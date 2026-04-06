@@ -154,18 +154,14 @@
             <span v-if="currentPhase >= 2" class="badge accent">In Progress</span>
           </div>
         </div>
-        
+
         <div class="card-content">
           <p class="api-note">POST /api/simulation/create</p>
           <p class="description">Graph build is complete. Please proceed to the next step to set up the simulation environment</p>
-          <button 
-            class="action-btn" 
-            :disabled="currentPhase < 2 || creatingSimulation"
-            @click="handleEnterEnvSetup"
-          >
+          <div v-if="currentPhase >= 2" class="auto-advance-msg">
             <span v-if="creatingSimulation" class="spinner-sm"></span>
-            {{ creatingSimulation ? 'Creating...' : 'Enter Environment Setup ➝' }}
-          </button>
+            <span>{{ creatingSimulation ? 'Creating simulation...' : 'Graph built — preparing agents...' }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -202,11 +198,18 @@ const props = defineProps({
   systemLogs: { type: Array, default: () => [] }
 })
 
-defineEmits(['next-step'])
+const emit = defineEmits(['next-step'])
 
 const selectedOntologyItem = ref(null)
 const logContent = ref(null)
 const creatingSimulation = ref(false)
+
+// Auto-advance when graph build completes (phase 2)
+watch(() => props.currentPhase, (newPhase, oldPhase) => {
+  if (newPhase >= 2 && !creatingSimulation.value) {
+    handleEnterEnvSetup()
+  }
+})
 
 // Enter environment setup - create simulation and navigate
 const handleEnterEnvSetup = async () => {
@@ -598,27 +601,15 @@ watch(() => props.systemLogs.length, () => {
   display: block;
 }
 
-/* Step 03 Button */
-.action-btn {
-  width: 100%;
-  background: #000;
-  color: #FFF;
-  border: none;
-  padding: 14px;
-  border-radius: 4px;
+/* Step 03 Auto-advance message */
+.auto-advance-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.action-btn:hover:not(:disabled) {
-  opacity: 0.8;
-}
-
-.action-btn:disabled {
-  background: #CCC;
-  cursor: not-allowed;
+  color: #FF5722;
+  font-weight: 500;
+  padding: 12px 0;
 }
 
 .progress-section {

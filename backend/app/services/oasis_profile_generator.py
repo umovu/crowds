@@ -159,11 +159,17 @@ class OasisProfileGenerator:
         "ISTP", "ISFP", "ESTP", "ESFP"
     ]
 
-    # Common countries list
+    # Simulation context countries — read from env, default to South African provinces/regions
     COUNTRIES = [
-        "US", "UK", "Japan", "Germany", "France",
-        "Canada", "Australia", "Brazil", "India", "South Korea"
+        c.strip() for c in
+        __import__('os').environ.get(
+            'SIMULATION_COUNTRIES',
+            'South Africa'
+        ).split(',')
     ]
+
+    # Default country for institutional agents
+    DEFAULT_COUNTRY = __import__('os').environ.get('SIMULATION_DEFAULT_COUNTRY', 'South Africa')
 
     # Individual type entities (need to generate specific personas)
     INDIVIDUAL_ENTITY_TYPES = [
@@ -655,7 +661,7 @@ Please generate JSON containing the following fields:
 3. age: Age as number (must be integer)
 4. gender: Gender, must be in English: "male" or "female"
 5. mbti: MBTI type (e.g., INTJ, ENFP)
-6. country: Country (use English, e.g., "US")
+6. country: Country (use English, e.g., "South Africa")
 7. profession: Profession
 8. interested_topics: Array of interested topics
 
@@ -704,7 +710,7 @@ Please generate JSON containing the following fields:
 3. age: Fixed at 30 (virtual age of institutional account)
 4. gender: Fixed at "other" (institutional account uses other to denote non-individual)
 5. mbti: MBTI type used to describe account style, e.g., ISTJ represents rigorous conservative
-6. country: Country (use English, e.g., "US")
+6. country: Country (use English, e.g., "South Africa")
 7. profession: Institutional function description
 8. interested_topics: Array of focus areas
 
@@ -758,7 +764,7 @@ Important:
                 "age": 30,  # Institutional virtual age
                 "gender": "other",  # Institutional uses other
                 "mbti": "ISTJ",  # Institutional style: rigorous conservative
-                "country": "US",
+                "country": self.DEFAULT_COUNTRY,
                 "profession": "Media",
                 "interested_topics": ["General News", "Current Events", "Public Affairs"],
             }
@@ -770,7 +776,7 @@ Important:
                 "age": 30,  # Institutional virtual age
                 "gender": "other",  # Institutional uses other
                 "mbti": "ISTJ",  # Institutional style: rigorous conservative
-                "country": "US",
+                "country": self.DEFAULT_COUNTRY,
                 "profession": entity_type,
                 "interested_topics": ["Public Policy", "Community", "Official Announcements"],
             }
@@ -1111,7 +1117,7 @@ Important:
                 "age": profile.age if profile.age else 30,
                 "gender": self._normalize_gender(profile.gender),
                 "mbti": profile.mbti if profile.mbti else "ISTJ",
-                "country": profile.country if profile.country else "US",
+                "country": profile.country if profile.country else self.DEFAULT_COUNTRY,
             }
 
             # Optional fields

@@ -455,8 +455,9 @@ def prepare_simulation():
         document_text = ProjectManager.get_extracted_text(state.project_id) or ""
         
         entity_types_list = data.get('entity_types')
-        use_llm_for_profiles = data.get('use_llm_for_profiles', True)
+        use_llm_for_profiles = data.get('use_llm_for_profiles', False)
         parallel_profile_count = data.get('parallel_profile_count', 5)
+        max_agents = data.get('max_agents', int(os.environ.get('MAX_SIMULATION_AGENTS', '30')))
         
         # ========== Get GraphStorage（Capture reference before background task starts） ==========
         storage = current_app.extensions.get('neo4j_storage')
@@ -580,6 +581,7 @@ def prepare_simulation():
                     progress_callback=progress_callback,
                     parallel_profile_count=parallel_profile_count,
                     storage=storage,
+                    max_agents=max_agents,
                 )
                 
                 # Task complete
@@ -2020,16 +2022,26 @@ def get_simulation_posts(simulation_id: str):
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
+        user_id = request.args.get('user_id', type=int)
+
         try:
-            cursor.execute("""
-                SELECT * FROM post 
-                ORDER BY created_at DESC 
-                LIMIT ? OFFSET ?
-            """, (limit, offset))
-            
-            posts = [dict(row) for row in cursor.fetchall()]
-            
-            cursor.execute("SELECT COUNT(*) FROM post")
+            if user_id is not None:
+                cursor.execute("""
+                    SELECT * FROM post
+                    WHERE user_id = ?
+                    ORDER BY created_at ASC
+                    LIMIT ? OFFSET ?
+                """, (user_id, limit, offset))
+                posts = [dict(row) for row in cursor.fetchall()]
+                cursor.execute("SELECT COUNT(*) FROM post WHERE user_id = ?", (user_id,))
+            else:
+                cursor.execute("""
+                    SELECT * FROM post
+                    ORDER BY created_at DESC
+                    LIMIT ? OFFSET ?
+                """, (limit, offset))
+                posts = [dict(row) for row in cursor.fetchall()]
+                cursor.execute("SELECT COUNT(*) FROM post")
             total = cursor.fetchone()[0]
             
         except sqlite3.OperationalError:

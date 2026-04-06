@@ -179,16 +179,17 @@
               </div>
             </div>
 
-            <!-- Agent Configuration -->
+            <!-- Agent Configuration (collapsed by default) -->
             <div class="config-block">
-              <div class="config-block-header">
+              <div class="config-block-header advanced-toggle" @click="showAgentDetails = !showAgentDetails">
                 <span class="config-block-title">Agent Configuration</span>
-                <span class="config-block-badge">{{ simulationConfig.agent_configs?.length || 0 }} Number</span>
+                <span class="config-block-badge">{{ simulationConfig.agent_configs?.length || 0 }} agents</span>
+                <span class="advanced-label">Advanced {{ showAgentDetails ? '▴' : '▾' }}</span>
               </div>
-              <div class="agents-cards">
-                <div 
-                  v-for="agent in simulationConfig.agent_configs" 
-                  :key="agent.agent_id" 
+              <div class="agents-cards" v-if="showAgentDetails">
+                <div
+                  v-for="agent in simulationConfig.agent_configs"
+                  :key="agent.agent_id"
                   class="agent-card"
                 >
                   <!-- Card header -->
@@ -509,20 +510,12 @@
             </Transition>
           </div>
 
-          <div class="action-group dual">
-            <button 
-              class="action-btn secondary"
-              @click="$emit('go-back')"
-            >
-              ← Return graph construction
-            </button>
-            <button 
-              class="action-btn primary"
-              :disabled="phase < 4"
-              @click="handleStartSimulation"
-            >
-              Start dual world parallel simulation ➝
-            </button>
+          <div v-if="phase >= 4" class="auto-advance-msg">
+            <span class="spinner-sm"></span>
+            <span>Environment ready — launching simulation...</span>
+          </div>
+          <div v-else class="auto-advance-msg waiting">
+            <span>Preparing environment...</span>
           </div>
         </div>
       </div>
@@ -662,6 +655,7 @@ const expectedTotal = ref(null)
 const simulationConfig = ref(null)
 const selectedProfile = ref(null)
 const showProfilesDetail = ref(true)
+const showAgentDetails = ref(false) // Agent config cards hidden by default (Advanced section)
 
 // Log deduplication：Record key information from last output
 let lastLoggedMessage = ''
@@ -1055,6 +1049,19 @@ const loadPreparedData = async () => {
   }
 }
 
+// Auto-advance: when env setup completes (phase 4), emit next-step exactly once
+const autoAdvancedToSim = ref(false)
+watch(phase, (newPhase) => {
+  if (newPhase >= 4 && !autoAdvancedToSim.value) {
+    autoAdvancedToSim.value = true
+    const params = {}
+    if (useCustomRounds.value) {
+      params.maxRounds = customMaxRounds.value
+    }
+    emit('next-step', params)
+  }
+})
+
 // Scroll log to bottom
 const logContent = ref(null)
 watch(() => props.systemLogs?.length, () => {
@@ -1230,6 +1237,40 @@ onUnmounted(() => {
 
 .action-group.dual .action-btn {
   width: 100%;
+}
+
+/* Auto-advance message */
+.auto-advance-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #FF5722;
+  font-weight: 500;
+  padding: 12px 0;
+  margin-top: 16px;
+}
+
+.auto-advance-msg.waiting {
+  color: #999;
+}
+
+/* Advanced toggle header */
+.advanced-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.advanced-toggle:hover {
+  background: #F5F5F5;
+  border-radius: 4px;
+}
+
+.advanced-label {
+  margin-left: auto;
+  font-size: 11px;
+  color: #999;
+  font-weight: 500;
 }
 
 /* Info Card */

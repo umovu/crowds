@@ -1,9 +1,9 @@
 <template>
-  <div class="interaction-panel">
+  <div class="interaction-panel" :class="{ 'side-panel-mode': sidePanel }">
     <!-- Main Split Layout -->
     <div class="main-split-layout">
-      <!-- LEFT PANEL: Report Style -->
-      <div class="left-panel report-style" ref="leftPanel">
+      <!-- LEFT PANEL: Report Style (hidden in side-panel mode) -->
+      <div v-if="!sidePanel" class="left-panel report-style" ref="leftPanel">
         <div v-if="reportOutline" class="report-content-wrapper">
           <!-- Report Header -->
           <div class="report-header-block">
@@ -233,10 +233,25 @@
                 </svg>
               </button>
             </div>
-            <div v-if="showFullProfile && selectedAgent.bio" class="profile-card-body">
-              <div class="profile-card-bio">
-                <div class="profile-card-label">Introduction</div>
+            <div v-if="showFullProfile" class="profile-card-body">
+              <div class="profile-card-tabs">
+                <button class="profile-tab" :class="{ active: profileTab === 'bio' }" @click="profileTab = 'bio'">Profile</button>
+                <button class="profile-tab" :class="{ active: profileTab === 'posts' }" @click="profileTab = 'posts'; loadAgentPosts()">Posts</button>
+              </div>
+              <div v-if="profileTab === 'bio' && selectedAgent.bio" class="profile-card-bio">
                 <p>{{ selectedAgent.bio }}</p>
+              </div>
+              <div v-if="profileTab === 'posts'" class="profile-card-posts">
+                <div v-if="agentPostsLoading" class="posts-loading">Loading posts...</div>
+                <div v-else-if="agentPosts.length === 0" class="posts-empty">No posts found for this agent.</div>
+                <div v-else v-for="(post, i) in agentPosts" :key="i" class="agent-post-item">
+                  <p class="agent-post-content">{{ post.content }}</p>
+                  <div class="agent-post-meta">
+                    <span>👍 {{ post.num_likes }}</span>
+                    <span>🔁 {{ post.num_shares }}</span>
+                    <span class="post-time">{{ post.created_at?.slice(11, 16) }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -413,11 +428,12 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { chatWithReport, getReport, getAgentLog } from '../api/report'
-import { interviewAgents, getSimulationProfilesRealtime } from '../api/simulation'
+import { interviewAgents, getSimulationProfilesRealtime, getAgentPosts } from '../api/simulation'
 
 const props = defineProps({
   reportId: String,
-  simulationId: String
+  simulationId: String,
+  sidePanel: { type: Boolean, default: false } // When true, hides the duplicate report left panel
 })
 
 const emit = defineEmits(['add-log', 'update-status'])
@@ -429,6 +445,9 @@ const showAgentDropdown = ref(false)
 const selectedAgent = ref(null)
 const selectedAgentIndex = ref(null)
 const showFullProfile = ref(true)
+const profileTab = ref('bio')
+const agentPosts = ref([])
+const agentPostsLoading = ref(false)
 const showToolsDetail = ref(true)
 
 // Chat State
@@ -532,10 +551,26 @@ const selectAgent = (agent, idx) => {
   selectedAgentIndex.value = idx
   chatTarget.value = 'agent'
   showAgentDropdown.value = false
+  profileTab.value = 'bio'
+  agentPosts.value = []
 
   // Restore this Agent's chat history
   chatHistory.value = chatHistoryCache.value[`agent_${idx}`] || []
   addLog(`Selected conversation target: ${agent.username}`)
+}
+
+const loadAgentPosts = async () => {
+  if (!props.simulationId || !selectedAgent.value || agentPostsLoading.value) return
+  agentPostsLoading.value = true
+  try {
+    const userId = selectedAgent.value.user_id ?? selectedAgent.value.agent_id ?? selectedAgentIndex.value
+    const res = await getAgentPosts(props.simulationId, userId, 'reddit', 50)
+    agentPosts.value = res?.data?.posts || []
+  } catch {
+    agentPosts.value = []
+  } finally {
+    agentPostsLoading.value = false
+  }
 }
 
 const formatTime = (timestamp) => {
@@ -978,6 +1013,16 @@ watch(() => props.simulationId, (newId) => {
   flex: 1;
   display: flex;
   overflow: hidden;
+}
+
+/* When used as a side panel, fill full width with just the interaction part */
+.interaction-panel.side-panel-mode .main-split-layout {
+  overflow-y: auto;
+}
+
+.interaction-panel.side-panel-mode .right-panel {
+  width: 100%;
+  overflow-y: auto;
 }
 
 /* Left Panel - Report Style (identical to Step4Report.vue) */
@@ -1753,6 +1798,68 @@ watch(() => props.simulationId, (newId) => {
   font-size: 13px;
   line-height: 1.6;
   color: #4B5563;
+}
+
+.profile-card-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #E5E7EB;
+  margin-bottom: 10px;
+}
+
+.profile-tab {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.profile-tab.active {
+  color: #111827;
+  border-bottom-color: #111827;
+}
+
+.profile-card-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.agent-post-item {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.agent-post-content {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1F2937;
+}
+
+.agent-post-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: #9CA3AF;
+}
+
+.post-time { margin-left: auto; }
+
+.posts-loading, .posts-empty {
+  font-size: 13px;
+  color: #9CA3AF;
+  text-align: center;
+  padding: 16px 0;
 }
 
 /* Target Selector */

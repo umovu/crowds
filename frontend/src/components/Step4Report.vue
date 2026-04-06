@@ -127,13 +127,13 @@
             </div>
           </div>
 
-          <!-- Next Step Button - Show after completion -->
-          <button v-if="isComplete" class="next-step-btn" @click="goToInteraction">
-            <span>Enter Deep Interaction</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
+          <button v-if="isComplete" class="download-md-btn" @click="downloadMarkdown">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
+            <span>Download Markdown</span>
           </button>
 
           <div class="workflow-divider"></div>
@@ -409,6 +409,32 @@ const goToInteraction = () => {
   if (props.reportId) {
     router.push({ name: 'Interaction', params: { reportId: props.reportId } })
   }
+}
+
+const downloadMarkdown = () => {
+  if (!reportOutline.value) return
+  const lines = []
+  lines.push(`# ${reportOutline.value.title}`)
+  lines.push('')
+  if (reportOutline.value.summary) {
+    lines.push(`> ${reportOutline.value.summary}`)
+    lines.push('')
+  }
+  const sections = reportOutline.value.sections || []
+  sections.forEach((section, idx) => {
+    lines.push(`## ${idx + 1}. ${section.title}`)
+    lines.push('')
+    const content = generatedSections.value[idx + 1]
+    if (content) lines.push(content)
+    lines.push('')
+  })
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `report-${props.reportId || 'mirofish'}.md`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 // State
@@ -3425,6 +3451,29 @@ watch(() => props.reportId, (newId) => {
 
 .next-step-btn:hover svg {
   transform: translateX(4px);
+}
+
+.download-md-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: calc(100% - 40px);
+  margin: 8px 20px 0 20px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.download-md-btn:hover {
+  background: #F3F4F6;
+  border-color: #D1D5DB;
 }
 
 /* Workflow Empty */

@@ -91,15 +91,10 @@
       </div>
 
       <div class="action-controls">
-        <button 
-          class="action-btn primary"
-          :disabled="phase !== 2 || isGeneratingReport"
-          @click="handleNextStep"
-        >
+        <div v-if="phase === 2" class="auto-advance-msg">
           <span v-if="isGeneratingReport" class="loading-spinner-small"></span>
-          {{ isGeneratingReport ? 'Starting...' : 'Start Generating Report' }} 
-          <span v-if="!isGeneratingReport" class="arrow-icon">→</span>
-        </button>
+          <span>{{ isGeneratingReport ? 'Generating report...' : 'Simulation complete — generating report...' }}</span>
+        </div>
       </div>
     </div>
 
@@ -684,6 +679,16 @@ watch(() => props.systemLogs?.length, () => {
   })
 })
 
+// Auto-advance: when simulation completes (phase 2), auto-generate report exactly once
+const autoAdvancedToReport = ref(false)
+watch(phase, (newPhase) => {
+  if (newPhase === 2 && !autoAdvancedToReport.value) {
+    autoAdvancedToReport.value = true
+    addLog('Simulation completed — auto-generating report...')
+    handleNextStep()
+  }
+})
+
 onMounted(() => {
   addLog('Step3 Simulation initialization')
   if (props.simulationId) {
@@ -896,6 +901,16 @@ onUnmounted(() => {
 .action-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+/* Auto-advance message in control bar */
+.auto-advance-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #FF5722;
+  font-weight: 500;
 }
 
 /* --- Main Content Area --- */

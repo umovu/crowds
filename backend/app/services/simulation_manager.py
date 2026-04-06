@@ -232,10 +232,11 @@ class SimulationManager:
         simulation_requirement: str,
         document_text: str,
         defined_entity_types: Optional[List[str]] = None,
-        use_llm_for_profiles: bool = True,
+        use_llm_for_profiles: bool = False,
         progress_callback: Optional[callable] = None,
         parallel_profile_count: int = 3,
         storage: 'GraphStorage' = None,
+        max_agents: int = 30,
     ) -> SimulationState:
         """
         Prepare simulation environment (fully automated)
@@ -304,6 +305,10 @@ class SimulationManager:
                 return state
             
             # ========== Phase 2: Generate Agent Profile ==========
+            if max_agents and len(filtered.entities) > max_agents:
+                filtered.entities = filtered.entities[:max_agents]
+                filtered.filtered_count = max_agents
+                state.entities_count = max_agents
             total_entities = len(filtered.entities)
             
             if progress_callback:

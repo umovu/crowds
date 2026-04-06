@@ -7,23 +7,11 @@
       </div>
       
       <div class="header-center">
-        <div class="view-switcher">
-          <button 
-            v-for="mode in ['graph', 'split', 'workbench']" 
-            :key="mode"
-            class="switch-btn"
-            :class="{ active: viewMode === mode }"
-            @click="viewMode = mode"
-          >
-            {{ { graph: 'Graph', split: 'Split', workbench: 'Workbench' }[mode] }}
-          </button>
-        </div>
       </div>
 
       <div class="header-right">
         <div class="workflow-step">
-          <span class="step-num">Step 4/5</span>
-          <span class="step-name">Report</span>
+          <span class="step-name">Results</span>
         </div>
         <div class="step-divider"></div>
         <span class="status-indicator" :class="statusClass">
@@ -35,20 +23,8 @@
 
     <!-- Main Content Area -->
     <main class="content-area">
-      <!-- Left Panel: Graph -->
-      <div class="panel-wrapper left" :style="leftPanelStyle">
-        <GraphPanel 
-          :graphData="graphData"
-          :loading="graphLoading"
-          :currentPhase="4"
-          :isSimulating="false"
-          @refresh="refreshGraph"
-          @toggle-maximize="toggleMaximize('graph')"
-        />
-      </div>
-
-      <!-- Right Panel: Step4 Report -->
-      <div class="panel-wrapper right" :style="rightPanelStyle">
+      <!-- Step4 Report fills the full area -->
+      <div class="report-area">
         <Step4Report
           :reportId="currentReportId"
           :simulationId="simulationId"
@@ -57,6 +33,26 @@
           @update-status="updateStatus"
         />
       </div>
+
+      <!-- Chat/Survey Side Panel (collapsible) -->
+      <div class="interaction-panel-wrapper" :class="{ expanded: interactionPanelOpen }">
+        <!-- Tab trigger on left edge -->
+        <button class="interaction-tab" @click="interactionPanelOpen = !interactionPanelOpen">
+          <span class="tab-label">{{ interactionPanelOpen ? 'Close ✕' : 'Chat / Survey ▸' }}</span>
+        </button>
+
+        <!-- Panel content -->
+        <div class="interaction-panel-content" v-if="interactionPanelOpen">
+          <Step5Interaction
+            :reportId="currentReportId"
+            :simulationId="simulationId"
+            :systemLogs="systemLogs"
+            :sidePanel="true"
+            @add-log="addLog"
+            @update-status="updateStatus"
+          />
+        </div>
+      </div>
     </main>
   </div>
 </template>
@@ -64,10 +60,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import GraphPanel from '../components/GraphPanel.vue'
 import Step4Report from '../components/Step4Report.vue'
-import { getProject, getGraphData } from '../api/graph'
-import { getSimulation } from '../api/simulation'
+import Step5Interaction from '../components/Step5Interaction.vue'
 import { getReport } from '../api/report'
 
 const route = useRoute()
@@ -78,30 +72,14 @@ const props = defineProps({
   reportId: String
 })
 
-// Layout State - Default to workbench view
-const viewMode = ref('workbench')
+// Interaction panel state (collapsed by default)
+const interactionPanelOpen = ref(false)
 
 // Data State
 const currentReportId = ref(route.params.reportId)
 const simulationId = ref(null)
-const projectData = ref(null)
-const graphData = ref(null)
-const graphLoading = ref(false)
 const systemLogs = ref([])
 const currentStatus = ref('processing') // processing | completed | error
-
-// --- Computed Layout Styles ---
-const leftPanelStyle = computed(() => {
-  if (viewMode.value === 'graph') return { width: '100%', opacity: 1, transform: 'translateX(0)' }
-  if (viewMode.value === 'workbench') return { width: '0%', opacity: 0, transform: 'translateX(-20px)' }
-  return { width: '50%', opacity: 1, transform: 'translateX(0)' }
-})
-
-const rightPanelStyle = computed(() => {
-  if (viewMode.value === 'workbench') return { width: '100%', opacity: 1, transform: 'translateX(0)' }
-  if (viewMode.value === 'graph') return { width: '0%', opacity: 0, transform: 'translateX(20px)' }
-  return { width: '50%', opacity: 1, transform: 'translateX(0)' }
-})
 
 // --- Status Computed ---
 const statusClass = computed(() => {
@@ -127,74 +105,20 @@ const updateStatus = (status) => {
   currentStatus.value = status
 }
 
-// --- Layout Methods ---
-const toggleMaximize = (target) => {
-  if (viewMode.value === target) {
-    viewMode.value = 'split'
-  } else {
-    viewMode.value = target
-  }
-}
-
 // --- Data Logic ---
 const loadReportData = async () => {
   try {
     addLog(`Loading report data: ${currentReportId.value}`)
-    
+
     // Get report info to retrieve simulation_id
     const reportRes = await getReport(currentReportId.value)
     if (reportRes.success && reportRes.data) {
-      const reportData = reportRes.data
-      simulationId.value = reportData.simulation_id
-      
-      if (simulationId.value) {
-        // Get simulation info
-        const simRes = await getSimulation(simulationId.value)
-        if (simRes.success && simRes.data) {
-          const simData = simRes.data
-          
-          // Get project info
-          if (simData.project_id) {
-            const projRes = await getProject(simData.project_id)
-            if (projRes.success && projRes.data) {
-              projectData.value = projRes.data
-              addLog(`Project loaded: ${projRes.data.project_id}`)
-              
-              // Get graph data
-              if (projRes.data.graph_id) {
-                await loadGraph(projRes.data.graph_id)
-              }
-            }
-          }
-        }
-      }
+      simulationId.value = reportRes.data.simulation_id
     } else {
       addLog(`Failed to load report: ${reportRes.error || 'Unknown error'}`)
     }
   } catch (err) {
     addLog(`Load error: ${err.message}`)
-  }
-}
-
-const loadGraph = async (graphId) => {
-  graphLoading.value = true
-  
-  try {
-    const res = await getGraphData(graphId)
-    if (res.success) {
-      graphData.value = res.data
-      addLog('Graph data loaded successfully')
-    }
-  } catch (err) {
-    addLog(`Graph load failed: ${err.message}`)
-  } finally {
-    graphLoading.value = false
-  }
-}
-
-const refreshGraph = () => {
-  if (projectData.value?.graph_id) {
-    loadGraph(projectData.value.graph_id)
   }
 }
 
@@ -335,14 +259,56 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.panel-wrapper {
+/* Report fills full width */
+.report-area {
+  flex: 1;
   height: 100%;
   overflow: hidden;
-  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease, transform 0.3s ease;
-  will-change: width, opacity, transform;
 }
 
-.panel-wrapper.left {
-  border-right: 1px solid #EAEAEA;
+/* Collapsible interaction side panel */
+.interaction-panel-wrapper {
+  position: relative;
+  height: 100%;
+  width: 0;
+  transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-left: 1px solid #EAEAEA;
+  overflow: visible;
+}
+
+.interaction-panel-wrapper.expanded {
+  width: 400px;
+}
+
+.interaction-tab {
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  background: #000;
+  color: #FFF;
+  border: none;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  white-space: nowrap;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.interaction-tab:hover {
+  background: #333;
+}
+
+.tab-label {
+  letter-spacing: 0.5px;
+}
+
+.interaction-panel-content {
+  height: 100%;
+  overflow-y: auto;
+  width: 400px;
 }
 </style>
