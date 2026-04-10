@@ -38,6 +38,7 @@ class AgentActivity:
         Use natural language description format so NER extractor can extract entities and relationships
         """
         action_descriptions = {
+            # OASIS action types
             "CREATE_POST": self._describe_create_post,
             "LIKE_POST": self._describe_like_post,
             "DISLIKE_POST": self._describe_dislike_post,
@@ -50,6 +51,10 @@ class AgentActivity:
             "SEARCH_POSTS": self._describe_search,
             "SEARCH_USER": self._describe_search_user,
             "MUTE": self._describe_mute,
+            # AgentSociety OpinionCaptureBlock action types
+            "EXPRESS_OPINION": self._describe_express_opinion,
+            "RESPOND_TO_OPINION": self._describe_respond_to_opinion,
+            "SEARCH_TOPIC": self._describe_search_topic,
         }
 
         describe_func = action_descriptions.get(self.action_type, self._describe_generic)
@@ -169,6 +174,32 @@ class AgentActivity:
             return f"Muted user \"{target_user_name}\""
         return "Muted a user"
 
+    # ── AgentSociety OpinionCaptureBlock action descriptors ──────────────────
+
+    def _describe_express_opinion(self) -> str:
+        content = self.action_args.get("content", "")
+        topics = self.action_args.get("topics", [])
+        topic_str = f" on {', '.join(topics)}" if topics else ""
+        if content:
+            return f"Expressed an opinion{topic_str}: \"{content}\""
+        return f"Expressed an opinion{topic_str}"
+
+    def _describe_respond_to_opinion(self) -> str:
+        content = self.action_args.get("content", "")
+        target = self.action_args.get("target_agent_name", "")
+        target_content = self.action_args.get("target_content", "")
+        if content and target and target_content:
+            return f"Responded to {target}'s opinion \"{target_content[:80]}\": \"{content}\""
+        elif content and target:
+            return f"Responded to {target}: \"{content}\""
+        elif content:
+            return f"Responded to an opinion: \"{content}\""
+        return "Responded to an opinion"
+
+    def _describe_search_topic(self) -> str:
+        query = self.action_args.get("query", "")
+        return f"Searched for opinions on \"{query}\"" if query else "Searched for a topic"
+
     def _describe_generic(self) -> str:
         return f"Executed {self.action_type} action"
 
@@ -257,7 +288,7 @@ class GraphMemoryUpdater:
 
     def add_activity(self, activity: AgentActivity):
         """Add an agent activity to queue"""
-        if activity.action_type == "DO_NOTHING":
+        if activity.action_type in ("DO_NOTHING", "OBSERVE"):
             self._skipped_count += 1
             return
 
