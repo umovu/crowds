@@ -28,6 +28,46 @@ from ..utils.logger import get_logger
 logger = get_logger("mirofish.opinion_block")
 
 # ─────────────────────────────────────────────────────────────
+# South African socio-economic context — injected into every
+# agent prompt so the LLM stays grounded in SA realities.
+# This simulation exists to test policy on digital agents
+# BEFORE it is implemented on actual people.
+# ─────────────────────────────────────────────────────────────
+SA_POLICY_CONTEXT = """
+SIMULATION CONTEXT — READ CAREFULLY:
+You are participating in a South African policy simulation. Agents are digital
+representations of South African people used to stress-test policy proposals
+before they affect real citizens. Your responses must reflect the lived realities
+of South Africa.
+
+Key socio-economic realities to stay grounded in:
+- Unemployment: ~32% nationally, ~60% among youth (Stats SA 2024)
+- Extreme inequality: Gini coefficient ~0.63, one of the highest globally
+- Persistent load-shedding (Eskom power cuts) affecting daily life and business
+- Land reform debate: historical dispossession and calls for redistribution
+- Social grant dependency: ~28 million SASSA recipients (SRD, child support, pension)
+- Racial inequality legacy from apartheid still shapes economic access
+- 11 official languages; communities often multilingual (code-switching common)
+- Urban/rural divide: Johannesburg, Cape Town, Durban vs rural Eastern Cape, Limpopo
+- Township communities (Soweto, Khayelitsha, Umlazi) vs formal suburbs
+- High gender-based violence (GBV) rates — a major policy concern
+- Public healthcare (clinics, hospitals) vs private medical aid — NHI debate active
+- BEE/BBBEE policies and debates about economic inclusion
+- High crime rates affecting safety perceptions and movement
+- Xenophobia tensions, especially toward other African migrants
+- Strong trade union influence (COSATU, NUMSA)
+- Key political actors: ANC, DA, EFF, MK Party, IFP
+- Water access crises in parts of the country
+- Education inequality: no-fee schools, Nsfas bursaries, school infrastructure gaps
+
+When expressing opinions, responding to others, or deciding how to act:
+- Speak as a person shaped by these realities, not as a neutral observer
+- Reference specific SA concerns naturally (load-shedding, unemployment, grants, etc.)
+- Reflect your character's language background, province, class, and lived experience
+- Policy positions should reflect real trade-offs South Africans navigate daily
+""".strip()
+
+# ─────────────────────────────────────────────────────────────
 # Action constants  (maps to JSONL action_type field)
 # ─────────────────────────────────────────────────────────────
 class OpinionActionType:
@@ -219,17 +259,19 @@ class OpinionCaptureBlock:
             f"- {o['agent_name']}: {o['content'][:100]}" for o in feed[-5:]
         ) or "(empty — be the first to speak)"
 
-        prompt = f"""You are {agent.name}. {agent.persona[:300]}
+        prompt = f"""{SA_POLICY_CONTEXT}
+
+You are {agent.name}. {agent.persona[:300]}
 
 Current shared opinion feed (recent):
 {feed_preview}
 
 Choose ONE action for this round. Respond with ONLY the action name:
-- EXPRESS_OPINION   (share your view on a relevant topic)
+- EXPRESS_OPINION    (share your view on a policy or issue relevant to your life)
 - RESPOND_TO_OPINION (engage with someone's opinion above)
-- SEARCH_TOPIC      (look up opinions on a specific topic)
-- OBSERVE           (read silently)
-- DO_NOTHING        (stay quiet)
+- SEARCH_TOPIC       (look up opinions on a specific policy or topic)
+- OBSERVE            (read silently)
+- DO_NOTHING         (stay quiet this round)
 {f'Special prompt: {initial_prompt}' if initial_prompt else ''}
 Action:"""
 
@@ -256,12 +298,16 @@ Action:"""
         topic_hint = random.choice(agent.interested_topics) if agent.interested_topics else "the current situation"
         feed_ctx = "\n".join(f"- {o['agent_name']}: {o['content'][:80]}" for o in feed[-3:]) or "(none yet)"
 
-        prompt = f"""You are {agent.name}. {agent.persona[:500]}
+        prompt = f"""{SA_POLICY_CONTEXT}
+
+You are {agent.name}. {agent.persona[:500]}
 
 Recent opinions from others:
 {feed_ctx}
 
-Share your genuine opinion about "{topic_hint}" in 1-3 sentences. Be direct, in-character, and opinionated.
+Share your genuine opinion about "{topic_hint}" in 1-3 sentences. Be direct and in-character.
+Ground your view in your lived South African experience — your province, employment situation,
+language background, and relationship with government services. Be opinionated, not generic.
 Opinion:"""
 
         content = await self._call_llm(prompt, agent.name, max_tokens=200)
@@ -281,11 +327,15 @@ Opinion:"""
 
         target = random.choice(feed[-5:]) if len(feed) >= 5 else feed[-1]
 
-        prompt = f"""You are {agent.name}. {agent.persona[:400]}
+        prompt = f"""{SA_POLICY_CONTEXT}
+
+You are {agent.name}. {agent.persona[:400]}
 
 {target['agent_name']} said: "{target['content']}"
 
-Respond in 1-2 sentences. Stay in character — agree, challenge, nuance, or question them.
+Respond in 1-2 sentences. Stay fully in character as a South African shaped by your
+background — your class, province, language, employment, and relationship with the state.
+Agree, challenge, nuance, or question them authentically.
 Response:"""
 
         content = await self._call_llm(prompt, agent.name, max_tokens=150)
