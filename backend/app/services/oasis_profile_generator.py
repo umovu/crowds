@@ -178,10 +178,12 @@ class OasisProfileGenerator:
         "ISTP", "ISFP", "ESTP", "ESFP"
     ]
 
-    # Common countries list
-    COUNTRIES = [
-        "US", "UK", "Japan", "Germany", "France",
-        "Canada", "Australia", "Brazil", "India", "South Korea"
+    # Country — South Africa only for this policy simulation
+    COUNTRIES = ["South Africa"]
+
+    SA_PROVINCES = [
+        "Gauteng", "Western Cape", "KwaZulu-Natal", "Eastern Cape",
+        "Limpopo", "Mpumalanga", "North West", "Free State", "Northern Cape"
     ]
 
     # Individual type entities (need to generate specific personas)
@@ -633,9 +635,35 @@ class OasisProfileGenerator:
         }
     
     def _get_system_prompt(self, is_individual: bool) -> str:
-        """Get system prompt"""
-        base_prompt = "You are an expert in generating social media user profiles. Generate detailed, realistic personas for opinion simulation that maximize restoration of existing reality. Must return valid JSON format with all string values containing no unescaped newlines. Use English."
-        return base_prompt
+        """Get system prompt — anchored in South African socio-economic expertise."""
+        entity_type_guidance = (
+            "You are generating a profile for a South African individual citizen."
+            if is_individual else
+            "You are generating a profile for a South African institution, organisation, or community group."
+        )
+        return f"""You are an expert in South African socio-economics, public policy, and demography.
+Your task is to generate deeply realistic personas for a POLICY SIMULATION — digital agents that
+represent South African people or institutions so that policies can be tested on them BEFORE
+being implemented on actual citizens.
+
+{entity_type_guidance}
+
+The personas you generate must accurately reflect South African lived realities:
+- The full socio-economic spectrum: from informal settlement residents to middle-class suburbanites
+  to rural farming communities
+- South Africa's 11-language landscape (isiZulu, isiXhosa, Afrikaans, Sesotho, English, etc.)
+  — note the character's home language and how it shapes their expression
+- The nine provinces and the very different conditions in each
+  (e.g., Limpopo poverty vs Western Cape tourism economy vs Gauteng urban inequality)
+- Key SA pressures: load-shedding, unemployment (~32%), social grants (SRD/SASSA),
+  land reform, BEE, NHI, crime, GBV, housing backlogs, water access
+- Political awareness: ANC, DA, EFF, MK Party loyalties and disillusionment
+- Ubuntu values, community solidarity, religious influence (Christianity dominant,
+  also Islam in Cape Malay communities, Hindu in KZN)
+- The legacy of apartheid on spatial planning, economic access, and identity
+- Youth demographics (60%+ youth unemployment) vs pension-age grant recipients
+
+Generate valid JSON only. All string values must contain no unescaped newlines. Use English."""
     
     def _build_individual_persona_prompt(
         self,
@@ -650,7 +678,10 @@ class OasisProfileGenerator:
         attrs_str = json.dumps(entity_attributes, ensure_ascii=False) if entity_attributes else "None"
         context_str = context[:3000] if context else "No additional context"
 
-        return f"""Generate a detailed social media user persona for the entity, maximizing restoration of existing reality.
+        return f"""Generate a detailed South African citizen persona for this individual entity.
+This persona will be used as a digital agent in a policy simulation — the agent must closely
+resemble a real South African person so that policy proposals can be stress-tested before
+affecting actual citizens.
 
 Entity Name: {entity_name}
 Entity Type: {entity_type}
@@ -660,29 +691,45 @@ Entity Attributes: {attrs_str}
 Context Information:
 {context_str}
 
-Please generate JSON containing the following fields:
+Generate JSON with the following fields:
 
-1. bio: Social media bio, 200 characters
-2. persona: Detailed persona description (2000 words of pure text), must include:
-   - Basic information (age, profession, educational background, location)
-   - Personal background (important experiences, event associations, social relationships)
-   - Personality traits (MBTI type, core personality, emotional expression)
-   - Social media behavior (posting frequency, content preferences, interaction style, language characteristics)
-   - Positions and views (attitudes toward topics, content that may provoke/touch emotions)
-   - Unique features (catchphrases, special experiences, personal interests)
-   - Personal memories (important part of persona, introduce this individual's association with events and their existing actions/reactions in events)
-3. age: Age as number (must be integer)
-4. gender: Gender, must be in English: "male" or "female"
-5. mbti: MBTI type (e.g., INTJ, ENFP)
-6. country: Country (use English, e.g., "US")
-7. profession: Profession
-8. interested_topics: Array of interested topics
+1. bio: Social media bio (max 200 characters). Should feel authentic — written in the person's
+   own voice, possibly mixing English with their home language (e.g., "Sawubona from Durban" or
+   "Proudly from Soweto").
+
+2. persona: Detailed persona description (~2000 words of continuous prose). Must cover:
+   - Demographics: age, gender, home language, province, town/township/suburb, race/ethnicity
+   - Socio-economic situation: employment status (employed/unemployed/informal sector/grant
+     recipient), household income bracket, housing type (RDP house/flat/backyard/shack/bond),
+     whether they have medical aid or rely on public clinics
+   - Education: highest qualification, school type (no-fee/Model C/private), NSFAS experience
+   - Daily life pressures: load-shedding impact on work/business, water access, transport
+     (taxi/bus/own car), food security
+   - Political awareness: party affiliation or disillusionment, views on government service
+     delivery, ANC/DA/EFF/MK stances, voting history or abstention
+   - Policy opinions: attitudes toward NHI, land reform, BEE/BBBEE, social grants expansion,
+     minimum wage, housing policy, GBV legislation
+   - Community context: Ubuntu values, church/mosque/community involvement, neighbourhood safety
+   - Language and expression style: home language influence on English, common SA slang
+     (lekker, eish, howzit, yebo, sharp sharp, bra, sisi)
+   - Personal history: how apartheid's legacy or post-1994 changes shaped their family
+   - Personality: MBTI type, how they engage in debates, emotional triggers, trust in institutions
+
+3. age: Integer (realistic for the entity — SA median age is ~28)
+4. gender: "male" or "female"
+5. mbti: MBTI type
+6. country: "South Africa"
+7. province: SA province (Gauteng / Western Cape / KwaZulu-Natal / Eastern Cape /
+   Limpopo / Mpumalanga / North West / Free State / Northern Cape)
+8. profession: Job title or "Unemployed" or "Informal trader" or "Grant recipient"
+9. interested_topics: Array of SA-specific policy topics this person cares about
+   (e.g., "load-shedding", "unemployment", "land reform", "NHI", "social grants",
+   "gender-based violence", "education fees", "housing")
 
 Important:
-- All field values must be strings or numbers, do not use newlines
-- persona must be a coherent text description
-- Use English
-- Content must be consistent with entity information
+- All string values must be on a single line (no unescaped newlines)
+- country MUST be "South Africa"
+- The persona must feel unmistakably South African — not generic
 - age must be a valid integer, gender must be "male" or "female"
 """
 
@@ -699,7 +746,9 @@ Important:
         attrs_str = json.dumps(entity_attributes, ensure_ascii=False) if entity_attributes else "None"
         context_str = context[:3000] if context else "No additional context"
 
-        return f"""Generate detailed social media account profile for institutional/group entity, maximizing restoration of existing reality.
+        return f"""Generate a detailed South African institutional persona for this group or organisational entity.
+This profile will be used as a digital agent in a South African policy simulation — the agent
+must authentically represent how this type of South African institution engages with policy debates.
 
 Entity Name: {entity_name}
 Entity Type: {entity_type}
@@ -709,30 +758,43 @@ Entity Attributes: {attrs_str}
 Context Information:
 {context_str}
 
-Please generate JSON containing the following fields:
+Generate JSON with the following fields:
 
-1. bio: Official account bio, 200 characters, professional and appropriate
-2. persona: Detailed account profile description (2000 words of pure text), must include:
-   - Basic institutional information (official name, organizational nature, founding background, main functions)
-   - Account positioning (account type, target audience, core functions)
-   - Speaking style (language characteristics, common expressions, taboo topics)
-   - Content publishing characteristics (content types, publishing frequency, active time periods)
-   - Position and attitude (official stance on core topics, handling of controversies)
-   - Special notes (group profiles represented, operational habits)
-   - Institutional memories (important part of institutional persona, introduce this institution's association with events and their existing actions/reactions in events)
-3. age: Fixed at 30 (virtual age of institutional account)
-4. gender: Fixed at "other" (institutional account uses other to denote non-individual)
-5. mbti: MBTI type used to describe account style, e.g., ISTJ represents rigorous conservative
-6. country: Country (use English, e.g., "US")
-7. profession: Institutional function description
-8. interested_topics: Array of focus areas
+1. bio: Official account bio (max 200 characters). Clear, professional, South African in tone.
+   Examples: "SASSA official account | Helping SA's most vulnerable" or
+   "Proudly South African NGO fighting GBV in townships since 1999"
+
+2. persona: Detailed institutional profile (~2000 words of continuous prose). Must cover:
+   - Organisation identity: full name, type (government dept/NGO/trade union/media/community
+     group/university/SOE), mandate, founding context (often post-1994), legal status
+   - SA policy position: official stance on key SA issues — NHI, land reform, BEE,
+     social grants, load-shedding/Eskom, minimum wage, housing, GBV, water access
+   - Constituency: who they represent or serve (e.g., workers in mining sector, township
+     residents in Tshwane, rural women in Eastern Cape, SMMEs in Western Cape)
+   - Communication style: formal/populist/activist, language used (English, Zulu, Afrikaans),
+     relationship with government and opposition
+   - SA-specific institutional pressures: budget cuts, cadre deployment concerns, accountability
+     to funders, political alignment or independence, community trust levels
+   - Key policy battles this institution is known for or actively engages in
+   - Historical role: how the institution has evolved since 1994 and through key SA crises
+     (Marikana, State Capture, COVID, load-shedding, July 2021 unrest)
+   - Institutional behaviour in debates: confrontational/collaborative, media presence,
+     use of legal channels, street protest, parliamentary submissions
+
+3. age: 30 (virtual institutional account age)
+4. gender: "other" (institutional)
+5. mbti: MBTI type describing the institution's engagement style
+6. country: "South Africa"
+7. province: Primary province of operation, or "National" if countrywide
+8. profession: Institutional role (e.g., "Government Department", "Civil Society NGO",
+   "Trade Union", "State-Owned Enterprise", "Academic Institution", "Community Organisation")
+9. interested_topics: Array of SA policy areas this institution actively engages with
 
 Important:
-- All field values must be strings or numbers, no null values allowed
-- persona must be a coherent text description, do not use newlines
-- Use English
-- age must be integer 30, gender must be string "other"
-- Institutional account speech must match its identity positioning"""
+- All string values must be on a single line (no unescaped newlines)
+- country MUST be "South Africa"
+- The institution must feel unmistakably South African in its concerns and framing
+- age must be integer 30, gender must be string "other" """
     
     def _generate_profile_rule_based(
         self,
@@ -746,65 +808,98 @@ Important:
         # Generate different personas based on entity type
         entity_type_lower = entity_type.lower()
 
+        province = random.choice(self.SA_PROVINCES)
+
         if entity_type_lower in ["student", "alumni"]:
             return {
-                "bio": f"{entity_type} with interests in academics and social issues.",
-                "persona": f"{entity_name} is a {entity_type.lower()} who is actively engaged in academic and social discussions. They enjoy sharing perspectives and connecting with peers.",
+                "bio": f"Student from {province}, South Africa. Passionate about education access and youth unemployment.",
+                "persona": (
+                    f"{entity_name} is a {entity_type.lower()} from {province}, South Africa. "
+                    f"They are navigating the reality of high youth unemployment and a struggling higher education system. "
+                    f"They rely on NSFAS or family support, face load-shedding that disrupts study, and are acutely aware of "
+                    f"the gap between what was promised post-1994 and what they experience daily. "
+                    f"They engage passionately on topics like free education, graduate unemployment, and social grants."
+                ),
                 "age": random.randint(18, 30),
                 "gender": random.choice(["male", "female"]),
                 "mbti": random.choice(self.MBTI_TYPES),
-                "country": random.choice(self.COUNTRIES),
+                "country": "South Africa",
+                "province": province,
                 "profession": "Student",
-                "interested_topics": ["Education", "Social Issues", "Technology"],
+                "interested_topics": ["education fees", "youth unemployment", "NSFAS", "social grants", "load-shedding"],
             }
 
         elif entity_type_lower in ["publicfigure", "expert", "faculty"]:
             return {
-                "bio": f"Expert and thought leader in their field.",
-                "persona": f"{entity_name} is a recognized {entity_type.lower()} who shares insights and opinions on important matters. They are known for their expertise and influence in public discourse.",
+                "bio": f"South African expert and public voice on policy and socio-economic issues.",
+                "persona": (
+                    f"{entity_name} is a recognised {entity_type.lower()} based in South Africa, "
+                    f"with expertise that intersects with the country's most pressing policy debates. "
+                    f"They are regularly called on to comment on issues like inequality, state capacity, "
+                    f"BEE implementation, NHI, and land reform. Their views are shaped by direct engagement "
+                    f"with both government and civil society in the South African context."
+                ),
                 "age": random.randint(35, 60),
                 "gender": random.choice(["male", "female"]),
                 "mbti": random.choice(["ENTJ", "INTJ", "ENTP", "INTP"]),
-                "country": random.choice(self.COUNTRIES),
-                "profession": entity_attributes.get("occupation", "Expert"),
-                "interested_topics": ["Politics", "Economics", "Culture & Society"],
+                "country": "South Africa",
+                "province": province,
+                "profession": entity_attributes.get("occupation", "Policy Expert"),
+                "interested_topics": ["land reform", "BEE", "NHI", "inequality", "state capture", "economic policy"],
             }
 
         elif entity_type_lower in ["mediaoutlet", "socialmediaplatform"]:
             return {
-                "bio": f"Official account for {entity_name}. News and updates.",
-                "persona": f"{entity_name} is a media entity that reports news and facilitates public discourse. The account shares timely updates and engages with the audience on current events.",
-                "age": 30,  # Institutional virtual age
-                "gender": "other",  # Institutional uses other
-                "mbti": "ISTJ",  # Institutional style: rigorous conservative
-                "country": "US",
-                "profession": "Media",
-                "interested_topics": ["General News", "Current Events", "Public Affairs"],
+                "bio": f"{entity_name} | South African news and public interest journalism.",
+                "persona": (
+                    f"{entity_name} is a South African media entity that covers national affairs, "
+                    f"policy debates, and community issues. It engages audiences on load-shedding, "
+                    f"service delivery failures, political accountability, and social justice. "
+                    f"Its editorial stance reflects the complex, multilingual South African public discourse."
+                ),
+                "age": 30,
+                "gender": "other",
+                "mbti": "ISTJ",
+                "country": "South Africa",
+                "province": "National",
+                "profession": "Media Organisation",
+                "interested_topics": ["service delivery", "political accountability", "social justice", "load-shedding"],
             }
 
         elif entity_type_lower in ["university", "governmentagency", "ngo", "organization"]:
             return {
-                "bio": f"Official account of {entity_name}.",
-                "persona": f"{entity_name} is an institutional entity that communicates official positions, announcements, and engages with stakeholders on relevant matters.",
-                "age": 30,  # Institutional virtual age
-                "gender": "other",  # Institutional uses other
-                "mbti": "ISTJ",  # Institutional style: rigorous conservative
-                "country": "US",
+                "bio": f"Official account of {entity_name} | Serving South Africa.",
+                "persona": (
+                    f"{entity_name} is a South African institution operating in the post-apartheid landscape. "
+                    f"It navigates the tensions between transformation mandates, budget constraints, "
+                    f"and service delivery expectations. It engages on policy matters relevant to its "
+                    f"constituency and responds to government, civil society, and community stakeholders."
+                ),
+                "age": 30,
+                "gender": "other",
+                "mbti": "ISTJ",
+                "country": "South Africa",
+                "province": province,
                 "profession": entity_type,
-                "interested_topics": ["Public Policy", "Community", "Official Announcements"],
+                "interested_topics": ["public policy", "service delivery", "transformation", "community development"],
             }
 
         else:
-            # Default persona
             return {
-                "bio": entity_summary[:150] if entity_summary else f"{entity_type}: {entity_name}",
-                "persona": entity_summary or f"{entity_name} is a {entity_type.lower()} participating in social discussions.",
+                "bio": entity_summary[:150] if entity_summary else f"{entity_name} — South Africa",
+                "persona": (
+                    entity_summary or
+                    f"{entity_name} is a {entity_type.lower()} in South Africa, shaped by the country's "
+                    f"socio-economic realities including high unemployment, load-shedding, and inequality. "
+                    f"They participate in public debates about policy and service delivery."
+                ),
                 "age": random.randint(25, 50),
                 "gender": random.choice(["male", "female"]),
                 "mbti": random.choice(self.MBTI_TYPES),
-                "country": random.choice(self.COUNTRIES),
+                "country": "South Africa",
+                "province": province,
                 "profession": entity_type,
-                "interested_topics": ["General", "Social Issues"],
+                "interested_topics": ["service delivery", "unemployment", "inequality", "social grants"],
             }
     
     def set_graph_id(self, graph_id: str):
