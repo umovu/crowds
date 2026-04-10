@@ -209,8 +209,9 @@ def create_simulation():
         state = manager.create_simulation(
             project_id=project_id,
             graph_id=graph_id,
+            # AgentSociety swap: single opinion_space platform replaces twitter/reddit
             enable_twitter=data.get('enable_twitter', True),
-            enable_reddit=data.get('enable_reddit', True),
+            enable_reddit=data.get('enable_reddit', False),
         )
         
         return jsonify({
@@ -252,13 +253,20 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
     if not os.path.exists(simulation_dir):
         return False, {"reason": "Simulation directory does not exist"}
     
-    # Required file list (scripts not included, scripts are in backend/scripts/)
+    # Required file list — AgentSociety swap uses agentsociety_profiles.json instead of
+    # the OASIS-era twitter_profiles.csv + reddit_profiles.json pair.
     required_files = [
         "state.json",
         "simulation_config.json",
-        "reddit_profiles.json",
-        "twitter_profiles.csv"
     ]
+    # Accept either the new AgentSociety profiles file or the legacy OASIS files
+    has_as_profiles = os.path.exists(os.path.join(simulation_dir, "agentsociety_profiles.json"))
+    has_oasis_profiles = (
+        os.path.exists(os.path.join(simulation_dir, "reddit_profiles.json"))
+        or os.path.exists(os.path.join(simulation_dir, "twitter_profiles.csv"))
+    )
+    if not has_as_profiles and not has_oasis_profiles:
+        required_files.append("agentsociety_profiles.json")  # will be listed as missing
     
     # Check if files exist
     existing_files = []
@@ -1415,7 +1423,9 @@ def generate_profiles():
             use_llm=use_llm
         )
         
-        if platform == "reddit":
+        if platform == "opinion_space":
+            profiles_data = [p.to_agentsociety_format() for p in profiles]
+        elif platform == "reddit":
             profiles_data = [p.to_reddit_format() for p in profiles]
         elif platform == "twitter":
             profiles_data = [p.to_twitter_format() for p in profiles]
@@ -1494,7 +1504,7 @@ def start_simulation():
                 "error": "Please provide simulation_id"
             }), 400
 
-        platform = data.get('platform', 'parallel')
+        platform = data.get('platform', 'opinion_space')
         max_rounds = data.get('max_rounds')  # Optional: Maximum simulation rounds
         enable_graph_memory_update = data.get('enable_graph_memory_update', False)  # Optional：IsFalseEnable knowledge graph memory update
         force = data.get('force', False)  # Optional：Force restart
@@ -1514,10 +1524,10 @@ def start_simulation():
                     "error": "max_rounds Must be valid integer"
                 }), 400
 
-        if platform not in ['twitter', 'reddit', 'parallel']:
+        if platform not in ['twitter', 'reddit', 'parallel', 'opinion_space']:
             return jsonify({
                 "success": False,
-                "error": f"Invalid platform type: {platform}，Optional: twitter/reddit/parallel"
+                "error": f"Invalid platform type: {platform}. Options: opinion_space / twitter / reddit / parallel"
             }), 400
 
         # Check if simulation is ready
@@ -2213,7 +2223,7 @@ def interview_agent():
             }), 400
         
         # VerifyplatformParameters
-        if platform and platform not in ("twitter", "reddit"):
+        if platform and platform not in ("twitter", "reddit", "opinion_space"):
             return jsonify({
                 "success": False,
                 "error": "platform Parameter can only be 'twitter' Or 'reddit'"
@@ -2328,7 +2338,7 @@ def interview_agents_batch():
             }), 400
 
         # VerifyplatformParameters
-        if platform and platform not in ("twitter", "reddit"):
+        if platform and platform not in ("twitter", "reddit", "opinion_space"):
             return jsonify({
                 "success": False,
                 "error": "platform Parameter can only be 'twitter' Or 'reddit'"
@@ -2455,7 +2465,7 @@ def interview_all_agents():
             }), 400
 
         # VerifyplatformParameters
-        if platform and platform not in ("twitter", "reddit"):
+        if platform and platform not in ("twitter", "reddit", "opinion_space"):
             return jsonify({
                 "success": False,
                 "error": "platform Parameter can only be 'twitter' Or 'reddit'"

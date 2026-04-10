@@ -37,7 +37,7 @@ export const getSimulation = (simulationId) => {
  * @param {string} simulationId
  * @param {string} platform - 'reddit' | 'twitter'
  */
-export const getSimulationProfiles = (simulationId, platform = 'reddit') => {
+export const getSimulationProfiles = (simulationId, platform = 'opinion_space') => {
   return service.get(`/api/simulation/${simulationId}/profiles`, { params: { platform } })
 }
 
@@ -46,7 +46,7 @@ export const getSimulationProfiles = (simulationId, platform = 'reddit') => {
  * @param {string} simulationId
  * @param {string} platform - 'reddit' | 'twitter'
  */
-export const getSimulationProfilesRealtime = (simulationId, platform = 'reddit') => {
+export const getSimulationProfilesRealtime = (simulationId, platform = 'opinion_space') => {
   return service.get(`/api/simulation/${simulationId}/profiles/realtime`, { params: { platform } })
 }
 
@@ -115,7 +115,7 @@ export const getRunStatusDetail = (simulationId) => {
  * @param {number} limit - Number of results
  * @param {number} offset - Offset
  */
-export const getSimulationPosts = (simulationId, platform = 'reddit', limit = 50, offset = 0) => {
+export const getSimulationPosts = (simulationId, platform = 'opinion_space', limit = 50, offset = 0) => {
   return service.get(`/api/simulation/${simulationId}/posts`, {
     params: { platform, limit, offset }
   })

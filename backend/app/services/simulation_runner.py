@@ -387,7 +387,10 @@ class SimulationRunner:
             cls._graph_memory_enabled[simulation_id] = False
         
         # Determine which script to run (scripts located in backend/scripts/ directory)
-        if platform == "twitter":
+        if platform == "opinion_space":
+            script_name = "run_simulation_as.py"
+            state.twitter_running = True   # reuse twitter slot as single-platform indicator
+        elif platform == "twitter":
             script_name = "run_twitter_simulation.py"
             state.twitter_running = True
         elif platform == "reddit":
@@ -482,7 +485,8 @@ class SimulationRunner:
         """Monitor simulation process and parse action logs"""
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
         
-        # New log structure: per-platform action logs
+        # Log paths — opinion_space runner uses single log; OASIS uses per-platform logs
+        opinion_actions_log = os.path.join(sim_dir, "opinion_space", "actions.jsonl")
         twitter_actions_log = os.path.join(sim_dir, "twitter", "actions.jsonl")
         reddit_actions_log = os.path.join(sim_dir, "reddit", "actions.jsonl")
         
@@ -494,30 +498,38 @@ class SimulationRunner:
         
         twitter_position = 0
         reddit_position = 0
-        
+        opinion_position = 0
+
         try:
             while process.poll() is None:  # Process still running
-                # Read Twitter action log
-                if os.path.exists(twitter_actions_log):
-                    twitter_position = cls._read_action_log(
-                        twitter_actions_log, twitter_position, state, "twitter"
+                # AgentSociety opinion_space runner (single log, mapped to twitter slot for status)
+                if os.path.exists(opinion_actions_log):
+                    opinion_position = cls._read_action_log(
+                        opinion_actions_log, opinion_position, state, "twitter"
                     )
-                
-                # Read Reddit action log
-                if os.path.exists(reddit_actions_log):
-                    reddit_position = cls._read_action_log(
-                        reddit_actions_log, reddit_position, state, "reddit"
-                    )
-                
+                else:
+                    # OASIS per-platform logs
+                    if os.path.exists(twitter_actions_log):
+                        twitter_position = cls._read_action_log(
+                            twitter_actions_log, twitter_position, state, "twitter"
+                        )
+                    if os.path.exists(reddit_actions_log):
+                        reddit_position = cls._read_action_log(
+                            reddit_actions_log, reddit_position, state, "reddit"
+                        )
+
                 # Update status
                 cls._save_run_state(state)
                 time.sleep(2)
-            
+
             # After process ends, read logs one more time
-            if os.path.exists(twitter_actions_log):
-                cls._read_action_log(twitter_actions_log, twitter_position, state, "twitter")
-            if os.path.exists(reddit_actions_log):
-                cls._read_action_log(reddit_actions_log, reddit_position, state, "reddit")
+            if os.path.exists(opinion_actions_log):
+                cls._read_action_log(opinion_actions_log, opinion_position, state, "twitter")
+            else:
+                if os.path.exists(twitter_actions_log):
+                    cls._read_action_log(twitter_actions_log, twitter_position, state, "twitter")
+                if os.path.exists(reddit_actions_log):
+                    cls._read_action_log(reddit_actions_log, reddit_position, state, "reddit")
             
             # Process ended
             exit_code = process.returncode
@@ -699,20 +711,21 @@ class SimulationRunner:
             True if all enabled platforms are completed
         """
         sim_dir = os.path.join(cls.RUN_STATE_DIR, state.simulation_id)
+        opinion_log = os.path.join(sim_dir, "opinion_space", "actions.jsonl")
         twitter_log = os.path.join(sim_dir, "twitter", "actions.jsonl")
         reddit_log = os.path.join(sim_dir, "reddit", "actions.jsonl")
-        
-        # Check which platforms are enabled (by file existence)
+
+        # AgentSociety single-platform runner
+        if os.path.exists(opinion_log):
+            return state.twitter_completed
+
+        # OASIS per-platform runners
         twitter_enabled = os.path.exists(twitter_log)
         reddit_enabled = os.path.exists(reddit_log)
-        
-        # If platform is enabled but not completed, return False
         if twitter_enabled and not state.twitter_completed:
             return False
         if reddit_enabled and not state.reddit_completed:
             return False
-        
-        # At least one platform is enabled and completed
         return twitter_enabled or reddit_enabled
     
     @classmethod

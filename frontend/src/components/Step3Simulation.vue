@@ -3,13 +3,14 @@
     <!-- Top Control Bar -->
     <div class="control-bar">
       <div class="status-group">
-        <!-- Twitter Platform Progress -->
+        <!-- Opinion Space Progress (AgentSociety single-platform) -->
         <div class="platform-status twitter" :class="{ active: runStatus.twitter_running, completed: runStatus.twitter_completed }">
           <div class="platform-header">
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path>
             </svg>
-            <span class="platform-name">Info Plaza</span>
+            <span class="platform-name">Opinion Space</span>
             <span v-if="runStatus.twitter_completed" class="status-badge">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -34,56 +35,10 @@
           <div class="actions-tooltip">
             <div class="tooltip-title">Available Actions</div>
             <div class="tooltip-actions">
-              <span class="tooltip-action">POST</span>
-              <span class="tooltip-action">LIKE</span>
-              <span class="tooltip-action">REPOST</span>
-              <span class="tooltip-action">QUOTE</span>
-              <span class="tooltip-action">FOLLOW</span>
-              <span class="tooltip-action">IDLE</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Reddit Platform Progress -->
-        <div class="platform-status reddit" :class="{ active: runStatus.reddit_running, completed: runStatus.reddit_completed }">
-          <div class="platform-header">
-            <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
-            <span class="platform-name">Topic Community</span>
-            <span v-if="runStatus.reddit_completed" class="status-badge">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </span>
-          </div>
-          <div class="platform-stats">
-            <span class="stat">
-              <span class="stat-label">ROUND</span>
-              <span class="stat-value mono">{{ runStatus.reddit_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
-            </span>
-            <span class="stat">
-              <span class="stat-label">Elapsed Time</span>
-              <span class="stat-value mono">{{ redditElapsedTime }}</span>
-            </span>
-            <span class="stat">
-              <span class="stat-label">ACTS</span>
-              <span class="stat-value mono">{{ runStatus.reddit_actions_count || 0 }}</span>
-            </span>
-          </div>
-          <!-- Available Actions Tooltip -->
-          <div class="actions-tooltip">
-            <div class="tooltip-title">Available Actions</div>
-            <div class="tooltip-actions">
-              <span class="tooltip-action">POST</span>
-              <span class="tooltip-action">COMMENT</span>
-              <span class="tooltip-action">LIKE</span>
-              <span class="tooltip-action">DISLIKE</span>
+              <span class="tooltip-action">EXPRESS</span>
+              <span class="tooltip-action">RESPOND</span>
               <span class="tooltip-action">SEARCH</span>
-              <span class="tooltip-action">TREND</span>
-              <span class="tooltip-action">FOLLOW</span>
-              <span class="tooltip-action">MUTE</span>
-              <span class="tooltip-action">REFRESH</span>
+              <span class="tooltip-action">OBSERVE</span>
               <span class="tooltip-action">IDLE</span>
             </div>
           </div>
@@ -147,7 +102,11 @@
                 
                 <div class="header-meta">
                   <div class="platform-indicator">
-                    <svg v-if="action.platform === 'twitter'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    <!-- opinion_space / AgentSociety -->
+                    <svg v-if="action.platform === 'opinion_space'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+                    <!-- OASIS twitter -->
+                    <svg v-else-if="action.platform === 'twitter'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    <!-- OASIS reddit -->
                     <svg v-else viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                   </div>
                   <div class="action-badge" :class="getActionTypeClass(action.action_type)">
@@ -157,6 +116,30 @@
               </div>
               
               <div class="card-body">
+                <!-- AgentSociety: Express Opinion -->
+                <div v-if="action.action_type === 'EXPRESS_OPINION' && action.action_args?.content" class="content-text main-text">
+                  {{ action.action_args.content }}
+                </div>
+
+                <!-- AgentSociety: Respond to Opinion -->
+                <template v-if="action.action_type === 'RESPOND_TO_OPINION'">
+                  <div v-if="action.action_args?.content" class="content-text">{{ action.action_args.content }}</div>
+                  <div v-if="action.action_args?.target_content" class="quoted-block">
+                    <div class="quote-header">
+                      <span class="quote-label">{{ action.action_args.target_agent_name || 'Agent' }}</span>
+                    </div>
+                    <div class="quote-content">{{ action.action_args.target_content }}</div>
+                  </div>
+                </template>
+
+                <!-- AgentSociety: Search Topic -->
+                <template v-if="action.action_type === 'SEARCH_TOPIC'">
+                  <div class="search-info">
+                    <span>Searched: "{{ action.action_args?.query || '' }}"</span>
+                    <span v-if="action.action_args?.results_count !== undefined" class="meta-text"> — {{ action.action_args.results_count }} results</span>
+                  </div>
+                </template>
+
                 <!-- CREATE_POST: Post Publication -->
                 <div v-if="action.action_type === 'CREATE_POST' && action.action_args?.content" class="content-text main-text">
                   {{ action.action_args.content }}
@@ -388,13 +371,13 @@ const doStartSimulation = async () => {
 
   isStarting.value = true
   startError.value = null
-  addLog('Starting dual-platform parallel simulation...')
+  addLog('Starting Opinion Space simulation (AgentSociety)...')
   emit('update-status', 'processing')
 
   try {
     const params = {
       simulation_id: props.simulationId,
-      platform: 'parallel',
+      platform: 'opinion_space',
       force: true,  // Force restart
       enable_graph_memory_update: true  // Enable dynamic graph update
     }
@@ -591,34 +574,46 @@ const fetchRunStatusDetail = async () => {
 // Helpers
 const getActionTypeLabel = (type) => {
   const labels = {
-    'CREATE_POST': 'POST',
-    'REPOST': 'REPOST',
-    'LIKE_POST': 'LIKE',
-    'CREATE_COMMENT': 'COMMENT',
-    'LIKE_COMMENT': 'LIKE',
-    'DO_NOTHING': 'IDLE',
-    'FOLLOW': 'FOLLOW',
-    'SEARCH_POSTS': 'SEARCH',
-    'QUOTE_POST': 'QUOTE',
-    'UPVOTE_POST': 'UPVOTE',
-    'DOWNVOTE_POST': 'DOWNVOTE'
+    // AgentSociety OpinionCaptureBlock
+    'EXPRESS_OPINION':    'OPINION',
+    'RESPOND_TO_OPINION': 'RESPOND',
+    'SEARCH_TOPIC':       'SEARCH',
+    'OBSERVE':            'OBSERVE',
+    // OASIS legacy
+    'CREATE_POST':   'POST',
+    'REPOST':        'REPOST',
+    'LIKE_POST':     'LIKE',
+    'CREATE_COMMENT':'COMMENT',
+    'LIKE_COMMENT':  'LIKE',
+    'FOLLOW':        'FOLLOW',
+    'SEARCH_POSTS':  'SEARCH',
+    'QUOTE_POST':    'QUOTE',
+    'UPVOTE_POST':   'UPVOTE',
+    'DOWNVOTE_POST': 'DOWNVOTE',
+    'DO_NOTHING':    'IDLE',
   }
   return labels[type] || type || 'UNKNOWN'
 }
 
 const getActionTypeClass = (type) => {
   const classes = {
-    'CREATE_POST': 'badge-post',
-    'REPOST': 'badge-action',
-    'LIKE_POST': 'badge-action',
-    'CREATE_COMMENT': 'badge-comment',
-    'LIKE_COMMENT': 'badge-action',
-    'QUOTE_POST': 'badge-post',
-    'FOLLOW': 'badge-meta',
-    'SEARCH_POSTS': 'badge-meta',
-    'UPVOTE_POST': 'badge-action',
+    // AgentSociety OpinionCaptureBlock
+    'EXPRESS_OPINION':    'badge-post',
+    'RESPOND_TO_OPINION': 'badge-comment',
+    'SEARCH_TOPIC':       'badge-meta',
+    'OBSERVE':            'badge-idle',
+    // OASIS legacy
+    'CREATE_POST':   'badge-post',
+    'REPOST':        'badge-action',
+    'LIKE_POST':     'badge-action',
+    'CREATE_COMMENT':'badge-comment',
+    'LIKE_COMMENT':  'badge-action',
+    'QUOTE_POST':    'badge-post',
+    'FOLLOW':        'badge-meta',
+    'SEARCH_POSTS':  'badge-meta',
+    'UPVOTE_POST':   'badge-action',
     'DOWNVOTE_POST': 'badge-action',
-    'DO_NOTHING': 'badge-idle'
+    'DO_NOTHING':    'badge-idle',
   }
   return classes[type] || 'badge-default'
 }

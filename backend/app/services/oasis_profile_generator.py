@@ -115,6 +115,25 @@ class OasisAgentProfile:
         
         return profile
     
+    def to_agentsociety_format(self) -> Dict[str, Any]:
+        """Convert to AgentSociety / OpinionCaptureBlock profile format."""
+        profile = {
+            "user_id": self.user_id,
+            "user_name": self.user_name,
+            "name": self.name,
+            "bio": self.bio,
+            "persona": self.persona,
+            "interested_topics": self.interested_topics or [],
+            "source_entity_uuid": self.source_entity_uuid,
+            "source_entity_type": self.source_entity_type,
+            "created_at": self.created_at,
+        }
+        for attr in ("age", "gender", "mbti", "country", "profession"):
+            val = getattr(self, attr, None)
+            if val is not None:
+                profile[attr] = val
+        return profile
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to complete dictionary format"""
         return {
@@ -842,7 +861,12 @@ Important:
                     return
 
                 try:
-                    if output_platform == "reddit":
+                    if output_platform == "opinion_space":
+                        # AgentSociety format (JSON, superset of reddit format)
+                        profiles_data = [p.to_agentsociety_format() for p in existing_profiles]
+                        with open(realtime_output_path, 'w', encoding='utf-8') as f:
+                            json.dump(profiles_data, f, ensure_ascii=False, indent=2)
+                    elif output_platform == "reddit":
                         # Reddit JSON format
                         profiles_data = [p.to_reddit_format() for p in existing_profiles]
                         with open(realtime_output_path, 'w', encoding='utf-8') as f:
