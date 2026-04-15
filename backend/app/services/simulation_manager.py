@@ -1,7 +1,7 @@
 """
-OASIS Simulation Manager
-Manage Twitter and Reddit dual-platform parallel simulations
-Use preset scripts + LLM intelligent generation of config parameters
+Simulation Manager
+Manages AgentSociety opinion-space simulations.
+Uses preset scripts + LLM intelligent generation of config parameters.
 """
 
 import os
@@ -15,10 +15,10 @@ from enum import Enum
 from ..config import Config
 from ..utils.logger import get_logger
 from .entity_reader import EntityReader, FilteredEntities
-from .oasis_profile_generator import OasisProfileGenerator, OasisAgentProfile
+from .agent_profile_generator import AgentProfileGenerator, AgentProfile
 from .simulation_config_generator import SimulationConfigGenerator, SimulationParameters
 
-logger = get_logger('mirofish.simulation')
+logger = get_logger('fub.simulation')
 
 
 class SimulationStatus(str, Enum):
@@ -33,55 +33,41 @@ class SimulationStatus(str, Enum):
     FAILED = "failed"
 
 
-class PlatformType(str, Enum):
-    """Platform type"""
-    TWITTER = "twitter"
-    REDDIT = "reddit"
-
-
 @dataclass
 class SimulationState:
     """Simulation status"""
     simulation_id: str
     project_id: str
     graph_id: str
-    
-    # Platform enabled state
-    enable_twitter: bool = True
-    enable_reddit: bool = True
-    
+
     # Status
     status: SimulationStatus = SimulationStatus.CREATED
-    
+
     # Preparation phase data
     entities_count: int = 0
     profiles_count: int = 0
     entity_types: List[str] = field(default_factory=list)
-    
+
     # Config generation information
     config_generated: bool = False
     config_reasoning: str = ""
-    
+
     # Runtime data
     current_round: int = 0
-    twitter_status: str = "not_started"
-    reddit_status: str = "not_started"
-    
+
     # Timestamps
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
     updated_at: str = field(default_factory=lambda: datetime.now().isoformat())
-    
+
     # Error message
     error: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Complete status dict (internal use)"""
         return {
             "simulation_id": self.simulation_id,
             "project_id": self.project_id,
             "graph_id": self.graph_id,
-            "enable_twitter": self.enable_twitter,
-            "enable_reddit": self.enable_reddit,
             "status": self.status.value,
             "entities_count": self.entities_count,
             "profiles_count": self.profiles_count,
@@ -89,8 +75,6 @@ class SimulationState:
             "config_generated": self.config_generated,
             "config_reasoning": self.config_reasoning,
             "current_round": self.current_round,
-            "twitter_status": self.twitter_status,
-            "reddit_status": self.reddit_status,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "error": self.error,
@@ -171,8 +155,6 @@ class SimulationManager:
             simulation_id=simulation_id,
             project_id=data.get("project_id", ""),
             graph_id=data.get("graph_id", ""),
-            enable_twitter=data.get("enable_twitter", True),
-            enable_reddit=data.get("enable_reddit", True),
             status=SimulationStatus(data.get("status", "created")),
             entities_count=data.get("entities_count", 0),
             profiles_count=data.get("profiles_count", 0),
@@ -180,8 +162,6 @@ class SimulationManager:
             config_generated=data.get("config_generated", False),
             config_reasoning=data.get("config_reasoning", ""),
             current_round=data.get("current_round", 0),
-            twitter_status=data.get("twitter_status", "not_started"),
-            reddit_status=data.get("reddit_status", "not_started"),
             created_at=data.get("created_at", datetime.now().isoformat()),
             updated_at=data.get("updated_at", datetime.now().isoformat()),
             error=data.get("error"),
@@ -194,30 +174,24 @@ class SimulationManager:
         self,
         project_id: str,
         graph_id: str,
-        enable_twitter: bool = True,
-        enable_reddit: bool = True,
     ) -> SimulationState:
         """
-        Create new simulation
-        
+        Create new simulation.
+
         Args:
             project_id: Project ID
             graph_id: Graph ID
-            enable_twitter: Whether to enable Twitter simulation
-            enable_reddit: Whether to enable Reddit simulation
-            
+
         Returns:
             SimulationState
         """
         import uuid
         simulation_id = f"sim_{uuid.uuid4().hex[:12]}"
-        
+
         state = SimulationState(
             simulation_id=simulation_id,
             project_id=project_id,
             graph_id=graph_id,
-            enable_twitter=enable_twitter,
-            enable_reddit=enable_reddit,
             status=SimulationStatus.CREATED,
         )
         
@@ -315,7 +289,7 @@ class SimulationManager:
                 )
             
             # Pass graph_id to enable graph retrieval functionality, get richer context
-            generator = OasisProfileGenerator(storage=storage, graph_id=state.graph_id)
+            generator = AgentProfileGenerator(storage=storage, graph_id=state.graph_id)
             
             def profile_progress(current, total, msg):
                 if progress_callback:
@@ -328,52 +302,33 @@ class SimulationManager:
                         item_name=msg
                     )
             
-            # Set real-time save file path (prefer Reddit JSON format)
-            realtime_output_path = None
-            realtime_platform = "reddit"
-            if state.enable_reddit:
-                realtime_output_path = os.path.join(sim_dir, "reddit_profiles.json")
-                realtime_platform = "reddit"
-            elif state.enable_twitter:
-                realtime_output_path = os.path.join(sim_dir, "twitter_profiles.csv")
-                realtime_platform = "twitter"
-            
+            realtime_output_path = os.path.join(sim_dir, "agentsociety_profiles.json")
+
             profiles = generator.generate_profiles_from_entities(
                 entities=filtered.entities,
                 use_llm=use_llm_for_profiles,
                 progress_callback=profile_progress,
-                graph_id=state.graph_id,  # Pass graph_id for graph retrieval
-                parallel_count=parallel_profile_count,  # Parallel generation count
-                realtime_output_path=realtime_output_path,  # Real-time save path
-                output_platform=realtime_platform  # Output format
+                graph_id=state.graph_id,
+                parallel_count=parallel_profile_count,
+                realtime_output_path=realtime_output_path,
+                output_platform="opinion_space"
             )
-            
+
             state.profiles_count = len(profiles)
-            
-            # Save Profile files (Note: Twitter uses CSV format, Reddit uses JSON format)
-            # Reddit has been saved in real-time during generation, save once more here to ensure completeness
+
             if progress_callback:
                 progress_callback(
-                    "generating_profiles", 95, 
+                    "generating_profiles", 95,
                     "Saving Profile files...",
                     current=total_entities,
                     total=total_entities
                 )
-            
-            if state.enable_reddit:
-                generator.save_profiles(
-                    profiles=profiles,
-                    file_path=os.path.join(sim_dir, "reddit_profiles.json"),
-                    platform="reddit"
-                )
-            
-            if state.enable_twitter:
-                # Twitter uses CSV format! This is OASIS requirement
-                generator.save_profiles(
-                    profiles=profiles,
-                    file_path=os.path.join(sim_dir, "twitter_profiles.csv"),
-                    platform="twitter"
-                )
+
+            generator.save_profiles(
+                profiles=profiles,
+                file_path=os.path.join(sim_dir, "agentsociety_profiles.json"),
+                platform="opinion_space"
+            )
             
             if progress_callback:
                 progress_callback(
@@ -409,8 +364,6 @@ class SimulationManager:
                 simulation_requirement=simulation_requirement,
                 document_text=document_text,
                 entities=filtered.entities,
-                enable_twitter=state.enable_twitter,
-                enable_reddit=state.enable_reddit
             )
             
             if progress_callback:
@@ -480,18 +433,18 @@ class SimulationManager:
         
         return simulations
     
-    def get_profiles(self, simulation_id: str, platform: str = "reddit") -> List[Dict[str, Any]]:
+    def get_profiles(self, simulation_id: str, platform: str = "opinion_space") -> List[Dict[str, Any]]:
         """Get Agent Profiles for simulation"""
         state = self._load_simulation_state(simulation_id)
         if not state:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
-        
+
         sim_dir = self._get_simulation_dir(simulation_id)
-        profile_path = os.path.join(sim_dir, f"{platform}_profiles.json")
-        
+        profile_path = os.path.join(sim_dir, "agentsociety_profiles.json")
+
         if not os.path.exists(profile_path):
             return []
-        
+
         with open(profile_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     
@@ -517,15 +470,9 @@ class SimulationManager:
             "scripts_dir": scripts_dir,
             "config_file": config_path,
             "commands": {
-                "twitter": f"python {scripts_dir}/run_twitter_simulation.py --config {config_path}",
-                "reddit": f"python {scripts_dir}/run_reddit_simulation.py --config {config_path}",
-                "parallel": f"python {scripts_dir}/run_parallel_simulation.py --config {config_path}",
+                "opinion_space": f"python {scripts_dir}/run_simulation_as.py --config {config_path}",
             },
             "instructions": (
-                f"1. Activate conda environment: conda activate MiroFish\n"
-                f"2. Run simulation (scripts located in {scripts_dir}):\n"
-                f"   - Run Twitter alone: python {scripts_dir}/run_twitter_simulation.py --config {config_path}\n"
-                f"   - Run Reddit alone: python {scripts_dir}/run_reddit_simulation.py --config {config_path}\n"
-                f"   - Run both platforms in parallel: python {scripts_dir}/run_parallel_simulation.py --config {config_path}"
+                f"1. Run simulation: python {scripts_dir}/run_simulation_as.py --config {config_path}"
             )
         }

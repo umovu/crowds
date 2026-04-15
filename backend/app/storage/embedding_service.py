@@ -14,7 +14,7 @@ import requests
 
 from ..config import Config
 
-logger = logging.getLogger('mirofish.embedding')
+logger = logging.getLogger('fub.embedding')
 
 
 class EmbeddingService:

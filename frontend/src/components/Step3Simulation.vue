@@ -4,14 +4,14 @@
     <div class="control-bar">
       <div class="status-group">
         <!-- Opinion Space Progress (AgentSociety single-platform) -->
-        <div class="platform-status twitter" :class="{ active: runStatus.twitter_running, completed: runStatus.twitter_completed }">
+        <div class="platform-status opinion-space" :class="{ active: runStatus.simulation_running, completed: runStatus.simulation_completed }">
           <div class="platform-header">
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="8" r="4"></circle>
               <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path>
             </svg>
             <span class="platform-name">Opinion Space</span>
-            <span v-if="runStatus.twitter_completed" class="status-badge">
+            <span v-if="runStatus.simulation_completed" class="status-badge">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
@@ -20,15 +20,19 @@
           <div class="platform-stats">
             <span class="stat">
               <span class="stat-label">ROUND</span>
-              <span class="stat-value mono">{{ runStatus.twitter_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
+              <span class="stat-value mono">{{ runStatus.current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
             </span>
             <span class="stat">
               <span class="stat-label">Elapsed Time</span>
-              <span class="stat-value mono">{{ twitterElapsedTime }}</span>
+              <span class="stat-value mono">{{ elapsedTime }}</span>
             </span>
             <span class="stat">
               <span class="stat-label">ACTS</span>
-              <span class="stat-value mono">{{ runStatus.twitter_actions_count || 0 }}</span>
+              <span class="stat-value mono">{{ runStatus.simulation_actions_count || 0 }}</span>
+            </span>
+            <span class="stat" v-if="runStatus.total_agents">
+              <span class="stat-label">AGENTS</span>
+              <span class="stat-value mono">{{ runStatus.agents_expressed_count || 0 }}<span class="stat-total">/{{ runStatus.total_agents }}</span></span>
             </span>
           </div>
           <!-- Available Actions Tooltip -->
@@ -65,14 +69,9 @@
         <div class="timeline-stats">
           <span class="total-count">TOTAL EVENTS: <span class="mono">{{ allActions.length }}</span></span>
           <span class="platform-breakdown">
-            <span class="breakdown-item twitter">
-              <svg class="mini-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-              <span class="mono">{{ twitterActionsCount }}</span>
-            </span>
-            <span class="breakdown-divider">/</span>
-            <span class="breakdown-item reddit">
-              <svg class="mini-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-              <span class="mono">{{ redditActionsCount }}</span>
+            <span class="breakdown-item opinion-space">
+              <svg class="mini-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+              <span class="mono">{{ allActions.length }}</span>
             </span>
           </span>
         </div>
@@ -102,12 +101,7 @@
                 
                 <div class="header-meta">
                   <div class="platform-indicator">
-                    <!-- opinion_space / AgentSociety -->
-                    <svg v-if="action.platform === 'opinion_space'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
-                    <!-- OASIS twitter -->
-                    <svg v-else-if="action.platform === 'twitter'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    <!-- OASIS reddit -->
-                    <svg v-else viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
                   </div>
                   <div class="action-badge" :class="getActionTypeClass(action.action_type)">
                     {{ getActionTypeLabel(action.action_type) }}
@@ -232,7 +226,7 @@
                 </template>
 
                 <!-- Generic Fallback: Unknown types or content not handled above -->
-                <div v-if="!['CREATE_POST', 'QUOTE_POST', 'REPOST', 'LIKE_POST', 'CREATE_COMMENT', 'SEARCH_POSTS', 'FOLLOW', 'UPVOTE_POST', 'DOWNVOTE_POST', 'DO_NOTHING'].includes(action.action_type) && action.action_args?.content" class="content-text">
+                <div v-if="!['EXPRESS_OPINION', 'RESPOND_TO_OPINION', 'SEARCH_TOPIC', 'OBSERVE', 'DO_NOTHING', 'CREATE_POST', 'QUOTE_POST', 'REPOST', 'LIKE_POST', 'CREATE_COMMENT', 'SEARCH_POSTS', 'FOLLOW', 'UPVOTE_POST', 'DOWNVOTE_POST'].includes(action.action_type) && action.action_args?.content" class="content-text">
                   {{ action.action_args.content }}
                 </div>
               </div>
@@ -312,16 +306,7 @@ const chronologicalActions = computed(() => {
   return allActions.value
 })
 
-// Count actions per platform
-const twitterActionsCount = computed(() => {
-  return allActions.value.filter(a => a.platform === 'twitter').length
-})
-
-const redditActionsCount = computed(() => {
-  return allActions.value.filter(a => a.platform === 'reddit').length
-})
-
-// Format simulated elapsed time (calculated based on rounds and minutes per round)
+// Format simulated elapsed time
 const formatElapsedTime = (currentRound) => {
   if (!currentRound || currentRound <= 0) return '0h 0m'
   const totalMinutes = currentRound * props.minutesPerRound
@@ -330,14 +315,8 @@ const formatElapsedTime = (currentRound) => {
   return `${hours}h ${minutes}m`
 }
 
-// Simulated elapsed time for Twitter platform
-const twitterElapsedTime = computed(() => {
-  return formatElapsedTime(runStatus.value.twitter_current_round || 0)
-})
-
-// Simulated elapsed time for Reddit platform
-const redditElapsedTime = computed(() => {
-  return formatElapsedTime(runStatus.value.reddit_current_round || 0)
+const elapsedTime = computed(() => {
+  return formatElapsedTime(runStatus.value.current_round || 0)
 })
 
 // Methods
@@ -351,8 +330,7 @@ const resetAllState = () => {
   runStatus.value = {}
   allActions.value = []
   actionIds.value = new Set()
-  prevTwitterRound.value = 0
-  prevRedditRound.value = 0
+  prevRound.value = 0
   startError.value = null
   isStarting.value = false
   isStopping.value = false
@@ -465,9 +443,7 @@ const stopPolling = () => {
   }
 }
 
-// Track previous rounds for each platform to detect changes and output logs
-const prevTwitterRound = ref(0)
-const prevRedditRound = ref(0)
+const prevRound = ref(0)
 
 const fetchRunStatus = async () => {
   if (!props.simulationId) return
@@ -477,31 +453,16 @@ const fetchRunStatus = async () => {
 
     if (res.success && res.data) {
       const data = res.data
-
       runStatus.value = data
 
-      // Detect round changes for each platform and output logs
-      if (data.twitter_current_round > prevTwitterRound.value) {
-        addLog(`[Info Plaza] R${data.twitter_current_round}/${data.total_rounds} | T:${data.twitter_simulated_hours || 0}h | A:${data.twitter_actions_count}`)
-        prevTwitterRound.value = data.twitter_current_round
+      if (data.current_round > prevRound.value) {
+        addLog(`[Opinion Space] R${data.current_round}/${data.total_rounds} | T:${data.simulated_hours || 0}h | A:${data.simulation_actions_count || 0}`)
+        prevRound.value = data.current_round
       }
 
-      if (data.reddit_current_round > prevRedditRound.value) {
-        addLog(`[Topic Community] R${data.reddit_current_round}/${data.total_rounds} | T:${data.reddit_simulated_hours || 0}h | A:${data.reddit_actions_count}`)
-        prevRedditRound.value = data.reddit_current_round
-      }
+      const isCompleted = data.runner_status === 'completed' || data.runner_status === 'stopped' || data.simulation_completed === true
 
-      // Check if simulation is complete (via runner_status or platform completion status)
-      const isCompleted = data.runner_status === 'completed' || data.runner_status === 'stopped'
-
-      // Additional check: if backend hasn't updated runner_status yet, but platforms have reported completion
-      // Check via twitter_completed and reddit_completed status
-      const platformsCompleted = checkPlatformsCompleted(data)
-
-      if (isCompleted || platformsCompleted) {
-        if (platformsCompleted && !isCompleted) {
-          addLog('✓ Detected all platform simulations have ended')
-        }
+      if (isCompleted) {
         addLog('✓ Simulation completed')
         phase.value = 2
         stopPolling()
@@ -511,30 +472,6 @@ const fetchRunStatus = async () => {
   } catch (err) {
     console.warn('Failed to fetch run status:', err)
   }
-}
-
-// Check if all enabled platforms have completed
-const checkPlatformsCompleted = (data) => {
-  // If no platform data, return false
-  if (!data) return false
-
-  // Check completion status for each platform
-  const twitterCompleted = data.twitter_completed === true
-  const redditCompleted = data.reddit_completed === true
-
-  // If at least one platform completed, check if all enabled platforms are complete
-  // Determine if platform is enabled via actions_count (count > 0 or running was true)
-  const twitterEnabled = (data.twitter_actions_count > 0) || data.twitter_running || twitterCompleted
-  const redditEnabled = (data.reddit_actions_count > 0) || data.reddit_running || redditCompleted
-
-  // If no platform is enabled, return false
-  if (!twitterEnabled && !redditEnabled) return false
-
-  // Check if all enabled platforms are complete
-  if (twitterEnabled && !twitterCompleted) return false
-  if (redditEnabled && !redditCompleted) return false
-
-  return true
 }
 
 const fetchRunStatusDetail = async () => {
@@ -822,8 +759,7 @@ onUnmounted(() => {
   letter-spacing: 0.05em;
 }
 
-.platform-status.twitter .platform-icon { color: #000; }
-.platform-status.reddit .platform-icon { color: #000; }
+.platform-status.opinion-space .platform-icon { color: #000; }
 
 .platform-stats {
   display: flex;
@@ -943,8 +879,7 @@ onUnmounted(() => {
 }
 
 .breakdown-divider { color: #DDD; }
-.breakdown-item.twitter { color: #000; }
-.breakdown-item.reddit { color: #000; }
+.breakdown-item.opinion-space { color: #000; }
 
 /* --- Timeline Feed --- */
 .timeline-feed {
@@ -996,10 +931,8 @@ onUnmounted(() => {
   border-radius: 50%;
 }
 
-.timeline-item.twitter .marker-dot { background: #000; }
-.timeline-item.reddit .marker-dot { background: #000; }
-.timeline-item.twitter .timeline-marker { border-color: #000; }
-.timeline-item.reddit .timeline-marker { border-color: #000; }
+.timeline-item.opinion-space .marker-dot { background: #000; }
+.timeline-item.opinion-space .timeline-marker { border-color: #000; }
 
 /* Card Layout */
 .timeline-card {
@@ -1018,24 +951,14 @@ onUnmounted(() => {
   border-color: #DDD;
 }
 
-/* Left side (Twitter) */
-.timeline-item.twitter {
+/* Opinion Space timeline item */
+.timeline-item.opinion-space {
   justify-content: flex-start;
   padding-right: 50%;
 }
-.timeline-item.twitter .timeline-card {
+.timeline-item.opinion-space .timeline-card {
   margin-left: auto;
   margin-right: 32px; /* Gap from axis */
-}
-
-/* Right side (Reddit) */
-.timeline-item.reddit {
-  justify-content: flex-end;
-  padding-left: 50%;
-}
-.timeline-item.reddit .timeline-card {
-  margin-right: auto;
-  margin-left: 32px; /* Gap from axis */
 }
 
 /* Card Content Styles */

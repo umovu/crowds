@@ -128,13 +128,23 @@
           </div>
 
           <!-- Next Step Button - Show after completion -->
-          <button v-if="isComplete" class="next-step-btn" @click="goToInteraction">
-            <span>Enter Deep Interaction</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
+          <div v-if="isComplete" class="complete-actions">
+            <button class="next-step-btn" @click="goToInteraction">
+              <span>Enter Deep Interaction</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+            <a class="download-btn" :href="`/api/report/${reportId}/download`" download>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download .md</span>
+            </a>
+          </div>
 
           <div class="workflow-divider"></div>
         </div>
@@ -392,7 +402,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick, h, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAgentLog, getConsoleLog } from '../api/report'
+import { getAgentLog, getConsoleLog, getReport } from '../api/report'
 
 const router = useRouter()
 
@@ -792,8 +802,7 @@ const parseInterview = (text) => {
         bio: '',
         selectionReason: '',
         questions: [],
-        twitterAnswer: '',
-        redditAnswer: '',
+        answer: '',
         quotes: []
       }
 
@@ -833,36 +842,10 @@ const parseInterview = (text) => {
         }
       }
 
-      // Extract answers - separate Twitter and Reddit
+      // Extract answers
       const answerMatch = block.match(/\*\*A:\*\*\s*([\s\S]*?)(?=\*\*Key Quotes:\*\*|$)/)
       if (answerMatch) {
-        const answerText = answerMatch[1].trim()
-
-        // Separate Twitter and Reddit answers
-        const twitterMatch = answerText.match(/\[Twitter Platform Response\]\n?([\s\S]*?)(?=\[Reddit Platform Response\]|$)/)
-        const redditMatch = answerText.match(/\[Reddit Platform Response\]\n?([\s\S]*?)$/)
-
-        if (twitterMatch) {
-          interview.twitterAnswer = twitterMatch[1].trim()
-        }
-        if (redditMatch) {
-          interview.redditAnswer = redditMatch[1].trim()
-        }
-
-        // Platform fallback logic (compatible with old format: only one platform marker)
-        if (!twitterMatch && redditMatch) {
-          // Only Reddit answer, copy as default display if not placeholder
-          if (interview.redditAnswer && interview.redditAnswer !== '(No response from this platform)') {
-            interview.twitterAnswer = interview.redditAnswer
-          }
-        } else if (twitterMatch && !redditMatch) {
-          if (interview.twitterAnswer && interview.twitterAnswer !== '(No response from this platform)') {
-            interview.redditAnswer = interview.twitterAnswer
-          }
-        } else if (!twitterMatch && !redditMatch) {
-          // No platform markers (very old format), use answer as-is
-          interview.twitterAnswer = answerText
-        }
+        interview.answer = answerMatch[1].trim()
       }
 
       // Extract key quotes (compatible with various quote formats)
@@ -1293,19 +1276,21 @@ const InterviewDisplay = {
     const activeIndex = ref(0)
     const expandedAnswers = ref(new Set())
     // Maintain independent platform selection state for each question-answer pair
-    const platformTabs = reactive({}) // { 'agentIdx-qIdx': 'twitter' | 'reddit' }
+    // Get answer for a specific question
+    const getAnswerForQuestion = (interview, qIdx) => {
+      const answer = interview.answer
+      if (!answer || isPlaceholderText(answer)) return answer || ''
+      const questionCount = interview.questions?.length || 1
+      const answers = splitAnswerByQuestions(answer, questionCount)
+      if (answers.length > 1 && qIdx < answers.length) {
+        return answers[qIdx] || ''
+      }
+      return qIdx === 0 ? answer : ''
+    }
 
-    // Get current platform selection for a question
-    const getPlatformTab = (agentIdx, qIdx) => {
-      const key = `${agentIdx}-${qIdx}`
-      return platformTabs[key] || 'twitter'
-    }
-    
-    // Set platform selection for a question
-    const setPlatformTab = (agentIdx, qIdx, platform) => {
-      const key = `${agentIdx}-${qIdx}`
-      platformTabs[key] = platform
-    }
+    // No longer needed — kept as no-op for compatibility
+    const getPlatformTab = () => 'opinion_space'
+    const setPlatformTab = () => {}
     
     const toggleAnswer = (key) => {
       const newSet = new Set(expandedAnswers.value)
@@ -1393,31 +1378,8 @@ const InterviewDisplay = {
       return [answerText]
     }
 
-    // Get answer for a specific question
-    const getAnswerForQuestion = (interview, qIdx, platform) => {
-      const answer = platform === 'twitter' ? interview.twitterAnswer : (interview.redditAnswer || interview.twitterAnswer)
-      if (!answer || isPlaceholderText(answer)) return answer || ''
-
-      const questionCount = interview.questions?.length || 1
-      const answers = splitAnswerByQuestions(answer, questionCount)
-
-      // Split successful and index valid
-      if (answers.length > 1 && qIdx < answers.length) {
-        return answers[qIdx] || ''
-      }
-
-      // Split failed: first question returns full answer, others return empty
-      return qIdx === 0 ? answer : ''
-    }
-
-    // Check if a question has dual-platform answers (filter placeholder text)
-    const hasMultiplePlatforms = (interview, qIdx) => {
-      if (!interview.twitterAnswer || !interview.redditAnswer) return false
-      const twitterAnswer = getAnswerForQuestion(interview, qIdx, 'twitter')
-      const redditAnswer = getAnswerForQuestion(interview, qIdx, 'reddit')
-      // Both platforms have real answers (non-placeholder) and different content
-      return !isPlaceholderText(twitterAnswer) && !isPlaceholderText(redditAnswer) && twitterAnswer !== redditAnswer
-    }
+    // Single-platform: always false
+    const hasMultiplePlatforms = () => false
     
     return () => h('div', { class: 'interview-display' }, [
       // Header Section
@@ -1478,9 +1440,8 @@ const InterviewDisplay = {
             : [props.result.interviews[activeIndex.value]?.question || 'No question available']
           ).map((question, qIdx) => {
             const interview = props.result.interviews[activeIndex.value]
-            const currentPlatform = getPlatformTab(activeIndex.value, qIdx)
-            const answerText = getAnswerForQuestion(interview, qIdx, currentPlatform)
-            const hasDualPlatform = hasMultiplePlatforms(interview, qIdx)
+            const answerText = getAnswerForQuestion(interview, qIdx)
+            const hasDualPlatform = false
             const expandKey = `${activeIndex.value}-${qIdx}`
             const isExpanded = expandedAnswers.value.has(expandKey)
             const isPlaceholder = isPlaceholderText(answerText)
@@ -1501,29 +1462,7 @@ const InterviewDisplay = {
                 h('div', { class: 'qa-content' }, [
                   h('div', { class: 'qa-answer-header' }, [
                     h('div', { class: 'qa-sender' }, interview?.name || 'Agent'),
-                    // Dual-platform switch button (only show with real dual-platform answers)
-                    hasDualPlatform && h('div', { class: 'platform-switch' }, [
-                      h('button', {
-                        class: ['platform-btn', { active: currentPlatform === 'twitter' }],
-                        onClick: (e) => { e.stopPropagation(); setPlatformTab(activeIndex.value, qIdx, 'twitter') }
-                      }, [
-                        h('svg', { class: 'platform-icon', viewBox: '0 0 24 24', width: 12, height: 12, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }, [
-                          h('circle', { cx: '12', cy: '12', r: '10' }),
-                          h('line', { x1: '2', y1: '12', x2: '22', y2: '12' }),
-                          h('path', { d: 'M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z' })
-                        ]),
-                        h('span', {}, 'World 1')
-                      ]),
-                      h('button', {
-                        class: ['platform-btn', { active: currentPlatform === 'reddit' }],
-                        onClick: (e) => { e.stopPropagation(); setPlatformTab(activeIndex.value, qIdx, 'reddit') }
-                      }, [
-                        h('svg', { class: 'platform-icon', viewBox: '0 0 24 24', width: 12, height: 12, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }, [
-                          h('path', { d: 'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z' })
-                        ]),
-                        h('span', {}, 'World 2')
-                      ])
-                    ])
+                    null
                   ]),
                   h('div', {
                     class: ['qa-text', 'answer-text', { 'placeholder-text': isPlaceholder }],
@@ -2170,11 +2109,61 @@ const stopPolling = () => {
   }
 }
 
+// Parse a completed markdown report into per-section content keyed by 1-based index.
+// Splits on ## headings that match the outline section titles (fuzzy: trimmed, case-insensitive).
+const parseSectionsFromMarkdown = (markdown, outline) => {
+  if (!markdown || !outline?.sections?.length) return {}
+
+  // Split the markdown on any ## heading
+  const parts = markdown.split(/^##\s+/m)
+  // parts[0] is the preamble (title, summary, hr) — skip it
+  const sectionParts = parts.slice(1)
+
+  const result = {}
+  outline.sections.forEach((section, idx) => {
+    // Find the part whose first line matches this section title
+    const titleNorm = section.title.trim().toLowerCase()
+    const match = sectionParts.find(p => {
+      const firstLine = p.split('\n')[0].trim().toLowerCase()
+      return firstLine === titleNorm || firstLine.startsWith(titleNorm)
+    })
+    if (match) {
+      // Strip the first line (the heading) so renderMarkdown doesn't double-render it
+      const body = match.replace(/^.+\n/, '').trim()
+      result[idx + 1] = body
+    } else if (sectionParts[idx]) {
+      // Fallback: use positional match
+      result[idx + 1] = sectionParts[idx].replace(/^.+\n/, '').trim()
+    }
+  })
+  return result
+}
+
+// Try to load an already-completed report immediately, skipping log polling.
+const tryLoadCompletedReport = async (reportId) => {
+  if (!reportId) return false
+  try {
+    const res = await getReport(reportId)
+    const data = res.data?.data
+    if (!data || data.status !== 'completed' || !data.outline) return false
+
+    reportOutline.value = data.outline
+    generatedSections.value = parseSectionsFromMarkdown(data.markdown_content, data.outline)
+    currentSectionIndex.value = null
+    isComplete.value = true
+    startTime.value = startTime.value || Date.now()
+    return true
+  } catch {
+    return false
+  }
+}
+
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
   if (props.reportId) {
     addLog(`Report Agent initialized: ${props.reportId}`)
-    startPolling()
+    const loaded = await tryLoadCompletedReport(props.reportId)
+    if (!loaded) startPolling()
   }
 })
 
@@ -2182,8 +2171,9 @@ onUnmounted(() => {
   stopPolling()
 })
 
-watch(() => props.reportId, (newId) => {
+watch(() => props.reportId, async (newId) => {
   if (newId) {
+    stopPolling()
     agentLogs.value = []
     consoleLogs.value = []
     agentLogLine.value = 0
@@ -2196,8 +2186,9 @@ watch(() => props.reportId, (newId) => {
     collapsedSections.value = new Set()
     isComplete.value = false
     startTime.value = null
-    
-    startPolling()
+
+    const loaded = await tryLoadCompletedReport(newId)
+    if (!loaded) startPolling()
   }
 }, { immediate: true })
 </script>
@@ -3397,13 +3388,20 @@ watch(() => props.reportId, (newId) => {
   font-size: 14px;
 }
 
+.complete-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: calc(100% - 40px);
+  margin: 4px 20px 0 20px;
+}
+
 .next-step-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: calc(100% - 40px);
-  margin: 4px 20px 0 20px;
+  width: 100%;
   padding: 14px 20px;
   font-size: 14px;
   font-weight: 600;
@@ -3425,6 +3423,29 @@ watch(() => props.reportId, (newId) => {
 
 .next-step-btn:hover svg {
   transform: translateX(4px);
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  background: transparent;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.download-btn:hover {
+  background: #F9FAFB;
+  border-color: #9CA3AF;
 }
 
 /* Workflow Empty */

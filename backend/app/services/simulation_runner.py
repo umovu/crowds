@@ -1,6 +1,7 @@
 """
-OASIS Simulation Runner
-Run simulations in the background and record actions for each Agent, supporting real-time status monitoring
+Simulation Runner
+Run AgentSociety opinion-space simulations in the background, recording actions for each Agent
+and providing real-time status monitoring.
 """
 
 import os
@@ -23,7 +24,7 @@ from ..utils.logger import get_logger
 from .graph_memory_updater import GraphMemoryManager
 from .simulation_ipc import SimulationIPCClient, CommandType, IPCResponse
 
-logger = get_logger('mirofish.simulation_runner')
+logger = get_logger('fub.simulation_runner')
 
 # Flag whether cleanup function is registered
 _cleanup_registered = False
@@ -49,7 +50,7 @@ class AgentAction:
     """Agent action record"""
     round_num: int
     timestamp: str
-    platform: str  # twitter / reddit
+    platform: str  # opinion_space
     agent_id: int
     agent_name: str
     action_type: str  # CREATE_POST, LIKE_POST, etc.
@@ -78,19 +79,17 @@ class RoundSummary:
     start_time: str
     end_time: Optional[str] = None
     simulated_hour: int = 0
-    twitter_actions: int = 0
-    reddit_actions: int = 0
+    total_actions: int = 0
     active_agents: List[int] = field(default_factory=list)
     actions: List[AgentAction] = field(default_factory=list)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "round_num": self.round_num,
             "start_time": self.start_time,
             "end_time": self.end_time,
             "simulated_hour": self.simulated_hour,
-            "twitter_actions": self.twitter_actions,
-            "reddit_actions": self.reddit_actions,
+            "total_actions": self.total_actions,
             "active_agents": self.active_agents,
             "actions_count": len(self.actions),
             "actions": [a.to_dict() for a in self.actions],
@@ -103,29 +102,18 @@ class SimulationRunState:
     simulation_id: str
     runner_status: RunnerStatus = RunnerStatus.IDLE
 
-    # Progress information
+    # Progress
     current_round: int = 0
     total_rounds: int = 0
     simulated_hours: int = 0
     total_simulation_hours: int = 0
 
-    # Per-platform independent rounds and simulated time (for dual-platform parallel display)
-    twitter_current_round: int = 0
-    reddit_current_round: int = 0
-    twitter_simulated_hours: int = 0
-    reddit_simulated_hours: int = 0
+    # Opinion Space status
+    simulation_running: bool = False
+    simulation_completed: bool = False
+    simulation_actions_count: int = 0
 
-    # Platform status
-    twitter_running: bool = False
-    reddit_running: bool = False
-    twitter_actions_count: int = 0
-    reddit_actions_count: int = 0
-
-    # Platform completion status (detected via simulation_end events in actions.jsonl)
-    twitter_completed: bool = False
-    reddit_completed: bool = False
-
-    # Round summary
+    # Round summaries
     rounds: List[RoundSummary] = field(default_factory=list)
 
     # Recent actions (for frontend real-time display)
@@ -142,20 +130,15 @@ class SimulationRunState:
 
     # Process ID (for stopping)
     process_pid: Optional[int] = None
-    
+
     def add_action(self, action: AgentAction):
         """Add action to recent actions list"""
         self.recent_actions.insert(0, action)
         if len(self.recent_actions) > self.max_recent_actions:
             self.recent_actions = self.recent_actions[:self.max_recent_actions]
-        
-        if action.platform == "twitter":
-            self.twitter_actions_count += 1
-        else:
-            self.reddit_actions_count += 1
-        
+        self.simulation_actions_count += 1
         self.updated_at = datetime.now().isoformat()
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "simulation_id": self.simulation_id,
@@ -165,18 +148,10 @@ class SimulationRunState:
             "simulated_hours": self.simulated_hours,
             "total_simulation_hours": self.total_simulation_hours,
             "progress_percent": round(self.current_round / max(self.total_rounds, 1) * 100, 1),
-            # Per-platform independent rounds and time
-            "twitter_current_round": self.twitter_current_round,
-            "reddit_current_round": self.reddit_current_round,
-            "twitter_simulated_hours": self.twitter_simulated_hours,
-            "reddit_simulated_hours": self.reddit_simulated_hours,
-            "twitter_running": self.twitter_running,
-            "reddit_running": self.reddit_running,
-            "twitter_completed": self.twitter_completed,
-            "reddit_completed": self.reddit_completed,
-            "twitter_actions_count": self.twitter_actions_count,
-            "reddit_actions_count": self.reddit_actions_count,
-            "total_actions_count": self.twitter_actions_count + self.reddit_actions_count,
+            "simulation_running": self.simulation_running,
+            "simulation_completed": self.simulation_completed,
+            "simulation_actions_count": self.simulation_actions_count,
+            "total_actions_count": self.simulation_actions_count,
             "started_at": self.started_at,
             "updated_at": self.updated_at,
             "completed_at": self.completed_at,
@@ -256,17 +231,9 @@ class SimulationRunner:
                 total_rounds=data.get("total_rounds", 0),
                 simulated_hours=data.get("simulated_hours", 0),
                 total_simulation_hours=data.get("total_simulation_hours", 0),
-                # Per-platform independent rounds and time
-                twitter_current_round=data.get("twitter_current_round", 0),
-                reddit_current_round=data.get("reddit_current_round", 0),
-                twitter_simulated_hours=data.get("twitter_simulated_hours", 0),
-                reddit_simulated_hours=data.get("reddit_simulated_hours", 0),
-                twitter_running=data.get("twitter_running", False),
-                reddit_running=data.get("reddit_running", False),
-                twitter_completed=data.get("twitter_completed", False),
-                reddit_completed=data.get("reddit_completed", False),
-                twitter_actions_count=data.get("twitter_actions_count", 0),
-                reddit_actions_count=data.get("reddit_actions_count", 0),
+                simulation_running=data.get("simulation_running", False),
+                simulation_completed=data.get("simulation_completed", False),
+                simulation_actions_count=data.get("simulation_actions_count", 0),
                 started_at=data.get("started_at"),
                 updated_at=data.get("updated_at", datetime.now().isoformat()),
                 completed_at=data.get("completed_at"),
@@ -312,20 +279,20 @@ class SimulationRunner:
     def start_simulation(
         cls,
         simulation_id: str,
-        platform: str = "parallel",  # twitter / reddit / parallel
-        max_rounds: int = None,  # Maximum simulation rounds (optional, for truncating long simulations)
-        enable_graph_memory_update: bool = False,  # Whether to update activities to the graph
-        graph_id: str = None,  # Graph ID (required when enabling graph updates)
-        storage: 'GraphStorage' = None  # GraphStorage instance (required if enable_graph_memory_update)
+        platform: str = "opinion_space",
+        max_rounds: int = None,
+        enable_graph_memory_update: bool = False,
+        graph_id: str = None,
+        storage: 'GraphStorage' = None
     ) -> SimulationRunState:
         """
-        Start simulation
+        Start AgentSociety opinion-space simulation.
 
         Args:
             simulation_id: Simulation ID
-            platform: Platform to run (twitter/reddit/parallel)
-            max_rounds: Maximum simulation rounds (optional, for truncating long simulations)
-            enable_graph_memory_update: Whether to dynamically update Agent activities to the graph
+            platform: Ignored — always runs opinion_space via run_simulation_as.py
+            max_rounds: Maximum simulation rounds (optional)
+            enable_graph_memory_update: Whether to update agent activities to the graph
             graph_id: Graph ID (required when enabling graph updates)
 
         Returns:
@@ -386,20 +353,9 @@ class SimulationRunner:
         else:
             cls._graph_memory_enabled[simulation_id] = False
         
-        # Determine which script to run (scripts located in backend/scripts/ directory)
-        if platform == "opinion_space":
-            script_name = "run_simulation_as.py"
-            state.twitter_running = True   # reuse twitter slot as single-platform indicator
-        elif platform == "twitter":
-            script_name = "run_twitter_simulation.py"
-            state.twitter_running = True
-        elif platform == "reddit":
-            script_name = "run_reddit_simulation.py"
-            state.reddit_running = True
-        else:
-            script_name = "run_parallel_simulation.py"
-            state.twitter_running = True
-            state.reddit_running = True
+        # Always run the AgentSociety opinion-space runner
+        script_name = "run_simulation_as.py"
+        state.simulation_running = True
         
         script_path = os.path.join(cls.SCRIPTS_DIR, script_name)
         
@@ -485,51 +441,26 @@ class SimulationRunner:
         """Monitor simulation process and parse action logs"""
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
         
-        # Log paths — opinion_space runner uses single log; OASIS uses per-platform logs
-        opinion_actions_log = os.path.join(sim_dir, "opinion_space", "actions.jsonl")
-        twitter_actions_log = os.path.join(sim_dir, "twitter", "actions.jsonl")
-        reddit_actions_log = os.path.join(sim_dir, "reddit", "actions.jsonl")
-        
+        actions_log = os.path.join(sim_dir, "opinion_space", "actions.jsonl")
+
         process = cls._processes.get(simulation_id)
         state = cls.get_run_state(simulation_id)
-        
+
         if not process or not state:
             return
-        
-        twitter_position = 0
-        reddit_position = 0
-        opinion_position = 0
+
+        position = 0
 
         try:
             while process.poll() is None:  # Process still running
-                # AgentSociety opinion_space runner (single log, mapped to twitter slot for status)
-                if os.path.exists(opinion_actions_log):
-                    opinion_position = cls._read_action_log(
-                        opinion_actions_log, opinion_position, state, "twitter"
-                    )
-                else:
-                    # OASIS per-platform logs
-                    if os.path.exists(twitter_actions_log):
-                        twitter_position = cls._read_action_log(
-                            twitter_actions_log, twitter_position, state, "twitter"
-                        )
-                    if os.path.exists(reddit_actions_log):
-                        reddit_position = cls._read_action_log(
-                            reddit_actions_log, reddit_position, state, "reddit"
-                        )
-
-                # Update status
+                if os.path.exists(actions_log):
+                    position = cls._read_action_log(actions_log, position, state, "opinion_space")
                 cls._save_run_state(state)
                 time.sleep(2)
 
-            # After process ends, read logs one more time
-            if os.path.exists(opinion_actions_log):
-                cls._read_action_log(opinion_actions_log, opinion_position, state, "twitter")
-            else:
-                if os.path.exists(twitter_actions_log):
-                    cls._read_action_log(twitter_actions_log, twitter_position, state, "twitter")
-                if os.path.exists(reddit_actions_log):
-                    cls._read_action_log(reddit_actions_log, reddit_position, state, "reddit")
+            # After process ends, read log one more time
+            if os.path.exists(actions_log):
+                cls._read_action_log(actions_log, position, state, "opinion_space")
             
             # Process ended
             exit_code = process.returncode
@@ -552,10 +483,9 @@ class SimulationRunner:
                 state.error = f"Process exit code: {exit_code}, error: {error_info}"
                 logger.error(f"Simulation failed: {simulation_id}, error={state.error}")
             
-            state.twitter_running = False
-            state.reddit_running = False
+            state.simulation_running = False
             cls._save_run_state(state)
-            
+
         except Exception as e:
             logger.error(f"Monitor thread exception: {simulation_id}, error={str(e)}")
             state.runner_status = RunnerStatus.FAILED
@@ -629,46 +559,19 @@ class SimulationRunner:
                             if "event_type" in action_data:
                                 event_type = action_data.get("event_type")
                                 
-                                # Detect simulation_end event, mark platform completed
                                 if event_type == "simulation_end":
-                                    if platform == "twitter":
-                                        state.twitter_completed = True
-                                        state.twitter_running = False
-                                        logger.info(f"Twitter simulation completed: {state.simulation_id}, total_rounds={action_data.get('total_rounds')}, total_actions={action_data.get('total_actions')}")
-                                    elif platform == "reddit":
-                                        state.reddit_completed = True
-                                        state.reddit_running = False
-                                        logger.info(f"Reddit simulation completed: {state.simulation_id}, total_rounds={action_data.get('total_rounds')}, total_actions={action_data.get('total_actions')}")
-                                    
-                                    # Check if all enabled platforms are completed
-                                    # If only one platform is running, check only that platform
-                                    # If both platforms are running, need both to complete
-                                    all_completed = cls._check_all_platforms_completed(state)
-                                    if all_completed:
-                                        state.runner_status = RunnerStatus.COMPLETED
-                                        state.completed_at = datetime.now().isoformat()
-                                        logger.info(f"All platform simulations completed: {state.simulation_id}")
-                                
-                                # Update round information (from round_end event)
+                                    state.simulation_completed = True
+                                    state.simulation_running = False
+                                    state.runner_status = RunnerStatus.COMPLETED
+                                    state.completed_at = datetime.now().isoformat()
+                                    logger.info(f"Opinion Space simulation completed: {state.simulation_id}, total_rounds={action_data.get('total_rounds')}, total_actions={action_data.get('total_actions')}")
+
                                 elif event_type == "round_end":
                                     round_num = action_data.get("round", 0)
                                     simulated_hours = action_data.get("simulated_hours", 0)
-                                    
-                                    # Update per-platform independent rounds and time
-                                    if platform == "twitter":
-                                        if round_num > state.twitter_current_round:
-                                            state.twitter_current_round = round_num
-                                        state.twitter_simulated_hours = simulated_hours
-                                    elif platform == "reddit":
-                                        if round_num > state.reddit_current_round:
-                                            state.reddit_current_round = round_num
-                                        state.reddit_simulated_hours = simulated_hours
-                                    
-                                    # Overall rounds take maximum of both platforms
                                     if round_num > state.current_round:
                                         state.current_round = round_num
-                                    # Overall time takes maximum of both platforms
-                                    state.simulated_hours = max(state.twitter_simulated_hours, state.reddit_simulated_hours)
+                                    state.simulated_hours = simulated_hours
                                 
                                 continue
                             
@@ -702,31 +605,8 @@ class SimulationRunner:
     
     @classmethod
     def _check_all_platforms_completed(cls, state: SimulationRunState) -> bool:
-        """
-        Check if all enabled platforms have completed simulation
-        
-        Judge whether a platform is enabled by checking if corresponding actions.jsonl file exists
-        
-        Returns:
-            True if all enabled platforms are completed
-        """
-        sim_dir = os.path.join(cls.RUN_STATE_DIR, state.simulation_id)
-        opinion_log = os.path.join(sim_dir, "opinion_space", "actions.jsonl")
-        twitter_log = os.path.join(sim_dir, "twitter", "actions.jsonl")
-        reddit_log = os.path.join(sim_dir, "reddit", "actions.jsonl")
-
-        # AgentSociety single-platform runner
-        if os.path.exists(opinion_log):
-            return state.twitter_completed
-
-        # OASIS per-platform runners
-        twitter_enabled = os.path.exists(twitter_log)
-        reddit_enabled = os.path.exists(reddit_log)
-        if twitter_enabled and not state.twitter_completed:
-            return False
-        if reddit_enabled and not state.reddit_completed:
-            return False
-        return twitter_enabled or reddit_enabled
+        """Check whether the opinion-space simulation has completed."""
+        return state.simulation_completed
     
     @classmethod
     def _terminate_process(cls, process: subprocess.Popen, simulation_id: str, timeout: int = 10):
@@ -815,8 +695,7 @@ class SimulationRunner:
                     process.kill()
         
         state.runner_status = RunnerStatus.STOPPED
-        state.twitter_running = False
-        state.reddit_running = False
+        state.simulation_running = False
         state.completed_at = datetime.now().isoformat()
         cls._save_run_state(state)
         
@@ -922,44 +801,18 @@ class SimulationRunner:
             Complete action list (sorted by timestamp, newest first)
         """
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
-        actions = []
-        
-        # Read Twitter action file (auto-set platform to twitter based on file path)
-        twitter_actions_log = os.path.join(sim_dir, "twitter", "actions.jsonl")
-        if not platform or platform == "twitter":
-            actions.extend(cls._read_actions_from_file(
-                twitter_actions_log,
-                default_platform="twitter",  # Auto-fill platform field
-                platform_filter=platform,
-                agent_id=agent_id, 
-                round_num=round_num
-            ))
-        
-        # Read Reddit action file (auto-set platform to reddit based on file path)
-        reddit_actions_log = os.path.join(sim_dir, "reddit", "actions.jsonl")
-        if not platform or platform == "reddit":
-            actions.extend(cls._read_actions_from_file(
-                reddit_actions_log,
-                default_platform="reddit",  # Auto-fill platform field
-                platform_filter=platform,
-                agent_id=agent_id,
-                round_num=round_num
-            ))
-        
-        # If per-platform files do not exist, try reading old single file format
-        if not actions:
-            actions_log = os.path.join(sim_dir, "actions.jsonl")
-            actions = cls._read_actions_from_file(
-                actions_log,
-                default_platform=None,  # Old format files should have platform field
-                platform_filter=platform,
-                agent_id=agent_id,
-                round_num=round_num
-            )
-        
+
+        actions_log = os.path.join(sim_dir, "opinion_space", "actions.jsonl")
+        actions = cls._read_actions_from_file(
+            actions_log,
+            default_platform="opinion_space",
+            platform_filter=platform,
+            agent_id=agent_id,
+            round_num=round_num,
+        )
+
         # Sort by timestamp (newest first)
         actions.sort(key=lambda x: x.timestamp, reverse=True)
-        
         return actions
     
     @classmethod
@@ -1427,10 +1280,15 @@ class SimulationRunner:
             with open(status_file, 'r', encoding='utf-8') as f:
                 status = json.load(f)
             return {
-                "status": status.get("status", "stopped"),
-                "twitter_available": status.get("twitter_available", False),
-                "reddit_available": status.get("reddit_available", False),
-                "timestamp": status.get("timestamp")
+                "status":                 status.get("status", "stopped"),
+                "twitter_available":      status.get("twitter_available", False),
+                "reddit_available":       status.get("reddit_available", False),
+                "timestamp":              status.get("timestamp"),
+                # AgentSociety runner fields
+                "agents_expressed_count": status.get("agents_expressed_count", 0),
+                "agents_expressed":       status.get("agents_expressed", []),
+                "total_agents":           status.get("total_agents", 0),
+                "simulation_actions_count": status.get("simulation_actions_count", 0),
             }
         except (json.JSONDecodeError, OSError):
             return default_status

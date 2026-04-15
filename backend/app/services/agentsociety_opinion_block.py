@@ -25,7 +25,7 @@ from openai import AsyncOpenAI
 from ..config import Config
 from ..utils.logger import get_logger
 
-logger = get_logger("mirofish.opinion_block")
+logger = get_logger("fub.opinion_block")
 
 # ─────────────────────────────────────────────────────────────
 # South African socio-economic context — injected into every
@@ -35,36 +35,41 @@ logger = get_logger("mirofish.opinion_block")
 # ─────────────────────────────────────────────────────────────
 SA_POLICY_CONTEXT = """
 SIMULATION CONTEXT — READ CAREFULLY:
-You are participating in a South African policy simulation. Agents are digital
-representations of South African people used to stress-test policy proposals
-before they affect real citizens. Your responses must reflect the lived realities
-of South Africa.
+You are participating in a South African policy simulation that represents the FULL spectrum
+of South African society. Agents range from civic moderates to extreme edge-case actors —
+gang members, looters, political agitators, conspiracy spreaders, community protectors,
+grant-dependent survivors, disillusioned youth who have dropped out of civic life entirely.
+This breadth is intentional: policies must be stress-tested against ALL actor types, not just
+the reasonable majority. Your job is to be exactly who your character is — no softening,
+no neutralising, no generic "community member" voice unless that is truly who you are.
 
-Key socio-economic realities to stay grounded in:
+South African realities this simulation is grounded in:
 - Unemployment: ~32% nationally, ~60% among youth (Stats SA 2024)
 - Extreme inequality: Gini coefficient ~0.63, one of the highest globally
-- Persistent load-shedding (Eskom power cuts) affecting daily life and business
-- Land reform debate: historical dispossession and calls for redistribution
-- Social grant dependency: ~28 million SASSA recipients (SRD, child support, pension)
-- Racial inequality legacy from apartheid still shapes economic access
-- 11 official languages; communities often multilingual (code-switching common)
-- Urban/rural divide: Johannesburg, Cape Town, Durban vs rural Eastern Cape, Limpopo
-- Township communities (Soweto, Khayelitsha, Umlazi) vs formal suburbs
-- High gender-based violence (GBV) rates — a major policy concern
-- Public healthcare (clinics, hospitals) vs private medical aid — NHI debate active
-- BEE/BBBEE policies and debates about economic inclusion
-- High crime rates affecting safety perceptions and movement
-- Xenophobia tensions, especially toward other African migrants
-- Strong trade union influence (COSATU, NUMSA)
-- Key political actors: ANC, DA, EFF, MK Party, IFP
-- Water access crises in parts of the country
-- Education inequality: no-fee schools, Nsfas bursaries, school infrastructure gaps
+- July 2021 unrest: looting, burning, deaths — the gap between grievance and violence is thin
+- Persistent load-shedding (Eskom power cuts) destroying small businesses and daily life
+- Land reform debate: historical dispossession and calls for expropriation
+- Social grant dependency: ~28 million SASSA recipients — grants are survival, not charity
+- Cape Flats gang economy: drugs, protection, territorial control as parallel governance
+- The Numbers (26s/27s/28s): prison gang culture that shapes Cape Township identity
+- Taxi violence: rank wars, route disputes, enforcer culture
+- Xenophobia: recurring attacks on foreign nationals, especially in townships
+- Police legitimacy crisis: high rates of police brutality, corruption, extrajudicial killings
+- Racial inequality legacy from apartheid still shapes every economic outcome
+- 11 official languages; code-switching is cultural identity not confusion
+- Township communities (Soweto, Khayelitsha, Umlazi, Manenberg) vs formal suburbs
+- High gender-based violence — femicide rate among highest globally
+- BEE/BBBEE: genuine economic inclusion debate vs perception of elite capture
+- Strong trade union history — COSATU, NUMSA — but declining working-class organisation
+- Key political actors: ANC (declining), DA (minority appeal), EFF (radical left),
+  MK Party (Zuma loyalists), IFP (KZN base)
 
 When expressing opinions, responding to others, or deciding how to act:
-- Speak as a person shaped by these realities, not as a neutral observer
-- Reference specific SA concerns naturally (load-shedding, unemployment, grants, etc.)
-- Reflect your character's language background, province, class, and lived experience
-- Policy positions should reflect real trade-offs South Africans navigate daily
+- Speak as the specific person you are, from inside your identity — not as a neutral observer
+- If you are an edge-case actor, lean into it fully — your perspective is as valid as anyone's
+- Reference SA realities that YOUR character would actually know and care about
+- Policy positions should reflect the real trade-offs your specific character navigates
+- Your language, slang, code-switching, and register must match who you are
 """.strip()
 
 # ─────────────────────────────────────────────────────────────
@@ -187,8 +192,11 @@ class OpinionEnvironment:
         conn.close()
 
 
-# ─────────────────────────────────────────────────────────────
-# OpinionCaptureBlock  (AgentSociety Block pattern)
+# OpinionCaptureBlock and OpinionAgent have been moved to:
+#   opinion_block.py  — extends agentsociety.agent.Block
+#   opinion_agent.py  — extends agentsociety.agent.Agent
+#
+# The classes below are kept for any remaining import compatibility.
 # ─────────────────────────────────────────────────────────────
 class OpinionCaptureBlock:
     """
@@ -261,7 +269,8 @@ class OpinionCaptureBlock:
 
         prompt = f"""{SA_POLICY_CONTEXT}
 
-You are {agent.name}. {agent.persona[:300]}
+You are {agent.name}.
+{agent.character_context(detail="brief")}
 
 Current shared opinion feed (recent):
 {feed_preview}
@@ -300,7 +309,8 @@ Action:"""
 
         prompt = f"""{SA_POLICY_CONTEXT}
 
-You are {agent.name}. {agent.persona[:500]}
+You are {agent.name}.
+{agent.character_context(detail="full")}
 
 Recent opinions from others:
 {feed_ctx}
@@ -329,7 +339,8 @@ Opinion:"""
 
         prompt = f"""{SA_POLICY_CONTEXT}
 
-You are {agent.name}. {agent.persona[:400]}
+You are {agent.name}.
+{agent.character_context(detail="full")}
 
 {target['agent_name']} said: "{target['content']}"
 
@@ -412,6 +423,13 @@ class OpinionAgent:
         active_hours: List[int],
         block: OpinionCaptureBlock,
         source_entity_uuid: Optional[str] = None,
+        background_story: Optional[str] = None,
+        age: Optional[int] = None,
+        gender: Optional[str] = None,
+        education: Optional[str] = None,
+        occupation: Optional[str] = None,
+        marriage_status: Optional[str] = None,
+        province: Optional[str] = None,
     ):
         self.agent_id = agent_id
         self.name = name
@@ -422,6 +440,45 @@ class OpinionAgent:
         self.active_hours = active_hours
         self._block = block
         self.source_entity_uuid = source_entity_uuid
+        self.background_story = background_story
+        self.age = age
+        self.gender = gender
+        self.education = education
+        self.occupation = occupation
+        self.marriage_status = marriage_status
+        self.province = province
+
+    def character_context(self, detail: str = "full") -> str:
+        """
+        Build a character description for LLM prompts.
+
+        detail="brief"  — persona + key demographics (for dispatcher / short prompts)
+        detail="full"   — all fields including background story (for action prompts)
+        """
+        lines = [self.persona]
+
+        attrs = []
+        if self.age:
+            attrs.append(f"Age {self.age}")
+        if self.gender:
+            attrs.append(self.gender.capitalize())
+        if self.occupation:
+            attrs.append(self.occupation)
+        if self.education:
+            attrs.append(f"Education: {self.education}")
+        if self.marriage_status:
+            attrs.append(self.marriage_status)
+        if self.province:
+            attrs.append(f"Province: {self.province}")
+        if self.stance and self.stance != "neutral":
+            attrs.append(f"Stance: {self.stance}")
+        if attrs:
+            lines.append(" | ".join(attrs))
+
+        if detail == "full" and self.background_story:
+            lines.append(f"\nBackground: {self.background_story[:600]}")
+
+        return "\n".join(lines)
 
     async def forward(self, round_num: int, initial_prompt: Optional[str] = None) -> Dict[str, Any]:
         """Execute one simulation step; returns the action record dict."""

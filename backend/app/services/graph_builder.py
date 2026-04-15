@@ -14,7 +14,7 @@ from ..models.task import TaskManager, TaskStatus
 from ..storage import GraphStorage
 from .text_processor import TextProcessor
 
-logger = logging.getLogger('mirofish.graph_builder')
+logger = logging.getLogger('fub.graph_builder')
 
 
 @dataclass
@@ -48,7 +48,7 @@ class GraphBuilderService:
         self,
         text: str,
         ontology: Dict[str, Any],
-        graph_name: str = "MiroFish Graph",
+        graph_name: str = "Fub Simulation Graph",
         chunk_size: int = 500,
         chunk_overlap: int = 50,
         batch_size: int = 3
@@ -169,7 +169,7 @@ class GraphBuilderService:
         """Create graph"""
         return self.storage.create_graph(
             name=name,
-            description="MiroFish Social Simulation Graph"
+            description="Fub Simulation Social Graph"
         )
 
     def set_ontology(self, graph_id: str, ontology: Dict[str, Any]):

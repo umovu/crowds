@@ -22,7 +22,7 @@ from ..config import Config
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
 
-logger = get_logger('mirofish.simulation_config')
+logger = get_logger('fub.simulation_config')
 
 # Time zone configuration for Chinese work schedules (Beijing Time)
 CHINA_TIMEZONE_CONFIG = {
@@ -125,22 +125,6 @@ class EventConfig:
     narrative_direction: str = ""
 
 
-@dataclass
-class PlatformConfig:
-    """Platform-specific configuration"""
-    platform: str  # twitter or reddit
-
-    # Recommendation algorithm weights
-    recency_weight: float = 0.4  # Time freshness
-    popularity_weight: float = 0.3  # Popularity
-    relevance_weight: float = 0.3  # Relevance
-
-    # Viral threshold (number of interactions before triggering spread)
-    viral_threshold: int = 10
-
-    # Echo chamber effect strength (degree of similar opinion clustering)
-    echo_chamber_strength: float = 0.5
-
 
 @dataclass
 class SimulationParameters:
@@ -159,10 +143,6 @@ class SimulationParameters:
 
     # Event configuration
     event_config: EventConfig = field(default_factory=EventConfig)
-
-    # Platform configuration
-    twitter_config: Optional[PlatformConfig] = None
-    reddit_config: Optional[PlatformConfig] = None
 
     # LLM configuration
     llm_model: str = ""
@@ -183,8 +163,6 @@ class SimulationParameters:
             "time_config": time_dict,
             "agent_configs": [asdict(a) for a in self.agent_configs],
             "event_config": asdict(self.event_config),
-            "twitter_config": asdict(self.twitter_config) if self.twitter_config else None,
-            "reddit_config": asdict(self.reddit_config) if self.reddit_config else None,
             "llm_model": self.llm_model,
             "llm_base_url": self.llm_base_url,
             "generated_at": self.generated_at,
@@ -247,8 +225,6 @@ class SimulationConfigGenerator:
         simulation_requirement: str,
         document_text: str,
         entities: List[EntityNode],
-        enable_twitter: bool = True,
-        enable_reddit: bool = True,
         progress_callback: Optional[Callable[[int, int, str], None]] = None,
     ) -> SimulationParameters:
         """
@@ -261,8 +237,6 @@ class SimulationConfigGenerator:
             simulation_requirement: Simulation requirement description
             document_text: Original document content
             entities: Filtered entity list
-            enable_twitter: Whether to enable Twitter
-            enable_reddit: Whether to enable Reddit
             progress_callback: Progress callback function(current_step, total_steps, message)
 
         Returns:
@@ -332,31 +306,6 @@ class SimulationConfigGenerator:
         assigned_count = len([p for p in event_config.initial_posts if p.get("poster_agent_id") is not None])
         reasoning_parts.append(f"Initial posts assigned: {assigned_count} posts assigned publishers")
 
-        # ========== Final step: Generate platform configuration ==========
-        report_progress(total_steps, "Generating platform configuration...")
-        twitter_config = None
-        reddit_config = None
-        
-        if enable_twitter:
-            twitter_config = PlatformConfig(
-                platform="twitter",
-                recency_weight=0.4,
-                popularity_weight=0.3,
-                relevance_weight=0.3,
-                viral_threshold=10,
-                echo_chamber_strength=0.5
-            )
-        
-        if enable_reddit:
-            reddit_config = PlatformConfig(
-                platform="reddit",
-                recency_weight=0.3,
-                popularity_weight=0.4,
-                relevance_weight=0.3,
-                viral_threshold=15,
-                echo_chamber_strength=0.6
-            )
-        
         # Build final parameters
         params = SimulationParameters(
             simulation_id=simulation_id,
@@ -366,8 +315,6 @@ class SimulationConfigGenerator:
             time_config=time_config,
             agent_configs=all_agent_configs,
             event_config=event_config,
-            twitter_config=twitter_config,
-            reddit_config=reddit_config,
             llm_model=self.model_name,
             llm_base_url=self.base_url,
             generation_reasoning=" | ".join(reasoning_parts)

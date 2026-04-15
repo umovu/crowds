@@ -14,7 +14,7 @@ import tempfile
 # Add project path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.services.oasis_profile_generator import OasisProfileGenerator, OasisAgentProfile
+from app.services.agent_profile_generator import AgentProfileGenerator, AgentProfile
 
 
 def test_profile_formats():
@@ -25,7 +25,7 @@ def test_profile_formats():
     
     # Create test Profile data
     test_profiles = [
-        OasisAgentProfile(
+        AgentProfile(
             user_id=0,
             user_name="test_user_123",
             name="Test User",
@@ -44,7 +44,7 @@ def test_profile_formats():
             source_entity_uuid="test-uuid-123",
             source_entity_type="Student",
         ),
-        OasisAgentProfile(
+        AgentProfile(
             user_id=1,
             user_name="org_official_456",
             name="Official Organization",
@@ -61,7 +61,7 @@ def test_profile_formats():
         ),
     ]
     
-    generator = OasisProfileGenerator.__new__(OasisProfileGenerator)
+    generator = AgentProfileGenerator.__new__(AgentProfileGenerator)
     
     # Use temporary directory
     with tempfile.TemporaryDirectory() as temp_dir:

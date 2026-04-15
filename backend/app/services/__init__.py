@@ -6,7 +6,7 @@ from .ontology_generator import OntologyGenerator
 from .graph_builder import GraphBuilderService
 from .text_processor import TextProcessor
 from .entity_reader import EntityReader, EntityNode, FilteredEntities
-from .oasis_profile_generator import OasisProfileGenerator, OasisAgentProfile
+from .agent_profile_generator import AgentProfileGenerator, AgentProfile
 from .simulation_manager import SimulationManager, SimulationState, SimulationStatus
 from .simulation_config_generator import (
     SimulationConfigGenerator,
@@ -14,7 +14,6 @@ from .simulation_config_generator import (
     AgentActivityConfig,
     TimeSimulationConfig,
     EventConfig,
-    PlatformConfig
 )
 from .simulation_runner import (
     SimulationRunner,
@@ -44,8 +43,8 @@ __all__ = [
     'EntityReader',
     'EntityNode',
     'FilteredEntities',
-    'OasisProfileGenerator',
-    'OasisAgentProfile',
+    'AgentProfileGenerator',
+    'AgentProfile',
     'SimulationManager',
     'SimulationState',
     'SimulationStatus',
@@ -54,7 +53,6 @@ __all__ = [
     'AgentActivityConfig',
     'TimeSimulationConfig',
     'EventConfig',
-    'PlatformConfig',
     'SimulationRunner',
     'SimulationRunState',
     'RunnerStatus',
