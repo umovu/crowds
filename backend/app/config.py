@@ -32,6 +32,9 @@ class Config:
     LLM_BASE_URL = os.environ.get('LLM_BASE_URL', 'http://localhost:11434/v1')
     LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'qwen2.5:32b')
 
+    # Graph Backend: 'neo4j' or 'kglite'
+    GRAPH_BACKEND = os.environ.get('GRAPH_BACKEND', 'neo4j')
+    
     # Neo4j configuration
     NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://localhost:7687')
     NEO4J_USER = os.environ.get('NEO4J_USER', 'neo4j')

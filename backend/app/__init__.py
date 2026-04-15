@@ -42,17 +42,19 @@ def create_app(config_class=Config):
     # Enable CORS
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    # --- Initialize Neo4jStorage singleton (DI via app.extensions) ---
-    from .storage import Neo4jStorage
+    # --- Initialize Graph Storage singleton (DI via app.extensions) ---
+    from .storage import get_storage, Neo4jStorage, KGLiteStorage
     try:
-        neo4j_storage = Neo4jStorage()
-        app.extensions['neo4j_storage'] = neo4j_storage
+        graph_backend = Config.GRAPH_BACKEND
+        graph_storage = get_storage(graph_backend)
+        app.extensions['graph_storage'] = graph_storage
+        app.extensions['graph_backend'] = graph_backend
         if should_log_startup:
-            logger.info("Neo4jStorage initialized (connected to %s)", Config.NEO4J_URI)
+            logger.info("GraphStorage initialized (%s)", graph_backend.upper())
     except Exception as e:
-        logger.error("Neo4jStorage initialization failed: %s", e)
-        # Store None so endpoints can return 503 gracefully
-        app.extensions['neo4j_storage'] = None
+        logger.error("GraphStorage initialization failed: %s", e)
+        app.extensions['graph_storage'] = None
+        app.extensions['graph_backend'] = 'neo4j'
 
     # Register simulation process cleanup function (ensure all simulation processes terminate on server shutdown)
     from .services.simulation_runner import SimulationRunner
@@ -75,10 +77,11 @@ def create_app(config_class=Config):
         return response
 
     # Register blueprints
-    from .api import graph_bp, simulation_bp, report_bp
+    from .api import graph_bp, simulation_bp, report_bp, config_bp
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
+    app.register_blueprint(config_bp, url_prefix='/api/config')
 
     # Health check
     @app.route('/health')

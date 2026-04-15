@@ -117,7 +117,13 @@
               </div>
               <div :style="s.inputWrapper">
                 <textarea v-model="formData.simulationRequirement" :style="s.codeInput" placeholder="// Describe your simulation or prediction goal in natural language" rows="6" :disabled="loading"></textarea>
-                <div :style="s.modelBadge">Engine: Ollama + Neo4j (local)</div>
+                <div :style="s.engineSelector">
+                  <span :style="s.engineLabel">Graph:</span>
+                  <select v-model="selectedBackend" @change="switchBackend" :style="s.engineSelect" :disabled="loading">
+                    <option value="neo4j">Neo4j (Docker)</option>
+                    <option value="kglite">KGLite (No Docker)</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -138,7 +144,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import HistoryDatabase from '../components/HistoryDatabase.vue'
 
@@ -206,7 +212,9 @@ const s = reactive({
   consoleDividerText: { padding: '0 15px', fontFamily: mono, fontSize: '0.7rem', color: '#BBB', letterSpacing: '1px' },
   inputWrapper: { position: 'relative', border: '1px solid #DDD', background: '#FAFAFA' },
   codeInput: { width: '100%', border: 'none', background: 'transparent', padding: '20px', fontFamily: mono, fontSize: '0.9rem', lineHeight: '1.6', resize: 'vertical', outline: 'none', minHeight: '150px' },
-  modelBadge: { position: 'absolute', bottom: '10px', right: '15px', fontFamily: mono, fontSize: '0.7rem', color: '#AAA' },
+  engineSelector: { position: 'absolute', bottom: '10px', right: '15px', display: 'flex', alignItems: 'center', gap: '8px' },
+  engineLabel: { fontFamily: mono, fontSize: '0.7rem', color: '#AAA' },
+  engineSelect: { fontFamily: mono, fontSize: '0.7rem', padding: '4px 8px', border: '1px solid #DDD', background: '#fff', cursor: 'pointer', outline: 'none' },
   btnSection: { padding: '0 20px 20px' },
   startEngineBtn: { width: '100%', background: '#000', color: '#fff', border: 'none', padding: '20px', fontFamily: mono, fontWeight: '700', fontSize: '1.1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', letterSpacing: '1px' },
 })
@@ -227,6 +235,39 @@ const loading = ref(false)
 const error = ref('')
 const isDragOver = ref(false)
 const fileInput = ref(null)
+const selectedBackend = ref('neo4j')
+
+const fetchBackend = async () => {
+  try {
+    const response = await fetch('/api/config/backend')
+    const data = await response.json()
+    selectedBackend.value = data.backend || 'neo4j'
+  } catch (e) {
+    console.warn('Could not fetch backend config:', e)
+  }
+}
+
+const switchBackend = async () => {
+  try {
+    const response = await fetch('/api/config/backend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ backend: selectedBackend.value })
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      alert('Failed to switch backend: ' + (data.error || 'Unknown error'))
+      fetchBackend()
+    }
+  } catch (e) {
+    alert('Failed to switch backend: ' + e.message)
+    fetchBackend()
+  }
+}
+
+onMounted(() => {
+  fetchBackend()
+})
 
 const canSubmit = computed(() => {
   return formData.value.simulationRequirement.trim() !== '' && files.value.length > 0

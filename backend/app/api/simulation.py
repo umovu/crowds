@@ -62,7 +62,7 @@ def get_graph_entities(graph_id: str):
         
         logger.info(f"Get knowledge graph entities: graph_id={graph_id}, entity_types={entity_types}, enrich={enrich}")
         
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized")
         reader = EntityReader(storage)
@@ -90,7 +90,7 @@ def get_graph_entities(graph_id: str):
 def get_entity_detail(graph_id: str, entity_uuid: str):
     """Get detailed information of a single entity"""
     try:
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized")
         reader = EntityReader(storage)
@@ -122,7 +122,7 @@ def get_entities_by_type(graph_id: str, entity_type: str):
     try:
         enrich = request.args.get('enrich', 'true').lower() == 'true'
         
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized")
         reader = EntityReader(storage)
@@ -451,7 +451,7 @@ def prepare_simulation():
         parallel_profile_count = data.get('parallel_profile_count', 5)
         
         # ========== Get GraphStorage（Capture reference before background task starts） ==========
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized — check Neo4j connection")
 
@@ -1364,7 +1364,7 @@ def generate_profiles():
         
         entity_types = data.get('entity_types')
         use_llm = data.get('use_llm', True)
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized")
         reader = EntityReader(storage)
