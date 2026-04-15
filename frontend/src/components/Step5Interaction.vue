@@ -86,7 +86,9 @@
           </svg>
           <div class="action-bar-text">
             <span class="action-bar-title">Interactive Tools</span>
-            <span class="action-bar-subtitle mono">{{ profiles.length }} agents available</span>
+            <span class="action-bar-subtitle mono" :class="{ 'no-agents': profiles.length === 0 }">
+              {{ profiles.length > 0 ? `${profiles.length} agents available` : 'No agents - complete Step 3 first' }}
+            </span>
           </div>
         </div>
           <div class="action-bar-tabs">
@@ -918,16 +920,33 @@ const loadAgentLogs = async () => {
 }
 
 const loadProfiles = async () => {
-  if (!props.simulationId) return
+  if (!props.simulationId) {
+    addLog('No simulation ID provided - cannot load agents')
+    return
+  }
 
   try {
+    addLog(`Loading agents from simulation: ${props.simulationId}`)
     const res = await getSimulationProfilesRealtime(props.simulationId, 'opinion_space')
+    
     if (res.success && res.data) {
       profiles.value = res.data.profiles || []
-      addLog(`Loaded ${profiles.value.length} simulated individuals`)
+      
+      if (profiles.value.length === 0) {
+        addLog('No agents loaded - simulation may not have completed profile generation')
+        if (res.data.is_generating) {
+          addLog('Profile generation is still in progress...')
+        } else if (!res.data.file_exists) {
+          addLog('ERROR: Profile file not found - ensure Step 3 (Simulation) completed successfully')
+        }
+      } else {
+        addLog(`Loaded ${profiles.value.length} agents`)
+      }
+    } else {
+      addLog(`API Error: ${res.error || 'Failed to load agents'}`)
     }
   } catch (err) {
-    addLog(`Failed to load simulated individuals: ${err.message}`)
+    addLog(`ERROR loading agents: ${err.message}`)
   }
 }
 
@@ -1357,6 +1376,10 @@ watch(() => props.simulationId, (newId) => {
 
 .action-bar-subtitle.mono {
   font-family: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+.action-bar-subtitle.no-agents {
+  color: #DC2626;
 }
 
 .action-bar-tabs {
