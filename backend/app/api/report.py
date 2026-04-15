@@ -70,7 +70,7 @@ def generate_report():
 
         # Initialize graph_tools in Flask context BEFORE spawning thread
         # (current_app is not available inside background threads)
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             return jsonify({"success": False, "error": "GraphStorage not initialized — check Neo4j connection"}), 500
         graph_tools = GraphToolsService(storage=storage)
@@ -249,7 +249,7 @@ def chat_with_report_agent():
 
         simulation_requirement = project.simulation_requirement or ""
 
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized — check Neo4j connection")
         graph_tools = GraphToolsService(storage=storage)
@@ -393,7 +393,7 @@ def search_graph_tool():
         limit = data.get('limit', 10)
         if not graph_id or not query:
             return jsonify({"success": False, "error": "Please provide graph_id and query"}), 400
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized — check Neo4j connection")
         tools = GraphToolsService(storage=storage)
@@ -411,7 +411,7 @@ def get_graph_statistics_tool():
         graph_id = data.get('graph_id')
         if not graph_id:
             return jsonify({"success": False, "error": "Please provide graph_id"}), 400
-        storage = current_app.extensions.get('neo4j_storage')
+        storage = current_app.extensions.get('graph_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized — check Neo4j connection")
         tools = GraphToolsService(storage=storage)

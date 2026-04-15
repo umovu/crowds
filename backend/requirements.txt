@@ -15,8 +15,9 @@ openai>=1.0.0
 # HTTP client for Ollama embedding API
 requests>=2.28.0
 
-# ============= Neo4j Graph Database =============
+# ============= Graph Database =============
 neo4j>=5.15.0
+kglite>=0.5.0
 
 # ============= OASIS 社交媒体模拟 =============
 # OASIS 社交模拟框架

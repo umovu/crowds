@@ -23,10 +23,10 @@ logger = get_logger('fub.api')
 
 
 def _get_storage():
-    """Get Neo4jStorage from Flask app extensions."""
-    storage = current_app.extensions.get('neo4j_storage')
+    """Get GraphStorage from Flask app extensions."""
+    storage = current_app.extensions.get('graph_storage')
     if not storage:
-        raise ValueError("GraphStorage not initialized — check Neo4j connection")
+        raise ValueError("GraphStorage not initialized")
     return storage
 
 
