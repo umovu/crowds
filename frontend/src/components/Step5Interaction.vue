@@ -101,7 +101,7 @@
               <span>Chat with Report Agent</span>
             </button>
             <div class="agent-dropdown" v-if="profiles.length > 0">
-              <button 
+              <button
                 class="tab-pill agent-pill"
                 :class="{ active: activeTab === 'chat' && chatTarget === 'agent' }"
                 @click="toggleAgentDropdown"
@@ -110,23 +110,23 @@
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>{{ selectedAgent ? selectedAgent.username : 'Chat with any individual' }}</span>
+                <span>{{ selectedAgent ? agentDisplayName(selectedAgent) : `Chat with any individual (${profiles.length})` }}</span>
                 <svg class="dropdown-arrow" :class="{ open: showAgentDropdown }" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
               <div v-if="showAgentDropdown" class="dropdown-menu">
-                <div class="dropdown-header">Select conversation target</div>
-                <div 
-                  v-for="(agent, idx) in profiles" 
+                <div class="dropdown-header">Select conversation target ({{ profiles.length }} agents)</div>
+                <div
+                  v-for="(agent, idx) in profiles"
                   :key="idx"
                   class="dropdown-item"
                   @click="selectAgent(agent, idx)"
                 >
-                  <div class="agent-avatar">{{ (agent.username || 'A')[0] }}</div>
+                  <div class="agent-avatar">{{ (agentDisplayName(agent) || 'A')[0].toUpperCase() }}</div>
                   <div class="agent-info">
-                    <span class="agent-name">{{ agent.username }}</span>
-                    <span class="agent-role">{{ agent.profession || 'Unknown profession' }}</span>
+                    <span class="agent-name">{{ agentDisplayName(agent) }}</span>
+                    <span class="agent-role">{{ agent.occupation || agent.profession || agent.actor_archetype || 'Unknown' }}</span>
                   </div>
                 </div>
               </div>
@@ -155,7 +155,7 @@
               <div class="tools-card-avatar">R</div>
               <div class="tools-card-info">
                 <div class="tools-card-name">Report Agent - Chat</div>
-                <div class="tools-card-subtitle">Quick chat version of Report Agent with 4 professional tools, has MiroFish's full memory</div>
+                <div class="tools-card-subtitle">Quick chat version of Report Agent with 4 professional tools, has full simulation memory</div>
               </div>
               <button class="tools-card-toggle" @click="showToolsDetail = !showToolsDetail">
                 <svg :class="{ 'is-expanded': showToolsDetail }" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
@@ -219,12 +219,12 @@
           <!-- Agent Profile Card -->
           <div v-if="chatTarget === 'agent' && selectedAgent" class="agent-profile-card">
             <div class="profile-card-header">
-              <div class="profile-card-avatar">{{ (selectedAgent.username || 'A')[0] }}</div>
+              <div class="profile-card-avatar">{{ (agentDisplayName(selectedAgent) || 'A')[0].toUpperCase() }}</div>
               <div class="profile-card-info">
-                <div class="profile-card-name">{{ selectedAgent.username }}</div>
+                <div class="profile-card-name">{{ agentDisplayName(selectedAgent) }}</div>
                 <div class="profile-card-meta">
-                  <span v-if="selectedAgent.name" class="profile-card-handle">@{{ selectedAgent.name }}</span>
-                  <span class="profile-card-profession">{{ selectedAgent.profession || 'Unknown profession' }}</span>
+                  <span v-if="selectedAgent.actor_archetype" class="profile-card-handle">{{ selectedAgent.actor_archetype }}</span>
+                  <span class="profile-card-profession">{{ selectedAgent.occupation || selectedAgent.profession || 'Unknown' }}</span>
                 </div>
               </div>
               <button class="profile-card-toggle" @click="showFullProfile = !showFullProfile">
@@ -233,10 +233,14 @@
                 </svg>
               </button>
             </div>
-            <div v-if="showFullProfile && selectedAgent.bio" class="profile-card-body">
+            <div v-if="showFullProfile && (selectedAgent.persona || selectedAgent.background_story || selectedAgent.bio)" class="profile-card-body">
               <div class="profile-card-bio">
-                <div class="profile-card-label">Introduction</div>
-                <p>{{ selectedAgent.bio }}</p>
+                <div class="profile-card-label">Persona</div>
+                <p>{{ selectedAgent.persona || selectedAgent.bio }}</p>
+              </div>
+              <div v-if="selectedAgent.group_affiliation" class="profile-card-bio" style="margin-top:8px">
+                <div class="profile-card-label">Group</div>
+                <p>{{ selectedAgent.group_affiliation }}</p>
               </div>
             </div>
           </div>
@@ -261,12 +265,12 @@
             >
               <div class="message-avatar">
                 <span v-if="msg.role === 'user'">U</span>
-                <span v-else>{{ msg.role === 'assistant' && chatTarget === 'report_agent' ? 'R' : (selectedAgent?.username?.[0] || 'A') }}</span>
+                <span v-else>{{ msg.role === 'assistant' && chatTarget === 'report_agent' ? 'R' : (selectedAgent ? agentDisplayName(selectedAgent)[0].toUpperCase() : 'A') }}</span>
               </div>
               <div class="message-content">
                 <div class="message-header">
                   <span class="sender-name">
-                    {{ msg.role === 'user' ? 'You' : (chatTarget === 'report_agent' ? 'Report Agent' : (selectedAgent?.username || 'Agent')) }}
+                    {{ msg.role === 'user' ? 'You' : (chatTarget === 'report_agent' ? 'Report Agent' : (selectedAgent ? agentDisplayName(selectedAgent) : 'Agent')) }}
                   </span>
                   <span class="message-time">{{ formatTime(msg.timestamp) }}</span>
                 </div>
@@ -275,7 +279,7 @@
             </div>
             <div v-if="isSending" class="chat-message assistant">
               <div class="message-avatar">
-                <span>{{ chatTarget === 'report_agent' ? 'R' : (selectedAgent?.username?.[0] || 'A') }}</span>
+                <span>{{ chatTarget === 'report_agent' ? 'R' : (selectedAgent ? agentDisplayName(selectedAgent)[0].toUpperCase() : 'A') }}</span>
               </div>
               <div class="message-content">
                 <div class="typing-indicator">
@@ -475,6 +479,11 @@ const toggleSectionCollapse = (idx) => {
     newSet.add(idx)
   }
   collapsedSections.value = newSet
+}
+
+// Agentsociety profiles use `name` not `username` — normalise here
+const agentDisplayName = (agent) => {
+  return agent?.username || agent?.name || `Agent ${agent?.id ?? ''}`
 }
 
 const selectChatTarget = (target) => {
@@ -711,7 +720,7 @@ const sendToAgent = async (message) => {
     throw new Error('Please select a simulated individual first')
   }
 
-  addLog(`Send to ${selectedAgent.value.username}: ${message.substring(0, 50)}...`)
+  addLog(`Send to ${agentDisplayName(selectedAgent.value)}: ${message.substring(0, 50)}...`)
 
   // Build prompt with chat history
   let prompt = message
@@ -733,20 +742,18 @@ const sendToAgent = async (message) => {
   })
 
   if (res.success && res.data) {
-    // Correct data path: res.data.result.results is an object dictionary
-    // Format: {"twitter_0": {...}, "reddit_0": {...}} or single platform {"reddit_0": {...}}
+    // data path: res.data.result.results is an object dictionary
+    // Format: {"opinion_space_0": {...}, "opinion_space_1": {...}}
     const resultData = res.data.result || res.data
     const resultsDict = resultData.results || resultData
 
-    // Convert object dictionary to array, prefer reddit platform response
+    // Look up by opinion_space key, fall back to first value
     let responseContent = null
     const agentId = selectedAgentIndex.value
 
     if (typeof resultsDict === 'object' && !Array.isArray(resultsDict)) {
-      // Prefer reddit platform response, then twitter
-      const redditKey = `reddit_${agentId}`
-      const twitterKey = `twitter_${agentId}`
-      const agentResult = resultsDict[redditKey] || resultsDict[twitterKey] || Object.values(resultsDict)[0]
+      const opinionKey = `opinion_space_${agentId}`
+      const agentResult = resultsDict[opinionKey] || Object.values(resultsDict)[0]
       if (agentResult) {
         responseContent = agentResult.response || agentResult.answer
       }
@@ -761,7 +768,7 @@ const sendToAgent = async (message) => {
         content: responseContent,
         timestamp: new Date().toISOString()
       })
-      addLog(`${selectedAgent.value.username} replied`)
+      addLog(`${agentDisplayName(selectedAgent.value)} replied`)
     } else {
       throw new Error('No response data')
     }
@@ -833,9 +840,8 @@ const submitSurvey = async () => {
         let responseContent = 'No response'
 
         if (typeof resultsDict === 'object' && !Array.isArray(resultsDict)) {
-          const redditKey = `reddit_${agentIdx}`
-          const twitterKey = `twitter_${agentIdx}`
-          const agentResult = resultsDict[redditKey] || resultsDict[twitterKey]
+          const opinionKey = `opinion_space_${agentIdx}`
+          const agentResult = resultsDict[opinionKey] || Object.values(resultsDict)[agentIdx]
           if (agentResult) {
             responseContent = agentResult.response || agentResult.answer || 'No response'
           }
@@ -915,7 +921,7 @@ const loadProfiles = async () => {
   if (!props.simulationId) return
 
   try {
-    const res = await getSimulationProfilesRealtime(props.simulationId, 'reddit')
+    const res = await getSimulationProfilesRealtime(props.simulationId, 'opinion_space')
     if (res.success && res.data) {
       profiles.value = res.data.profiles || []
       addLog(`Loaded ${profiles.value.length} simulated individuals`)

@@ -1,27 +1,24 @@
 <div align="center">
 
-<img src="./static/image/mirofish-offline-banner.png" alt="MiroFish Offline" width="100%"/>
+<img src="./static/image/mirofish-offline-banner.png" alt="Fub Simulation Offline" width="100%"/>
 
-# MiroFish-Offline
+# Fub Simulation
 
-**Fully local fork of [MiroFish](https://github.com/666ghj/MiroFish) — no cloud APIs required. English UI.**
+**A local-first multi-agent swarm intelligence engine for simulating public opinion and social dynamics.**
 
 *A multi-agent swarm intelligence engine that simulates public opinion, market sentiment, and social dynamics. Entirely on your hardware.*
 
-[![GitHub Stars](https://img.shields.io/github/stars/nikmcfly/MiroFish-Offline?style=flat-square&color=DAA520)](https://github.com/nikmcfly/MiroFish-Offline/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/nikmcfly/MiroFish-Offline?style=flat-square)](https://github.com/nikmcfly/MiroFish-Offline/network)
-[![Docker](https://img.shields.io/badge/Docker-Build-2496ED?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square)](./LICENSE)
 
 </div>
 
 ## What is this?
 
-MiroFish is a multi-agent simulation engine: upload any document (press release, policy draft, financial report), and it generates hundreds of AI agents with unique personalities that simulate the public reaction on social media. Posts, arguments, opinion shifts — hour by hour.
+Fub Simulation is a multi-agent simulation engine: upload any document (press release, policy draft, financial report), and it generates hundreds of AI agents with unique personalities that simulate the public reaction on social media. Posts, arguments, opinion shifts — hour by hour.
 
-The [original MiroFish](https://github.com/666ghj/MiroFish) was built for the Chinese market (Chinese UI, Zep Cloud for knowledge graphs, DashScope API). This fork makes it **fully local and fully English**:
+The original MiroFish was built for the Chinese market (Chinese UI, Zep Cloud for knowledge graphs, DashScope API). This fork makes it **fully local and fully English**:
 
-| Original MiroFish | MiroFish-Offline |
+| Original MiroFish | Fub Simulation |
 |---|---|
 | Chinese UI | **English UI** (1,000+ strings translated) |
 | Zep Cloud (graph memory) | **Neo4j Community Edition 5.15** |
@@ -40,7 +37,7 @@ The [original MiroFish](https://github.com/666ghj/MiroFish) was built for the Ch
 ## Screenshot
 
 <div align="center">
-<img src="./static/image/mirofish-offline-screenshot.jpg" alt="MiroFish Offline — English UI" width="100%"/>
+<img src="./static/image/mirofish-offline-screenshot.jpg" alt="Fub Simulation Offline — English UI" width="100%"/>
 </div>
 
 ## Quick Start
@@ -53,16 +50,16 @@ The [original MiroFish](https://github.com/666ghj/MiroFish) was built for the Ch
 ### Option A: Docker (easiest)
 
 ```bash
-git clone https://github.com/nikmcfly/MiroFish-Offline.git
-cd MiroFish-Offline
+git clone <your-repo-url>
+cd Fub-Simulation
 cp .env.example .env
 
-# Start all services (Neo4j, Ollama, MiroFish)
+# Start all services (Neo4j, Ollama, Fub Simulation)
 docker compose up -d
 
 # Pull the required models into Ollama
-docker exec mirofish-ollama ollama pull qwen2.5:32b
-docker exec mirofish-ollama ollama pull nomic-embed-text
+docker exec fub-ollama ollama pull qwen2.5:32b
+docker exec fub-ollama ollama pull nomic-embed-text
 ```
 
 Open `http://localhost:3000` — that's it.
@@ -74,7 +71,7 @@ Open `http://localhost:3000` — that's it.
 ```bash
 docker run -d --name neo4j \
   -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/mirofish \
+  -e NEO4J_AUTH=neo4j/fubsimulation \
   neo4j:5.15-community
 ```
 
@@ -120,7 +117,7 @@ LLM_MODEL_NAME=qwen2.5:32b
 # Neo4j
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
-NEO4J_PASSWORD=mirofish
+NEO4J_PASSWORD=fubsimulation
 
 # Embeddings
 EMBEDDING_MODEL=nomic-embed-text
@@ -196,10 +193,10 @@ AGPL-3.0 — same as the original MiroFish project. See [LICENSE](./LICENSE).
 
 ## Credits & Attribution
 
-This is a modified fork of [MiroFish](https://github.com/666ghj/MiroFish) by [666ghj](https://github.com/666ghj), originally supported by [Shanda Group](https://www.shanda.com/). The simulation engine is powered by [OASIS](https://github.com/camel-ai/oasis) from the CAMEL-AI team.
+This is a modified fork of MiroFish by 666ghj, originally supported by Shanda Group. The simulation engine is powered by OASIS from the CAMEL-AI team.
 
 **Modifications in this fork:**
 - Backend migrated from Zep Cloud to local Neo4j CE 5.15 + Ollama
 - Entire frontend translated from Chinese to English (20 files, 1,000+ strings)
 - All Zep references replaced with Neo4j across the UI
-- Rebranded to MiroFish Offline
+- Rebranded to Fub Simulation

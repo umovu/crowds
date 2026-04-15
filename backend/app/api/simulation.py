@@ -10,13 +10,13 @@ from flask import request, jsonify, send_file, current_app
 from . import simulation_bp
 from ..config import Config
 from ..services.entity_reader import EntityReader
-from ..services.oasis_profile_generator import OasisProfileGenerator
+from ..services.agent_profile_generator import AgentProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner, RunnerStatus
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
 
-logger = get_logger('mirofish.api.simulation')
+logger = get_logger('fub.api.simulation')
 
 
 # Interview prompt optimization prefix
@@ -161,22 +161,18 @@ def create_simulation():
     
     Request (JSON):
         {
-            "project_id": "proj_xxxx",      // Required
-            "graph_id": "mirofish_xxxx",    // Optional, if not provided, get from project
-            "enable_twitter": true,          // Optional, default true
-            "enable_reddit": true            // Optional, default true
+            "project_id": "proj_xxxx",  // Required
+            "graph_id": "fub_xxxx"      // Optional, if not provided, get from project
         }
-    
+
     Returns:
         {
             "success": true,
             "data": {
                 "simulation_id": "sim_xxxx",
                 "project_id": "proj_xxxx",
-                "graph_id": "mirofish_xxxx",
+                "graph_id": "fub_xxxx",
                 "status": "created",
-                "enable_twitter": true,
-                "enable_reddit": true,
                 "created_at": "2025-12-01T10:00:00"
             }
         }
@@ -209,9 +205,6 @@ def create_simulation():
         state = manager.create_simulation(
             project_id=project_id,
             graph_id=graph_id,
-            # AgentSociety swap: single opinion_space platform replaces twitter/reddit
-            enable_twitter=data.get('enable_twitter', True),
-            enable_reddit=data.get('enable_reddit', False),
         )
         
         return jsonify({
@@ -253,20 +246,11 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
     if not os.path.exists(simulation_dir):
         return False, {"reason": "Simulation directory does not exist"}
     
-    # Required file list — AgentSociety swap uses agentsociety_profiles.json instead of
-    # the OASIS-era twitter_profiles.csv + reddit_profiles.json pair.
     required_files = [
         "state.json",
         "simulation_config.json",
+        "agentsociety_profiles.json",
     ]
-    # Accept either the new AgentSociety profiles file or the legacy OASIS files
-    has_as_profiles = os.path.exists(os.path.join(simulation_dir, "agentsociety_profiles.json"))
-    has_oasis_profiles = (
-        os.path.exists(os.path.join(simulation_dir, "reddit_profiles.json"))
-        or os.path.exists(os.path.join(simulation_dir, "twitter_profiles.csv"))
-    )
-    if not has_as_profiles and not has_oasis_profiles:
-        required_files.append("agentsociety_profiles.json")  # will be listed as missing
     
     # Check if files exist
     existing_files = []
@@ -309,7 +293,7 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
         prepared_statuses = ["ready", "preparing", "running", "completed", "stopped", "failed"]
         if status in prepared_statuses and config_generated:
             # Get file statistics
-            profiles_file = os.path.join(simulation_dir, "reddit_profiles.json")
+            profiles_file = os.path.join(simulation_dir, "agentsociety_profiles.json")
             config_file = os.path.join(simulation_dir, "simulation_config.json")
             
             profiles_count = 0
@@ -996,8 +980,8 @@ def get_simulation_profiles(simulation_id: str):
         platform: Platform type（reddit/twitter，Defaultreddit）
     """
     try:
-        platform = request.args.get('platform', 'reddit')
-        
+        platform = request.args.get('platform', 'opinion_space')
+
         manager = SimulationManager()
         profiles = manager.get_profiles(simulation_id, platform=platform)
         
@@ -1058,41 +1042,29 @@ def get_simulation_profiles_realtime(simulation_id: str):
     from datetime import datetime
     
     try:
-        platform = request.args.get('platform', 'reddit')
-        
         # Get simulation directory
         sim_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
-        
+
         if not os.path.exists(sim_dir):
             return jsonify({
                 "success": False,
                 "error": f"Simulation does not exist: {simulation_id}"
             }), 404
-        
-        # Determine file path
-        if platform == "reddit":
-            profiles_file = os.path.join(sim_dir, "reddit_profiles.json")
-        else:
-            profiles_file = os.path.join(sim_dir, "twitter_profiles.csv")
-        
+
+        profiles_file = os.path.join(sim_dir, "agentsociety_profiles.json")
+
         # Check if files exist
         file_exists = os.path.exists(profiles_file)
         profiles = []
         file_modified_at = None
-        
+
         if file_exists:
-            # Get file modification time
             file_stat = os.stat(profiles_file)
             file_modified_at = datetime.fromtimestamp(file_stat.st_mtime).isoformat()
-            
+
             try:
-                if platform == "reddit":
-                    with open(profiles_file, 'r', encoding='utf-8') as f:
-                        profiles = json.load(f)
-                else:
-                    with open(profiles_file, 'r', encoding='utf-8') as f:
-                        reader = csv.DictReader(f)
-                        profiles = list(reader)
+                with open(profiles_file, 'r', encoding='utf-8') as f:
+                    profiles = json.load(f)
             except (json.JSONDecodeError, Exception) as e:
                 logger.warning(f"Failed to read profiles file: {e}")
                 profiles = []
@@ -1235,8 +1207,7 @@ def get_simulation_config_realtime(simulation_id: str):
                 "simulation_hours": config.get("time_config", {}).get("total_simulation_hours"),
                 "initial_posts_count": len(config.get("event_config", {}).get("initial_posts", [])),
                 "hot_topics_count": len(config.get("event_config", {}).get("hot_topics", [])),
-                "has_twitter_config": "twitter_config" in config,
-                "has_reddit_config": "reddit_config" in config,
+                "has_opinion_space_config": True,
                 "generated_at": config.get("generated_at"),
                 "llm_model": config.get("llm_model")
             }
@@ -1323,30 +1294,24 @@ def download_simulation_config(simulation_id: str):
 @simulation_bp.route('/script/<script_name>/download', methods=['GET'])
 def download_simulation_script(script_name: str):
     """
-    Download simulation run script file (general scripts from backend/scripts/)
-    
-    script_nameOptional values：
-        - run_twitter_simulation.py
-        - run_reddit_simulation.py
-        - run_parallel_simulation.py
+    Download simulation run script file (from backend/scripts/)
+
+    script_name options:
+        - run_simulation_as.py
         - action_logger.py
     """
     try:
-        # Scripts located at backend/scripts/ Directory
         scripts_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../scripts'))
-        
-        # Verify script name
+
         allowed_scripts = [
-            "run_twitter_simulation.py",
-            "run_reddit_simulation.py", 
-            "run_parallel_simulation.py",
+            "run_simulation_as.py",
             "action_logger.py"
         ]
-        
+
         if script_name not in allowed_scripts:
             return jsonify({
                 "success": False,
-                "error": f"Unknown script: {script_name}，Optional: {allowed_scripts}"
+                "error": f"Unknown script: {script_name}. Options: {allowed_scripts}"
             }), 400
         
         script_path = os.path.join(scripts_dir, script_name)
@@ -1381,7 +1346,7 @@ def generate_profiles():
     
     Request (JSON):
         {
-            "graph_id": "mirofish_xxxx",     // Required
+            "graph_id": "fub_xxxx",     // Required
             "entity_types": ["Student"],      // Optional
             "use_llm": true,                  // Optional
             "platform": "reddit"              // Optional
@@ -1399,8 +1364,6 @@ def generate_profiles():
         
         entity_types = data.get('entity_types')
         use_llm = data.get('use_llm', True)
-        platform = data.get('platform', 'reddit')
-        
         storage = current_app.extensions.get('neo4j_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized")
@@ -1410,32 +1373,24 @@ def generate_profiles():
             defined_entity_types=entity_types,
             enrich_with_edges=True
         )
-        
+
         if filtered.filtered_count == 0:
             return jsonify({
                 "success": False,
                 "error": "No matching entities found"
             }), 400
-        
-        generator = OasisProfileGenerator()
+
+        generator = AgentProfileGenerator()
         profiles = generator.generate_profiles_from_entities(
             entities=filtered.entities,
             use_llm=use_llm
         )
-        
-        if platform == "opinion_space":
-            profiles_data = [p.to_agentsociety_format() for p in profiles]
-        elif platform == "reddit":
-            profiles_data = [p.to_reddit_format() for p in profiles]
-        elif platform == "twitter":
-            profiles_data = [p.to_twitter_format() for p in profiles]
-        else:
-            profiles_data = [p.to_dict() for p in profiles]
-        
+        profiles_data = [p.to_agentsociety_format() for p in profiles]
+
         return jsonify({
             "success": True,
             "data": {
-                "platform": platform,
+                "platform": "opinion_space",
                 "entity_types": list(filtered.entity_types),
                 "count": len(profiles_data),
                 "profiles": profiles_data
@@ -1524,10 +1479,10 @@ def start_simulation():
                     "error": "max_rounds Must be valid integer"
                 }), 400
 
-        if platform not in ['twitter', 'reddit', 'parallel', 'opinion_space']:
+        if platform not in ['opinion_space']:
             return jsonify({
                 "success": False,
-                "error": f"Invalid platform type: {platform}. Options: opinion_space / twitter / reddit / parallel"
+                "error": f"Invalid platform type: {platform}. Only 'opinion_space' is supported."
             }), 400
 
         # Check if simulation is ready
@@ -1745,17 +1700,24 @@ def get_run_status(simulation_id: str):
                     "current_round": 0,
                     "total_rounds": 0,
                     "progress_percent": 0,
-                    "twitter_actions_count": 0,
-                    "reddit_actions_count": 0,
+                    "simulation_actions_count": 0,
                     "total_actions_count": 0,
                 }
             })
         
+        data = run_state.to_dict()
+
+        # Merge live agent-expressed count from subprocess env_status.json
+        env_status = SimulationRunner.get_env_status_detail(simulation_id)
+        data["agents_expressed_count"] = env_status.get("agents_expressed_count", 0)
+        data["agents_expressed"]       = env_status.get("agents_expressed", [])
+        data["total_agents"]           = env_status.get("total_agents", 0)
+
         return jsonify({
             "success": True,
-            "data": run_state.to_dict()
+            "data": data,
         })
-        
+
     except Exception as e:
         logger.error(f"Failed to get running status: {str(e)}")
         return jsonify({
@@ -1813,43 +1775,24 @@ def get_run_status_detail(simulation_id: str):
                     "simulation_id": simulation_id,
                     "runner_status": "idle",
                     "all_actions": [],
-                    "twitter_actions": [],
-                    "reddit_actions": []
                 }
             })
-        
-        # Get complete action list
+
         all_actions = SimulationRunner.get_all_actions(
             simulation_id=simulation_id,
-            platform=platform_filter
+            platform=platform_filter,
         )
-        
-        # Get actions by platform
-        twitter_actions = SimulationRunner.get_all_actions(
-            simulation_id=simulation_id,
-            platform="twitter"
-        ) if not platform_filter or platform_filter == "twitter" else []
-        
-        reddit_actions = SimulationRunner.get_all_actions(
-            simulation_id=simulation_id,
-            platform="reddit"
-        ) if not platform_filter or platform_filter == "reddit" else []
-        
-        # Get current round actions（recent_actions Only show latest round）
+
         current_round = run_state.current_round
         recent_actions = SimulationRunner.get_all_actions(
             simulation_id=simulation_id,
             platform=platform_filter,
-            round_num=current_round
+            round_num=current_round,
         ) if current_round > 0 else []
-        
-        # Get basic status information
+
         result = run_state.to_dict()
         result["all_actions"] = [a.to_dict() for a in all_actions]
-        result["twitter_actions"] = [a.to_dict() for a in twitter_actions]
-        result["reddit_actions"] = [a.to_dict() for a in reddit_actions]
         result["rounds_count"] = len(run_state.rounds)
-        # recent_actions Only show latest round content of two platforms
         result["recent_actions"] = [a.to_dict() for a in recent_actions]
         
         return jsonify({
@@ -2223,10 +2166,10 @@ def interview_agent():
             }), 400
         
         # VerifyplatformParameters
-        if platform and platform not in ("twitter", "reddit", "opinion_space"):
+        if platform and platform not in ("opinion_space",):
             return jsonify({
                 "success": False,
-                "error": "platform Parameter can only be 'twitter' Or 'reddit'"
+                "error": "platform must be opinion_space (was: 'twitter' Or 'reddit'"
             }), 400
         
         # Check environment status
@@ -2338,10 +2281,10 @@ def interview_agents_batch():
             }), 400
 
         # VerifyplatformParameters
-        if platform and platform not in ("twitter", "reddit", "opinion_space"):
+        if platform and platform not in ("opinion_space",):
             return jsonify({
                 "success": False,
-                "error": "platform Parameter can only be 'twitter' Or 'reddit'"
+                "error": "platform must be opinion_space (was: 'twitter' Or 'reddit'"
             }), 400
 
         # Verify each interview item
@@ -2465,10 +2408,10 @@ def interview_all_agents():
             }), 400
 
         # VerifyplatformParameters
-        if platform and platform not in ("twitter", "reddit", "opinion_space"):
+        if platform and platform not in ("opinion_space",):
             return jsonify({
                 "success": False,
-                "error": "platform Parameter can only be 'twitter' Or 'reddit'"
+                "error": "platform must be opinion_space (was: 'twitter' Or 'reddit'"
             }), 400
 
         # Check environment status

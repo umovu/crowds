@@ -29,7 +29,7 @@ from .graph_tools import (
     InterviewResult
 )
 
-logger = get_logger('mirofish.report_agent')
+logger = get_logger('fub.report_agent')
 
 
 class ReportLogger:
@@ -352,8 +352,8 @@ class ReportConsoleLogger:
 
         # Add to report_agent related loggers
         loggers_to_attach = [
-            'mirofish.report_agent',
-            'mirofish.graph_tools',
+            'fub.report_agent',
+            'fub.graph_tools',
         ]
 
         for logger_name in loggers_to_attach:
@@ -368,8 +368,8 @@ class ReportConsoleLogger:
 
         if self._file_handler:
             loggers_to_detach = [
-                'mirofish.report_agent',
-                'mirofish.graph_tools',
+                'fub.report_agent',
+                'fub.graph_tools',
             ]
 
             for logger_name in loggers_to_detach:

@@ -1,11 +1,11 @@
 [project]
-name = "mirofish-offline-backend"
+name = "fub-simulation-backend"
 version = "0.2.0"
-description = "MiroFish-Offline - Offline-first fork running on Neo4j + Ollama"
+description = "Fub Simulation - Offline-first fork running on Neo4j + Ollama"
 requires-python = ">=3.11"
 license = { text = "AGPL-3.0" }
 authors = [
-    { name = "MiroFish Team" }
+    { name = "Fub Simulation Team" }
 ]
 
 dependencies = [
@@ -19,10 +19,9 @@ dependencies = [
     # Neo4j graph database driver
     "neo4j>=5.15.0",
     
-    # OASIS 社交媒体模拟
-    "camel-oasis==0.2.5",
-    "camel-ai==0.2.78",
-    
+    # AgentSociety — Agent + Block + Memory framework (Tsinghua FIB Lab)
+    "agentsociety>=1.5.7",
+
     # 文件处理
     "PyMuPDF>=1.24.0",
     # 编码检测（支持非UTF-8编码的文本文件）

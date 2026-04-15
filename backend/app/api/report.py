@@ -17,7 +17,7 @@ from ..models.task import TaskManager, TaskStatus
 from ..services.graph_tools import GraphToolsService
 from ..utils.logger import get_logger
 
-logger = get_logger('mirofish.api.report')
+logger = get_logger('fub.api.report')
 
 
 # ============== Report Generation Interface ==============
