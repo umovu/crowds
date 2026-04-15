@@ -79,8 +79,10 @@ class KGLiteStorage(GraphStorage):
             "summary": summary,
         }
         try:
+            name_escaped = name.replace("'", "\\'")
+            summary_escaped = summary.replace("'", "\\'")
             self._graph.cypher(
-                f"CREATE (n:{entity_type or 'Entity'} {{uuid: '{entity_uuid}', graph_id: '{graph_id}', name: '{name.replace("'", "\\'")}', summary: '{summary.replace("'", "\\'")}'}})"
+                f"CREATE (n:{entity_type or 'Entity'} {{uuid: '{entity_uuid}', graph_id: '{graph_id}', name: '{name_escaped}', summary: '{summary_escaped}'}})"
             )
         except Exception as e:
             logger.warning(f"KGLite node creation warning: {e}")
@@ -106,11 +108,12 @@ class KGLiteStorage(GraphStorage):
         })
         
         try:
+            fact_escaped = fact.replace("'", "\\'")
             self._graph.cypher(
                 f"""
                 MATCH (src {{uuid: '{source_uuid}'}})
                 MATCH (tgt {{uuid: '{target_uuid}'}})
-                CREATE (src)-[r:RELATION {{uuid: '{rel_uuid}', graph_id: '{graph_id}', name: '{relation_type}', fact: '{fact.replace("'", "\\'")}'}}]->(tgt)
+                CREATE (src)-[r:RELATION {{uuid: '{rel_uuid}', graph_id: '{graph_id}', name: '{relation_type}', fact: '{fact_escaped}'}}]->(tgt)
                 """
             )
         except Exception as e:
