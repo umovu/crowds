@@ -103,5 +103,4 @@ AGPL-3.0 — see [LICENSE](./LICENSE).
 
 ## Credits
 
-Powered by OASIS from the CAMEL-AI team.
-Powered by AgentSociety simulation engine.
+Powered by the AgentSociety simulation engine.
