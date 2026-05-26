@@ -42,8 +42,8 @@ Upload a policy draft, press release, or event brief — and watch how hundreds 
 ### Option A: Docker
 
 ```bash
-git clone https://github.com/dlangamandla/Fub-simulation.git
-cd Fub-simulation
+git clone https://github.com/jtswartbooi/fub-sandbox.git
+cd fub-sandbox
 cp .env.example .env
 
 docker compose up -d
