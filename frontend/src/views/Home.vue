@@ -129,23 +129,62 @@
               />
             </div>
 
-            <!-- Advanced settings (collapsed by default) -->
-            <details class="advanced-settings">
-              <summary class="advanced-summary">Advanced settings</summary>
-              <div class="advanced-body">
-                <div class="advanced-row">
-                  <span class="advanced-label">Graph engine</span>
-                  <select v-model="selectedBackend" @change="switchBackend" class="advanced-select" :disabled="loading">
-                    <option value="ladybug">LadybugDB — Embedded (recommended)</option>
-                    <option value="neo4j">Neo4j — Server, needs Docker</option>
-                    <option value="kglite">KGLite — In-memory (dev only)</option>
-                  </select>
-                </div>
-                <div class="advanced-hint">
-                  The default works for almost everyone. Only change this if you know why.
-                </div>
+            <!-- Graph engine picker -->
+            <div :style="s.consoleSection">
+              <div class="console-header" :style="s.consoleHeader">
+                <span>04 / Graph Engine</span>
+                <span>Choose one</span>
               </div>
-            </details>
+              <div class="engine-grid">
+                <label
+                  class="engine-card"
+                  :class="{ selected: selectedBackend === 'ladybug' }"
+                >
+                  <input
+                    type="radio"
+                    value="ladybug"
+                    v-model="selectedBackend"
+                    @change="switchBackend"
+                    :disabled="loading"
+                    class="engine-radio"
+                  />
+                  <div class="engine-card-body">
+                    <div class="engine-card-top">
+                      <span class="engine-name">LadybugDB</span>
+                      <span class="engine-tag">Recommended</span>
+                    </div>
+                    <div class="engine-desc">
+                      Embedded, no Docker needed. Persists to a file on disk.
+                      Best for solo / local use.
+                    </div>
+                  </div>
+                </label>
+
+                <label
+                  class="engine-card"
+                  :class="{ selected: selectedBackend === 'neo4j' }"
+                >
+                  <input
+                    type="radio"
+                    value="neo4j"
+                    v-model="selectedBackend"
+                    @change="switchBackend"
+                    :disabled="loading"
+                    class="engine-radio"
+                  />
+                  <div class="engine-card-body">
+                    <div class="engine-card-top">
+                      <span class="engine-name">Neo4j</span>
+                      <span class="engine-tag-muted">Needs Docker</span>
+                    </div>
+                    <div class="engine-desc">
+                      Industry-standard graph server. Built-in browser UI,
+                      handles bigger graphs, supports multi-process access.
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
 
             <div :style="s.btnSection">
               <button :style="s.startEngineBtn" @click="startSimulation" :disabled="!canSubmit || loading">
@@ -468,63 +507,75 @@ const startSimulation = async () => {
   }
 }
 
-/* Advanced settings fold — hides expert controls (graph engine, etc.)
-   behind a collapsible section so first-run users aren't asked questions
-   they can't answer. Click to expand. */
-.advanced-settings {
-  margin: 8px 20px 20px;
-  border-top: 1px solid #EEE;
-  padding-top: 12px;
+/* Graph-engine picker — two radio cards, one selected.
+   Promoted out of the "advanced" fold so the user makes a deliberate
+   choice between the two supported backends (Ladybug / Neo4j). */
+.engine-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
-.advanced-summary {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: #999;
+.engine-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #DDD;
   cursor: pointer;
-  padding: 4px 0;
-  list-style: none;
-  user-select: none;
+  background: #fff;
+  transition: border-color 0.15s, background 0.15s;
 }
-.advanced-summary::before {
-  content: '▸ ';
-  color: #BBB;
-  font-size: 0.7rem;
+.engine-card:hover {
+  border-color: #1E9E5A;
 }
-.advanced-settings[open] .advanced-summary::before {
-  content: '▾ ';
+.engine-card.selected {
+  border-color: #1E9E5A;
+  background: #F0FAF4;
 }
-.advanced-summary:hover { color: #1E9E5A; }
-.advanced-body {
-  padding: 12px 0 4px;
+.engine-radio {
+  margin-top: 3px;
+  accent-color: #1E9E5A;
+  cursor: pointer;
+}
+.engine-card-body {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
-.advanced-row {
+.engine-card-top {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
-.advanced-label {
+.engine-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #000;
+}
+.engine-tag {
   font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #1E9E5A;
+  color: #fff;
+  padding: 1px 6px;
+}
+.engine-tag-muted {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #999;
+  background: #F4F4F4;
+  padding: 1px 6px;
+}
+.engine-desc {
   font-size: 0.75rem;
-  color: #777;
-  min-width: 100px;
+  color: #666;
+  line-height: 1.45;
 }
-.advanced-select {
-  flex: 1;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  padding: 6px 10px;
-  border: 1px solid #DDD;
-  background: #fff;
-  cursor: pointer;
-  outline: none;
-}
-.advanced-hint {
-  font-size: 0.7rem;
-  color: #AAA;
-  font-style: italic;
+@media (max-width: 720px) {
+  .engine-grid { grid-template-columns: 1fr; }
 }
 
 .console-dot {
