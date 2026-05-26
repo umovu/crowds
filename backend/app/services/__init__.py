@@ -35,6 +35,7 @@ from .simulation_ipc import (
     CommandType,
     CommandStatus
 )
+from .interview_service import InterviewService
 
 __all__ = [
     'OntologyGenerator',
@@ -67,4 +68,5 @@ __all__ = [
     'IPCResponse',
     'CommandType',
     'CommandStatus',
+    'InterviewService',
 ]

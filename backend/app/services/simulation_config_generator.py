@@ -83,10 +83,10 @@ class AgentActivityConfig:
 class TimeSimulationConfig:
     """Time simulation configuration (based on Chinese work schedule habits)"""
     # Total simulation time (simulation hours)
-    total_simulation_hours: int = 72  # Default 72 hours (3 days)
+    total_simulation_hours: int = 24  # Default 24 hours (1 day)
 
-    # Time represented per round (simulation minutes) - default 60 minutes (1 hour), speed up time
-    minutes_per_round: int = 60
+    # Time represented per round (simulation minutes) - default 30 minutes, speed up time
+    minutes_per_round: int = 30
 
     # Range of agents activated per hour
     agents_per_hour_min: int = 5
@@ -264,17 +264,29 @@ class SimulationConfigGenerator:
         )
         
         reasoning_parts = []
+
+        # ========== Step 1 & 2: Generate time & event config in parallel ==========
+        from concurrent.futures import ThreadPoolExecutor, as_completed
         
-        # ========== Step 1: Generate time configuration ==========
-        report_progress(1, "Generating time configuration...")
+        report_progress(1, "Generating time & event configuration in parallel...")
         num_entities = len(entities)
-        time_config_result = self._generate_time_config(context, num_entities)
+        
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            # Submit both tasks
+            time_future = executor.submit(
+                self._generate_time_config, context, num_entities
+            )
+            event_future = executor.submit(
+                self._generate_event_config, context, simulation_requirement, entities
+            )
+            
+            # Collect results
+            time_config_result = time_future.result()
+            event_config_result = event_future.result()
+        
         time_config = self._parse_time_config(time_config_result, num_entities)
         reasoning_parts.append(f"Time config: {time_config_result.get('reasoning', 'Success')}")
-
-        # ========== Step 2: Generate event configuration ==========
-        report_progress(2, "Generating event configuration and hot topics...")
-        event_config_result = self._generate_event_config(context, simulation_requirement, entities)
+        
         event_config = self._parse_event_config(event_config_result)
         reasoning_parts.append(f"Event config: {event_config_result.get('reasoning', 'Success')}")
 
@@ -321,6 +333,63 @@ class SimulationConfigGenerator:
         )
         
         logger.info(f"Simulation configuration generation complete: {len(params.agent_configs)} agent configurations")
+
+        return params
+
+    def inject_core_focus_configs(
+        self,
+        params: SimulationParameters,
+        custom_profiles: List[Dict[str, Any]],
+    ) -> SimulationParameters:
+        """
+        Inject agent configs for custom agents that are marked as core focus.
+
+        These agents need proper AgentActivityConfig entries so they are guaranteed
+        to participate in the simulation with high activity and influence.
+
+        Args:
+            params: Existing SimulationParameters from generate_config()
+            custom_profiles: List of custom agent profile dicts (from agentsociety_profiles.json)
+
+        Returns:
+            Updated SimulationParameters with core focus configs injected
+        """
+        from .agent_profile_generator import AgentProfile
+
+        existing_ids = {ac.agent_id for ac in params.agent_configs}
+        core_focus_agents = [
+            p for p in custom_profiles
+            if p.get("is_core_focus", False) and p.get("id") not in existing_ids
+        ]
+
+        if not core_focus_agents:
+            logger.info("No core focus agents need config injection")
+            return params
+
+        logger.info(f"Injecting configs for {len(core_focus_agents)} core focus agents")
+
+        for profile_data in core_focus_agents:
+            agent_id = profile_data.get("id")
+            name = profile_data.get("name", f"Agent_{agent_id}")
+            archetype = profile_data.get("actor_archetype", "civic_moderate")
+
+            config = AgentActivityConfig(
+                agent_id=agent_id,
+                entity_uuid=profile_data.get("source_entity_uuid", ""),
+                entity_name=name,
+                entity_type="custom_agent",
+                activity_level=1.0,
+                posts_per_hour=1.5,
+                comments_per_hour=2.5,
+                active_hours=list(range(24)),
+                response_delay_min=3,
+                response_delay_max=30,
+                sentiment_bias=0.0,
+                stance="neutral",
+                influence_weight=1.5,
+            )
+            params.agent_configs.append(config)
+            logger.info(f"  Core focus config injected: {name} (id={agent_id}, archetype={archetype})")
 
         return params
 
@@ -542,15 +611,15 @@ Field description:
     def _get_default_time_config(self, num_entities: int) -> Dict[str, Any]:
         """Get default time configuration (Chinese work schedule)"""
         return {
-            "total_simulation_hours": 72,
-            "minutes_per_round": 60,  # 1 hour per round, speed up time
+            "total_simulation_hours": 24,
+            "minutes_per_round": 30,  # 30 min per round
             "agents_per_hour_min": max(1, num_entities // 15),
             "agents_per_hour_max": max(5, num_entities // 5),
             "peak_hours": [19, 20, 21, 22],
             "off_peak_hours": [0, 1, 2, 3, 4, 5],
             "morning_hours": [6, 7, 8],
             "work_hours": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-            "reasoning": "Using default Chinese work schedule configuration (1 hour per round)"
+            "reasoning": "Using default configuration (1 day, 30 min/round)"
         }
 
     def _parse_time_config(self, result: Dict[str, Any], num_entities: int) -> TimeSimulationConfig:

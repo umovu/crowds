@@ -59,3 +59,19 @@ backend/uploads/
 # Docker 数据
 data/backend/venv311/
 backend/venv311/
+
+# Embedded graph DBs (binary, never commit)
+backend/ladybug_data
+backend/ladybug_data.*
+backend/kuzu_data
+backend/kuzu_data.*
+
+# Scratch test / debug files
+agentsociety2_test_*.txt
+mcp_test_result.txt
+prompt_output.txt
+print_prompt.py
+find_prompt_line.py
+save_prompt.py
+read_all.py
+TODO.md

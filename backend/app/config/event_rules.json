@@ -1,0 +1,316 @@
+{
+  "version": "1.0",
+  "description": "Reactive event rules for SA policy opinion simulation. Rules are evaluated after each round. When a rule's trigger conditions are met, its event is injected into the simulation.",
+  "rules": [
+    {
+      "id": "sentiment_spike_police",
+      "description": "High-impact anger from 25%+ agents triggers police deployment",
+      "category": "institutional_response",
+      "trigger": {
+        "type": "threshold",
+        "metric": "pct_agents_with_impact_above",
+        "value": 0.7,
+        "min_proportion": 0.25,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "institutional_response",
+        "source": "SAPS",
+        "title": "Police Deploy Units to Affected Areas",
+        "content": "The Police Minister announces the deployment of Public Order Policing units and riot control vehicles to areas where protests are anticipated. Communities are urged to remain calm and exercise their constitutional right to peaceful protest.",
+        "affected_archetypes": ["violent_agitator", "community_protector", "civic_moderate", "political_activist"],
+        "severity": "high",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 5,
+      "max_triggers_per_simulation": 3
+    },
+    {
+      "id": "sentiment_extreme_opposition",
+      "description": "Extreme anger (impact > 0.85) from 10%+ agents triggers opposition urgency",
+      "category": "political_response",
+      "trigger": {
+        "type": "threshold",
+        "metric": "pct_agents_with_impact_above",
+        "value": 0.85,
+        "min_proportion": 0.1,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "political_response",
+        "source": "Parliament",
+        "title": "Opposition Calls for Urgent Debate",
+        "content": "The Official Opposition has requested an urgent debate in the National Assembly, citing widespread public anger and the government's failure to address community grievances. The Speaker is considering the request.",
+        "affected_archetypes": ["political_activist", "institutional_loyalist", "civic_moderate", "whistleblower"],
+        "severity": "medium",
+        "persist_rounds": 2
+      },
+      "cooldown_rounds": 4,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "topic_cascade_land",
+      "description": "5+ agents mention land triggers media coverage",
+      "category": "media_attention",
+      "trigger": {
+        "type": "topic_mention_count",
+        "topics": ["land", "expropriation", "farm", "farmer"],
+        "min_count": 5,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "media_attention",
+        "source": "Media",
+        "title": "Land Reform Dominates Headlines",
+        "content": "Major news outlets are running extensive coverage on land reform, featuring interviews with farmers, land claimants, and policy experts. Social media hashtags #LandReform and #Expropriation are trending nationally.",
+        "affected_archetypes": ["political_activist", "economic_migrant", "community_leader", "institutional_loyalist"],
+        "severity": "medium",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 6,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "topic_cascade_grants",
+      "description": "5+ agents mention grants/SASSA triggers minister response",
+      "category": "institutional_response",
+      "trigger": {
+        "type": "topic_mention_count",
+        "topics": ["grant", "SASSA", "social grant", "SRD", "R350"],
+        "min_count": 5,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "institutional_response",
+        "source": "DSD",
+        "title": "Social Development Minister Addresses Grant Concerns",
+        "content": "The Minister of Social Development holds a press conference acknowledging concerns about grant adequacy and distribution challenges. She announces a review of the SRD grant value but warns fiscal constraints limit immediate increases.",
+        "affected_archetypes": ["grant_dependent_survivor", "civic_moderate", "political_activist", "disillusioned_dropout"],
+        "severity": "medium",
+        "persist_rounds": 2
+      },
+      "cooldown_rounds": 5,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "topic_cascade_eskom",
+      "description": "4+ agents mention Eskom/load-shedding triggers escalation",
+      "category": "external_shock",
+      "trigger": {
+        "type": "topic_mention_count",
+        "topics": ["Eskom", "load-shedding", "electricity", "power"],
+        "min_count": 4,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "external_shock",
+        "source": "Eskom",
+        "title": "Eskom Announces Stage 6 Load-Shedding",
+        "content": "Eskom announces unexpected Stage 6 load-shedding due to further breakdowns at multiple power stations. The utility warns that restoration may take longer than usual, and businesses should prepare for extended outages.",
+        "affected_archetypes": ["civic_moderate", "economic_migrant", "small_business_owner", "disillusioned_dropout"],
+        "severity": "high",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 6,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "archetype_protest_organizing",
+      "description": "Violent agitator + 3 mob followers active triggers protest rumors",
+      "category": "civil_unrest",
+      "trigger": {
+        "type": "archetype_interaction",
+        "primary_archetype": "violent_agitator",
+        "secondary_archetypes": ["mob_follower"],
+        "min_secondary_count": 3,
+        "window_rounds": 2,
+        "require_action_types": ["EXPRESS_OPINION", "RESPOND_TO_OPINION"]
+      },
+      "event": {
+        "type": "civil_unrest",
+        "source": "Community Intelligence",
+        "title": "Protest Organizing Rumors Surface",
+        "content": "Whispers of organized protest action are circulating in community groups and taxi ranks. Community leaders are attempting to de-escalate tensions, while some residents are stocking up on essentials. Road closures are possible.",
+        "affected_archetypes": ["violent_agitator", "mob_follower", "community_leader", "community_protector", "institutional_loyalist"],
+        "severity": "critical",
+        "persist_rounds": 4
+      },
+      "cooldown_rounds": 5,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "archetype_confrontation",
+      "description": "Community protector + violent agitator both active triggers clash risk",
+      "category": "civil_unrest",
+      "trigger": {
+        "type": "archetype_interaction",
+        "primary_archetype": "community_protector",
+        "secondary_archetypes": ["violent_agitator"],
+        "min_secondary_count": 1,
+        "window_rounds": 1,
+        "require_action_types": ["EXPRESS_OPINION", "RESPOND_TO_OPINION"]
+      },
+      "event": {
+        "type": "civil_unrest",
+        "source": "Local Media",
+        "title": "Tensions Rise Between Community Factions",
+        "content": "Local reporters note rising tensions between community safety groups and more radical elements. Residents report conflicting messages about who speaks for the community. SAPS has increased patrols but remains on the periphery.",
+        "affected_archetypes": ["community_protector", "violent_agitator", "community_leader", "civic_moderate", "institutional_loyalist"],
+        "severity": "high",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 4,
+      "max_triggers_per_simulation": 3
+    },
+    {
+      "id": "non_participation_crisis",
+      "description": "50%+ non-participation for 2 rounds triggers credibility crisis",
+      "category": "political_response",
+      "trigger": {
+        "type": "sustained_non_participation",
+        "min_proportion": 0.5,
+        "consecutive_rounds": 2,
+        "count_action_types": ["DO_NOTHING", "NON_PARTICIPATION", "OBSERVE"]
+      },
+      "event": {
+        "type": "political_response",
+        "source": "Civil Society",
+        "title": "Silent Majority Raises Legitimacy Questions",
+        "content": "Civil society organizations and academics are questioning whether current consultation processes are reaching the most marginalized. Polling agencies report unusually high 'refused to answer' rates. The Presidency is reportedly concerned about a growing disconnect.",
+        "affected_archetypes": ["civic_moderate", "institutional_loyalist", "disillusioned_dropout", "grant_dependent_survivor"],
+        "severity": "medium",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 8,
+      "max_triggers_per_simulation": 1
+    },
+    {
+      "id": "distrust_spiral",
+      "description": "30%+ non-participation with 'distrust' reason triggers fact-check response",
+      "category": "media_attention",
+      "trigger": {
+        "type": "non_participation_reason_threshold",
+        "reason_category": "distrust",
+        "min_proportion_of_non_participants": 0.3,
+        "window_rounds": 2
+      },
+      "event": {
+        "type": "media_attention",
+        "source": "Fact-Checkers",
+        "title": "Misinformation Watchdogs Issue Advisory",
+        "content": "Independent fact-checking organizations have issued an advisory warning about coordinated misinformation campaigns targeting the policy consultation process. They urge citizens to verify information through official channels before forming opinions.",
+        "affected_archetypes": ["conspiracy_spreader", "civic_moderate", "whistleblower", "institutional_loyalist"],
+        "severity": "medium",
+        "persist_rounds": 2
+      },
+      "cooldown_rounds": 5,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "radicalism_escalation",
+      "description": "Average radicalism shifts from <2.5 to >3.5 over 4 rounds",
+      "category": "security_response",
+      "trigger": {
+        "type": "radicalism_drift",
+        "from_max": 2.5,
+        "to_min": 3.5,
+        "window_rounds": 4
+      },
+      "event": {
+        "type": "security_response",
+        "source": "State Security",
+        "title": "Intelligence Agencies Flag Escalation Risk",
+        "content": "The State Security Agency has briefed the National Security Council on a sharp increase in radical rhetoric across monitored channels. While no specific threat has been identified, provincial governments have been advised to review their contingency plans.",
+        "affected_archetypes": ["violent_agitator", "political_activist", "institutional_loyalist", "community_protector", "whistleblower"],
+        "severity": "high",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 6,
+      "max_triggers_per_simulation": 1
+    },
+    {
+      "id": "whistleblower_activation",
+      "description": "Whistleblower posts high-impact opinion triggers inquiry",
+      "category": "media_attention",
+      "trigger": {
+        "type": "archetype_impact_threshold",
+        "archetype": "whistleblower",
+        "min_impact_score": 0.8,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "media_attention",
+        "source": "Investigative Media",
+        "title": "Investigative Journalists Launch Inquiry",
+        "content": "Following serious allegations from a community source, investigative journalists have begun probing institutional conduct related to the policy area. The affected department has declined to comment pending an internal review.",
+        "affected_archetypes": ["whistleblower", "institutional_loyalist", "civic_moderate", "conspiracy_spreader"],
+        "severity": "medium",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 5,
+      "max_triggers_per_simulation": 2
+    },
+    {
+      "id": "scheduled_loadshedding",
+      "description": "Scheduled external shock - load-shedding intensifies",
+      "category": "scheduled_shock",
+      "trigger": {
+        "type": "scheduled",
+        "rounds": [5, 15, 25]
+      },
+      "event": {
+        "type": "external_shock",
+        "source": "Eskom",
+        "title": "Unexpected Generation Unit Failure",
+        "content": "Eskom announces an unplanned outage at a major power station, pushing load-shedding to higher stages than forecast. Small business associations report widespread frustration, with some owners saying they cannot survive another escalation.",
+        "affected_archetypes": ["civic_moderate", "economic_migrant", "disillusioned_dropout", "small_business_owner"],
+        "severity": "high",
+        "persist_rounds": 3
+      },
+      "cooldown_rounds": 0,
+      "max_triggers_per_simulation": 999
+    },
+    {
+      "id": "scheduled_taxi_strike",
+      "description": "Scheduled external shock - taxi strike",
+      "category": "scheduled_shock",
+      "trigger": {
+        "type": "scheduled",
+        "rounds": [10]
+      },
+      "event": {
+        "type": "external_shock",
+        "source": "SANTACO",
+        "title": "Taxi Associations Announce Strike",
+        "content": "South African National Taxi Council (SANTACO) members in major metros announce a stay-away to protest permit enforcement and route disputes. Commuters are warned to make alternative transport arrangements. Violence at ranks is possible.",
+        "affected_archetypes": ["economic_migrant", "civic_moderate", "community_protector", "violent_agitator"],
+        "severity": "high",
+        "persist_rounds": 2
+      },
+      "cooldown_rounds": 0,
+      "max_triggers_per_simulation": 999
+    },
+    {
+      "id": "conspiracy_viral",
+      "description": "Conspiracy spreader gains 3+ responses in a round",
+      "category": "media_attention",
+      "trigger": {
+        "type": "archetype_response_count",
+        "archetype": "conspiracy_spreader",
+        "min_responses": 3,
+        "window_rounds": 1
+      },
+      "event": {
+        "type": "media_attention",
+        "source": "Social Media Platforms",
+        "title": "Fact-Checkers Warn Against Viral Misinformation",
+        "content": "Social media platforms have placed warning labels on trending posts containing unsubstantiated claims about the policy. Independent fact-checkers are issuing clarifications, but engagement data suggests the corrections are not reaching the same audiences as the original claims.",
+        "affected_archetypes": ["conspiracy_spreader", "civic_moderate", "institutional_loyalist", "whistleblower"],
+        "severity": "medium",
+        "persist_rounds": 2
+      },
+      "cooldown_rounds": 4,
+      "max_triggers_per_simulation": 2
+    }
+  ]
+}

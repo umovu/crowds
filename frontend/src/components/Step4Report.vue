@@ -2144,7 +2144,7 @@ const tryLoadCompletedReport = async (reportId) => {
   if (!reportId) return false
   try {
     const res = await getReport(reportId)
-    const data = res.data?.data
+    const data = res.data
     if (!data || data.status !== 'completed' || !data.outline) return false
 
     reportOutline.value = data.outline

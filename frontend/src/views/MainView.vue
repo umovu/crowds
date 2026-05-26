@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">MIROFISH OFFLINE</div>
+        <div class="brand" @click="router.push('/')">FUB POLICY SIM</div>
       </div>
       
       <div class="header-center">
@@ -22,8 +22,8 @@
 
       <div class="header-right">
         <div class="workflow-step">
-          <span class="step-num">Step {{ currentStep }}/5</span>
-          <span class="step-name">{{ stepNames[currentStep - 1] }}</span>
+          <span class="step-num">{{ stepLabel }}</span>
+          <span class="step-name">{{ stepSubLabel }}</span>
         </div>
         <div class="step-divider"></div>
         <span class="status-indicator" :class="statusClass">
@@ -65,6 +65,8 @@
           :projectData="projectData"
           :graphData="graphData"
           :systemLogs="systemLogs"
+          :customAgents="customAgents"
+          :customAgentsEnabled="customAgentsEnabled"
           @go-back="handleGoBack"
           @next-step="handleNextStep"
           @add-log="addLog"
@@ -75,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GraphPanel from '../components/GraphPanel.vue'
 import Step1GraphBuild from '../components/Step1GraphBuild.vue'
@@ -104,6 +106,8 @@ const currentPhase = ref(-1) // -1: Upload, 0: Ontology, 1: Build, 2: Complete
 const ontologyProgress = ref(null)
 const buildProgress = ref(null)
 const systemLogs = ref([])
+const customAgents = ref([])
+const customAgentsEnabled = ref(false)
 
 // Polling timers
 let pollTimer = null
@@ -135,6 +139,24 @@ const statusText = computed(() => {
   if (currentPhase.value === 1) return 'Building Graph'
   if (currentPhase.value === 0) return 'Generating Ontology'
   return 'Initializing'
+})
+
+// Unified header label — collapse Step 1 + Step 2 into "Preparing simulation"
+// since the user doesn't care about the graph/env boundary. Real step numbers
+// resume at Step 3 (the actual run).
+const stepLabel = computed(() => {
+  if (currentStep.value <= 2) return 'Preparing simulation'
+  return `Step ${currentStep.value}/5`
+})
+const stepSubLabel = computed(() => {
+  if (currentStep.value <= 2) {
+    if (currentPhase.value === 0) return 'Reading your document...'
+    if (currentPhase.value === 1) return 'Mapping entities and relations...'
+    if (currentPhase.value >= 2 && currentStep.value === 2) return 'Generating personas...'
+    if (currentPhase.value >= 2) return 'Ready'
+    return 'Initializing...'
+  }
+  return stepNames[currentStep.value - 1]
 })
 
 // --- Helpers ---
@@ -175,6 +197,25 @@ const handleGoBack = () => {
   }
 }
 
+// Auto-advance from Step 1 → Step 2 the instant the graph build completes.
+// The user shouldn't have to click "Enter Environment Setup" — that's a step
+// boundary they don't care about. Personas start generating immediately, the
+// graph visual on the left keeps showing the "alive" signal during it.
+// A small delay so "Graph complete ✓" is visible for a beat before the
+// right panel swaps over (less jarring than instant).
+let _autoAdvanceTimer = null
+watch(currentPhase, (phase) => {
+  if (phase === 2 && currentStep.value === 1) {
+    if (_autoAdvanceTimer) clearTimeout(_autoAdvanceTimer)
+    _autoAdvanceTimer = setTimeout(() => {
+      if (currentPhase.value === 2 && currentStep.value === 1) {
+        addLog('Graph ready — auto-advancing to environment setup')
+        handleNextStep()
+      }
+    }, 800)
+  }
+})
+
 // --- Data Logic ---
 
 const initProject = async () => {
@@ -188,28 +229,60 @@ const initProject = async () => {
 
 const handleNewProject = async () => {
   const pending = getPendingUpload()
-  if (!pending.isPending || pending.files.length === 0) {
-    error.value = 'No pending files found.'
-    addLog('Error: No pending files found for new project.')
+  customAgents.value = pending.customAgents || []
+  customAgentsEnabled.value = pending.customAgentsEnabled || false
+
+  const seedText = (pending.simulationRequirement || '').trim()
+  const hasFiles = pending.files && pending.files.length > 0
+  const hasCustomAgents = customAgentsEnabled.value && customAgents.value.length > 0
+  // Web-research-synthesized seed material is a valid standalone input
+  const hasSubstantialSeed = seedText.length >= 100
+
+  if (!pending.isPending || (!hasFiles && !hasCustomAgents && !hasSubstantialSeed)) {
+    error.value = 'No simulation input found. Provide a seed message, upload a document, or add custom agents.'
+    addLog('Error: No pending files, custom agents, or seed material found.')
     return
   }
-  
+
+  if (!hasFiles && hasCustomAgents) {
+    addLog('Custom agents mode: no documents uploaded. Skipping graph build...')
+  }
+  if (!hasFiles && !hasCustomAgents && hasSubstantialSeed) {
+    addLog(`Seed-only mode: using simulation_requirement (${seedText.length} chars) as source document`)
+  }
+
   try {
     loading.value = true
     currentPhase.value = 0
     ontologyProgress.value = { message: 'Uploading and analyzing docs...' }
     addLog('Starting ontology generation: Uploading files...')
-    
+
     const formData = new FormData()
     pending.files.forEach(f => formData.append('files', f))
     formData.append('simulation_requirement', pending.simulationRequirement)
-    
+    if (hasCustomAgents) {
+      formData.append('custom_agents', JSON.stringify(customAgents.value))
+    }
+
     const res = await generateOntology(formData)
     if (res.success) {
       clearPendingUpload()
       currentProjectId.value = res.data.project_id
       projectData.value = res.data
-      
+
+      // Merge custom agents extracted from seed document with any UI-defined ones
+      if (res.data.custom_agents && res.data.custom_agents.length > 0) {
+        const existingNames = new Set(customAgents.value.map(a => a.name?.toLowerCase()))
+        const newAgents = res.data.custom_agents.filter(a => a.name && !existingNames.has(a.name.toLowerCase()))
+        if (newAgents.length > 0) {
+          customAgents.value = [...customAgents.value, ...newAgents]
+          customAgentsEnabled.value = true
+          addLog(`Document '# Agents' section: merged ${newAgents.length} new agents (${res.data.custom_agents.length} total in doc)`)
+        } else {
+          addLog(`Document '# Agents' section: all ${res.data.custom_agents.length} agents already defined`)
+        }
+      }
+
       router.replace({ name: 'Process', params: { projectId: res.data.project_id } })
       ontologyProgress.value = null
       addLog(`Ontology generated successfully for project ${res.data.project_id}`)
@@ -235,7 +308,14 @@ const loadProject = async () => {
       projectData.value = res.data
       updatePhaseByStatus(res.data.status)
       addLog(`Project loaded. Status: ${res.data.status}`)
-      
+
+      // Load custom agents if persisted with project
+      if (res.data.custom_agents && res.data.custom_agents.length > 0) {
+        customAgents.value = res.data.custom_agents
+        customAgentsEnabled.value = true
+        addLog(`Loaded ${res.data.custom_agents.length} custom agents from project`)
+      }
+
       if (res.data.status === 'ontology_generated' && !res.data.graph_id) {
         await startBuildGraph()
       } else if (res.data.status === 'graph_building' && res.data.graph_build_task_id) {

@@ -47,28 +47,56 @@ class Neo4jStorage(GraphStorage):
         self._user = user or Config.NEO4J_USER
         self._password = password or Config.NEO4J_PASSWORD
 
-        self._driver = GraphDatabase.driver(
-            self._uri, auth=(self._user, self._password)
-        )
+        # Lazy driver initialization — don't connect until first use
+        self._driver = None
+        self._driver_init_error = None
+
         self._embedding = embedding_service or EmbeddingService()
         self._ner = ner_extractor or NERExtractor()
         self._search = SearchService(self._embedding)
 
-        # Initialize schema (indexes, constraints)
-        self._ensure_schema()
+        # Schema init deferred to first use
+        self._schema_initialized = False
+
+    def _ensure_driver(self):
+        """Create driver on first use — fail-soft if Neo4j unavailable."""
+        if self._driver is not None:
+            if self._driver_init_error:
+                raise self._driver_init_error
+            return self._driver
+
+        try:
+            self._driver = GraphDatabase.driver(
+                self._uri, auth=(self._user, self._password),
+                connection_timeout=5, max_connection_lifetime=3600
+            )
+            # Test connection immediately
+            self._driver.verify_connectivity()
+            return self._driver
+        except Exception as e:
+            self._driver_init_error = RuntimeError(f"Neo4j unavailable: {e}")
+            raise self._driver_init_error
 
     def close(self):
         """Close the Neo4j driver connection."""
-        self._driver.close()
+        if self._driver:
+            self._driver.close()
 
     def _ensure_schema(self):
-        """Create indexes and constraints if they don't exist."""
-        with self._driver.session() as session:
-            for query in neo4j_schema.ALL_SCHEMA_QUERIES:
-                try:
-                    session.run(query)
-                except Exception as e:
-                    logger.warning(f"Schema query warning (may already exist): {e}")
+        """Create indexes and constraints if they don't exist. Called lazily on first use."""
+        if self._schema_initialized:
+            return
+        try:
+            with self._driver.session(database="neo4j", connection_acquisition_timeout=5) as session:
+                for query in neo4j_schema.ALL_SCHEMA_QUERIES:
+                    try:
+                        session.run(query)
+                    except Exception as e:
+                        logger.debug(f"Schema query (may already exist): {e}")
+            self._schema_initialized = True
+        except Exception as e:
+            logger.warning(f"Neo4j schema init skipped: {e}")
+            self._schema_initialized = True  # Don't retry on every call
 
     # ----------------------------------------------------------------
     # Retry wrapper
@@ -101,6 +129,8 @@ class Neo4jStorage(GraphStorage):
     # ----------------------------------------------------------------
 
     def create_graph(self, name: str, description: str = "") -> str:
+        self._ensure_driver()
+        self._ensure_schema()
         graph_id = str(uuid.uuid4())
         now = datetime.now(timezone.utc).isoformat()
 
@@ -128,6 +158,8 @@ class Neo4jStorage(GraphStorage):
         return graph_id
 
     def delete_graph(self, graph_id: str) -> None:
+        self._ensure_driver()
+        self._ensure_schema()
         def _delete(tx):
             # Delete all entities and their relationships
             tx.run(
@@ -145,6 +177,8 @@ class Neo4jStorage(GraphStorage):
         logger.info(f"Deleted graph {graph_id}")
 
     def set_ontology(self, graph_id: str, ontology: Dict[str, Any]) -> None:
+        self._ensure_driver()
+        self._ensure_schema()
         def _set(tx):
             tx.run(
                 """
@@ -159,6 +193,8 @@ class Neo4jStorage(GraphStorage):
             self._call_with_retry(session.execute_write, _set)
 
     def get_ontology(self, graph_id: str) -> Dict[str, Any]:
+        self._ensure_driver()
+        self._ensure_schema()
         with self._driver.session() as session:
             result = session.run(
                 "MATCH (g:Graph {graph_id: $gid}) RETURN g.ontology_json AS oj",
@@ -175,6 +211,8 @@ class Neo4jStorage(GraphStorage):
 
     def add_text(self, graph_id: str, text: str) -> str:
         """Process text: NER/RE → batch embed → create nodes/edges → return episode_id."""
+        self._ensure_driver()
+        self._ensure_schema()
         episode_id = str(uuid.uuid4())
         now = datetime.now(timezone.utc).isoformat()
 
@@ -389,6 +427,8 @@ class Neo4jStorage(GraphStorage):
     # ----------------------------------------------------------------
 
     def get_all_nodes(self, graph_id: str, limit: int = 2000) -> List[Dict[str, Any]]:
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             result = tx.run(
                 """
@@ -406,6 +446,8 @@ class Neo4jStorage(GraphStorage):
             return self._call_with_retry(session.execute_read, _read)
 
     def get_node(self, uuid: str) -> Optional[Dict[str, Any]]:
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             result = tx.run(
                 "MATCH (n:Entity {uuid: $uuid}) RETURN n, labels(n) AS labels",
@@ -421,6 +463,8 @@ class Neo4jStorage(GraphStorage):
 
     def get_node_edges(self, node_uuid: str) -> List[Dict[str, Any]]:
         """O(1) Cypher — NOT full scan + filter like the old Zep code."""
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             result = tx.run(
                 """
@@ -438,6 +482,8 @@ class Neo4jStorage(GraphStorage):
             return self._call_with_retry(session.execute_read, _read)
 
     def get_nodes_by_label(self, graph_id: str, label: str) -> List[Dict[str, Any]]:
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             # Dynamic label in query (safe — label comes from ontology, not user input)
             query = f"""
@@ -455,6 +501,8 @@ class Neo4jStorage(GraphStorage):
     # ----------------------------------------------------------------
 
     def get_all_edges(self, graph_id: str) -> List[Dict[str, Any]]:
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             result = tx.run(
                 """
@@ -489,6 +537,8 @@ class Neo4jStorage(GraphStorage):
         Returns a dict with 'edges' and/or 'nodes' lists
         (callers like zep_tools will wrap into SearchResult).
         """
+        self._ensure_driver()
+        self._ensure_schema()
         result = {"edges": [], "nodes": [], "query": query}
 
         with self._driver.session() as session:
@@ -509,6 +559,8 @@ class Neo4jStorage(GraphStorage):
     # ----------------------------------------------------------------
 
     def get_graph_info(self, graph_id: str) -> Dict[str, Any]:
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             # Count nodes
             node_result = tx.run(
@@ -551,6 +603,8 @@ class Neo4jStorage(GraphStorage):
         Full graph dump with enriched edge format (for frontend).
         Includes derived fields: fact_type, source_node_name, target_node_name.
         """
+        self._ensure_driver()
+        self._ensure_schema()
         def _read(tx):
             # Get all nodes
             node_result = tx.run(

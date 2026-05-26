@@ -2,7 +2,7 @@
 KGLiteStorage — KGLite implementation of GraphStorage.
 
 A lightweight, embedded graph database that requires no server setup.
-Uses Cypher-like queries for compatibility with existing code.
+Uses pandas DataFrames for node/edge storage with in-memory fallback dicts.
 """
 
 import json
@@ -10,6 +10,8 @@ import uuid
 import logging
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional, Callable
+
+import pandas as pd
 
 from kglite import KnowledgeGraph
 
@@ -34,12 +36,12 @@ class KGLiteStorage(GraphStorage):
         self._embedding = embedding_service or EmbeddingService()
         self._ner = ner_extractor or NERExtractor()
         self._search = SearchService(self._embedding)
-        
+
         self._graphs: Dict[str, Dict[str, Any]] = {}
         self._entities: Dict[str, Dict[str, Any]] = {}
         self._relations: List[Dict[str, Any]] = []
         self._ontologies: Dict[str, Dict[str, Any]] = {}
-        
+
         logger.info("KGLiteStorage initialized")
 
     def close(self):
@@ -52,13 +54,13 @@ class KGLiteStorage(GraphStorage):
     def _get_graph_edges(self, graph_id: str) -> List[Dict[str, Any]]:
         return [r for r in self._relations if r.get("graph_id") == graph_id]
 
-    def _get_or_create_entity(self, graph_id: str, name: str, name_lower: str, 
-                               entity_type: str, summary: str = "", 
+    def _get_or_create_entity(self, graph_id: str, name: str, name_lower: str,
+                               entity_type: str, summary: str = "",
                                attributes: Dict = None, embedding: List = None) -> str:
         key = f"{graph_id}:{name_lower}"
         if key in self._entities:
             return self._entities[key]["uuid"]
-        
+
         entity_uuid = str(uuid.uuid4())
         self._entities[key] = {
             "uuid": entity_uuid,
@@ -71,22 +73,20 @@ class KGLiteStorage(GraphStorage):
             "embedding": embedding or [],
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
-        
-        entity_node = {
-            "type": entity_type or "Entity",
-            "graph_id": graph_id,
-            "name": name,
-            "summary": summary,
-        }
+
+        # Add to KGLite using DataFrame API
         try:
-            name_escaped = name.replace("'", "\\'")
-            summary_escaped = summary.replace("'", "\\'")
-            self._graph.cypher(
-                f"CREATE (n:{entity_type or 'Entity'} {{uuid: '{entity_uuid}', graph_id: '{graph_id}', name: '{name_escaped}', summary: '{summary_escaped}'}})"
-            )
+            df = pd.DataFrame([{
+                "uuid": entity_uuid,
+                "name": name,
+                "summary": summary,
+                "entity_type": entity_type or "Entity",
+                "graph_id": graph_id,
+            }])
+            self._graph.add_nodes(df, node_type="Entity", unique_id_field="uuid")
         except Exception as e:
-            logger.warning(f"KGLite node creation warning: {e}")
-        
+            logger.debug(f"KGLite node creation warning: {e}")
+
         return entity_uuid
 
     def _create_relation(self, graph_id: str, source_uuid: str, target_uuid: str,
@@ -106,25 +106,26 @@ class KGLiteStorage(GraphStorage):
             "invalid_at": None,
             "expired_at": None,
         })
-        
+
+        # Add to KGLite using connections API
         try:
-            fact_escaped = fact.replace("'", "\\'")
-            self._graph.cypher(
-                f"""
-                MATCH (src {{uuid: '{source_uuid}'}})
-                MATCH (tgt {{uuid: '{target_uuid}'}})
-                CREATE (src)-[r:RELATION {{uuid: '{rel_uuid}', graph_id: '{graph_id}', name: '{relation_type}', fact: '{fact_escaped}'}}]->(tgt)
-                """
-            )
+            conn_df = pd.DataFrame([{
+                "source": source_uuid,
+                "target": target_uuid,
+                "relation_type": relation_type,
+                "fact": fact,
+                "graph_id": graph_id,
+            }])
+            self._graph.add_connections(conn_df, source_id_field="source", target_id_field="target", edge_type_field="relation_type")
         except Exception as e:
-            logger.warning(f"KGLite relation creation warning: {e}")
-        
+            logger.debug(f"KGLite relation creation warning: {e}")
+
         return rel_uuid
 
     def create_graph(self, name: str, description: str = "") -> str:
         graph_id = str(uuid.uuid4())
         now = datetime.now(timezone.utc).isoformat()
-        
+
         self._graphs[graph_id] = {
             "graph_id": graph_id,
             "name": name,
@@ -132,23 +133,23 @@ class KGLiteStorage(GraphStorage):
             "ontology_json": "{}",
             "created_at": now,
         }
-        
+
         logger.info(f"Created graph '{name}' with id {graph_id}")
         return graph_id
 
     def delete_graph(self, graph_id: str) -> None:
         if graph_id in self._graphs:
             del self._graphs[graph_id]
-        
+
         keys_to_delete = [k for k, v in self._entities.items() if v.get("graph_id") == graph_id]
         for key in keys_to_delete:
             del self._entities[key]
-        
+
         self._relations = [r for r in self._relations if r.get("graph_id") != graph_id]
-        
+
         if graph_id in self._ontologies:
             del self._ontologies[graph_id]
-        
+
         logger.info(f"Deleted graph {graph_id}")
 
     def set_ontology(self, graph_id: str, ontology: Dict[str, Any]) -> None:
@@ -164,12 +165,12 @@ class KGLiteStorage(GraphStorage):
         now = datetime.now(timezone.utc).isoformat()
 
         ontology = self.get_ontology(graph_id)
-        
+
         logger.info(f"[add_text] Starting NER extraction for chunk ({len(text)} chars)...")
         extraction = self._ner.extract(text, ontology)
         entities = extraction.get("entities", [])
         relations = extraction.get("relations", [])
-        
+
         logger.info(
             f"[add_text] NER done: {len(entities)} entities, {len(relations)} relations"
         )
@@ -198,7 +199,7 @@ class KGLiteStorage(GraphStorage):
             attrs = entity.get("attributes", {})
             embedding = entity_embeddings[idx] if idx < len(entity_embeddings) else []
             summary = entity_summaries[idx]
-            
+
             e_uuid = self._get_or_create_entity(
                 graph_id, ename, ename.lower(), etype, summary, attrs, embedding
             )
@@ -209,16 +210,16 @@ class KGLiteStorage(GraphStorage):
             target_name = relation["target"]
             rtype = relation["type"]
             fact = relation["fact"]
-            
+
             source_uuid = entity_uuid_map.get(source_name.lower())
             target_uuid = entity_uuid_map.get(target_name.lower())
-            
+
             if not source_uuid or not target_uuid:
                 logger.warning(
                     f"Skipping relation {source_name}->{target_name}: entity not found"
                 )
                 continue
-            
+
             self._create_relation(graph_id, source_uuid, target_uuid, rtype, fact, episode_id)
 
         logger.info(f"[add_text] Chunk done: episode={episode_id}")
@@ -289,40 +290,40 @@ class KGLiteStorage(GraphStorage):
         scope: str = "edges",
     ):
         result = {"edges": [], "nodes": [], "query": query}
-        
+
         nodes = self._get_graph_nodes(graph_id)
         edges = self._get_graph_edges(graph_id)
-        
+
         query_lower = query.lower()
-        
+
         if scope in ("nodes", "both"):
             matching_nodes = [
-                n for n in nodes 
-                if query_lower in n.get("name", "").lower() or 
+                n for n in nodes
+                if query_lower in n.get("name", "").lower() or
                    query_lower in n.get("summary", "").lower()
             ][:limit]
             result["nodes"] = matching_nodes
-        
+
         if scope in ("edges", "both"):
             matching_edges = [
-                e for e in edges 
+                e for e in edges
                 if query_lower in e.get("fact", "").lower() or
                    query_lower in e.get("name", "").lower()
             ][:limit]
             result["edges"] = matching_edges
-        
+
         return result
 
     def get_graph_info(self, graph_id: str) -> Dict[str, Any]:
         nodes = self._get_graph_nodes(graph_id)
         edges = self._get_graph_edges(graph_id)
-        
+
         entity_types = set()
         for node in nodes:
             for label in node.get("labels", []):
                 if label != "Entity":
                     entity_types.add(label)
-        
+
         return {
             "graph_id": graph_id,
             "node_count": len(nodes),
@@ -333,9 +334,9 @@ class KGLiteStorage(GraphStorage):
     def get_graph_data(self, graph_id: str) -> Dict[str, Any]:
         nodes = self._get_graph_nodes(graph_id)
         edges = self._get_graph_edges(graph_id)
-        
+
         node_map: Dict[str, str] = {n["uuid"]: n["name"] for n in nodes}
-        
+
         enriched_edges = []
         for edge in edges:
             ed = edge.copy()
@@ -344,7 +345,7 @@ class KGLiteStorage(GraphStorage):
             ed["target_node_name"] = node_map.get(ed.get("target_node_uuid", ""), "")
             ed["episodes"] = ed.get("episode_ids", [])
             enriched_edges.append(ed)
-        
+
         return {
             "graph_id": graph_id,
             "nodes": nodes,

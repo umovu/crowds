@@ -18,17 +18,24 @@ requests>=2.28.0
 # ============= Graph Database =============
 neo4j>=5.15.0
 kglite>=0.5.0
+ladybug>=0.16.0
 
-# ============= OASIS 社交媒体模拟 =============
-# OASIS 社交模拟框架
-camel-oasis==0.2.5
-camel-ai==0.2.78
+# ============= AgentSociety2 模拟引擎 =============
+# AgentSociety2 — Agent + Block + Memory framework (Tsinghua FIB Lab)
+agentsociety2>=2.0.0
 
 # ============= 文件处理 =============
 PyMuPDF>=1.24.0
 # 编码检测（支持非UTF-8编码的文本文件）
 charset-normalizer>=3.0.0
 chardet>=5.0.0
+
+# ============= Deep Research =============
+# Iterative web research (custom implementation using firecrawl-py + openai)
+# Activate by setting FIRECRAWL_API_KEY in .env
+firecrawl-py>=0.0.8
+asyncio-throttle>=1.0.2
+aiohttp>=3.9.0
 
 # ============= 工具库 =============
 # 环境变量加载

@@ -5,6 +5,8 @@ Step2: Entity reading and filtering, OASIS simulation preparation and execution 
 
 import os
 import traceback
+import asyncio
+from typing import Dict, Any, List, Optional
 from flask import request, jsonify, send_file, current_app
 
 from . import simulation_bp
@@ -13,6 +15,11 @@ from ..services.entity_reader import EntityReader
 from ..services.agent_profile_generator import AgentProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner, RunnerStatus
+from ..services.topic_extractor import TopicExtractor
+from ..services.interview_service import InterviewService
+from ..services.custom_agent_parser import CustomAgentParser
+from ..services.agent_enricher import AgentContextEnricher
+from ..services.deep_research_service import research_archetypes as _deep_research_archetypes
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
 
@@ -21,7 +28,26 @@ logger = get_logger('fub.api.simulation')
 
 # Interview prompt optimization prefix
 # Adding this prefix can prevent agents from calling tools and reply directly with text
-INTERVIEW_PROMPT_PREFIX = "Based on your persona, all your past memories and actions, reply directly to me with text without calling any tools:"
+INTERVIEW_PROMPT_PREFIX = """You are being interviewed about a specific South African policy. Follow these rules STRICTLY:
+
+SPEAKING STYLE:
+- Speak as a real South African with lived experience in your community
+- Use natural language - you may include SA slang, vernacular, or code-switching where appropriate
+- Express yourself as a person with authentic perspective, not as a policy analyst
+
+VOICE:
+- If your persona represents a community or collective, use 'we' and 'our community' to express shared views
+- If your persona is an individual, use 'I' and 'my' perspective
+- Ground your response in how this policy or question affects YOUR LIVELIHOOD, FAMILY, or COMMUNITY
+
+TOPIC FOCUS:
+- Stay STRICTLY on the policy or question being asked
+- Keep responses concrete and specific about the policy's direct impacts
+- Do not volunteer information about sports, entertainment, unrelated political issues, or personal matters unconnected to the topic
+
+RESPONSE FORMAT:
+- Reply directly with text only - do not call any tools
+- Be concise but substantive - 2-4 sentences minimum for structured questions"""
 
 
 def optimize_interview_prompt(prompt: str) -> str:
@@ -143,6 +169,71 @@ def get_entities_by_type(graph_id: str, entity_type: str):
         
     except Exception as e:
         logger.error(f"Failed to get entities: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+# ============== Custom Agent Parsing ==============
+
+@simulation_bp.route('/custom-agents/parse', methods=['POST'])
+def parse_custom_agent_document():
+    """
+    Parse a custom agent definition document.
+
+    Supports JSON files (direct AgentProfile-compatible arrays)
+    and unstructured text (PDF, MD, TXT) via LLM extraction.
+
+    Request: multipart/form-data with 'file' field
+
+    Returns:
+        {
+            "success": true,
+            "data": [ {agent_profile}, ... ]
+        }
+    """
+    try:
+        from werkzeug.utils import secure_filename
+
+        if 'file' not in request.files:
+            return jsonify({"success": False, "error": "No file provided"}), 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"success": False, "error": "Empty filename"}), 400
+
+        # Save uploaded file temporarily
+        upload_dir = os.path.join(os.path.dirname(__file__), '../../uploads/temp')
+        os.makedirs(upload_dir, exist_ok=True)
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(upload_dir, filename)
+        file.save(file_path)
+
+        # Get optional simulation context
+        simulation_requirement = request.form.get('simulation_requirement', '')
+
+        parser = CustomAgentParser()
+        profiles = parser.parse_doc(file_path, simulation_requirement)
+
+        # Clean up temp file
+        try:
+            os.remove(file_path)
+        except Exception:
+            pass
+
+        # Serialize profiles for response
+        data = [p.to_agentsociety_format() for p in profiles]
+
+        return jsonify({
+            "success": True,
+            "data": data,
+            "count": len(data)
+        })
+
+    except Exception as e:
+        logger.error(f"Failed to parse custom agent document: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
@@ -290,7 +381,7 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
         # - completed: Execution complete, preparation already completed
         # - stopped: Stopped, preparation already completed
         # - failed: Execution failed (but preparation is not completed)
-        prepared_statuses = ["ready", "preparing", "running", "completed", "stopped", "failed"]
+        prepared_statuses = ["ready", "preparing", "running", "completed", "stopped", "failed", "paused"]
         if status in prepared_statuses and config_generated:
             # Get file statistics
             profiles_file = os.path.join(simulation_dir, "agentsociety_profiles.json")
@@ -449,7 +540,25 @@ def prepare_simulation():
         entity_types_list = data.get('entity_types')
         use_llm_for_profiles = data.get('use_llm_for_profiles', True)
         parallel_profile_count = data.get('parallel_profile_count', 5)
-        
+        custom_agents_raw = data.get('custom_agents', [])
+
+        # Parse custom agents if provided in request, else load from project
+        custom_profiles = []
+        if custom_agents_raw and len(custom_agents_raw) > 0:
+            try:
+                parser = CustomAgentParser()
+                custom_profiles = parser.parse_raw(custom_agents_raw)
+                logger.info(f"Received {len(custom_agents_raw)} raw custom agents from request, parsed {len(custom_profiles)} valid profiles")
+            except Exception as e:
+                logger.warning(f"Failed to parse custom agents from request: {e}")
+        elif project.custom_agents and len(project.custom_agents) > 0:
+            try:
+                parser = CustomAgentParser()
+                custom_profiles = parser.parse_raw(project.custom_agents)
+                logger.info(f"Loaded {len(project.custom_agents)} custom agents from project, parsed {len(custom_profiles)} valid profiles")
+            except Exception as e:
+                logger.warning(f"Failed to parse custom agents from project: {e}")
+
         # ========== Get GraphStorage（Capture reference before background task starts） ==========
         storage = current_app.extensions.get('graph_storage')
         if not storage:
@@ -572,13 +681,22 @@ def prepare_simulation():
                     progress_callback=progress_callback,
                     parallel_profile_count=parallel_profile_count,
                     storage=storage,
+                    custom_profiles=custom_profiles,
                 )
-                
-                # Task complete
-                task_manager.complete_task(
-                    task_id,
-                    result=result_state.to_simple_dict()
-                )
+
+                # prepare_simulation returns a FAILED state (instead of raising)
+                # for known issues like 0 matching entities. Surface that as a
+                # failed task so the frontend stops polling and shows the error.
+                if getattr(result_state, "status", None) == SimulationStatus.FAILED:
+                    task_manager.fail_task(
+                        task_id,
+                        result_state.error or "Preparation failed"
+                    )
+                else:
+                    task_manager.complete_task(
+                        task_id,
+                        result=result_state.to_simple_dict()
+                    )
                 
             except Exception as e:
                 logger.error(f"Failed to prepare simulation: {str(e)}")
@@ -1009,6 +1127,144 @@ def get_simulation_profiles(simulation_id: str):
         }), 500
 
 
+@simulation_bp.route('/<simulation_id>/enrichment', methods=['GET'])
+def get_simulation_enrichment(simulation_id: str):
+    """Return raw deep-research findings per archetype (empty dict if not available)."""
+    try:
+        manager = SimulationManager()
+        sim_dir = manager._get_simulation_dir(simulation_id)
+        enrichment_path = os.path.join(sim_dir, 'enrichment.json')
+        if not os.path.exists(enrichment_path):
+            return jsonify({"success": True, "data": {}})
+        with open(enrichment_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify({"success": True, "data": data})
+    except Exception as e:
+        logger.warning(f"Failed to load enrichment for {simulation_id}: {e}")
+        return jsonify({"success": True, "data": {}})
+
+
+@simulation_bp.route('/<simulation_id>/research/rerun', methods=['POST'])
+def rerun_simulation_research(simulation_id: str):
+    """Re-run deep web research for this simulation's archetypes.
+
+    Reads entity types from the graph that this simulation is built on,
+    runs the deep research pipeline, overwrites enrichment.json.
+    """
+    try:
+        import re as _re
+        from ..services.entity_reader import EntityReader
+        from ..services.agent_enricher import AgentContextEnricher
+        from ..services.deep_research_service import research_archetypes as _research
+
+        manager = SimulationManager()
+        state = manager._load_simulation_state(simulation_id)
+        if not state:
+            return jsonify({"success": False, "error": "Simulation not found"}), 404
+
+        from ..storage import get_storage
+        storage = get_storage()
+        reader = EntityReader(storage)
+        filtered = reader.filter_defined_entities(graph_id=state.graph_id, defined_entity_types=None, enrich_with_edges=False)
+
+        def _norm(t):
+            s = _re.sub(r'([A-Z])', r'_\1', t).lower().lstrip('_')
+            return _re.sub(r'[\s\-]+', '_', s.strip())
+
+        entity_types = list({_norm(e.type) for e in filtered.entities if e.type})
+        if not entity_types:
+            return jsonify({"success": False, "error": "No entity types found in graph"}), 400
+
+        project = ProjectManager().get_project(state.project_id) if state.project_id else None
+        seed = (project.simulation_requirement if project else "") or ""
+
+        raw_research = _research(
+            archetypes=entity_types,
+            query=seed or "current socio-economic conditions South Africa 2025",
+            document_text=seed,
+        )
+
+        if not raw_research:
+            return jsonify({
+                "success": False,
+                "error": "Research returned no results. Check FIRECRAWL_API_KEY and Firecrawl quota."
+            }), 500
+
+        enrichment = AgentContextEnricher.enrich_from_miroflow(raw_research, entity_types)
+        sim_dir = manager._get_simulation_dir(simulation_id)
+        enrichment_file = os.path.join(sim_dir, "enrichment.json")
+        with open(enrichment_file, 'w', encoding='utf-8') as f:
+            json.dump(raw_research, f, ensure_ascii=False, indent=2)
+
+        return jsonify({
+            "success": True,
+            "data": {
+                "archetypes": entity_types,
+                "enriched_count": len(enrichment),
+                "enrichment": raw_research,
+            }
+        })
+    except Exception as e:
+        logger.error(f"Re-run research failed for {simulation_id}: {e}")
+        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+
+
+@simulation_bp.route('/<simulation_id>/cost', methods=['GET'])
+def get_simulation_cost(simulation_id: str):
+    """Return token usage and estimated USD/ZAR cost for prepare + simulation phases."""
+    try:
+        manager = SimulationManager()
+        state = manager._load_simulation_state(simulation_id)
+        if not state:
+            return jsonify({"success": False, "error": "Simulation not found"}), 404
+
+        sim_dir = manager._get_simulation_dir(simulation_id)
+        actions_path = os.path.join(sim_dir, 'opinion_space', 'actions.jsonl')
+        sim_tokens_in = sim_tokens_out = sim_cost = 0.0
+        if os.path.exists(actions_path):
+            with open(actions_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        a = json.loads(line)
+                        sim_tokens_in += a.get("prompt_tokens", 0)
+                        sim_tokens_out += a.get("completion_tokens", 0)
+                        sim_cost += a.get("estimated_cost_usd", 0)
+                    except Exception:
+                        pass
+
+        price_in = float(Config.LLM_PRICE_PROMPT_PER_1M or 0.14)
+        price_out = float(Config.LLM_PRICE_COMPLETION_PER_1M or 0.28)
+        total_usd = round(state.prepare_cost_usd + sim_cost, 6)
+        zar_rate = 18.5
+
+        return jsonify({
+            "success": True,
+            "data": {
+                "prepare": {
+                    "prompt_tokens": state.prepare_prompt_tokens,
+                    "completion_tokens": state.prepare_completion_tokens,
+                    "cost_usd": state.prepare_cost_usd,
+                    "cost_zar": round(state.prepare_cost_usd * zar_rate, 4),
+                },
+                "simulation": {
+                    "prompt_tokens": int(sim_tokens_in),
+                    "completion_tokens": int(sim_tokens_out),
+                    "cost_usd": round(sim_cost, 6),
+                    "cost_zar": round(sim_cost * zar_rate, 4),
+                },
+                "total_cost_usd": total_usd,
+                "total_cost_zar": round(total_usd * zar_rate, 4),
+                "pricing_used": {
+                    "input_per_1m": price_in,
+                    "output_per_1m": price_out,
+                },
+            }
+        })
+    except Exception as e:
+        logger.warning(f"Cost endpoint error for {simulation_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @simulation_bp.route('/<simulation_id>/profiles/realtime', methods=['GET'])
 def get_simulation_profiles_realtime(simulation_id: str):
     """
@@ -1042,6 +1298,9 @@ def get_simulation_profiles_realtime(simulation_id: str):
     from datetime import datetime
     
     try:
+        # Get platform from query parameters
+        platform = request.args.get('platform', 'reddit')
+
         # Get simulation directory
         sim_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
 
@@ -1169,15 +1428,18 @@ def get_simulation_config_realtime(simulation_id: str):
         generation_stage = None
         config_generated = False
         
+        status = ""
+        error_msg = None
         state_file = os.path.join(sim_dir, "state.json")
         if os.path.exists(state_file):
             try:
                 with open(state_file, 'r', encoding='utf-8') as f:
                     state_data = json.load(f)
                     status = state_data.get("status", "")
+                    error_msg = state_data.get("error")
                     is_generating = status == "preparing"
                     config_generated = state_data.get("config_generated", False)
-                    
+
                     # Judge current stage
                     if is_generating:
                         if state_data.get("profiles_generated", False):
@@ -1186,9 +1448,11 @@ def get_simulation_config_realtime(simulation_id: str):
                             generation_stage = "generating_profiles"
                     elif status == "ready":
                         generation_stage = "completed"
+                    elif status == "failed":
+                        generation_stage = "failed"
             except Exception:
                 pass
-        
+
         # Build return data
         response_data = {
             "simulation_id": simulation_id,
@@ -1197,6 +1461,9 @@ def get_simulation_config_realtime(simulation_id: str):
             "is_generating": is_generating,
             "generation_stage": generation_stage,
             "config_generated": config_generated,
+            "status": status,
+            "error": error_msg,
+            "failed": status == "failed",
             "config": config
         }
         
@@ -1342,15 +1609,20 @@ def download_simulation_script(script_name: str):
 @simulation_bp.route('/generate-profiles', methods=['POST'])
 def generate_profiles():
     """
-    Generate directly from knowledge graphOASIS Agent Profile（Do not createSimulation）
-    
+    Generate agent profiles directly from the knowledge graph (no simulation created).
+
     Request (JSON):
         {
-            "graph_id": "fub_xxxx",     // Required
-            "entity_types": ["Student"],      // Optional
-            "use_llm": true,                  // Optional
-            "platform": "reddit"              // Optional
+            "graph_id": "fub_xxxx",          // Required
+            "entity_types": ["Student"],     // Optional — filter entity types
+            "use_llm": true,                 // Optional — use LLM for generation
+            "seed_message": "..."            // Optional — policy/event text; used to
+                                             //   ground web research queries per entity type
         }
+
+    Web enrichment runs automatically when SERPER_API_KEY is set in .env.
+    Each entity type is researched in parallel (Serper search + LLM synthesis),
+    and the findings are injected into persona prompts before generation.
     """
     try:
         data = request.get_json() or {}
@@ -1380,7 +1652,28 @@ def generate_profiles():
                 "error": "No matching entities found"
             }), 400
 
-        generator = AgentProfileGenerator()
+        # --- Web research enrichment ---
+        # Runs automatically when FIRECRAWL_API_KEY is set (deep-research-python).
+        # Falls back gracefully if the library is not installed or keys are missing.
+        enrichment_data = {}
+        seed_message = data.get('seed_message') or data.get('document_text', '')
+        try:
+            entity_types = list({e.type.lower() for e in filtered.entities if e.type})
+            if entity_types:
+                logger.info(f"Running deep-research enrichment for entity types: {entity_types}")
+                query = seed_message or "current socio-economic conditions South Africa 2025"
+                raw_content = _deep_research_archetypes(
+                    archetypes=entity_types,
+                    query=query,
+                    document_text=seed_message,
+                    max_workers=3,
+                )
+                enrichment_data = AgentContextEnricher.enrich_from_miroflow(raw_content, entity_types)
+                logger.info(f"Web enrichment complete: {len(enrichment_data)} archetypes enriched")
+        except Exception as enrich_err:
+            logger.warning(f"Web enrichment failed (continuing without it): {enrich_err}")
+
+        generator = AgentProfileGenerator(enrichment_data=enrichment_data)
         profiles = generator.generate_profiles_from_entities(
             entities=filtered.entities,
             use_llm=use_llm
@@ -1463,6 +1756,13 @@ def start_simulation():
         max_rounds = data.get('max_rounds')  # Optional: Maximum simulation rounds
         enable_graph_memory_update = data.get('enable_graph_memory_update', False)  # Optional：IsFalseEnable knowledge graph memory update
         force = data.get('force', False)  # Optional：Force restart
+
+        # New: Preset and simulation params
+        preset = data.get('preset')  # 'quick', 'balanced', 'deep'
+        convergence_threshold = data.get('convergence_threshold')
+        convergence_window = data.get('convergence_window')
+        max_agents_per_round = data.get('max_agents_per_round')
+        min_agents_per_round = data.get('min_agents_per_round')
 
         # Verify max_rounds Parameters
         if max_rounds is not None:
@@ -1560,6 +1860,65 @@ def start_simulation():
             
             logger.info(f"Enable knowledge graph memory update: simulation_id={simulation_id}, graph_id={graph_id}")
         
+        # Load and update simulation config with preset params
+        config_updated = False
+        max_rounds_from_preset = None
+        
+        if preset or convergence_threshold or convergence_window or max_agents_per_round or min_agents_per_round:
+            sim_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
+            config_path = os.path.join(sim_dir, "simulation_config.json")
+
+            if os.path.exists(config_path):
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        config = json.load(f)
+
+                    # Apply preset
+                    if preset in ['quick', 'balanced', 'deep']:
+                        presets = {
+                            'quick':    {'convergence_threshold': 0.08, 'convergence_window': 3, 'max_agents_per_round': 10, 'min_agents_per_round': 2},
+                            'balanced': {'convergence_threshold': 0.05, 'convergence_window': 3, 'max_agents_per_round': 15, 'min_agents_per_round': 3},
+                            'deep':     {'convergence_threshold': 0.03, 'convergence_window': 5, 'max_agents_per_round': 30, 'min_agents_per_round': 5},
+                        }
+                        config.update(presets[preset])
+                        # Also set max_rounds explicitly from preset
+                        preset_rounds = {'quick': 6, 'balanced': 12, 'deep': 24}
+                        max_rounds_from_preset = preset_rounds[preset]
+                        
+                        # Apply preset time_config to control total rounds
+                        # Aligned with run_simulation_as.py presets
+                        time_overrides = {
+                            'quick':    {'total_simulation_hours': 6, 'minutes_per_round': 60},   # 6 rounds
+                            'balanced': {'total_simulation_hours': 12, 'minutes_per_round': 60},  # 12 rounds
+                            'deep':     {'total_simulation_hours': 24, 'minutes_per_round': 60},  # 24 rounds
+                        }
+                        if 'time_config' not in config:
+                            config['time_config'] = {}
+                        config['time_config'].update(time_overrides[preset])
+                        
+                        logger.info(f"Applied preset '{preset}' to config: {simulation_id}, time_config={time_overrides[preset]}")
+
+                    # Apply individual overrides
+                    if convergence_threshold is not None:
+                        config['convergence_threshold'] = float(convergence_threshold)
+                    if convergence_window is not None:
+                        config['convergence_window'] = int(convergence_window)
+                    if max_agents_per_round is not None:
+                        config['max_agents_per_round'] = int(max_agents_per_round)
+                    if min_agents_per_round is not None:
+                        config['min_agents_per_round'] = int(min_agents_per_round)
+
+                    with open(config_path, 'w', encoding='utf-8') as f:
+                        json.dump(config, f, ensure_ascii=False, indent=2)
+                    config_updated = True
+                except Exception as e:
+                    logger.warning(f"Failed to update config with preset params: {e}")
+
+        # Use max_rounds from preset if not explicitly set
+        if max_rounds is None and max_rounds_from_preset is not None:
+            max_rounds = max_rounds_from_preset
+            logger.info(f"Using max_rounds={max_rounds} from preset")
+
         # Start simulation
         run_state = SimulationRunner.start_simulation(
             simulation_id=simulation_id,
@@ -2182,12 +2541,34 @@ def interview_agent():
         # Optimizeprompt，Add prefix to avoidAgent call tools
         optimized_prompt = optimize_interview_prompt(prompt)
         
+        # Extract query context for context-aware responses
+        storage = current_app.extensions.get('graph_storage')
+        
+        # Get graph_id from simulation
+        manager = SimulationManager()
+        sim_state = manager.get_simulation(simulation_id)
+        graph_id = sim_state.graph_id if sim_state else None
+        
+        query_context = None
+        if storage and graph_id:
+            try:
+                extractor = TopicExtractor()
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                query_context = loop.run_until_complete(
+                    extractor.extract_query_context(prompt, storage, graph_id)
+                )
+                loop.close()
+            except Exception as e:
+                logger.warning(f"Failed to extract query context: {e}")
+        
         result = SimulationRunner.interview_agent(
             simulation_id=simulation_id,
             agent_id=agent_id,
             prompt=optimized_prompt,
             platform=platform,
-            timeout=timeout
+            timeout=timeout,
+            query_context=query_context
         )
 
         return jsonify({
@@ -2277,14 +2658,14 @@ def interview_agents_batch():
         if not interviews or not isinstance(interviews, list):
             return jsonify({
                 "success": False,
-                "error": "Please provide interviews（Interview list）"
+                "error": "Please provide interviews (Interview list)"
             }), 400
 
-        # VerifyplatformParameters
+        # Verify platform parameter - opinion_space only
         if platform and platform not in ("opinion_space",):
             return jsonify({
                 "success": False,
-                "error": "platform must be opinion_space (was: 'twitter' Or 'reddit'"
+                "error": "platform must be 'opinion_space'"
             }), 400
 
         # Verify each interview item
@@ -2292,23 +2673,31 @@ def interview_agents_batch():
             if 'agent_id' not in interview:
                 return jsonify({
                     "success": False,
-                    "error": f"Interview list item{i+1}Missing agent_id"
+                    "error": f"Interview list item {i+1} missing agent_id"
                 }), 400
             if 'prompt' not in interview:
                 return jsonify({
                     "success": False,
-                    "error": f"Interview list item{i+1}Missing prompt"
+                    "error": f"Interview list item {i+1} missing prompt"
                 }), 400
-            # Verify each item'splatform（IfHas）
+            # Verify each item's platform (if provided) - opinion_space only
             item_platform = interview.get('platform')
-            if item_platform and item_platform not in ("twitter", "reddit"):
+            if item_platform and item_platform not in ("opinion_space",):
                 return jsonify({
                     "success": False,
-                    "error": f"Interview list item {i+1}: platform must be 'twitter' or 'reddit'"
+                    "error": f"Interview list item {i+1}: platform must be 'opinion_space'"
                 }), 400
 
         # Check environment status
-        if not SimulationRunner.check_env_alive(simulation_id):
+        # Check environment status
+        try:
+            env_alive = SimulationRunner.check_env_alive(simulation_id)
+            logger.info(f"Interview check: simulation={simulation_id}, env_alive={env_alive}")
+        except Exception as e:
+            logger.error(f"check_env_alive failed: {e}")
+            env_alive = False
+
+        if not env_alive:
             return jsonify({
                 "success": False,
                 "error": "Simulation environment not running or closed. Please ensure simulation is started and wait for it to progress."
@@ -2327,6 +2716,16 @@ def interview_agents_batch():
             platform=platform,
             timeout=timeout
         )
+
+        # Check if we got actual results - if not, fall back to post-simulation interview
+        if not result.get("result", {}).get("results"):
+            logger.warning(f"Interview returned no results, falling back to post-simulation interview")
+            result = _post_simulation_interview_fallback(
+                simulation_id=simulation_id,
+                profiles=SimulationManager().get_profiles(simulation_id, 'opinion_space') or [],
+                prompt=", ".join([iv.get("prompt", "") for iv in optimized_interviews]),
+                platform=platform or 'opinion_space'
+            )
 
         return jsonify({
             "success": result.get("success", False),
@@ -2354,19 +2753,247 @@ def interview_agents_batch():
         }), 500
 
 
+@simulation_bp.route('/interview/post-simulation', methods=['POST'])
+def interview_agents_post_simulation():
+    """
+    Post-simulation interview - Interview agents after simulation completes.
+
+    This endpoint allows interviewing ANY agent (including those who didn't speak)
+    after the simulation has completed. It reads agent profiles from disk.
+
+    Request (JSON):
+        {
+            "simulation_id": "sim_xxxx",       // Required, Simulation ID
+            "prompt": "What do you think about...?", // Required, Interview question
+            "agent_id": 0,                      // Optional, Specific agent ID (if empty, interviews all)
+            "platform": "opinion_space",         // Optional, Must be opinion_space
+            "timeout": 180                    // Optional, Timeout in seconds, default 180
+        }
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "simulation_id": "sim_xxxx",
+                "interviews_count": 1,
+                "result": {
+                    "results": {
+                        "opinion_space_0": {"agent_id": 0, "response": "...", "platform": "opinion_space"}
+                    }
+                },
+                "timestamp": "2025-12-08T10:00:01"
+            }
+        }
+    """
+    import sqlite3
+    import os
+    import json
+
+    try:
+        data = request.get_json() or {}
+
+        simulation_id = data.get('simulation_id')
+        prompt = data.get('prompt')
+        agent_id = data.get('agent_id')
+        platform = data.get('platform', 'opinion_space')
+        timeout = data.get('timeout', 180)
+
+        if not simulation_id:
+            return jsonify({
+                "success": False,
+                "error": "Please provide simulation_id"
+            }), 400
+
+        if not prompt:
+            return jsonify({
+                "success": False,
+                "error": "Please provide prompt (interview question)"
+            }), 400
+
+        # Validate platform
+        if platform and platform not in ("opinion_space",):
+            return jsonify({
+                "success": False,
+                "error": "platform must be 'opinion_space'"
+            }), 400
+
+        # Load agent profiles directly from file (bypass SimulationManager validation)
+        sim_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
+        profiles_file = os.path.join(sim_dir, "agentsociety_profiles.json")
+        
+        try:
+            if not os.path.exists(profiles_file):
+                raise FileNotFoundError(f"Profiles file not found: {profiles_file}")
+            with open(profiles_file, 'r', encoding='utf-8') as f:
+                profiles = json.load(f)
+        except Exception as e:
+            return jsonify({
+                "success": False,
+                "error": f"Cannot load profiles: {str(e)}"
+            }), 400
+
+        if not profiles:
+            return jsonify({
+                "success": False,
+                "error": f"No agents found for simulation {simulation_id}"
+            }), 404
+
+        # Determine which agents to interview
+        if agent_id is not None:
+            # Filter to specific agent
+            target_profiles = [p for p in profiles if p.get('id') == agent_id]
+            if not target_profiles:
+                return jsonify({
+                    "success": False,
+                    "error": f"Agent {agent_id} not found in simulation"
+                }), 404
+        else:
+            # No agent_id specified - interview all agents
+            target_profiles = profiles
+
+        # Optimize prompt to prevent agent from calling tools
+        optimized_prompt = optimize_interview_prompt(prompt)
+
+        # Build interview list
+        interviews = []
+        for agent in target_profiles:
+            agent_idx = agent.get('id', agent.get('agent_id'))
+            if agent_idx is not None:
+                interviews.append({
+                    "agent_id": agent_idx,
+                    "prompt": optimized_prompt
+                })
+
+        # Check if simulation environment is still running
+        from app.services.simulation_runner import SimulationRunner
+        env_alive = SimulationRunner.check_env_alive(simulation_id)
+
+        if env_alive:
+            # Simulation is still running - use live interview API
+            result = SimulationRunner.interview_agents_batch(
+                simulation_id=simulation_id,
+                interviews=interviews,
+                platform=platform,
+                timeout=float(timeout)
+            )
+        else:
+            # Simulation completed - need to restart environment briefly for interview
+            # or use stored profiles for a simulated response
+            result = _post_simulation_interview_fallback(
+                simulation_id=simulation_id,
+                profiles=target_profiles,
+                prompt=optimized_prompt,
+                platform=platform)
+
+        return jsonify({
+            "success": result.get("success", False),
+            "data": {
+                "simulation_id": simulation_id,
+                "interviews_count": len(interviews),
+                "result": result
+            }
+        })
+
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 400
+
+    except TimeoutError as e:
+        return jsonify({
+            "success": False,
+            "error": f"Interview timeout: {str(e)}"
+        }), 504
+
+    except Exception as e:
+        logger.error(f"Post-simulation interview failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+def _post_simulation_interview_fallback(
+    simulation_id: str,
+    profiles: List[Dict],
+    prompt: str,
+    platform: str = "opinion_space"
+) -> Dict[str, Any]:
+    """
+    Fallback interview method when simulation environment is not running.
+    Loads agent profiles and simulates interview responses using LLM.
+    """
+    from app.utils.llm_client import LLMClient
+    from datetime import datetime
+
+    llm = LLMClient()
+    results = {}
+
+    max_agents = min(10, len(profiles))  # Limit to avoid long processing
+    for agent in profiles[:max_agents]:
+        agent_id = agent.get('id', agent.get('agent_id'))
+        if agent_id is None:
+            continue
+
+        agent_name = agent.get('username') or agent.get('name') or f"Agent {agent_id}"
+        agent_bio = agent.get('bio', '') or agent.get('persona', '') or agent.get('background_story', '')
+        agent_role = agent.get('profession') or agent.get('occupation', 'Citizen')
+
+        # Build prompt with agent context
+        context_prompt = f"""You are {agent_name}, a {agent_role} in South Africa.
+
+Your background: {agent_bio[:500]}
+
+Please answer the following question in YOUR OWN VOICE, as yourself:
+
+{prompt}
+
+Remember:
+1. Answer directly as your character
+2. Do not call any tools
+3. Do not use JSON or markdown formatting
+4. Provide a genuine, personal response"""
+
+        try:
+            response = llm.chat(
+                messages=[{"role": "user", "content": context_prompt}],
+                temperature=0.7
+            )
+
+            results[f"{platform}_{agent_id}"] = {
+                "agent_id": agent_id,
+                "response": response,
+                "platform": platform
+            }
+        except Exception as e:
+            results[f"{platform}_{agent_id}"] = {
+                "agent_id": agent_id,
+                "response": f"Sorry, I couldn't process this interview: {str(e)}",
+                "platform": platform
+            }
+
+    return {
+        "success": True,
+        "interviews_count": len(results),
+        "results": results,
+        "timestamp": datetime.now().isoformat()
+    }
+
+
 @simulation_bp.route('/interview/all', methods=['POST'])
 def interview_all_agents():
     """
-    Global interview - UseInterview all with same questionAgent
+    Global interview - Interview all agents with the same question
 
     Note: This feature requires simulation to be in a running or completed state.
 
     Request (JSON):
         {
-            "simulation_id": "sim_xxxx",            // Required，Simulation ID
+            "simulation_id": "sim_xxxx",            // Required, Simulation ID
             "prompt": "What is your overall view on this?",  // Required, interview question (avoid enabling agent to use tools)
-            "platform": "reddit",                   // Optional, Specified platform (twitter/reddit)
-                                                    // When not specified: Both platforms in dual-platform simulations, single platform in single-platform simulations
+            "platform": "opinion_space",            // Optional, Must be opinion_space
             "timeout": 180                          // Optional, timeout in seconds, default 180
         }
 
@@ -2657,6 +3284,682 @@ def close_simulation_env():
         
     except Exception as e:
         logger.error(f"Failed to close environment: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+# =============================================================================
+# Policy Wind Tunnel — Interview & Intervention APIs
+# =============================================================================
+
+@simulation_bp.route('/<simulation_id>/agents', methods=['GET'])
+def list_simulation_agents(simulation_id: str):
+    """
+    List all agents in a simulation with their policy-relevant state.
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "simulation_id": "sim_xxxx",
+                "agent_count": 50,
+                "agents": [
+                    {
+                        "id": 0,
+                        "name": "Official Body",
+                        "occupation": "Government Agency",
+                        "actor_archetype": "institutional_loyalist",
+                        "group_affiliation": null,
+                        "is_institutional": true,
+                        "stance": "neutral",
+                        "base_radicalism": 1,
+                        "interested_topics": ["Policy Implementation", "Public Safety", ...]
+                    },
+                    ...
+                ]
+            }
+        }
+    """
+    try:
+        service = InterviewService(simulation_id)
+        agents = service.list_agents()
+        return jsonify({
+            "success": True,
+            "data": {
+                "simulation_id": simulation_id,
+                "agent_count": len(agents),
+                "agents": agents,
+            }
+        })
+    except FileNotFoundError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 404
+    except Exception as e:
+        logger.error(f"Failed to list agents: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/agents/<int:agent_id>/interview', methods=['POST'])
+def interview_single_agent(simulation_id: str, agent_id: int):
+    """
+    Interview a single agent (post-hoc, no running simulation required).
+
+    Request (JSON):
+        {
+            "question": "What is your biggest concern?",  // Required if question_type not set
+            "question_type": "biggest_concern",           // Optional: structured question type
+            "policy_context": "Fuel levy increase of 75c/L"  // Optional: for structured questions
+        }
+
+    Supported question_type values:
+        - "biggest_concern": What is your biggest concern?
+        - "what_would_change": What would change your position?
+        - "willing_to_negotiate": Are you willing to negotiate?
+        - "mobilization_intent": Are you planning to take action?
+        - "message_to_government": What message for policy makers?
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "agent_id": 5,
+                "agent_name": "Taxi Association Chair",
+                "response": "Our biggest concern is...",
+                "stance_before": "oppose",
+                "stance_after": "concerned",
+                "stance_changed": true,
+                "actor_archetype": "community_protector",
+                "timestamp": "2026-05-05T10:00:00"
+            }
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        question = data.get('question', '')
+        question_type = data.get('question_type')
+        policy_context = data.get('policy_context')
+
+        if not question and not question_type:
+            return jsonify({
+                "success": False,
+                "error": "Provide 'question' or 'question_type'"
+            }), 400
+
+        service = InterviewService(simulation_id)
+
+        # Run async interview in sync Flask context
+        loop = asyncio.new_event_loop()
+        try:
+            result = loop.run_until_complete(service.interview_agent(
+                agent_id=agent_id,
+                question=question,
+                question_type=question_type,
+                policy_context=policy_context,
+            ))
+        finally:
+            loop.close()
+
+        return jsonify({
+            "success": True,
+            "data": result
+        })
+
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 404
+    except Exception as e:
+        logger.error(f"Interview failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/agents/batch-interview', methods=['POST'])
+def batch_interview_agents(simulation_id: str):
+    """
+    Interview multiple agents with the same question.
+
+    Request (JSON):
+        {
+            "question": "What is your biggest concern?",
+            "question_type": "biggest_concern",        // Optional
+            "policy_context": "Fuel levy increase...", // Optional
+            "agent_ids": [5, 12, 23]                   // Optional (default: all agents)
+        }
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "simulation_id": "sim_xxxx",
+                "total_interviewed": 50,
+                "successful": 48,
+                "failed": 2,
+                "stance_distribution": {"oppose": 20, "concerned": 15, ...},
+                "results": [...]
+            }
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        question = data.get('question', '')
+        question_type = data.get('question_type')
+        policy_context = data.get('policy_context')
+        agent_ids = data.get('agent_ids')
+
+        if not question and not question_type:
+            return jsonify({
+                "success": False,
+                "error": "Provide 'question' or 'question_type'"
+            }), 400
+
+        service = InterviewService(simulation_id)
+
+        loop = asyncio.new_event_loop()
+        try:
+            result = loop.run_until_complete(service.batch_interview(
+                question=question,
+                agent_ids=agent_ids,
+                question_type=question_type,
+                policy_context=policy_context,
+            ))
+        finally:
+            loop.close()
+
+        return jsonify({
+            "success": True,
+            "data": result
+        })
+
+    except Exception as e:
+        logger.error(f"Batch interview failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/agents/<int:agent_id>/intervene', methods=['POST'])
+def intervene_with_agent(simulation_id: str, agent_id: int):
+    """
+    Apply a policy-maker intervention to an agent.
+
+    Request (JSON):
+        {
+            "intervention_text": "We will offer a R500/month taxi operator subsidy"
+        }
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "agent_id": 5,
+                "agent_name": "Taxi Association Chair",
+                "response": "That changes things...",
+                "stance_before": "oppose",
+                "stance_after": "concerned",
+                "radicalism_before": 4,
+                "radicalism_after": 2,
+                "mobilization_before": 2,
+                "mobilization_after": 1,
+                "stance_changed": true,
+                "timestamp": "2026-05-05T10:00:00"
+            }
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        intervention_text = data.get('intervention_text')
+
+        if not intervention_text:
+            return jsonify({
+                "success": False,
+                "error": "Provide 'intervention_text'"
+            }), 400
+
+        service = InterviewService(simulation_id)
+
+        loop = asyncio.new_event_loop()
+        try:
+            result = loop.run_until_complete(service.intervene_with_agent(
+                agent_id=agent_id,
+                intervention_text=intervention_text,
+            ))
+        finally:
+            loop.close()
+
+        return jsonify({
+            "success": True,
+            "data": result
+        })
+
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 404
+    except Exception as e:
+        logger.error(f"Intervention failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/fork', methods=['POST'])
+def fork_simulation(simulation_id: str):
+    """
+    Fork a simulation, optionally modifying agent states.
+
+    Request (JSON):
+        {
+            "new_simulation_id": "sim_xxxx_fork1",
+            "agent_modifications": {
+                "5": {"stance": "support", "current_radicalism": 2},
+                "12": {"stance": "neutral", "current_radicalism": 1}
+            }
+        }
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "original_simulation_id": "sim_xxxx",
+                "new_simulation_id": "sim_xxxx_fork1",
+                "new_simulation_dir": "/path/to/sim",
+                "modified_agents": 2
+            }
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        new_simulation_id = data.get('new_simulation_id')
+        agent_modifications_raw = data.get('agent_modifications', {})
+
+        if not new_simulation_id:
+            return jsonify({
+                "success": False,
+                "error": "Provide 'new_simulation_id'"
+            }), 400
+
+        # Convert string keys to int keys (JSON keys are strings)
+        agent_modifications = {}
+        for k, v in agent_modifications_raw.items():
+            try:
+                agent_modifications[int(k)] = v
+            except ValueError:
+                continue
+
+        service = InterviewService(simulation_id)
+        new_dir = service.fork_simulation(new_simulation_id, agent_modifications)
+
+        return jsonify({
+            "success": True,
+            "data": {
+                "original_simulation_id": simulation_id,
+                "new_simulation_id": new_simulation_id,
+                "new_simulation_dir": new_dir,
+                "modified_agents": len(agent_modifications),
+            }
+        })
+
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Fork failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+# =============================================================================
+# In-Simulation Pause & Intervention APIs
+# =============================================================================
+
+@simulation_bp.route('/<simulation_id>/pause', methods=['POST'])
+def pause_simulation(simulation_id: str):
+    """
+    Pause a running simulation between rounds.
+
+    The simulation will complete the current round, then pause before
+    starting the next round. While paused, you can interview agents
+    and apply interventions.
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "paused": true,
+                "message": "Simulation paused"
+            }
+        }
+    """
+    try:
+        result = SimulationRunner.pause_simulation(simulation_id)
+        return jsonify({
+            "success": result.get("success", False),
+            "data": result
+        })
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Pause failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/resume', methods=['POST'])
+def resume_simulation(simulation_id: str):
+    """
+    Resume a paused simulation.
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "paused": false,
+                "message": "Simulation resumed"
+            }
+        }
+    """
+    try:
+        result = SimulationRunner.resume_simulation(simulation_id)
+        return jsonify({
+            "success": result.get("success", False),
+            "data": result
+        })
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Resume failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/agents/<int:agent_id>/intervene-live', methods=['POST'])
+def intervene_live(simulation_id: str, agent_id: int):
+    """
+    Apply an intervention to an agent during a running (paused) simulation.
+
+    Request (JSON):
+        {
+            "intervention_text": "We will offer a R500/month taxi operator subsidy"
+        }
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "agent_id": 5,
+                "response": "That changes things...",
+                "stance_before": "oppose",
+                "stance_after": "concerned",
+                "radicalism_before": 4,
+                "radicalism_after": 2,
+                "mobilization_before": 2,
+                "mobilization_after": 1,
+                "propagation_count": 3,
+                "stance_changed": true
+            }
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        intervention_text = data.get('intervention_text')
+
+        if not intervention_text:
+            return jsonify({
+                "success": False,
+                "error": "Provide 'intervention_text'"
+            }), 400
+
+        result = SimulationRunner.apply_intervention_during_sim(
+            simulation_id=simulation_id,
+            agent_id=agent_id,
+            intervention_text=intervention_text,
+        )
+
+        return jsonify({
+            "success": result.get("success", False),
+            "data": result.get("result") or result
+        })
+
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Live intervention failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+# ============== Impact-Extraction Interview API ==============
+
+@simulation_bp.route('/interview/impact', methods=['POST'])
+def impact_interview():
+    """
+    Batch impact-extraction interview with auto-reframing per agent.
+
+    The system analyzes the user's generic question, reframes it per agent persona,
+    interviews all agents, and returns structured impact metadata.
+
+    Request (JSON):
+        {
+            "simulation_id": "sim_xxxx",   // Required
+            "question": "What if the policy changes after 12 months?",  // Required
+            "agent_ids": [1, 4, 7]         // Optional, default all agents
+        }
+
+    Returns:
+        {
+            "success": true,
+            "data": {
+                "simulation_id": "sim_xxxx",
+                "original_question": "What if the policy changes after 12 months?",
+                "question_archetype": "counterfactual",
+                "total_interviewed": 8,
+                "impact_dashboard": {
+                    "emotional_temperature": {"fear": 5, "anger": 2, "sadness": 1},
+                    "stance_distribution": {"support": 3, "concerned": 4, "oppose": 1},
+                    "mobilization_risk": {"low": 5, "medium": 2, "high": 1},
+                    "predicted_actions": [...]
+                },
+                "results": [
+                    {
+                        "agent_id": 1,
+                        "agent_name": "Agent Name",
+                        "response": "The changes will affect my community...",
+                        "reframed_question": "The policy change happens next month...",
+                        "impact_metadata": {
+                            "granularity": "micro",
+                            "affected_entity": "Family",
+                            "emotional_tone": "fear",
+                            "predicted_action": "keep son indoors"
+                        },
+                        "internal_state": {
+                            "emotion": {"fear": 9, "anger": 2, ...},
+                            "needs": {"safety_physical": 95, ...},
+                            "stance": "support"
+                        }
+                    }
+                ]
+            }
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get("simulation_id")
+        question = data.get("question", "")
+        agent_ids = data.get("agent_ids")
+
+        if not simulation_id:
+            return jsonify({"success": False, "error": "simulation_id is required"}), 400
+        if not question:
+            return jsonify({"success": False, "error": "question is required"}), 400
+
+        service = InterviewService(simulation_id)
+
+        # Run batch impact interview (async)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            result = loop.run_until_complete(
+                service.batch_impact_interview(
+                    question=question,
+                    agent_ids=agent_ids,
+                )
+            )
+        finally:
+            loop.close()
+
+        return jsonify({
+            "success": True,
+            "data": result
+        })
+
+    except Exception as e:
+        logger.error(f"Impact interview failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+# ============== Structured Data Export API ==============
+
+@simulation_bp.route('/<simulation_id>/export/states', methods=['GET'])
+def export_agent_states(simulation_id: str):
+    """
+    Export time-series agent state data for external analysis.
+
+    Query parameters:
+        format: "json" or "csv" (default json)
+        rounds: comma-separated round numbers, or "all"
+
+    Returns:
+        Time-series of stance, radicalism, emotion, mobilization per agent per round.
+    """
+    try:
+        from ..services.data_exporter import SimulationDataExporter
+
+        fmt = request.args.get("format", "json")
+        rounds_str = request.args.get("rounds", "all")
+        rounds = None
+        if rounds_str != "all":
+            rounds = [int(r.strip()) for r in rounds_str.split(",") if r.strip().isdigit()]
+
+        exporter = SimulationDataExporter(simulation_id)
+        data = exporter.export_agent_states(rounds=rounds)
+
+        if fmt == "csv":
+            import csv
+            import io
+            output = io.StringIO()
+            if data and data.get("records"):
+                writer = csv.DictWriter(output, fieldnames=data["records"][0].keys())
+                writer.writeheader()
+                writer.writerows(data["records"])
+            return send_file(
+                io.BytesIO(output.getvalue().encode()),
+                mimetype="text/csv",
+                as_attachment=True,
+                download_name=f"{simulation_id}_agent_states.csv"
+            )
+
+        return jsonify({
+            "success": True,
+            "data": data
+        })
+
+    except Exception as e:
+        logger.error(f"Export agent states failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/export/impact', methods=['GET'])
+def export_impact_summary(simulation_id: str):
+    """
+    Export aggregate impact summary from latest impact interviews.
+
+    Query parameters:
+        format: "json" or "csv" (default json)
+
+    Returns:
+        Aggregate emotional temperature, stance distribution, mobilization risk,
+        predicted actions, and affected entities.
+    """
+    try:
+        from ..services.data_exporter import SimulationDataExporter
+
+        fmt = request.args.get("format", "json")
+
+        exporter = SimulationDataExporter(simulation_id)
+        data = exporter.export_impact_summary()
+
+        if fmt == "csv":
+            import csv
+            import io
+            output = io.StringIO()
+            if data and data.get("predicted_actions"):
+                writer = csv.DictWriter(output, fieldnames=data["predicted_actions"][0].keys())
+                writer.writeheader()
+                writer.writerows(data["predicted_actions"])
+            return send_file(
+                io.BytesIO(output.getvalue().encode()),
+                mimetype="text/csv",
+                as_attachment=True,
+                download_name=f"{simulation_id}_impact_summary.csv"
+            )
+
+        return jsonify({
+            "success": True,
+            "data": data
+        })
+
+    except Exception as e:
+        logger.error(f"Export impact summary failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),

@@ -1,6 +1,23 @@
 import service, { requestWithRetry } from './index'
 
 /**
+ * Parse a custom agent definition document (JSON or unstructured text)
+ * @param {File} file - The uploaded document
+ */
+export const parseAgentDocument = (file) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return requestWithRetry(() =>
+    service({
+      url: '/api/simulation/custom-agents/parse',
+      method: 'post',
+      data: formData,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }), 2, 1000
+  )
+}
+
+/**
  * Create simulation
  * @param {Object} data - { project_id, graph_id? }
  */
@@ -42,6 +59,30 @@ export const getSimulationProfiles = (simulationId, platform = 'opinion_space') 
 }
 
 /**
+ * Get deep-research findings per archetype (empty if Firecrawl not configured)
+ * @param {string} simulationId
+ */
+export const getEnrichmentData = (simulationId) => {
+  return service.get(`/api/simulation/${simulationId}/enrichment`)
+}
+
+/**
+ * Re-run deep web research for this simulation's archetypes (overwrites enrichment.json)
+ * @param {string} simulationId
+ */
+export const rerunResearch = (simulationId) => {
+  return service.post(`/api/simulation/${simulationId}/research/rerun`)
+}
+
+/**
+ * Get token usage and estimated cost (USD + ZAR) for a simulation
+ * @param {string} simulationId
+ */
+export const getSimulationCost = (simulationId) => {
+  return service.get(`/api/simulation/${simulationId}/cost`)
+}
+
+/**
  * Get Agent Profiles being generated in real-time
  * @param {string} simulationId
  * @param {string} platform - 'opinion_space'
@@ -78,7 +119,7 @@ export const listSimulations = (projectId) => {
 
 /**
  * Start simulation
- * @param {Object} data - { simulation_id, platform?, max_rounds?, enable_graph_memory_update? }
+ * @param {Object} data - { simulation_id, platform?, max_rounds?, enable_graph_memory_update?, preset? }
  */
 export const startSimulation = (data) => {
   return requestWithRetry(() => service.post('/api/simulation/start', data), 3, 1000)
@@ -169,11 +210,19 @@ export const getEnvStatus = (data) => {
 }
 
 /**
- * Batch interview Agents
+ * Batch interview Agents (during simulation)
  * @param {Object} data - { simulation_id, interviews: [{ agent_id, prompt }] }
  */
 export const interviewAgents = (data) => {
   return requestWithRetry(() => service.post('/api/simulation/interview/batch', data), 3, 1000)
+}
+
+/**
+ * Post-simulation interview (after simulation completes)
+ * @param {Object} data - { simulation_id, prompt, agent_id? }
+ */
+export const interviewAgentsPostSimulation = (data) => {
+  return requestWithRetry(() => service.post('/api/simulation/interview/post-simulation', data), 3, 1000)
 }
 
 /**
@@ -183,5 +232,85 @@ export const interviewAgents = (data) => {
  */
 export const getSimulationHistory = (limit = 20) => {
   return service.get('/api/simulation/history', { params: { limit } })
+}
+
+// =============================================================================
+// Policy Wind Tunnel — Interview & Intervention APIs
+// =============================================================================
+
+/**
+ * List all agents in a simulation with policy-relevant state
+ * @param {string} simulationId
+ */
+export const getSimulationAgents = (simulationId) => {
+  return service.get(`/api/simulation/${simulationId}/agents`)
+}
+
+/**
+ * Interview a single agent (post-hoc, no running simulation required)
+ * @param {string} simulationId
+ * @param {number} agentId
+ * @param {Object} data - { question?, question_type?, policy_context? }
+ */
+export const interviewAgent = (simulationId, agentId, data) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/agents/${agentId}/interview`, data), 3, 1000)
+}
+
+/**
+ * Batch interview multiple agents
+ * @param {string} simulationId
+ * @param {Object} data - { question, question_type?, policy_context?, agent_ids? }
+ */
+export const batchInterviewAgents = (simulationId, data) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/agents/batch-interview`, data), 3, 1000)
+}
+
+/**
+ * Apply a policy-maker intervention to an agent
+ * @param {string} simulationId
+ * @param {number} agentId
+ * @param {Object} data - { intervention_text }
+ */
+export const interveneWithAgent = (simulationId, agentId, data) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/agents/${agentId}/intervene`, data), 3, 1000)
+}
+
+/**
+ * Fork a simulation with optional agent modifications
+ * @param {string} simulationId
+ * @param {Object} data - { new_simulation_id, agent_modifications? }
+ */
+export const forkSimulation = (simulationId, data) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/fork`, data), 3, 1000)
+}
+
+// =============================================================================
+// In-Simulation Pause & Live Intervention APIs
+// =============================================================================
+
+/**
+ * Pause a running simulation between rounds
+ * @param {string} simulationId
+ */
+export const pauseSimulation = (simulationId) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/pause`), 3, 1000)
+}
+
+/**
+ * Resume a paused simulation
+ * @param {string} simulationId
+ */
+export const resumeSimulation = (simulationId) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/resume`), 3, 1000)
+}
+
+/**
+ * Apply intervention to agent during live (paused) simulation
+ * @param {string} simulationId
+ * @param {number} agentId
+ * @param {Object} data - { intervention_text }
+ */
+export const interveneLive = (simulationId, agentId, data) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/agents/${agentId}/intervene-live`, data), 3, 1000)
 }
 

@@ -12,10 +12,13 @@ JSONL line format (one JSON object per line):
     "platform": "opinion_space",
     "agent_id": int,
     "agent_name": str,
-    "action_type": str,   # EXPRESS_OPINION | RESPOND_TO_OPINION | SEARCH_TOPIC | OBSERVE | DO_NOTHING
+    "action_type": str,   # EXPRESS_OPINION | RESPOND_TO_OPINION | SEARCH_TOPIC | OBSERVE | DO_NOTHING | NON_PARTICIPATION
     "action_args": dict,
     "result": null,
-    "success": bool
+    "success": bool,
+    "reason": str,
+    "internal_thought": str,
+    "impact_score": float
 }
 
 Special event lines (same format as OASIS):
@@ -70,6 +73,12 @@ class AgentSocietyOutputWriter:
             "action_args": action_result.get("action_args", {}),
             "result": None,
             "success": action_result.get("success", True),
+            "reason": action_result.get("reason", ""),
+            "internal_thought": action_result.get("internal_thought", ""),
+            "impact_score": action_result.get("impact_score", 0.0),
+            "prompt_tokens": action_result.get("prompt_tokens", 0),
+            "completion_tokens": action_result.get("completion_tokens", 0),
+            "estimated_cost_usd": action_result.get("estimated_cost_usd", 0.0),
         }
         self._append(record)
 
@@ -81,13 +90,16 @@ class AgentSocietyOutputWriter:
             "simulated_hours": simulated_hours,
         })
 
-    def write_simulation_end(self, total_rounds: int):
+    def write_simulation_end(self, total_rounds: int, extra: Dict[str, Any] = None):
         """Write simulation_end event marker."""
-        self._append({
+        record = {
             "event_type": "simulation_end",
             "total_rounds": total_rounds,
             "total_actions": self._total_actions,
-        })
+        }
+        if extra:
+            record.update(extra)
+        self._append(record)
 
     @property
     def total_actions(self) -> int:

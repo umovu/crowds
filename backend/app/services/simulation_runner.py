@@ -57,7 +57,13 @@ class AgentAction:
     action_args: Dict[str, Any] = field(default_factory=dict)
     result: Optional[str] = None
     success: bool = True
-    
+    reason: str = ""
+    internal_thought: str = ""
+    impact_score: float = 0.0
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    estimated_cost_usd: float = 0.0
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "round_num": self.round_num,
@@ -69,6 +75,12 @@ class AgentAction:
             "action_args": self.action_args,
             "result": self.result,
             "success": self.success,
+            "reason": self.reason,
+            "internal_thought": self.internal_thought,
+            "impact_score": self.impact_score,
+            "prompt_tokens": self.prompt_tokens,
+            "completion_tokens": self.completion_tokens,
+            "estimated_cost_usd": self.estimated_cost_usd,
         }
 
 
@@ -170,9 +182,9 @@ class SimulationRunState:
 class SimulationRunner:
     """
     Simulation Runner
-    
+
     Responsible for:
-    1. Running OASIS simulations in background processes
+    1. Running AgentSociety2 opinion-space simulations in background processes
     2. Parsing run logs and recording actions for each Agent
     3. Providing real-time status query interfaces
     4. Supporting pause/stop/resume operations
@@ -254,6 +266,12 @@ class SimulationRunner:
                     action_args=a.get("action_args", {}),
                     result=a.get("result"),
                     success=a.get("success", True),
+                    reason=a.get("reason", ""),
+                    internal_thought=a.get("internal_thought", ""),
+                    impact_score=a.get("impact_score", 0.0),
+                    prompt_tokens=a.get("prompt_tokens", 0),
+                    completion_tokens=a.get("completion_tokens", 0),
+                    estimated_cost_usd=a.get("estimated_cost_usd", 0.0),
                 ))
             
             return state
@@ -374,15 +392,43 @@ class SimulationRunner:
             #   reddit/actions.jsonl  - Reddit action log
             #   simulation.log        - Main process log
             
+            # Read preset params from config to pass to subprocess
+            config_path = os.path.join(sim_dir, "simulation_config.json")
+            preset_args = []
+            if os.path.exists(config_path):
+                try:
+                    with open(config_path, 'r') as f:
+                        cfg = json.load(f)
+                    for key in ['convergence_threshold', 'convergence_window', 'max_agents_per_round', 'min_agents_per_round']:
+                        if key in cfg:
+                            arg_name = '--' + key.replace('_', '-')
+                            preset_args.extend([arg_name, str(cfg[key])])
+                    if 'preset' in cfg:
+                        preset_args.extend(['--preset', cfg['preset']])
+                except Exception as e:
+                    logger.warning(f"Failed to read preset params from config: {e}")
+
             cmd = [
-                sys.executable,  # Python interpreter
+                sys.executable,
                 script_path,
-                "--config", config_path,  # Use full config file path
-            ]
+                "--config", config_path,
+                "--no-wait",
+            ] + preset_args
             
             # If max_rounds specified, add to command-line arguments
             if max_rounds is not None and max_rounds > 0:
                 cmd.extend(["--max-rounds", str(max_rounds)])
+            
+            # Enable fast mode via env var, if rounds <= 12, or if preset is quick/balanced
+            fast_presets = ('quick', 'balanced')
+            is_fast_preset = False
+            for i, arg in enumerate(preset_args):
+                if arg == '--preset' and i + 1 < len(preset_args) and preset_args[i + 1] in fast_presets:
+                    is_fast_preset = True
+                    break
+            if os.environ.get('SIMULATION_FAST_MODE', '').lower() == 'true' or (max_rounds is not None and max_rounds <= 12) or is_fast_preset:
+                cmd.append("--fast")
+                logger.info(f"Fast mode enabled for simulation {simulation_id}")
             
             # Create main log file to avoid stdout/stderr pipe buffer overflow
             main_log_path = os.path.join(sim_dir, "simulation.log")
@@ -585,6 +631,12 @@ class SimulationRunner:
                                 action_args=action_data.get("action_args", {}),
                                 result=action_data.get("result"),
                                 success=action_data.get("success", True),
+                                reason=action_data.get("reason", ""),
+                                internal_thought=action_data.get("internal_thought", ""),
+                                impact_score=action_data.get("impact_score", 0.0),
+                                prompt_tokens=action_data.get("prompt_tokens", 0),
+                                completion_tokens=action_data.get("completion_tokens", 0),
+                                estimated_cost_usd=action_data.get("estimated_cost_usd", 0.0),
                             )
                             state.add_action(action)
                             
@@ -773,6 +825,12 @@ class SimulationRunner:
                         action_args=data.get("action_args", {}),
                         result=data.get("result"),
                         success=data.get("success", True),
+                        reason=data.get("reason", ""),
+                        internal_thought=data.get("internal_thought", ""),
+                        impact_score=data.get("impact_score", 0.0),
+                        prompt_tokens=data.get("prompt_tokens", 0),
+                        completion_tokens=data.get("completion_tokens", 0),
+                        estimated_cost_usd=data.get("estimated_cost_usd", 0.0),
                     ))
                     
                 except json.JSONDecodeError:
@@ -883,34 +941,26 @@ class SimulationRunner:
             if round_num not in rounds:
                 rounds[round_num] = {
                     "round_num": round_num,
-                    "twitter_actions": 0,
-                    "reddit_actions": 0,
+                    "total_actions": 0,
                     "active_agents": set(),
                     "action_types": {},
                     "first_action_time": action.timestamp,
                     "last_action_time": action.timestamp,
                 }
-            
+
             r = rounds[round_num]
-            
-            if action.platform == "twitter":
-                r["twitter_actions"] += 1
-            else:
-                r["reddit_actions"] += 1
-            
+            r["total_actions"] += 1
             r["active_agents"].add(action.agent_id)
             r["action_types"][action.action_type] = r["action_types"].get(action.action_type, 0) + 1
             r["last_action_time"] = action.timestamp
-        
+
         # Convert to list
         result = []
         for round_num in sorted(rounds.keys()):
             r = rounds[round_num]
             result.append({
                 "round_num": round_num,
-                "twitter_actions": r["twitter_actions"],
-                "reddit_actions": r["reddit_actions"],
-                "total_actions": r["twitter_actions"] + r["reddit_actions"],
+                "total_actions": r["total_actions"],
                 "active_agents_count": len(r["active_agents"]),
                 "active_agents": list(r["active_agents"]),
                 "action_types": r["action_types"],
@@ -940,21 +990,13 @@ class SimulationRunner:
                     "agent_id": agent_id,
                     "agent_name": action.agent_name,
                     "total_actions": 0,
-                    "twitter_actions": 0,
-                    "reddit_actions": 0,
                     "action_types": {},
                     "first_action_time": action.timestamp,
                     "last_action_time": action.timestamp,
                 }
-            
+
             stats = agent_stats[agent_id]
             stats["total_actions"] += 1
-            
-            if action.platform == "twitter":
-                stats["twitter_actions"] += 1
-            else:
-                stats["reddit_actions"] += 1
-            
             stats["action_types"][action.action_type] = stats["action_types"].get(action.action_type, 0) + 1
             stats["last_action_time"] = action.timestamp
         
@@ -996,20 +1038,18 @@ class SimulationRunner:
         cleaned_files = []
         errors = []
         
-        # Files to delete (including database files)
+        # Files to delete
         files_to_delete = [
             "run_state.json",
             "simulation.log",
             "stdout.log",
             "stderr.log",
-            "twitter_simulation.db",  # Twitter platform database
-            "reddit_simulation.db",   # Reddit platform database
-            "env_status.json",        # Environment status file
+            "env_status.json",
         ]
-        
-        # Directories to delete (contains action logs)
-        dirs_to_clean = ["twitter", "reddit"]
-        
+
+        # Directories to clean (contains action logs and simulation DB)
+        dirs_to_clean = ["opinion_space"]
+
         # Delete files
         for filename in files_to_delete:
             file_path = os.path.join(sim_dir, filename)
@@ -1019,18 +1059,19 @@ class SimulationRunner:
                     cleaned_files.append(filename)
                 except Exception as e:
                     errors.append(f"Failed to delete {filename}: {str(e)}")
-        
-        # Clean up action logs in platform directories
+
+        # Clean up action logs in opinion_space directory
         for dir_name in dirs_to_clean:
             dir_path = os.path.join(sim_dir, dir_name)
             if os.path.exists(dir_path):
-                actions_file = os.path.join(dir_path, "actions.jsonl")
-                if os.path.exists(actions_file):
-                    try:
-                        os.remove(actions_file)
-                        cleaned_files.append(f"{dir_name}/actions.jsonl")
-                    except Exception as e:
-                        errors.append(f"Failed to delete {dir_name}/actions.jsonl: {str(e)}")
+                for fname in ["actions.jsonl", "opinion_simulation.db", "replay.db"]:
+                    fpath = os.path.join(dir_path, fname)
+                    if os.path.exists(fpath):
+                        try:
+                            os.remove(fpath)
+                            cleaned_files.append(f"{dir_name}/{fname}")
+                        except Exception as e:
+                            errors.append(f"Failed to delete {dir_name}/{fname}: {str(e)}")
         
         # Clean up in-memory run state
         if simulation_id in cls._run_states:
@@ -1098,8 +1139,7 @@ class SimulationRunner:
                     state = cls.get_run_state(simulation_id)
                     if state:
                         state.runner_status = RunnerStatus.STOPPED
-                        state.twitter_running = False
-                        state.reddit_running = False
+                        state.simulation_running = False
                         state.completed_at = datetime.now().isoformat()
                         state.error = "Server closed, simulation terminated"
                         cls._save_run_state(state)
@@ -1268,26 +1308,25 @@ class SimulationRunner:
         
         default_status = {
             "status": "stopped",
-            "twitter_available": False,
-            "reddit_available": False,
-            "timestamp": None
+            "timestamp": None,
+            "agents_expressed_count": 0,
+            "agents_expressed": [],
+            "total_agents": 0,
+            "simulation_actions_count": 0,
         }
-        
+
         if not os.path.exists(status_file):
             return default_status
-        
+
         try:
             with open(status_file, 'r', encoding='utf-8') as f:
                 status = json.load(f)
             return {
-                "status":                 status.get("status", "stopped"),
-                "twitter_available":      status.get("twitter_available", False),
-                "reddit_available":       status.get("reddit_available", False),
-                "timestamp":              status.get("timestamp"),
-                # AgentSociety runner fields
-                "agents_expressed_count": status.get("agents_expressed_count", 0),
-                "agents_expressed":       status.get("agents_expressed", []),
-                "total_agents":           status.get("total_agents", 0),
+                "status":                   status.get("status", "stopped"),
+                "timestamp":                status.get("timestamp"),
+                "agents_expressed_count":   status.get("agents_expressed_count", 0),
+                "agents_expressed":         status.get("agents_expressed", []),
+                "total_agents":             status.get("total_agents", 0),
                 "simulation_actions_count": status.get("simulation_actions_count", 0),
             }
         except (json.JSONDecodeError, OSError):
@@ -1300,7 +1339,8 @@ class SimulationRunner:
         agent_id: int,
         prompt: str,
         platform: str = None,
-        timeout: float = 60.0
+        timeout: float = 60.0,
+        query_context: dict = None
     ) -> Dict[str, Any]:
         """
         Interview single Agent
@@ -1314,6 +1354,7 @@ class SimulationRunner:
                 - "reddit": only interview Reddit platform
                 - None: interview both platforms simultaneously in dual-platform simulations, return integrated results
             timeout: Timeout (seconds)
+            query_context: Optional context with topics and entities for context-aware responses
 
         Returns:
             Interview result dict
@@ -1337,7 +1378,8 @@ class SimulationRunner:
             agent_id=agent_id,
             prompt=prompt,
             platform=platform,
-            timeout=timeout
+            timeout=timeout,
+            query_context=query_context
         )
 
         if response.status.value == "completed":
@@ -1416,6 +1458,69 @@ class SimulationRunner:
                 "timestamp": response.timestamp
             }
     
+    @classmethod
+    def pause_simulation(cls, simulation_id: str, timeout: float = 30.0) -> Dict[str, Any]:
+        """Pause a running simulation between rounds."""
+        sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
+        if not os.path.exists(sim_dir):
+            raise ValueError(f"Simulation does not exist: {simulation_id}")
+        ipc_client = SimulationIPCClient(sim_dir)
+        if not ipc_client.check_env_alive():
+            raise ValueError(f"Simulation environment not running: {simulation_id}")
+        response = ipc_client.send_pause(timeout=timeout)
+        return {
+            "success": response.status.value == "completed",
+            "paused": response.result.get("paused", False) if response.result else False,
+            "message": response.result.get("message", "") if response.result else "",
+        }
+
+    @classmethod
+    def resume_simulation(cls, simulation_id: str, timeout: float = 30.0) -> Dict[str, Any]:
+        """Resume a paused simulation."""
+        sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
+        if not os.path.exists(sim_dir):
+            raise ValueError(f"Simulation does not exist: {simulation_id}")
+        ipc_client = SimulationIPCClient(sim_dir)
+        if not ipc_client.check_env_alive():
+            raise ValueError(f"Simulation environment not running: {simulation_id}")
+        response = ipc_client.send_resume(timeout=timeout)
+        return {
+            "success": response.status.value == "completed",
+            "paused": response.result.get("paused", True) if response.result else True,
+            "message": response.result.get("message", "") if response.result else "",
+        }
+
+    @classmethod
+    def apply_intervention_during_sim(
+        cls,
+        simulation_id: str,
+        agent_id: int,
+        intervention_text: str,
+        timeout: float = 120.0
+    ) -> Dict[str, Any]:
+        """Apply an intervention to an agent during a paused simulation."""
+        sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
+        if not os.path.exists(sim_dir):
+            raise ValueError(f"Simulation does not exist: {simulation_id}")
+        ipc_client = SimulationIPCClient(sim_dir)
+        if not ipc_client.check_env_alive():
+            raise ValueError(f"Simulation environment not running: {simulation_id}")
+        response = ipc_client.send_apply_intervention(
+            agent_id=agent_id,
+            intervention_text=intervention_text,
+            timeout=timeout
+        )
+        if response.status.value == "completed":
+            return {
+                "success": True,
+                "result": response.result,
+            }
+        else:
+            return {
+                "success": False,
+                "error": response.error,
+            }
+
     @classmethod
     def interview_all_agents(
         cls,
@@ -1591,47 +1696,26 @@ class SimulationRunner:
         limit: int = 100
     ) -> List[Dict[str, Any]]:
         """
-        Get Interview history records (read from database)
-        
+        Get Interview history records (read from opinion_space/replay.db).
+
         Args:
             simulation_id: Simulation ID
-            platform: Platform type (reddit/twitter/None)
-                - "reddit": only get Reddit platform history
-                - "twitter": only get Twitter platform history
-                - None: get all history from both platforms
-            agent_id: Specify Agent ID (optional, only get history for that Agent)
-            limit: Return count limit per platform
-            
+            platform: Unused — kept for API compatibility
+            agent_id: Filter by Agent ID (optional)
+            limit: Maximum records to return
+
         Returns:
             Interview history records list
         """
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
         
-        results = []
-        
-        # Determine platforms to query
-        if platform in ("reddit", "twitter"):
-            platforms = [platform]
-        else:
-            # When platform not specified, query both platforms
-            platforms = ["twitter", "reddit"]
-        
-        for p in platforms:
-            db_path = os.path.join(sim_dir, f"{p}_simulation.db")
-            platform_results = cls._get_interview_history_from_db(
-                db_path=db_path,
-                platform_name=p,
-                agent_id=agent_id,
-                limit=limit
-            )
-            results.extend(platform_results)
-        
-        # Sort by time in descending order
+        db_path = os.path.join(sim_dir, "opinion_space", "replay.db")
+        results = cls._get_interview_history_from_db(
+            db_path=db_path,
+            platform_name="opinion_space",
+            agent_id=agent_id,
+            limit=limit,
+        )
         results.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
-        
-        # If queried multiple platforms, limit total count
-        if len(platforms) > 1 and len(results) > limit:
-            results = results[:limit]
-        
-        return results
+        return results[:limit]
 

@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="./static/image/mirofish-offline-banner.png" alt="Fub Simulation" width="100%"/>
-
 # Fub Simulation
 
 **Test your policies, announcements, and events on digital agents before they reach real people.**
@@ -18,7 +16,7 @@ Fub Simulation lets you **stress-test ideas on virtual populations** before they
 
 Upload a policy draft, press release, or event brief — and watch how hundreds of AI agents with distinct personalities, opinions, and biases react. See how ideas spread, where resistance builds, and what the public mood looks like *before* you commit.
 
-**Built on MiroFish architecture**, powered by the AgentSociety simulation engine.
+**Powered by the AgentSociety simulation engine with live web-research grounding.**
 
 ## Use Cases
 
@@ -84,11 +82,12 @@ npm run dev
 
 ## Architecture
 
-Built on MiroFish architecture, powered by **AgentSociety** simulation engine.
+Powered by **AgentSociety** simulation engine with live web-research grounding.
 
 - **Neo4j** — Knowledge graph and memory storage
 - **Ollama** — Local LLM inference (qwen2.5, llama3, etc.)
 - **AgentSociety** — Agent-Block-Action simulation model
+- **Web research** — Optional deep web research for persona enrichment
 
 ## Hardware Requirements
 
@@ -104,5 +103,5 @@ AGPL-3.0 — see [LICENSE](./LICENSE).
 
 ## Credits
 
-Based on MiroFish by 666ghj / Shanda Group.
 Powered by OASIS from the CAMEL-AI team.
+Powered by AgentSociety simulation engine.

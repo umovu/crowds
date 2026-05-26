@@ -223,6 +223,15 @@ def delete_report(report_id: str):
 
 @report_bp.route('/chat', methods=['POST'])
 def chat_with_report_agent():
+    import signal
+    import functools
+    
+    class TimeoutError(Exception):
+        pass
+    
+    def timeout_handler(signum, frame):
+        raise TimeoutError("Request timed out after 60 seconds")
+    
     try:
         data = request.get_json() or {}
         simulation_id = data.get('simulation_id')
@@ -261,9 +270,23 @@ def chat_with_report_agent():
             graph_tools=graph_tools
         )
 
-        result = agent.chat(message=message, chat_history=chat_history)
+        # Set timeout for the chat operation (60 seconds)
+        if hasattr(signal, 'SIGALRM'):
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(60)
+        
+        try:
+            result = agent.chat(message=message, chat_history=chat_history)
+        finally:
+            if hasattr(signal, 'SIGALRM'):
+                signal.alarm(0)
+        
         return jsonify({"success": True, "data": {"response": result, "simulation_id": simulation_id}})
 
+    except TimeoutError as e:
+        logger.error(f"Chat timed out: {str(e)}")
+        return jsonify({"success": False, "error": "Request timed out. Please try again.", "timeout": True}), 504
+        
     except Exception as e:
         logger.error(f"Chat failed: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

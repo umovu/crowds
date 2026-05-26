@@ -36,6 +36,11 @@ Therefore, **entities must be real-world entities that can voice and interact on
 - Topics/subjects (such as "academic integrity", "education reform")
 - Views/attitudes (such as "supporters", "opponents")
 
+**Also extract but do NOT make opinion agents**:
+- `Location`: Geographic places — cities, provinces, townships, neighborhoods, suburbs, regions.
+  Examples: "Cape Town", "Western Cape", "Manenberg", "Khayelitsha", "Soweto", "Gauteng".
+  These are CONTEXT, not voices. They should NOT be given personas or participate in the simulation.
+
 ## Output Format
 
 Please output JSON format with the following structure:
@@ -138,6 +143,9 @@ B. **Specific types (8, designed based on text content)**:
 **Organization types (fallback)**:
 - Organization: Any organization (use when not fitting other specific types)
 
+**Location types (for context extraction only — NOT simulation agents)**:
+- Location: Any geographic place — city, province, township, suburb, neighborhood, region, district.
+
 ## Relationship Type Reference
 
 - WORKS_FOR: Works for
@@ -194,11 +202,17 @@ class OntologyGenerator:
         ]
 
         # Call LLM
-        result = self.llm_client.chat_json(
-            messages=messages,
-            temperature=0.3,
-            max_tokens=4096
-        )
+        import traceback as tb
+        try:
+            result = self.llm_client.chat_json(
+                messages=messages,
+                temperature=0.3,
+                max_tokens=4096
+            )
+        except Exception as e:
+            print(f"[ONTOLOGY ERROR] LLM call failed: {e}")
+            print(f"[ONTOLOGY ERROR] Traceback: {tb.format_exc()}")
+            raise
 
         # Validate and post-process
         result = self._validate_and_process(result)

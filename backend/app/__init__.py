@@ -16,8 +16,40 @@ from .config import Config
 from .utils.logger import setup_logger, get_logger
 
 
+def _setup_agentsociety2_env():
+    """Bridge Fub's config to agentsociety2's expected env vars.
+
+    Maps Fub's unified config to the env vars agentsociety2 and its skills
+    expect at runtime.
+    """
+    # LLM config (required by AgentSociety2). The simulation uses the SIM_LLM_*
+    # model/key/base when set, falling back to the research LLM_* config.
+    _sim_key = os.environ.get("SIM_LLM_API_KEY") or Config.LLM_API_KEY or ""
+    _sim_base = os.environ.get("SIM_LLM_BASE_URL") or Config.LLM_BASE_URL or ""
+    _sim_model = os.environ.get("SIM_LLM_MODEL") or Config.LLM_MODEL_NAME or ""
+    if not os.environ.get("AGENTSOCIETY_NANO_LLM_API_KEY"):
+        os.environ["AGENTSOCIETY_NANO_LLM_API_KEY"] = _sim_key
+    if not os.environ.get("AGENTSOCIETY_NANO_LLM_API_BASE"):
+        os.environ["AGENTSOCIETY_NANO_LLM_API_BASE"] = _sim_base
+    if not os.environ.get("AGENTSOCIETY_NANO_LLM_MODEL"):
+        os.environ["AGENTSOCIETY_NANO_LLM_MODEL"] = _sim_model
+    if not os.environ.get("AGENTSOCIETY_LLM_API_KEY"):
+        os.environ["AGENTSOCIETY_LLM_API_KEY"] = _sim_key
+    if not os.environ.get("AGENTSOCIETY_LLM_API_BASE"):
+        os.environ["AGENTSOCIETY_LLM_API_BASE"] = _sim_base
+
+    # Web research (MiroFlow) — bridge if user has configured in .env
+    if Config.WEB_SEARCH_API_URL and not os.environ.get("WEB_SEARCH_API_URL"):
+        os.environ["WEB_SEARCH_API_URL"] = Config.WEB_SEARCH_API_URL
+    if not os.environ.get("WEB_SEARCH_API_TOKEN"):
+        os.environ["WEB_SEARCH_API_TOKEN"] = Config.WEB_SEARCH_API_TOKEN or "dummy_token"
+
+
 def create_app(config_class=Config):
     """Flask application factory function"""
+    # Ensure agentsociety2 env vars are set before any imports trigger it
+    _setup_agentsociety2_env()
+
     app = Flask(__name__)
     app.config.from_object(config_class)
 
@@ -43,7 +75,9 @@ def create_app(config_class=Config):
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # --- Initialize Graph Storage singleton (DI via app.extensions) ---
-    from .storage import get_storage, Neo4jStorage, KGLiteStorage
+    # Single-process server (reloader disabled in run.py), so we always init here.
+    # Embedded LadybugDB needs exactly one process holding its file lock.
+    from .storage import get_storage, Neo4jStorage, LadybugStorage
     try:
         graph_backend = Config.GRAPH_BACKEND
         graph_storage = get_storage(graph_backend)
@@ -54,7 +88,7 @@ def create_app(config_class=Config):
     except Exception as e:
         logger.error("GraphStorage initialization failed: %s", e)
         app.extensions['graph_storage'] = None
-        app.extensions['graph_backend'] = 'neo4j'
+        app.extensions['graph_backend'] = Config.GRAPH_BACKEND
 
     # Register simulation process cleanup function (ensure all simulation processes terminate on server shutdown)
     from .services.simulation_runner import SimulationRunner
@@ -77,11 +111,13 @@ def create_app(config_class=Config):
         return response
 
     # Register blueprints
-    from .api import graph_bp, simulation_bp, report_bp, config_bp
+    from .api import graph_bp, simulation_bp, report_bp, config_bp, analysis_bp, research_bp
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(config_bp, url_prefix='/api/config')
+    app.register_blueprint(analysis_bp, url_prefix='/api/analysis')
+    app.register_blueprint(research_bp, url_prefix='/api/research')
 
     # Health check
     @app.route('/health')

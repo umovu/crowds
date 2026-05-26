@@ -14,6 +14,13 @@ from dataclasses import dataclass, field, asdict
 from ..config import Config
 
 
+class CustomAgentSource(str, Enum):
+    """Source of custom agent definitions"""
+    SEED_DOCUMENT = "seed_document"
+    AGENT_DOCUMENT = "agent_document"
+    MANUAL = "manual"
+
+
 class ProjectStatus(str, Enum):
     """Project status"""
     CREATED = "created"              # Just created, files uploaded
@@ -44,6 +51,17 @@ class Project:
     graph_id: Optional[str] = None
     graph_build_task_id: Optional[str] = None
 
+    # Custom agents extracted from seed document or added manually
+    custom_agents: List[Dict[str, Any]] = field(default_factory=list)
+    custom_agents_enabled: bool = False
+
+    # MiroFlow enrichment data (archetype → research text)
+    enrichment_data: Dict[str, str] = field(default_factory=dict)
+
+    # Literature papers saved to this project (used as agent-grounding context).
+    # Each entry: {id, title, authors, year, source, abstract, url}
+    saved_papers: List[Dict[str, Any]] = field(default_factory=list)
+
     # Configuration
     simulation_requirement: Optional[str] = None
     chunk_size: int = 500
@@ -66,6 +84,10 @@ class Project:
             "analysis_summary": self.analysis_summary,
             "graph_id": self.graph_id,
             "graph_build_task_id": self.graph_build_task_id,
+            "custom_agents": self.custom_agents,
+            "custom_agents_enabled": self.custom_agents_enabled,
+            "enrichment_data": self.enrichment_data,
+            "saved_papers": self.saved_papers,
             "simulation_requirement": self.simulation_requirement,
             "chunk_size": self.chunk_size,
             "chunk_overlap": self.chunk_overlap,
@@ -91,6 +113,10 @@ class Project:
             analysis_summary=data.get('analysis_summary'),
             graph_id=data.get('graph_id'),
             graph_build_task_id=data.get('graph_build_task_id'),
+            custom_agents=data.get('custom_agents', []),
+            custom_agents_enabled=data.get('custom_agents_enabled', False),
+            enrichment_data=data.get('enrichment_data', {}),
+            saved_papers=data.get('saved_papers', []),
             simulation_requirement=data.get('simulation_requirement'),
             chunk_size=data.get('chunk_size', 500),
             chunk_overlap=data.get('chunk_overlap', 50),

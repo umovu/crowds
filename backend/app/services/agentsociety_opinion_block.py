@@ -50,14 +50,14 @@ South African realities this simulation is grounded in:
 - Persistent load-shedding (Eskom power cuts) destroying small businesses and daily life
 - Land reform debate: historical dispossession and calls for expropriation
 - Social grant dependency: ~28 million SASSA recipients — grants are survival, not charity
-- Cape Flats gang economy: drugs, protection, territorial control as parallel governance
-- The Numbers (26s/27s/28s): prison gang culture that shapes Cape Township identity
+- Township gang economies: drugs, protection, territorial control as parallel governance
+- Prison gang culture: Numbers (26s/27s/28s) that shapes township community identity
 - Taxi violence: rank wars, route disputes, enforcer culture
 - Xenophobia: recurring attacks on foreign nationals, especially in townships
 - Police legitimacy crisis: high rates of police brutality, corruption, extrajudicial killings
 - Racial inequality legacy from apartheid still shapes every economic outcome
 - 11 official languages; code-switching is cultural identity not confusion
-- Township communities (Soweto, Khayelitsha, Umlazi, Manenberg) vs formal suburbs
+- Township communities: informal settlements vs formal suburbs across SA
 - High gender-based violence — femicide rate among highest globally
 - BEE/BBBEE: genuine economic inclusion debate vs perception of elite capture
 - Strong trade union history — COSATU, NUMSA — but declining working-class organisation
@@ -76,13 +76,13 @@ When expressing opinions, responding to others, or deciding how to act:
 # Action constants  (maps to JSONL action_type field)
 # ─────────────────────────────────────────────────────────────
 class OpinionActionType:
-    EXPRESS_OPINION    = "EXPRESS_OPINION"
+    EXPRESS_OPINION     = "EXPRESS_OPINION"
     RESPOND_TO_OPINION = "RESPOND_TO_OPINION"
     SEARCH_TOPIC       = "SEARCH_TOPIC"
     OBSERVE            = "OBSERVE"
     DO_NOTHING         = "DO_NOTHING"
-
-    ALL = [EXPRESS_OPINION, RESPOND_TO_OPINION, SEARCH_TOPIC, OBSERVE, DO_NOTHING]
+    NON_PARTICIPATION  = "NON_PARTICIPATION"
+    ALL = [EXPRESS_OPINION, RESPOND_TO_OPINION, SEARCH_TOPIC, OBSERVE, DO_NOTHING, NON_PARTICIPATION]
 
 
 # ─────────────────────────────────────────────────────────────
@@ -114,7 +114,10 @@ class OpinionEnvironment:
                 content   TEXT NOT NULL,
                 topics    TEXT,
                 round_num INTEGER NOT NULL,
-                created_at TEXT NOT NULL
+                created_at TEXT NOT NULL,
+                reason TEXT,
+                internal_thought TEXT,
+                impact_score REAL DEFAULT 0.0
             )
         """)
         conn.execute("""
@@ -125,9 +128,57 @@ class OpinionEnvironment:
                 opinion_id    INTEGER NOT NULL,
                 content       TEXT NOT NULL,
                 round_num     INTEGER NOT NULL,
-                created_at    TEXT NOT NULL
+                created_at    TEXT NOT NULL,
+                reason TEXT,
+                internal_thought TEXT,
+                impact_score REAL DEFAULT 0.0
             )
         """)
+        
+        # New table to track ALL agent actions per round (including OBSERVE/DO_NOTHING)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS agent_round_activity (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                agent_id      INTEGER NOT NULL,
+                agent_name    TEXT NOT NULL,
+                action_type   TEXT NOT NULL,
+                round_num     INTEGER NOT NULL,
+                created_at    TEXT NOT NULL,
+                reason        TEXT,
+                internal_thought TEXT,
+                impact_score  REAL DEFAULT 0.0,
+                content       TEXT,
+                topics        TEXT
+            )
+        """)
+        
+        # Add new columns to existing tables if they don't exist (migration)
+        try:
+            conn.execute("ALTER TABLE opinion ADD COLUMN reason TEXT")
+        except sqlite3.OperationalError:
+            pass  # Column already exists
+        try:
+            conn.execute("ALTER TABLE opinion ADD COLUMN internal_thought TEXT")
+        except sqlite3.OperationalError:
+            pass
+        try:
+            conn.execute("ALTER TABLE opinion ADD COLUMN impact_score REAL DEFAULT 0.0")
+        except sqlite3.OperationalError:
+            pass
+        
+        try:
+            conn.execute("ALTER TABLE opinion_response ADD COLUMN reason TEXT")
+        except sqlite3.OperationalError:
+            pass
+        try:
+            conn.execute("ALTER TABLE opinion_response ADD COLUMN internal_thought TEXT")
+        except sqlite3.OperationalError:
+            pass
+        try:
+            conn.execute("ALTER TABLE opinion_response ADD COLUMN impact_score REAL DEFAULT 0.0")
+        except sqlite3.OperationalError:
+            pass
+            
         conn.commit()
         conn.close()
 
@@ -149,14 +200,16 @@ class OpinionEnvironment:
             ]
 
     async def add_opinion(self, agent_id: int, agent_name: str,
-                          content: str, topics: List[str], round_num: int) -> int:
+                          content: str, topics: List[str], round_num: int,
+                          reason: str = "", internal_thought: str = "",
+                          impact_score: float = 0.0) -> int:
         """Persist an expressed opinion; return its ID."""
         now = datetime.now().isoformat()
         conn = sqlite3.connect(self.db_path)
         cur = conn.execute(
-            "INSERT INTO opinion (agent_id, agent_name, content, topics, round_num, created_at)"
-            " VALUES (?, ?, ?, ?, ?, ?)",
-            (agent_id, agent_name, content, json.dumps(topics), round_num, now),
+            "INSERT INTO opinion (agent_id, agent_name, content, topics, round_num, created_at, reason, internal_thought, impact_score)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (agent_id, agent_name, content, json.dumps(topics), round_num, now, reason, internal_thought, impact_score),
         )
         opinion_id = cur.lastrowid
         conn.commit()
@@ -170,6 +223,9 @@ class OpinionEnvironment:
             "topics": topics,
             "round_num": round_num,
             "created_at": now,
+            "reason": reason,
+            "internal_thought": internal_thought,
+            "impact_score": impact_score,
         }
         async with self._lock:
             self._opinions.append(record)
@@ -179,14 +235,34 @@ class OpinionEnvironment:
         return opinion_id
 
     async def add_response(self, agent_id: int, agent_name: str,
-                           opinion_id: int, content: str, round_num: int):
+                           opinion_id: int, content: str, round_num: int,
+                           reason: str = "", internal_thought: str = "",
+                           impact_score: float = 0.0):
         now = datetime.now().isoformat()
         conn = sqlite3.connect(self.db_path)
         conn.execute(
             "INSERT INTO opinion_response"
-            " (agent_id, agent_name, opinion_id, content, round_num, created_at)"
-            " VALUES (?, ?, ?, ?, ?, ?)",
-            (agent_id, agent_name, opinion_id, content, round_num, now),
+            " (agent_id, agent_name, opinion_id, content, round_num, created_at, reason, internal_thought, impact_score)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (agent_id, agent_name, opinion_id, content, round_num, now, reason, internal_thought, impact_score),
+        )
+        conn.commit()
+        conn.close()
+    
+    async def add_agent_activity(
+        self, agent_id: int, agent_name: str, action_type: str, round_num: int,
+        reason: str = "", internal_thought: str = "",
+        impact_score: float = 0.0, content: str = "", topics: List[str] = None
+    ):
+        """Record all agent activities including OBSERVE and DO_NOTHING."""
+        now = datetime.now().isoformat()
+        conn = sqlite3.connect(self.db_path)
+        conn.execute(
+            "INSERT INTO agent_round_activity"
+            " (agent_id, agent_name, action_type, round_num, created_at, reason, internal_thought, impact_score, content, topics)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (agent_id, agent_name, action_type, round_num, now, reason, internal_thought, impact_score, 
+             content, json.dumps(topics or [])),
         )
         conn.commit()
         conn.close()
@@ -215,11 +291,12 @@ class OpinionCaptureBlock:
         "Captures agent opinions and stances on topics in a shared social medium."
     )
     actions = {
-        OpinionActionType.EXPRESS_OPINION:    "Share a new opinion or perspective on a relevant topic.",
+        OpinionActionType.EXPRESS_OPINION:     "Share a new opinion or perspective on a relevant topic.",
         OpinionActionType.RESPOND_TO_OPINION: "Respond to or engage with another agent's opinion.",
         OpinionActionType.SEARCH_TOPIC:       "Search for opinions related to a specific topic or keyword.",
-        OpinionActionType.OBSERVE:            "Read the feed silently without posting.",
+        OpinionActionType.OBSERVE:             "Read the feed silently without posting.",
         OpinionActionType.DO_NOTHING:         "Take no action this round.",
+        OpinionActionType.NON_PARTICIPATION:  "Explain why you are choosing not to engage in the discussion this round.",
     }
 
     def __init__(self, llm_client: AsyncOpenAI, model_name: str, env: OpinionEnvironment):
@@ -252,8 +329,10 @@ class OpinionCaptureBlock:
             return await self._search_topic(agent, feed, round_num)
         elif action_type == OpinionActionType.OBSERVE:
             return self._observe(agent, feed, round_num)
+        elif action_type == OpinionActionType.NON_PARTICIPATION:
+            return await self._non_participation(agent, feed, round_num)
         else:
-            return self._do_nothing(agent, round_num)
+            return await self._do_nothing(agent, round_num)
 
     # ── Dispatcher ────────────────────────────────────────────
 
@@ -276,21 +355,27 @@ Current shared opinion feed (recent):
 {feed_preview}
 
 Choose ONE action for this round. Respond with ONLY the action name:
-- EXPRESS_OPINION    (share your view on a policy or issue relevant to your life)
-- RESPOND_TO_OPINION (engage with someone's opinion above)
-- SEARCH_TOPIC       (look up opinions on a specific policy or topic)
-- OBSERVE            (read silently)
-- DO_NOTHING         (stay quiet this round)
+- EXPRESS_OPINION     (share your view on a policy or issue relevant to your life)
+- RESPOND_TO_OPINION  (engage with someone's opinion above)
+- SEARCH_TOPIC        (look up opinions on a specific policy or topic)
+- OBSERVE             (read silently)
+- DO_NOTHING          (stay quiet this round)
+- NON_PARTICIPATION   (explain why you are not engaging this round)
 {f'Special prompt: {initial_prompt}' if initial_prompt else ''}
 Action:"""
 
         try:
-            resp = await self._llm.chat.completions.create(
-                model=self._model,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=20,
-                temperature=0.7,
-            )
+            from ..config import Config
+            kwargs = {
+                "model": self._model,
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 25,
+                "temperature": 0.7,
+            }
+            extra = Config.llm_extra_body()
+            if extra:
+                kwargs["extra_body"] = extra
+            resp = await self._llm.chat.completions.create(**kwargs)
             raw = resp.choices[0].message.content.strip().upper()
             for act in OpinionActionType.ALL:
                 if act in raw:
@@ -298,8 +383,8 @@ Action:"""
         except Exception as e:
             logger.warning(f"Dispatcher failed for {agent.name}: {e}")
 
-        # Default: express opinion if feed is sparse, else observe
-        return OpinionActionType.EXPRESS_OPINION if len(feed) < 3 else OpinionActionType.OBSERVE
+        # Default: express opinion if feed is sparse, else non_participation (requires reason)
+        return OpinionActionType.EXPRESS_OPINION if len(feed) < 3 else OpinionActionType.NON_PARTICIPATION
 
     # ── Action implementations ────────────────────────────────
 
@@ -312,12 +397,17 @@ Action:"""
 You are {agent.name}.
 {agent.character_context(detail="full")}
 
-Recent opinions from others:
+What OTHERS have already said (do NOT repeat or paraphrase these points — bring a new angle):
 {feed_ctx}
 
-Share your genuine opinion about "{topic_hint}" in 1-3 sentences. Be direct and in-character.
-Ground your view in your lived South African experience — your province, employment situation,
-language background, and relationship with government services. Be opinionated, not generic.
+Share YOUR opinion about "{topic_hint}" — 1-3 sentences. Hard rules:
+- Cite a SPECIFIC personal detail: your job, who depends on you, your street/township, a recent
+  experience, an amount in rand, a name. Specifics over abstractions.
+- Take a stance the others above have NOT taken. If they agree on something, complicate it.
+  If they're all angry, find the inconvenient nuance. If they're calm, raise an alarm.
+- NO generic phrases: "this is concerning", "something must be done", "we need to come together",
+  "the government should listen". Banned.
+- Sound like a real South African talking, not a press release.
 Opinion:"""
 
         content = await self._call_llm(prompt, agent.name, max_tokens=200)
@@ -385,16 +475,92 @@ Response:"""
             "success": True,
         }
 
-    # ── LLM helper ────────────────────────────────────────────
+    async def _non_participation(self, agent: "OpinionAgent", feed: List[Dict], round_num: int) -> Dict:
+        reason = await self._get_non_participation_reason(agent, feed)
+        return {
+            "action_type": OpinionActionType.NON_PARTICIPATION,
+            "action_args": {
+                "reason": reason,
+                "reason_category": self._categorize_reason(reason),
+            },
+            "success": True,
+        }
 
-    async def _call_llm(self, prompt: str, agent_name: str, max_tokens: int = 200) -> str:
+    async def _get_non_participation_reason(self, agent: "OpinionAgent", feed: List[Dict]) -> str:
+        feed_ctx = "\n".join(f"- {o['agent_name']}: {o['content'][:100]}" for o in feed[-5:]) if feed else "(no opinions yet)"
+        
+        prompt = f"""{SA_POLICY_CONTEXT}
+
+You are {agent.name}.
+{agent.character_context(detail="full")}
+
+The current conversation in this space:
+{feed_ctx}
+
+You have chosen to not express your opinion or engage this round. Explain in 1-2 sentences WHY you are choosing not to participate. This is valuable data - it reveals barriers to civic engagement.
+
+Consider your character's situation:
+- Do they distrust the process or other participants?
+- Are they overwhelmed by daily survival struggles?
+- Do they feel unheard or marginalized?
+- Do they prefer to observe before engaging?
+- Are they too busy or have competing priorities?
+- Do they simply not care about the topic?
+- Do they feel powerless to change anything?
+
+Be specific and in-character. State your reason for non-engagement:
+"""
         try:
             resp = await self._llm.chat.completions.create(
                 model=self._model,
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=max_tokens,
+                max_tokens=150,
                 temperature=0.8,
             )
+            text = resp.choices[0].message.content or ""
+            text = re.sub(r"^\s*['\"]*|['\"]*\s*$", "", text.strip())
+            return text.strip() if text.strip() else "No reason provided"
+        except Exception as e:
+            logger.warning(f"Failed to get non-participation reason for {agent.name}: {e}")
+            return "Unable to generate reason"
+
+    def _categorize_reason(self, reason: str) -> str:
+        reason_lower = reason.lower()
+        
+        if any(word in reason_lower for word in ["distrust", "don't trust", "don't believe", "suspicious", "fake", "manipulation"]):
+            return "distrust"
+        elif any(word in reason_lower for word in ["busy", "work", "time", "no time", "schedule", "appointments", "surviving", "struggling"]):
+            return "time_constraints"
+        elif any(word in reason_lower for word in ["don't care", "apathetic", "not interested", "boring", "irrelevant"]):
+            return "apathy"
+        elif any(word in reason_lower for word in ["powerless", "nothing will change", "hopeless", "waste of time", "pointless"]):
+            return "cynicism"
+        elif any(word in reason_lower for word in ["unheard", "marginalized", "not represented", "ignored", "voiceless"]):
+            return "exclusion"
+        elif any(word in reason_lower for word in ["observe", "watching", "waiting", "see what", "first"]):
+            return "observational"
+        elif any(word in reason_lower for word in ["fear", "unsafe", "risk", "retaliation", "consequences"]):
+            return "fear"
+        else:
+            return "other"
+
+    # ── LLM helper ────────────────────────────────────────────
+
+    async def _call_llm(self, prompt: str, agent_name: str, max_tokens: int = 200) -> str:
+        try:
+            from ..config import Config
+            kwargs = {
+                "model": self._model,
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": max_tokens,
+                "temperature": 0.9,
+                "presence_penalty": 0.6,
+                "frequency_penalty": 0.4,
+            }
+            extra = Config.llm_extra_body()
+            if extra:
+                kwargs["extra_body"] = extra
+            resp = await self._llm.chat.completions.create(**kwargs)
             text = resp.choices[0].message.content or ""
             # Strip think tags
             return re.sub(r"<think>[\s\S]*?</think>", "", text).strip()

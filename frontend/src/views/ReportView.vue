@@ -3,19 +3,19 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">MIROFISH OFFLINE</div>
+        <div class="brand" @click="router.push('/')">FUB POLICY SIM</div>
       </div>
       
       <div class="header-center">
         <div class="view-switcher">
           <button 
-            v-for="mode in ['graph', 'split', 'workbench']" 
+            v-for="mode in ['graph', 'split', 'workbench', 'analytics']" 
             :key="mode"
             class="switch-btn"
             :class="{ active: viewMode === mode }"
             @click="viewMode = mode"
           >
-            {{ { graph: 'Graph', split: 'Split', workbench: 'Workbench' }[mode] }}
+            {{ { graph: 'Graph', split: 'Split', workbench: 'Workbench', analytics: 'Analytics' }[mode] }}
           </button>
         </div>
       </div>
@@ -36,7 +36,7 @@
     <!-- Main Content Area -->
     <main class="content-area">
       <!-- Left Panel: Graph -->
-      <div class="panel-wrapper left" :style="leftPanelStyle">
+      <div v-if="viewMode !== 'analytics'" class="panel-wrapper left" :style="leftPanelStyle">
         <GraphPanel 
           :graphData="graphData"
           :loading="graphLoading"
@@ -48,7 +48,7 @@
       </div>
 
       <!-- Right Panel: Step4 Report -->
-      <div class="panel-wrapper right" :style="rightPanelStyle">
+      <div v-if="viewMode !== 'analytics'" class="panel-wrapper right" :style="rightPanelStyle">
         <Step4Report
           :reportId="currentReportId"
           :simulationId="simulationId"
@@ -56,6 +56,11 @@
           @add-log="addLog"
           @update-status="updateStatus"
         />
+      </div>
+
+      <!-- Analytics Panel -->
+      <div v-if="viewMode === 'analytics'" class="panel-wrapper analytics" :style="analyticsPanelStyle">
+        <SimulationDashboard :simulationId="simulationId" />
       </div>
     </main>
   </div>
@@ -66,6 +71,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GraphPanel from '../components/GraphPanel.vue'
 import Step4Report from '../components/Step4Report.vue'
+import SimulationDashboard from '../components/SimulationDashboard.vue'
 import { getProject, getGraphData } from '../api/graph'
 import { getSimulation } from '../api/simulation'
 import { getReport } from '../api/report'
@@ -94,13 +100,19 @@ const currentStatus = ref('processing') // processing | completed | error
 const leftPanelStyle = computed(() => {
   if (viewMode.value === 'graph') return { width: '100%', opacity: 1, transform: 'translateX(0)' }
   if (viewMode.value === 'workbench') return { width: '0%', opacity: 0, transform: 'translateX(-20px)' }
+  if (viewMode.value === 'analytics') return { width: '0%', opacity: 0, transform: 'translateX(-20px)' }
   return { width: '50%', opacity: 1, transform: 'translateX(0)' }
 })
 
 const rightPanelStyle = computed(() => {
   if (viewMode.value === 'workbench') return { width: '100%', opacity: 1, transform: 'translateX(0)' }
   if (viewMode.value === 'graph') return { width: '0%', opacity: 0, transform: 'translateX(20px)' }
+  if (viewMode.value === 'analytics') return { width: '0%', opacity: 0, transform: 'translateX(20px)' }
   return { width: '50%', opacity: 1, transform: 'translateX(0)' }
+})
+
+const analyticsPanelStyle = computed(() => {
+  return { width: '100%', opacity: 1, transform: 'translateX(0)' }
 })
 
 // --- Status Computed ---
@@ -344,5 +356,10 @@ onMounted(() => {
 
 .panel-wrapper.left {
   border-right: 1px solid #EAEAEA;
+}
+
+.panel-wrapper.analytics {
+  overflow-y: auto;
+  background: #FAFAFA;
 }
 </style>

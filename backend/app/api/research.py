@@ -1,0 +1,1296 @@
+"""
+Research API Routes
+
+Endpoints for literature search and research context management.
+"""
+
+import os
+import logging
+from flask import Blueprint, request, jsonify, current_app
+
+from ..services.literature_service import LiteratureSearchService
+from ..utils.logger import get_logger
+
+logger = get_logger("fub.research")
+
+research_bp = Blueprint("research", __name__)
+
+_literature_service = None
+
+
+def get_literature_service() -> LiteratureSearchService:
+    global _literature_service
+    if _literature_service is None:
+        _literature_service = LiteratureSearchService(max_results_per_source=10)
+    return _literature_service
+
+
+@research_bp.route("/search", methods=["POST"])
+def search_literature():
+    """
+    Search academic literature across all configured sources.
+
+    Request body:
+    {
+        "query": "search query string",
+        "sources": ["arxiv", "openalex", "crossref", "local"],  // optional
+        "max_results": 10  // optional, default 10
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    query = data.get("query", "").strip()
+    if not query:
+        return jsonify({"error": "Query is required"}), 400
+
+    sources = data.get("sources")
+    if sources and not isinstance(sources, list):
+        return jsonify({"error": "sources must be a list"}), 400
+
+    max_results = data.get("max_results", 10)
+    if not isinstance(max_results, int) or max_results < 1 or max_results > 50:
+        return jsonify({"error": "max_results must be between 1 and 50"}), 400
+
+    try:
+        service = LiteratureSearchService(max_results_per_source=max_results)
+        results = service.search(query, sources)
+
+        logger.info(f"Literature search: query='{query}', sources={sources}, results={results['total']}")
+
+        return jsonify(results)
+
+    except Exception as e:
+        logger.error(f"Literature search failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/search/<source>", methods=["POST"])
+def search_source_only(source):
+    """Search only a specific source (arxiv, openalex, crossref, local)."""
+    if source not in ["arxiv", "openalex", "crossref", "local"]:
+        return jsonify({"error": f"Unknown source: {source}"}), 400
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    query = data.get("query", "").strip()
+    if not query:
+        return jsonify({"error": "Query is required"}), 400
+
+    max_results = data.get("max_results", 10)
+
+    try:
+        service = LiteratureSearchService(max_results_per_source=max_results)
+        results = service.search(query, sources=[source])
+        return jsonify(results)
+
+    except Exception as e:
+        logger.error(f"{source} search failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/local", methods=["GET"])
+def get_local_papers():
+    """Get all locally uploaded papers."""
+    try:
+        service = get_literature_service()
+        papers = service.get_local_papers()
+        return jsonify({
+            "papers": papers,
+            "total": len(papers)
+        })
+    except Exception as e:
+        logger.error(f"Failed to get local papers: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/local", methods=["POST"])
+def add_local_paper():
+    """
+    Add a local paper manually (without file upload).
+
+    Request body:
+    {
+        "title": "Paper title",
+        "authors": ["Author 1", "Author 2"],
+        "year": 2024,
+        "abstract": "Paper abstract...",
+        "doi": "10.xxxx/xxxxx"  // optional
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    title = data.get("title", "").strip()
+    if not title:
+        return jsonify({"error": "Title is required"}), 400
+
+    authors = data.get("authors", [])
+    if isinstance(authors, str):
+        authors = [a.strip() for a in authors.split(",")]
+
+    year = data.get("year")
+    if year:
+        try:
+            year = int(year)
+        except (ValueError, TypeError):
+            year = None
+
+    abstract = data.get("abstract", "")
+    doi = data.get("doi")
+
+    try:
+        service = get_literature_service()
+        paper = service.add_local_paper(
+            title=title,
+            authors=authors,
+            year=year,
+            abstract=abstract,
+            doi=doi
+        )
+
+        return jsonify({
+            "success": True,
+            "paper": {
+                "id": paper.id,
+                "title": paper.title,
+                "authors": paper.authors,
+                "year": paper.year,
+                "source": paper.source
+            }
+        }), 201
+
+    except Exception as e:
+        logger.error(f"Failed to add local paper: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/local/upload", methods=["POST"])
+def upload_local_paper():
+    """
+    Upload a local paper file (PDF, MD, or TXT).
+
+    Multipart form data:
+    - file: The paper file (required)
+    - title: Paper title (optional, extracted from file if not provided)
+    - authors: Comma-separated authors (optional)
+    - year: Publication year (optional)
+    - abstract: Paper abstract (optional)
+    - doi: DOI (optional)
+    """
+    if 'file' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    # Check file extension
+    allowed_extensions = {'.pdf', '.md', '.txt'}
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in allowed_extensions:
+        return jsonify({"error": f"File type not allowed. Allowed: {', '.join(allowed_extensions)}"}), 400
+
+    # Get form data
+    title = request.form.get('title', '').strip() or file.filename
+    authors_str = request.form.get('authors', '')
+    authors = [a.strip() for a in authors_str.split(',')] if authors_str else []
+    year = request.form.get('year')
+    year = int(year) if year and year.isdigit() else None
+    abstract = request.form.get('abstract', '')
+    doi = request.form.get('doi', '')
+
+    # Save file
+    try:
+        service = get_literature_service()
+        papers_dir = service._get_local_papers_dir()
+
+        # Create safe filename
+        safe_title = "".join(c for c in title if c.isalnum() or c in (' ', '-', '_')).strip()
+        safe_filename = f"{safe_title[:50]}_{int(os.path.getmtime('.'))}{ext}"
+        file_path = papers_dir / safe_filename
+
+        file.save(str(file_path))
+
+        # Add paper to collection
+        paper = service.add_local_paper(
+            title=title,
+            authors=authors,
+            year=year,
+            abstract=abstract,
+            doi=doi,
+            file_path=str(file_path)
+        )
+
+        return jsonify({
+            "success": True,
+            "paper": {
+                "id": paper.id,
+                "title": paper.title,
+                "authors": paper.authors,
+                "year": paper.year,
+                "source": paper.source,
+                "local_path": paper.local_path
+            }
+        }), 201
+
+    except Exception as e:
+        logger.error(f"Failed to upload paper: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/web", methods=["POST"])
+def web_research():
+    """
+    Perform web research. Tries MiroFlow first, then falls back to Firecrawl.
+
+    Request body:
+    {
+        "query": "Research question or topic",
+        "url": "https://...",   // optional, for direct scraping via Firecrawl
+        "llm": "qwen-3",        // optional, MiroFlow only
+        "agent": "mirothinker..."  // optional, MiroFlow only
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    query = data.get("query", "").strip()
+    url = data.get("url", "").strip()
+
+    if not query and not url:
+        return jsonify({"error": "Query or URL is required"}), 400
+
+    try:
+        from ..services.firecrawl_service import FirecrawlService
+
+        fc = FirecrawlService()
+
+        # If a specific URL is given, use Firecrawl directly
+        if url:
+            if not fc.is_available():
+                return jsonify({
+                    "error": "No scraping service configured. Set FIRECRAWL_API_KEY in .env"
+                }), 503
+            result = fc.scrape(url)
+            return jsonify(result)
+
+        # Try MiroFlow for full research queries
+        from ..services.miroflow_service import MiroFlowService
+        from ..services.serper_service import SerperService
+
+        miro = MiroFlowService()
+        serper = SerperService()
+
+        if miro.is_available():
+            result = miro.research_sync(query)
+            if result.get("success"):
+                return jsonify(result)
+            logger.warning(f"MiroFlow failed, error: {result.get('error')}")
+
+        # Default: Serper search + Firecrawl scrape
+        if serper.is_available() and fc.is_available():
+            result = serper.search_and_scrape(query, num_results=5)
+            if result.get("success"):
+                return jsonify(result)
+
+        # Fallback: just Serper search results
+        if serper.is_available():
+            result = serper.search(query)
+            return jsonify(result)
+
+        # Fallback: just Firecrawl scrape
+        if fc.is_available():
+            return jsonify({
+                "success": False,
+                "message": "Serper not configured for web search. Use 'url' field to scrape a specific page.",
+                "query": query
+            })
+
+        return jsonify({
+            "error": "No web research service configured. Set FIRECRAWL_API_KEY and/or SERPER_API_KEY in .env"
+        }), 503
+
+    except Exception as e:
+        logger.error(f"Web research failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/web/scrape", methods=["POST"])
+def firecrawl_scrape():
+    """
+    Scrape a single webpage using Firecrawl API.
+
+    Request body:
+    {
+        "url": "https://example.com/article"
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    url = data.get("url", "").strip()
+    if not url:
+        return jsonify({"error": "URL is required"}), 400
+
+    try:
+        from ..services.firecrawl_service import FirecrawlService
+
+        service = FirecrawlService()
+        if not service.is_available():
+            return jsonify({
+                "error": "Firecrawl API key not configured. Set FIRECRAWL_API_KEY in .env"
+            }), 503
+
+        result = service.scrape(url)
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"Firecrawl scrape failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/web/status", methods=["GET"])
+def web_research_status():
+    """Check availability of web research services."""
+    try:
+        from ..services.miroflow_service import MiroFlowService
+        from ..services.firecrawl_service import FirecrawlService
+        from ..services.serper_service import SerperService
+
+        miro = MiroFlowService()
+        fc = FirecrawlService()
+        serper = SerperService()
+
+        services = []
+        if fc.is_available():
+            services.append("firecrawl")
+        if serper.is_available():
+            services.append("serper")
+        if miro.is_available():
+            services.append("miroflow")
+
+        return jsonify({
+            "available": len(services) > 0,
+            "services": services,
+            "serper": {
+                "available": serper.is_available(),
+                "message": "Configured" if serper.is_available() else "Set SERPER_API_KEY in .env"
+            },
+            "firecrawl": {
+                "available": fc.is_available(),
+                "message": "Configured" if fc.is_available() else "Set FIRECRAWL_API_KEY in .env"
+            },
+            "miroflow": {
+                "available": miro.is_available(),
+                "message": "Configured" if miro.is_available() else "Set WEB_SEARCH_API_URL in .env (requires Python 3.12+)"
+            }
+        })
+    except Exception as e:
+        return jsonify({
+            "available": False,
+            "error": str(e)
+        }), 500
+
+
+@research_bp.route("/enrich", methods=["POST"])
+def enrich_agents():
+    """
+    Enrich agent context with research findings.
+
+    Takes research results and generates enriched context for agent prompts.
+
+    Request body:
+    {
+        "query": "Research query used for enrichment",
+        "archetypes": ["informal_trader", "community_organizer"],
+        "research_type": "literature" | "web",
+        "papers": [...]  // optional, for literature enrichment
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    query = data.get("query", "").strip()
+    archetypes = data.get("archetypes", [])
+    research_type = data.get("research_type", "literature")
+
+    if not query:
+        return jsonify({"error": "Query is required"}), 400
+
+    if not archetypes:
+        return jsonify({"error": "At least one archetype is required"}), 400
+
+    try:
+        from ..services.agent_enricher import AgentContextEnricher
+
+        enriched_context = {}
+
+        if research_type == "literature":
+            papers = data.get("papers", [])
+            if not papers:
+                # If no papers provided, do a search
+                service = LiteratureSearchService(max_results_per_source=5)
+                results = service.search(query)
+                papers = results.get("papers", [])
+
+            enriched_context = AgentContextEnricher.enrich_from_literature(
+                papers, archetypes
+            )
+
+        elif research_type == "web":
+            from ..services.miroflow_service import MiroFlowService
+            from ..services.firecrawl_service import FirecrawlService
+            from ..services.serper_service import SerperService
+
+            miro = MiroFlowService()
+            fc = FirecrawlService()
+            serper = SerperService()
+            urls = data.get("urls", [])
+
+            context_source = ""
+            combined = []
+            enriched_context = {}
+
+            if miro.is_available():
+                result = miro.research_sync(query)
+                if result.get("success"):
+                    context_source = "miroflow"
+                    combined.append(result.get("content", ""))
+                    enriched_context = AgentContextEnricher.enrich_from_web_research(
+                        result, archetypes
+                    )
+
+            if not enriched_context and serper.is_available() and fc.is_available():
+                result = serper.search_and_scrape(query, num_results=5)
+                if result.get("success"):
+                    context_source = "serper+firecrawl"
+                    for item in result.get("scraped_content", []):
+                        content = item.get("content", "")
+                        if content:
+                            combined.append(content)
+                    research_result = {
+                        "success": True,
+                        "content": "\n\n---\n\n".join(combined)
+                    }
+                    enriched_context = AgentContextEnricher.enrich_from_web_research(
+                        research_result, archetypes
+                    )
+
+            if not enriched_context and fc.is_available() and urls:
+                for url in urls:
+                    r = fc.scrape(url)
+                    if r.get("success"):
+                        combined.append(r["content"][:1500])
+                if combined:
+                    context_source = "firecrawl"
+                    research_result = {
+                        "success": True,
+                        "content": "\n\n---\n\n".join(combined)
+                    }
+                    enriched_context = AgentContextEnricher.enrich_from_web_research(
+                        research_result, archetypes
+                    )
+
+            if not enriched_context:
+                return jsonify({
+                    "error": "Web research not available for enrichment. Configure Serper + Firecrawl, or provide URLs"
+                }), 503
+
+        else:
+            return jsonify({"error": f"Unknown research type: {research_type}"}), 400
+
+        return jsonify({
+            "success": True,
+            "query": query,
+            "research_type": research_type,
+            "archetypes": archetypes,
+            "context": enriched_context,
+            "enriched_count": len(enriched_context)
+        })
+
+    except Exception as e:
+        logger.error(f"Agent enrichment failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/web/search", methods=["POST"])
+def serper_search():
+    """
+    Search Google via Serper API.
+
+    Request body:
+    {
+        "query": "search topic",
+        "num_results": 10  // optional, max 20
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    query = data.get("query", "").strip()
+    if not query:
+        return jsonify({"error": "Query is required"}), 400
+
+    num_results = min(data.get("num_results", 10), 20)
+
+    try:
+        from ..services.serper_service import SerperService
+
+        service = SerperService()
+        if not service.is_available():
+            return jsonify({
+                "error": "Serper API key not configured. Set SERPER_API_KEY in .env"
+            }), 503
+
+        result = service.search(query, num_results)
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"Serper search failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@research_bp.route("/seed", methods=["POST"])
+def generate_seed():
+    """
+    Generate seed material from web research when user doesn't have a document.
+
+    Searches Google for the topic, scrapes top results via Firecrawl, then has
+    the LLM synthesize a structured policy briefing that can be used as the
+    simulation_requirement / seed document in place of an uploaded file.
+
+    Request body:
+    {
+        "topic": "GBV response in rural KZN, taxi industry tensions",
+        "extra_urls": ["https://..."]  // optional, scraped in addition to search results
+    }
+
+    Response:
+    {
+        "success": true,
+        "seed_text": "## Background\\n...\\n## Key actors\\n...",
+        "sources": [{"url": "...", "title": "..."}],
+        "scraped_count": 7,
+        "char_count": 4231
+    }
+    """
+    from ..services.firecrawl_service import FirecrawlService
+    from ..services.serper_service import SerperService
+    from ..services.jina_service import JinaService
+    from ..utils.llm_client import LLMClient
+
+    data = request.get_json() or {}
+    topic = (data.get("topic") or "").strip()
+    extra_urls = data.get("extra_urls", []) or []
+
+    if not topic:
+        return jsonify({"error": "topic is required"}), 400
+
+    fc = FirecrawlService()
+    serper = SerperService()
+    jina = JinaService()
+
+    scraped = []
+
+    # Step 1+2 (preferred): Jina search+scrape in one call — more generous free tier
+    if jina.api_key:
+        try:
+            combined = jina.search_and_scrape(topic, num_results=6)
+            if combined.get("success"):
+                for item in combined.get("scraped_content", []):
+                    if item.get("content"):
+                        scraped.append({
+                            "url": item["url"],
+                            "title": item.get("title", ""),
+                            "content": item["content"][:3000],
+                        })
+        except Exception as e:
+            logger.warning(f"Jina search_and_scrape failed: {e}")
+
+    # Step 1+2 (fallback): Serper search + Firecrawl scrape
+    if not scraped and serper.is_available() and fc.is_available():
+        try:
+            combined = serper.search_and_scrape(topic, num_results=6)
+            if combined.get("success"):
+                for item in combined.get("scraped_content", []):
+                    if item.get("content"):
+                        scraped.append({
+                            "url": item["url"],
+                            "title": item.get("title", ""),
+                            "content": item["content"][:3000],
+                        })
+        except Exception as e:
+            logger.warning(f"Serper+Firecrawl search failed: {e}")
+
+    # Also scrape any user-supplied URLs (Jina first, Firecrawl fallback)
+    for url in extra_urls[:3]:
+        r = jina.scrape(url) if jina.api_key else {"success": False}
+        if not r.get("success") and fc.is_available():
+            try:
+                r = fc.scrape(url)
+            except Exception as e:
+                logger.warning(f"Firecrawl scrape failed for {url}: {e}")
+                continue
+        if r.get("success"):
+            scraped.append({
+                "url": url,
+                "title": r.get("title", url),
+                "content": (r.get("content") or "")[:3000],
+            })
+
+    if not scraped:
+        return jsonify({
+            "success": False,
+            "error": (
+                "No content could be scraped. "
+                "Check that FIRECRAWL_API_KEY is valid and (optionally) SERPER_API_KEY is set "
+                "for Google search. You can also pass extra_urls explicitly."
+            ),
+        }), 502
+
+    # Step 3: Synthesize into a structured briefing
+    sources_blob = "\n\n".join(
+        f"### Source {i+1}: {s['title']}\n{s['content']}"
+        for i, s in enumerate(scraped)
+    )
+    citations = ", ".join(f"[{i+1}]" for i in range(len(scraped)))
+
+    synthesis_prompt = (
+        f"You are preparing a seed briefing document for a South African policy simulation.\n\n"
+        f"TOPIC: {topic}\n\n"
+        f"Below are {len(scraped)} articles scraped from the web. Synthesize them into a "
+        f"structured briefing (~1200-1800 words) that a simulation engine will use to generate "
+        f"agent personas and run a multi-agent simulation.\n\n"
+        f"REQUIRED STRUCTURE:\n"
+        f"## Background\n"
+        f"  - Set the scene. What is the situation? Where (province, township, sector)? Recent timeline.\n\n"
+        f"## Key actors and their interests\n"
+        f"  - List 5-8 distinct actor types involved (e.g. taxi_operator, community_leader, police_officer).\n"
+        f"  - For each: their role, their concerns, their relationship to the issue.\n"
+        f"  - Be specific to South African context. Use real archetypes from the articles.\n\n"
+        f"## Recent events\n"
+        f"  - Bulleted timeline of concrete events from the articles. Cite sources inline like [1], [2].\n\n"
+        f"## Tensions and dynamics\n"
+        f"  - What conflicts exist between the actors? Where are the friction points?\n\n"
+        f"## Policy environment\n"
+        f"  - What policies, government responses, or proposals are in play? What's contested?\n\n"
+        f"Cite sources inline using {citations}. Do not invent facts not in the sources. "
+        f"Write in clear, declarative prose suitable for downstream LLM ingestion.\n\n"
+        f"SOURCES:\n{sources_blob}"
+    )
+
+    try:
+        llm = LLMClient()
+        seed_text = llm.chat(
+            messages=[
+                {"role": "system", "content": "You are a policy research analyst specializing in South African socio-political contexts. Produce concise, fact-grounded briefings."},
+                {"role": "user", "content": synthesis_prompt},
+            ],
+            temperature=0.4,
+            max_tokens=3500,
+        )
+    except Exception as e:
+        logger.error(f"Synthesis LLM call failed: {e}")
+        return jsonify({"success": False, "error": f"Synthesis failed: {e}"}), 500
+
+    # Append source list to bottom of seed text for transparency
+    sources_md = "\n\n---\n\n## Sources\n" + "\n".join(
+        f"[{i+1}] [{s['title'] or s['url']}]({s['url']})"
+        for i, s in enumerate(scraped)
+    )
+    seed_text = seed_text.strip() + sources_md
+
+    return jsonify({
+        "success": True,
+        "seed_text": seed_text,
+        "sources": [{"url": s["url"], "title": s["title"]} for s in scraped],
+        "scraped_count": len(scraped),
+        "char_count": len(seed_text),
+    })
+
+
+@research_bp.route("/people", methods=["POST"])
+def search_people():
+    """
+    Generate ready-to-use agent personas for a described group of people.
+
+    Lets a user type a real-world group (e.g. "Cape Town minibus taxi drivers")
+    and get back structured personas they can drop straight into the custom-agent
+    roster, to model how that group would react to an event/policy.
+
+    Request body:
+    {
+        "group": "Cape Town minibus taxi drivers",   // required
+        "count": 5,                                    // optional, default 5, max 12
+        "ground_with_web": true,                       // optional, default false
+        "context": "reaction to SANDF deployment"      // optional extra framing
+    }
+
+    Response:
+    {
+        "success": true,
+        "agents": [ {persona dict matching CustomAgentParser shape}, ... ],
+        "grounded": true,
+        "sources": [{"url": "...", "title": "..."}]
+    }
+    """
+    from ..utils.llm_client import LLMClient
+
+    data = request.get_json() or {}
+    group = (data.get("group") or "").strip()
+    context = (data.get("context") or "").strip()
+    ground_with_web = bool(data.get("ground_with_web", False))
+
+    if not group:
+        return jsonify({"error": "group is required"}), 400
+
+    try:
+        count = int(data.get("count", 5))
+    except (ValueError, TypeError):
+        count = 5
+    count = max(1, min(count, 12))
+
+    # ---- Optional web grounding: reuse search+scrape (Jina → Serper+Firecrawl) ----
+    grounded = False
+    sources = []
+    web_context = ""
+    if ground_with_web:
+        from ..services.firecrawl_service import FirecrawlService
+        from ..services.serper_service import SerperService
+        from ..services.jina_service import JinaService
+
+        fc = FirecrawlService()
+        serper = SerperService()
+        jina = JinaService()
+        scraped = []
+        search_query = f"{group} South Africa lived experience concerns daily life" if not context else f"{group} {context} South Africa"
+
+        try:
+            if jina.api_key:
+                combined = jina.search_and_scrape(search_query, num_results=5)
+                if combined.get("success"):
+                    for item in combined.get("scraped_content", []):
+                        if item.get("content"):
+                            scraped.append({"url": item["url"], "title": item.get("title", ""), "content": item["content"][:2500]})
+            if not scraped and serper.is_available() and fc.is_available():
+                combined = serper.search_and_scrape(search_query, num_results=5)
+                if combined.get("success"):
+                    for item in combined.get("scraped_content", []):
+                        if item.get("content"):
+                            scraped.append({"url": item["url"], "title": item.get("title", ""), "content": item["content"][:2500]})
+        except Exception as e:
+            logger.warning(f"People-search web grounding failed (continuing LLM-only): {e}")
+
+        if scraped:
+            grounded = True
+            sources = [{"url": s["url"], "title": s["title"]} for s in scraped]
+            web_context = "\n\n".join(
+                f"### Source {i+1}: {s['title']}\n{s['content']}" for i, s in enumerate(scraped)
+            )
+
+    # ---- Generate personas in the CustomAgentParser dict shape ----
+    grounding_block = (
+        f"\n\nUse the following real web research about this group to ground the personas in "
+        f"current, specific reality (cite no sources in output, just absorb the facts):\n{web_context}\n"
+        if web_context else ""
+    )
+    context_block = f"\nThey are being modelled for their reaction to: {context}\n" if context else ""
+
+    prompt = f"""Generate {count} distinct, realistic agent personas representing members of this group:
+
+GROUP: {group}{context_block}{grounding_block}
+
+The personas should capture the genuine diversity *within* this group — different ages, economic
+situations, attitudes, and temperaments — not {count} copies of a stereotype. Ground them in real
+South African socio-economic context.
+
+For each persona produce a JSON object with these fields:
+- name: realistic full name
+- persona: 2-4 sentences on who they are, worldview, role
+- background_story: 1-2 paragraphs of life history
+- age: integer
+- gender: "male", "female", or "other"
+- education, occupation, country, province, residence, religion, race
+- mbti: e.g. "ISTP"
+- skills: array of strings
+- personality_traits: string
+- group_affiliation, behavioral_tendencies, voice_guide
+- actor_archetype: one of [civic_moderate, political_activist, violent_agitator, opportunist_looter, mob_follower, conspiracy_spreader, community_leader, institutional_loyalist, disillusioned_dropout, criminal_opportunist, community_protector, grant_dependent_survivor, economic_migrant, whistleblower]
+- is_institutional: true/false
+- income: string e.g. "R8,000/month"
+- emotions: object with keys sadness, joy, fear, disgust, anger, surprise (each 0-10)
+- emotion_keyword, emotion_thought
+- attitudes: array of {{"topic": "...", "rating": 0-10, "description": "..."}}
+- beliefs: array of strings
+
+Return ONLY a valid JSON object of the form {{"personas": [ ... ]}}. No explanation."""
+
+    try:
+        llm = LLMClient()
+        parsed = llm.chat_json(
+            messages=[
+                {"role": "system", "content": "You are an expert in South African socio-economics who designs realistic, diverse agent personas. Return ONLY valid JSON."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.7,
+            max_tokens=4000,
+        )
+        if isinstance(parsed, dict):
+            agents = parsed.get("personas", parsed.get("agents", parsed.get("profiles", [])))
+        elif isinstance(parsed, list):
+            agents = parsed
+        else:
+            agents = []
+        agents = [a for a in agents if isinstance(a, dict) and a.get("name")]
+        # Tag origin so the merge pipeline treats them as custom
+        for a in agents:
+            a["source_entity_type"] = "custom_people_search"
+    except Exception as e:
+        logger.error(f"People-search persona generation failed: {e}")
+        return jsonify({"success": False, "error": f"Persona generation failed: {e}"}), 500
+
+    if not agents:
+        return jsonify({"success": False, "error": "No personas were generated. Try rephrasing the group."}), 502
+
+    return jsonify({
+        "success": True,
+        "group": group,
+        "agents": agents,
+        "grounded": grounded,
+        "sources": sources,
+        "count": len(agents),
+    })
+
+
+@research_bp.route("/deep", methods=["POST"])
+def deep_research():
+    """
+    Run MiroFlow deep research for persona enrichment.
+
+    Researches current reality for each archetype found in the document,
+    returning structured data that grounds persona generation in real-world conditions.
+
+    Request body:
+    {
+        "query": "How will minimum wage increase affect informal workers?",
+        "document_text": "...content of uploaded PDF...",
+        "archetypes": ["informal_trader", "unemployed_youth"]  // optional — auto-detected if omitted
+    }
+
+    Response:
+    {
+        "success": true,
+        "enrichment": {
+            "informal_trader": "Current wholesale prices up 18%...",
+            "unemployed_youth": "60% unemployment, NEET stats...",
+            ...
+        },
+        "archetypes_researched": 4,
+        "archetypes_completed": 3,
+        "status": "completed"
+    }
+    """
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Request body required"}), 400
+
+    query = data.get("query", "").strip()
+    document_text = data.get("document_text", "")
+    archetypes = data.get("archetypes", [])
+
+    if not isinstance(archetypes, list):
+        return jsonify({"error": "archetypes must be a list"}), 400
+
+    # Cap to 3 archetypes for speed (each takes ~2 min of web research)
+    archetypes = archetypes[:3]
+
+    # Auto-detect archetypes from document text if not provided
+    if not archetypes and document_text:
+        archetypes = _detect_archetypes_from_document(document_text, query)
+        if not archetypes:
+            return jsonify({
+                "error": "Could not detect archetypes from document. Please provide archetypes manually."
+            }), 400
+        # Cap to 3 archetypes for speed (each takes ~2 min of web research)
+        archetypes = archetypes[:3]
+        logger.info(f"Auto-detected {len(archetypes)} archetypes from document: {archetypes}")
+
+    if not archetypes:
+        return jsonify({"error": "At least one archetype is required (provide archetypes or document_text)"}), 400
+
+    try:
+        from ..services.miroflow_service import MiroFlowService
+
+        miro = MiroFlowService()
+        if not miro.is_available():
+            return jsonify({
+                "error": "MiroFlow MCP server not configured. Set WEB_SEARCH_API_URL in .env"
+            }), 503
+
+        logger.info(f"Deep research starting: {len(archetypes)} archetypes for query: {query[:80]}...")
+
+        results = miro.research_archetypes_batch(
+            archetypes=archetypes,
+            query=query,
+            document_text=document_text,
+            max_workers=3
+        )
+
+        enrichment = {}
+        completed_count = 0
+
+        for archetype, result in results.items():
+            if result.get("success"):
+                content = result.get("content", "")
+                if content:
+                    enrichment[archetype] = content
+                    completed_count += 1
+                    logger.info(f"Enrichment data captured for {archetype} ({len(content)} chars)")
+            else:
+                logger.warning(f"MiroFlow research failed for {archetype}: {result.get('error', 'unknown')}")
+
+        status = "completed" if completed_count == len(archetypes) else "partial"
+        if completed_count == 0:
+            status = "failed"
+
+        logger.info(f"Deep research {status}: {completed_count}/{len(archetypes)} archetypes enriched")
+
+        return jsonify({
+            "success": status != "failed",
+            "enrichment": enrichment,
+            "archetypes_researched": len(archetypes),
+            "archetypes_completed": completed_count,
+            "status": status
+        })
+
+    except Exception as e:
+        logger.error(f"Deep research failed: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+def _detect_archetypes_from_document(document_text: str, query: str = "") -> list:
+    """
+    Use LLM to detect actor archetypes from document text.
+    Returns a list of archetype strings matching the known archetype taxonomy.
+    """
+    from ..config import Config
+    from openai import OpenAI
+
+    client = OpenAI(api_key=Config.LLM_API_KEY, base_url=Config.LLM_BASE_URL)
+    model = Config.LLM_MODEL_NAME
+
+    prompt = f"""Analyze this document and identify the key actor archetypes present.
+These archetypes will be used to research current real-world conditions for a policy simulation.
+
+Document excerpt (first 3000 chars):
+{document_text[:3000]}
+
+{"Research query: " + query if query else ""}
+
+Choose archetypes from this taxonomy (pick only those clearly present in the document):
+
+CIVIC/ESTABLISHMENT: civic_moderate, community_leader, institutional_loyalist
+ACTIVISM: political_activist, student_activist
+COMMUNITY: street_committee_chair, traditional_authority, community_organizer, spaza_shop_owner
+ECONOMIC: taxi_operator, informal_trader, small_business_owner, gig_worker, unemployed_youth
+CRIMINAL/GANG: gang_member, syndicates, mob_follower, opportunist_looter, violent_agitator, criminal_opportunist, community_protector
+VULNERABLE: gbv_advocate, foreign_national, person_with_disability, elderly_grant_recipient, grant_dependent_survivor
+DISENGAGED: disillusioned_dropout, conspiracy_spreader, whistleblower
+PROFESSIONAL: nurse_healthcare_worker, teacher, community_journalist, ngo_worker
+SECURITY: police_officer, soldier, private_security, park_ranger
+
+Return ONLY a JSON array of archetype strings, e.g. ["informal_trader", "unemployed_youth", "taxi_operator"]
+No explanation, no extra text."""
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are an expert in South African socio-economics. Return ONLY a JSON array of archetype strings."},
+                {"role": "user", "content": prompt},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.3,
+            max_tokens=200,
+        )
+        content = response.choices[0].message.content.strip()
+        import json
+        result = json.loads(content)
+        if isinstance(result, list):
+            archetypes = [str(a).strip() for a in result if str(a).strip()]
+            if archetypes:
+                return archetypes
+        elif isinstance(result, dict):
+            for key in ["archetypes", "actors", "types"]:
+                if key in result and isinstance(result[key], list):
+                    archetypes = [str(a).strip() for a in result[key] if str(a).strip()]
+                    if archetypes:
+                        return archetypes
+    except Exception as e:
+        logger.warning(f"Archetype LLM detection failed: {e}")
+
+    # Fallback: try to extract from known keywords in text
+    known_archetypes = [
+        "informal_trader", "unemployed_youth", "taxi_operator", "spaza_shop_owner",
+        "gang_member", "political_activist", "community_organizer", "student_activist",
+        "civic_moderate", "institutional_loyalist", "opportunist_looter", "violent_agitator",
+        "grant_dependent_survivor", "foreign_national", "nurse_healthcare_worker", "teacher",
+        "police_officer", "soldier", "private_security", "community_leader",
+    ]
+    text_lower = document_text.lower()
+    detected = []
+    for arch in known_archetypes:
+        keywords = arch.replace("_", " ").split()
+        if all(kw in text_lower for kw in keywords):
+            detected.append(arch)
+    if detected:
+        return detected
+
+    # Final fallback: infer from topic keywords
+    topic_archetype_map = {
+        "murder": ["gang_member", "police_officer", "community_leader", "victim"],
+        "crime": ["gang_member", "police_officer", "community_protector", "civic_moderate"],
+        "deployment": ["soldier", "police_officer", "community_leader", "civic_moderate"],
+        "protest": ["political_activist", "community_organizer", "unemployed_youth", "student_activist"],
+        "wage": ["informal_trader", "unemployed_youth", "taxi_operator", "spaza_shop_owner"],
+        "housing": ["community_organizer", "grant_dependent_survivor", "civic_moderate", "institutional_loyalist"],
+        "water": ["community_organizer", "grant_dependent_survivor", "civic_moderate"],
+        "electricity": ["community_organizer", "small_business_owner", "civic_moderate"],
+        "health": ["nurse_healthcare_worker", "grant_dependent_survivor", "elderly_grant_recipient"],
+        "education": ["teacher", "student_activist", "community_organizer"],
+    }
+    for topic, archetypes in topic_archetype_map.items():
+        if topic in text_lower:
+            logger.info(f"Topic-based fallback: '{topic}' → {archetypes}")
+            return archetypes
+
+    # Ultimate fallback: general civic archetypes
+    logger.info("Using ultimate fallback archetypes")
+    return ["civic_moderate", "community_leader", "unemployed_youth"]
+
+
+# ============================================================================
+# Persona Library — browse cached/generated personas in the UI side panel
+# ============================================================================
+
+_PERSONA_CACHE_DIR = os.path.join(
+    os.path.dirname(__file__), "..", "..", "uploads", "persona_cache"
+)
+
+
+def _persona_cache_dir() -> str:
+    os.makedirs(_PERSONA_CACHE_DIR, exist_ok=True)
+    return _PERSONA_CACHE_DIR
+
+
+@research_bp.route("/personas", methods=["GET"])
+def list_personas():
+    """List every cached persona — metadata only, for the side-panel list.
+
+    Response:
+    {
+        "success": true,
+        "count": 42,
+        "personas": [
+            { "id": "<hash>", "name": "...", "archetype": "...", "age": 52,
+              "occupation": "...", "province": "...", "level": "exact|archetype" },
+            ...
+        ]
+    }
+    """
+    import json as _json
+    d = _persona_cache_dir()
+    personas = []
+    try:
+        for fn in sorted(os.listdir(d)):
+            if not fn.endswith(".json"):
+                continue
+            try:
+                with open(os.path.join(d, fn), "r", encoding="utf-8") as f:
+                    data = _json.load(f)
+            except Exception:
+                continue
+            profile = data.get("profile") if isinstance(data, dict) else None
+            if not isinstance(profile, dict):
+                continue
+            meta = data.get("meta", {}) if isinstance(data, dict) else {}
+            personas.append({
+                "id":         fn[:-5],  # drop .json
+                "name":       profile.get("name") or meta.get("entity") or "Unknown",
+                "archetype":  profile.get("actor_archetype") or meta.get("type") or "",
+                "age":        profile.get("age"),
+                "gender":     profile.get("gender"),
+                "occupation": profile.get("occupation"),
+                "province":   profile.get("province"),
+                "level":      meta.get("level", "exact"),
+            })
+        # De-dupe: each persona is stored under two keys (exact + archetype) so
+        # the same agent appears twice. Collapse by (name, archetype, occupation)
+        # and keep the 'exact' entry when both exist.
+        seen = {}
+        for p in personas:
+            key = (p["name"], p["archetype"], p["occupation"])
+            if key not in seen or seen[key]["level"] == "archetype":
+                seen[key] = p
+        unique = list(seen.values())
+        unique.sort(key=lambda x: (x["archetype"] or "", x["name"] or ""))
+        return jsonify({"success": True, "count": len(unique), "personas": unique})
+    except Exception as e:
+        logger.error(f"List personas failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@research_bp.route("/personas/<persona_id>", methods=["GET"])
+def get_persona(persona_id: str):
+    """Return one persona's full JSON profile plus the rendered markdown card.
+
+    Response:
+    {
+        "success": true,
+        "profile":  {...full persona dict...},
+        "markdown": "# Name\\n\\n**Archetype:** ...",
+        "meta":     {...}
+    }
+    """
+    import json as _json
+    # Guard against path traversal — only allow hex hash filenames
+    if not persona_id or any(c not in "0123456789abcdef" for c in persona_id.lower()):
+        return jsonify({"success": False, "error": "Invalid persona id"}), 400
+    d = _persona_cache_dir()
+    json_path = os.path.join(d, f"{persona_id}.json")
+    md_path = os.path.join(d, f"{persona_id}.md")
+    if not os.path.exists(json_path):
+        return jsonify({"success": False, "error": "Persona not found"}), 404
+    try:
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = _json.load(f)
+        markdown = ""
+        if os.path.exists(md_path):
+            with open(md_path, "r", encoding="utf-8") as f:
+                markdown = f.read()
+        return jsonify({
+            "success":  True,
+            "profile":  data.get("profile", data) if isinstance(data, dict) else {},
+            "meta":     data.get("meta", {}) if isinstance(data, dict) else {},
+            "markdown": markdown,
+        })
+    except Exception as e:
+        logger.error(f"Get persona {persona_id[:12]} failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ============================================================================
+# Project-scoped saved papers — feed literature into sim enrichment
+# ============================================================================
+
+def _paper_id(p: dict) -> str:
+    """Stable id for de-dup. Prefer the search id, else fall back to URL/title."""
+    return str(p.get("id") or p.get("url") or p.get("title") or "").strip()
+
+
+def _slim_paper(p: dict) -> dict:
+    """Keep only the fields we care about when storing on a project."""
+    return {
+        "id":       _paper_id(p),
+        "title":    p.get("title", ""),
+        "authors":  p.get("authors", []) if isinstance(p.get("authors"), list) else [str(p.get("authors", ""))],
+        "year":     p.get("year"),
+        "source":   p.get("source", ""),
+        "abstract": p.get("abstract", ""),
+        "url":      p.get("url", ""),
+    }
+
+
+@research_bp.route("/projects", methods=["GET"])
+def list_projects_for_research():
+    """List existing projects so the research page can pick which one to save into."""
+    try:
+        from ..models.project import ProjectManager
+        projects = ProjectManager.list_projects() or []
+        out = [{
+            "project_id": p.project_id,
+            "name":       p.name or "Unnamed Project",
+            "updated_at": p.updated_at,
+            "papers_count": len(getattr(p, "saved_papers", []) or []),
+        } for p in projects]
+        # Newest first
+        out.sort(key=lambda x: x.get("updated_at") or "", reverse=True)
+        return jsonify({"success": True, "count": len(out), "projects": out})
+    except Exception as e:
+        logger.error(f"List projects (research) failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@research_bp.route("/projects/<project_id>/papers", methods=["GET"])
+def list_saved_papers(project_id: str):
+    """Return the papers currently saved to this project."""
+    try:
+        from ..models.project import ProjectManager
+        project = ProjectManager.get_project(project_id)
+        if not project:
+            return jsonify({"success": False, "error": "Project not found"}), 404
+        papers = list(getattr(project, "saved_papers", []) or [])
+        return jsonify({"success": True, "count": len(papers), "papers": papers})
+    except Exception as e:
+        logger.error(f"List saved papers failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@research_bp.route("/projects/<project_id>/papers", methods=["POST"])
+def save_paper_to_project(project_id: str):
+    """Save (or replace) a paper on this project. De-dupes by paper id."""
+    try:
+        from ..models.project import ProjectManager
+        project = ProjectManager.get_project(project_id)
+        if not project:
+            return jsonify({"success": False, "error": "Project not found"}), 404
+        data = request.get_json() or {}
+        if not data.get("title") and not data.get("id"):
+            return jsonify({"success": False, "error": "Paper must have a title or id"}), 400
+        slim = _slim_paper(data)
+        pid = slim["id"]
+        existing = list(getattr(project, "saved_papers", []) or [])
+        # Replace if same id, else append
+        existing = [p for p in existing if _paper_id(p) != pid]
+        existing.append(slim)
+        project.saved_papers = existing
+        ProjectManager.save_project(project)
+        return jsonify({"success": True, "count": len(existing), "paper": slim})
+    except Exception as e:
+        logger.error(f"Save paper to project {project_id} failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@research_bp.route("/projects/<project_id>/papers/<paper_id>", methods=["DELETE"])
+def remove_saved_paper(project_id: str, paper_id: str):
+    """Remove a saved paper from a project (paper_id matches saved id)."""
+    try:
+        from ..models.project import ProjectManager
+        project = ProjectManager.get_project(project_id)
+        if not project:
+            return jsonify({"success": False, "error": "Project not found"}), 404
+        before = list(getattr(project, "saved_papers", []) or [])
+        after  = [p for p in before if _paper_id(p) != paper_id]
+        project.saved_papers = after
+        ProjectManager.save_project(project)
+        return jsonify({"success": True, "removed": len(before) - len(after), "count": len(after)})
+    except Exception as e:
+        logger.error(f"Remove saved paper failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500

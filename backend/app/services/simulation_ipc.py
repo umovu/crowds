@@ -26,6 +26,9 @@ class CommandType(str, Enum):
     INTERVIEW = "interview"           # Single Agent interview
     BATCH_INTERVIEW = "batch_interview"  # Batch interview
     CLOSE_ENV = "close_env"           # Close environment
+    PAUSE = "pause"                   # Pause simulation between rounds
+    RESUME = "resume"                 # Resume simulation after pause
+    APPLY_INTERVENTION = "apply_intervention"  # Apply intervention to agent during pause
 
 
 class CommandStatus(str, Enum):
@@ -190,7 +193,8 @@ class SimulationIPCClient:
         agent_id: int,
         prompt: str,
         platform: str = None,
-        timeout: float = 60.0
+        timeout: float = 60.0,
+        query_context: dict = None
     ) -> IPCResponse:
         """
         Send single Agent interview command
@@ -203,6 +207,7 @@ class SimulationIPCClient:
                 - "reddit": only interview Reddit platform  
                 - None: interview both platforms simultaneously in dual-platform simulations, single platform in single-platform simulations
             timeout: Timeout
+            query_context: Optional context with topics and entities for context-aware responses
             
         Returns:
             IPCResponse, result field contains interview result
@@ -213,6 +218,8 @@ class SimulationIPCClient:
         }
         if platform:
             args["platform"] = platform
+        if query_context:
+            args["query_context"] = query_context
             
         return self.send_command(
             command_type=CommandType.INTERVIEW,
@@ -250,6 +257,38 @@ class SimulationIPCClient:
             timeout=timeout
         )
     
+    def send_pause(self, timeout: float = 30.0) -> IPCResponse:
+        """Send pause simulation command."""
+        return self.send_command(
+            command_type=CommandType.PAUSE,
+            args={},
+            timeout=timeout
+        )
+
+    def send_resume(self, timeout: float = 30.0) -> IPCResponse:
+        """Send resume simulation command."""
+        return self.send_command(
+            command_type=CommandType.RESUME,
+            args={},
+            timeout=timeout
+        )
+
+    def send_apply_intervention(
+        self,
+        agent_id: int,
+        intervention_text: str,
+        timeout: float = 60.0
+    ) -> IPCResponse:
+        """Send apply intervention command to running simulation."""
+        return self.send_command(
+            command_type=CommandType.APPLY_INTERVENTION,
+            args={
+                "agent_id": agent_id,
+                "intervention_text": intervention_text,
+            },
+            timeout=timeout
+        )
+
     def send_close_env(self, timeout: float = 30.0) -> IPCResponse:
         """
         Send close environment command
@@ -270,7 +309,9 @@ class SimulationIPCClient:
         """
         Check if simulation environment is alive
         
-        Judge by checking env_status.json file
+        Judge by checking:
+        1. env_status.json file exists and status is "alive"
+        2. IPC command directory is accessible (process still running)
         """
         status_file = os.path.join(self.simulation_dir, "env_status.json")
         if not os.path.exists(status_file):
@@ -279,9 +320,34 @@ class SimulationIPCClient:
         try:
             with open(status_file, 'r', encoding='utf-8') as f:
                 status = json.load(f)
-            return status.get("status") == "alive"
+            # The sim subprocess reports several "up" states, all of which can
+            # accept IPC commands (pause / intervene):
+            #   "alive"   — idle / waiting between rounds
+            #   "running" — actively processing a round
+            #   "paused"  — paused for intervention (the whole point of pausing!)
+            # Only a missing file or "stopped"/"closed" means the env is gone.
+            if status.get("status") not in ("alive", "running", "paused"):
+                return False
         except (json.JSONDecodeError, OSError):
             return False
+
+        # Additional check: verify the commands directory is accessible
+        # If process is dead, this directory becomes inaccessible
+        commands_dir = os.path.join(self.simulation_dir, "ipc_commands")
+        if not os.path.isdir(commands_dir):
+            return False
+        
+        # Check if there's a recent status update (within last 2 minutes)
+        # If status is stale, process has exited
+        try:
+            status_mtime = os.path.getmtime(status_file)
+            import time
+            if time.time() - status_mtime > 120:  # 2 minutes
+                return False
+        except OSError:
+            pass
+        
+        return True
 
 
 class SimulationIPCServer:

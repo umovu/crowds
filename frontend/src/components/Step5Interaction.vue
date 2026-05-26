@@ -419,7 +419,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { chatWithReport, getReport, getAgentLog } from '../api/report'
-import { interviewAgents, getSimulationProfilesRealtime } from '../api/simulation'
+import { interviewAgents, interviewAgentsPostSimulation, getSimulationProfilesRealtime } from '../api/simulation'
 
 const props = defineProps({
   reportId: String,
@@ -735,13 +735,44 @@ const sendToAgent = async (message) => {
     prompt = `Here is our previous conversation:\n${historyContext}\n\nNow my new question is: ${message}`
   }
 
-  const res = await interviewAgents({
-    simulation_id: props.simulationId,
-    interviews: [{
+  let res
+  let usePostSimulation = false
+
+  try {
+    // Try the live interview endpoint first (works during simulation)
+    res = await interviewAgents({
+      simulation_id: props.simulationId,
+      interviews: [{
+        agent_id: selectedAgentIndex.value,
+        prompt: prompt
+      }]
+    })
+
+    // Check if we need to fall back:
+    // 1. API returned error (simulation not running)
+    // 2. No results returned (simulation completed, no agents in memory)
+    // Note: API returns result directly in res.data (not res.data.result)
+    const resultData = res.data
+    const resultsDict = resultData?.results || resultData?.result?.results
+    const hasResults = resultsDict && Object.keys(resultsDict).length > 0
+    if (!res.success || !hasResults) {
+      addLog(`Live interview: success=${res.success}, results=${JSON.stringify(resultsDict)}, falling back...`)
+      usePostSimulation = true
+    }
+  } catch (e) {
+    // Network error - fall back to post-simulation interview
+    usePostSimulation = true
+  }
+
+  // Use post-simulation interview if needed
+  if (usePostSimulation) {
+    addLog('Using post-simulation interview...')
+    res = await interviewAgentsPostSimulation({
+      simulation_id: props.simulationId,
       agent_id: selectedAgentIndex.value,
       prompt: prompt
-    }]
-  })
+    })
+  }
 
   if (res.success && res.data) {
     // data path: res.data.result.results is an object dictionary

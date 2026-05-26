@@ -156,15 +156,17 @@
         </div>
         
         <div class="card-content">
-          <p class="api-note">POST /api/simulation/create</p>
-          <p class="description">Graph build is complete. Please proceed to the next step to set up the simulation environment</p>
-          <button 
-            class="action-btn" 
+          <p class="description">
+            Graph build is complete. The next stage starts automatically — you don't need to click anything.
+          </p>
+          <button
+            class="action-btn-quiet"
             :disabled="currentPhase < 2 || creatingSimulation"
             @click="handleEnterEnvSetup"
+            title="Auto-advance handles this. Use only if it doesn't fire."
           >
             <span v-if="creatingSimulation" class="spinner-sm"></span>
-            {{ creatingSimulation ? 'Creating...' : 'Enter Environment Setup ➝' }}
+            {{ creatingSimulation ? 'Creating...' : 'Skip to setup' }}
           </button>
         </div>
       </div>
@@ -616,6 +618,32 @@ watch(() => props.systemLogs.length, () => {
 
 .action-btn:disabled {
   background: #CCC;
+  cursor: not-allowed;
+}
+
+/* Quiet fallback button — auto-advance handles the normal flow, this only
+   gets used if it somehow misfires. Visually de-emphasised so it doesn't
+   read as the primary call to action. */
+.action-btn-quiet {
+  width: auto;
+  margin-top: 8px;
+  background: transparent;
+  color: #888;
+  border: 1px solid #DDD;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn-quiet:hover:not(:disabled) {
+  color: #1E9E5A;
+  border-color: #1E9E5A;
+}
+.action-btn-quiet:disabled {
+  color: #BBB;
+  border-color: #EEE;
   cursor: not-allowed;
 }
 

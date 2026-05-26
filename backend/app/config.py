@@ -30,10 +30,32 @@ class Config:
     # LLM configuration (unified OpenAI format)
     LLM_API_KEY = os.environ.get('LLM_API_KEY')
     LLM_BASE_URL = os.environ.get('LLM_BASE_URL', 'http://localhost:11434/v1')
-    LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'qwen2.5:32b')
+    LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'llama-3.3-70b-versatile')
 
-    # Graph Backend: 'neo4j' or 'kglite'
-    GRAPH_BACKEND = os.environ.get('GRAPH_BACKEND', 'neo4j')
+    # LLM pricing (USD per 1 million tokens) — used for cost estimation
+    # Set these when using paid APIs (DeepSeek, OpenAI, Groq) so simulations
+    # can report estimated spend.  If unset, built-in defaults are used.
+    LLM_PRICE_PROMPT_PER_1M = os.environ.get('LLM_PRICE_PROMPT_PER_1M')
+    LLM_PRICE_COMPLETION_PER_1M = os.environ.get('LLM_PRICE_COMPLETION_PER_1M')
+
+    @staticmethod
+    def llm_extra_body() -> dict:
+        """
+        Provider-specific extra_body parameters for the configured LLM.
+
+        Qwen 3.x models are reasoning-enabled by default — they emit hidden
+        "thinking" tokens that count against output usage. For an opinion-
+        simulation workload we want concise persona outputs, not chain-of-
+        thought, so we disable thinking. For other providers returns {}.
+        """
+        model = (os.environ.get('LLM_MODEL_NAME') or '').lower()
+        if model.startswith('qwen') or 'qwen' in model:
+            return {'enable_thinking': False}
+        return {}
+
+    # Graph Backend: 'ladybug' (default — embedded, no Docker, persistent),
+    # 'neo4j' (server, needs Docker), or 'kglite' (in-memory, dev only)
+    GRAPH_BACKEND = os.environ.get('GRAPH_BACKEND', 'ladybug')
     
     # Neo4j configuration
     NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://localhost:7687')
@@ -66,6 +88,22 @@ class Config:
     REPORT_AGENT_MAX_TOOL_CALLS = int(os.environ.get('REPORT_AGENT_MAX_TOOL_CALLS', '5'))
     REPORT_AGENT_MAX_REFLECTION_ROUNDS = int(os.environ.get('REPORT_AGENT_MAX_REFLECTION_ROUNDS', '2'))
     REPORT_AGENT_TEMPERATURE = float(os.environ.get('REPORT_AGENT_TEMPERATURE', '0.5'))
+
+    # MiroFlow / Web Research configuration
+    WEB_SEARCH_API_URL = os.environ.get('WEB_SEARCH_API_URL', '')
+    WEB_SEARCH_API_TOKEN = os.environ.get('WEB_SEARCH_API_TOKEN', '')
+    MIROFLOW_DEFAULT_LLM = os.environ.get('MIROFLOW_DEFAULT_LLM', 'qwen-3')
+    MIROFLOW_DEFAULT_AGENT = os.environ.get('MIROFLOW_DEFAULT_AGENT', 'mirothinker_v1.5_keep5_max200')
+
+    # Firecrawl configuration (used by deep-research-python for full-page scraping)
+    FIRECRAWL_API_KEY = os.environ.get('FIRECRAWL_API_KEY', '')
+
+    # Serper configuration (Google Search — used by MCP inline fallback)
+    SERPER_API_KEY = os.environ.get('SERPER_API_KEY', '')
+
+    # deep-research-python expects OPENAI_KEY / CUSTOM_MODEL / OPENAI_BASE_URL.
+    # _ensure_groq_env() in deep_research_service.py auto-maps LLM_* vars at runtime,
+    # so no extra entries are needed here — reading them directly from os.environ.
 
     @classmethod
     def validate(cls):

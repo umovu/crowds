@@ -110,6 +110,89 @@
               </div>
             </div>
           </div>
+
+          <!-- Deep Research Panel (visible when deep research ran) -->
+          <div v-if="Object.keys(enrichmentData).length > 0 || researchRunning" class="enrichment-section">
+            <div class="preview-header">
+              <span class="preview-title">Deep Research</span>
+              <span class="preview-hint">Web research grounding agent personas in real conditions</span>
+            </div>
+
+            <!-- Stats row -->
+            <div v-if="Object.keys(enrichmentData).length > 0" class="research-stats">
+              <div class="rstat">
+                <div class="rstat-value">{{ Object.keys(enrichmentData).length }}</div>
+                <div class="rstat-label">Archetypes</div>
+              </div>
+              <div class="rstat">
+                <div class="rstat-value">{{ researchCharCount.toLocaleString() }}</div>
+                <div class="rstat-label">Chars of data</div>
+              </div>
+              <div class="rstat">
+                <div class="rstat-value">{{ researchSources.length }}</div>
+                <div class="rstat-label">Sources</div>
+              </div>
+            </div>
+
+            <!-- Sources -->
+            <div v-if="researchSources.length > 0" class="research-sources">
+              <span class="sources-label">Sources:</span>
+              <span v-for="src in researchSources" :key="src" class="source-tag">{{ src }}</span>
+            </div>
+
+            <!-- Running indicator -->
+            <div v-if="researchRunning" class="research-running">
+              <span class="console-dot active"></span>
+              Researching {{ researchCurrentArchetype || 'archetypes' }}…
+            </div>
+
+            <!-- Per-archetype cards -->
+            <div
+              v-for="(text, archetype) in enrichmentData"
+              :key="archetype"
+              class="enrichment-card"
+            >
+              <div class="enrichment-header" @click="toggleEnrichment(archetype)">
+                <span class="enrichment-archetype">{{ archetype.replace(/_/g, ' ') }}</span>
+                <span class="enrichment-chars">{{ text.length.toLocaleString() }} chars</span>
+                <span class="enrichment-toggle">{{ expandedEnrichment.has(archetype) ? '▲' : '▼' }}</span>
+              </div>
+              <div v-if="expandedEnrichment.has(archetype)" class="enrichment-body">
+                <pre class="enrichment-text">{{ text }}</pre>
+              </div>
+            </div>
+
+            <!-- Re-run button -->
+            <button
+              class="rerun-research-btn"
+              :disabled="researchRunning || !props.simulationId"
+              @click="rerunResearch"
+            >
+              <span v-if="researchRunning">Researching…</span>
+              <span v-else>🔄 Re-run research</span>
+            </button>
+            <div v-if="researchError" class="research-error">{{ researchError }}</div>
+          </div>
+
+          <!-- Cost summary panel -->
+          <div v-if="costData" class="cost-summary">
+            <div class="cost-row">
+              <span class="cost-label">Prepare phase</span>
+              <span class="cost-value">R{{ costData.prepare.cost_zar }} <span class="cost-usd">${{ costData.prepare.cost_usd }}</span></span>
+            </div>
+            <div class="cost-row" v-if="costData.simulation.prompt_tokens > 0">
+              <span class="cost-label">Simulation phase</span>
+              <span class="cost-value">R{{ costData.simulation.cost_zar }} <span class="cost-usd">${{ costData.simulation.cost_usd }}</span></span>
+            </div>
+            <div class="cost-row cost-total">
+              <span class="cost-label">Total cost</span>
+              <span class="cost-value">R{{ costData.total_cost_zar }} <span class="cost-usd">${{ costData.total_cost_usd }}</span></span>
+            </div>
+            <div class="cost-tokens">
+              {{ (costData.prepare.prompt_tokens + costData.simulation.prompt_tokens).toLocaleString() }} in /
+              {{ (costData.prepare.completion_tokens + costData.simulation.completion_tokens).toLocaleString() }} out tokens
+            </div>
+          </div>
         </div>
       </div>
 
@@ -382,6 +465,66 @@
           </div>
         </div>
       </div>
+      
+      <!-- Simulation Preset Selection -->
+      <div v-if="simulationConfig && phase === 4" class="preset-section">
+        <div class="preset-header">
+          <span class="section-title">Simulation Preset</span>
+          <span class="section-desc">Choose a preset to optimize for speed, balance, or depth</span>
+        </div>
+        <div class="preset-cards">
+          <div 
+            class="preset-card" 
+            :class="{ 'active': selectedPreset === 'quick' }"
+            @click="selectPreset('quick')"
+          >
+            <div class="preset-icon">⚡</div>
+            <div class="preset-name">Quick</div>
+            <div class="preset-desc">~2-3 min • Low cost • Fast preview</div>
+            <div class="preset-meta">
+              <span class="meta-item">Rounds: ~24 (10min/round)</span>
+              <span class="meta-item">Agents/round: 10</span>
+            </div>
+            <div v-if="selectedPreset === 'quick'" class="preset-check">✓</div>
+          </div>
+          
+          <div 
+            class="preset-card" 
+            :class="{ 'active': selectedPreset === 'balanced' }"
+            @click="selectPreset('balanced')"
+          >
+            <div class="preset-icon">⚖️</div>
+            <div class="preset-name">Balanced</div>
+            <div class="preset-desc">~5-6 min • Medium cost • Recommended</div>
+            <div class="preset-meta">
+              <span class="meta-item">Rounds: ~48 (10min/round)</span>
+              <span class="meta-item">Agents/round: 15</span>
+            </div>
+            <div v-if="selectedPreset === 'balanced'" class="preset-check">✓</div>
+          </div>
+          
+          <div 
+            class="preset-card" 
+            :class="{ 'active': selectedPreset === 'deep' }"
+            @click="selectPreset('deep')"
+          >
+            <div class="preset-icon">🔬</div>
+            <div class="preset-name">Deep</div>
+            <div class="preset-desc">~12-15 min • Higher cost • Thorough analysis</div>
+            <div class="preset-meta">
+              <span class="meta-item">Rounds: ~96 (10min/round)</span>
+              <span class="meta-item">Agents/round: 30</span>
+            </div>
+            <div v-if="selectedPreset === 'deep'" class="preset-check">✓</div>
+          </div>
+        </div>
+        <div v-if="selectedPreset" class="preset-summary">
+          <span class="summary-text">
+            Selected: {{ selectedPreset }} preset — 
+            {{ selectedPreset === 'quick' ? 'Fast preview with minimal cost' : selectedPreset === 'balanced' ? 'Optimal balance of speed and quality' : 'Comprehensive simulation with full depth' }}
+          </span>
+        </div>
+      </div>
 
       <!-- Step 05: Preparation completed -->
       <div class="step-card" :class="{ 'active': phase === 4 }">
@@ -401,79 +544,90 @@
           <p class="description">Simulation environment preparation completed，Can start running simulation</p>
           
           <!-- Simulation Rounds Configuration - Only show after configuration generation is completed and rounds are calculated -->
-          <div v-if="simulationConfig && autoGeneratedRounds" class="rounds-config-section">
+          <div v-if="simulationConfig && (selectedPreset || autoGeneratedRounds)" class="rounds-config-section">
             <div class="rounds-header">
               <div class="header-left">
                 <span class="section-title">Simulation Rounds Setting</span>
-                <span class="section-desc">Automatically plan and infer reality <span class="desc-highlight">{{ simulationConfig?.time_config?.total_simulation_hours || '-' }}</span> hours，Each round represents reality <span class="desc-highlight">{{ simulationConfig?.time_config?.minutes_per_round || '-' }}</span> minutes time elapsed</span>
+                <span v-if="selectedPreset" class="section-desc">
+                  Preset "{{ selectedPreset }}" — {{ customMaxRounds }} rounds ({{ 
+                  selectedPreset === 'quick' ? '~3 min' : selectedPreset === 'balanced' ? '~8 min' : '~20 min' }})
+                </span>
+                <span v-else-if="useCustomRounds" class="section-desc">
+                  Custom setting — {{ customMaxRounds }} rounds
+                </span>
+                <span v-else class="section-desc">Automatically plan and infer reality 
+                  <span class="desc-highlight">{{ simulationConfig?.time_config?.total_simulation_hours || '-' }}</span> hours，Each round represents reality 
+                  <span class="desc-highlight">{{ simulationConfig?.time_config?.minutes_per_round || '-' }}</span> minutes time elapsed</span>
               </div>
-              <label class="switch-control">
+              
+              <label v-if="!selectedPreset" class="switch-control">
                 <input type="checkbox" v-model="useCustomRounds">
                 <span class="switch-track"></span>
                 <span class="switch-label">Custom</span>
               </label>
             </div>
-            
-            <Transition name="fade" mode="out-in">
-              <div v-if="useCustomRounds" class="rounds-content custom" key="custom">
-                <div class="slider-display">
-                  <div class="slider-main-value">
-                    <span class="val-num">{{ customMaxRounds }}</span>
-                    <span class="val-unit">rounds</span>
-                  </div>
-                  <div class="slider-meta-info">
-                    <span>IfAgentScale is100：Estimated time approximately {{ Math.round(customMaxRounds * 0.6) }} minutes</span>
-                  </div>
-                </div>
+             
+             <Transition name="fade" mode="out-in">
+               <div v-if="useCustomRounds" class="rounds-content custom" key="custom">
+                 <div class="slider-display">
+                   <div class="slider-main-value">
+                     <span class="val-num">{{ customMaxRounds }}</span>
+                     <span class="val-unit">rounds</span>
+                   </div>
+                   <div class="slider-meta-info">
+                     <span>IfAgentScale is100：Estimated time approximately {{ Math.round(customMaxRounds * 0.6) }} minutes</span>
+                   </div>
+                 </div>
 
-                <div class="range-wrapper">
-                  <input 
-                    type="range" 
-                    v-model.number="customMaxRounds" 
-                    min="10" 
-                    :max="autoGeneratedRounds"
-                    step="5"
-                    class="minimal-slider"
-                    :style="{ '--percent': ((customMaxRounds - 10) / (autoGeneratedRounds - 10)) * 100 + '%' }"
-                  />
-                  <div class="range-marks">
-                    <span>10</span>
-                    <span 
-                      class="mark-recommend" 
-                      :class="{ active: customMaxRounds === 40 }"
-                      @click="customMaxRounds = 40"
-                      :style="{ position: 'absolute', left: `calc(${(40 - 10) / (autoGeneratedRounds - 10) * 100}% - 30px)` }"
-                    >40 (Recommendation)</span>
-                    <span>{{ autoGeneratedRounds }}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div v-else class="rounds-content auto" key="auto">
-                <div class="auto-info-card">
-                  <div class="auto-value">
-                    <span class="val-num">{{ autoGeneratedRounds }}</span>
-                    <span class="val-unit">rounds</span>
-                  </div>
-                  <div class="auto-content">
-                    <div class="auto-meta-row">
-                      <span class="duration-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        IfAgentScale is100：Estimated time {{ Math.round(autoGeneratedRounds * 0.6) }} minutes
-                      </span>
-                    </div>
-                    <div class="auto-desc">
-                      <p class="highlight-tip" @click="useCustomRounds = true">If first run，Strongly recommend switching to‘Custom mode’Reduce simulation rounds，to quickly preview effects and reduce error risk ➝</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Transition>
-          </div>
-
+                 <div class="range-wrapper">
+                   <input 
+                     type="range" 
+                     v-model.number="customMaxRounds" 
+                     min="10" 
+                     :max="sliderMax"
+                     step="5"
+                     class="minimal-slider"
+                     :style="{ '--percent': sliderPercent + '%' }"
+                   />
+                   <div class="range-marks">
+                     <span>10</span>
+                     <span 
+                       class="mark-recommend" 
+                       :class="{ active: customMaxRounds === 40 }"
+                       @click="customMaxRounds = 40"
+                       :style="{ position: 'absolute', left: recommendPos + '%' }"
+                     >40 (Recommendation)</span>
+                     <span>{{ sliderMax }}</span>
+                   </div>
+                 </div>
+               </div>
+               
+               <div v-else class="rounds-content auto" key="auto">
+                 <div class="auto-info-card">
+                   <div class="auto-value">
+                     <span class="val-num">{{ autoGeneratedRounds }}</span>
+                     <span class="val-unit">rounds</span>
+                   </div>
+                   <div class="auto-content">
+                     <div class="auto-meta-row">
+                       <span class="duration-badge">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                           <circle cx="12" cy="12" r="10"></circle>
+                           <polyline points="12 6 12 12 16 14"></polyline>
+                         </svg>
+                         IfAgentScale is100：Estimated time {{ Math.round(autoGeneratedRounds * 0.6) }} minutes
+                       </span>
+                     </div>
+                     <div class="auto-desc">
+                       <p class="highlight-tip" @click="useCustomRounds = true">If first run，Strongly recommend switching to'Custom mode'Reduce simulation rounds，to quickly preview effects and reduce error risk ➝</p>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </Transition>
+           </div>
+           </div>
+           
           <div class="action-group dual">
             <button 
               class="action-btn secondary"
@@ -489,11 +643,11 @@
               Start dual world parallel simulation ➝
             </button>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Profile Detail Modal -->
+        </div>
+        </div>
+
+       <!-- Profile Detail Modal -->
     <Transition name="modal">
       <div v-if="selectedProfile" class="profile-modal-overlay" @click.self="selectedProfile = null">
         <div class="profile-modal">
@@ -598,19 +752,24 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import { 
-  prepareSimulation, 
-  getPrepareStatus, 
+import {
+  prepareSimulation,
+  getPrepareStatus,
   getSimulationProfilesRealtime,
   getSimulationConfig,
-  getSimulationConfigRealtime 
+  getSimulationConfigRealtime,
+  getEnrichmentData,
+  getSimulationCost,
+  rerunResearch as rerunResearchApi
 } from '../api/simulation'
 
 const props = defineProps({
   simulationId: String,  // Passed from parent component
   projectData: Object,
   graphData: Object,
-  systemLogs: Array
+  systemLogs: Array,
+  customAgents: { type: Array, default: () => [] },
+  customAgentsEnabled: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['go-back', 'next-step', 'add-log', 'update-status'])
@@ -624,6 +783,27 @@ const progressMessage = ref('')
 const profiles = ref([])
 const entityTypes = ref([])
 const expectedTotal = ref(null)
+const enrichmentData = ref({})
+const expandedEnrichment = ref(new Set())
+const costData = ref(null)
+const researchRunning = ref(false)
+const researchCurrentArchetype = ref('')
+const researchError = ref('')
+
+const researchCharCount = computed(() => {
+  return Object.values(enrichmentData.value).reduce((sum, t) => sum + (t?.length || 0), 0)
+})
+
+const researchSources = computed(() => {
+  const sourceKeywords = ['HRW', 'SAPS', 'StatsSA', 'World Bank', 'Amnesty', 'News24', 'Daily Maverick', 'GroundUp', 'Mail & Guardian', 'Business Day', 'SABC', 'eNCA', 'TimesLIVE', 'IOL', 'Reuters', 'BBC', 'gov.za', 'Wikipedia']
+  const allText = Object.values(enrichmentData.value).join(' ')
+  const found = new Set()
+  const lower = allText.toLowerCase()
+  for (const src of sourceKeywords) {
+    if (lower.includes(src.toLowerCase())) found.add(src)
+  }
+  return [...found]
+})
 const simulationConfig = ref(null)
 const selectedProfile = ref(null)
 const showProfilesDetail = ref(true)
@@ -634,6 +814,7 @@ let lastLoggedProfileCount = 0
 let lastLoggedConfigStage = ''
 
 // Simulation Rounds Configuration
+const selectedPreset = ref('balanced') // Default to balanced preset
 const useCustomRounds = ref(false) // DefaultUse auto-configured rounds
 const customMaxRounds = ref(40)   // Default recommendation40rounds
 
@@ -668,6 +849,61 @@ const autoGeneratedRounds = computed(() => {
   return Math.max(calculatedRounds, 40)
 })
 
+// Slider computed properties to simplify template expressions
+const sliderMax = computed(() => {
+  if (useCustomRounds.value) {
+    return customMaxRounds.value * 2
+  }
+  return autoGeneratedRounds.value || 100
+})
+
+const sliderPercent = computed(() => {
+  const max = sliderMax.value
+  if (!max || max <= 10) return 0
+  return ((customMaxRounds.value - 10) / (max - 10)) * 100
+})
+
+const recommendPos = computed(() => {
+  const max = sliderMax.value
+  if (!max || max <= 10) return 0
+  return ((40 - 10) / (max - 10)) * 100
+})
+
+// Simulation Preset
+const selectPreset = (preset) => {
+  // Always select (no toggle off) - standard preset behavior
+  selectedPreset.value = preset
+  
+  // Update max rounds based on preset
+  if (preset === 'quick') {
+    customMaxRounds.value = 20
+  } else if (preset === 'balanced') {
+    customMaxRounds.value = 50
+  } else if (preset === 'deep') {
+    customMaxRounds.value = 100
+  }
+  
+  // Update displayed simulationConfig values so Step 05 shows correct values
+  // Optimized for API rate limits: 10 min per round for faster, real-time simulation
+  if (simulationConfig.value && simulationConfig.value.time_config) {
+    const overrides = {
+      'quick':   { total_simulation_hours: 4, minutes_per_round: 10 },   // 24 rounds
+      'balanced': { total_simulation_hours: 8, minutes_per_round: 10 },  // 48 rounds
+      'deep':     { total_simulation_hours: 16, minutes_per_round: 10 }, // 96 rounds
+    }
+    if (overrides[preset]) {
+      simulationConfig.value = {
+        ...simulationConfig.value,
+        time_config: {
+          ...simulationConfig.value.time_config,
+          ...overrides[preset]
+        }
+      }
+      addLog(`Preset '${preset}' applied: ${overrides[preset].total_simulation_hours}h / ${overrides[preset].minutes_per_round}min per round`)
+    }
+  }
+}
+
 // Polling timer
 let pollTimer = null
 let profilesTimer = null
@@ -697,6 +933,36 @@ const totalTopicsCount = computed(() => {
   }, 0)
 })
 
+const toggleEnrichment = (archetype) => {
+  const s = new Set(expandedEnrichment.value)
+  if (s.has(archetype)) s.delete(archetype)
+  else s.add(archetype)
+  expandedEnrichment.value = s
+}
+
+const rerunResearch = async () => {
+  if (!props.simulationId || researchRunning.value) return
+  researchRunning.value = true
+  researchError.value = ''
+  researchCurrentArchetype.value = ''
+  emit('add-log', '🔍 Re-running deep web research...')
+  try {
+    const res = await rerunResearchApi(props.simulationId)
+    if (res.success) {
+      enrichmentData.value = res.data.enrichment || {}
+      emit('add-log', `✓ Research complete — ${res.data.enriched_count} archetypes enriched`)
+    } else {
+      researchError.value = res.error || 'Research failed'
+      emit('add-log', `✗ Research failed: ${researchError.value}`)
+    }
+  } catch (e) {
+    researchError.value = e.message || 'Network error'
+    emit('add-log', `✗ Research error: ${researchError.value}`)
+  } finally {
+    researchRunning.value = false
+  }
+}
+
 // Methods
 const addLog = (msg) => {
   emit('add-log', msg)
@@ -707,12 +973,18 @@ const handleStartSimulation = () => {
   // Build parameters to pass to parent component
   const params = {}
   
+  // Add preset if selected
+  if (selectedPreset.value) {
+    params.preset = selectedPreset.value
+    addLog(`Start simulation with ${selectedPreset.value} preset`)
+  }
+  
   if (useCustomRounds.value) {
     // User custom rounds，Pass max_rounds Parameter
     params.maxRounds = customMaxRounds.value
     addLog(`Start simulation，Custom rounds: ${customMaxRounds.value} rounds`)
   } else {
-    // User chose to keep auto-generated rounds，Do not pass max_rounds Parameter
+    // User chose to keep auto-configured rounds，Do not pass max_rounds Parameter
     addLog(`Start simulation，Use auto-configured rounds: ${autoGeneratedRounds.value} rounds`)
   }
   
@@ -737,19 +1009,24 @@ const startPrepareSimulation = async () => {
     emit('update-status', 'error')
     return
   }
-  
+
   // Mark step 1 completed，Start step 2
   phase.value = 1
   addLog(`Simulation instance created: ${props.simulationId}`)
   addLog('Preparing simulation environment...')
   emit('update-status', 'processing')
-  
+
   try {
-    const res = await prepareSimulation({
+    const payload = {
       simulation_id: props.simulationId,
       use_llm_for_profiles: true,
       parallel_profile_count: 5
-    })
+    }
+    if (props.customAgentsEnabled && props.customAgents.length > 0) {
+      payload.custom_agents = props.customAgents
+      addLog(`Injecting ${props.customAgents.length} custom agent profiles into simulation`)
+    }
+    const res = await prepareSimulation(payload)
     
     if (res.success && res.data) {
       if (res.data.already_prepared) {
@@ -934,7 +1211,16 @@ const fetchConfigRealtime = async () => {
     
     if (res.success && res.data) {
       const data = res.data
-      
+
+      // Stop immediately if preparation failed — don't poll forever
+      if (data.failed || data.status === 'failed') {
+        stopConfigPolling()
+        const msg = data.error || 'Preparation failed (unknown error)'
+        addLog(`✗ Preparation failed: ${msg}`)
+        emit('update-status', 'error')
+        return
+      }
+
       // Output configuration generation phase log（Avoid duplication）
       if (data.generation_stage && data.generation_stage !== lastLoggedConfigStage) {
         lastLoggedConfigStage = data.generation_stage
@@ -944,7 +1230,7 @@ const fetchConfigRealtime = async () => {
           addLog('CallingLLMGenerate Simulation ConfigurationParameter...')
         }
       }
-      
+
       // If configuration is generated
       if (data.config_generated && data.config) {
         simulationConfig.value = data.config
@@ -989,6 +1275,23 @@ const loadPreparedData = async () => {
   // Get one last time Profiles
   await fetchProfilesRealtime()
   addLog(`Loaded ${profiles.value.length} NumberAgentPersona`)
+
+  // Fetch deep-research enrichment (silently, no error if not available)
+  try {
+    const enrichRes = await getEnrichmentData(props.simulationId)
+    if (enrichRes.data && Object.keys(enrichRes.data).length > 0) {
+      enrichmentData.value = enrichRes.data
+      addLog(`✓ Research context loaded for ${Object.keys(enrichRes.data).length} archetypes`)
+    }
+  } catch (_) { /* enrichment is optional */ }
+
+  // Fetch cost summary (silently)
+  try {
+    const costRes = await getSimulationCost(props.simulationId)
+    if (costRes.data?.success) {
+      costData.value = costRes.data.data
+    }
+  } catch (_) { /* cost is optional */ }
 
   // Get configuration（Use real-time interface）
   try {
@@ -2453,7 +2756,121 @@ onUnmounted(() => {
   background: #CBD5E1;
 }
 
+/* Simulation Preset */
+.preset-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: #F8FAFC;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+}
+
+.preset-header {
+  margin-bottom: 16px;
+}
+
+.preset-header .section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preset-header .section-desc {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.preset-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.preset-card {
+  background: #FFF;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  position: relative;
+}
+
+.preset-card:hover {
+  border-color: #CBD5E1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.preset-card.active {
+  border-color: #FF5722;
+  background: #FFF7F0;
+  box-shadow: 0 4px 12px rgba(255,87,34,0.15);
+}
+
+.preset-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.preset-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.preset-desc {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.preset-meta {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.meta-item {
+  font-size: 10px;
+  color: #64748B;
+  background: #F1F5F9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.preset-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #FF5722;
+  font-size: 16px;
+}
+
+.preset-summary {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #E8F5E9;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #2E7D32;
+}
+
+.summary-text {
+  text-align: center;
+}
+
 /* Auto Info */
+.preset-section + .step-card {
+  margin-top: 20px;
+}
+
 .auto-info-card {
   display: flex;
   align-items: center;
@@ -2564,4 +2981,228 @@ onUnmounted(() => {
   transform: scale(0.95) translateY(10px);
   opacity: 0;
 }
+
+/* Research Context enrichment panel */
+.enrichment-section {
+  margin-top: 20px;
+  border-top: 1px solid #E5E5E5;
+  padding-top: 16px;
+}
+
+.preview-hint {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+.enrichment-card {
+  border: 1px solid #E5E5E5;
+  margin-bottom: 8px;
+  background: #FAFAFA;
+}
+
+.enrichment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.enrichment-header:hover {
+  background: #F0F0F0;
+}
+
+.enrichment-archetype {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.enrichment-toggle {
+  font-size: 0.65rem;
+  color: #999;
+}
+
+.enrichment-body {
+  border-top: 1px solid #E5E5E5;
+  padding: 12px 14px;
+}
+
+.enrichment-text {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #444;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  font-family: inherit;
+}
+
+.research-stats {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  background: #F7F7F7;
+  border: 1px solid #E5E5E5;
+  margin-bottom: 10px;
+}
+
+.rstat {
+  flex: 1;
+  text-align: center;
+}
+
+.rstat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.rstat-label {
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.research-sources {
+  margin-bottom: 10px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.sources-label {
+  color: #888;
+  margin-right: 4px;
+}
+
+.source-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  background: #EFEFEF;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #333;
+}
+
+.research-running {
+  padding: 10px;
+  background: #FFF7E5;
+  border: 1px solid #FFD580;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  color: #B45309;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.console-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #aaa;
+}
+.console-dot.active {
+  background: #1E9E5A;
+  animation: rdot-pulse 1s infinite;
+}
+@keyframes rdot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.enrichment-chars {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #888;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.rerun-research-btn {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #333;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.rerun-research-btn:hover:not(:disabled) {
+  background: #333;
+  color: #fff;
+}
+
+.rerun-research-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.research-error {
+  margin-top: 8px;
+  padding: 8px;
+  background: #FEE;
+  border: 1px solid #FCC;
+  color: #C00;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+
+.cost-summary {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #F7F9FC;
+  border: 1px solid #DDE4EE;
+  border-radius: 4px;
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.82rem;
+}
+
+.cost-total {
+  border-top: 1px solid #DDE4EE;
+  margin-top: 6px;
+  padding-top: 8px;
+  font-weight: 600;
+}
+
+.cost-label {
+  color: #555;
+}
+
+.cost-value {
+  font-family: 'JetBrains Mono', monospace;
+  color: #222;
+}
+
+.cost-usd {
+  color: #888;
+  font-size: 0.75rem;
+  margin-left: 6px;
+}
+
+.cost-tokens {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: #888;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: right;
+}
+
 </style>

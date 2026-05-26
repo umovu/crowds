@@ -158,6 +158,7 @@ class EntityReader:
         # Filter entities matching criteria
         filtered_entities = []
         entity_types_found: Set[str] = set()
+        seen_names: Set[str] = set()  # For deduplication by name (case-insensitive)
 
         for node in all_nodes:
             labels = node.get("labels", [])
@@ -167,6 +168,10 @@ class EntityReader:
 
             if not custom_labels:
                 # Only default labels, skip
+                continue
+
+            # Skip geographic locations — they are context, not simulation agents
+            if any(la.lower() == "location" for la in custom_labels):
                 continue
 
             # If predefined types specified, check if matching
@@ -228,7 +233,14 @@ class EntityReader:
 
                 entity.related_nodes = related_nodes
 
-            filtered_entities.append(entity)
+            # Deduplicate by name - keep first occurrence only
+            if entity.name.lower() not in seen_names:
+                seen_names.add(entity.name.lower())
+                filtered_entities.append(entity)
+
+        duplicate_count = total_count - len(filtered_entities)
+        if duplicate_count > 0:
+            logger.warning(f"Deduplicated {duplicate_count} entities by name")
 
         logger.info(f"Filter completed: total nodes {total_count}, matched {len(filtered_entities)}, "
                      f"entity types: {entity_types_found}")

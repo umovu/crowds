@@ -201,7 +201,8 @@ const route = useRoute()
 // State
 const projects = ref([])
 const loading = ref(true)
-const isExpanded = ref(false)
+// Always expanded — cards visible immediately on page load (no scroll-trigger animation)
+const isExpanded = ref(true)
 const hoveringCard = ref(null)
 const historyContainer = ref(null)
 const selectedProject = ref(null)  // Currently selected project (for modal)
@@ -452,6 +453,10 @@ const loadHistory = async () => {
 
 // Initialize IntersectionObserver
 const initObserver = () => {
+  // Disabled — cards are always expanded, no scroll-triggered animation.
+  // Previously this collapsed/expanded the list as it entered/left the viewport,
+  // which could hide cards on slow renders. Now static for predictability.
+  return
   if (observer) {
     observer.disconnect()
   }

@@ -5,6 +5,7 @@ Uses preset scripts + LLM intelligent generation of config parameters.
 """
 
 import os
+import re
 import json
 import shutil
 from typing import Dict, Any, List, Optional
@@ -17,6 +18,10 @@ from ..utils.logger import get_logger
 from .entity_reader import EntityReader, FilteredEntities
 from .agent_profile_generator import AgentProfileGenerator, AgentProfile
 from .simulation_config_generator import SimulationConfigGenerator, SimulationParameters
+from .document_context_engine import DocumentContextEngine
+from .custom_agent_parser import CustomAgentParser
+from .deep_research_service import research_archetypes as _deep_research_archetypes
+from .agent_enricher import AgentContextEnricher
 
 logger = get_logger('fub.simulation')
 
@@ -62,6 +67,11 @@ class SimulationState:
     # Error message
     error: Optional[str] = None
 
+    # Cost tracking
+    prepare_prompt_tokens: int = 0
+    prepare_completion_tokens: int = 0
+    prepare_cost_usd: float = 0.0
+
     def to_dict(self) -> Dict[str, Any]:
         """Complete status dict (internal use)"""
         return {
@@ -78,6 +88,9 @@ class SimulationState:
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "error": self.error,
+            "prepare_prompt_tokens": self.prepare_prompt_tokens,
+            "prepare_completion_tokens": self.prepare_completion_tokens,
+            "prepare_cost_usd": self.prepare_cost_usd,
         }
     
     def to_simple_dict(self) -> Dict[str, Any]:
@@ -165,8 +178,11 @@ class SimulationManager:
             created_at=data.get("created_at", datetime.now().isoformat()),
             updated_at=data.get("updated_at", datetime.now().isoformat()),
             error=data.get("error"),
+            prepare_prompt_tokens=data.get("prepare_prompt_tokens", 0),
+            prepare_completion_tokens=data.get("prepare_completion_tokens", 0),
+            prepare_cost_usd=data.get("prepare_cost_usd", 0.0),
         )
-        
+
         self._simulations[simulation_id] = state
         return state
     
@@ -210,6 +226,7 @@ class SimulationManager:
         progress_callback: Optional[callable] = None,
         parallel_profile_count: int = 3,
         storage: 'GraphStorage' = None,
+        custom_profiles: Optional[List] = None,
     ) -> SimulationState:
         """
         Prepare simulation environment (fully automated)
@@ -242,6 +259,75 @@ class SimulationManager:
             self._save_simulation_state(state)
             
             sim_dir = self._get_simulation_dir(simulation_id)
+
+            # Load enrichment data if it exists (from MiroFlow deep research)
+            enrichment_data = {}
+            enrichment_file = os.path.join(sim_dir, "enrichment.json")
+            if os.path.exists(enrichment_file):
+                try:
+                    with open(enrichment_file, 'r', encoding='utf-8') as f:
+                        enrichment_data = json.load(f)
+                    logger.info(f"Loaded enrichment data from simulation dir for {len(enrichment_data)} archetypes")
+                except Exception as e:
+                    logger.warning(f"Failed to load enrichment data from simulation dir: {e}")
+
+            # Also check project for enrichment data (saved during project creation)
+            project_for_papers = None
+            if not enrichment_data and state.project_id:
+                try:
+                    from ..models.project import ProjectManager
+                    project_for_papers = ProjectManager.get_project(state.project_id)
+                    if project_for_papers and project_for_papers.enrichment_data:
+                        enrichment_data = project_for_papers.enrichment_data
+                        logger.info(f"Loaded enrichment data from project for {len(enrichment_data)} archetypes")
+                except Exception as e:
+                    logger.warning(f"Failed to load enrichment data from project: {e}")
+            elif state.project_id:
+                try:
+                    from ..models.project import ProjectManager
+                    project_for_papers = ProjectManager.get_project(state.project_id)
+                except Exception:
+                    pass
+
+            # Merge in saved literature papers as a shared grounding block.
+            # The block is appended to every archetype's existing enrichment so
+            # personas reference the academic context alongside other research.
+            try:
+                saved_papers = list(getattr(project_for_papers, "saved_papers", []) or []) if project_for_papers else []
+            except Exception:
+                saved_papers = []
+            if saved_papers:
+                lit_lines = ["ACADEMIC LITERATURE (saved to this project):"]
+                for p in saved_papers[:15]:
+                    title = (p.get("title") or "").strip()
+                    year  = p.get("year") or ""
+                    src   = p.get("source") or ""
+                    authors_list = p.get("authors") or []
+                    authors = ", ".join(authors_list[:3]) if isinstance(authors_list, list) else str(authors_list)
+                    abstract = (p.get("abstract") or "").strip().replace("\n", " ")
+                    if len(abstract) > 280:
+                        abstract = abstract[:280].rsplit(" ", 1)[0] + "..."
+                    lit_lines.append(f"- \"{title}\" ({year}, {src}) — {authors}")
+                    if abstract:
+                        lit_lines.append(f"    {abstract}")
+                lit_block = "\n".join(lit_lines)
+                # Append to every existing archetype's enrichment, and seed one
+                # synthetic entry so even archetype-less generation still sees it.
+                if enrichment_data:
+                    for k in list(enrichment_data.keys()):
+                        enrichment_data[k] = (enrichment_data[k] or "").rstrip() + "\n\n" + lit_block
+                else:
+                    enrichment_data = {"__literature__": lit_block}
+                logger.info(f"Merged {len(saved_papers)} saved papers into enrichment ({len(enrichment_data)} archetypes total)")
+
+            # Persist whatever we ended up with to the simulation dir so the
+            # generator and future runs see it.
+            if enrichment_data:
+                try:
+                    with open(enrichment_file, 'w', encoding='utf-8') as f:
+                        json.dump(enrichment_data, f, ensure_ascii=False, indent=2)
+                except Exception as e:
+                    logger.warning(f"Failed to persist enrichment data to sim dir: {e}")
             
             # ========== Phase 1: Read and filter entities ==========
             if progress_callback:
@@ -277,19 +363,49 @@ class SimulationManager:
                 self._save_simulation_state(state)
                 return state
             
+            # ========== Phase 1.5: Deep research enrichment ==========
+            # Run only if no enrichment already loaded and Firecrawl is configured.
+            def _normalize_archetype(t: str) -> str:
+                s = re.sub(r'([A-Z])', r'_\1', t).lower().lstrip('_')
+                return re.sub(r'[\s\-]+', '_', s.strip())
+
+            if not enrichment_data:
+                try:
+                    if progress_callback:
+                        progress_callback("generating_profiles", 0, "Running web research for archetypes...")
+                    entity_types = list({_normalize_archetype(e.type) for e in filtered.entities if e.type})
+                    seed = document_text or simulation_requirement or ""
+                    raw_research = _deep_research_archetypes(
+                        archetypes=entity_types,
+                        query=seed or "current socio-economic conditions South Africa 2025",
+                        document_text=seed,
+                    )
+                    if raw_research:
+                        enrichment_data = AgentContextEnricher.enrich_from_miroflow(raw_research, entity_types)
+                        # Persist raw research so the API endpoint can serve it
+                        with open(enrichment_file, 'w', encoding='utf-8') as f:
+                            json.dump(raw_research, f, ensure_ascii=False, indent=2)
+                        logger.info(f"Deep research complete: {len(enrichment_data)} archetypes enriched")
+                except Exception as research_err:
+                    logger.warning(f"Deep research failed (continuing without enrichment): {research_err}")
+
             # ========== Phase 2: Generate Agent Profile ==========
             total_entities = len(filtered.entities)
-            
+
             if progress_callback:
                 progress_callback(
-                    "generating_profiles", 0, 
+                    "generating_profiles", 0,
                     "Starting generation...",
                     current=0,
                     total=total_entities
                 )
-            
+
             # Pass graph_id to enable graph retrieval functionality, get richer context
-            generator = AgentProfileGenerator(storage=storage, graph_id=state.graph_id)
+            generator = AgentProfileGenerator(
+                storage=storage,
+                graph_id=state.graph_id,
+                enrichment_data=enrichment_data
+            )
             
             def profile_progress(current, total, msg):
                 if progress_callback:
@@ -316,6 +432,48 @@ class SimulationManager:
 
             state.profiles_count = len(profiles)
 
+            # ========== Expand population if needed (LLM self-generation) ==========
+            # Always expand if we have fewer than 20 agents — richer simulations need scale
+            target_min = 20
+            if len(profiles) < target_min and document_text:
+                needed = target_min - len(profiles)
+                logger.info(f"Seed population small ({len(profiles)}), expanding by {needed} via LLM...")
+                if progress_callback:
+                    progress_callback(
+                        "generating_profiles", 85,
+                        f"Expanding agent population by {needed}...",
+                        current=len(profiles),
+                        total=target_min
+                    )
+                
+                profiles = generator.expand_population(
+                    seed_profiles=profiles,
+                    document_text=document_text,
+                    target_count=target_min,
+                    progress_callback=lambda curr, tot, msg: progress_callback(
+                        "generating_profiles", 85 + int(curr / tot * 10),
+                        msg,
+                        current=curr,
+                        total=tot
+                    ) if progress_callback else None,
+                )
+                
+                state.profiles_count = len(profiles)
+                logger.info(f"Population expanded to {len(profiles)} agents")
+
+            # ========== Merge custom agents if provided ==========
+            if custom_profiles and len(custom_profiles) > 0:
+                if progress_callback:
+                    progress_callback(
+                        "generating_profiles", 92,
+                        f"Merging {len(custom_profiles)} custom agents...",
+                        current=len(profiles),
+                        total=len(profiles) + len(custom_profiles)
+                    )
+                profiles = CustomAgentParser.merge_profiles(profiles, custom_profiles)
+                state.profiles_count = len(profiles)
+                logger.info(f"Merged custom agents: final count = {len(profiles)}")
+
             if progress_callback:
                 progress_callback(
                     "generating_profiles", 95,
@@ -329,15 +487,75 @@ class SimulationManager:
                 file_path=os.path.join(sim_dir, "agentsociety_profiles.json"),
                 platform="opinion_space"
             )
-            
+
+            usage = generator.get_usage_stats()
+            state.prepare_prompt_tokens = usage["prompt_tokens"]
+            state.prepare_completion_tokens = usage["completion_tokens"]
+            state.prepare_cost_usd = usage["estimated_cost_usd"]
+            self._save_simulation_state(state)
+
             if progress_callback:
                 progress_callback(
-                    "generating_profiles", 100, 
+                    "generating_profiles", 100,
                     f"Completed, total {len(profiles)} Profiles",
                     current=len(profiles),
                     total=len(profiles)
                 )
-            
+
+            # ========== Phase 2.5: Build and save document context for runtime ==========
+            if progress_callback:
+                progress_callback(
+                    "building_context", 0,
+                    "Building document context...",
+                    current=0,
+                    total=2
+                )
+
+            try:
+                ctx_engine = DocumentContextEngine(storage=storage)
+                ctx_engine.build_from_graph(state.graph_id)
+
+                # Extract facts if we have document text and an LLM client
+                facts = []
+                if document_text:
+                    try:
+                        from openai import OpenAI
+                        client = OpenAI(
+                            api_key=Config.LLM_API_KEY,
+                            base_url=Config.LLM_BASE_URL,
+                        )
+                        facts = ctx_engine.extract_facts(
+                            document_text=document_text,
+                            llm_client=client,
+                            model_name=Config.LLM_MODEL,
+                        )
+                    except Exception as e:
+                        logger.warning(f"LLM fact extraction skipped: {e}")
+
+                doc_context = {
+                    "domain": ctx_engine.domain,
+                    "domain_profile": ctx_engine.get_domain_profile(),
+                    "document_context_block": ctx_engine.get_document_context_block(),
+                    "dynamic_rules": ctx_engine.get_dynamic_rules(),
+                    "facts": facts,
+                }
+
+                ctx_path = os.path.join(sim_dir, "document_context.json")
+                with open(ctx_path, 'w', encoding='utf-8') as f:
+                    json.dump(doc_context, f, ensure_ascii=False, indent=2)
+
+                logger.info(f"Saved document context to {ctx_path} ({len(facts)} facts)")
+            except Exception as e:
+                logger.warning(f"Document context building failed: {e}")
+
+            if progress_callback:
+                progress_callback(
+                    "building_context", 100,
+                    "Document context saved",
+                    current=2,
+                    total=2
+                )
+
             # ========== Phase 3: LLM intelligent generation of simulation config ==========
             if progress_callback:
                 progress_callback(
@@ -365,6 +583,14 @@ class SimulationManager:
                 document_text=document_text,
                 entities=filtered.entities,
             )
+
+            if custom_profiles:
+                core_focus_custom = [p for p in custom_profiles if p.get("is_core_focus", False)]
+                if core_focus_custom:
+                    sim_params = config_generator.inject_core_focus_configs(
+                        sim_params, custom_profiles
+                    )
+                    logger.info(f"Injected core focus configs for {len(core_focus_custom)} agents")
             
             if progress_callback:
                 progress_callback(

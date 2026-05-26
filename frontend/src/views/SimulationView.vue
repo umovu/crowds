@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">MIROFISH OFFLINE</div>
+        <div class="brand" @click="router.push('/')">FUB POLICY SIM</div>
       </div>
       
       <div class="header-center">
@@ -154,16 +154,27 @@ const handleNextStep = (params = {}) => {
   } else {
     addLog('Using auto-configured simulation rounds')
   }
+  
+  // Log preset if provided
+  if (params.preset) {
+    addLog(`Using preset: ${params.preset}`)
+  }
 
   // Build route parameters
   const routeParams = {
     name: 'SimulationRun',
-    params: { simulationId: currentSimulationId.value }
+    params: { simulationId: currentSimulationId.value },
+    query: {}
   }
 
   // If custom rounds exist, pass via query parameters
   if (params.maxRounds) {
-    routeParams.query = { maxRounds: params.maxRounds }
+    routeParams.query.maxRounds = params.maxRounds
+  }
+  
+  // If preset exists, pass via query parameters
+  if (params.preset) {
+    routeParams.query.preset = params.preset
   }
 
   // Navigate to Step 3 page

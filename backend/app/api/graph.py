@@ -13,6 +13,7 @@ from ..config import Config
 from ..services.ontology_generator import OntologyGenerator
 from ..services.graph_builder import GraphBuilderService
 from ..services.text_processor import TextProcessor
+from ..services.custom_agent_parser import CustomAgentParser
 from ..utils.file_parser import FileParser
 from ..utils.logger import get_logger
 from ..models.task import TaskManager, TaskStatus
@@ -161,6 +162,7 @@ def generate_ontology():
         simulation_requirement = request.form.get('simulation_requirement', '')
         project_name = request.form.get('project_name', 'Unnamed Project')
         additional_context = request.form.get('additional_context', '')
+        enrichment_data_raw = request.form.get('enrichment_data', '')
 
         logger.debug(f"Project name: {project_name}")
         logger.debug(f"Simulation requirement: {simulation_requirement[:100]}...")
@@ -171,17 +173,34 @@ def generate_ontology():
                 "error": "Please provide simulation requirement description (simulation_requirement)"
             }), 400
 
-        # Get uploaded files
+        # Get uploaded files. Files are optional if the simulation_requirement
+        # is substantial (e.g. a web-research-synthesized briefing), which can
+        # serve as the source document on its own.
         uploaded_files = request.files.getlist('files')
-        if not uploaded_files or all(not f.filename for f in uploaded_files):
+        has_files = uploaded_files and any(f.filename for f in uploaded_files)
+        has_substantial_seed = len((simulation_requirement or '').strip()) >= 100
+        if not has_files and not has_substantial_seed:
             return jsonify({
                 "success": False,
-                "error": "Please upload at least one document file"
+                "error": (
+                    "Provide at least one document file OR a substantial "
+                    "simulation_requirement (100+ characters) describing your scenario."
+                )
             }), 400
 
         # Create project
         project = ProjectManager.create_project(name=project_name)
         project.simulation_requirement = simulation_requirement
+
+        # Parse and save enrichment data if provided
+        if enrichment_data_raw:
+            try:
+                import json
+                project.enrichment_data = json.loads(enrichment_data_raw)
+                logger.info(f"Loaded enrichment data for {len(project.enrichment_data)} archetypes")
+            except Exception as e:
+                logger.warning(f"Failed to parse enrichment data: {e}")
+
         logger.info(f"Project created: {project.project_id}")
         
         # Save files and extract text
@@ -207,6 +226,19 @@ def generate_ontology():
                 document_texts.append(text)
                 all_text += f"\n\n=== {file_info['original_filename']} ===\n{text}"
 
+        # If no files were uploaded but a substantial seed message exists
+        # (e.g. web-research-synthesized briefing), treat that as the document.
+        if not document_texts and has_substantial_seed:
+            seed_doc = TextProcessor.preprocess_text(simulation_requirement)
+            document_texts.append(seed_doc)
+            all_text = f"\n\n=== seed_briefing.md ===\n{seed_doc}"
+            project.files.append({
+                "filename": "seed_briefing.md",
+                "size": len(seed_doc),
+                "synthetic": True,
+            })
+            logger.info(f"Using simulation_requirement as synthetic document ({len(seed_doc)} chars)")
+
         if not document_texts:
             ProjectManager.delete_project(project.project_id)
             return jsonify({
@@ -218,6 +250,25 @@ def generate_ontology():
         project.total_text_length = len(all_text)
         ProjectManager.save_extracted_text(project.project_id, all_text)
         logger.info(f"Text extraction completed, total {len(all_text)} characters")
+
+        # ========== Extract custom agents from seed document ==========
+        logger.info("Scanning document for '# Agents' section...")
+        custom_agents_extracted = []
+        try:
+            agent_profiles = CustomAgentParser.extract_agents_from_text(
+                all_text,
+                simulation_requirement=simulation_requirement,
+                use_llm=True
+            )
+            if agent_profiles:
+                custom_agents_extracted = [p.to_agentsociety_format() for p in agent_profiles]
+                project.custom_agents = custom_agents_extracted
+                project.custom_agents_enabled = True
+                logger.info(f"Extracted {len(custom_agents_extracted)} custom agents from '# Agents' section")
+            else:
+                logger.info("No '# Agents' section found in document")
+        except Exception as e:
+            logger.warning(f"Custom agent extraction from seed document failed: {e}")
 
         # Generate ontology
         logger.info("Calling LLM to generate ontology definition...")
@@ -241,7 +292,7 @@ def generate_ontology():
         project.status = ProjectStatus.ONTOLOGY_GENERATED
         ProjectManager.save_project(project)
         logger.info(f"=== Ontology generation completed === Project ID: {project.project_id}")
-        
+
         return jsonify({
             "success": True,
             "data": {
@@ -250,7 +301,9 @@ def generate_ontology():
                 "ontology": project.ontology,
                 "analysis_summary": project.analysis_summary,
                 "files": project.files,
-                "total_text_length": project.total_text_length
+                "total_text_length": project.total_text_length,
+                "custom_agents": project.custom_agents,
+                "custom_agents_count": len(project.custom_agents)
             }
         })
         
