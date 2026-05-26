@@ -104,3 +104,5 @@ AGPL-3.0 — see [LICENSE](./LICENSE).
 ## Credits
 
 Powered by the AgentSociety simulation engine.
+
+Forked from Mirofish Offline.
