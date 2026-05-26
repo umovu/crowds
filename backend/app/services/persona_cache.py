@@ -85,7 +85,7 @@ def make_archetype_key(
     data ⇒ same key, regardless of project or specific entity name.
 
     Allows cross-project reuse: a 'taxi_operator' persona generated for one
-    SANDF/Cape Flats project can be reused by another project on the same
+    project on a given topic can be reused by another project on the same
     topic. The enrichment_snippet is the topic proxy (it carries the live
     web-research data for this archetype, which is topic-specific).
     """
