@@ -313,9 +313,14 @@ const selectedBackend = ref('ladybug')
 const customAgentsEnabled = ref(false)
 const customAgents = ref([])
 
+// Use VITE_API_BASE_URL so the deployed frontend calls the configured
+// backend (e.g. a tunnel URL), not its own origin. Empty string falls back
+// to same-origin for local dev where the Vite proxy handles /api/*.
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+
 const fetchBackend = async () => {
   try {
-    const response = await fetch('/api/config/backend')
+    const response = await fetch(`${API_BASE}/api/config/backend`)
     const data = await response.json()
     selectedBackend.value = data.backend || 'ladybug'
   } catch (e) {
@@ -325,7 +330,7 @@ const fetchBackend = async () => {
 
 const switchBackend = async () => {
   try {
-    const response = await fetch('/api/config/backend', {
+    const response = await fetch(`${API_BASE}/api/config/backend`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ backend: selectedBackend.value })
