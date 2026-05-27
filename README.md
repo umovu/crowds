@@ -1,6 +1,6 @@
 <div align="center">
 
-# Fub Simulation
+# Fub Sandbox
 
 **Test your policies, announcements, and events on digital agents before they reach real people.**
 
@@ -12,7 +12,7 @@
 
 ## What is this?
 
-Fub Simulation lets you **stress-test ideas on virtual populations** before they reach real audiences.
+Fub Sandbox lets you **stress-test ideas on virtual populations** before they reach real audiences.
 
 Upload a policy draft, press release, or event brief — and watch how hundreds of AI agents with distinct personalities, opinions, and biases react. See how ideas spread, where resistance builds, and what the public mood looks like *before* you commit.
 
@@ -42,7 +42,7 @@ Upload a policy draft, press release, or event brief — and watch how hundreds 
 ### Option A: Docker
 
 ```bash
-git clone https://github.com/jtswartbooi/fub-sandbox.git
+git clone https://github.com/umovu/fub-sandbox.git
 cd fub-sandbox
 cp .env.example .env
 
