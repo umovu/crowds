@@ -95,8 +95,22 @@ def _start_miroflow_mcp():
     print(f"WARNING: MiroFlow MCP server may not have started on port {mcp_port}")
 
 
+def _get_version() -> str:
+    version_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "VERSION")
+    try:
+        with open(version_file) as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "0.0.0"
+
+
 def main():
     """Main function"""
+    import argparse
+    parser = argparse.ArgumentParser(description="Fub Simulation backend server")
+    parser.add_argument("-v", "--version", action="version", version=f"fub-simulation v{_get_version()}")
+    parser.parse_args()
+
     # Validate configuration
     errors = Config.validate()
     if errors:
