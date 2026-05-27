@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">FUB POLICY SIM</div>
+        <div class="brand" @click="router.push('/')">fubsandbox</div>
       </div>
       
       <div class="header-center">
@@ -337,6 +337,7 @@ onMounted(async () => {
   font-size: 18px;
   letter-spacing: 1px;
   cursor: pointer;
+  color: #1E9E5A;
 }
 
 .header-center {

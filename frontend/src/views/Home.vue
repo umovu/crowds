@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- Top Navigation Bar -->
     <nav class="navbar" :style="s.navbar">
-      <div class="nav-brand" :style="s.navBrand">FUB POLICY SIM</div>
+        <div class="nav-brand" :style="s.navBrand">fubsandbox</div>
     </nav>
 
     <div class="main-content" :style="s.mainContent">
@@ -215,8 +215,8 @@ const mono = 'JetBrains Mono, monospace'
 const sans = 'Space Grotesk, Noto Sans SC, system-ui, sans-serif'
 
 const s = reactive({
-  navbar: { height: '60px', background: '#000', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 40px' },
-  navBrand: { fontFamily: mono, fontWeight: '800', letterSpacing: '1px', fontSize: '1.2rem' },
+  navbar: { height: '60px', background: 'transparent', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 40px' },
+  navBrand: { fontFamily: mono, fontWeight: '800', letterSpacing: '1px', fontSize: '1.2rem', color: '#1E9E5A' },
   mainContent: { maxWidth: '1400px', margin: '0 auto', padding: '40px 40px' },
   dashboardSection: { display: 'flex', gap: '60px', alignItems: 'flex-start' },
   leftPanel: { flex: '0.8', display: 'flex', flexDirection: 'column' },
