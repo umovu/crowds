@@ -16,6 +16,8 @@ Fub Sandbox lets you **stress-test ideas on virtual populations** before they re
 
 Upload a policy draft, press release, or event brief — and watch how hundreds of AI agents with distinct personalities, opinions, and biases react. See how ideas spread, where resistance builds, and what the public mood looks like *before* you commit.
 
+Because policy announcements don't land in the abstract — they land on **taxi drivers, grant recipients, shop stewards, students, parents, small business owners.** Fub Sandbox surfaces how those communities, in their own voices, would receive what you're about to say.
+
 **Powered by the AgentSociety simulation engine with live web-research grounding.**
 
 ## Use Cases
