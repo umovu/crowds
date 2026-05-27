@@ -1,7 +1,7 @@
 {
-  "name": "fub-simulation",
+  "name": "fub-sandbox",
   "version": "0.2.0",
-  "description": "Fub Simulation — local-first swarm intelligence engine (Neo4j + Ollama)",
+  "description": "Fub Sandbox — local-first swarm intelligence engine (Neo4j + Ollama)",
   "scripts": {
     "setup": "npm install && cd frontend && npm install",
     "setup:backend": "cd backend && uv sync",

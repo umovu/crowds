@@ -108,7 +108,7 @@ def main():
     """Main function"""
     import argparse
     parser = argparse.ArgumentParser(description="Fub Simulation backend server")
-    parser.add_argument("-v", "--version", action="version", version=f"fub-simulation v{_get_version()}")
+    parser.add_argument("-v", "--version", action="version", version=f"fub-sandbox v{_get_version()}")
     parser.parse_args()
 
     # Validate configuration
