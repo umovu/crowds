@@ -1756,7 +1756,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fub-simulation-backend"
+name = "fub-sandbox-backend"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [

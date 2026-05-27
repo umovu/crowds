@@ -1,7 +1,7 @@
 [project]
-name = "fub-simulation-backend"
+name = "fub-sandbox-backend"
 version = "0.2.0"
-description = "Fub Simulation - Offline-first fork running on Neo4j + Ollama"
+description = "Fub Sandbox - Offline-first fork running on Neo4j + Ollama"
 requires-python = ">=3.11"
 license = { text = "AGPL-3.0" }
 authors = [

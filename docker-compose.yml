@@ -1,7 +1,7 @@
 services:
-  fub-simulation:
+  fub-sandbox:
     build: .
-    container_name: fub-simulation
+    container_name: fub-sandbox
     env_file:
       - .env
     ports:
