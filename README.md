@@ -2,9 +2,9 @@
 
 # Fub Sandbox
 
-**Test your policies, announcements, and events on digital agents before they reach real people.**
+**Pressure-test your policies, announcements, and events against a synthetic public — before they meet the real one.**
 
-*A multi-agent simulation engine that generates AI agents with unique personalities to simulate public reaction to your content — before it goes live.*
+*Describe a scenario, generate a population of AI agents with distinct personalities, and run your content past them to map the range of plausible reactions.*
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square)](./LICENSE)
 
@@ -12,36 +12,49 @@
 
 ## What is this?
 
-Fub Sandbox lets you **stress-test ideas on virtual populations** before they reach real audiences.
+Fub Sandbox generates a population of AI personas — each with its own background, biases, and viewpoint — then plays your policy draft, press release, or event brief past them. You see **the range of reactions your content might provoke**: where resistance builds, how an idea gets read or misread, and which objections you hadn't considered.
 
-Upload a policy draft, press release, or event brief — and watch how hundreds of AI agents with distinct personalities, opinions, and biases react. See how ideas spread, where resistance builds, and what the public mood looks like *before* you commit.
+It's built for **coverage, not prediction.** The agents are LLM-driven personas, not a statistically representative sample. Treat the output as a fast, broad rehearsal of the *kinds* of responses your content might draw — directional signal to prepare against, not a forecast of what real people will do. Used that way, it's genuinely useful. Read as a poll, it will mislead you.
 
-Because policy announcements don't land in the abstract — they land on **taxi drivers, grant recipients, shop stewards, students, parents, small business owners.** Fub Sandbox surfaces how those communities, in their own voices, would receive what you're about to say.
+What makes it a *sandbox* rather than a passive demo: you can **intervene** — pause a running simulation, pose a follow-up ("we'll add a subsidy"), and watch stances shift — and you can **bring your own people** by injecting custom agents that model the specific stakeholders or groups you care about.
 
-**Powered by the AgentSociety simulation engine with live web-research grounding.**
+## What you can do with it
 
-## Use Cases
-
-- **Policy testing** — See how communities respond to regulations before drafting legislation
-- **Crisis simulation** — Predict public reaction to announcements and communications
-- **Event planning** — Test how audiences will receive conferences, launches, or campaigns
-- **Stakeholder analysis** — Understand how different groups will interpret your message
+- **Red-team a policy** — surface likely objections, blind spots, and ways a rule gets gamed, before you commit
+- **Test framing** — see how different groups might read or misread your wording
+- **Rehearse crisis comms** — pressure-test an announcement and the reactions you'd need to handle
+- **Intervene mid-run** — pause a live simulation, pose a follow-up, and watch how opinions move
+- **Probe after the fact** — read each agent's expressed opinion post-run, then pose interventions and see how they respond
+- **Bring your own people** — inject custom agents (named stakeholders, specific groups), merged into the population or run on their own
 
 ## How It Works
 
-1. **Build Graph** — Extract entities, relationships, and context from your document into a knowledge graph
-2. **Create Agents** — Generate a population with diverse personalities, biases, and viewpoints
-3. **Run Simulation** — Watch agents react, discuss, argue, and shift opinions on your topic
-4. **Analyze Results** — Get structured insights on sentiment, influence patterns, and key viewpoints
+1. **Seed** — give it a document or a described scenario; it extracts entities, relationships, and context into a knowledge graph
+2. **Populate** — it generates a population of agents (configurable in size) with diverse personalities, biases, and viewpoints, grounded in real socio-economic context
+3. **Run** — agents post, argue, respond, and shift opinion across rounds; pause and intervene at any point
+4. **Analyse** — the Analytics dashboard breaks down sentiment over time, who participated (and who stayed silent), what topics spread, each agent's opinions, and side-by-side scenario comparisons
+
+## Scope & Limitations
+
+Read this before you rely on the output.
+
+- **Personas, not people.** Grounding makes agents plausible, not accurate. There is no claim of statistical representativeness.
+- **Coverage, not prediction.** A broad survey of *possible* reactions — not a forecast or a poll.
+- **Quality depends on your seed.** Vague input produces generic agents. The richer and more specific the scenario, the more useful the run.
+- **Population size is configurable** and trades off against cost and runtime — larger runs mean more LLM calls. Smaller populations show limited opinion propagation, so don't over-read network effects at low agent counts.
+- **Regional grounding is configurable.** It ships with a default context that you can change to fit your setting.
+- **Web grounding is optional** and off by default — it makes personas more current but needs third-party API keys (see below).
 
 ## Quick Start
+
+You can run the full stack with Docker (provisions Neo4j + Ollama for a self-contained local deployment), or run it lighter against a hosted LLM with the embedded graph database.
 
 ### Prerequisites
 
 - Docker & Docker Compose, **or**
-- Python 3.11+, Node.js 18+, Neo4j 5.15+, Ollama
+- Python 3.11+ and Node.js 18+ (plus an LLM endpoint — hosted or local)
 
-### Option A: Docker
+### Option A: Docker (self-contained, local models)
 
 ```bash
 git clone https://github.com/umovu/fub-sandbox.git
@@ -50,48 +63,53 @@ cp .env.example .env
 
 docker compose up -d
 
-# Pull required models
+# Pull the local models used by the Docker stack
 docker exec fub-ollama ollama pull qwen2.5:32b
 docker exec fub-ollama ollama pull nomic-embed-text
 ```
 
 Open `http://localhost:3000`
 
-### Option B: Manual
+### Option B: Manual (embedded graph + your own LLM)
+
+The lightest path: the embedded **LadybugDB** graph backend (no Docker, no Neo4j) and any OpenAI-compatible LLM endpoint — hosted (e.g. Qwen/DashScope, Groq) or local (Ollama).
 
 ```bash
-# Start Neo4j
-docker run -d --name neo4j \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/fubsimulation \
-  neo4j:5.15-community
-
-# Start Ollama & pull models
-ollama serve &
-ollama pull qwen2.5:32b
-ollama pull nomic-embed-text
+git clone https://github.com/umovu/fub-sandbox.git
+cd fub-sandbox
+cp .env.example .env
+# Edit .env: set GRAPH_BACKEND=ladybug and your LLM_* endpoint/key
 
 # Run backend
 cd backend
 pip install -r requirements.txt
 python run.py
 
-# Run frontend
+# Run frontend (in a second terminal)
 cd frontend
 npm install
 npm run dev
 ```
 
+### LLM configuration
+
+The pipeline splits LLM usage into two tiers, configured independently in `.env`:
+
+- `LLM_*` — research, persona generation, and document parsing (lower volume, benefits from a stronger model)
+- `SIM_LLM_*` — the simulation runtime (high volume; a cheaper/faster model is the right tool). Leave these blank to reuse the research key.
+
+Any OpenAI-compatible endpoint works. **Optional web grounding** (richer, more current personas) is enabled per-run and uses `JINA_API_KEY` / `SERPER_API_KEY` / `FIRECRAWL_API_KEY` if set.
+
 ## Architecture
 
-Powered by **AgentSociety** simulation engine with live web-research grounding.
-
-- **Neo4j** — Knowledge graph and memory storage
-- **Ollama** — Local LLM inference (qwen2.5, llama3, etc.)
-- **AgentSociety** — Agent-Block-Action simulation model
-- **Web research** — Optional deep web research for persona enrichment
+- **Simulation engine** — AgentSociety (Agent–Block–Action model)
+- **Graph / memory** — LadybugDB by default (embedded, no Docker); Neo4j and an in-memory backend are also supported
+- **LLM** — any OpenAI-compatible endpoint; split into research and simulation tiers
+- **Web research (optional)** — Jina / Serper / Firecrawl for grounding personas in live sources
 
 ## Hardware Requirements
+
+Applies to the **Docker** option (local Neo4j + Ollama inference). Running against a hosted LLM with the embedded graph needs far less.
 
 | Component | Minimum | Recommended |
 |---|---|---|
@@ -105,6 +123,4 @@ AGPL-3.0 — see [LICENSE](./LICENSE).
 
 ## Credits
 
-Powered by the AgentSociety simulation engine.
-
-Forked from Mirofish Offline.
+Built on the AgentSociety simulation engine. Forked from MiroFish-Offline.
