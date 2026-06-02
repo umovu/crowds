@@ -106,9 +106,18 @@ class IPCHandler:
         self,
         simulation_dir: str,
         agents: Dict[int, PersonAgent],
+        mode: str = "policy",
+        runner: "AgentSocietyRunner" = None,
+        company_label: str = "",
     ):
         self.simulation_dir = simulation_dir
         self.agents         = agents
+        self.mode           = mode
+        # runner is needed for founder broadcasts: they ride the same
+        # _pending_events rail the round loop already drains (feed post +
+        # whole-room reaction). company_label anchors the "founder of X" framing.
+        self.runner         = runner
+        self.company_label  = (company_label or "").strip()
         self.commands_dir   = os.path.join(simulation_dir, IPC_COMMANDS_DIR)
         self.responses_dir  = os.path.join(simulation_dir, IPC_RESPONSES_DIR)
         self.status_file    = os.path.join(simulation_dir, ENV_STATUS_FILE)
@@ -265,7 +274,7 @@ class IPCHandler:
             return True
         try:
             if hasattr(agent, 'apply_intervention'):
-                result = await agent.apply_intervention(intervention_text)
+                result = await agent.apply_intervention(intervention_text, mode=self.mode)
                 # Propagate to affiliated agents (same group/archetype)
                 propagation_count = 0
                 delta = agent.get_propagation_delta()
@@ -282,6 +291,59 @@ class IPCHandler:
         except Exception as e:
             logger.error(f"Intervention failed for agent {agent_id}: {e}")
             self.send_response(command_id, "failed", error=str(e))
+        return True
+
+    def _founder_label(self, founder_name: str = "") -> str:
+        """Attribution for a founder broadcast, degrading gracefully:
+        name+company -> name only -> company only -> generic. A supplied name
+        is always kept (don't discard it just because the company is unknown)."""
+        name = (founder_name or "").strip()
+        company = self.company_label
+        if name and company:
+            return f"{name}, founder of {company}"
+        if name:
+            return f"{name}, the founder"
+        if company:
+            return f"The founder of {company}"
+        return "The founder of this product"
+
+    def handle_broadcast_intervention(
+        self,
+        command_id: str,
+        intervention_text: str,
+        founder_name: str = "",
+    ) -> bool:
+        """Queue a founder announcement onto the shared event rail.
+
+        The round loop drains _pending_events: it posts each as a News_Source
+        opinion (visible in the feed) AND feeds it to every active agent's
+        'RECENT EVENTS' prompt (whole-room reaction). So a founder broadcast
+        reuses that exact path — no separate feed/fan-out logic needed.
+        """
+        text = (intervention_text or "").strip()
+        if not text:
+            self.send_response(command_id, "failed", error="Empty intervention_text")
+            return True
+        if self.runner is None:
+            self.send_response(command_id, "failed", error="Broadcast not available (no runner)")
+            return True
+
+        label = self._founder_label(founder_name)
+        event = {
+            "rule_id": f"founder_broadcast_{command_id}",
+            "source": label,
+            "title": f"{label} makes an announcement",
+            "content": text,
+            "category": "founder_announcement",
+        }
+        self.runner._pending_events.append(event)
+        self.send_response(command_id, "completed", result={
+            "broadcast": True,
+            "source": label,
+            "content": text,
+            "message": "Founder announcement queued — it will post to the opinion space and the room will react next round.",
+            "timestamp": datetime.now().isoformat(),
+        })
         return True
 
     async def process_commands(self) -> bool:
@@ -328,6 +390,14 @@ class IPCHandler:
                 args.get("intervention_text", "")
             ))
             return True
+        elif ctype == "broadcast_intervention":
+            # Founder broadcast: post the message into the opinion space as a
+            # founder announcement and let the whole active room react next round.
+            return self.handle_broadcast_intervention(
+                cid,
+                args.get("intervention_text", ""),
+                args.get("founder_name") or "",
+            )
         elif ctype == "close_env":
             self.send_response(cid, "completed", result={"message": "Environment will close"})
             return False
@@ -433,6 +503,11 @@ class AgentSocietyRunner:
         document_context = ""
         dynamic_rules = []
         facts = []
+        sim_mode = self.config.get("mode", "policy")
+        # Company/product label anchors founder broadcasts ("founder of X").
+        # Prefer an explicit company name from saved context; else fall back
+        # to the detected domain; else stay empty -> generic "this product".
+        company_label = ""
 
         # 1. Try to load pre-built document context from simulation directory
         ctx_path = os.path.join(self.simulation_dir, "document_context.json")
@@ -444,8 +519,10 @@ class AgentSocietyRunner:
                 dynamic_rules = saved_ctx.get("dynamic_rules", [])
                 facts = saved_ctx.get("facts", [])
                 domain = saved_ctx.get("domain", "unknown")
+                sim_mode = saved_ctx.get("mode", "policy")
+                company_label = saved_ctx.get("company") or (domain if domain and domain != "unknown" else "")
                 dp = saved_ctx.get("domain_profile", {})
-                print(f"  Document  : Domain={domain} (from saved context)")
+                print(f"  Document  : Domain={domain} (from saved context, mode={sim_mode})")
                 print(f"  Entities  : {dp.get('total_entities', 0)} extracted")
                 if dp.get('organizations'):
                     print(f"  Orgs      : {', '.join(dp['organizations'][:5])}")
@@ -466,7 +543,8 @@ class AgentSocietyRunner:
                     user=os.environ.get("NEO4J_USER", Config.NEO4J_USER),
                     password=os.environ.get("NEO4J_PASSWORD", Config.NEO4J_PASSWORD),
                 )
-                ctx_engine = DocumentContextEngine(storage)
+                sim_mode = config.get("mode", "policy")
+                ctx_engine = DocumentContextEngine(storage, mode=sim_mode)
                 profile = ctx_engine.build_from_graph(graph_id)
                 document_context = ctx_engine.get_document_context_block()
                 dynamic_rules = ctx_engine.get_dynamic_rules()
@@ -505,10 +583,24 @@ class AgentSocietyRunner:
         from app.services.convergence_detector import ConvergenceDetector
         from app.services.agent_sampler import AgentSampler
 
+        from app.config import Config as _Cfg
+        # saturation_rounds: dedicated coverage knob, falling back to convergence_window.
+        _sat_rounds = self.config.get(
+            "coverage_saturation_rounds",
+            self.config.get("convergence_window", _Cfg.COVERAGE_SATURATION_ROUNDS),
+        )
         self.detector = ConvergenceDetector(
             threshold=self.config.get("convergence_threshold", 0.05),
-            window=self.config.get("convergence_window", 3)
+            window=self.config.get("convergence_window", 3),
+            saturation_rounds=_sat_rounds,
         )
+        self._use_coverage_stop = self.config.get("use_coverage_stop", _Cfg.USE_COVERAGE_STOP)
+
+        # Coverage metric: cumulative, stance-aware distinct-position registry.
+        # Lives for the whole run; feeds both the snapshot metric and the
+        # coverage-saturation stop. Never fatal (lexical fallback if Ollama down).
+        from app.services.position_clustering import PositionRegistry
+        self.position_registry = PositionRegistry(threshold=_Cfg.POSITION_SIM_THRESHOLD)
         # Note: sampler will be initialized after all_agents is created
 
         opinion_skill = OpinionCaptureSkill(env=env, document_context=document_context, fast_mode=self.fast_mode, model_name=model)
@@ -589,6 +681,14 @@ class AgentSocietyRunner:
                 is_institutional=p.get("is_institutional", False),
             )
             all_agents[uid] = agent
+            # Register similarity attrs for homophily-biased feeds. init_state is
+            # passed by reference so the agent's CURRENT stance is read live.
+            env.register_agent_attrs(
+                uid,
+                archetype=archetype,
+                group=p.get("group_affiliation"),
+                init_state=getattr(agent, "init_state", None),
+            )
 
         print(f"  Agents    : {len(all_agents)} loaded\n")
 
@@ -599,7 +699,8 @@ class AgentSocietyRunner:
         )
 
         writer = AgentSocietyOutputWriter(self.output_dir)
-        ipc    = IPCHandler(self.simulation_dir, all_agents)
+        ipc    = IPCHandler(self.simulation_dir, all_agents, mode=sim_mode,
+                            runner=self, company_label=company_label)
 
         # Initialize replay storage
         sim_id = self.config.get("simulation_id", os.path.basename(self.simulation_dir))
@@ -656,7 +757,12 @@ class AgentSocietyRunner:
             simulated_day     = simulated_minutes // (24 * 60) + 1
 
             # ── Inject pending events as "News_Source" opinions ─────────
-            for evt in self._pending_events:
+            # Snapshot the events to inject this round. Anything appended to
+            # _pending_events *after* this point (e.g. a founder broadcast that
+            # arrives over IPC mid-round while paused) is intentionally left for
+            # the next round, and is carried past the end-of-round assignment.
+            events_to_inject = list(self._pending_events)
+            for evt in events_to_inject:
                 await env.add_opinion(
                     agent_id=-1,
                     agent_name=evt.get("source", "News_Source"),
@@ -677,17 +783,25 @@ class AgentSocietyRunner:
                     "success": True,
                 })
 
-            # Build events prompt for agents
+            # Build events prompt for agents (from the same snapshot we injected)
             events_prompt = None
-            if self._pending_events:
+            if events_to_inject:
                 events_lines = ["RECENT EVENTS — these have just happened:"]
-                for evt in self._pending_events:
-                    events_lines.append(f"  • {evt['source']}: {evt['title']}")
+                for evt in events_to_inject:
+                    if evt.get("category") == "founder_announcement":
+                        # Surface the founder's actual words so the room reacts to
+                        # the announcement itself, not just a headline.
+                        events_lines.append(f"  • {evt['source']} says directly: \"{evt['content']}\"")
+                    else:
+                        events_lines.append(f"  • {evt['source']}: {evt['title']}")
                 events_prompt = "\n".join(events_lines)
 
             active = self._get_active_agents(all_agents, simulated_hour, round_num)
             if not active:
-                self._pending_events = []
+                # Keep events appended mid-round (e.g. founder broadcasts) for a
+                # later active round; drop the ones we already injected above.
+                self._pending_events = [e for e in self._pending_events
+                                        if e not in events_to_inject]
                 continue
 
             tasks   = [step_agent(a, round_num, events_prompt) for a in active]
@@ -757,6 +871,9 @@ class AgentSocietyRunner:
                     "reason": record.get("reason", "") if isinstance(record, dict) else "",
                     "topics": record.get("action_args", {}).get("topics", []) if isinstance(record, dict) else [],
                     "radicalism_level": getattr(agent, 'base_radicalism', 1),
+                    # CURRENT stance (mutates during the run) — drives stance-aware
+                    # position clustering. Read live, never cached.
+                    "stance": agent.init_state.get("stance", "neutral") if hasattr(agent, "init_state") else "neutral",
                 }                )
 
             # Record posted agents for sampler momentum
@@ -768,17 +885,58 @@ class AgentSocietyRunner:
                 if isinstance(result, dict):
                     round_actions.append(result)
 
-            # Record round for convergence detection
+            # ── Coverage metric → stop decision ────────────────────────
+            # Cluster this round's expressed stances and update the cumulative
+            # registry FIRST, because the coverage-saturation stop depends on it.
+            # Only EXPRESS/RESPOND posts carry a stance position.
+            position_posts = [
+                {"content": a.get("content", ""), "stance": a.get("stance", "neutral")}
+                for a in actions_for_rules
+                if a.get("action_type") in (
+                    OpinionActionType.EXPRESS_OPINION,
+                    OpinionActionType.RESPOND_TO_OPINION,
+                ) and a.get("content")
+            ]
+            pos = self.position_registry.ingest_round(position_posts)
+            self._last_position_result = pos
+            print(
+                f"    [Coverage] round {round_num}: distinct={pos['total_distinct']} "
+                f"new={pos['n_new_positions']} spread={pos['spread']} mode={pos['mode']}"
+            )
+            # A mode flip (embed<->lexical) makes counts incomparable — reset baseline.
+            if pos.get("mode_changed"):
+                self.detector.reset_coverage()
+            self.detector.record_coverage(pos["n_new_positions"], pos["total_distinct"])
+
+            # Legacy sentiment-stability detector — kept as SHADOW only (logged,
+            # never acts) so we can validate the inversion before retiring it.
             self.detector.record_round(round_actions)
-            should_stop, divergence, stable_rounds = self.detector.check()
-            
-            if should_stop:
-                print(f"    [Convergence] Detected after {stable_rounds} stable rounds (divergence={divergence:.4f}). Stopping simulation.")
-                break
+            old_should_stop, divergence, stable_rounds = self.detector.check()
+            cov_should_stop, total_distinct, rounds_since_new = self.detector.coverage_saturated()
+
+            if self._use_coverage_stop:
+                if old_should_stop:
+                    print(f"    [shadow] old sentiment-detector WOULD have stopped here "
+                          f"(stable_rounds={stable_rounds}, divergence={divergence:.4f}) — ignored.")
+                if cov_should_stop:
+                    print(f"    [Coverage saturated] No new position for {rounds_since_new} rounds "
+                          f"(distinct={total_distinct}). Stopping simulation.")
+                    break
+            else:
+                # Legacy behaviour: stop on sentiment stability (the old failure mode).
+                if old_should_stop:
+                    print(f"    [Convergence] Detected after {stable_rounds} stable rounds "
+                          f"(divergence={divergence:.4f}). Stopping simulation.")
+                    break
 
             # ── Evaluate event rules ──────────────────────────────────
             new_events = self._event_engine.evaluate(round_num, actions_for_rules)
-            self._pending_events = new_events
+            # Carry over anything appended to _pending_events *after* this round's
+            # injection pass — i.e. founder broadcasts that arrived over IPC
+            # mid-round (often while paused). Without this, the assignment below
+            # would clobber them before they're ever posted to the feed.
+            carried = [e for e in self._pending_events if e not in events_to_inject]
+            self._pending_events = carried + new_events
 
             if new_events:
                 print(f"    [Events triggered this round: {len(new_events)}] " +
@@ -788,8 +946,13 @@ class AgentSocietyRunner:
             for evt in self._pending_events:
                 self._replay.store_injected_event(sim_id, evt)
 
-            # Calculate metrics for snapshot
+            # Calculate metrics for snapshot. Coverage figures were computed above
+            # (the stop depends on them); fold them into the persisted metrics.
             metrics = self._event_engine._calculate_metrics(actions_for_rules)
+            metrics["distinct_positions"] = pos["total_distinct"]
+            metrics["new_positions"] = pos["n_new_positions"]
+            metrics["position_spread"] = pos["spread"]
+
             self._replay.store_sentiment_snapshot(
                 simulation_id=sim_id,
                 round_num=round_num,
@@ -912,6 +1075,8 @@ async def main():
     parser.add_argument("--fast",       action="store_true", default=False, help="Fast mode: abbreviated prompts, reduced concurrency")
     parser.add_argument("--convergence-threshold", type=float, default=0.05, help="Convergence threshold (default: 0.05)")
     parser.add_argument("--convergence-window",  type=int,   default=3,     help="Convergence window (default: 3)")
+    parser.add_argument("--coverage-saturation-rounds", type=int, default=None, help="Stop after N rounds with no new distinct position (coverage stop)")
+    parser.add_argument("--no-coverage-stop", action="store_true", default=False, help="Use the legacy sentiment-stability stop instead of coverage saturation")
     parser.add_argument("--max-agents-per-round", type=int,   default=8,    help="Max agents per round (default: 8)")
     parser.add_argument("--min-agents-per-round", type=int,   default=2,     help="Min agents per round (default: 2)")
     parser.add_argument("--preset", choices=["quick", "balanced", "deep"], default=None, help="Simulation preset")
@@ -928,9 +1093,9 @@ async def main():
     # Apply preset if specified
     if args.preset:
         presets = {
-            "quick":  {"convergence_threshold": 0.10, "convergence_window": 2, "max_agents_per_round": 6, "min_agents_per_round": 2, "total_simulation_hours": 6, "minutes_per_round": 60},
-            "balanced": {"convergence_threshold": 0.05, "convergence_window": 3, "max_agents_per_round": 10, "min_agents_per_round": 3, "total_simulation_hours": 12, "minutes_per_round": 60},
-            "deep":     {"convergence_threshold": 0.03, "convergence_window": 5, "max_agents_per_round": 20, "min_agents_per_round": 5, "total_simulation_hours": 24, "minutes_per_round": 60},
+            "quick":  {"convergence_threshold": 0.10, "convergence_window": 2, "coverage_saturation_rounds": 3, "max_agents_per_round": 6, "min_agents_per_round": 2, "total_simulation_hours": 6, "minutes_per_round": 60},
+            "balanced": {"convergence_threshold": 0.05, "convergence_window": 3, "coverage_saturation_rounds": 4, "max_agents_per_round": 10, "min_agents_per_round": 3, "total_simulation_hours": 12, "minutes_per_round": 60},
+            "deep":     {"convergence_threshold": 0.03, "convergence_window": 5, "coverage_saturation_rounds": 6, "max_agents_per_round": 20, "min_agents_per_round": 5, "total_simulation_hours": 24, "minutes_per_round": 60},
         }
         config.update(presets[args.preset])
         print(f"  Preset    : {args.preset}")
@@ -938,6 +1103,8 @@ async def main():
     # Apply command line overrides
     if args.convergence_threshold != 0.05: config["convergence_threshold"] = args.convergence_threshold
     if args.convergence_window != 3:     config["convergence_window"] = args.convergence_window
+    if args.coverage_saturation_rounds is not None: config["coverage_saturation_rounds"] = args.coverage_saturation_rounds
+    if args.no_coverage_stop:            config["use_coverage_stop"] = False
     if args.max_agents_per_round != 15: config["max_agents_per_round"] = args.max_agents_per_round
     if args.min_agents_per_round != 3:  config["min_agents_per_round"] = args.min_agents_per_round
 

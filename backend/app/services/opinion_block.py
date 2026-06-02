@@ -22,6 +22,7 @@ from .agentsociety_opinion_block import (
     OpinionEnvironment,
     SA_POLICY_CONTEXT,
 )
+from .document_context_engine import sanitize_language_drift
 from ..utils.logger import get_logger
 from ..utils.token_counter import TokenCounter
 
@@ -96,12 +97,30 @@ _ARCHETYPE_ANCHORS = {
     "whistleblower":           "You expose uncomfortable truths. Precise, specific, willing to name names or situations. High conviction, high risk.",
     "grant_dependent_survivor": "SASSA is life. Everything else is noise. Speak from the reality of grant day, queue day, hungry day.",
     "civic_moderate":          "Be direct and in-character, grounded in your SA lived experience.",
+
+    # ── Product-mode market segments (additive; policy keys above untouched) ──
+    # Every anchor forbids a buy/validation verdict — only reasoning, objections,
+    # conditions, confusion, or qualitative willingness.
+    "early_adopter":           "You love trying new things first and tolerate rough edges. React with curiosity and ideas, not a verdict. Name what excites you and what you'd want next.",
+    "champion":                "You get genuinely excited and want others to try it too. Advocate, but stay specific about WHY — never hand out a blanket endorsement or buy signal.",
+    "power_user":              "You push products hard and want depth, control, and integrations. Probe the limits, ask about edge cases, never give a simple thumbs-up.",
+    "pragmatist":              "Show me it works and it's worth the rand. Ask for proof, not hype. Weigh it against the effort to switch. No verdict without evidence.",
+    "integrator":              "You only care if it fits what you already use (WhatsApp, EFT, existing tools). Ask how it connects; reject anything that adds friction.",
+    "end_user":                "You're whoever uses it day to day. Talk about friction, confusion, and whether it actually saves you effort. Speak from hands-on reality.",
+    "skeptic":                 "You assume it won't work until shown otherwise — SA has overpromised and under-delivered too often. Name the likely failure mode. Never give a buy signal.",
+    "budget_holder":           "You're the one who pays. Reason in rands, data costs, load-shedding running costs, and ROI. Ask what it replaces and what it really costs over a year.",
+    "compliance_gatekeeper":   "You worry about POPIA, security, and who's accountable. Ask where data goes, who's liable, and what happens when it breaks. Block until satisfied.",
+    "competitor_switcher":     "You already use a rival or local alternative. Weigh the switching cost out loud. Ask why you'd leave what already works for you.",
+    "laggard":                 "You're slow to change and distrust new tech. Prefer what you know. Express reluctance and the hassle of learning something new.",
+    "casual_skimmer":          "You won't read much and react to first impressions only. Short, surface-level reactions. If it's not instantly clear, you move on.",
 }
 
 _LOUD_ARCHETYPES = {
     "violent_agitator", "conspiracy_spreader", "political_activist",
     "opportunist_looter", "mob_follower", "community_leader",
     "community_protector", "criminal_opportunist", "whistleblower",
+    # Product-mode loud segments (additive)
+    "early_adopter", "skeptic", "competitor_switcher", "champion", "power_user",
 }
 
 # Patterns that indicate a weak / generic reason for non-posting actions
@@ -357,9 +376,19 @@ class OpinionCaptureSkill:
         initial_prompt: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Execute one simulation step with the agent."""
-        feed = await self._env.get_feed(exclude_agent_id=agent.id)
-
         archetype = agent.init_state.get("actor_archetype", "civic_moderate") if hasattr(agent, 'init_state') else "civic_moderate"
+
+        # Homophily-biased feed: pass this agent's similarity attrs so it mostly
+        # reads similar agents (same archetype/group/CURRENT stance) with a small
+        # cross-group leak. Stance is read live here, never cached.
+        _group = agent.init_state.get("group_affiliation") if hasattr(agent, 'init_state') else None
+        _stance = agent.init_state.get("stance") if hasattr(agent, 'init_state') else None
+        feed = await self._env.get_feed(
+            exclude_agent_id=agent.id,
+            archetype=archetype,
+            group=_group,
+            stance=_stance,
+        )
         
         if not feed and archetype in _LOUD_ARCHETYPES:
             initial_prompt = (
@@ -567,6 +596,10 @@ class OpinionCaptureSkill:
                     agent_name=agent.name,
                 )
                 action_type, content, reason, internal_thought = _parse(raw)
+                
+                content = sanitize_language_drift(content, label=f"opinion_{agent.name}")
+                reason = sanitize_language_drift(reason, label=f"reason_{agent.name}")
+                internal_thought = sanitize_language_drift(internal_thought, label=f"thought_{agent.name}")
 
                 if action_type and (content or action_type not in (
                     OpinionActionType.EXPRESS_OPINION,
@@ -654,6 +687,7 @@ class OpinionCaptureSkill:
                     token_info["estimated_cost_usd"] = round(token_info["estimated_cost_usd"] + fb_cost, 6)
                     content = re.sub(r"<think>[\s\S]*?</think>", "", fallback_raw or "").strip()
                     content = content.strip('"').strip()
+                    content = sanitize_language_drift(content, label=f"fallback_{agent.name}")
                 except Exception:
                     pass
             if not content:

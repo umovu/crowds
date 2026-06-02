@@ -100,7 +100,26 @@ class OpinionEnvironment:
         self.db_path = db_path
         self._opinions: List[Dict] = []   # in-memory feed (recent)
         self._lock = asyncio.Lock()
+        # Homophily map: agent_id -> {"archetype", "group", "init_state"}.
+        # init_state is kept by REFERENCE so the agent's CURRENT stance is read
+        # live each round (stance mutates during the run — never cache its value).
+        self._agent_attrs: Dict[int, Dict[str, Any]] = {}
         self._init_db()
+
+    def register_agent_attrs(self, agent_id: int, archetype: Optional[str],
+                             group: Optional[str], init_state: Optional[Dict] = None):
+        """Register an agent's similarity attributes for homophily-biased feeds."""
+        self._agent_attrs[agent_id] = {
+            "archetype": archetype,
+            "group": group,
+            "init_state": init_state if init_state is not None else {},
+        }
+
+    def _current_stance(self, agent_id: int) -> Optional[str]:
+        attrs = self._agent_attrs.get(agent_id)
+        if not attrs:
+            return None
+        return (attrs.get("init_state") or {}).get("stance")
 
     # ── DB setup ─────────────────────────────────────────────
 
@@ -184,12 +203,64 @@ class OpinionEnvironment:
 
     # ── Feed operations ───────────────────────────────────────
 
-    async def get_feed(self, exclude_agent_id: int) -> List[Dict]:
-        """Return recent opinions excluding this agent's own."""
+    async def get_feed(
+        self,
+        exclude_agent_id: int,
+        archetype: Optional[str] = None,
+        group: Optional[str] = None,
+        stance: Optional[str] = None,
+    ) -> List[Dict]:
+        """Return recent opinions excluding this agent's own.
+
+        When the requesting agent's similarity attrs are supplied, the feed is
+        HOMOPHILY-BIASED: the agent mostly reads posts from similar agents (same
+        archetype OR group OR current stance), with a small per-slot
+        CROSS_GROUP_LEAK chance of pulling a dissimilar post instead. This lets
+        distinct objections develop in parallel instead of one loud voice setting
+        the global frame and cascading. Recency order is preserved so the skill's
+        `respond_target = recent_feed[-1]` still picks the latest visible post.
+
+        With no attrs (back-compat / unknown agent) it returns the old global tail.
+        """
         async with self._lock:
-            return [o for o in self._opinions if o["agent_id"] != exclude_agent_id][
-                -self.FEED_SIZE:
-            ]
+            candidates = [o for o in self._opinions if o["agent_id"] != exclude_agent_id]
+
+        # No similarity signal → original global behaviour.
+        if archetype is None and group is None and stance is None:
+            return candidates[-self.FEED_SIZE:]
+
+        from ..config import Config
+        size = max(1, Config.NEIGHBORHOOD_SIZE)
+        leak = min(1.0, max(0.0, Config.CROSS_GROUP_LEAK))
+
+        def _homophilous(o: Dict) -> bool:
+            aid = o.get("agent_id")
+            attrs = self._agent_attrs.get(aid, {})
+            if archetype and attrs.get("archetype") and attrs["archetype"] == archetype:
+                return True
+            if group and attrs.get("group") and attrs["group"] == group:
+                return True
+            if stance and self._current_stance(aid) == stance:
+                return True
+            return False
+
+        # Look at the most recent window, then split by similarity, newest-first.
+        recent = candidates[-self.FEED_SIZE:]
+        similar = [o for o in recent if _homophilous(o)]
+        other = [o for o in recent if not _homophilous(o)]
+
+        # Fill up to `size` slots, mostly from `similar`, leaking to `other` with
+        # probability `leak` per slot so clusters still hear each other.
+        sim_q = list(reversed(similar))   # newest first
+        oth_q = list(reversed(other))
+        picked: List[Dict] = []
+        while len(picked) < size and (sim_q or oth_q):
+            take_other = (random.random() < leak and oth_q) or not sim_q
+            picked.append(oth_q.pop(0) if take_other else sim_q.pop(0))
+
+        # Restore recency order (oldest→newest) so respond_target = last = newest.
+        picked.sort(key=lambda o: o.get("id", 0))
+        return picked
 
     async def search(self, query: str) -> List[Dict]:
         """Simple keyword search over the in-memory feed."""

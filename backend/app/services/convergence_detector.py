@@ -12,11 +12,21 @@ class ConvergenceDetector:
         self,
         threshold: float = 0.05,
         window: int = 3,
+        saturation_rounds: int = 4,
     ):
         self.threshold = threshold
         self.window = window
+        # --- legacy sentiment-stability path (now SHADOW-only) ---
         self._round_distributions: List[Dict[str, float]] = []
         self._stable_count = 0
+        # --- coverage-saturation path (the real stop) ---
+        # This is a coverage simulator: stop when NO NEW distinct position has
+        # appeared for `saturation_rounds` rounds. Never stop because opinions
+        # agree. Novelty is judged cumulatively by PositionRegistry (passed in as
+        # n_new_positions each round), NOT by a per-round count.
+        self.saturation_rounds = saturation_rounds
+        self._rounds_since_new_position = 0
+        self._total_distinct = 0
 
     def record_round(self, actions: List[Dict]):
         """Record opinion distribution for a round."""
@@ -70,6 +80,36 @@ class ConvergenceDetector:
 
         should_stop = self._stable_count >= self.window
         return should_stop, avg_divergence, self._stable_count
+
+    # ── Coverage saturation (the real stop) ─────────────────────
+
+    def record_coverage(self, n_new_positions: int, total_distinct: int) -> None:
+        """Record a round's coverage outcome from PositionRegistry.
+
+        A round with zero new positions advances the saturation counter; any new
+        position resets it. Swaps (old positions replaced by new) count as novelty
+        because the registry reports them as new; rephrasings do not, because they
+        match an existing registry centroid.
+        """
+        self._total_distinct = total_distinct
+        if n_new_positions > 0:
+            self._rounds_since_new_position = 0
+        else:
+            self._rounds_since_new_position += 1
+
+    def reset_coverage(self) -> None:
+        """Reset the saturation baseline — e.g. when PositionRegistry flips
+        between embedding and lexical mode (the metrics are not comparable)."""
+        self._rounds_since_new_position = 0
+
+    def coverage_saturated(self) -> tuple:
+        """Returns (should_stop, total_distinct, rounds_since_new).
+
+        Stops ONLY when no new distinct position has appeared for
+        `saturation_rounds` rounds. Never stops on agreement.
+        """
+        should_stop = self._rounds_since_new_position >= self.saturation_rounds
+        return should_stop, self._total_distinct, self._rounds_since_new_position
 
     @staticmethod
     def _js_divergence(p: Dict[str, float], q: Dict[str, float]) -> float:

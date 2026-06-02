@@ -79,6 +79,18 @@ class Config:
     OASIS_DEFAULT_MAX_ROUNDS = int(os.environ.get('OASIS_DEFAULT_MAX_ROUNDS', '10'))
     OASIS_SIMULATION_DATA_DIR = os.path.join(os.path.dirname(__file__), '../uploads/simulations')
 
+    # Coverage simulator configuration — this tool surfaces the RANGE of distinct
+    # reactions, not a majority. Convergence is the failure mode. The run stops on
+    # COVERAGE SATURATION (no new distinct position for N rounds), never on
+    # agreement; positions are clustered stance-first; agents read homophily-biased
+    # neighborhoods with a small cross-group leak so distinct objections develop in
+    # parallel instead of cascading one direction.
+    COVERAGE_SATURATION_ROUNDS = int(os.environ.get('COVERAGE_SATURATION_ROUNDS', '4'))   # stop after N rounds with no new position
+    USE_COVERAGE_STOP          = os.environ.get('USE_COVERAGE_STOP', 'true').lower() == 'true'  # False = old sentiment stop
+    POSITION_SIM_THRESHOLD     = float(os.environ.get('POSITION_SIM_THRESHOLD', '0.82'))  # cosine/Jaccard: same position (CALIBRATE)
+    NEIGHBORHOOD_SIZE          = int(os.environ.get('NEIGHBORHOOD_SIZE', '5'))             # posts an agent reads per round
+    CROSS_GROUP_LEAK           = float(os.environ.get('CROSS_GROUP_LEAK', '0.2'))          # prob. a feed slot pulls a non-similar post
+
     # Opinion Space available actions
     OPINION_SPACE_ACTIONS = [
         'EXPRESS_OPINION', 'RESPOND_TO_OPINION', 'SEARCH_TOPIC', 'OBSERVE', 'DO_NOTHING'
