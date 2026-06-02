@@ -63,6 +63,11 @@ class PostSimAnalytics:
                 "avg_radicalism": snap["avg_radicalism"],
                 "non_participation_pct": snap["non_participation_pct"],
                 "total_actions": snap["total_actions"],
+                # Coverage metric — first-class: cumulative distinct positions,
+                # how many were new this round, and their spread.
+                "distinct_positions": snap["distinct_positions"] if "distinct_positions" in snap.keys() else 0,
+                "new_positions": snap["new_positions"] if "new_positions" in snap.keys() else 0,
+                "position_spread": snap["position_spread"] if "position_spread" in snap.keys() else 0.0,
                 "events": events_by_round.get(snap["round_num"], []),
                 "top_topics": self._parse_json(snap["top_topics_json"]),
             })
@@ -430,7 +435,8 @@ class PostSimAnalytics:
     # ── Agent Summary ───────────────────────────────────────────
 
     def agent_summary(self, simulation_id: str) -> List[Dict[str, Any]]:
-        """Summary stats per agent."""
+        """Summary stats per agent, plus each agent's latest expressed opinion
+        and stance — enough to decide what intervention to pose post-sim."""
         rows = self.storage.query(
             """
             SELECT agent_id, agent_name, archetype,
@@ -445,18 +451,56 @@ class PostSimAnalytics:
             """,
             (simulation_id,),
         )
-        return [
-            {
-                "agent_id": r["agent_id"],
+
+        # Per-agent stance from the stored profiles (may be empty for older runs).
+        stance_rows = self.storage.query(
+            "SELECT agent_id, stance FROM agent_profiles WHERE simulation_id = ?",
+            (simulation_id,),
+        )
+        stance_by_id = {r["agent_id"]: r["stance"] for r in stance_rows}
+
+        out = []
+        for r in rows:
+            agent_id = r["agent_id"]
+            # Latest opinion this agent actually voiced (prefer an expressed
+            # opinion; fall back to any action with content).
+            latest = self.storage.query(
+                """
+                SELECT content, round_num FROM opinion_actions
+                WHERE simulation_id = ? AND agent_id = ?
+                  AND action_type = 'EXPRESS_OPINION' AND content IS NOT NULL AND content != ''
+                ORDER BY round_num DESC, created_at DESC
+                LIMIT 1
+                """,
+                (simulation_id, agent_id),
+            )
+            if not latest:
+                latest = self.storage.query(
+                    """
+                    SELECT content, round_num FROM opinion_actions
+                    WHERE simulation_id = ? AND agent_id = ?
+                      AND content IS NOT NULL AND content != ''
+                    ORDER BY round_num DESC, created_at DESC
+                    LIMIT 1
+                    """,
+                    (simulation_id, agent_id),
+                )
+            latest_opinion = latest[0]["content"] if latest else ""
+            latest_round = latest[0]["round_num"] if latest else None
+
+            out.append({
+                "agent_id": agent_id,
                 "name": r["agent_name"],
                 "archetype": r["archetype"],
                 "action_count": r["action_count"],
                 "avg_impact": round(r["avg_impact"] or 0, 3),
                 "express_count": r["express_count"],
                 "respond_count": r["respond_count"],
-            }
-            for r in rows
-        ]
+                "stance": stance_by_id.get(agent_id) or "",
+                "latest_opinion": latest_opinion,
+                "latest_opinion_round": latest_round,
+            })
+        return out
 
     # ── Helpers ─────────────────────────────────────────────────
 

@@ -34,6 +34,20 @@ class ReplayStorage:
         self.db_path = db_path
         self._ensure_db_dir()
         self._init_schema()
+        self._migrate_schema()
+
+    def _migrate_schema(self):
+        """Add columns introduced after a DB was first created. Safe to re-run."""
+        with sqlite3.connect(self.db_path) as conn:
+            cols = {r[1] for r in conn.execute("PRAGMA table_info(sentiment_snapshots)")}
+            for name, decl in (
+                ("distinct_positions", "INTEGER DEFAULT 0"),
+                ("new_positions", "INTEGER DEFAULT 0"),
+                ("position_spread", "REAL DEFAULT 0.0"),
+            ):
+                if name not in cols:
+                    conn.execute(f"ALTER TABLE sentiment_snapshots ADD COLUMN {name} {decl}")
+            conn.commit()
 
     def _ensure_db_dir(self):
         """Ensure parent directory exists."""
@@ -110,6 +124,11 @@ class ReplayStorage:
                     top_topics_json TEXT,
                     active_archetypes_json TEXT,
                     events_injected_count INTEGER,
+                    -- Coverage metric: cumulative distinct positions, new this round,
+                    -- and how far apart the distinct positions are (see PositionRegistry).
+                    distinct_positions INTEGER DEFAULT 0,
+                    new_positions INTEGER DEFAULT 0,
+                    position_spread REAL DEFAULT 0.0,
                     created_at TEXT NOT NULL
                 );
 
@@ -357,8 +376,9 @@ class ReplayStorage:
                 (simulation_id, round_num, total_actions, avg_impact_score,
                  pct_high_impact, avg_radicalism, non_participation_count,
                  non_participation_pct, top_topics_json, active_archetypes_json,
-                 events_injected_count, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 events_injected_count, distinct_positions, new_positions,
+                 position_spread, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     simulation_id,
@@ -372,6 +392,9 @@ class ReplayStorage:
                     json.dumps(metrics.get("topic_counts", {})),
                     json.dumps(metrics.get("archetype_counts", {})),
                     events_injected_count,
+                    metrics.get("distinct_positions", 0),
+                    metrics.get("new_positions", 0),
+                    metrics.get("position_spread", 0.0),
                     datetime.now().isoformat(),
                 ),
             )
