@@ -53,6 +53,29 @@ os.environ["AGENTSOCIETY_ANALYSIS_LLM_MODEL"] = model
 os.environ["AGENTSOCIETY_ANALYSIS_LLM_API_KEY"] = api_key
 os.environ["AGENTSOCIETY_ANALYSIS_LLM_API_BASE"] = base_url
 
+# ── Disable Qwen "thinking" on the sim path (huge token saver) ──────
+# Qwen reasoning models emit hidden chain-of-thought that counts as completion
+# tokens — measured at ~94% of sim output (≈1600 of ≈1700 tokens/call), all of
+# which the simulation discards. agentsociety2 builds its litellm Router with
+# hardcoded litellm_params (no extra_body hook) and PersonAgent.acompletion takes
+# no kwargs, so the only injection point is litellm.acompletion itself. Wrapping
+# it here — BEFORE the library imports/builds its router — makes every sim call
+# carry extra_body={"enable_thinking": False}. Verified to cut completion from
+# ~1700 → ~30-100 tokens with no loss of answer quality. The research/persona path
+# already disables thinking via Config.llm_extra_body(); this closes the sim gap.
+if "qwen" in (model or "").lower():
+    import litellm as _litellm
+    _orig_acompletion = _litellm.acompletion
+
+    async def _acompletion_no_thinking(*args, **kwargs):
+        eb = dict(kwargs.get("extra_body") or {})
+        eb.setdefault("enable_thinking", False)
+        kwargs["extra_body"] = eb
+        return await _orig_acompletion(*args, **kwargs)
+
+    _litellm.acompletion = _acompletion_no_thinking
+    print("Token saver: Qwen thinking disabled on sim path (extra_body.enable_thinking=False)")
+
 # ── agentsociety2 imports ────────────────────────────────────────
 from agentsociety2 import PersonAgent
 
