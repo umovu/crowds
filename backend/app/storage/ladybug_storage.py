@@ -72,8 +72,16 @@ class LadybugStorage(GraphStorage):
             self._db = ladybug.Database(db_path)
         except Exception as e:
             msg = str(e)
-            is_corrupt_wal = any(s in msg for s in (
-                "Corrupted wal", "WAL record", "wal file",
+            msg_l = msg.lower()
+            # Match WAL-corruption signatures case-insensitively. A force-killed
+            # backend can surface this several ways: the friendly "Corrupted wal
+            # file" message, OR a raw Ladybug C++ assertion that names the WAL
+            # source file (e.g. ".../storage/wal/wal_record.cpp ... UNREACHABLE_CODE").
+            # The latter was previously unrecognized, so quarantine never fired and
+            # graph_storage stayed None → every build 500'd. Catch both.
+            is_corrupt_wal = any(s in msg_l for s in (
+                "corrupted wal", "wal record", "wal file",
+                "wal_record.cpp", "wal/", "unreachable_code",
             ))
             if not is_corrupt_wal:
                 raise

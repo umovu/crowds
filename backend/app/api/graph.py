@@ -560,6 +560,10 @@ def build_graph():
         })
         
     except Exception as e:
+        # Log the full stack — previously this was only returned to the client,
+        # so server logs showed a bare 500 with no cause (undiagnosable).
+        logger.error(f"build_graph failed (synchronous phase): {e}")
+        logger.error(traceback.format_exc())
         return jsonify({
             "success": False,
             "error": str(e),
