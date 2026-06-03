@@ -87,7 +87,7 @@ class Config:
     # parallel instead of cascading one direction.
     COVERAGE_SATURATION_ROUNDS = int(os.environ.get('COVERAGE_SATURATION_ROUNDS', '4'))   # stop after N rounds with no new position
     USE_COVERAGE_STOP          = os.environ.get('USE_COVERAGE_STOP', 'true').lower() == 'true'  # False = old sentiment stop
-    POSITION_SIM_THRESHOLD     = float(os.environ.get('POSITION_SIM_THRESHOLD', '0.82'))  # cosine/Jaccard: same position (CALIBRATE)
+    POSITION_SIM_THRESHOLD     = float(os.environ.get('POSITION_SIM_THRESHOLD', '0.72'))  # cosine/Jaccard: same position (calibrated 2026-06 live: 0.82 over-counted, never matched cross-round)
     NEIGHBORHOOD_SIZE          = int(os.environ.get('NEIGHBORHOOD_SIZE', '5'))             # posts an agent reads per round
     CROSS_GROUP_LEAK           = float(os.environ.get('CROSS_GROUP_LEAK', '0.2'))          # prob. a feed slot pulls a non-similar post
 
