@@ -1,0 +1,54 @@
+{
+  "source": "SASSA / Dept of Social Development 2026/2027 social grant schedule, effective April 2026. Verified against dsd.gov.za and sanews.gov.za (June 2026). Amounts change with each national budget — update effective_date and values when they do.",
+  "effective_date": "2026-04-01",
+  "currency": "ZAR",
+  "note": "Real published policy figures, not estimates. Used as KNOWN income for grant-dependent personas (income_provenance = grant_schedule).",
+  "grants": {
+    "older_person": {
+      "label": "Older Person's Grant (state old-age pension)",
+      "monthly_amount": 2400,
+      "older_than_75_amount": 2420,
+      "keywords": ["old age", "old-age", "older person", "pension", "pensioner", "sassa pension", "state pension"]
+    },
+    "disability": {
+      "label": "Disability Grant",
+      "monthly_amount": 2400,
+      "keywords": ["disability grant", "disabled", "disability"]
+    },
+    "war_veteran": {
+      "label": "War Veteran's Grant",
+      "monthly_amount": 2420,
+      "keywords": ["war veteran"]
+    },
+    "care_dependency": {
+      "label": "Care Dependency Grant",
+      "monthly_amount": 2400,
+      "keywords": ["care dependency"]
+    },
+    "foster_child": {
+      "label": "Foster Child Grant",
+      "monthly_amount": 1290,
+      "keywords": ["foster", "foster child", "foster care"]
+    },
+    "child_support": {
+      "label": "Child Support Grant",
+      "monthly_amount": 580,
+      "keywords": ["child support", "child grant", "csg"]
+    },
+    "grant_in_aid": {
+      "label": "Grant-in-Aid",
+      "monthly_amount": 580,
+      "keywords": ["grant-in-aid", "grant in aid"]
+    },
+    "srd": {
+      "label": "Social Relief of Distress grant",
+      "monthly_amount": 370,
+      "keywords": ["srd", "social relief", "r370", "370 grant", "covid grant", "distress grant"]
+    },
+    "generic": {
+      "label": "Social grant (type unspecified)",
+      "monthly_amount": 580,
+      "keywords": ["sassa", "grant", "social grant", "welfare"]
+    }
+  }
+}

@@ -100,6 +100,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger("agentsociety.runner")
 
+# Generic founder attribution for posted pitches / announcements (product mode).
+# Kept generic by design (no name detection) per product-framing decision.
+FOUNDER_LABEL = "The founder"
+
 _shutdown_event: Optional[asyncio.Event] = None
 _cleanup_done = False
 
@@ -626,7 +630,47 @@ class AgentSocietyRunner:
         self.position_registry = PositionRegistry(threshold=_Cfg.POSITION_SIM_THRESHOLD)
         # Note: sampler will be initialized after all_agents is created
 
-        opinion_skill = OpinionCaptureSkill(env=env, document_context=document_context, fast_mode=self.fast_mode, model_name=model)
+        # ── Product mode: extract the pitch object once (one cheap LLM call) ──
+        # The economic-reasoning lens needs a structured {what/pricing/problem/
+        # status_quo} to react to. Best-effort: any failure → empty pitch, and
+        # the lens degrades to generic "the product being pitched" phrasing.
+        pitch = None
+        if sim_mode == "product":
+            try:
+                import re
+                from openai import OpenAI as _OpenAI
+                from app.services.mode_specs import (
+                    build_pitch_extraction_prompt,
+                    PRODUCT_PITCH_EXTRACTION_SYSTEM,
+                )
+                _client = _OpenAI(api_key=api_key, base_url=base_url)
+                _pp = build_pitch_extraction_prompt(
+                    document_context, self.config.get("simulation_requirement", "")
+                )
+                _resp = _client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        {"role": "system", "content": PRODUCT_PITCH_EXTRACTION_SYSTEM},
+                        {"role": "user", "content": _pp},
+                    ],
+                    temperature=0.3,
+                    max_tokens=400,
+                )
+                _raw = (_resp.choices[0].message.content or "").strip()
+                _raw = re.sub(r"<think>[\s\S]*?</think>", "", _raw)
+                _raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", _raw.strip(), flags=re.MULTILINE).strip()
+                _m = re.search(r'\{[\s\S]*\}', _raw)
+                pitch = json.loads(_m.group()) if _m else None
+                if pitch:
+                    print(f"  Pitch     : {pitch.get('what_it_is', '?')[:70]}")
+            except Exception as e:
+                logger.warning(f"Pitch extraction failed (lens will use generic phrasing): {e}")
+                pitch = None
+
+        opinion_skill = OpinionCaptureSkill(
+            env=env, document_context=document_context, fast_mode=self.fast_mode,
+            model_name=model, mode=sim_mode, pitch=pitch,
+        )
         
         # ── Event Rule Engine with dynamic rules ──────────────────
         self._event_engine = EventRuleEngine(dynamic_rules=dynamic_rules)
@@ -761,6 +805,28 @@ class AgentSocietyRunner:
                 })
 
         print(f"Seeded {len(event_cfg.get('initial_posts', []))} initial opinions")
+
+        # ── Product mode: post the pitch as a founder announcement ─────────
+        # So agents respond directly TO the pitch (an actual post they react to),
+        # not just to ambient background context. Rides the same _pending_events
+        # rail as manual founder broadcasts; drained at round 0 below.
+        self._pitch_event = None  # the re-anchor reminder source, set when posted
+        if sim_mode == "product" and pitch:
+            try:
+                from app.services.mode_specs import build_pitch_announcement
+                announcement = build_pitch_announcement(pitch, short=False)
+                self._pitch_event = {
+                    "rule_id": "founder_pitch_round0",
+                    "source": FOUNDER_LABEL,
+                    "title": f"{FOUNDER_LABEL} makes an announcement",
+                    "content": announcement,
+                    "category": "founder_announcement",
+                }
+                self._pending_events.append(self._pitch_event)
+                print(f"  Pitch posted as founder announcement (round 0)")
+            except Exception as e:
+                logger.warning(f"Founder pitch post failed: {e}")
+
         if self.fast_mode:
             print("FAST MODE: Reduced rounds (6h), abbreviated prompts, higher concurrency (10)")
         print("Starting simulation loop...\n")
@@ -774,10 +840,35 @@ class AgentSocietyRunner:
             async with semaphore:
                 return await opinion_skill.execute(agent, round_num=rn, initial_prompt=events_prompt)
 
+        # Re-anchor cadence: re-post a short pitch reminder every N rounds so the
+        # room keeps returning to the pitch instead of drifting. 0 disables.
+        from app.config import Config as _ReCfg
+        pitch_reanchor_every = int(
+            self.config.get("pitch_reanchor_every",
+                            getattr(_ReCfg, "PITCH_REANCHOR_EVERY", 4))
+        )
+
         for round_num in range(total_rounds):
             simulated_minutes = round_num * minutes_per_round
             simulated_hour    = (simulated_minutes // 60) % 24
             simulated_day     = simulated_minutes // (24 * 60) + 1
+
+            # ── Product mode: re-anchor the pitch on a cadence ─────────────
+            # Skip round 0 (already posted). Re-post a short reminder so agents
+            # re-centre on the pitch; they remain free to keep objecting.
+            if (self._pitch_event and pitch_reanchor_every > 0
+                    and round_num > 0 and round_num % pitch_reanchor_every == 0):
+                try:
+                    from app.services.mode_specs import build_pitch_announcement
+                    self._pending_events.append({
+                        "rule_id": f"founder_pitch_reanchor_r{round_num}",
+                        "source": FOUNDER_LABEL,
+                        "title": f"{FOUNDER_LABEL} follows up",
+                        "content": build_pitch_announcement(pitch, short=True),
+                        "category": "founder_announcement",
+                    })
+                except Exception as e:
+                    logger.debug(f"Pitch re-anchor skipped at round {round_num}: {e}")
 
             # ── Inject pending events as "News_Source" opinions ─────────
             # Snapshot the events to inject this round. Anything appended to
@@ -880,6 +971,7 @@ class AgentSocietyRunner:
                         opinion_id=record.get("action_args", {}).get("opinion_id"),
                         target_opinion_id=record.get("action_args", {}).get("target_opinion_id"),
                         target_agent_name=record.get("action_args", {}).get("target_agent_name", ""),
+                        economic_reasoning=record.get("economic_reasoning"),
                     )
 
                 # Build action metric for rule engine

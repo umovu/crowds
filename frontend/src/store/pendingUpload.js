@@ -9,15 +9,19 @@ const state = reactive({
   simulationRequirement: '',
   customAgents: [],
   customAgentsEnabled: false,
+  customAgentsOnly: false,
+  mode: 'policy',
   enrichmentData: {},
   isPending: false
 })
 
-export function setPendingUpload(files, requirement, customAgents = [], customAgentsEnabled = false) {
+export function setPendingUpload(files, requirement, customAgents = [], customAgentsEnabled = false, customAgentsOnly = false, mode = 'policy') {
   state.files = files
   state.simulationRequirement = requirement
   state.customAgents = customAgents
   state.customAgentsEnabled = customAgentsEnabled
+  state.customAgentsOnly = customAgentsOnly
+  state.mode = mode
   state.isPending = true
 }
 
@@ -31,6 +35,8 @@ export function getPendingUpload() {
     simulationRequirement: state.simulationRequirement,
     customAgents: state.customAgents,
     customAgentsEnabled: state.customAgentsEnabled,
+    customAgentsOnly: state.customAgentsOnly,
+    mode: state.mode,
     enrichmentData: state.enrichmentData,
     isPending: state.isPending
   }
@@ -41,6 +47,8 @@ export function clearPendingUpload() {
   state.simulationRequirement = ''
   state.customAgents = []
   state.customAgentsEnabled = false
+  state.customAgentsOnly = false
+  state.mode = 'policy'
   state.enrichmentData = {}
   state.isPending = false
 }

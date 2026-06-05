@@ -1,11 +1,17 @@
 import service, { requestWithRetry } from './index'
 
+// Analytics endpoints are fast DB reads, not long-running generation. Override
+// the global 5-minute axios timeout so a stalled request fails in ~30s with a
+// clear error instead of spinning for minutes. (Retries on 4xx are already
+// suppressed in index.js, so a missing-data 404 also fails fast.)
+const ANALYTICS_OPTS = { timeout: 30000 }
+
 /**
  * Get sentiment timeline with event markers
  * @param {string} simulationId
  */
 export const getSentimentTimeline = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/sentiment-timeline`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/sentiment-timeline`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -13,7 +19,7 @@ export const getSentimentTimeline = (simulationId) => {
  * @param {string} simulationId
  */
 export const getArchetypeActivity = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/archetype-activity`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/archetype-activity`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -22,7 +28,7 @@ export const getArchetypeActivity = (simulationId) => {
  * @param {string} eventId
  */
 export const getEventImpact = (simulationId, eventId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/event-impact/${eventId}`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/event-impact/${eventId}`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -30,7 +36,7 @@ export const getEventImpact = (simulationId, eventId) => {
  * @param {string} simulationId
  */
 export const getTopicCascade = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/topic-cascade`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/topic-cascade`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -38,7 +44,7 @@ export const getTopicCascade = (simulationId) => {
  * @param {string} simulationId
  */
 export const getRadicalismDrift = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/radicalism-drift`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/radicalism-drift`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -46,7 +52,7 @@ export const getRadicalismDrift = (simulationId) => {
  * @param {string} simulationId
  */
 export const getNonParticipation = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/non-participation`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/non-participation`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -54,7 +60,7 @@ export const getNonParticipation = (simulationId) => {
  * @param {string} simulationId
  */
 export const getEventSummary = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/event-summary`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/event-summary`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -62,7 +68,7 @@ export const getEventSummary = (simulationId) => {
  * @param {string} simulationId
  */
 export const getAgentSummary = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/agent-summary`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/agent-summary`, ANALYTICS_OPTS), 3, 1000)
 }
 
 /**
@@ -70,5 +76,5 @@ export const getAgentSummary = (simulationId) => {
  * @param {string} simulationId
  */
 export const getOverview = (simulationId) => {
-  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/overview`), 3, 1000)
+  return requestWithRetry(() => service.get(`/api/analysis/${simulationId}/overview`, ANALYTICS_OPTS), 3, 1000)
 }

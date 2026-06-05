@@ -5,6 +5,7 @@ Endpoints for literature search and research context management.
 """
 
 import os
+import json
 import logging
 from flask import Blueprint, request, jsonify, current_app
 
@@ -875,6 +876,168 @@ Return ONLY a valid JSON object of the form {{"personas": [ ... ]}}. No explanat
         "grounded": grounded,
         "sources": sources,
         "count": len(agents),
+    })
+
+
+@research_bp.route("/agents/enrich", methods=["POST"])
+def enrich_agent():
+    """
+    Enrich a partial agent dict — fill in missing/thin fields with the LLM.
+
+    Lets users seed an agent with just a name (or name + a few traits) and
+    have the system flesh it out to a full persona, optionally grounded in
+    live web research.
+
+    Request body:
+    {
+        "agent": { "name": "...", ...partial agent dict... },   // required
+        "ground_with_web": false                                  // optional
+    }
+
+    Response:
+    {
+        "success": true,
+        "agent": { ...fully populated dict, preserving user-provided values... },
+        "grounded": false,
+        "sources": []
+    }
+
+    Behaviour:
+    - Existing non-empty fields in `agent` are preserved exactly.
+    - Missing or empty fields get LLM-generated values consistent with the
+      provided ones (a "taxi driver from Mitchells Plain" stays that).
+    - With ground_with_web=true, the LLM is given live web context about
+      the role/group/place before generating.
+    """
+    from ..utils.llm_client import LLMClient
+
+    data = request.get_json() or {}
+    agent_in = data.get("agent")
+    if not isinstance(agent_in, dict) or not agent_in.get("name"):
+        return jsonify({"success": False, "error": "agent.name is required"}), 400
+    ground_with_web = bool(data.get("ground_with_web", False))
+
+    # Build a short label describing this person for the web-research query.
+    occupation = (agent_in.get("occupation") or "").strip()
+    province = (agent_in.get("province") or "").strip()
+    archetype = (agent_in.get("actor_archetype") or "").strip()
+    name = agent_in["name"]
+    descriptor_bits = [b for b in [occupation, province, archetype.replace("_", " ")] if b]
+    descriptor = ", ".join(descriptor_bits) if descriptor_bits else name
+
+    # ---- Optional web grounding (same pattern as search_people) ----
+    grounded = False
+    sources = []
+    web_context = ""
+    if ground_with_web and descriptor_bits:
+        from ..services.firecrawl_service import FirecrawlService
+        from ..services.serper_service import SerperService
+        from ..services.jina_service import JinaService
+
+        fc = FirecrawlService()
+        serper = SerperService()
+        jina = JinaService()
+        scraped = []
+        search_query = f"{descriptor} South Africa lived experience daily life"
+        try:
+            if jina.api_key:
+                combined = jina.search_and_scrape(search_query, num_results=4)
+                if combined.get("success"):
+                    for item in combined.get("scraped_content", []):
+                        if item.get("content"):
+                            scraped.append({"url": item["url"], "title": item.get("title", ""), "content": item["content"][:2000]})
+            if not scraped and serper.is_available() and fc.is_available():
+                combined = serper.search_and_scrape(search_query, num_results=4)
+                if combined.get("success"):
+                    for item in combined.get("scraped_content", []):
+                        if item.get("content"):
+                            scraped.append({"url": item["url"], "title": item.get("title", ""), "content": item["content"][:2000]})
+        except Exception as e:
+            logger.warning(f"Enrich agent web grounding failed (continuing LLM-only): {e}")
+        if scraped:
+            grounded = True
+            sources = [{"url": s["url"], "title": s["title"]} for s in scraped]
+            web_context = "\n\n".join(
+                f"### Source {i+1}: {s['title']}\n{s['content']}" for i, s in enumerate(scraped)
+            )
+
+    grounding_block = (
+        f"\n\nUse this live web research to ground the persona in current South African reality "
+        f"(absorb the facts, don't cite sources in output):\n{web_context}\n"
+        if web_context else ""
+    )
+
+    # Show the LLM only the fields the user actually provided, so it preserves them.
+    existing_dump = json.dumps(
+        {k: v for k, v in agent_in.items() if v not in (None, "", [], {})},
+        ensure_ascii=False, indent=2,
+    )
+
+    prompt = f"""You are enriching a partial South African agent persona for a policy simulation.
+
+The user has provided the following fields. PRESERVE THEM EXACTLY:
+{existing_dump}
+
+Fill in every other missing field consistently with what the user provided.
+If the user said the agent is a taxi driver from the Western Cape, the
+background_story / persona / beliefs must reflect THAT specific person —
+not a generic one.{grounding_block}
+
+Return a complete JSON object with these fields (preserve provided values verbatim,
+generate the missing ones):
+- name (provided — preserve verbatim)
+- persona: 2-4 sentences on who they are, worldview, role
+- background_story: 1-2 paragraphs of life history
+- age: integer
+- gender: "male", "female", or "other"
+- education, occupation, country, province, residence, religion, race
+- mbti: e.g. "ISTP"
+- skills: array of strings
+- personality_traits: string
+- group_affiliation, behavioral_tendencies, voice_guide
+- actor_archetype: one of [civic_moderate, political_activist, violent_agitator, opportunist_looter, mob_follower, conspiracy_spreader, community_leader, institutional_loyalist, disillusioned_dropout, criminal_opportunist, community_protector, grant_dependent_survivor, economic_migrant, whistleblower]
+- is_institutional: true/false
+- income: string e.g. "R8,000/month"
+- emotions: object with keys sadness, joy, fear, disgust, anger, surprise (each 0-10)
+- emotion_keyword, emotion_thought
+- attitudes: array of {{"topic": "...", "rating": 0-10, "description": "..."}}
+- beliefs: array of strings
+
+Return ONLY a valid JSON object (the agent itself, not wrapped in an array). No explanation."""
+
+    try:
+        llm = LLMClient()
+        parsed = llm.chat_json(
+            messages=[
+                {"role": "system", "content": "You are an expert in South African socio-economics who enriches agent personas. Return ONLY valid JSON for one agent."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.6,
+            max_tokens=2500,
+        )
+    except Exception as e:
+        logger.error(f"Agent enrichment LLM failed: {e}")
+        return jsonify({"success": False, "error": f"Enrichment failed: {e}"}), 500
+
+    if not isinstance(parsed, dict):
+        return jsonify({"success": False, "error": "LLM did not return a usable persona object."}), 502
+
+    # Merge: user-provided non-empty values win; LLM fills only the rest.
+    enriched = dict(parsed)
+    for k, v in agent_in.items():
+        if v not in (None, "", [], {}):
+            enriched[k] = v
+    # Always preserve the original _id so the frontend can update in place.
+    if agent_in.get("_id"):
+        enriched["_id"] = agent_in["_id"]
+    if not enriched.get("source_entity_type", "").startswith("custom"):
+        enriched["source_entity_type"] = "custom_enriched"
+
+    return jsonify({
+        "success": True,
+        "agent": enriched,
+        "grounded": grounded,
+        "sources": sources,
     })
 
 

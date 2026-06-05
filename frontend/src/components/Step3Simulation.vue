@@ -109,6 +109,7 @@
               <button class="wb-tab" :class="{ active: interventionMode === 'map' }" @click="interventionMode = 'map'">Stance Map</button>
               <button class="wb-tab" :class="{ active: interventionMode === 'target' }" @click="interventionMode = 'target'">Target</button>
               <button class="wb-tab" :class="{ active: interventionMode === 'broadcast' }" @click="interventionMode = 'broadcast'">Broadcast</button>
+              <button class="wb-tab" :class="{ active: interventionMode === 'founder' }" @click="interventionMode = 'founder'">Founder Post</button>
             </div>
           </div>
 
@@ -244,6 +245,51 @@
             </div>
           </div>
 
+          <!-- MODE: Founder Post (posts to the opinion space; whole room reacts) -->
+          <div v-if="interventionMode === 'founder'" class="wb-founder">
+            <p class="wb-hint">
+              Post as the founder. Your message appears in the opinion space and
+              <strong>every active agent reacts to it next round</strong> — you'll see it land in the feed.
+            </p>
+
+            <div class="intervention-field">
+              <label class="field-label">Your name <span class="field-optional">(optional)</span></label>
+              <input
+                v-model="founderName"
+                type="text"
+                placeholder="e.g. Nkosinathi Themba — leave blank to post as 'the founder'"
+                class="agent-select"
+              />
+            </div>
+
+            <div class="intervention-field">
+              <label class="field-label">Announcement</label>
+              <textarea
+                v-model="founderText"
+                placeholder="e.g. We just made it free for the first 3 months — and it works fully offline."
+                class="intervention-textarea"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <p class="founder-attribution">
+              Posting as: <strong>{{ founderAttribution }}</strong>
+            </p>
+
+            <button
+              class="intervention-btn"
+              :disabled="!founderText.trim() || founderLoading"
+              @click="handleFounderPost"
+            >
+              <span v-if="founderLoading" class="loading-spinner-small"></span>
+              <span v-else>Post to opinion space →</span>
+            </button>
+
+            <div v-if="founderResult" class="founder-result" :class="{ ok: founderResult.ok }">
+              {{ founderResult.message }}
+            </div>
+          </div>
+
           <!-- Intervention History (this pause session) -->
           <div v-if="interventionHistory.length > 0" class="wb-history">
             <div class="history-label">Applied this session</div>
@@ -354,7 +400,7 @@
                 <div class="agent-info">
                   <div class="avatar-placeholder">{{ (action.agent_name || 'A')[0] }}</div>
                   <span class="agent-name">{{ action.agent_name }}</span>
-                  <span v-if="isCustomAgent(action.agent_id)" class="agent-custom-badge">◆</span>
+                  <span v-if="isCustomAgent(action.agent_id)" class="agent-custom-badge" title="Custom agent you added to the roster">◆ Custom</span>
                   <span class="chat-hint">💬</span>
                 </div>
                 
@@ -641,7 +687,8 @@ import {
   interviewAgents,
   pauseSimulation,
   resumeSimulation,
-  interveneLive
+  interveneLive,
+  broadcastIntervention
 } from '../api/simulation'
 import { generateReport } from '../api/report'
 
@@ -760,13 +807,34 @@ const liveInterviewResult = ref(null)
 const liveInterviewLoading = ref(false)
 
 // Policy Workbench state (legacy floating panel)
-const interventionMode = ref('map')  // 'map' | 'target' | 'broadcast'
+const interventionMode = ref('map')  // 'map' | 'target' | 'broadcast' | 'founder'
 const changedAgentIds = ref(new Set())
 const interventionHistory = ref([])
 const broadcastArchetype = ref('')
 const broadcastText = ref('')
 const broadcastResults = ref([])
 const broadcastLoading = ref(false)
+
+// Founder Post state (posts to the opinion space; whole room reacts)
+const founderName = ref('')
+const founderText = ref('')
+const founderLoading = ref(false)
+const founderResult = ref(null)
+
+// Best-effort company label for the attribution preview. The backend derives
+// the authoritative one from saved context; this is just so the user sees who
+// they're posting as. Falls back to a generic label.
+const companyLabel = computed(() =>
+  (props.projectData?.company || props.projectData?.product_name || props.projectData?.title || '').trim()
+)
+const founderAttribution = computed(() => {
+  const name = founderName.value.trim()
+  const company = companyLabel.value
+  if (name && company) return `${name}, founder of ${company}`
+  if (company) return `The founder of ${company}`
+  if (name) return `${name} (founder)`
+  return 'The founder of this product'
+})
 
 // Bottom-dock intervention state
 const dockTarget = ref('all')      // "all" (everyone), "agent:5", or "arch:taxi_operator"
@@ -1089,6 +1157,36 @@ const handleBroadcast = async () => {
   const shifted = broadcastResults.value.filter(r => r.stance_changed).length
   addLog(`Broadcast complete: ${shifted}/${targets.length} agents shifted stance`)
   broadcastLoading.value = false
+}
+
+// Founder Post: announce into the opinion space. Unlike Broadcast (which DMs
+// each agent privately), this posts to the feed and the whole active room
+// reacts next round — visible confirmation it landed.
+const handleFounderPost = async () => {
+  if (!founderText.value.trim()) return
+  founderLoading.value = true
+  founderResult.value = null
+  try {
+    const res = await broadcastIntervention(props.simulationId, {
+      intervention_text: founderText.value.trim(),
+      founder_name: founderName.value.trim(),
+    })
+    if (res.success) {
+      const src = res.data?.source || founderAttribution.value
+      founderResult.value = {
+        ok: true,
+        message: `Posted to the opinion space as “${src}”. Resume the sim — the room will react next round.`,
+      }
+      addLog(`Founder post queued: "${founderText.value.trim().slice(0, 60)}" — room reacts next round`)
+      founderText.value = ''
+    } else {
+      founderResult.value = { ok: false, message: res.error || 'Founder post failed.' }
+    }
+  } catch (e) {
+    founderResult.value = { ok: false, message: e.message || 'Founder post failed.' }
+  } finally {
+    founderLoading.value = false
+  }
 }
 
 // Pause simulation
@@ -2134,9 +2232,16 @@ onUnmounted(() => {
 }
 
 .agent-custom-badge {
-  margin-left: 4px;
-  font-size: 11px;
-  color: #2E7D32;
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: #1E9E5A;
+  background: rgba(30, 158, 90, 0.10);
+  border: 1px solid rgba(30, 158, 90, 0.35);
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
 }
 
 .header-meta {
@@ -3146,6 +3251,28 @@ onUnmounted(() => {
   color: #FF9800;
   margin-bottom: 10px;
   font-family: 'JetBrains Mono', monospace;
+}
+
+.field-optional { color: #888; font-weight: 400; }
+
+.founder-attribution {
+  font-size: 11px;
+  color: #1E9E5A;
+  margin: 6px 0 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.founder-result {
+  margin-top: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: rgba(255, 80, 80, 0.08);
+  color: #d66;
+}
+.founder-result.ok {
+  background: rgba(30, 158, 90, 0.1);
+  color: #1E9E5A;
 }
 
 .broadcast-results { margin-top: 14px; }

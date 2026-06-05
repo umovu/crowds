@@ -362,5 +362,13 @@ onMounted(() => {
 .panel-wrapper.analytics {
   overflow-y: auto;
   background: #FAFAFA;
+  /* Flex items default to min-width:auto and refuse to shrink below their
+     content width — so a wide child (the tab row) could push the panel past the
+     viewport and get clipped by .content-area's overflow:hidden, hiding the
+     right-hand tabs. Constrain the panel to the available width so its content
+     (header tabs) wraps/scrolls inside it instead. */
+  flex: 1 1 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 </style>

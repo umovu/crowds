@@ -88,6 +88,7 @@ class ReplayStorage:
                     opinion_id INTEGER,
                     target_opinion_id INTEGER,
                     target_agent_name TEXT,
+                    economic_reasoning TEXT,
                     created_at TEXT NOT NULL
                 );
 
@@ -164,6 +165,12 @@ class ReplayStorage:
                 CREATE INDEX IF NOT EXISTS idx_snapshots_sim_round
                     ON sentiment_snapshots(simulation_id, round_num);
             """)
+            # Migration: add economic_reasoning to existing DBs (nullable; product
+            # mode only). Matches the additive ALTER pattern used elsewhere.
+            try:
+                conn.execute("ALTER TABLE opinion_actions ADD COLUMN economic_reasoning TEXT")
+            except sqlite3.OperationalError:
+                pass  # Column already exists
             conn.commit()
         logger.info(f"ReplayStorage initialized: {self.db_path}")
 
@@ -262,16 +269,22 @@ class ReplayStorage:
         opinion_id: Optional[int] = None,
         target_opinion_id: Optional[int] = None,
         target_agent_name: str = "",
+        economic_reasoning: Optional[str] = None,
     ):
-        """Store a single agent action."""
+        """Store a single agent action.
+
+        economic_reasoning is a JSON string of the agent's qualitative economic
+        stance (product mode only); None in policy mode.
+        """
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
                 """
                 INSERT INTO opinion_actions
                 (simulation_id, round_num, agent_id, agent_name, archetype,
                  action_type, content, topics_json, impact_score, internal_thought,
-                 reason, opinion_id, target_opinion_id, target_agent_name, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 reason, opinion_id, target_opinion_id, target_agent_name,
+                 economic_reasoning, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     simulation_id,
@@ -288,6 +301,7 @@ class ReplayStorage:
                     opinion_id,
                     target_opinion_id,
                     target_agent_name,
+                    economic_reasoning,
                     datetime.now().isoformat(),
                 ),
             )
@@ -304,8 +318,9 @@ class ReplayStorage:
                     INSERT INTO opinion_actions
                     (simulation_id, round_num, agent_id, agent_name, archetype,
                      action_type, content, topics_json, impact_score, internal_thought,
-                     reason, opinion_id, target_opinion_id, target_agent_name, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     reason, opinion_id, target_opinion_id, target_agent_name,
+                     economic_reasoning, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         simulation_id,
@@ -322,6 +337,7 @@ class ReplayStorage:
                         a.get("opinion_id"),
                         a.get("target_opinion_id"),
                         a.get("target_agent_name", ""),
+                        a.get("economic_reasoning"),
                         datetime.now().isoformat(),
                     ),
                 )

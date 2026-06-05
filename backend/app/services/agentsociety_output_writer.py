@@ -76,6 +76,9 @@ class AgentSocietyOutputWriter:
             "reason": action_result.get("reason", ""),
             "internal_thought": action_result.get("internal_thought", ""),
             "impact_score": action_result.get("impact_score", 0.0),
+            # Product mode only: qualitative economic stance JSON (impulse / budget_tier
+            # / disposition + objections). None in policy mode.
+            "economic_reasoning": action_result.get("economic_reasoning"),
             "prompt_tokens": action_result.get("prompt_tokens", 0),
             "completion_tokens": action_result.get("completion_tokens", 0),
             "estimated_cost_usd": action_result.get("estimated_cost_usd", 0.0),

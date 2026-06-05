@@ -67,6 +67,8 @@
           :systemLogs="systemLogs"
           :customAgents="customAgents"
           :customAgentsEnabled="customAgentsEnabled"
+          :customAgentsOnly="customAgentsOnly"
+          :mode="mode"
           @go-back="handleGoBack"
           @next-step="handleNextStep"
           @add-log="addLog"
@@ -108,6 +110,8 @@ const buildProgress = ref(null)
 const systemLogs = ref([])
 const customAgents = ref([])
 const customAgentsEnabled = ref(false)
+const customAgentsOnly = ref(false)
+const mode = ref('policy')
 
 // Polling timers
 let pollTimer = null
@@ -231,6 +235,8 @@ const handleNewProject = async () => {
   const pending = getPendingUpload()
   customAgents.value = pending.customAgents || []
   customAgentsEnabled.value = pending.customAgentsEnabled || false
+  customAgentsOnly.value = pending.customAgentsOnly || false
+  mode.value = pending.mode || 'policy'
 
   const seedText = (pending.simulationRequirement || '').trim()
   const hasFiles = pending.files && pending.files.length > 0

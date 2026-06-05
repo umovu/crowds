@@ -90,6 +90,7 @@ class Config:
     POSITION_SIM_THRESHOLD     = float(os.environ.get('POSITION_SIM_THRESHOLD', '0.72'))  # cosine/Jaccard: same position (calibrated 2026-06 live: 0.82 over-counted, never matched cross-round)
     NEIGHBORHOOD_SIZE          = int(os.environ.get('NEIGHBORHOOD_SIZE', '5'))             # posts an agent reads per round
     CROSS_GROUP_LEAK           = float(os.environ.get('CROSS_GROUP_LEAK', '0.2'))          # prob. a feed slot pulls a non-similar post
+    PITCH_REANCHOR_EVERY       = int(os.environ.get('PITCH_REANCHOR_EVERY', '4'))          # product mode: re-post pitch reminder every N rounds (0 = once at round 0 only)
 
     # Opinion Space available actions
     OPINION_SPACE_ACTIONS = [

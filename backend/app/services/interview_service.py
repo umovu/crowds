@@ -34,7 +34,23 @@ class InterviewService:
         self.sim_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
         self.profiles_path = os.path.join(self.sim_dir, "agentsociety_profiles.json")
         self.profiles: List[Dict[str, Any]] = []
+        self.mode = self._load_mode()
         self._load_profiles()
+
+    def _load_mode(self) -> str:
+        """Read the simulation mode ('policy' or 'product') from document_context.json.
+
+        Written by simulation_manager at build time. Defaults to 'policy' if the
+        file is missing or unreadable, so interviews never error on mode alone.
+        """
+        ctx_path = os.path.join(self.sim_dir, "document_context.json")
+        try:
+            with open(ctx_path, 'r', encoding='utf-8') as f:
+                ctx = json.load(f)
+            mode = (ctx.get("mode") or "policy").strip().lower()
+            return mode if mode in ("policy", "product") else "policy"
+        except (FileNotFoundError, json.JSONDecodeError, OSError):
+            return "policy"
 
     def _load_profiles(self):
         """Load agent profiles from simulation directory."""
@@ -188,7 +204,7 @@ class InterviewService:
         agent = self._create_agent(profile)
         t = datetime.now()
 
-        result = await agent.apply_intervention(intervention_text, t=t)
+        result = await agent.apply_intervention(intervention_text, t=t, mode=self.mode)
 
         # Enrich with agent metadata
         result["agent_id"] = agent_id

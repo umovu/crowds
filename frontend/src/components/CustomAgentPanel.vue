@@ -73,10 +73,80 @@
             <button class="file-remove" @click.stop="removeAgentDoc">×</button>
           </div>
         </div>
+        <div class="upload-helper">
+          <span class="upload-helper-hint">PDF, MD, TXT, JSON. Required field: <code>name</code>.</span>
+          <a
+            href="/agents-example.json"
+            download="agents-example.json"
+            class="upload-helper-link"
+            @click.stop
+          >
+            Download example template
+          </a>
+        </div>
         <div v-if="parseStatus" class="parse-status" :class="parseStatus.type">
           {{ parseStatus.message }}
         </div>
       </div>
+
+      <!-- Pending review (after upload, before commit to roster) -->
+      <Transition name="fade-slide">
+        <div v-if="pendingAgents.length > 0" class="pending-section" ref="pendingScrollRef">
+          <div class="pending-header">
+            <div>
+              <span class="pending-title">Review uploaded agents</span>
+              <span class="pending-sub">{{ pendingAgents.length }} parsed — pick which to add</span>
+            </div>
+            <button class="pending-toggle-all" @click="toggleAllPendingSelected">
+              {{ allPendingSelected() ? 'Deselect all' : 'Select all' }}
+            </button>
+          </div>
+          <div class="pending-list">
+            <div
+              v-for="agent in pendingAgents"
+              :key="agent._id"
+              class="pending-row"
+              :class="{ selected: pendingSelected.has(agent._id) }"
+            >
+              <label class="pending-label">
+                <input
+                  type="checkbox"
+                  :checked="pendingSelected.has(agent._id)"
+                  @change="togglePendingSelected(agent._id)"
+                  class="pending-check"
+                />
+                <div class="pending-meta">
+                  <div class="pending-name">{{ agent.name }}</div>
+                  <div class="pending-tags">
+                    <span class="pending-badge">
+                      {{ (agent.actor_archetype || agent.archetype || 'unknown').replace(/_/g, ' ') }}
+                    </span>
+                    <span v-if="agent.age" class="pending-bit">{{ agent.age }}y</span>
+                    <span v-if="agent.occupation" class="pending-bit">{{ agent.occupation }}</span>
+                    <span v-if="!agent.background_story && !agent.bio" class="pending-warn">missing background</span>
+                    <span v-if="!agent.persona && !agent.description" class="pending-warn">missing persona</span>
+                  </div>
+                </div>
+              </label>
+              <button
+                class="pending-enrich"
+                :disabled="enrichingIds.has(agent._id)"
+                @click.stop="enrichPendingAgent(agent)"
+                title="Let AI fill in missing fields based on what's already here"
+              >
+                <span v-if="enrichingIds.has(agent._id)">…</span>
+                <span v-else>✨ Enrich</span>
+              </button>
+            </div>
+          </div>
+          <div class="pending-actions">
+            <button class="pending-discard" @click="discardPendingAgents">Discard</button>
+            <button class="pending-commit" @click="commitPendingAgents">
+              Add {{ Array.from(pendingSelected).length }} agent{{ Array.from(pendingSelected).length !== 1 ? 's' : '' }}
+            </button>
+          </div>
+        </div>
+      </Transition>
 
       <!-- Manual Add -->
       <div class="manual-section">
@@ -106,12 +176,33 @@
         </div>
       </div>
 
+      <!-- Run Mode -->
+      <div class="run-mode">
+        <label class="run-mode-row">
+          <input type="checkbox" :checked="customOnly" @change="toggleCustomOnly" />
+          <span class="run-mode-label">
+            <strong>Run on custom agents only</strong>
+            <span class="run-mode-hint">
+              Skip the auto-generated population — the simulation runs solely on the
+              {{ agentCount }} agent{{ agentCount !== 1 ? 's' : '' }} above.
+            </span>
+          </span>
+        </label>
+      </div>
+
       <!-- Merge Mode Note -->
-      <div class="merge-note">
+      <div v-if="!customOnly" class="merge-note">
         <span class="note-icon">ℹ</span>
         <span class="note-text">
           Custom agents will be <strong>merged</strong> with auto-generated graph agents.
           Custom profiles take priority when names conflict.
+        </span>
+      </div>
+      <div v-else class="merge-note custom-only-note">
+        <span class="note-icon">◆</span>
+        <span class="note-text">
+          <strong>Custom-only mode.</strong> Only your custom agents will be simulated.
+          With a small cast, expect little opinion propagation between agents.
         </span>
       </div>
     </div>
@@ -126,19 +217,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import AgentDefinitionCard from './AgentDefinitionCard.vue'
 import AgentEditModal from './AgentEditModal.vue'
 
 import { parseAgentDocument } from '../api/simulation'
-import { searchPeople } from '../api/research'
+import { searchPeople, enrichAgent } from '../api/research'
 
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
   enabled: { type: Boolean, default: false },
+  customOnly: { type: Boolean, default: false },
 })
 
-const emit = defineEmits(['update:modelValue', 'update:enabled'])
+const emit = defineEmits(['update:modelValue', 'update:enabled', 'update:customOnly'])
+
+function toggleCustomOnly() {
+  emit('update:customOnly', !props.customOnly)
+}
 
 const agents = computed({
   get: () => props.modelValue,
@@ -160,6 +256,54 @@ const dragOver = ref(false)
 const agentDocFile = ref(null)
 const agentDocInput = ref(null)
 const parseStatus = ref(null)
+
+// Issue 1 — preview before commit. Parsed agents land here first; the user
+// reviews them and commits selected ones to the roster (or discards all).
+// Avoids silent commits of bad parses into the live roster.
+const pendingAgents = ref([])
+const pendingSelected = ref(new Set())
+const pendingScrollRef = ref(null)
+
+// Per-row enrichment: track which agents are currently being enriched so we
+// can show a spinner on just that row, not the whole panel.
+const enrichingIds = ref(new Set())
+
+async function enrichPendingAgent(agent) {
+  if (!agent || !agent._id || enrichingIds.value.has(agent._id)) return
+  const idx = pendingAgents.value.findIndex(a => a._id === agent._id)
+  if (idx === -1) return
+
+  // Mark as enriching (Set must be reassigned for Vue reactivity)
+  const startSet = new Set(enrichingIds.value)
+  startSet.add(agent._id)
+  enrichingIds.value = startSet
+
+  try {
+    const res = await enrichAgent({ agent })
+    if (res && res.success && res.agent) {
+      // Update the row in place. Backend already preserved _id and any
+      // user-provided non-empty fields.
+      const updated = { ...res.agent }
+      const next = [...pendingAgents.value]
+      next[idx] = updated
+      pendingAgents.value = next
+    } else {
+      parseStatus.value = {
+        type: 'error',
+        message: (res && res.error) || 'Enrich failed.'
+      }
+    }
+  } catch (err) {
+    parseStatus.value = {
+      type: 'error',
+      message: err.message || 'Enrich failed.'
+    }
+  } finally {
+    const endSet = new Set(enrichingIds.value)
+    endSet.delete(agent._id)
+    enrichingIds.value = endSet
+  }
+}
 
 // People search
 const peopleQuery = ref('')
@@ -231,30 +375,128 @@ function handleDrop(e) {
   if (file) setAgentDoc(file)
 }
 
+// Issue 2 — informative status. Counts what came through with vs without
+// the key fields so the user can tell at a glance whether the parse was
+// good. Reports a single summary line under the upload zone.
+function summarizeExtraction(parsed) {
+  let complete = 0
+  const missing = { archetype: 0, background: 0, persona: 0 }
+  for (const a of parsed) {
+    const hasArch = !!(a.actor_archetype || a.archetype)
+    const hasBg = !!(a.background_story || a.bio || a.background)
+    const hasPersona = !!(a.persona || a.description)
+    if (hasArch && hasBg && hasPersona) complete++
+    if (!hasArch) missing.archetype++
+    if (!hasBg) missing.background++
+    if (!hasPersona) missing.persona++
+  }
+  const parts = []
+  parts.push(`${parsed.length} extracted`)
+  if (complete > 0 && complete < parsed.length) parts.push(`${complete} complete`)
+  else if (complete === parsed.length) parts.push('all complete')
+  const gaps = []
+  if (missing.archetype) gaps.push(`${missing.archetype} missing archetype`)
+  if (missing.background) gaps.push(`${missing.background} missing background`)
+  if (missing.persona) gaps.push(`${missing.persona} missing persona`)
+  if (gaps.length) parts.push(gaps.join(', '))
+  return parts.join(' · ')
+}
+
 async function setAgentDoc(file) {
+  // Issue 7 — block re-upload if a pending review is already showing. Forces
+  // the user to commit or discard before the next file, avoiding ambiguous
+  // state where two unreviewed batches stack.
+  if (pendingAgents.value.length > 0) {
+    parseStatus.value = {
+      type: 'error',
+      message: 'Review the pending agents below before uploading another file.'
+    }
+    return
+  }
   agentDocFile.value = file
   parseStatus.value = { type: 'loading', message: 'Parsing agent definitions...' }
 
   try {
     const result = await parseAgentDocument(file)
     if (result && result.success && Array.isArray(result.data)) {
-      const count = result.data.length
-      const validCount = result.data.filter(a => a && typeof a === 'object' && a.name).length
-      console.log(`[CustomAgentPanel] Backend returned ${count} agents, ${validCount} valid`)
-      // Merge parsed agents, avoiding duplicates by name (defensive: filter null/invalid)
       const validAgents = result.data.filter(a => a && typeof a === 'object' && a.name)
       const existingNames = new Set(agents.value.map(a => (a && a.name || '').toLowerCase()))
-      const newAgents = validAgents.filter(a => !existingNames.has(a.name.toLowerCase()))
-      agents.value = [...agents.value, ...newAgents]
+      // Filter out names already in the roster so the user doesn't review
+      // duplicates that would silently drop on commit.
+      const fresh = validAgents.filter(a => !existingNames.has(a.name.toLowerCase()))
+      const stagedAgents = fresh.map(a => ({ ...a, _id: a._id || genId() }))
+
+      if (stagedAgents.length === 0) {
+        parseStatus.value = {
+          type: 'error',
+          message: validAgents.length > 0
+            ? `Parsed ${validAgents.length} agents but all already exist in the roster.`
+            : 'No usable agents found in the document.'
+        }
+        return
+      }
+
+      pendingAgents.value = stagedAgents
+      pendingSelected.value = new Set(stagedAgents.map(a => a._id))
       parseStatus.value = {
         type: 'success',
-        message: `Extracted ${newAgents.length} agent${newAgents.length !== 1 ? 's' : ''} from document.`
+        message: summarizeExtraction(stagedAgents) + ' — review below.'
       }
+      // Issue 7 — bring the new section into view so the user sees that
+      // something happened, even on a tall page.
+      nextTick(() => {
+        try { pendingScrollRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }) } catch {}
+      })
     } else {
       parseStatus.value = { type: 'error', message: result.error || 'Could not parse agents from document.' }
     }
   } catch (err) {
     parseStatus.value = { type: 'error', message: err.message || 'Parse failed.' }
+  }
+}
+
+// Commit selected pending agents into the live roster.
+function commitPendingAgents() {
+  const toAdd = pendingAgents.value.filter(a => pendingSelected.value.has(a._id))
+  if (toAdd.length === 0) {
+    parseStatus.value = { type: 'error', message: 'Select at least one agent to add.' }
+    return
+  }
+  agents.value = [...agents.value, ...toAdd]
+  const n = toAdd.length
+  parseStatus.value = {
+    type: 'success',
+    message: `Added ${n} agent${n !== 1 ? 's' : ''} to the roster.`
+  }
+  pendingAgents.value = []
+  pendingSelected.value = new Set()
+  removeAgentDoc()
+}
+
+function discardPendingAgents() {
+  pendingAgents.value = []
+  pendingSelected.value = new Set()
+  parseStatus.value = null
+  removeAgentDoc()
+}
+
+function togglePendingSelected(id) {
+  const next = new Set(pendingSelected.value)
+  if (next.has(id)) next.delete(id)
+  else next.add(id)
+  pendingSelected.value = next
+}
+
+function allPendingSelected() {
+  return pendingAgents.value.length > 0 &&
+         pendingAgents.value.every(a => pendingSelected.value.has(a._id))
+}
+
+function toggleAllPendingSelected() {
+  if (allPendingSelected()) {
+    pendingSelected.value = new Set()
+  } else {
+    pendingSelected.value = new Set(pendingAgents.value.map(a => a._id))
   }
 }
 
@@ -558,6 +800,36 @@ function genId() {
   color: #C5283D;
 }
 
+/* Helper row under the upload zone — types accepted + example download.
+   Quiet enough not to compete with the drop zone; visible enough that a
+   first-time user finds the template without having to ask. */
+.upload-helper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: #888;
+}
+.upload-helper-hint code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  background: #F4F4F4;
+  padding: 1px 5px;
+  color: #000;
+}
+.upload-helper-link {
+  color: #1E9E5A;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px dotted #1E9E5A;
+}
+.upload-helper-link:hover {
+  color: #167a45;
+  border-bottom-style: solid;
+}
+
 .parse-status {
   margin-top: 8px;
   padding: 8px 12px;
@@ -642,6 +914,45 @@ function genId() {
   overflow-y: auto;
 }
 
+/* Run mode toggle */
+.run-mode {
+  padding: 12px;
+  background: #FAFAFA;
+  border: 1px solid #EAEAEA;
+}
+.run-mode-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.run-mode-row input {
+  margin-top: 3px;
+  accent-color: #1E9E5A;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.run-mode-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.run-mode-label strong {
+  font-size: 0.85rem;
+  color: #000;
+}
+.run-mode-hint {
+  font-size: 0.75rem;
+  color: #888;
+  line-height: 1.4;
+}
+.custom-only-note {
+  background: #F0FAF4;
+}
+.custom-only-note .note-icon {
+  color: #1E9E5A;
+}
+
 /* Merge note */
 .merge-note {
   display: flex;
@@ -658,5 +969,184 @@ function genId() {
   color: #1E9E5A;
   font-weight: 700;
   flex-shrink: 0;
+}
+
+/* Pending review — preview before committing parsed agents to the roster.
+   Tinted background + slide transition so the user sees something happened. */
+.pending-section {
+  margin: 6px 0 18px;
+  padding: 14px 16px;
+  background: #F0FAF4;
+  border: 1px solid #1E9E5A;
+  border-left-width: 3px;
+}
+.pending-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+.pending-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #000;
+  display: block;
+}
+.pending-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #1E9E5A;
+}
+.pending-toggle-all {
+  background: transparent;
+  border: 1px solid #BBB;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: #555;
+}
+.pending-toggle-all:hover {
+  border-color: #1E9E5A;
+  color: #1E9E5A;
+}
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.pending-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid #DDE7E0;
+  transition: border-color 0.15s, background 0.15s;
+}
+.pending-row:hover {
+  border-color: #1E9E5A;
+}
+.pending-row.selected {
+  border-color: #1E9E5A;
+  background: #fff;
+}
+.pending-row:not(.selected) {
+  opacity: 0.6;
+}
+.pending-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+.pending-check {
+  margin-top: 2px;
+  accent-color: #1E9E5A;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pending-enrich {
+  align-self: center;
+  background: transparent;
+  border: 1px solid #1E9E5A;
+  color: #1E9E5A;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.pending-enrich:hover:not(:disabled) {
+  background: #1E9E5A;
+  color: #fff;
+}
+.pending-enrich:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.pending-meta {
+  flex: 1;
+  min-width: 0;
+}
+.pending-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #000;
+}
+.pending-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  align-items: center;
+}
+.pending-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  background: #000;
+  color: #fff;
+  padding: 1px 6px;
+}
+.pending-bit {
+  font-size: 0.72rem;
+  color: #666;
+}
+.pending-warn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #C5283D;
+  background: #FFF0F2;
+  padding: 1px 6px;
+}
+.pending-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.pending-discard {
+  background: transparent;
+  border: 1px solid #BBB;
+  color: #666;
+  padding: 7px 14px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.pending-discard:hover {
+  border-color: #C5283D;
+  color: #C5283D;
+}
+.pending-commit {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  padding: 7px 16px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pending-commit:hover {
+  background: #1E9E5A;
+  border-color: #1E9E5A;
+}
+
+/* Slide-down transition for the pending review block */
+.fade-slide-enter-active, .fade-slide-leave-active {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.fade-slide-enter-from, .fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>

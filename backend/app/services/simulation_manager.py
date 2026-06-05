@@ -227,6 +227,8 @@ class SimulationManager:
         parallel_profile_count: int = 3,
         storage: 'GraphStorage' = None,
         custom_profiles: Optional[List] = None,
+        custom_only: bool = False,
+        mode: str = 'policy',
     ) -> SimulationState:
         """
         Prepare simulation environment (fully automated)
@@ -404,7 +406,8 @@ class SimulationManager:
             generator = AgentProfileGenerator(
                 storage=storage,
                 graph_id=state.graph_id,
-                enrichment_data=enrichment_data
+                enrichment_data=enrichment_data,
+                mode=mode
             )
             
             def profile_progress(current, total, msg):
@@ -420,22 +423,47 @@ class SimulationManager:
             
             realtime_output_path = os.path.join(sim_dir, "agentsociety_profiles.json")
 
-            profiles = generator.generate_profiles_from_entities(
-                entities=filtered.entities,
-                use_llm=use_llm_for_profiles,
-                progress_callback=profile_progress,
-                graph_id=state.graph_id,
-                parallel_count=parallel_profile_count,
-                realtime_output_path=realtime_output_path,
-                output_platform="opinion_space"
-            )
+            # ========== Custom-only mode: skip auto-generation entirely ==========
+            # When the user opts to run on custom agents alone, we don't read the
+            # graph population or LLM-expand — the run consists solely of their
+            # hand-defined agents. Falls back to normal generation if custom_only
+            # was requested but no usable custom profiles came through.
+            run_custom_only = bool(custom_only and custom_profiles and len(custom_profiles) > 0)
 
-            state.profiles_count = len(profiles)
+            if run_custom_only:
+                logger.info(f"Custom-only mode: running on {len(custom_profiles)} custom agents, skipping auto-generation")
+                if progress_callback:
+                    progress_callback(
+                        "generating_profiles", 90,
+                        f"Custom-only mode — using {len(custom_profiles)} custom agents...",
+                        current=len(custom_profiles),
+                        total=len(custom_profiles)
+                    )
+                # merge against an empty auto population to assign sequential IDs
+                profiles = CustomAgentParser.merge_profiles([], custom_profiles)
+                state.profiles_count = len(profiles)
+                logger.info(f"Custom-only population: {len(profiles)} agents")
+            else:
+                if custom_only:
+                    logger.warning("custom_only requested but no usable custom profiles — falling back to auto-generation")
+
+                profiles = generator.generate_profiles_from_entities(
+                    entities=filtered.entities,
+                    use_llm=use_llm_for_profiles,
+                    progress_callback=profile_progress,
+                    graph_id=state.graph_id,
+                    parallel_count=parallel_profile_count,
+                    realtime_output_path=realtime_output_path,
+                    output_platform="opinion_space"
+                )
+
+                state.profiles_count = len(profiles)
 
             # ========== Expand population if needed (LLM self-generation) ==========
-            # Always expand if we have fewer than 20 agents — richer simulations need scale
+            # Always expand if we have fewer than 20 agents — richer simulations need scale.
+            # Skipped in custom-only mode (the cast is deliberately exactly what the user defined).
             target_min = 20
-            if len(profiles) < target_min and document_text:
+            if not run_custom_only and len(profiles) < target_min and document_text:
                 needed = target_min - len(profiles)
                 logger.info(f"Seed population small ({len(profiles)}), expanding by {needed} via LLM...")
                 if progress_callback:
@@ -462,7 +490,8 @@ class SimulationManager:
                 logger.info(f"Population expanded to {len(profiles)} agents")
 
             # ========== Merge custom agents if provided ==========
-            if custom_profiles and len(custom_profiles) > 0:
+            # In custom-only mode the custom profiles are already the population, so skip.
+            if not run_custom_only and custom_profiles and len(custom_profiles) > 0:
                 if progress_callback:
                     progress_callback(
                         "generating_profiles", 92,
@@ -512,11 +541,11 @@ class SimulationManager:
                 )
 
             try:
-                ctx_engine = DocumentContextEngine(storage=storage)
+                ctx_engine = DocumentContextEngine(storage=storage, mode=mode)
                 ctx_engine.build_from_graph(state.graph_id)
 
-                # Extract facts if we have document text and an LLM client
                 facts = []
+                competitive_landscape = []
                 if document_text:
                     try:
                         from openai import OpenAI
@@ -529,15 +558,24 @@ class SimulationManager:
                             llm_client=client,
                             model_name=Config.LLM_MODEL,
                         )
+                        if mode == "product":
+                            competitive_landscape = ctx_engine.extract_competitive_landscape(
+                                document_text=document_text,
+                                llm_client=client,
+                                model_name=Config.LLM_MODEL,
+                            )
+                            ctx_engine._build_document_context_block()
                     except Exception as e:
-                        logger.warning(f"LLM fact extraction skipped: {e}")
+                        logger.warning(f"LLM extraction skipped: {e}")
 
                 doc_context = {
+                    "mode": mode,
                     "domain": ctx_engine.domain,
                     "domain_profile": ctx_engine.get_domain_profile(),
                     "document_context_block": ctx_engine.get_document_context_block(),
                     "dynamic_rules": ctx_engine.get_dynamic_rules(),
                     "facts": facts,
+                    "competitive_landscape": competitive_landscape,
                 }
 
                 ctx_path = os.path.join(sim_dir, "document_context.json")

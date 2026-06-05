@@ -34,6 +34,23 @@ test announcements / events before committing them in real life.
   (`ladybug_storage.__init__` quarantines bad files). Don't force-kill
   the backend — use Ctrl+C.
 
+## Product-mode economy (hard rules)
+
+The product-sim economic lens must keep "wants it" and "can afford it" strictly
+separate. When touching anything economic:
+
+- **Affordability comes from real persona data, never the LLM.** The affordability
+  number is computed from the persona's real income/budget. If the LLM can write
+  or change a budget figure, that's a bug — fix it, don't work around it.
+- **"Wants it" vs "can afford it" are separate fields. Never merge them.**
+  "Wants it" is qualitative LLM output (objections, willingness, conditions).
+  "Can afford it" is computed from real data. They do not collapse into one number.
+- **Never emit a "% who would buy" or any validation score.** An affordability
+  share computed from real income is allowed; a purchase *probability* is not.
+- **Every economic change must be testable with the LLM switched off.** If a piece
+  of economic logic can't be asserted without calling a model, it's in the wrong
+  layer.
+
 ## Style
 
 - Don't add new abstractions speculatively; keep the simplification

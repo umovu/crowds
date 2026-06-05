@@ -21,10 +21,11 @@ from openai import OpenAI
 from ..config import Config
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
+from .document_context_engine import sanitize_language_drift
 
 logger = get_logger('fub.simulation_config')
 
-# Time zone configuration for Chinese work schedules (Beijing Time)
+# Time zone configuration for South African work schedules (SAST)
 CHINA_TIMEZONE_CONFIG = {
     # Dead hours (almost no activity)
     "dead_hours": [0, 1, 2, 3, 4, 5],
@@ -81,7 +82,7 @@ class AgentActivityConfig:
 
 @dataclass
 class TimeSimulationConfig:
-    """Time simulation configuration (based on Chinese work schedule habits)"""
+    """Time simulation configuration (based on South African / SAST work schedule habits)"""
     # Total simulation time (simulation hours)
     total_simulation_hours: int = 24  # Default 24 hours (1 day)
 
@@ -92,7 +93,7 @@ class TimeSimulationConfig:
     agents_per_hour_min: int = 5
     agents_per_hour_max: int = 20
 
-    # Peak hours (evening 19-22, most active time for Chinese people)
+    # Peak hours (evening 19-22, most active time for South African users)
     peak_hours: List[int] = field(default_factory=lambda: [19, 20, 21, 22])
     peak_activity_multiplier: float = 1.5
 
@@ -285,10 +286,14 @@ class SimulationConfigGenerator:
             event_config_result = event_future.result()
         
         time_config = self._parse_time_config(time_config_result, num_entities)
-        reasoning_parts.append(f"Time config: {time_config_result.get('reasoning', 'Success')}")
-        
+        # Defense-in-depth: strip any non-Latin script the LLM may still emit, so the
+        # displayed reasoning can't surface as Chinese even if the model drifts.
+        reasoning_parts.append("Time config: " + sanitize_language_drift(
+            str(time_config_result.get('reasoning', 'Success')), label="time_config_reasoning"))
+
         event_config = self._parse_event_config(event_config_result)
-        reasoning_parts.append(f"Event config: {event_config_result.get('reasoning', 'Success')}")
+        reasoning_parts.append("Event config: " + sanitize_language_drift(
+            str(event_config_result.get('reasoning', 'Success')), label="event_config_reasoning"))
 
         # ========== Step 3-N: Generate agent configurations in batches ==========
         all_agent_configs = []
@@ -563,7 +568,7 @@ class SimulationConfigGenerator:
 Please generate time configuration JSON.
 
 ### Basic principles (for reference only, adjust flexibly based on event nature and participant characteristics):
-- User base is Chinese people, must follow Beijing Time work schedule habits
+- User base is South African; follow South African Standard Time (SAST) work schedule habits
 - 0-5am almost no activity (activity coefficient 0.05)
 - 6-8am gradually active (activity coefficient 0.4)
 - 9-18 work time moderately active (activity coefficient 0.7)
@@ -600,7 +605,7 @@ Field description:
 - work_hours (int array): Work hours
 - reasoning (string): Brief explanation for this configuration"""
 
-        system_prompt = "You are a social media simulation expert. Return pure JSON format, time configuration must follow Chinese work schedule habits."
+        system_prompt = "You are a social media simulation expert. Return pure JSON format. The audience is South African (SAST timezone); time configuration must follow South African work schedule habits. Write all text fields, including 'reasoning', in English only."
 
         try:
             return self._call_llm_with_retry(prompt, system_prompt)
@@ -609,7 +614,7 @@ Field description:
             return self._get_default_time_config(num_entities)
     
     def _get_default_time_config(self, num_entities: int) -> Dict[str, Any]:
-        """Get default time configuration (Chinese work schedule)"""
+        """Get default time configuration (South African / SAST work schedule)"""
         return {
             "total_simulation_hours": 24,
             "minutes_per_round": 30,  # 30 min per round
@@ -854,7 +859,7 @@ Simulation Requirements: {simulation_requirement}
 
 ## Task
 Generate activity configuration for each entity, noting:
-- **Time follows Chinese work schedule**: Almost no activity 0-5am, most active 19-22
+- **Time follows South African (SAST) work schedule**: Almost no activity 0-5am, most active 19-22
 - **Official institutions** (University/GovernmentAgency): Low activity (0.1-0.3), active during work hours (9-17), slow response (60-240 min), high influence (2.5-3.0)
 - **Media** (MediaOutlet): Medium activity (0.4-0.6), active all day (8-23), fast response (5-30 min), high influence (2.0-2.5)
 - **Individuals** (Student/Person/Alumni): High activity (0.6-0.9), mainly evening activity (18-23), fast response (1-15 min), low influence (0.8-1.2)
@@ -868,7 +873,7 @@ Return JSON format (no markdown):
             "activity_level": <0.0-1.0>,
             "posts_per_hour": <posting frequency>,
             "comments_per_hour": <comment frequency>,
-            "active_hours": [<active hours list, consider Chinese work schedule>],
+            "active_hours": [<active hours list, consider South African work schedule>],
             "response_delay_min": <minimum response delay minutes>,
             "response_delay_max": <maximum response delay minutes>,
             "sentiment_bias": <-1.0 to 1.0>,
@@ -879,7 +884,7 @@ Return JSON format (no markdown):
     ]
 }}"""
 
-        system_prompt = "You are a social media behavior analysis expert. Return pure JSON, configuration must follow Chinese work schedule habits."
+        system_prompt = "You are a social media behavior analysis expert. Return pure JSON. The audience is South African (SAST timezone); configuration must follow South African work schedule habits. Write all text fields in English only."
 
         try:
             result = self._call_llm_with_retry(prompt, system_prompt)
@@ -918,7 +923,7 @@ Return JSON format (no markdown):
         return configs
     
     def _generate_agent_config_by_rule(self, entity: EntityNode) -> Dict[str, Any]:
-        """Generate single agent configuration based on rules (Chinese work schedule)"""
+        """Generate single agent configuration based on rules (South African / SAST work schedule)"""
         entity_type = (entity.get_entity_type() or "Unknown").lower()
 
         if entity_type in ["university", "governmentagency", "ngo"]:

@@ -9,11 +9,8 @@
       <section class="dashboard-section" :style="s.dashboardSection">
         <!-- Left column: brief marketing / what-is-this -->
         <aside class="pitch-panel">
-          <div class="pitch-tag">POLICY WIND TUNNEL</div>
-          <h1 class="pitch-title">
-            Test events on <span class="pitch-accent">digital agents</span><br />
-            before they happen to real people.
-          </h1>
+          <div class="pitch-tag">{{ pitchCopy.tag }}</div>
+          <h1 class="pitch-title" v-html="pitchCopy.title"></h1>
 
           <ul class="pitch-list">
             <li>
@@ -34,14 +31,14 @@
               <span class="pitch-bullet">03</span>
               <div>
                 <div class="pitch-bullet-title">Intervene mid-flight</div>
-                <div class="pitch-bullet-desc">Pause and test a policy announcement. Compare trajectories.</div>
+                <div class="pitch-bullet-desc">{{ pitchCopy.bullet3 }}</div>
               </div>
             </li>
           </ul>
 
           <div class="pitch-foot">
             <span class="pitch-foot-dot"></span>
-            Built for South African policy questions. Designed for evidence, not vibes.
+            Built for South African policy and product questions. Designed for evidence, not vibes.
           </div>
         </aside>
 
@@ -49,17 +46,34 @@
         <div class="right-panel" :style="{ ...s.rightPanel, flex: '1' }">
           <div class="console-box" :style="s.consoleBox">
 
+            <!-- Mode selector: Policy vs Product -->
+            <div class="mode-switch">
+              <button
+                class="mode-btn"
+                :class="{ active: mode === 'policy' }"
+                :disabled="loading || seedLoading"
+                @click="mode = 'policy'"
+              >Policy</button>
+              <button
+                class="mode-btn"
+                :class="{ active: mode === 'product' }"
+                :disabled="loading || seedLoading"
+                @click="mode = 'product'"
+              >Product</button>
+              <span class="mode-hint">{{ pitchCopy.modeHint }}</span>
+            </div>
+
             <!-- 01: Seed Message -->
             <div :style="s.consoleSection">
               <div class="console-header" :style="s.consoleHeader">
-                <span>01 / Seed Message</span>
+                <span>01 / {{ pitchCopy.seedHeader }}</span>
                 <span>Required</span>
               </div>
               <div :style="s.inputWrapper">
                 <textarea
                   v-model="formData.simulationRequirement"
                   :style="s.codeInput"
-                  placeholder="Describe the policy, event, or scenario you want to simulate. What are you testing? Who is the audience?"
+                  :placeholder="pitchCopy.seedPlaceholder"
                   rows="8"
                   :disabled="loading || seedLoading"
                 ></textarea>
@@ -126,6 +140,7 @@
               <CustomAgentPanel
                 v-model="customAgents"
                 v-model:enabled="customAgentsEnabled"
+                v-model:customOnly="customAgentsOnly"
               />
             </div>
 
@@ -312,6 +327,33 @@ const fileInput = ref(null)
 const selectedBackend = ref('ladybug')
 const customAgentsEnabled = ref(false)
 const customAgents = ref([])
+const customAgentsOnly = ref(false)
+
+// Simulation mode: 'policy' (citizens vs a policy) or 'product' (a SA market vs a product idea)
+const mode = ref('policy')
+
+// Mode-driven pitch + input copy. Policy strings are the originals, so the
+// default view is unchanged.
+const pitchCopy = computed(() => {
+  if (mode.value === 'product') {
+    return {
+      tag: 'PRODUCT WIND TUNNEL',
+      title: 'Stress-test a product idea<br />against a South African market.',
+      bullet3: 'Pause and test a price, feature, or pitch change. Compare reactions.',
+      modeHint: 'How would a SA market react to your product idea?',
+      seedHeader: 'Product Idea',
+      seedPlaceholder: 'Describe the product idea, pitch, or positioning you want to stress-test. What is it? Who is it for? What problem does it solve?'
+    }
+  }
+  return {
+    tag: 'POLICY WIND TUNNEL',
+    title: 'Test events on <span class="pitch-accent">digital agents</span><br />before they happen to real people.',
+    bullet3: 'Pause and test a policy announcement. Compare trajectories.',
+    modeHint: 'How would the public react to your policy or announcement?',
+    seedHeader: 'Seed Message',
+    seedPlaceholder: 'Describe the policy, event, or scenario you want to simulate. What are you testing? Who is the audience?'
+  }
+})
 
 // Use VITE_API_BASE_URL so the deployed frontend calls the configured
 // backend (e.g. a tunnel URL), not its own origin. Empty string falls back
@@ -403,7 +445,9 @@ const startSimulation = async () => {
       files.value,
       formData.value.simulationRequirement,
       customAgentsEnabled.value ? customAgents.value : [],
-      customAgentsEnabled.value
+      customAgentsEnabled.value,
+      customAgentsEnabled.value && customAgentsOnly.value,
+      mode.value
     )
     router.push({ name: 'Process', params: { projectId: 'new' } })
   })
@@ -413,6 +457,39 @@ const startSimulation = async () => {
 </script>
 
 <style scoped>
+/* Mode selector — Policy vs Product. Drives pitch + input copy and the
+   simulation mode sent to /prepare. */
+.mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.mode-btn {
+  padding: 6px 16px;
+  border: 1px solid #DDD;
+  background: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mode-btn:first-of-type { border-radius: 6px 0 0 6px; }
+.mode-btn:nth-of-type(2) { border-radius: 0 6px 6px 0; border-left: none; }
+.mode-btn.active {
+  background: #1E9E5A;
+  border-color: #1E9E5A;
+  color: #fff;
+}
+.mode-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.mode-hint {
+  font-size: 0.75rem;
+  color: #999;
+  margin-left: 4px;
+}
+
 /* Left-column pitch panel — brief what-is-this strap so first-time visitors
    understand the product without a separate landing page. Designed to sit
    beside the console, not above it. */
