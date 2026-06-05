@@ -314,3 +314,9 @@ export const interveneLive = (simulationId, agentId, data) => {
   return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/agents/${agentId}/intervene-live`, data), 3, 1000)
 }
 
+// Founder broadcast: posts the message into the opinion space; the whole
+// active room reacts next round. data = { intervention_text, founder_name? }
+export const broadcastIntervention = (simulationId, data) => {
+  return requestWithRetry(() => service.post(`/api/simulation/${simulationId}/broadcast-intervention`, data), 3, 1000)
+}
+

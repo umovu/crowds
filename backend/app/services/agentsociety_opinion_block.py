@@ -136,7 +136,8 @@ class OpinionEnvironment:
                 created_at TEXT NOT NULL,
                 reason TEXT,
                 internal_thought TEXT,
-                impact_score REAL DEFAULT 0.0
+                impact_score REAL DEFAULT 0.0,
+                economic_reasoning TEXT
             )
         """)
         conn.execute("""
@@ -184,7 +185,12 @@ class OpinionEnvironment:
             conn.execute("ALTER TABLE opinion ADD COLUMN impact_score REAL DEFAULT 0.0")
         except sqlite3.OperationalError:
             pass
-        
+        # Product mode only: qualitative economic reasoning JSON (nullable in policy).
+        try:
+            conn.execute("ALTER TABLE opinion ADD COLUMN economic_reasoning TEXT")
+        except sqlite3.OperationalError:
+            pass
+
         try:
             conn.execute("ALTER TABLE opinion_response ADD COLUMN reason TEXT")
         except sqlite3.OperationalError:
@@ -273,14 +279,19 @@ class OpinionEnvironment:
     async def add_opinion(self, agent_id: int, agent_name: str,
                           content: str, topics: List[str], round_num: int,
                           reason: str = "", internal_thought: str = "",
-                          impact_score: float = 0.0) -> int:
-        """Persist an expressed opinion; return its ID."""
+                          impact_score: float = 0.0,
+                          economic_reasoning: Optional[str] = None) -> int:
+        """Persist an expressed opinion; return its ID.
+
+        economic_reasoning is a JSON string of the agent's qualitative economic
+        stance (product mode only); None/absent in policy mode.
+        """
         now = datetime.now().isoformat()
         conn = sqlite3.connect(self.db_path)
         cur = conn.execute(
-            "INSERT INTO opinion (agent_id, agent_name, content, topics, round_num, created_at, reason, internal_thought, impact_score)"
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (agent_id, agent_name, content, json.dumps(topics), round_num, now, reason, internal_thought, impact_score),
+            "INSERT INTO opinion (agent_id, agent_name, content, topics, round_num, created_at, reason, internal_thought, impact_score, economic_reasoning)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (agent_id, agent_name, content, json.dumps(topics), round_num, now, reason, internal_thought, impact_score, economic_reasoning),
         )
         opinion_id = cur.lastrowid
         conn.commit()
@@ -297,6 +308,7 @@ class OpinionEnvironment:
             "reason": reason,
             "internal_thought": internal_thought,
             "impact_score": impact_score,
+            "economic_reasoning": economic_reasoning,
         }
         async with self._lock:
             self._opinions.append(record)

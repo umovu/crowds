@@ -21,6 +21,7 @@ from enum import Enum
 from ..config import Config
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
+from .document_context_engine import sanitize_language_drift
 from .graph_tools import (
     GraphToolsService,
     SearchResult,
@@ -2155,6 +2156,7 @@ class ReportManager:
         if not content:
             return content
         
+        content = sanitize_language_drift(content, label=f"report_section_{section_title}")
         content = content.strip()
         lines = content.split('\n')
         cleaned_lines = []

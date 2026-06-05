@@ -177,6 +177,21 @@ export function searchPeople(data) {
 }
 
 /**
+ * Enrich a partial agent dict — fill in missing/thin fields with the LLM.
+ * Preserves any non-empty fields the user already provided.
+ * @param {Object} data - { agent: <partial dict>, ground_with_web?: boolean }
+ * @returns {Promise<{ success, agent, grounded, sources }>}
+ */
+export function enrichAgent(data) {
+  return service({
+    url: '/api/research/agents/enrich',
+    method: 'post',
+    data,
+    timeout: 120000
+  })
+}
+
+/**
  * List every cached/generated persona — metadata only, for the side panel.
  * @returns {Promise<{success, count, personas}>}
  */

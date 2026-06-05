@@ -541,6 +541,14 @@ def prepare_simulation():
         use_llm_for_profiles = data.get('use_llm_for_profiles', True)
         parallel_profile_count = data.get('parallel_profile_count', 5)
         custom_agents_raw = data.get('custom_agents', [])
+        # Run only on the user's custom agents (skip graph-derived population).
+        # Defaults to False = merge custom agents into the auto-generated population.
+        custom_agents_only = bool(data.get('custom_agents_only', False))
+        # Simulation mode: 'policy' (default) or 'product'. Drives persona framing +
+        # archetype taxonomy. Anything unrecognised degrades to 'policy' (never errors).
+        mode = (data.get('mode') or 'policy').strip().lower()
+        if mode not in ('policy', 'product'):
+            mode = 'policy'
 
         # Parse custom agents if provided in request, else load from project
         custom_profiles = []
@@ -558,6 +566,15 @@ def prepare_simulation():
                 logger.info(f"Loaded {len(project.custom_agents)} custom agents from project, parsed {len(custom_profiles)} valid profiles")
             except Exception as e:
                 logger.warning(f"Failed to parse custom agents from project: {e}")
+
+        # Custom-only requested but nothing usable parsed — fail loudly rather than
+        # silently falling back to a full auto-generated population the user didn't want.
+        if custom_agents_only and len(custom_profiles) == 0:
+            return jsonify({
+                "success": False,
+                "error": "Custom-agents-only mode is on, but no usable custom agents were provided. "
+                         "Add at least one custom agent, or turn off custom-only mode."
+            }), 400
 
         # ========== Get GraphStorage（Capture reference before background task starts） ==========
         storage = current_app.extensions.get('graph_storage')
@@ -682,6 +699,8 @@ def prepare_simulation():
                     parallel_profile_count=parallel_profile_count,
                     storage=storage,
                     custom_profiles=custom_profiles,
+                    custom_only=custom_agents_only,
+                    mode=mode,
                 )
 
                 # prepare_simulation returns a FAILED state (instead of raising)
@@ -3763,6 +3782,55 @@ def intervene_live(simulation_id: str, agent_id: int):
         }), 400
     except Exception as e:
         logger.error(f"Live intervention failed: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
+@simulation_bp.route('/<simulation_id>/broadcast-intervention', methods=['POST'])
+def broadcast_intervention(simulation_id: str):
+    """
+    Broadcast a founder announcement into the opinion space during a running
+    (paused) simulation. The message posts to the feed and the whole active
+    room reacts next round — unlike intervene-live, which targets one agent.
+
+    Request (JSON):
+        {
+            "intervention_text": "We just made it free for the first 3 months",
+            "founder_name": "Nkosinathi Themba"   # optional
+        }
+    """
+    try:
+        data = request.get_json() or {}
+        intervention_text = data.get('intervention_text')
+        founder_name = data.get('founder_name') or ""
+
+        if not intervention_text:
+            return jsonify({
+                "success": False,
+                "error": "Provide 'intervention_text'"
+            }), 400
+
+        result = SimulationRunner.broadcast_intervention_during_sim(
+            simulation_id=simulation_id,
+            intervention_text=intervention_text,
+            founder_name=founder_name,
+        )
+
+        return jsonify({
+            "success": result.get("success", False),
+            "data": result.get("result") or result
+        })
+
+    except ValueError as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Broadcast intervention failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),

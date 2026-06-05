@@ -769,7 +769,9 @@ const props = defineProps({
   graphData: Object,
   systemLogs: Array,
   customAgents: { type: Array, default: () => [] },
-  customAgentsEnabled: { type: Boolean, default: false }
+  customAgentsEnabled: { type: Boolean, default: false },
+  customAgentsOnly: { type: Boolean, default: false },
+  mode: { type: String, default: 'policy' }
 })
 
 const emit = defineEmits(['go-back', 'next-step', 'add-log', 'update-status'])
@@ -1020,11 +1022,20 @@ const startPrepareSimulation = async () => {
     const payload = {
       simulation_id: props.simulationId,
       use_llm_for_profiles: true,
-      parallel_profile_count: 5
+      parallel_profile_count: 5,
+      mode: props.mode || 'policy'
+    }
+    if (props.mode === 'product') {
+      addLog('Product mode: generating a South African market to stress-test the product idea')
     }
     if (props.customAgentsEnabled && props.customAgents.length > 0) {
       payload.custom_agents = props.customAgents
-      addLog(`Injecting ${props.customAgents.length} custom agent profiles into simulation`)
+      if (props.customAgentsOnly) {
+        payload.custom_agents_only = true
+        addLog(`Custom-only mode: running on ${props.customAgents.length} custom agents (auto-population skipped)`)
+      } else {
+        addLog(`Injecting ${props.customAgents.length} custom agent profiles into simulation`)
+      }
     }
     const res = await prepareSimulation(payload)
     

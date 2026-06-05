@@ -169,7 +169,8 @@ class AgentProfileGenerator:
         model_name: Optional[str] = None,
         storage: Optional[GraphStorage] = None,
         graph_id: Optional[str] = None,
-        enrichment_data: Optional[Dict[str, str]] = None
+        enrichment_data: Optional[Dict[str, str]] = None,
+        mode: str = "policy",
     ):
         self.api_key = api_key or Config.LLM_API_KEY
         self.base_url = base_url or Config.LLM_BASE_URL
@@ -182,6 +183,9 @@ class AgentProfileGenerator:
         self.storage = storage
         self.graph_id = graph_id
         self.enrichment_data = enrichment_data or {}
+        # 'policy' (default) or 'product' — kept consistent with the rest of the
+        # prepare pipeline (simulation_manager, DocumentContextEngine).
+        self.mode = mode
         self._usage = {"prompt_tokens": 0, "completion_tokens": 0}
 
     def get_usage_stats(self) -> dict:

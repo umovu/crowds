@@ -22,6 +22,7 @@ from .agentsociety_opinion_block import (
     OpinionEnvironment,
     SA_POLICY_CONTEXT,
 )
+from .mode_specs import build_economic_lens, seed_willingness_band, budget_tier, disposition
 from .document_context_engine import sanitize_language_drift
 from ..utils.logger import get_logger
 from ..utils.token_counter import TokenCounter
@@ -339,12 +340,17 @@ class OpinionCaptureSkill:
         "respond to others, search topics, or observe silently."
     )
 
-    def __init__(self, env: OpinionEnvironment, document_context: str = "", fast_mode: bool = False, model_name: str = ""):
+    def __init__(self, env: OpinionEnvironment, document_context: str = "", fast_mode: bool = False,
+                 model_name: str = "", mode: str = "policy", pitch: Optional[Dict[str, Any]] = None):
         self._env = env
         self._document_context = document_context
         self._fast_mode = fast_mode
         self._max_tokens = 80 if fast_mode else 200
         self._seen_agents = set()  # Track which agents have received full context
+        # Product mode only: economic-reasoning lens + extracted pitch object.
+        # In policy mode these stay inert and the prompt is byte-identical.
+        self._mode = mode
+        self._pitch = pitch or {}
         self._token_counter = TokenCounter(model_name) if model_name else TokenCounter()
         self._total_prompt_tokens = 0
         self._total_completion_tokens = 0
@@ -368,6 +374,111 @@ class OpinionCaptureSkill:
                 return first_sent
 
         return ""
+
+    _ECON_STATE_KEY = "product_economy"
+
+    def _budget_tier_for(self, agent: PersonAgent) -> str:
+        """Compute the deterministic budget tier from REAL persona data.
+
+        Pure / LLM-free (assertable with the model off). Reads only init_state
+        signals: actor_archetype, the safety_economic need (int 0–100, default
+        50), is_institutional, occupation, group_affiliation.
+        """
+        st = agent.init_state if hasattr(agent, "init_state") else {}
+        archetype = st.get("actor_archetype", "civic_moderate")
+        needs = st.get("needs") or {}
+        safety_economic = needs.get("safety_economic") if isinstance(needs, dict) else None
+        # Grant-dependent personas carry a REAL published grant amount as income;
+        # it overrides the archetype-inferred tier inside budget_tier().
+        grant_income = st.get("monthly_income_rand") if st.get("is_grant_dependent") else None
+        return budget_tier(
+            archetype=archetype,
+            safety_economic=safety_economic,
+            is_institutional=bool(st.get("is_institutional", False)),
+            occupation=st.get("occupation"),
+            group_affiliation=st.get("group_affiliation"),
+            grant_income=grant_income,
+        )
+
+    def _get_econ_state(self, agent: PersonAgent, archetype: str) -> Dict[str, Any]:
+        """Return this agent's economic state, seeding it on first encounter.
+
+        Product mode only. Qualitative fields are seeded in-character and then
+        moved by the LLM across rounds. `budget_tier` is computed from real data
+        (never the LLM); `impulse`/`disposition` are filled once the LLM responds.
+        """
+        state = None
+        try:
+            state = agent.get_skill_state(self._ECON_STATE_KEY)
+        except Exception:
+            state = None
+        if not state:
+            st = agent.init_state if hasattr(agent, "init_state") else {}
+            state = {
+                "perceived_cost": "not yet judged",
+                "willingness_band": seed_willingness_band(archetype),
+                "primary_objection": "none yet",
+                "reconsider_condition": "none yet",
+                # "wants it" vs "can afford it" — kept strictly separate.
+                "impulse": None,                       # LLM-derived desire (0–1)
+                "budget_tier": self._budget_tier_for(agent),  # real-data constraint
+                "disposition": "no reaction yet",      # impulse gated by tier
+                # Grant cohort markers (static persona facts) for analysis/coverage.
+                # income_provenance "grant_schedule" == real known income, not a guess.
+                "is_grant_dependent": bool(st.get("is_grant_dependent", False)),
+                "grant_type": st.get("grant_type"),
+                "income_provenance": st.get("income_provenance"),
+            }
+            try:
+                agent.set_skill_state(self._ECON_STATE_KEY, state)
+            except Exception:
+                pass
+        return state
+
+    def _update_econ_state(self, agent: PersonAgent, economic: Dict[str, Any]) -> Dict[str, Any]:
+        """Merge an LLM-emitted economic block into the agent's stored state.
+
+        Qualitative fields come from the LLM. `budget_tier` is ALWAYS recomputed
+        from real persona data here — the LLM can never write or change it.
+        `impulse` (desire) is parsed from the LLM and gated by the tier into a
+        qualitative `disposition`; the two stay separate fields.
+        """
+        prior = self._get_econ_state(
+            agent,
+            agent.init_state.get("actor_archetype", "civic_moderate") if hasattr(agent, "init_state") else "civic_moderate",
+        )
+        merged = dict(prior)
+        for k in ("perceived_cost", "willingness_band", "primary_objection", "reconsider_condition"):
+            v = economic.get(k)
+            if isinstance(v, str) and v.strip():
+                merged[k] = sanitize_language_drift(v.strip(), label=f"econ_{k}")[:240]
+
+        # Budget tier is authoritative from real data — recomputed, never trusted
+        # from the LLM even if it tries to emit one.
+        tier = self._budget_tier_for(agent)
+        merged["budget_tier"] = tier
+
+        # Impulse: the only LLM-derived number. Clamp to 0–1; keep prior if absent.
+        raw_impulse = economic.get("impulse")
+        impulse = prior.get("impulse")
+        if isinstance(raw_impulse, (int, float)):
+            impulse = max(0.0, min(1.0, float(raw_impulse)))
+        elif isinstance(raw_impulse, str):
+            try:
+                impulse = max(0.0, min(1.0, float(raw_impulse.strip())))
+            except (ValueError, AttributeError):
+                pass
+        merged["impulse"] = impulse
+
+        # Disposition = impulse gated by tier (deterministic; no buy score).
+        if impulse is not None:
+            merged["disposition"] = disposition(impulse, tier)
+
+        try:
+            agent.set_skill_state(self._ECON_STATE_KEY, merged)
+        except Exception:
+            pass
+        return merged
 
     async def execute(
         self,
@@ -465,6 +576,13 @@ class OpinionCaptureSkill:
         if initial_prompt:
             events_section = f"\n{'='*60}\n{initial_prompt}\n{'='*60}\n"
 
+        # Product mode: prepend the economic-reasoning lens (pitch + this agent's
+        # current, evolving economic stance). Inert / empty in policy mode.
+        economic_section = ""
+        if self._mode == "product":
+            econ_state = self._get_econ_state(agent, archetype)
+            economic_section = build_economic_lens(self._pitch, econ_state)
+
         # Build context section: document-specific + generic SA
         # In fast mode, only send full context on first encounter, then abbreviated
         is_first_encounter = agent.id not in self._seen_agents
@@ -490,6 +608,7 @@ class OpinionCaptureSkill:
         prompt = (
             f"{context_section}"
             f"{events_section}"
+            f"{economic_section}"
             f"Current opinion feed:\n{feed_preview}\n\n"
             f"Potential respond target: {respond_ctx}\n"
             f"Topic you care about: {topic_hint}\n\n"
@@ -568,11 +687,26 @@ class OpinionCaptureSkill:
 
             return "", "", "", ""
 
+        def _parse_economic(raw_text: str) -> Dict[str, Any]:
+            """Best-effort extraction of the optional 'economic' object (product mode)."""
+            if self._mode != "product" or not raw_text:
+                return {}
+            cleaned = _clean(raw_text)
+            m = re.search(r'"economic"\s*:\s*(\{[^{}]*\})', cleaned)
+            if not m:
+                return {}
+            try:
+                obj = json.loads(m.group(1))
+                return obj if isinstance(obj, dict) else {}
+            except Exception:
+                return {}
+
         raw = ""
         action_type = ""
         content = ""
         reason = ""
         internal_thought = ""
+        economic_block: Dict[str, Any] = {}
         last_error = None
 
         # Prepare messages for token counting
@@ -596,7 +730,8 @@ class OpinionCaptureSkill:
                     agent_name=agent.name,
                 )
                 action_type, content, reason, internal_thought = _parse(raw)
-                
+                economic_block = _parse_economic(raw)
+
                 content = sanitize_language_drift(content, label=f"opinion_{agent.name}")
                 reason = sanitize_language_drift(reason, label=f"reason_{agent.name}")
                 internal_thought = sanitize_language_drift(internal_thought, label=f"thought_{agent.name}")
@@ -656,6 +791,13 @@ class OpinionCaptureSkill:
 
         impact_score = _calculate_impact_score(internal_thought, action_type)
 
+        # Product mode: merge the LLM's economic block into the agent's evolving
+        # state and serialize it for persistence on posting actions. None in policy.
+        economic_reasoning_json: Optional[str] = None
+        if self._mode == "product":
+            merged_econ = self._update_econ_state(agent, economic_block)
+            economic_reasoning_json = json.dumps(merged_econ, ensure_ascii=False)
+
         if action_type == OpinionActionType.EXPRESS_OPINION:
             if not content:
                 # Re-count fallback prompt tokens
@@ -704,12 +846,13 @@ class OpinionCaptureSkill:
                 }
             opinion_id = await self._env.add_opinion(
                 agent.id, agent.name, content, [topic_hint], round_num,
-                reason=reason, internal_thought=internal_thought, impact_score=impact_score
+                reason=reason, internal_thought=internal_thought, impact_score=impact_score,
+                economic_reasoning=economic_reasoning_json
             )
             # Record post in agent's memory for interview context
             if hasattr(agent, 'record_post'):
                 agent.record_post(round_num, "EXPRESS_OPINION", content, impact_score)
-            return {
+            result = {
                 "action_type": OpinionActionType.EXPRESS_OPINION,
                 "action_args": {"content": content, "topics": [topic_hint], "opinion_id": opinion_id},
                 "success": True,
@@ -718,6 +861,9 @@ class OpinionCaptureSkill:
                 "impact_score": impact_score,
                 **token_info,
             }
+            if economic_reasoning_json is not None:
+                result["economic_reasoning"] = economic_reasoning_json
+            return result
 
         elif action_type == OpinionActionType.RESPOND_TO_OPINION:
             if not respond_target or not content:
@@ -739,7 +885,7 @@ class OpinionCaptureSkill:
             # Record post in agent's memory for interview context
             if hasattr(agent, 'record_post'):
                 agent.record_post(round_num, "RESPOND_TO_OPINION", content, impact_score)
-            return {
+            result = {
                 "action_type": OpinionActionType.RESPOND_TO_OPINION,
                 "action_args": {
                     "content":           content,
@@ -753,6 +899,9 @@ class OpinionCaptureSkill:
                 "impact_score": impact_score,
                 **token_info,
             }
+            if economic_reasoning_json is not None:
+                result["economic_reasoning"] = economic_reasoning_json
+            return result
 
         elif action_type == OpinionActionType.SEARCH_TOPIC:
             results = await self._env.search(topic_hint)

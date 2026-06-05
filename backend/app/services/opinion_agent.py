@@ -22,6 +22,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from agentsociety2 import PersonAgent
 
+from .document_context_engine import sanitize_language_drift
 from ..utils.logger import get_logger
 
 logger = get_logger("fub.opinion_agent")
@@ -53,6 +54,26 @@ class OpinionCitizenAgent(PersonAgent):
     STANCE_OPPOSE = "oppose"
     STANCE_RESIST = "resist"
     VALID_STANCES = [STANCE_SUPPORT, STANCE_NEUTRAL, STANCE_CONCERNED, STANCE_OPPOSE, STANCE_RESIST]
+
+    # Product mode reuses the same 5-point stance machinery but relabels it as a
+    # reaction/willingness ladder — NOT a buy/no-buy verdict (product honesty rule).
+    PRODUCT_STANCE_LABELS = {
+        STANCE_SUPPORT: "Won over",
+        STANCE_NEUTRAL: "Curious",
+        STANCE_CONCERNED: "Unconvinced",
+        STANCE_OPPOSE: "Resistant",
+        STANCE_RESIST: "Hostile",
+    }
+
+    @classmethod
+    def stance_label(cls, stance: Optional[str], mode: str = "policy") -> Optional[str]:
+        """Human-readable label for a stance. In product mode, map to the
+        reaction ladder; in policy mode, return the raw stance unchanged."""
+        if stance is None:
+            return None
+        if mode == "product":
+            return cls.PRODUCT_STANCE_LABELS.get(stance, stance)
+        return stance
 
     def __init__(
         self,
@@ -103,6 +124,46 @@ class OpinionCitizenAgent(PersonAgent):
             "mobilization_level": 0,  # 0=none, 1=discussing, 2=organizing, 3=acting
             "last_post_round": -1,
         })
+
+        # Carry occupation/background so downstream (budget tier, grant detection)
+        # can read them from init_state without re-opening the profile.
+        skill_state.setdefault("occupation", profile.get("occupation"))
+        skill_state.setdefault("background_story", profile.get("background_story"))
+
+        # Grant beneficiary detection — deterministic, from existing signals only.
+        # SASSA amounts are published policy → a real KNOWN income for this cohort.
+        try:
+            from .income_seeder import detect_grant, GRANT_PROVENANCE
+            # needs is populated later (_init_psychological_state); read from the
+            # raw profile here. Tolerate dict {safety_economic: n} or list of
+            # {need_type, intensity} objects.
+            _se = None
+            _raw_needs = profile.get("needs")
+            if isinstance(_raw_needs, dict):
+                _se = _raw_needs.get("safety_economic")
+            elif isinstance(_raw_needs, list):
+                for _n in _raw_needs:
+                    if isinstance(_n, dict) and _n.get("need_type") == "safety_economic":
+                        # intensity may be 0–1 or 0–100; normalise high-precision to 0–100
+                        _iv = _n.get("intensity")
+                        if isinstance(_iv, (int, float)):
+                            _se = int(_iv * 100) if _iv <= 1 else int(_iv)
+                        break
+            _is_grant, _gtype, _gamount = detect_grant(
+                actor_archetype=actor_archetype,
+                occupation=profile.get("occupation"),
+                background_story=profile.get("background_story"),
+                safety_economic=_se,
+            )
+            skill_state["is_grant_dependent"] = _is_grant
+            skill_state["grant_type"] = _gtype
+            if _is_grant and _gamount is not None:
+                skill_state["monthly_income_rand"] = _gamount
+                skill_state["income_provenance"] = GRANT_PROVENANCE
+        except Exception as e:
+            logger.debug(f"Grant detection skipped for agent {id}: {e}")
+            skill_state.setdefault("is_grant_dependent", False)
+            skill_state.setdefault("grant_type", None)
 
         super().__init__(
             id=id,
@@ -597,6 +658,7 @@ class OpinionCitizenAgent(PersonAgent):
                 t=t,
                 response_type=response_type,
             )
+            response = sanitize_language_drift(response, label=f"interview_{self.id}")
         except Exception as e:
             logger.error(f"Interview failed for agent {self.id}: {e}")
             return {
@@ -660,6 +722,7 @@ class OpinionCitizenAgent(PersonAgent):
                 t=t,
                 response_type=response_type,
             )
+            response = sanitize_language_drift(response, label=f"impact_interview_{self.id}")
         except Exception as e:
             logger.error(f"Impact interview failed for agent {self.id}: {e}")
             return {
@@ -891,17 +954,24 @@ class OpinionCitizenAgent(PersonAgent):
         self,
         intervention_text: str,
         t: Optional[datetime] = None,
+        mode: str = "policy",
     ) -> Dict[str, Any]:
-        """Apply a policy-maker intervention and update agent state.
+        """Apply an intervention and update agent state.
 
-        This is used during pause-and-intervene mode. The policy maker
-        tells the agent something (e.g., "We will offer a taxi subsidy"),
-        and the agent updates its stance and mobilization level.
+        This is used during pause-and-intervene mode.
+
+        - policy mode: a policy maker tells the agent something (e.g. "We will
+          offer a taxi subsidy") and the agent updates its stance / mobilization.
+        - product mode: a founder tells/shows the agent something about the
+          product (e.g. "It works offline and costs R49/month") and the agent
+          reacts as a market participant — objections, conditions, willingness.
+          NEVER a buy/no-buy verdict (product-mode honesty rule).
 
         Returns:
             Dict with "response", "stance_before", "stance_after",
-            "radicalism_before", "radicalism_after", "mobilization_before",
-            "mobilization_after".
+            "stance_before_label", "stance_after_label", "radicalism_before",
+            "radicalism_after", "mobilization_before", "mobilization_after",
+            "mode".
         """
         if t is None:
             t = datetime.now()
@@ -912,17 +982,30 @@ class OpinionCitizenAgent(PersonAgent):
 
         # Build a special prompt that asks the agent to react to the intervention
         char_ctx = await self.character_context(detail="brief")
-        prompt = (
-            f"{char_ctx}\n\n"
-            f"A policy maker has just told you the following:\n\n"
-            f"\"{intervention_text}\"\n\n"
-            f"React to this. How does it change your position, if at all? "
-            f"Be authentic to your character. If it genuinely addresses your concerns, "
-            f"acknowledge that. If it doesn't, say so clearly."
-        )
+        if mode == "product":
+            prompt = (
+                f"{char_ctx}\n\n"
+                f"A founder building this product has just told you the following:\n\n"
+                f"\"{intervention_text}\"\n\n"
+                f"React to this as the market participant you are. Does it change how you'd "
+                f"respond to this product, if at all? Be authentic to your character — raise "
+                f"your real objections, conditions, or confusion; if it genuinely addresses "
+                f"what was holding you back, say so. Do NOT give a buy / no-buy verdict or a "
+                f"purchase probability — just react with your reasoning."
+            )
+        else:
+            prompt = (
+                f"{char_ctx}\n\n"
+                f"A policy maker has just told you the following:\n\n"
+                f"\"{intervention_text}\"\n\n"
+                f"React to this. How does it change your position, if at all? "
+                f"Be authentic to your character. If it genuinely addresses your concerns, "
+                f"acknowledge that. If it doesn't, say so clearly."
+            )
 
         try:
             response = await self.answer_external_question(prompt=prompt, t=t)
+            response = sanitize_language_drift(response, label=f"intervention_{self.id}")
         except Exception as e:
             import traceback as _tb
             logger.error(f"Intervention failed for agent {self.id}: {e}\n{_tb.format_exc()}")
@@ -930,10 +1013,13 @@ class OpinionCitizenAgent(PersonAgent):
                 "response": "No response.",
                 "stance_before": stance_before,
                 "stance_after": stance_before,
+                "stance_before_label": self.stance_label(stance_before, mode),
+                "stance_after_label": self.stance_label(stance_before, mode),
                 "radicalism_before": radicalism_before,
                 "radicalism_after": radicalism_before,
                 "mobilization_before": mobilization_before,
                 "mobilization_after": mobilization_before,
+                "mode": mode,
                 "error": str(e),
             }
 
@@ -973,12 +1059,15 @@ class OpinionCitizenAgent(PersonAgent):
             "response": response,
             "stance_before": stance_before,
             "stance_after": stance_after,
+            "stance_before_label": self.stance_label(stance_before, mode),
+            "stance_after_label": self.stance_label(stance_after, mode),
             "radicalism_before": radicalism_before,
             "radicalism_after": radicalism_after,
             "mobilization_before": mobilization_before,
             "mobilization_after": mobilization_after,
             "stance_changed": stance_after != stance_before,
             "radicalism_changed": radicalism_after != radicalism_before,
+            "mode": mode,
         }
 
     def _calculate_mobilization(self, stance: str, radicalism: int) -> int:

@@ -1522,6 +1522,39 @@ class SimulationRunner:
             }
 
     @classmethod
+    def broadcast_intervention_during_sim(
+        cls,
+        simulation_id: str,
+        intervention_text: str,
+        founder_name: str = "",
+        timeout: float = 60.0
+    ) -> Dict[str, Any]:
+        """Broadcast a founder announcement into the opinion space during a
+        paused simulation. The message posts to the feed and the whole active
+        room reacts next round."""
+        sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
+        if not os.path.exists(sim_dir):
+            raise ValueError(f"Simulation does not exist: {simulation_id}")
+        ipc_client = SimulationIPCClient(sim_dir)
+        if not ipc_client.check_env_alive():
+            raise ValueError(f"Simulation environment not running: {simulation_id}")
+        response = ipc_client.send_broadcast_intervention(
+            intervention_text=intervention_text,
+            founder_name=founder_name,
+            timeout=timeout
+        )
+        if response.status.value == "completed":
+            return {
+                "success": True,
+                "result": response.result,
+            }
+        else:
+            return {
+                "success": False,
+                "error": response.error,
+            }
+
+    @classmethod
     def interview_all_agents(
         cls,
         simulation_id: str,

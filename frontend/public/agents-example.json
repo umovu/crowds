@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Lerato Mahlangu"
+  },
+  {
+    "name": "Thabo Mokoena",
+    "actor_archetype": "community_protector",
+    "persona": "A 52-year-old minibus taxi owner-driver from Mitchells Plain. Cautious about government, loyal to the taxi association, distrusts SAPS but condemns gang violence.",
+    "background_story": "Born in District Six, displaced to the Cape Flats as a child. Owns three minibuses and employs two drivers. His brother was killed in 2019 in a route-conflict shooting — a memory that shapes his views on safety and policing."
+  },
+  {
+    "name": "Aisha Davids",
+    "age": 29,
+    "gender": "female",
+    "education": "Matric + diploma",
+    "occupation": "Hired minibus taxi driver",
+    "marriage_status": "single",
+    "mbti": "ISFP",
+    "country": "South Africa",
+    "province": "Western Cape",
+    "residence": "Khayelitsha, Cape Town",
+    "religion": "Muslim",
+    "race": "Coloured",
+    "persona": "Second-generation in the taxi industry. More open to reforms than older drivers but worried about losing income. Has a young child at home.",
+    "background_story": "Started driving at 23 after her father retired. Saves carefully to buy her own vehicle one day. Sees the industry's problems clearly but feels powerless to change them.",
+    "voice_guide": "Speaks directly and unsentimentally. Switches to Afrikaans when frustrated. Often references her child as the reason for her caution.",
+    "interested_topics": ["transport policy", "small business", "education", "safety"],
+    "group_affiliation": "Western Cape Minibus Taxi Drivers' Forum",
+    "actor_archetype": "civic_moderate",
+    "behavioral_tendencies": "Listens more than she speaks. Asks practical questions. Avoids extreme positions.",
+    "is_institutional": false,
+    "emotions": {
+      "joy": 4,
+      "fear": 5,
+      "anger": 3,
+      "sadness": 4,
+      "disgust": 2,
+      "surprise": 2
+    },
+    "emotion_keyword": "anxious",
+    "emotion_thought": "Worried about what happens to her daughter if the industry collapses.",
+    "needs": {
+      "safety_economic": 80,
+      "safety_physical": 65,
+      "belonging": 50,
+      "respect": 45,
+      "personal_growth": 35,
+      "physiological_hunger": 20
+    },
+    "beliefs": [
+      "Reform is necessary, but not at the cost of jobs.",
+      "Government promises rarely reach the working class.",
+      "My daughter's education matters more than any politics."
+    ],
+    "attitudes": [
+      { "topic": "transport reform", "rating": 6, "description": "Open in principle, sceptical in practice" },
+      { "topic": "SAPS in the Cape Flats", "rating": 3, "description": "Distrusts them after years of bad encounters" }
+    ]
+  }
+]

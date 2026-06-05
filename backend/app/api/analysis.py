@@ -17,6 +17,7 @@ from typing import Optional
 from flask import jsonify, request
 
 from . import analysis_bp
+from ..config import Config
 from ..services.replay_storage import ReplayStorage
 from ..services.post_sim_analytics import PostSimAnalytics
 from ..utils.logger import get_logger
@@ -30,23 +31,27 @@ def _get_storage() -> Optional[ReplayStorage]:
     if not simulation_id:
         return None
 
-    # Look for simulation DB in standard location
-    # Try multiple possible paths
-    possible_paths = [
-        os.path.join("simulations", simulation_id, "opinion_space", "replay.db"),
-        os.path.join("data", "simulations", simulation_id, "opinion_space", "replay.db"),
-    ]
-
     # If simulation_id looks like a path, use it directly
     if os.path.sep in simulation_id or simulation_id.endswith('.db'):
         if os.path.exists(simulation_id):
             return ReplayStorage(simulation_id)
         return None
 
+    # Canonical location — where the sim writer actually puts replay.db
+    # (Config.OASIS_SIMULATION_DATA_DIR/<id>/opinion_space/replay.db). This is
+    # the same dir the rest of the simulation API resolves against; the legacy
+    # CWD-relative paths below are kept only as fallbacks.
+    possible_paths = [
+        os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id, "opinion_space", "replay.db"),
+        os.path.join("simulations", simulation_id, "opinion_space", "replay.db"),
+        os.path.join("data", "simulations", simulation_id, "opinion_space", "replay.db"),
+    ]
+
     for path in possible_paths:
         if os.path.exists(path):
             return ReplayStorage(path)
 
+    logger.warning(f"No replay.db found for simulation '{simulation_id}' (looked in: {possible_paths})")
     return None
 
 

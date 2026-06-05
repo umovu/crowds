@@ -29,6 +29,7 @@ class CommandType(str, Enum):
     PAUSE = "pause"                   # Pause simulation between rounds
     RESUME = "resume"                 # Resume simulation after pause
     APPLY_INTERVENTION = "apply_intervention"  # Apply intervention to agent during pause
+    BROADCAST_INTERVENTION = "broadcast_intervention"  # Founder announcement to the opinion space (whole room reacts)
 
 
 class CommandStatus(str, Enum):
@@ -285,6 +286,23 @@ class SimulationIPCClient:
             args={
                 "agent_id": agent_id,
                 "intervention_text": intervention_text,
+            },
+            timeout=timeout
+        )
+
+    def send_broadcast_intervention(
+        self,
+        intervention_text: str,
+        founder_name: str = "",
+        timeout: float = 60.0
+    ) -> IPCResponse:
+        """Send a founder broadcast: posts to the opinion space and the whole
+        active room reacts next round."""
+        return self.send_command(
+            command_type=CommandType.BROADCAST_INTERVENTION,
+            args={
+                "intervention_text": intervention_text,
+                "founder_name": founder_name,
             },
             timeout=timeout
         )
