@@ -20,11 +20,18 @@ What makes it a *sandbox* rather than a passive demo: you can **intervene** — 
 
 ## What you can do with it
 
+### Policy Mode Applications
 - **Red-team a policy** — surface likely objections, blind spots, and ways a rule gets gamed, before you commit
 - **Test framing** — see how different groups might read or misread your wording
 - **Rehearse crisis comms** — pressure-test an announcement and the reactions you'd need to handle
+
+### Product Mode Applications  
 - **Stress-test product ideas** — see how a South African market might react to your product pitch, including objections, confusion, and qualitative willingness (not purchase predictions)
-- **Intervene mid-run** — pause a live simulation, pose a follow-up, and watch how opinions move
+- **Identify market segments** — understand which customer types are most receptive vs. resistant
+- **Uncover adoption barriers** — discover real-world constraints like price sensitivity, data costs, or trust issues
+
+### Cross-Mode Capabilities
+- **Intervene mid-run** — pause a live simulation, pose a follow-up ("we'll add a subsidy"), and watch how opinions move
 - **Probe after the fact** — read each agent's expressed opinion post-run, then pose interventions and see how they respond
 - **Bring your own people** — inject custom agents (named stakeholders, specific groups), merged into the population or run on their own
 
