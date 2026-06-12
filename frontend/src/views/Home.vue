@@ -6,39 +6,278 @@
     </nav>
 
     <div class="main-content" :style="s.mainContent">
-      <section class="dashboard-section" :style="s.dashboardSection">
-        <!-- Left column: brief marketing / what-is-this -->
+      <div class="view-tabs">
+        <button
+          class="view-tab"
+          :class="{ active: activeView === 'console' }"
+          @click="activeView = 'console'"
+        >Console</button>
+        <button
+          class="view-tab"
+          :class="{ active: activeView === 'panel' }"
+          @click="activeView = 'panel'"
+        >Panel Pitch</button>
+        <button
+          class="view-tab"
+          :class="{ active: activeView === 'personas' }"
+          @click="activeView = 'personas'"
+        >Personas</button>
+      </div>
+
+      <div class="roster-chips">
+        <span class="chips-label">Sim roster</span>
+        <div v-if="customAgents.length === 0" class="chips-empty">
+          No personas preselected — pick from the Personas tab.
+        </div>
+        <div v-else class="chips-list">
+          <span
+            v-for="(p, idx) in customAgents"
+            :key="(p.name || '') + '_' + idx"
+            class="chip"
+            :title="p.persona || ''"
+          >
+            <span class="chip-name">{{ p.name || 'Unnamed' }}</span>
+            <span v-if="p.actor_archetype" class="chip-arch">{{ p.actor_archetype.replace(/_/g, ' ') }}</span>
+            <span v-if="p.province" class="chip-province">{{ p.province }}</span>
+            <button class="chip-remove" @click="removeFromRoster(idx)" title="Remove from roster">×</button>
+          </span>
+        </div>
+        <div v-if="customAgents.length > 0" class="chips-actions">
+          <button class="chips-clear" @click="clearRoster">Clear all</button>
+        </div>
+      </div>
+
+      <div v-if="activeView === 'panel'" class="panel-pitch-view">
+        <PanelPitchPanel />
+      </div>
+
+      <div v-else-if="activeView === 'personas'" class="personas-view">
+        <header class="view-header">
+          <h1>Persona Library</h1>
+          <p>{{ personaCount }} personas grounded in South African socio-economic context — sampled from Stats SA QLFS microdata, textured with a reasoning model. Click <strong>☐ Select</strong> to pick personas to add to your sim roster.</p>
+        </header>
+        <div v-if="customAgentsEnabled && customAgents.length > 0" class="roster-banner">
+          <span class="roster-banner-text">
+            <strong>{{ customAgents.length }}</strong> persona{{ customAgents.length !== 1 ? 's' : '' }} in your sim roster
+          </span>
+          <button class="roster-banner-btn" @click="activeView = 'console'">View in Custom Agents →</button>
+        </div>
+        <div class="panel-container">
+          <PersonaLibraryPanel @add-to-roster="onAddToRoster" />
+        </div>
+      </div>
+
+      <section v-else class="dashboard-section" :style="s.dashboardSection">
+        <!-- Left column: marketing pitch + agent pre-selection (tabbed, like the
+             Panel's sectioned style) -->
         <aside class="pitch-panel">
-          <div class="pitch-tag">{{ pitchCopy.tag }}</div>
-          <h1 class="pitch-title" v-html="pitchCopy.title"></h1>
+          <div class="pitch-tabs" role="tablist">
+            <button
+              class="pitch-tab"
+              role="tab"
+              :class="{ active: pitchTab === 'overview' }"
+              :aria-selected="pitchTab === 'overview'"
+              @click="pitchTab = 'overview'"
+            >Overview</button>
+            <button
+              class="pitch-tab"
+              role="tab"
+              :class="{ active: pitchTab === 'cast' }"
+              :aria-selected="pitchTab === 'cast'"
+              @click="setPitchTab('cast')"
+            >
+              Pick cast
+              <span v-if="pickedIds.size" class="pitch-tab-count">{{ pickedIds.size }}</span>
+            </button>
+          </div>
 
-          <ul class="pitch-list">
-            <li>
-              <span class="pitch-bullet">01</span>
-              <div>
-                <div class="pitch-bullet-title">Build a synthetic population</div>
-                <div class="pitch-bullet-desc">Personas grounded in real socio-economic context — not generic chatbots.</div>
-              </div>
-            </li>
-            <li>
-              <span class="pitch-bullet">02</span>
-              <div>
-                <div class="pitch-bullet-title">Run the scenario</div>
-                <div class="pitch-bullet-desc">Watch opinions form, polarize, and shift round by round.</div>
-              </div>
-            </li>
-            <li>
-              <span class="pitch-bullet">03</span>
-              <div>
-                <div class="pitch-bullet-title">Intervene mid-flight</div>
-                <div class="pitch-bullet-desc">{{ pitchCopy.bullet3 }}</div>
-              </div>
-            </li>
-          </ul>
+          <!-- TAB: Overview — brief marketing / what-is-this -->
+          <div v-show="pitchTab === 'overview'" class="pitch-tab-pane" role="tabpanel">
+            <div class="pitch-tag">{{ pitchCopy.tag }}</div>
+            <h1 class="pitch-title" v-html="pitchCopy.title"></h1>
 
-          <div class="pitch-foot">
-            <span class="pitch-foot-dot"></span>
-            Built for South African policy and product questions. Designed for evidence, not vibes.
+            <ul class="pitch-list">
+              <li>
+                <span class="pitch-bullet">01</span>
+                <div>
+                  <div class="pitch-bullet-title">Build a synthetic population</div>
+                  <div class="pitch-bullet-desc">Personas grounded in real socio-economic context — not generic chatbots.</div>
+                </div>
+              </li>
+              <li>
+                <span class="pitch-bullet">02</span>
+                <div>
+                  <div class="pitch-bullet-title">Run the scenario</div>
+                  <div class="pitch-bullet-desc">Watch opinions form, polarize, and shift round by round.</div>
+                </div>
+              </li>
+              <li>
+                <span class="pitch-bullet">03</span>
+                <div>
+                  <div class="pitch-bullet-title">Intervene mid-flight</div>
+                  <div class="pitch-bullet-desc">{{ pitchCopy.bullet3 }}</div>
+                </div>
+              </li>
+            </ul>
+
+            <div class="pitch-foot">
+              <span class="pitch-foot-dot"></span>
+              Built for South African policy and product questions. Designed for evidence, not vibes.
+            </div>
+          </div>
+
+          <!-- TAB: Cast — pre-select agents from the library, like the Panel's
+               WHO'S IN THE ROOM. Group cards (top) bulk-pick all members of a
+               group with one click; individual cards (below) fine-tune. The
+               "Add to roster" button merges them into the right column's
+               custom agents list. -->
+          <div v-show="pitchTab === 'cast'" class="pitch-tab-pane" role="tabpanel">
+            <div class="cast-section">
+              <div class="cast-section-header">
+                <span class="cast-section-title">02 / WHO'S IN THE ROOM — pick personas to seed your sim</span>
+                <span class="cast-section-count">{{ libraryPersonas.length }} in library · {{ pickedIds.size }} picked</span>
+              </div>
+
+              <div v-if="libraryLoading" class="cast-loading">Loading personas…</div>
+              <div v-else-if="!libraryPersonas.length" class="cast-empty">
+                No personas in the library yet. Add some on the Personas tab.
+              </div>
+              <template v-else>
+                <!-- Fee-status groups: Fee-paying vs No-fee-school.
+                     Mirrors the predicates in panel_service.SEGMENTS so the
+                     Console's Cast picker matches the Panel's segments 1:1. -->
+                <div class="cast-groups">
+                  <button
+                    type="button"
+                    class="cast-group"
+                    :class="{
+                      selected: feeGroupState('paying') === 'full',
+                      partial: feeGroupState('paying') === 'partial',
+                    }"
+                    :disabled="feeGroupCount('paying') === 0"
+                    @click="toggleFeeGroup('paying')"
+                    title="Households already paying school fees — proven education spend"
+                  >
+                    <span class="cast-group-top">
+                      <span class="cast-group-label">Fee-paying households</span>
+                      <span class="cast-group-count">{{ pickedInFeeGroup('paying') }}/{{ feeGroupCount('paying') }}</span>
+                    </span>
+                    <span class="cast-group-desc">Already paying school fees (GHS)</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="cast-group"
+                    :class="{
+                      selected: feeGroupState('non_paying') === 'full',
+                      partial: feeGroupState('non_paying') === 'partial',
+                    }"
+                    :disabled="feeGroupCount('non_paying') === 0"
+                    @click="toggleFeeGroup('non_paying')"
+                    title="Households at no-fee schools — tightest affordability test"
+                  >
+                    <span class="cast-group-top">
+                      <span class="cast-group-label">No-fee-school households</span>
+                      <span class="cast-group-count">{{ pickedInFeeGroup('non_paying') }}/{{ feeGroupCount('non_paying') }}</span>
+                    </span>
+                    <span class="cast-group-desc">No-fee schools only (GHS) — tightest affordability test</span>
+                  </button>
+                </div>
+
+                <!-- Archetype groups: every actor_archetype in the library.
+                     "Everyone" picks the full library in one click. -->
+                <div class="cast-group-section-label">By archetype</div>
+                <div class="cast-groups">
+                  <button
+                    type="button"
+                    class="cast-group"
+                    :class="{ selected: isAllPicked }"
+                    :disabled="libraryPersonas.length === 0"
+                    @click="toggleGroup('__all__')"
+                  >
+                    <span class="cast-group-top">
+                      <span class="cast-group-label">Everyone</span>
+                      <span class="cast-group-count">{{ pickedIds.size }}/{{ libraryPersonas.length }}</span>
+                    </span>
+                    <span class="cast-group-desc">Pick the full library</span>
+                  </button>
+                  <button
+                    v-for="a in castArchetypes"
+                    :key="a.key"
+                    type="button"
+                    class="cast-group"
+                    :class="{
+                      selected: groupState(a.key) === 'full',
+                      partial: groupState(a.key) === 'partial',
+                    }"
+                    @click="toggleGroup(a.key)"
+                  >
+                    <span class="cast-group-top">
+                      <span class="cast-group-label">{{ a.key.replace(/_/g, ' ') }}</span>
+                      <span class="cast-group-count">{{ pickedInGroup(a.key) }}/{{ a.count }}</span>
+                    </span>
+                    <span class="cast-group-desc">
+                      {{ groupState(a.key) === 'full' ? 'Picked' : groupState(a.key) === 'partial' ? 'Partially picked' : 'Not picked' }}
+                    </span>
+                  </button>
+                </div>
+
+                <div class="cast-controls">
+                  <input
+                    v-model="castSearch"
+                    class="cast-search"
+                    type="text"
+                    placeholder="Search personas by name, occupation…"
+                  />
+                  <select v-model="castArchetypeFilter" class="cast-filter">
+                    <option value="">All groups ({{ libraryPersonas.length }})</option>
+                    <option v-for="a in castArchetypes" :key="a.key" :value="a.key">
+                      {{ a.key.replace(/_/g, ' ') }} ({{ a.count }})
+                    </option>
+                  </select>
+                </div>
+
+                <div v-if="filteredLibrary.length === 0" class="cast-empty">No personas match.</div>
+                <div v-else class="cast-grid">
+                  <button
+                    v-for="p in filteredLibrary"
+                    :key="personaIdOf(p)"
+                    type="button"
+                    class="cast-card"
+                    :class="{ selected: pickedIds.has(personaIdOf(p)) }"
+                    :title="p.persona || ''"
+                    @click="togglePicked(p)"
+                  >
+                    <span class="cast-avatar">{{ (p.name || '?').slice(0, 1).toUpperCase() }}</span>
+                    <span class="cast-body">
+                      <span class="cast-name">{{ p.name || 'Unnamed' }}</span>
+                      <span class="cast-meta">
+                        <span class="cast-arch">{{ (p.actor_archetype || 'unknown').replace(/_/g, ' ') }}</span>
+                        <span v-if="p.province" class="cast-province">{{ p.province }}</span>
+                      </span>
+                      <span v-if="p.budget_tier" class="cast-tier" :class="'tier-' + p.budget_tier">{{ p.budget_tier }}</span>
+                    </span>
+                    <span class="cast-check">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+
+                <div class="cast-actions">
+                  <button class="cast-link" @click="selectAllFiltered" :disabled="!filteredLibrary.length">Select all visible</button>
+                  <span class="cast-divider">|</span>
+                  <button class="cast-link" @click="clearPicked" :disabled="pickedIds.size === 0">Clear</button>
+                  <button
+                    class="cast-add"
+                    :disabled="pickedIds.size === 0"
+                    @click="addPickedToRoster"
+                  >
+                    Add {{ pickedIds.size }} to roster →
+                  </button>
+                </div>
+              </template>
+            </div>
           </div>
         </aside>
 
@@ -212,19 +451,22 @@
         </div>
       </section>
 
-      <HistoryDatabase />
     </div>
     <PersonaLibraryDrawer />
+    <SimsDrawer />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import HistoryDatabase from '../components/HistoryDatabase.vue'
 import CustomAgentPanel from '../components/CustomAgentPanel.vue'
+import SimsDrawer from '../components/SimsDrawer.vue'
 import PersonaLibraryDrawer from '../components/PersonaLibraryDrawer.vue'
-import { generateSeedFromWeb } from '../api/research'
+import PersonaLibraryPanel from '../components/PersonaLibraryPanel.vue'
+import PanelPitchPanel from '../components/PanelPitchPanel.vue'
+import AgentPicker from '../components/AgentPicker.vue'
+import { generateSeedFromWeb, listPersonas, getPersona } from '../api/research'
 
 const mono = 'JetBrains Mono, monospace'
 const sans = 'Space Grotesk, Noto Sans SC, system-ui, sans-serif'
@@ -312,6 +554,212 @@ const s = reactive({
 })
 
 const router = useRouter()
+
+const activeView = ref('console')
+const personaCount = ref(199)
+
+const onAddToRoster = (personas) => {
+  const existing = new Set(customAgents.value.map(a => (a.name || '').toLowerCase()))
+  const fresh = personas.filter(p => p && p.name && !existing.has(p.name.toLowerCase()))
+  if (fresh.length === 0) return
+  customAgents.value = [...customAgents.value, ...fresh]
+  customAgentsEnabled.value = true
+}
+
+const removeFromRoster = (idx) => {
+  const list = [...customAgents.value]
+  list.splice(idx, 1)
+  customAgents.value = list
+  if (list.length === 0) customAgentsEnabled.value = false
+}
+
+const clearRoster = () => {
+  customAgents.value = []
+  customAgentsEnabled.value = false
+}
+
+// Left-column persona picker — choose the sim cast from the library directly.
+const libraryPersonas = ref([])
+const libraryLoading = ref(false)
+const pickedIds = ref(new Set())
+const personaIdOf = (p) => p.id ?? p.persona_id ?? p.name
+
+// Left-column tab state. 'overview' is the marketing strap; 'cast' is the
+// agent pre-selection grid (mirrors the Panel's "WHO'S IN THE ROOM").
+const pitchTab = ref('overview')
+
+// Lazy-load the persona library the first time the Cast tab is opened, so
+// first paint of the marketing tab stays fast.
+const setPitchTab = (tab) => {
+  pitchTab.value = tab
+  if (tab === 'cast') loadLibrary()
+}
+
+// Cast-tab local filters. Kept separate from the global `pickedIds` so typing
+// in the search box doesn't blow away the selection.
+const castSearch = ref('')
+const castArchetypeFilter = ref('')
+
+const castArchetypes = computed(() => {
+  const counts = {}
+  for (const p of libraryPersonas.value) {
+    const k = p.actor_archetype || 'unknown'
+    counts[k] = (counts[k] || 0) + 1
+  }
+  return Object.entries(counts)
+    .map(([key, count]) => ({ key, count }))
+    .sort((a, b) => b.count - a.count)
+})
+
+const filteredLibrary = computed(() => {
+  const q = castSearch.value.trim().toLowerCase()
+  return libraryPersonas.value.filter((p) => {
+    if (castArchetypeFilter.value && (p.actor_archetype || 'unknown') !== castArchetypeFilter.value) return false
+    if (!q) return true
+    return (
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.occupation || '').toLowerCase().includes(q) ||
+      (p.actor_archetype || '').toLowerCase().includes(q)
+    )
+  })
+})
+
+const loadLibrary = async () => {
+  if (libraryPersonas.value.length || libraryLoading.value) return
+  libraryLoading.value = true
+  try {
+    const res = await listPersonas()
+    libraryPersonas.value = (res.personas || []).map(p => ({
+      ...p,
+      actor_archetype: p.actor_archetype || p.archetype,
+    }))
+  } catch (e) {
+    console.error('Failed to load persona library:', e)
+  } finally {
+    libraryLoading.value = false
+  }
+}
+
+const togglePicked = (p) => {
+  const id = personaIdOf(p)
+  const next = new Set(pickedIds.value)
+  next.has(id) ? next.delete(id) : next.add(id)
+  pickedIds.value = next
+}
+
+// Group helpers — back the "WHO'S IN THE ROOM" group cards. A group is
+// `full` when every persona in it is picked, `partial` when at least one
+// is, and `none` otherwise. `__all__` is the synthetic "Everyone" group.
+const personasInGroup = (arch) => libraryPersonas.value.filter(
+  (p) => (p.actor_archetype || 'unknown') === arch
+)
+const pickedInGroup = (arch) => personasInGroup(arch).filter(
+  (p) => pickedIds.value.has(personaIdOf(p))
+).length
+const groupState = (arch) => {
+  const total = personasInGroup(arch).length
+  if (total === 0) return 'none'
+  const picked = pickedInGroup(arch)
+  if (picked === 0) return 'none'
+  if (picked === total) return 'full'
+  return 'partial'
+}
+const isAllPicked = computed(() =>
+  libraryPersonas.value.length > 0 &&
+  libraryPersonas.value.every((p) => pickedIds.value.has(personaIdOf(p)))
+)
+const toggleGroup = (arch) => {
+  const next = new Set(pickedIds.value)
+  if (arch === '__all__') {
+    const fullyPicked = isAllPicked.value
+    if (fullyPicked) {
+      next.clear()
+    } else {
+      for (const p of libraryPersonas.value) next.add(personaIdOf(p))
+    }
+  } else {
+    const state = groupState(arch)
+    const members = personasInGroup(arch)
+    if (state === 'full') {
+      for (const p of members) next.delete(personaIdOf(p))
+    } else {
+      for (const p of members) next.add(personaIdOf(p))
+    }
+  }
+  pickedIds.value = next
+}
+
+// Fee-status groups. Mirrors panel_service._pays_school_fees / _no_fee_only
+// (same predicate, same persona fields), so the Console picker agrees with
+// the Panel's `fee_paying` / `no_fee_school` segments 1:1.
+const personaFeeBands = (p) => {
+  const bands = Array.isArray(p.learner_fee_bands) ? [...p.learner_fee_bands] : []
+  if (p.fees_band) bands.push(p.fees_band)
+  return bands.filter(Boolean)
+}
+const isFeePaying = (p) => personaFeeBands(p).some((b) => b && b !== 'No fees')
+const isNoFeeOnly = (p) => {
+  const bands = personaFeeBands(p)
+  return bands.length > 0 && bands.every((b) => b === 'No fees')
+}
+const personasInFeeGroup = (kind) => libraryPersonas.value.filter(
+  (p) => (kind === 'paying' ? isFeePaying(p) : isNoFeeOnly(p))
+)
+const pickedInFeeGroup = (kind) => personasInFeeGroup(kind).filter(
+  (p) => pickedIds.value.has(personaIdOf(p))
+).length
+const feeGroupCount = (kind) => personasInFeeGroup(kind).length
+const feeGroupState = (kind) => {
+  const total = feeGroupCount(kind)
+  if (total === 0) return 'none'
+  const picked = pickedInFeeGroup(kind)
+  if (picked === 0) return 'none'
+  if (picked === total) return 'full'
+  return 'partial'
+}
+const toggleFeeGroup = (kind) => {
+  const state = feeGroupState(kind)
+  const members = personasInFeeGroup(kind)
+  if (members.length === 0) return
+  const next = new Set(pickedIds.value)
+  if (state === 'full') {
+    for (const p of members) next.delete(personaIdOf(p))
+  } else {
+    for (const p of members) next.add(personaIdOf(p))
+  }
+  pickedIds.value = next
+}
+
+const selectAllFiltered = () => {
+  const next = new Set(pickedIds.value)
+  for (const p of filteredLibrary.value) next.add(personaIdOf(p))
+  pickedIds.value = next
+}
+
+const clearPicked = () => {
+  pickedIds.value = new Set()
+}
+
+const addPickedToRoster = async () => {
+  const existingNames = new Set(customAgents.value.map(a => (a.name || '').toLowerCase()))
+  const added = []
+  for (const id of pickedIds.value) {
+    const meta = libraryPersonas.value.find(p => personaIdOf(p) === id)
+    if (!meta || existingNames.has((meta.name || '').toLowerCase())) continue
+    let full = meta
+    try {
+      const res = await getPersona(id)
+      if (res.success && res.persona) {
+        full = { ...res.persona, actor_archetype: res.persona.actor_archetype || res.persona.archetype }
+      }
+    } catch (e) {
+      console.warn('Falling back to metadata for persona', id, e)
+    }
+    added.push(full)
+  }
+  if (added.length) onAddToRoster(added)   // reuse the existing roster merge
+  pickedIds.value = new Set()
+}
 
 const formData = ref({ simulationRequirement: '' })
 const files = ref([])
@@ -408,7 +856,7 @@ const handleGenerateSeed = async () => {
 
   try {
     // Pass the user's natural-language query as the topic; backend infers + expands.
-    const res = await generateSeedFromWeb({ topic: query })
+    const res = await generateSeedFromWeb({ topic: query, mode: mode.value })
     if (res.success && res.seed_text) {
       formData.value.simulationRequirement = res.seed_text
       seedSources.value = res.sources || []
@@ -499,9 +947,53 @@ const startSimulation = async () => {
   padding: 10px 40px 10px 0;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
 }
+
+/* Tab bar — mirrors the Panel's numbered section style ("02 / WHO'S IN THE
+   ROOM") so it feels like the same product. */
+.pitch-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #E5E5E5;
+}
+.pitch-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #999;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.pitch-tab:hover { color: #000; }
+.pitch-tab.active {
+  color: #000;
+  border-bottom-color: #1E9E5A;
+}
+.pitch-tab-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #1E9E5A;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+.pitch-tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .pitch-tag {
   display: inline-block;
   align-self: flex-start;
@@ -588,6 +1080,253 @@ const startSimulation = async () => {
     padding: 0 0 30px 0;
   }
 }
+
+/* Cast tab — pre-select agents. Visually echoes the Panel's
+   "02 / WHO'S IN THE ROOM" section header and segment-card grid, but with
+   individual personas (not groups) as the cards. */
+.cast-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cast-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #666;
+  letter-spacing: 0.5px;
+}
+.cast-section-title { font-weight: 600; }
+.cast-section-count { color: #999; }
+.cast-loading,
+.cast-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: #999;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  border: 1px dashed #DDD;
+  background: #FAFAFA;
+}
+.cast-controls { display: flex; gap: 8px; }
+.cast-search,
+.cast-filter {
+  border: 1px solid #DDD;
+  padding: 7px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  background: #fff;
+  outline: none;
+}
+.cast-search { flex: 1; }
+.cast-search:focus,
+.cast-filter:focus { border-color: #1E9E5A; }
+
+/* Group quick-select cards (mirrors PanelPitchPanel's pp-segments). One click
+   picks every persona in the group; click again to deselect. Partial state
+   shows when a group has been individually fine-tuned. */
+.cast-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 8px;
+}
+.cast-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid #DDD;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
+}
+.cast-group:hover:not(:disabled) { border-color: #1E9E5A; }
+.cast-group.selected {
+  border-color: #1E9E5A;
+  background: #F0FAF4;
+}
+.cast-group.partial {
+  border-color: rgba(30, 158, 90, 0.5);
+  background: #FCFEFC;
+}
+.cast-group:disabled { opacity: 0.5; cursor: not-allowed; }
+.cast-group-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.cast-group-label {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: #000;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cast-group-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #1E9E5A;
+  background: rgba(30, 158, 90, 0.1);
+  padding: 1px 7px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.cast-group-desc {
+  font-size: 0.68rem;
+  color: #888;
+  line-height: 1.3;
+}
+.cast-group-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #999;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.cast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.cast-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #E5E5E5;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+.cast-card:hover { border-color: #1E9E5A; }
+.cast-card.selected {
+  border-color: #1E9E5A;
+  background: #F0FAF4;
+}
+.cast-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F0FAF4;
+  border: 1px solid rgba(30, 158, 90, 0.3);
+  color: #1E9E5A;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+.cast-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cast-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.cast-arch,
+.cast-province {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #666;
+}
+.cast-province { color: #999; }
+.cast-tier {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+.tier-tight { background: #FDEDEB; color: #C0392B; border: 1px solid #E6B0AA; }
+.tier-moderate { background: #F4F4F4; color: #666; border: 1px solid #DDD; }
+.tier-loose { background: rgba(30, 158, 90, 0.1); color: #1E9E5A; border: 1px solid rgba(30, 158, 90, 0.4); }
+
+.cast-check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #DDD;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  background: #fff;
+  transition: all 0.15s;
+}
+.cast-card.selected .cast-check {
+  background: #1E9E5A;
+  border-color: #1E9E5A;
+  color: #fff;
+}
+
+.cast-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cast-link {
+  background: transparent;
+  border: none;
+  padding: 4px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #1E9E5A;
+  cursor: pointer;
+  font-weight: 600;
+}
+.cast-link:hover:not(:disabled) { text-decoration: underline; }
+.cast-link:disabled { color: #BBB; cursor: not-allowed; }
+.cast-divider { color: #DDD; }
+.cast-add {
+  margin-left: auto;
+  padding: 9px 18px;
+  background: #1E9E5A;
+  color: #fff;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cast-add:hover:not(:disabled) { background: #178048; }
+.cast-add:disabled { background: #DDD; cursor: not-allowed; }
 
 /* Graph-engine picker — two radio cards, one selected.
    Promoted out of the "advanced" fold so the user makes a deliberate
@@ -749,4 +1488,182 @@ const startSimulation = async () => {
   color: #888;
   font-style: italic;
 }
+
+/* View tabs — switch between Console and Personas at the top of the page */
+.view-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #E5E5E5;
+  margin-bottom: 0;
+}
+.view-tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+.view-tab:hover { color: #000; }
+.view-tab.active {
+  color: #000;
+  border-bottom-color: #1E9E5A;
+}
+
+/* Roster chips — picked personas visible on every view, above the active panel */
+.roster-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid #E5E5E5;
+  margin-bottom: 24px;
+}
+.chips-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #999;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+.chips-empty {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #999;
+  font-style: italic;
+}
+.chips-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+  background: #F0FAF4;
+  border: 1px solid #1E9E5A;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #000;
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chip-name {
+  font-weight: 700;
+  color: #1E9E5A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chip-arch {
+  color: #666;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+.chip-province {
+  color: #999;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+.chip-remove {
+  background: transparent;
+  border: none;
+  color: #1E9E5A;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  margin-left: 2px;
+  font-weight: 700;
+}
+.chip-remove:hover { color: #C0392B; }
+.chips-actions { margin-left: auto; }
+.chips-clear {
+  background: transparent;
+  border: 1px solid #DDD;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #666;
+  cursor: pointer;
+}
+.chips-clear:hover { border-color: #C0392B; color: #C0392B; }
+
+/* Panel Pitch view — full-width below the tab bar */
+.panel-pitch-view {
+  margin-top: 24px;
+}
+
+/* Personas view — full-width panel below the tab bar */
+.personas-view {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px - 50px - 80px);
+  min-height: 500px;
+  border: 1px solid #E5E5E5;
+}
+.view-header {
+  padding: 24px 32px 16px;
+  border-bottom: 1px solid #EAEAEA;
+  flex-shrink: 0;
+}
+.view-header h1 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+}
+.view-header p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+  max-width: 720px;
+}
+.panel-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.roster-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 32px;
+  background: #F0FAF4;
+  border-bottom: 1px solid #DDD;
+  flex-shrink: 0;
+}
+.roster-banner-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: #1E9E5A;
+  flex: 1;
+}
+.roster-banner-btn {
+  background: #1E9E5A;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.roster-banner-btn:hover { background: #178048; }
 </style>
