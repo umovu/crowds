@@ -1564,11 +1564,12 @@ def list_personas():
                 logger.warning(f"Persona library load failed: {e}")
 
         # 1) Read every library persona — they're real, selectable personas
-        #    and the only source of fee-band data. Wrap in the cache shape so
-        #    downstream code doesn't need a branch.
+        #    and the only source of fee-band data. Use the library's stable
+        #    `id` directly so the panel segments' `members` list (which uses
+        #    the same IDs) lines up with `pickedIds` on the frontend.
         for lp in lib_index.values():
             personas.append({
-                "id":         f"lib:{lp.get('id') or (lp.get('name') or '')[:32]}",
+                "id":         lp.get("id") or (lp.get("name") or "")[:32],
                 "name":       lp.get("name") or "Unknown",
                 "archetype":  lp.get("actor_archetype") or "",
                 "age":        lp.get("age"),
@@ -1648,32 +1649,61 @@ def get_persona(persona_id: str):
         "markdown": "# Name\\n\\n**Archetype:** ...",
         "meta":     {...}
     }
+
+    Resolves both:
+    - cache personas (`uploads/persona_cache/<hex>.json`)
+    - library personas (`backend/app/data/persona_library/personas.json`)
+      by their stable library id (same id the list endpoint and the
+      panel segment members list expose).
     """
     import json as _json
     # Guard against path traversal — only allow hex hash filenames
     if not persona_id or any(c not in "0123456789abcdef" for c in persona_id.lower()):
         return jsonify({"success": False, "error": "Invalid persona id"}), 400
+
+    # 1) Cache first (faster, has rendered markdown sidecar).
     d = _persona_cache_dir()
     json_path = os.path.join(d, f"{persona_id}.json")
     md_path = os.path.join(d, f"{persona_id}.md")
-    if not os.path.exists(json_path):
-        return jsonify({"success": False, "error": "Persona not found"}), 404
-    try:
-        with open(json_path, "r", encoding="utf-8") as f:
-            data = _json.load(f)
-        markdown = ""
-        if os.path.exists(md_path):
-            with open(md_path, "r", encoding="utf-8") as f:
-                markdown = f.read()
-        return jsonify({
-            "success":  True,
-            "profile":  data.get("profile", data) if isinstance(data, dict) else {},
-            "meta":     data.get("meta", {}) if isinstance(data, dict) else {},
-            "markdown": markdown,
-        })
-    except Exception as e:
-        logger.error(f"Get persona {persona_id[:12]} failed: {e}")
-        return jsonify({"success": False, "error": str(e)}), 500
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                data = _json.load(f)
+            markdown = ""
+            if os.path.exists(md_path):
+                with open(md_path, "r", encoding="utf-8") as f:
+                    markdown = f.read()
+            return jsonify({
+                "success":  True,
+                "profile":  data.get("profile", data) if isinstance(data, dict) else {},
+                "meta":     data.get("meta", {}) if isinstance(data, dict) else {},
+                "markdown": markdown,
+            })
+        except Exception as e:
+            logger.error(f"Get persona {persona_id[:12]} failed: {e}")
+            return jsonify({"success": False, "error": str(e)}), 500
+
+    # 2) Library fallback — survey-grounded personas. Wrap in the cache
+    #    shape so the frontend's getPersona() consumer doesn't branch.
+    lib_path = os.path.join(
+        os.path.dirname(__file__), "..", "data", "persona_library", "personas.json"
+    )
+    if os.path.exists(lib_path):
+        try:
+            with open(lib_path, "r", encoding="utf-8") as f:
+                lib_data = _json.load(f)
+            for lp in (lib_data.get("personas") if isinstance(lib_data, dict) else lib_data) or []:
+                if lp.get("id") == persona_id:
+                    return jsonify({
+                        "success":  True,
+                        "profile":  lp,
+                        "meta":     {"level": "library", "entity": lp.get("name"), "type": lp.get("actor_archetype")},
+                        "markdown": "",  # library personas don't have a rendered sidecar
+                    })
+        except Exception as e:
+            logger.error(f"Library lookup for persona {persona_id[:12]} failed: {e}")
+
+    return jsonify({"success": False, "error": "Persona not found"}), 404
 
 
 # ============================================================================

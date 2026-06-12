@@ -143,68 +143,41 @@
                 No personas in the library yet. Add some on the Personas tab.
               </div>
               <template v-else>
-                <!-- Fee-status groups: Fee-paying vs No-fee-school.
-                     Mirrors the predicates in panel_service.SEGMENTS so the
-                     Console's Cast picker matches the Panel's segments 1:1. -->
-                <div class="cast-groups">
+                <!-- Segment cards: every panel_service.SEGMENTS group, in the
+                     same order they appear in the Panel's "WHO'S IN THE ROOM".
+                     The server provides label / description / count / members,
+                     so the picker and the panel share the same definitions
+                     without frontend re-implementation. Each card click
+                     toggles its members into the picked set; multi-select
+                     segments = union of members (a persona can ride in via
+                     several segments and only gets removed when none match). -->
+                <div v-if="segmentsLoading" class="cast-loading">Loading segments…</div>
+                <div v-else-if="!panelSegments.length" class="cast-empty">
+                  No segments available.
+                </div>
+                <div v-else class="cast-groups cast-groups-segments">
                   <button
+                    v-for="seg in panelSegments"
+                    :key="seg.id"
                     type="button"
                     class="cast-group"
                     :class="{
-                      selected: feeGroupState('paying') === 'full',
-                      partial: feeGroupState('paying') === 'partial',
+                      selected: segmentState(seg) === 'full',
+                      partial: segmentState(seg) === 'partial',
                     }"
-                    :disabled="feeGroupCount('paying') === 0"
-                    @click="toggleFeeGroup('paying')"
-                    title="Households already paying school fees — proven education spend"
+                    :disabled="seg.count === 0"
+                    @click="toggleSegment(seg)"
+                    :title="seg.description"
                   >
                     <span class="cast-group-top">
-                      <span class="cast-group-label">Fee-paying households</span>
-                      <span class="cast-group-count">{{ pickedInFeeGroup('paying') }}/{{ feeGroupCount('paying') }}</span>
+                      <span class="cast-group-label">{{ seg.label }}</span>
+                      <span class="cast-group-count">{{ pickedInSegment(seg) }}/{{ seg.count }}</span>
                     </span>
-                    <span class="cast-group-desc">Already paying school fees (GHS)</span>
-                  </button>
-                  <button
-                    type="button"
-                    class="cast-group"
-                    :class="{
-                      selected: feeGroupState('non_paying') === 'full',
-                      partial: feeGroupState('non_paying') === 'partial',
-                    }"
-                    :disabled="feeGroupCount('non_paying') === 0"
-                    @click="toggleFeeGroup('non_paying')"
-                    title="Households at no-fee schools — tightest affordability test"
-                  >
-                    <span class="cast-group-top">
-                      <span class="cast-group-label">No-fee-school households</span>
-                      <span class="cast-group-count">{{ pickedInFeeGroup('non_paying') }}/{{ feeGroupCount('non_paying') }}</span>
-                    </span>
-                    <span class="cast-group-desc">No-fee schools only (GHS) — tightest affordability test</span>
+                    <span class="cast-group-desc">{{ seg.description }}</span>
                   </button>
                 </div>
 
-                <!-- Quick-pick: Everyone (full library) + fee-status groups.
-                     Per-archetype group cards were removed — personas are the
-                     primary unit, archetype is just one filter dimension. -->
-                <div class="cast-groups">
-                  <button
-                    type="button"
-                    class="cast-group"
-                    :class="{ selected: isAllPicked }"
-                    :disabled="libraryPersonas.length === 0"
-                    @click="toggleGroup('__all__')"
-                  >
-                    <span class="cast-group-top">
-                      <span class="cast-group-label">Everyone</span>
-                      <span class="cast-group-count">{{ pickedIds.size }}/{{ libraryPersonas.length }}</span>
-                    </span>
-                    <span class="cast-group-desc">Pick the full library</span>
-                  </button>
-                </div>
-
-                <!-- Persona-level filters. Archetype and fee-status are persona
-                     attributes, not separate entity types — the grid below
-                     stays persona-first. -->
+                <!-- Persona-level filters for the fine-tuning grid below. -->
                 <div class="cast-controls">
                   <input
                     v-model="castSearch"
@@ -212,12 +185,6 @@
                     type="text"
                     placeholder="Search personas by name, occupation…"
                   />
-                  <select v-model="castFeeFilter" class="cast-filter">
-                    <option value="">All fee statuses ({{ libraryPersonas.length }})</option>
-                    <option value="paying">Fee-paying ({{ feeGroupCount('paying') }})</option>
-                    <option value="non_paying">No-fee-school ({{ feeGroupCount('non_paying') }})</option>
-                    <option value="unknown">No fee data ({{ libraryPersonas.length - feeGroupCount('paying') - feeGroupCount('non_paying') }})</option>
-                  </select>
                   <select v-model="castArchetypeFilter" class="cast-filter">
                     <option value="">All archetypes</option>
                     <option v-for="a in castArchetypes" :key="a.key" :value="a.key">
@@ -457,6 +424,7 @@ import PersonaLibraryPanel from '../components/PersonaLibraryPanel.vue'
 import PanelPitchPanel from '../components/PanelPitchPanel.vue'
 import AgentPicker from '../components/AgentPicker.vue'
 import { generateSeedFromWeb, listPersonas, getPersona } from '../api/research'
+import { listSegments } from '../api/panel'
 
 const mono = 'JetBrains Mono, monospace'
 const sans = 'Space Grotesk, Noto Sans SC, system-ui, sans-serif'
@@ -582,14 +550,36 @@ const pitchTab = ref('overview')
 // first paint of the marketing tab stays fast.
 const setPitchTab = (tab) => {
   pitchTab.value = tab
-  if (tab === 'cast') loadLibrary()
+  if (tab === 'cast') {
+    loadLibrary()
+    loadSegments()
+  }
+}
+
+// Panel segments — same definitions the Panel Pitch tab uses, server-side.
+// Server returns `members: [persona_id, …]` for each segment so the picker
+// can bulk-pick without re-implementing predicates. Library persona IDs
+// are stable hex hashes; cache personas use the filename hash.
+const panelSegments = ref([])
+const segmentsLoading = ref(false)
+const loadSegments = async () => {
+  if (panelSegments.value.length || segmentsLoading.value) return
+  segmentsLoading.value = true
+  try {
+    const res = await listSegments()
+    const data = res.data || res
+    panelSegments.value = data.segments || data?.data?.segments || []
+  } catch (e) {
+    console.error('Failed to load panel segments:', e)
+  } finally {
+    segmentsLoading.value = false
+  }
 }
 
 // Cast-tab local filters. Kept separate from the global `pickedIds` so typing
 // in the search box doesn't blow away the selection.
 const castSearch = ref('')
 const castArchetypeFilter = ref('')
-const castFeeFilter = ref('')
 
 const castArchetypes = computed(() => {
   const counts = {}
@@ -604,16 +594,8 @@ const castArchetypes = computed(() => {
 
 const filteredLibrary = computed(() => {
   const q = castSearch.value.trim().toLowerCase()
-  const feeMode = castFeeFilter.value
   return libraryPersonas.value.filter((p) => {
     if (castArchetypeFilter.value && (p.actor_archetype || 'unknown') !== castArchetypeFilter.value) return false
-    if (feeMode) {
-      const isPaying = isFeePaying(p)
-      const isNoFee = isNoFeeOnly(p)
-      if (feeMode === 'paying' && !isPaying) return false
-      if (feeMode === 'non_paying' && !isNoFee) return false
-      if (feeMode === 'unknown' && (isPaying || isNoFee)) return false
-    }
     if (!q) return true
     return (
       (p.name || '').toLowerCase().includes(q) ||
@@ -646,88 +628,41 @@ const togglePicked = (p) => {
   pickedIds.value = next
 }
 
-// Group helpers — back the "WHO'S IN THE ROOM" group cards. A group is
-// `full` when every persona in it is picked, `partial` when at least one
-// is, and `none` otherwise. `__all__` is the synthetic "Everyone" group.
-const personasInGroup = (arch) => libraryPersonas.value.filter(
-  (p) => (p.actor_archetype || 'unknown') === arch
-)
-const pickedInGroup = (arch) => personasInGroup(arch).filter(
-  (p) => pickedIds.value.has(personaIdOf(p))
-).length
-const groupState = (arch) => {
-  const total = personasInGroup(arch).length
-  if (total === 0) return 'none'
-  const picked = pickedInGroup(arch)
+// Segment helpers — driven by the server's panel_service.SEGMENTS list
+// (label / description / count / members). A segment is `full` when every
+// member is in pickedIds, `partial` when at least one is, else `none`.
+// Click toggles: full → remove all members, otherwise → add all.
+const pickedInSegment = (seg) => {
+  if (!seg || !seg.members) return 0
+  let n = 0
+  for (const m of seg.members) if (pickedIds.value.has(m)) n++
+  return n
+}
+const segmentState = (seg) => {
+  if (!seg || !seg.members || seg.members.length === 0) return 'none'
+  const picked = pickedInSegment(seg)
   if (picked === 0) return 'none'
-  if (picked === total) return 'full'
+  if (picked === seg.members.length) return 'full'
   return 'partial'
 }
-const isAllPicked = computed(() =>
-  libraryPersonas.value.length > 0 &&
-  libraryPersonas.value.every((p) => pickedIds.value.has(personaIdOf(p)))
-)
-const toggleGroup = (arch) => {
+const toggleSegment = (seg) => {
+  if (!seg || !seg.members || seg.members.length === 0) return
+  const state = segmentState(seg)
   const next = new Set(pickedIds.value)
-  if (arch === '__all__') {
-    const fullyPicked = isAllPicked.value
-    if (fullyPicked) {
-      next.clear()
-    } else {
-      for (const p of libraryPersonas.value) next.add(personaIdOf(p))
-    }
+  if (state === 'full') {
+    for (const m of seg.members) next.delete(m)
   } else {
-    const state = groupState(arch)
-    const members = personasInGroup(arch)
-    if (state === 'full') {
-      for (const p of members) next.delete(personaIdOf(p))
-    } else {
-      for (const p of members) next.add(personaIdOf(p))
-    }
+    for (const m of seg.members) next.add(m)
   }
   pickedIds.value = next
 }
 
-// Fee-status groups. Mirrors panel_service._pays_school_fees / _no_fee_only
-// (same predicate, same persona fields), so the Console picker agrees with
-// the Panel's `fee_paying` / `no_fee_school` segments 1:1.
-const personaFeeBands = (p) => {
-  const bands = Array.isArray(p.learner_fee_bands) ? [...p.learner_fee_bands] : []
-  if (p.fees_band) bands.push(p.fees_band)
-  return bands.filter(Boolean)
-}
-const isFeePaying = (p) => personaFeeBands(p).some((b) => b && b !== 'No fees')
-const isNoFeeOnly = (p) => {
-  const bands = personaFeeBands(p)
-  return bands.length > 0 && bands.every((b) => b === 'No fees')
-}
-const personasInFeeGroup = (kind) => libraryPersonas.value.filter(
-  (p) => (kind === 'paying' ? isFeePaying(p) : isNoFeeOnly(p))
+// isAllPicked — kept for the "Everyone" full-library pick / clear control
+// (no longer a card; still used by Select-all-visible).
+const isAllPicked = computed(() =>
+  libraryPersonas.value.length > 0 &&
+  libraryPersonas.value.every((p) => pickedIds.value.has(personaIdOf(p)))
 )
-const pickedInFeeGroup = (kind) => personasInFeeGroup(kind).filter(
-  (p) => pickedIds.value.has(personaIdOf(p))
-).length
-const feeGroupCount = (kind) => personasInFeeGroup(kind).length
-const feeGroupState = (kind) => {
-  const total = feeGroupCount(kind)
-  if (total === 0) return 'none'
-  const picked = pickedInFeeGroup(kind)
-  if (picked === 0) return 'none'
-  if (picked === total) return 'full'
-  return 'partial'
-}
-const toggleFeeGroup = (kind) => {
-  const state = feeGroupState(kind)
-  const members = personasInFeeGroup(kind)
-  if (members.length === 0) return
-  const next = new Set(pickedIds.value)
-  if (state === 'full') {
-    for (const p of members) next.delete(personaIdOf(p))
-  } else {
-    for (const p of members) next.add(personaIdOf(p))
-  }
-  pickedIds.value = next
-}
 
 const selectAllFiltered = () => {
   const next = new Set(pickedIds.value)
