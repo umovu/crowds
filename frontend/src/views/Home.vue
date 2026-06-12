@@ -183,9 +183,9 @@
                   </button>
                 </div>
 
-                <!-- Archetype groups: every actor_archetype in the library.
-                     "Everyone" picks the full library in one click. -->
-                <div class="cast-group-section-label">By archetype</div>
+                <!-- Quick-pick: Everyone (full library) + fee-status groups.
+                     Per-archetype group cards were removed — personas are the
+                     primary unit, archetype is just one filter dimension. -->
                 <div class="cast-groups">
                   <button
                     type="button"
@@ -200,27 +200,11 @@
                     </span>
                     <span class="cast-group-desc">Pick the full library</span>
                   </button>
-                  <button
-                    v-for="a in castArchetypes"
-                    :key="a.key"
-                    type="button"
-                    class="cast-group"
-                    :class="{
-                      selected: groupState(a.key) === 'full',
-                      partial: groupState(a.key) === 'partial',
-                    }"
-                    @click="toggleGroup(a.key)"
-                  >
-                    <span class="cast-group-top">
-                      <span class="cast-group-label">{{ a.key.replace(/_/g, ' ') }}</span>
-                      <span class="cast-group-count">{{ pickedInGroup(a.key) }}/{{ a.count }}</span>
-                    </span>
-                    <span class="cast-group-desc">
-                      {{ groupState(a.key) === 'full' ? 'Picked' : groupState(a.key) === 'partial' ? 'Partially picked' : 'Not picked' }}
-                    </span>
-                  </button>
                 </div>
 
+                <!-- Persona-level filters. Archetype and fee-status are persona
+                     attributes, not separate entity types — the grid below
+                     stays persona-first. -->
                 <div class="cast-controls">
                   <input
                     v-model="castSearch"
@@ -228,8 +212,14 @@
                     type="text"
                     placeholder="Search personas by name, occupation…"
                   />
+                  <select v-model="castFeeFilter" class="cast-filter">
+                    <option value="">All fee statuses ({{ libraryPersonas.length }})</option>
+                    <option value="paying">Fee-paying ({{ feeGroupCount('paying') }})</option>
+                    <option value="non_paying">No-fee-school ({{ feeGroupCount('non_paying') }})</option>
+                    <option value="unknown">No fee data ({{ libraryPersonas.length - feeGroupCount('paying') - feeGroupCount('non_paying') }})</option>
+                  </select>
                   <select v-model="castArchetypeFilter" class="cast-filter">
-                    <option value="">All groups ({{ libraryPersonas.length }})</option>
+                    <option value="">All archetypes</option>
                     <option v-for="a in castArchetypes" :key="a.key" :value="a.key">
                       {{ a.key.replace(/_/g, ' ') }} ({{ a.count }})
                     </option>
@@ -599,6 +589,7 @@ const setPitchTab = (tab) => {
 // in the search box doesn't blow away the selection.
 const castSearch = ref('')
 const castArchetypeFilter = ref('')
+const castFeeFilter = ref('')
 
 const castArchetypes = computed(() => {
   const counts = {}
@@ -613,8 +604,16 @@ const castArchetypes = computed(() => {
 
 const filteredLibrary = computed(() => {
   const q = castSearch.value.trim().toLowerCase()
+  const feeMode = castFeeFilter.value
   return libraryPersonas.value.filter((p) => {
     if (castArchetypeFilter.value && (p.actor_archetype || 'unknown') !== castArchetypeFilter.value) return false
+    if (feeMode) {
+      const isPaying = isFeePaying(p)
+      const isNoFee = isNoFeeOnly(p)
+      if (feeMode === 'paying' && !isPaying) return false
+      if (feeMode === 'non_paying' && !isNoFee) return false
+      if (feeMode === 'unknown' && (isPaying || isNoFee)) return false
+    }
     if (!q) return true
     return (
       (p.name || '').toLowerCase().includes(q) ||
