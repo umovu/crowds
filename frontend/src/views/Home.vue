@@ -202,7 +202,10 @@
                     class="cast-card"
                     :class="{ selected: pickedIds.has(personaIdOf(p)) }"
                     :title="p.persona || ''"
-                    @click="onPersonaClick(p, idx, $event)"
+                    @click="togglePicked(p)"
+                    @click.ctrl="addPicked(p)"
+                    @click.meta="addPicked(p)"
+                    @click.shift.stop="rangePickTo(idx)"
                   >
                     <span class="cast-check">
                       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3">
@@ -635,6 +638,31 @@ const togglePicked = (p) => {
   pickedIds.value = next
 }
 
+// Add-only — used by ⌘/Ctrl+click. Never toggles off.
+const addPicked = (p) => {
+  const id = personaIdOf(p)
+  if (pickedIds.value.has(id)) return
+  const next = new Set(pickedIds.value)
+  next.add(id)
+  pickedIds.value = next
+}
+
+// Shift+click range — add every persona from the last anchor through idx
+// across the *visible* (filtered) grid. The anchor is the last index that
+// received a plain (toggle) or modifier click.
+const rangePickTo = (idx) => {
+  if (lastClickedIdx.value < 0 || lastClickedIdx.value >= filteredLibrary.value.length) {
+    togglePicked(filteredLibrary.value[idx])
+    lastClickedIdx.value = idx
+    return
+  }
+  const [from, to] = [Math.min(lastClickedIdx.value, idx), Math.max(lastClickedIdx.value, idx)]
+  const next = new Set(pickedIds.value)
+  for (let i = from; i <= to; i++) next.add(personaIdOf(filteredLibrary.value[i]))
+  pickedIds.value = next
+  lastClickedIdx.value = idx
+}
+
 // Segment helpers — driven by the server's panel_service.SEGMENTS list
 // (label / description / count / members). A segment is `full` when every
 // member is in pickedIds, `partial` when at least one is, else `none`.
@@ -681,14 +709,19 @@ const isAllPicked = computed(() =>
 // slice of the grid.
 const lastClickedIdx = ref(-1)
 const onPersonaClick = (p, idx, ev) => {
-  if (ev.shiftKey && lastClickedIdx.value >= 0 && lastClickedIdx.value < filteredLibrary.value.length) {
+  // Defensive: $event should always be the MouseEvent here, but fall back
+  // to a plain toggle if it ever isn't (e.g. a programmatic invocation).
+  const shift = !!(ev && ev.shiftKey)
+  const accel = !!(ev && (ev.metaKey || ev.ctrlKey))
+  if (shift && lastClickedIdx.value >= 0 && lastClickedIdx.value < filteredLibrary.value.length) {
     const [from, to] = [Math.min(lastClickedIdx.value, idx), Math.max(lastClickedIdx.value, idx)]
     const next = new Set(pickedIds.value)
     for (let i = from; i <= to; i++) next.add(personaIdOf(filteredLibrary.value[i]))
     pickedIds.value = next
+    lastClickedIdx.value = idx
     return
   }
-  if (ev.metaKey || ev.ctrlKey) {
+  if (accel) {
     const id = personaIdOf(p)
     const next = new Set(pickedIds.value)
     next.add(id)
@@ -696,8 +729,8 @@ const onPersonaClick = (p, idx, ev) => {
     lastClickedIdx.value = idx
     return
   }
-  // Plain click — preserve old toggle behaviour, but also move the anchor
-  // for a follow-up shift-click range.
+  // Plain click — toggle the persona and move the anchor for any follow-up
+  // shift-click range.
   togglePicked(p)
   lastClickedIdx.value = idx
 }
