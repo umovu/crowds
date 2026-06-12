@@ -10,11 +10,99 @@ import logging
 from flask import Blueprint, request, jsonify, current_app
 
 from ..services.literature_service import LiteratureSearchService
+from ..services.deep_research_service import _is_available
 from ..utils.logger import get_logger
 
 logger = get_logger("fub.research")
 
 research_bp = Blueprint("research", __name__)
+
+
+def _extract_people_type_spec(web_context: str, group: str, context: str = "") -> list:
+    """Distil raw web text into a list of SA-grounded PEOPLE-TYPE segments.
+
+    This is the binding step between web research and persona generation. Web text
+    is never handed to the persona generator directly — it goes through here first,
+    so foreign products/brands/places with no SA relevance (the WeWALK leak) are
+    dropped to context and can never define WHO a persona is. The persona generator
+    downstream only ever sees these distilled SA people-type segments.
+
+    Returns a list of dicts: {segment, who, where, pain_points}. Empty list on any
+    failure — callers must treat an empty spec as "no usable grounding" and fall
+    back to ungrounded generation rather than feeding raw web text through.
+    """
+    from ..utils.llm_client import LLMClient
+
+    if not web_context.strip():
+        return []
+
+    context_line = f"\nThey are being modelled for their reaction to: {context}\n" if context else ""
+    prompt = f"""You are distilling web research into REAL SOUTH AFRICAN people-type segments
+for a simulation about this group:
+
+GROUP: {group}{context_line}
+
+Below is raw web research. Extract ONLY the kinds of REAL HUMAN PEOPLE in South Africa
+who belong to (or directly interact with) this group. Each segment is a type of person,
+grounded in SA reality — never a product, app, brand, device, company, or foreign entity.
+
+HARD RULES:
+- A product/app/brand/device (e.g. a named smart cane, an overseas app) is CONTEXT, not a
+  person. Never turn one into a segment. If the web text is mostly about a foreign product,
+  extract the SA PEOPLE who would use that *kind* of thing, not the product itself.
+- Every segment must be plausibly present in South Africa. Drop anything foreign with no SA
+  relevance.
+- Segments capture the genuine diversity WITHIN the group (different ages, incomes, attitudes,
+  locations) — not one stereotype.
+
+RAW WEB RESEARCH:
+{web_context}
+
+Return ONLY valid JSON of the form:
+{{"segments": [
+  {{"segment": "short label, e.g. 'blind commuter, Soweto'",
+    "who": "1-2 sentences on this person-type",
+    "where": "SA place / province / setting",
+    "pain_points": ["concrete pain point", "..."]}}
+]}}
+Return 4-8 distinct segments. No explanation."""
+
+    try:
+        llm = LLMClient()
+        parsed = llm.chat_json(
+            messages=[
+                {"role": "system", "content":
+                    "You extract real South African people-type segments from web research. "
+                    "Products, brands, and foreign entities are context, never people. Return ONLY JSON."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.3,
+            max_tokens=1500,
+        )
+    except Exception as e:
+        logger.warning(f"People-type spec extraction failed (falling back to ungrounded): {e}")
+        return []
+
+    segments = []
+    if isinstance(parsed, dict):
+        segments = parsed.get("segments", parsed.get("people_types", []))
+    elif isinstance(parsed, list):
+        segments = parsed
+    return [s for s in segments if isinstance(s, dict) and s.get("segment")]
+
+
+def _format_people_type_spec(segments: list) -> str:
+    """Render a people-type spec as the constraint block fed to the persona LLM."""
+    lines = []
+    for i, s in enumerate(segments, 1):
+        pains = s.get("pain_points") or []
+        pains_str = "; ".join(str(p) for p in pains) if isinstance(pains, list) else str(pains)
+        lines.append(
+            f"{i}. {s.get('segment', '')} — {s.get('who', '')} "
+            f"[where: {s.get('where', 'South Africa')}]"
+            + (f" [pain points: {pains_str}]" if pains_str else "")
+        )
+    return "\n".join(lines)
 
 _literature_service = None
 
@@ -250,14 +338,23 @@ def upload_local_paper():
 @research_bp.route("/web", methods=["POST"])
 def web_research():
     """
-    Perform web research. Tries MiroFlow first, then falls back to Firecrawl.
+    Perform web research using Firecrawl + Serper (deep research).
 
     Request body:
     {
         "query": "Research question or topic",
         "url": "https://...",   // optional, for direct scraping via Firecrawl
-        "llm": "qwen-3",        // optional, MiroFlow only
-        "agent": "mirothinker..."  // optional, MiroFlow only
+        "agent_context": {
+            "agents": [
+                {
+                    "name": "agent_name",
+                    "archetype": "agent_archetype",
+                    "description": "agent_description",
+                    "background": "agent_background"
+                }
+            ],
+            "context_focus": "specific_focus_area"
+        }   // optional, custom agent context to shape research
     }
     """
     data = request.get_json()
@@ -267,6 +364,7 @@ def web_research():
 
     query = data.get("query", "").strip()
     url = data.get("url", "").strip()
+    agent_context = data.get("agent_context", {})
 
     if not query and not url:
         return jsonify({"error": "Query or URL is required"}), 400
@@ -285,26 +383,39 @@ def web_research():
             result = fc.scrape(url)
             return jsonify(result)
 
-        # Try MiroFlow for full research queries
-        from ..services.miroflow_service import MiroFlowService
-        from ..services.serper_service import SerperService
+        # Use deep research service (Firecrawl + Jina + LLM)
+        from ..services.deep_research_service import research_archetypes
 
-        miro = MiroFlowService()
-        serper = SerperService()
-
-        if miro.is_available():
-            result = miro.research_sync(query)
-            if result.get("success"):
-                return jsonify(result)
-            logger.warning(f"MiroFlow failed, error: {result.get('error')}")
+        # Incorporate agent context into the research query
+        enhanced_query = query
+        if agent_context and agent_context.get("agents"):
+            agents = agent_context.get("agents", [])
+            if agents:
+                agent_names = [agent.get("name", "") for agent in agents if agent.get("name")]
+                if agent_names:
+                    enhanced_query = f"{query} (focusing on perspectives from: {', '.join(agent_names)})"
+        
+        result = research_archetypes(
+            archetypes=["general"],
+            query=enhanced_query,
+            breadth=3,
+            depth=2,
+        )
+        if result:
+            return jsonify({
+                "success": True,
+                "data": {"content": result.get("general", "")},
+                "source": "deep_research",
+                "agent_context": agent_context if agent_context else None
+            })
 
         # Default: Serper search + Firecrawl scrape
+        from ..services.serper_service import SerperService
+        serper = SerperService()
         if serper.is_available() and fc.is_available():
             result = serper.search_and_scrape(query, num_results=5)
             if result.get("success"):
                 return jsonify(result)
-
-        # Fallback: just Serper search results
         if serper.is_available():
             result = serper.search(query)
             return jsonify(result)
@@ -366,11 +477,9 @@ def firecrawl_scrape():
 def web_research_status():
     """Check availability of web research services."""
     try:
-        from ..services.miroflow_service import MiroFlowService
         from ..services.firecrawl_service import FirecrawlService
         from ..services.serper_service import SerperService
 
-        miro = MiroFlowService()
         fc = FirecrawlService()
         serper = SerperService()
 
@@ -379,8 +488,6 @@ def web_research_status():
             services.append("firecrawl")
         if serper.is_available():
             services.append("serper")
-        if miro.is_available():
-            services.append("miroflow")
 
         return jsonify({
             "available": len(services) > 0,
@@ -392,10 +499,6 @@ def web_research_status():
             "firecrawl": {
                 "available": fc.is_available(),
                 "message": "Configured" if fc.is_available() else "Set FIRECRAWL_API_KEY in .env"
-            },
-            "miroflow": {
-                "available": miro.is_available(),
-                "message": "Configured" if miro.is_available() else "Set WEB_SEARCH_API_URL in .env (requires Python 3.12+)"
             }
         })
     except Exception as e:
@@ -453,11 +556,10 @@ def enrich_agents():
             )
 
         elif research_type == "web":
-            from ..services.miroflow_service import MiroFlowService
+            from ..services.deep_research_service import research_archetypes
             from ..services.firecrawl_service import FirecrawlService
             from ..services.serper_service import SerperService
 
-            miro = MiroFlowService()
             fc = FirecrawlService()
             serper = SerperService()
             urls = data.get("urls", [])
@@ -466,13 +568,23 @@ def enrich_agents():
             combined = []
             enriched_context = {}
 
-            if miro.is_available():
-                result = miro.research_sync(query)
-                if result.get("success"):
-                    context_source = "miroflow"
-                    combined.append(result.get("content", ""))
+            # Try deep research service (Firecrawl + Jina + LLM)
+            if _is_available():
+                result = research_archetypes(
+                    archetypes=archetypes,
+                    query=query,
+                    breadth=3,
+                    depth=2,
+                )
+                if result:
+                    context_source = "deep_research"
+                    combined.append("\n\n".join(result.values()))
+                    research_result = {
+                        "success": True,
+                        "content": "\n\n---\n\n".join(combined)
+                    }
                     enriched_context = AgentContextEnricher.enrich_from_web_research(
-                        result, archetypes
+                        research_result, archetypes
                     )
 
             if not enriched_context and serper.is_available() and fc.is_available():
@@ -599,6 +711,7 @@ def generate_seed():
     data = request.get_json() or {}
     topic = (data.get("topic") or "").strip()
     extra_urls = data.get("extra_urls", []) or []
+    mode = data.get("mode", "policy")  # "policy" or "product"
 
     if not topic:
         return jsonify({"error": "topic is required"}), 400
@@ -609,10 +722,19 @@ def generate_seed():
 
     scraped = []
 
-    # Step 1+2 (preferred): Jina search+scrape in one call — more generous free tier
+    # 4 sources (not 6): the seed endpoint scrapes live pages serially, so each
+    # extra page adds real wall-clock and bloats the synthesis prompt. 4 keeps the
+    # briefing well-grounded while staying under the frontend timeout.
+    import time as _time
+    _t0 = _time.time()
+
+    # Step 1+2 (preferred): Jina search+scrape in one call — more generous free tier.
+    # Jina's search endpoint rejects long queries with 422, so truncate to a sane
+    # length for the search call. The full topic is still used downstream for synthesis.
+    jina_query = topic if len(topic) <= 200 else topic[:200].rsplit(" ", 1)[0]
     if jina.api_key:
         try:
-            combined = jina.search_and_scrape(topic, num_results=6)
+            combined = jina.search_and_scrape(jina_query, num_results=4)
             if combined.get("success"):
                 for item in combined.get("scraped_content", []):
                     if item.get("content"):
@@ -624,10 +746,11 @@ def generate_seed():
         except Exception as e:
             logger.warning(f"Jina search_and_scrape failed: {e}")
 
-    # Step 1+2 (fallback): Serper search + Firecrawl scrape
-    if not scraped and serper.is_available() and fc.is_available():
+    # Step 1+2 (fallback): Serper search + Firecrawl scrape — fires when Jina
+    # returned nothing OR when Jina was unavailable OR when Jina was bypassed.
+    if not scraped and (serper.is_available() or fc.is_available()):
         try:
-            combined = serper.search_and_scrape(topic, num_results=6)
+            combined = serper.search_and_scrape(jina_query if len(topic) > 200 else topic, num_results=4)
             if combined.get("success"):
                 for item in combined.get("scraped_content", []):
                     if item.get("content"):
@@ -655,6 +778,8 @@ def generate_seed():
                 "content": (r.get("content") or "")[:3000],
             })
 
+    logger.info(f"Seed scrape done: {len(scraped)} sources in {_time.time() - _t0:.1f}s (topic={topic[:60]})")
+
     if not scraped:
         return jsonify({
             "success": False,
@@ -666,56 +791,136 @@ def generate_seed():
         }), 502
 
     # Step 3: Synthesize into a structured briefing
+    _t_syn = _time.time()
     sources_blob = "\n\n".join(
         f"### Source {i+1}: {s['title']}\n{s['content']}"
         for i, s in enumerate(scraped)
     )
     citations = ", ".join(f"[{i+1}]" for i in range(len(scraped)))
 
-    synthesis_prompt = (
-        f"You are preparing a seed briefing document for a South African policy simulation.\n\n"
-        f"TOPIC: {topic}\n\n"
-        f"Below are {len(scraped)} articles scraped from the web. Synthesize them into a "
-        f"structured briefing (~1200-1800 words) that a simulation engine will use to generate "
-        f"agent personas and run a multi-agent simulation.\n\n"
-        f"REQUIRED STRUCTURE:\n"
-        f"## Background\n"
-        f"  - Set the scene. What is the situation? Where (province, township, sector)? Recent timeline.\n\n"
-        f"## Key actors and their interests\n"
-        f"  - List 5-8 distinct actor types involved (e.g. taxi_operator, community_leader, police_officer).\n"
-        f"  - For each: their role, their concerns, their relationship to the issue.\n"
-        f"  - Be specific to South African context. Use real archetypes from the articles.\n\n"
-        f"## Recent events\n"
-        f"  - Bulleted timeline of concrete events from the articles. Cite sources inline like [1], [2].\n\n"
-        f"## Tensions and dynamics\n"
-        f"  - What conflicts exist between the actors? Where are the friction points?\n\n"
-        f"## Policy environment\n"
-        f"  - What policies, government responses, or proposals are in play? What's contested?\n\n"
-        f"Cite sources inline using {citations}. Do not invent facts not in the sources. "
-        f"Write in clear, declarative prose suitable for downstream LLM ingestion.\n\n"
-        f"SOURCES:\n{sources_blob}"
+    if mode == "product":
+        synthesis_prompt = (
+            f"You are preparing a seed briefing document for a South African product stress-test simulation.\n\n"
+            f"PRODUCT IDEA: {topic}\n\n"
+            f"Below are {len(scraped)} articles scraped from the web. Synthesize them into a "
+            f"structured briefing (~1000-1400 words) that a simulation engine will use to generate "
+            f"agent personas and run a multi-agent product simulation.\n\n"
+            f"GEOGRAPHIC PRIORITY RULES:\n"
+            f"- PRIMARY: Focus on the South African market. What exists in SA? Who are the local players?\n"
+            f"- SECONDARY: International competitors with confirmed SA presence (e.g. Netflix, Uber, Showmax).\n"
+            f"- CONTEXT ONLY: Foreign competitors with NO SA presence — include ONLY for customer insight "
+            f"reference (a foreign competitor product can show what users value, without being a local actor).\n"
+            f"- Do NOT let foreign competitors dominate the briefing. They are reference points, not primary actors.\n\n"
+            f"REQUIRED STRUCTURE:\n"
+            f"## Background\n"
+            f"  - What is the product idea? What problem does it solve? Where in SA is this relevant?\n\n"
+            f"## SA market context\n"
+            f"  - What exists in South Africa today for this problem? Local competitors, alternatives, status-quo.\n\n"
+            f"## Key customer segments\n"
+            f"  - List 5-8 distinct South African customer types who would use this product.\n"
+            f"  - These MUST be REAL HUMAN people-types (e.g. 'blind commuters in Soweto', 'spaza owners',\n"
+            f"    'office workers with low vision') — NOT products, apps, brands, programmes, or companies.\n"
+            f"  - For each: their profile, their pain points, what they currently use instead.\n\n"
+            f"NON-AGENT RULE: Products, apps, brands, competitor products, and programmes (e.g. a named app,\n"
+            f"a device, a campaign) are CONTEXT ONLY. Mention them under competitive landscape, never as\n"
+            f"customer segments or actors. The simulation's agents are PEOPLE (and the businesses that buy),\n"
+            f"never products. A competitor PRODUCT is not an actor; the PEOPLE who use or sell it are.\n\n"
+            f"## Competitive landscape\n"
+            f"  - SA-based competitors (primary weight).\n"
+            f"  - International with SA presence (secondary weight).\n"
+            f"  - Global context competitors (reference only — include customer insights, not market dominance).\n\n"
+            f"## Barriers and realities\n"
+            f"  - What SA-specific barriers exist? (data costs, load-shedding, income, trust, regulation)\n\n"
+            f"Cite sources inline using {citations}. Do not invent facts not in the sources. "
+            f"Write in clear, declarative prose suitable for downstream LLM ingestion.\n\n"
+            f"SOURCES:\n{sources_blob}"
+        )
+    else:
+        synthesis_prompt = (
+            f"You are preparing a seed briefing document for a South African policy simulation.\n\n"
+            f"TOPIC: {topic}\n\n"
+            f"Below are {len(scraped)} articles scraped from the web. Synthesize them into a "
+            f"structured briefing (~1000-1400 words) that a simulation engine will use to generate "
+            f"agent personas and run a multi-agent simulation.\n\n"
+            f"REQUIRED STRUCTURE:\n"
+            f"## Background\n"
+            f"  - Set the scene. What is the situation? Where (province, township, sector)? Recent timeline.\n\n"
+            f"## Key actors and their interests\n"
+            f"  - List 5-8 distinct actor types involved (e.g. taxi_operator, community_leader, police_officer).\n"
+            f"  - These MUST be REAL HUMAN people-types — NOT organisations-as-names, programmes, or campaigns.\n"
+            f"    (A genuine institution may be an actor, but describe it as the PEOPLE who speak for it.)\n"
+            f"  - For each: their role, their concerns, their relationship to the issue.\n"
+            f"  - Be specific to South African context. Use real archetypes from the articles.\n\n"
+            f"NON-AGENT RULE: Programmes, campaigns, brands, and abstract initiatives are CONTEXT, not actors.\n"
+            f"The simulation's agents are PEOPLE and the institutions whose human representatives speak.\n\n"
+            f"## Recent events\n"
+            f"  - Bulleted timeline of concrete events from the articles. Cite sources inline like [1], [2].\n\n"
+            f"## Tensions and dynamics\n"
+            f"  - What conflicts exist between the actors? Where are the friction points?\n\n"
+            f"## Policy environment\n"
+            f"  - What policies, government responses, or proposals are in play? What's contested?\n\n"
+            f"Cite sources inline using {citations}. Do not invent facts not in the sources. "
+            f"Write in clear, declarative prose suitable for downstream LLM ingestion.\n\n"
+            f"SOURCES:\n{sources_blob}"
+        )
+
+    llm = LLMClient()
+    system_msg = (
+        "You are a research analyst specializing in South African contexts. "
+        "Produce concise, fact-grounded briefings. "
+        + ("For product simulations, prioritize SA market context; foreign competitors are reference only."
+           if mode == "product" else
+           "For policy simulations, focus on SA socio-political dynamics.")
     )
 
-    try:
-        llm = LLMClient()
-        seed_text = llm.chat(
-            messages=[
-                {"role": "system", "content": "You are a policy research analyst specializing in South African socio-political contexts. Produce concise, fact-grounded briefings."},
-                {"role": "user", "content": synthesis_prompt},
-            ],
-            temperature=0.4,
-            max_tokens=3500,
-        )
-    except Exception as e:
-        logger.error(f"Synthesis LLM call failed: {e}")
-        return jsonify({"success": False, "error": f"Synthesis failed: {e}"}), 500
-
-    # Append source list to bottom of seed text for transparency
+    # Append source list to bottom of seed text for transparency.
     sources_md = "\n\n---\n\n## Sources\n" + "\n".join(
         f"[{i+1}] [{s['title'] or s['url']}]({s['url']})"
         for i, s in enumerate(scraped)
     )
-    seed_text = seed_text.strip() + sources_md
+
+    # Synthesis is factored into a callable so the advisory judge can regenerate
+    # ONCE on a low score. The retry hint is qualitative only — it must not invite
+    # invented facts (the "no invented facts" criterion still applies on the retry).
+    def generate_briefing(prev_judge=None):
+        retry_hint = ""
+        if prev_judge is not None and prev_judge.reasoning:
+            retry_hint = (
+                f"\n\nA previous draft scored low. Improve on this feedback while staying "
+                f"strictly grounded in the SOURCES (do NOT invent facts to satisfy it):\n"
+                f"{prev_judge.reasoning}\n"
+            )
+        text = llm.chat(
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": synthesis_prompt + retry_hint},
+            ],
+            temperature=0.4,
+            max_tokens=2200,
+        )
+        return text.strip() + sources_md
+
+    judge_result = None
+    try:
+        from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of
+        if judge_enabled():
+            svc = get_judge_service()
+            seed_text, judge_result, regenerated = judge_best_of(
+                generate=generate_briefing,
+                judge=lambda t: svc.judge_seed_briefing(t, mode, topic),
+            )
+            if regenerated:
+                logger.info(f"Seed briefing regenerated once on judge feedback (topic={topic})")
+        else:
+            seed_text = generate_briefing()
+    except Exception as e:
+        logger.error(f"Synthesis LLM call failed: {e}")
+        return jsonify({"success": False, "error": f"Synthesis failed: {e}"}), 500
+
+    logger.info(
+        f"Seed synthesis done in {_time.time() - _t_syn:.1f}s "
+        f"(total {_time.time() - _t0:.1f}s, {len(seed_text)} chars)"
+    )
 
     return jsonify({
         "success": True,
@@ -723,6 +928,7 @@ def generate_seed():
         "sources": [{"url": s["url"], "title": s["title"]} for s in scraped],
         "scraped_count": len(scraped),
         "char_count": len(seed_text),
+        "judge": judge_result.to_dict() if judge_result else None,
     })
 
 
@@ -799,17 +1005,30 @@ def search_people():
             logger.warning(f"People-search web grounding failed (continuing LLM-only): {e}")
 
         if scraped:
-            grounded = True
             sources = [{"url": s["url"], "title": s["title"]} for s in scraped]
             web_context = "\n\n".join(
                 f"### Source {i+1}: {s['title']}\n{s['content']}" for i, s in enumerate(scraped)
             )
 
+    # ---- Bind web research to SA people-type segments BEFORE generating personas ----
+    # Raw web text is never handed to the persona LLM directly: it goes through
+    # _extract_people_type_spec first, so foreign products/brands (the WeWALK leak)
+    # stay context and can't define who a persona is. Personas must then conform to
+    # one of these distilled SA segments. If extraction yields nothing usable, we
+    # fall back to ungrounded generation rather than leaking raw web text through.
+    people_type_segments = []
+    if web_context:
+        people_type_segments = _extract_people_type_spec(web_context, group, context)
+        grounded = bool(people_type_segments)
+
     # ---- Generate personas in the CustomAgentParser dict shape ----
     grounding_block = (
-        f"\n\nUse the following real web research about this group to ground the personas in "
-        f"current, specific reality (cite no sources in output, just absorb the facts):\n{web_context}\n"
-        if web_context else ""
+        f"\n\nThese are the REAL SOUTH AFRICAN people-type segments derived from web research "
+        f"about this group. Each persona you generate MUST map to one of these segments and stay "
+        f"true to it. Set each persona's \"segment\" field to the segment label it represents. "
+        f"Do NOT invent person-types outside this list, and never turn a product/brand into a person:\n"
+        f"{_format_people_type_spec(people_type_segments)}\n"
+        if people_type_segments else ""
     )
     context_block = f"\nThey are being modelled for their reaction to: {context}\n" if context else ""
 
@@ -839,29 +1058,57 @@ For each persona produce a JSON object with these fields:
 - emotion_keyword, emotion_thought
 - attitudes: array of {{"topic": "...", "rating": 0-10, "description": "..."}}
 - beliefs: array of strings
+- segment: the people-type segment label this persona maps to (only when segments are provided above; omit otherwise)
 
 Return ONLY a valid JSON object of the form {{"personas": [ ... ]}}. No explanation."""
 
-    try:
-        llm = LLMClient()
+    # Generate personas. Factored into a callable so the advisory judge can
+    # regenerate ONCE on a low score (judge_best_of). `prev_judge` carries the
+    # first attempt's qualitative reasoning back as a hint on the retry — used to
+    # improve voice/diversity/realism only. It must NEVER instruct affordability
+    # or budget figures; those are computed downstream from real persona data.
+    llm = LLMClient()
+
+    def generate_personas(prev_judge=None):
+        retry_hint = ""
+        if prev_judge is not None and prev_judge.reasoning:
+            retry_hint = (
+                f"\n\nA previous attempt scored low. Improve on this feedback "
+                f"(qualitative only — do NOT change or invent income/budget numbers):\n"
+                f"{prev_judge.reasoning}\n"
+            )
         parsed = llm.chat_json(
             messages=[
                 {"role": "system", "content": "You are an expert in South African socio-economics who designs realistic, diverse agent personas. Return ONLY valid JSON."},
-                {"role": "user", "content": prompt},
+                {"role": "user", "content": prompt + retry_hint},
             ],
             temperature=0.7,
             max_tokens=4000,
         )
         if isinstance(parsed, dict):
-            agents = parsed.get("personas", parsed.get("agents", parsed.get("profiles", [])))
+            out = parsed.get("personas", parsed.get("agents", parsed.get("profiles", [])))
         elif isinstance(parsed, list):
-            agents = parsed
+            out = parsed
         else:
-            agents = []
-        agents = [a for a in agents if isinstance(a, dict) and a.get("name")]
-        # Tag origin so the merge pipeline treats them as custom
-        for a in agents:
+            out = []
+        out = [a for a in out if isinstance(a, dict) and a.get("name")]
+        for a in out:
             a["source_entity_type"] = "custom_people_search"
+        return out
+
+    judge_result = None
+    try:
+        from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of
+        if judge_enabled():
+            svc = get_judge_service()
+            agents, judge_result, regenerated = judge_best_of(
+                generate=generate_personas,
+                judge=lambda a: svc.judge_personas(a, topic=group),
+            )
+            if regenerated:
+                logger.info(f"Personas regenerated once on judge feedback (group={group})")
+        else:
+            agents = generate_personas()
     except Exception as e:
         logger.error(f"People-search persona generation failed: {e}")
         return jsonify({"success": False, "error": f"Persona generation failed: {e}"}), 500
@@ -876,6 +1123,7 @@ Return ONLY a valid JSON object of the form {{"personas": [ ... ]}}. No explanat
         "grounded": grounded,
         "sources": sources,
         "count": len(agents),
+        "judge": judge_result.to_dict() if judge_result else None,
     })
 
 
@@ -955,16 +1203,26 @@ def enrich_agent():
         except Exception as e:
             logger.warning(f"Enrich agent web grounding failed (continuing LLM-only): {e}")
         if scraped:
-            grounded = True
             sources = [{"url": s["url"], "title": s["title"]} for s in scraped]
             web_context = "\n\n".join(
                 f"### Source {i+1}: {s['title']}\n{s['content']}" for i, s in enumerate(scraped)
             )
 
+    # Bind web research to SA people-type segments before enriching: raw web text
+    # never reaches the persona LLM directly, so foreign products/brands can't
+    # redefine who this person is. The persona is constrained to fit whichever
+    # segment best matches the descriptor.
+    people_type_segments = []
+    if web_context:
+        people_type_segments = _extract_people_type_spec(web_context, descriptor, "")
+        grounded = bool(people_type_segments)
+
     grounding_block = (
-        f"\n\nUse this live web research to ground the persona in current South African reality "
-        f"(absorb the facts, don't cite sources in output):\n{web_context}\n"
-        if web_context else ""
+        f"\n\nThese REAL SOUTH AFRICAN people-type segments were derived from web research "
+        f"about this kind of person. Keep the persona true to whichever segment best fits the "
+        f"fields the user provided. Do NOT pull in foreign products/brands as identity — they are "
+        f"context only:\n{_format_people_type_spec(people_type_segments)}\n"
+        if people_type_segments else ""
     )
 
     # Show the LLM only the fields the user actually provided, so it preserves them.
@@ -1044,7 +1302,7 @@ Return ONLY a valid JSON object (the agent itself, not wrapped in an array). No 
 @research_bp.route("/deep", methods=["POST"])
 def deep_research():
     """
-    Run MiroFlow deep research for persona enrichment.
+    Run deep web research for persona enrichment using Firecrawl + Jina + LLM.
 
     Researches current reality for each archetype found in the document,
     returning structured data that grounds persona generation in real-world conditions.
@@ -1098,36 +1356,32 @@ def deep_research():
     if not archetypes:
         return jsonify({"error": "At least one archetype is required (provide archetypes or document_text)"}), 400
 
-    try:
-        from ..services.miroflow_service import MiroFlowService
+    if not _is_available():
+        return jsonify({
+            "error": "Deep research not available. Set FIRECRAWL_API_KEY or JINA_API_KEY in .env"
+        }), 503
 
-        miro = MiroFlowService()
-        if not miro.is_available():
-            return jsonify({
-                "error": "MiroFlow MCP server not configured. Set WEB_SEARCH_API_URL in .env"
-            }), 503
+    try:
+        from ..services.deep_research_service import research_archetypes
 
         logger.info(f"Deep research starting: {len(archetypes)} archetypes for query: {query[:80]}...")
 
-        results = miro.research_archetypes_batch(
+        results = research_archetypes(
             archetypes=archetypes,
             query=query,
             document_text=document_text,
-            max_workers=3
+            breadth=3,
+            depth=2,
         )
 
         enrichment = {}
         completed_count = 0
 
-        for archetype, result in results.items():
-            if result.get("success"):
-                content = result.get("content", "")
-                if content:
-                    enrichment[archetype] = content
-                    completed_count += 1
-                    logger.info(f"Enrichment data captured for {archetype} ({len(content)} chars)")
-            else:
-                logger.warning(f"MiroFlow research failed for {archetype}: {result.get('error', 'unknown')}")
+        for archetype, content in results.items():
+            if content:
+                enrichment[archetype] = content
+                completed_count += 1
+                logger.info(f"Enrichment data captured for {archetype} ({len(content)} chars)")
 
         status = "completed" if completed_count == len(archetypes) else "partial"
         if completed_count == 0:
@@ -1302,6 +1556,12 @@ def list_personas():
                 "gender":     profile.get("gender"),
                 "occupation": profile.get("occupation"),
                 "province":   profile.get("province"),
+                # Fee-band data is the signal the Cast picker needs to drive the
+                # "Fee-paying" / "No-fee-school" quick-select groups. Surfaced
+                # here (not on the full-profile fetch) so the picker can match
+                # personas without an N-call waterfall.
+                "fees_band":         profile.get("fees_band"),
+                "learner_fee_bands": profile.get("learner_fee_bands") or [],
                 "level":      meta.get("level", "exact"),
             })
         # De-dupe: each persona is stored under two keys (exact + archetype) so
