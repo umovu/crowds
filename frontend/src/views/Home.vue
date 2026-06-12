@@ -418,7 +418,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CustomAgentPanel from '../components/CustomAgentPanel.vue'
 import SimsDrawer from '../components/SimsDrawer.vue'
