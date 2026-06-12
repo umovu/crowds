@@ -196,14 +196,19 @@
                 <div v-if="filteredLibrary.length === 0" class="cast-empty">No personas match.</div>
                 <div v-else class="cast-grid">
                   <button
-                    v-for="p in filteredLibrary"
+                    v-for="(p, idx) in filteredLibrary"
                     :key="personaIdOf(p)"
                     type="button"
                     class="cast-card"
                     :class="{ selected: pickedIds.has(personaIdOf(p)) }"
                     :title="p.persona || ''"
-                    @click="togglePicked(p)"
+                    @click="onPersonaClick(p, idx, $event)"
                   >
+                    <span class="cast-check">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </span>
                     <span class="cast-avatar">{{ (p.name || '?').slice(0, 1).toUpperCase() }}</span>
                     <span class="cast-body">
                       <span class="cast-name">{{ p.name || 'Unnamed' }}</span>
@@ -213,18 +218,16 @@
                       </span>
                       <span v-if="p.budget_tier" class="cast-tier" :class="'tier-' + p.budget_tier">{{ p.budget_tier }}</span>
                     </span>
-                    <span class="cast-check">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </span>
                   </button>
                 </div>
 
                 <div class="cast-actions">
                   <button class="cast-link" @click="selectAllFiltered" :disabled="!filteredLibrary.length">Select all visible</button>
                   <span class="cast-divider">|</span>
+                  <button class="cast-link" @click="deselectAllFiltered" :disabled="!pickedIds.size">Deselect visible</button>
+                  <span class="cast-divider">|</span>
                   <button class="cast-link" @click="clearPicked" :disabled="pickedIds.size === 0">Clear</button>
+                  <span class="cast-hint">Shift-click for range · ⌘/Ctrl-click to add</span>
                   <button
                     class="cast-add"
                     :disabled="pickedIds.size === 0"
@@ -605,6 +608,10 @@ const filteredLibrary = computed(() => {
   })
 })
 
+// Drop the shift-range anchor whenever the visible slice changes, so a
+// stale anchor can't leap across a re-filtered grid.
+watch(filteredLibrary, () => { lastClickedIdx.value = -1 })
+
 const loadLibrary = async () => {
   if (libraryPersonas.value.length || libraryLoading.value) return
   libraryLoading.value = true
@@ -664,9 +671,46 @@ const isAllPicked = computed(() =>
   libraryPersonas.value.every((p) => pickedIds.value.has(personaIdOf(p)))
 )
 
+// Persona-grid multi-select. Mirrors the file-manager pattern:
+//   plain click   → toggle (add if not picked, remove if picked)
+//   Cmd/Ctrl+click → add without toggling off (a "select more" gesture)
+//   Shift+click   → range select from the last clicked persona through the
+//                   current one across the *visible* (filtered) grid
+// `lastClickedIdx` tracks the anchor for shift-range; resets to -1 when
+// filters/search change so a stale anchor can't leap across an unrelated
+// slice of the grid.
+const lastClickedIdx = ref(-1)
+const onPersonaClick = (p, idx, ev) => {
+  if (ev.shiftKey && lastClickedIdx.value >= 0 && lastClickedIdx.value < filteredLibrary.value.length) {
+    const [from, to] = [Math.min(lastClickedIdx.value, idx), Math.max(lastClickedIdx.value, idx)]
+    const next = new Set(pickedIds.value)
+    for (let i = from; i <= to; i++) next.add(personaIdOf(filteredLibrary.value[i]))
+    pickedIds.value = next
+    return
+  }
+  if (ev.metaKey || ev.ctrlKey) {
+    const id = personaIdOf(p)
+    const next = new Set(pickedIds.value)
+    next.add(id)
+    pickedIds.value = next
+    lastClickedIdx.value = idx
+    return
+  }
+  // Plain click — preserve old toggle behaviour, but also move the anchor
+  // for a follow-up shift-click range.
+  togglePicked(p)
+  lastClickedIdx.value = idx
+}
+
 const selectAllFiltered = () => {
   const next = new Set(pickedIds.value)
   for (const p of filteredLibrary.value) next.add(personaIdOf(p))
+  pickedIds.value = next
+}
+
+const deselectAllFiltered = () => {
+  const next = new Set(pickedIds.value)
+  for (const p of filteredLibrary.value) next.delete(personaIdOf(p))
   pickedIds.value = next
 }
 
@@ -1206,21 +1250,23 @@ const startSimulation = async () => {
 .tier-moderate { background: #F4F4F4; color: #666; border: 1px solid #DDD; }
 .tier-loose { background: rgba(30, 158, 90, 0.1); color: #1E9E5A; border: 1px solid rgba(30, 158, 90, 0.4); }
 
+/* Checkbox sits on the LEFT of the card so it reads as a real selectable
+   control, not a corner badge. Filled-green when selected. */
 .cast-check {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #DDD;
-  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #CCC;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: transparent;
   background: #fff;
   transition: all 0.15s;
+  flex-shrink: 0;
+  margin-top: 6px;
 }
+.cast-card:hover .cast-check { border-color: #1E9E5A; }
 .cast-card.selected .cast-check {
   background: #1E9E5A;
   border-color: #1E9E5A;
@@ -1246,6 +1292,12 @@ const startSimulation = async () => {
 .cast-link:hover:not(:disabled) { text-decoration: underline; }
 .cast-link:disabled { color: #BBB; cursor: not-allowed; }
 .cast-divider { color: #DDD; }
+.cast-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: #999;
+  margin-left: 6px;
+}
 .cast-add {
   margin-left: auto;
   padding: 9px 18px;
