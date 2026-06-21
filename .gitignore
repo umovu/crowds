@@ -10,6 +10,9 @@ Thumbs.db
 .env.test
 .env.production
 
+# Generated at build from VITE_SUPABASE_* env (keeps keys out of the repo)
+frontend/public/supabase-config.js
+
 # Python
 __pycache__/
 *.py[cod]
@@ -55,6 +58,9 @@ backend/logs/
 
 # 上传文件
 backend/uploads/
+
+# Licensed survey microdata (Stats SA / DataFirst QLFS etc.) — large + not redistributable
+backend/data/microdata/
 
 # Docker 数据
 data/backend/venv311/

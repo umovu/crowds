@@ -3,19 +3,22 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">fubsandbox</div>
+        <div class="brand" @click="router.push('/')">
+          <span class="brand-mark">f</span>
+          <span class="brand-word"><span class="brand-strong">fub</span>sandbox</span>
+        </div>
       </div>
       
       <div class="header-center">
         <div class="view-switcher">
-          <button 
-            v-for="mode in ['graph', 'split', 'workbench', 'analytics']" 
+          <button
+            v-for="mode in ['graph', 'split', 'workbench']"
             :key="mode"
             class="switch-btn"
             :class="{ active: viewMode === mode }"
             @click="viewMode = mode"
           >
-            {{ { graph: 'Graph', split: 'Split', workbench: 'Workbench', analytics: 'Analytics' }[mode] }}
+            {{ { graph: 'Graph', split: 'Split', workbench: 'Workbench' }[mode] }}
           </button>
         </div>
       </div>
@@ -36,7 +39,7 @@
     <!-- Main Content Area -->
     <main class="content-area">
       <!-- Left Panel: Graph -->
-      <div v-if="viewMode !== 'analytics'" class="panel-wrapper left" :style="leftPanelStyle">
+      <div class="panel-wrapper left" :style="leftPanelStyle">
         <GraphPanel 
           :graphData="graphData"
           :loading="graphLoading"
@@ -48,7 +51,7 @@
       </div>
 
       <!-- Right Panel: Step4 Report -->
-      <div v-if="viewMode !== 'analytics'" class="panel-wrapper right" :style="rightPanelStyle">
+      <div class="panel-wrapper right" :style="rightPanelStyle">
         <Step4Report
           :reportId="currentReportId"
           :simulationId="simulationId"
@@ -56,11 +59,6 @@
           @add-log="addLog"
           @update-status="updateStatus"
         />
-      </div>
-
-      <!-- Analytics Panel -->
-      <div v-if="viewMode === 'analytics'" class="panel-wrapper analytics" :style="analyticsPanelStyle">
-        <SimulationDashboard :simulationId="simulationId" />
       </div>
     </main>
   </div>
@@ -71,7 +69,6 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GraphPanel from '../components/GraphPanel.vue'
 import Step4Report from '../components/Step4Report.vue'
-import SimulationDashboard from '../components/SimulationDashboard.vue'
 import { getProject, getGraphData } from '../api/graph'
 import { getSimulation } from '../api/simulation'
 import { getReport } from '../api/report'
@@ -100,19 +97,13 @@ const currentStatus = ref('processing') // processing | completed | error
 const leftPanelStyle = computed(() => {
   if (viewMode.value === 'graph') return { width: '100%', opacity: 1, transform: 'translateX(0)' }
   if (viewMode.value === 'workbench') return { width: '0%', opacity: 0, transform: 'translateX(-20px)' }
-  if (viewMode.value === 'analytics') return { width: '0%', opacity: 0, transform: 'translateX(-20px)' }
   return { width: '50%', opacity: 1, transform: 'translateX(0)' }
 })
 
 const rightPanelStyle = computed(() => {
   if (viewMode.value === 'workbench') return { width: '100%', opacity: 1, transform: 'translateX(0)' }
   if (viewMode.value === 'graph') return { width: '0%', opacity: 0, transform: 'translateX(20px)' }
-  if (viewMode.value === 'analytics') return { width: '0%', opacity: 0, transform: 'translateX(20px)' }
   return { width: '50%', opacity: 1, transform: 'translateX(0)' }
-})
-
-const analyticsPanelStyle = computed(() => {
-  return { width: '100%', opacity: 1, transform: 'translateX(0)' }
 })
 
 // --- Status Computed ---
@@ -254,13 +245,36 @@ onMounted(() => {
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 800;
   font-size: 18px;
-  letter-spacing: 1px;
   cursor: pointer;
-  color: #1E9E5A;
+  user-select: none;
 }
+.brand:hover .brand-mark {
+  box-shadow: 0 3px 10px rgba(30, 158, 90, 0.35);
+  transform: translateY(-1px);
+}
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(30, 158, 90, 0.28);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.brand-word { line-height: 1; letter-spacing: -0.3px; color: #6b6b6b; font-weight: 700; }
+.brand-strong { color: #1E9E5A; }
 
 .view-switcher {
   display: flex;
@@ -357,18 +371,5 @@ onMounted(() => {
 
 .panel-wrapper.left {
   border-right: 1px solid #EAEAEA;
-}
-
-.panel-wrapper.analytics {
-  overflow-y: auto;
-  background: #FAFAFA;
-  /* Flex items default to min-width:auto and refuse to shrink below their
-     content width — so a wide child (the tab row) could push the panel past the
-     viewport and get clipped by .content-area's overflow:hidden, hiding the
-     right-hand tabs. Constrain the panel to the available width so its content
-     (header tabs) wraps/scrolls inside it instead. */
-  flex: 1 1 100%;
-  min-width: 0;
-  max-width: 100%;
 }
 </style>

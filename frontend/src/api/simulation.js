@@ -27,7 +27,10 @@ export const createSimulation = (data) => {
 
 /**
  * Prepare simulation environment (async task)
- * @param {Object} data - { simulation_id, entity_types?, use_llm_for_profiles?, parallel_profile_count?, force_regenerate? }
+ * @param {Object} data - { simulation_id, entity_types?, use_llm_for_profiles?, parallel_profile_count?, force_regenerate?,
+ *   mode?, mode_is_manual? }
+ *   mode_is_manual=true pins `mode`; when false (or omitted) the backend auto-detects
+ *   mode from the seed. The response echoes { mode, converged, secondary_lens, mode_detection }.
  */
 export const prepareSimulation = (data) => {
   return requestWithRetry(() => service.post('/api/simulation/prepare', data), 3, 1000)
@@ -69,9 +72,10 @@ export const getEnrichmentData = (simulationId) => {
 /**
  * Re-run deep web research for this simulation's archetypes (overwrites enrichment.json)
  * @param {string} simulationId
+ * @param {Object} agentContext - Optional custom agent context to shape research
  */
-export const rerunResearch = (simulationId) => {
-  return service.post(`/api/simulation/${simulationId}/research/rerun`)
+export const rerunResearch = (simulationId, agentContext = null) => {
+  return service.post(`/api/simulation/${simulationId}/research/rerun`, agentContext)
 }
 
 /**
@@ -232,6 +236,14 @@ export const interviewAgentsPostSimulation = (data) => {
  */
 export const getSimulationHistory = (limit = 20) => {
   return service.get('/api/simulation/history', { params: { limit } })
+}
+
+/**
+ * Delete a simulation's data from disk (refused while it is running)
+ * @param {string} simulationId
+ */
+export const deleteSimulation = (simulationId) => {
+  return service.delete(`/api/simulation/${simulationId}`)
 }
 
 // =============================================================================

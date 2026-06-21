@@ -47,6 +47,37 @@
         </div>
       </div>
 
+      <!-- Pick from persona library (panel-style group picker) -->
+      <div class="library-section">
+        <div class="section-header">
+          <span class="section-title">Pick from Persona Library</span>
+          <button class="library-toggle" @click="toggleLibrary">
+            {{ showLibrary ? 'Hide' : `Browse ${libraryPersonas.length || ''} personas` }}
+          </button>
+        </div>
+        <div v-if="showLibrary" class="library-body">
+          <div v-if="libraryLoading" class="parse-status info">Loading library…</div>
+          <template v-else>
+            <AgentPicker
+              :agents="libraryPersonas"
+              :multiSelect="true"
+              :selectedIds="librarySelected"
+              @toggle="toggleLibraryPersona"
+            />
+            <div class="library-actions">
+              <span class="library-count">{{ librarySelected.size }} selected</span>
+              <button
+                class="library-add-btn"
+                :disabled="librarySelected.size === 0"
+                @click="addLibrarySelection"
+              >
+                Add {{ librarySelected.size }} to roster
+              </button>
+            </div>
+          </template>
+        </div>
+      </div>
+
       <!-- Upload Area -->
       <div class="upload-section">
         <div class="section-header">
@@ -220,9 +251,10 @@
 import { ref, computed, nextTick } from 'vue'
 import AgentDefinitionCard from './AgentDefinitionCard.vue'
 import AgentEditModal from './AgentEditModal.vue'
+import AgentPicker from './AgentPicker.vue'
 
 import { parseAgentDocument } from '../api/simulation'
-import { searchPeople, enrichAgent } from '../api/research'
+import { searchPeople, enrichAgent, listPersonas, getPersona } from '../api/research'
 
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
@@ -248,6 +280,68 @@ const enabled = computed({
 
 const agentCount = computed(() => agents.value.length)
 const validAgents = computed(() => agents.value.filter(a => a && typeof a === 'object' && a.name))
+
+// Pick-from-library state. listPersonas returns metadata; the AgentPicker only
+// needs name/archetype/province/etc. for browsing. Full profile is fetched on
+// add so the roster gets the persona's complete identity.
+const showLibrary = ref(false)
+const libraryPersonas = ref([])
+const libraryLoading = ref(false)
+const librarySelected = ref(new Set())
+
+const personaId = (p) => p.id ?? p.persona_id ?? p.name
+
+async function toggleLibrary() {
+  showLibrary.value = !showLibrary.value
+  if (showLibrary.value && libraryPersonas.value.length === 0) {
+    libraryLoading.value = true
+    try {
+      const res = await listPersonas()
+      // Normalise field names the picker expects (archetype → actor_archetype).
+      libraryPersonas.value = (res.personas || []).map(p => ({
+        ...p,
+        actor_archetype: p.actor_archetype || p.archetype,
+      }))
+    } catch (e) {
+      console.error('Failed to load persona library:', e)
+    } finally {
+      libraryLoading.value = false
+    }
+  }
+}
+
+function toggleLibraryPersona(p) {
+  const id = personaId(p)
+  const next = new Set(librarySelected.value)
+  next.has(id) ? next.delete(id) : next.add(id)
+  librarySelected.value = next
+}
+
+async function addLibrarySelection() {
+  const ids = Array.from(librarySelected.value)
+  const existing = new Set(agents.value.map(a => (a.name || '').toLowerCase()))
+  const added = []
+  for (const id of ids) {
+    const meta = libraryPersonas.value.find(p => personaId(p) === id)
+    if (!meta || existing.has((meta.name || '').toLowerCase())) continue
+    let full = meta
+    try {
+      // Fetch the complete profile so the roster carries the full identity,
+      // not just the browse metadata.
+      const res = await getPersona(id)
+      if (res.success && res.persona) full = { ...res.persona, actor_archetype: res.persona.actor_archetype || res.persona.archetype }
+    } catch (e) {
+      console.warn('Falling back to metadata for persona', id, e)
+    }
+    added.push(full)
+  }
+  if (added.length) {
+    agents.value = [...agents.value, ...added]
+    if (!enabled.value) enabled.value = true
+  }
+  librarySelected.value = new Set()
+  showLibrary.value = false
+}
 
 const showModal = ref(false)
 const editingAgent = ref(null)
@@ -546,6 +640,53 @@ function genId() {
 </script>
 
 <style scoped>
+/* Pick-from-library section */
+.library-section { margin-bottom: 18px; }
+.library-toggle {
+  background: none;
+  border: 1px solid #1E9E5A;
+  color: #1E9E5A;
+  padding: 4px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.library-toggle:hover { background: #F0FAF4; }
+.library-body {
+  margin-top: 10px;
+  border: 1px solid #E5E5E5;
+  padding: 12px;
+  background: #fff;
+}
+.library-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #F0F0F0;
+}
+.library-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #666;
+}
+.library-add-btn {
+  background: #1E9E5A;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.library-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.library-add-btn:hover:not(:disabled) { background: #178048; }
+
 .custom-agent-panel {
   display: flex;
   flex-direction: column;

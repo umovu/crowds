@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crowds — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #1E9E5A;
+    --accent-deep: #178048;
+    --accent-soft: #F0FAF4;
+    --ink: #141414;
+    --ink-2: #4a4a4a;
+    --ink-3: #888;
+    --line: #E8E8E8;
+    --line-2: #F0F0F0;
+    --bg: #ffffff;
+    --bg-2: #FAFAFA;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --err: #C0392B;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Layout — split: left brand panel, right auth card ─────────────────── */
+  .auth-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+
+  /* Left — brand / marketing panel */
+  .brand-panel {
+    background: linear-gradient(160deg, #f8fdfb 0%, #eef9f2 100%);
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-panel::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,158,90,0.08), transparent 70%);
+    pointer-events: none;
+  }
+  .brand-top {
+    display: flex; align-items: center; gap: 11px; cursor: pointer;
+    position: relative; z-index: 1;
+  }
+  .brand-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+    color: #fff;
+    font-family: var(--mono); font-weight: 800; font-size: 1.2rem; line-height: 1;
+    box-shadow: 0 2px 8px rgba(30,158,90,0.30);
+  }
+  .brand-word {
+    font-family: var(--mono); font-weight: 800; font-size: 1.25rem;
+    letter-spacing: -0.4px; color: var(--ink);
+  }
+  .brand-word .accent { color: var(--accent); }
+
+  .brand-mid {
+    position: relative; z-index: 1;
+    max-width: 420px;
+  }
+  .brand-mid h1 {
+    font-size: 2.1rem; font-weight: 600; letter-spacing: -1px;
+    line-height: 1.12; margin: 0;
+  }
+  .brand-mid h1 .accent { color: var(--accent); }
+  .brand-mid p {
+    font-size: 1.02rem; color: var(--ink-2); line-height: 1.55;
+    margin: 18px 0 0;
+  }
+  .brand-feats {
+    display: flex; flex-direction: column; gap: 14px;
+    margin-top: 32px;
+  }
+  .brand-feat {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 0.9rem; color: var(--ink-2); line-height: 1.5;
+  }
+  .brand-feat .ic {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; flex-shrink: 0;
+  }
+  .brand-feat b { color: var(--ink); font-weight: 600; }
+
+  .brand-foot {
+    position: relative; z-index: 1;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3);
+  }
+
+  /* Right — auth card */
+  .auth-panel {
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 24px;
+    background: var(--bg);
+  }
+  .auth-card {
+    width: 100%; max-width: 380px;
+    display: flex; flex-direction: column;
+  }
+
+  /* Mobile brand mark (hidden on desktop) */
+  .auth-mobile-brand {
+    display: none;
+    align-items: center; gap: 10px;
+    margin-bottom: 32px; justify-content: center;
+  }
+
+  /* ── Mode toggle (Sign in / Sign up) ──────────────────────────────────── */
+  .auth-toggle {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 4px; margin-bottom: 28px;
+  }
+  .auth-toggle button {
+    padding: 9px 0; border: none; background: transparent;
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 700;
+    color: var(--ink-3); cursor: pointer; border-radius: 7px;
+    transition: all .15s;
+  }
+  .auth-toggle button.active {
+    background: #fff; color: var(--ink);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  .auth-title {
+    font-size: 1.5rem; font-weight: 600; letter-spacing: -.5px;
+    margin: 0 0 6px;
+  }
+  .auth-sub {
+    font-size: 0.88rem; color: var(--ink-3); margin: 0 0 24px;
+  }
+
+  /* ── OAuth buttons ────────────────────────────────────────────────────── */
+  .oauth-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    gap: 10px; padding: 12px 16px;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: #fff; cursor: pointer;
+    font-family: var(--sans); font-size: 0.92rem; font-weight: 600;
+    color: var(--ink); transition: all .15s;
+  }
+  .oauth-btn:hover {
+    border-color: var(--ink-3); background: var(--bg-2);
+  }
+  .oauth-btn:active { transform: scale(0.99); }
+  .oauth-btn .g-logo {
+    width: 18px; height: 18px; flex-shrink: 0;
+  }
+  .oauth-btn.email-btn {
+    border-color: var(--accent); color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .oauth-btn.email-btn:hover {
+    background: #fff;
+  }
+  .oauth-btn.email-btn .mail-ic {
+    width: 18px; height: 18px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .oauth-btns { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ── Divider ──────────────────────────────────────────────────────────── */
+  .divider {
+    display: flex; align-items: center; gap: 14px;
+    margin: 24px 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--line);
+  }
+  .divider span {
+    font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3);
+    font-weight: 600;
+  }
+
+  /* ── Email form ───────────────────────────────────────────────────────── */
+  .email-form {
+    display: none; flex-direction: column; gap: 16px;
+  }
+  .email-form.show { display: flex; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-family: var(--mono); font-size: 0.66rem; font-weight: 700;
+    letter-spacing: .5px; text-transform: uppercase; color: var(--ink-3);
+  }
+  .field input {
+    width: 100%; padding: 11px 14px;
+    border: 1px solid var(--line); border-radius: 10px;
+    font-family: var(--sans); font-size: 0.92rem; color: var(--ink);
+    background: #fff; outline: none; transition: border-color .15s;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(30,158,90,0.10);
+  }
+  .field input::placeholder { color: #bbb; }
+  .field input.invalid { border-color: var(--err); }
+  .field input.invalid:focus { box-shadow: 0 0 0 3px rgba(192,57,43,0.10); }
+  .field input.valid { border-color: var(--accent); }
+  .field-error {
+    font-family: var(--mono); font-size: 0.66rem; color: var(--err);
+    margin-top: 4px; display: none;
+  }
+  .field-error.show { display: block; }
+
+  /* Password strength meter + requirements checklist */
+  .pw-strength { margin-top: 8px; display: none; }
+  .pw-strength.show { display: block; }
+  .pw-strength-bar {
+    height: 4px; background: var(--line-2); border-radius: 2px; overflow: hidden;
+  }
+  .pw-strength-bar > i {
+    display: block; height: 100%; width: 0; border-radius: 2px;
+    transition: width .2s, background .2s;
+  }
+  .pw-strength-label {
+    font-family: var(--mono); font-size: 0.62rem; font-weight: 600;
+    margin-top: 5px; color: var(--ink-3);
+  }
+  .pw-reqs {
+    list-style: none; padding: 0; margin: 8px 0 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+  }
+  .pw-reqs li {
+    font-family: var(--mono); font-size: 0.6rem; color: var(--ink-3);
+    display: flex; align-items: center; gap: 5px;
+    transition: color .15s;
+  }
+  .pw-reqs li::before {
+    content: '○'; font-size: 0.7rem; line-height: 1; flex-shrink: 0;
+    transition: color .15s;
+  }
+  .pw-reqs li.met { color: var(--accent); }
+  .pw-reqs li.met::before { content: '●'; color: var(--accent); }
+
+  /* Password visibility toggle */
+  .pw-toggle {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 4px;
+    color: var(--ink-3); font-size: 0.78rem; line-height: 1;
+  }
+  .pw-toggle:hover { color: var(--ink); }
+  .pw-wrap { position: relative; }
+
+  .btn-primary {
+    width: 100%; padding: 12px 16px;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: var(--mono); font-size: 0.86rem; font-weight: 700;
+    background: #141414; color: #fff;
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-primary:hover:not(:disabled) { background: #000; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Magic link toggle ────────────────────────────────────────────────── */
+  .magic-toggle {
+    background: none; border: none; padding: 0;
+    font-family: var(--mono); font-size: 0.74rem; font-weight: 600;
+    color: var(--accent); cursor: pointer; text-align: center;
+    margin-top: 4px;
+  }
+  .magic-toggle:hover { text-decoration: underline; }
+
+  /* ── Message ──────────────────────────────────────────────────────────── */
+  .msg {
+    margin-top: 16px; padding: 10px 14px; border-radius: 8px;
+    font-size: 0.82rem; line-height: 1.45; text-align: center;
+    display: none;
+  }
+  .msg.show { display: block; }
+  .msg.ok { background: var(--accent-soft); color: var(--accent); }
+  .msg.err { background: #FEEEEC; color: var(--err); }
+
+  /* ── Footer link ──────────────────────────────────────────────────────── */
+  .auth-foot {
+    margin-top: 28px; text-align: center;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3);
+  }
+  .auth-foot a { color: var(--accent); text-decoration: none; }
+  .auth-foot a:hover { text-decoration: underline; }
+
+  /* ── Responsive ───────────────────────────────────────────────────────── */
+  @media (max-width: 820px) {
+    .auth-page { grid-template-columns: 1fr; }
+    .brand-panel { display: none; }
+    .auth-mobile-brand { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- ── Left: brand / marketing panel ─────────────────────────────────── -->
+  <aside class="brand-panel">
+    <div class="brand-top" onclick="window.location.href='landing.html'">
+      <span class="brand-mark">C</span>
+      <span class="brand-word"><span class="accent">Crowds</span></span>
+    </div>
+
+    <div class="brand-mid">
+      <h1>Test the room<br />before you walk<br />into it.</h1>
+      <p>
+        Generate a synthetic public from any scenario, run your message past
+        them, and map the range of plausible reactions — before you commit.
+      </p>
+      <div class="brand-feats">
+        <div class="brand-feat">
+          <span class="ic">✳</span>
+          <span><b>Seed to crowd in minutes</b> — describe a scenario, get a population of grounded AI agents.</span>
+        </div>
+        <div class="brand-feat">
+          <span class="ic">⏸</span>
+          <span><b>Intervene mid-run</b> — pause, pose a follow-up, and watch stances shift in real time.</span>
+        </div>
+        <div class="brand-feat">
+          <span class="ic">◢</span>
+          <span><b>Read the room</b> — sentiment, stance distribution, and a full prediction report.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-foot">AGPL-3.0</div>
+  </aside>
+
+  <!-- ── Right: auth card ──────────────────────────────────────────────── -->
+  <main class="auth-panel">
+    <div class="auth-card">
+
+      <!-- Mobile brand (shown when brand panel is hidden) -->
+      <div class="auth-mobile-brand">
+        <span class="brand-mark">C</span>
+        <span class="brand-word"><span class="accent">Crowds</span></span>
+      </div>
+
+      <!-- Mode toggle -->
+      <div class="auth-toggle">
+        <button class="active" id="tab-signin" type="button">Sign in</button>
+        <button id="tab-signup" type="button">Sign up</button>
+      </div>
+
+      <h2 class="auth-title" id="form-title">Welcome back</h2>
+      <p class="auth-sub" id="form-sub">Sign in to run simulations and access your reports.</p>
+
+      <!-- OAuth buttons -->
+      <div class="oauth-btns">
+        <button class="oauth-btn" id="btn-google" type="button">
+          <svg class="g-logo" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Continue with Google
+        </button>
+        <button class="oauth-btn email-btn" id="btn-email" type="button">
+          <span class="mail-ic">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M22 7l-10 6L2 7"/>
+            </svg>
+          </span>
+          Continue with email
+        </button>
+      </div>
+
+      <!-- Email + password form (hidden until "Continue with email" is clicked) -->
+      <div class="divider" id="form-divider" style="display:none">
+        <span>or</span>
+      </div>
+      <form class="email-form" id="email-form" onsubmit="return false">
+        <!-- Name field (sign-up only) -->
+        <div class="field" id="name-field" style="display:none">
+          <label>Full name</label>
+          <input type="text" id="name" placeholder="Thandi Mokoena" autocomplete="name" />
+          <div class="field-error" id="name-error">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+          <div class="field-error" id="email-error">Please enter a valid email address.</div>
+        </div>
+
+        <div class="field" id="password-field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="password" placeholder="At least 8 characters" autocomplete="current-password" />
+            <button class="pw-toggle" id="pw-toggle" type="button" aria-label="Show password">eye</button>
+          </div>
+          <div class="field-error" id="password-error">Password must be at least 8 characters.</div>
+          <!-- Strength meter + requirements (sign-up only) -->
+          <div class="pw-strength" id="pw-strength">
+            <div class="pw-strength-bar"><i id="pw-strength-fill"></i></div>
+            <div class="pw-strength-label" id="pw-strength-label">Strength: —</div>
+            <ul class="pw-reqs">
+              <li id="req-len">8+ characters</li>
+              <li id="req-upper">Uppercase letter</li>
+              <li id="req-lower">Lowercase letter</li>
+              <li id="req-num">Number</li>
+              <li id="req-special">Special character</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Confirm password (sign-up only) -->
+        <div class="field" id="confirm-field" style="display:none">
+          <label>Confirm password</label>
+          <div class="pw-wrap">
+            <input type="password" id="confirm" placeholder="Re-enter your password" autocomplete="new-password" />
+            <button class="pw-toggle" id="confirm-toggle" type="button" aria-label="Show password">eye</button>
+          </div>
+          <div class="field-error" id="confirm-error">Passwords don't match.</div>
+        </div>
+
+        <button class="btn-primary" id="btn-submit" type="submit" disabled>
+          <span id="btn-submit-text">Sign in</span>
+        </button>
+        <button class="magic-toggle" id="magic-toggle" type="button">Email me a magic link instead</button>
+      </form>
+
+      <!-- Message -->
+      <div class="msg" id="msg"></div>
+
+      <!-- Footer -->
+      <div class="auth-foot">
+        <a href="landing.html">← Back to Crowds</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { supabase, callbackUrl } from './supabase-client.js';
+
+(function () {
+  // ── State ──────────────────────────────────────────────────────────────
+  var mode = 'signin';        // 'signin' | 'signup'
+  var emailMode = false;      // email form visible?
+  var magic = false;          // magic link mode?
+
+  var tabSignin = document.getElementById('tab-signin');
+  var tabSignup = document.getElementById('tab-signup');
+  var formTitle = document.getElementById('form-title');
+  var formSub = document.getElementById('form-sub');
+  var btnGoogle = document.getElementById('btn-google');
+  var btnEmail = document.getElementById('btn-email');
+  var emailForm = document.getElementById('email-form');
+  var formDivider = document.getElementById('form-divider');
+  var emailInput = document.getElementById('email');
+  var passwordInput = document.getElementById('password');
+  var passwordField = document.getElementById('password-field');
+  var btnSubmit = document.getElementById('btn-submit');
+  var btnSubmitText = document.getElementById('btn-submit-text');
+  var magicToggle = document.getElementById('magic-toggle');
+  var msg = document.getElementById('msg');
+  // New fields
+  var nameField = document.getElementById('name-field');
+  var nameInput = document.getElementById('name');
+  var confirmField = document.getElementById('confirm-field');
+  var confirmInput = document.getElementById('confirm');
+  var pwStrength = document.getElementById('pw-strength');
+  var pwStrengthFill = document.getElementById('pw-strength-fill');
+  var pwStrengthLabel = document.getElementById('pw-strength-label');
+  var pwToggle = document.getElementById('pw-toggle');
+  var confirmToggle = document.getElementById('confirm-toggle');
+  // Field errors
+  var emailError = document.getElementById('email-error');
+  var passwordError = document.getElementById('password-error');
+  var nameError = document.getElementById('name-error');
+  var confirmError = document.getElementById('confirm-error');
+  // Password requirement items
+  var reqLen = document.getElementById('req-len');
+  var reqUpper = document.getElementById('req-upper');
+  var reqLower = document.getElementById('req-lower');
+  var reqNum = document.getElementById('req-num');
+  var reqSpecial = document.getElementById('req-special');
+
+  // ── Helpers ────────────────────────────────────────────────────────────
+  function showMsg(text, kind) {
+    msg.textContent = text;
+    msg.className = 'msg show ' + (kind === 'err' ? 'err' : 'ok');
+  }
+  function clearMsg() { msg.className = 'msg'; msg.textContent = ''; }
+
+  function validEmail(v) { return /\S+@\S+\.\S+/.test(v); }
+
+  // Password strength: returns { score 0-4, met: {len,upper,lower,num,special} }
+  function pwScore(v) {
+    var met = {
+      len: v.length >= 8,
+      upper: /[A-Z]/.test(v),
+      lower: /[a-z]/.test(v),
+      num: /[0-9]/.test(v),
+      special: /[^A-Za-z0-9]/.test(v)
+    };
+    var score = (met.len?1:0) + (met.upper?1:0) + (met.lower?1:0) + (met.num?1:0) + (met.special?1:0);
+    return { score: score, met: met };
+  }
+
+  var STRENGTH_COLORS = ['#E0E0E0', '#E74C3C', '#E67E22', '#F1C40F', '#1E9E5A'];
+  var STRENGTH_LABELS = ['—', 'Weak', 'Fair', 'Good', 'Strong'];
+
+  function updatePwStrength() {
+    var v = passwordInput.value;
+    var s = pwScore(v);
+    var pct = (s.score / 5) * 100;
+    pwStrengthFill.style.width = pct + '%';
+    pwStrengthFill.style.background = STRENGTH_COLORS[s.score];
+    pwStrengthLabel.textContent = 'Strength: ' + STRENGTH_LABELS[s.score];
+    // Toggle requirement items
+    reqLen.classList.toggle('met', s.met.len);
+    reqUpper.classList.toggle('met', s.met.upper);
+    reqLower.classList.toggle('met', s.met.lower);
+    reqNum.classList.toggle('met', s.met.num);
+    reqSpecial.classList.toggle('met', s.met.special);
+  }
+
+  function setFieldError(input, errorEl, show) {
+    input.classList.toggle('invalid', show);
+    input.classList.toggle('valid', !show && input.value.length > 0);
+    errorEl.classList.toggle('show', show);
+  }
+
+  function updateCopy() {
+    if (mode === 'signup') {
+      formTitle.textContent = 'Create your account';
+      formSub.textContent = 'Start simulating public reactions in minutes.';
+      tabSignin.classList.remove('active');
+      tabSignup.classList.add('active');
+      nameField.style.display = 'flex';
+      confirmField.style.display = 'flex';
+      pwStrength.classList.add('show');
+    } else {
+      formTitle.textContent = 'Welcome back';
+      formSub.textContent = 'Sign in to run simulations and access your reports.';
+      tabSignin.classList.add('active');
+      tabSignup.classList.remove('active');
+      nameField.style.display = 'none';
+      confirmField.style.display = 'none';
+      pwStrength.classList.remove('show');
+    }
+    updateSubmitLabel();
+    passwordInput.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+    validate();
+  }
+
+  function updateSubmitLabel() {
+    if (magic) {
+      btnSubmitText.textContent = 'Send magic link';
+    } else {
+      btnSubmitText.textContent = mode === 'signup' ? 'Sign up' : 'Sign in';
+    }
+  }
+
+  function validate() {
+    var hasEmail = validEmail(emailInput.value.trim());
+    var s = pwScore(passwordInput.value);
+    var hasPass = mode === 'signup' ? s.score >= 4 : passwordInput.value.length >= 6;
+    var nameOk = mode !== 'signup' || nameInput.value.trim().length >= 2;
+    var confirmOk = mode !== 'signup' || (confirmInput.value === passwordInput.value && confirmInput.value.length > 0);
+    if (magic) {
+      btnSubmit.disabled = !hasEmail;
+    } else {
+      btnSubmit.disabled = !(hasEmail && hasPass && nameOk && confirmOk);
+    }
+    return { hasEmail: hasEmail, hasPass: hasPass, nameOk: nameOk, confirmOk: confirmOk };
+  }
+
+  // ── Mode toggle (Sign in / Sign up) ────────────────────────────────────
+  tabSignin.addEventListener('click', function () { mode = 'signin'; updateCopy(); clearMsg(); });
+  tabSignup.addEventListener('click', function () { mode = 'signup'; updateCopy(); clearMsg(); });
+
+  // ── Google button → real Supabase OAuth (redirects to Google, returns to
+  //    the SPA's /auth/callback which settles the session and routes to next) ─
+  btnGoogle.addEventListener('click', async function () {
+    clearMsg();
+    btnGoogle.disabled = true;
+    btnGoogle.innerHTML = '<span style="font-size:0.8rem">Connecting to Google…</span>';
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: callbackUrl(nextUrl) }
+      });
+      if (error) throw error;
+      // On success the browser navigates away to Google — nothing more to do.
+    } catch (e) {
+      showMsg(e?.message || 'Could not start Google sign-in.', 'err');
+      btnGoogle.disabled = false;
+      btnGoogle.innerHTML = '<svg class="g-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google';
+    }
+  });
+
+  // ── Email button → reveals email form ──────────────────────────────────
+  btnEmail.addEventListener('click', function () {
+    emailMode = !emailMode;
+    if (emailMode) {
+      emailForm.classList.add('show');
+      formDivider.style.display = 'flex';
+      btnEmail.textContent = 'Use a different method';
+      btnEmail.classList.remove('email-btn');
+      btnEmail.style.color = 'var(--ink-3)';
+      btnEmail.style.border = '1px solid var(--line)';
+      btnEmail.style.background = 'var(--bg-2)';
+      setTimeout(function () { emailInput.focus(); }, 50);
+    } else {
+      emailForm.classList.remove('show');
+      formDivider.style.display = 'none';
+      btnEmail.innerHTML = '<span class="mail-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></span>Continue with email';
+      btnEmail.classList.add('email-btn');
+      btnEmail.style.color = '';
+      btnEmail.style.border = '';
+      btnEmail.style.background = '';
+    }
+    clearMsg();
+  });
+
+  // ── Magic link toggle ──────────────────────────────────────────────────
+  magicToggle.addEventListener('click', function () {
+    magic = !magic;
+    if (magic) {
+      passwordField.style.display = 'none';
+      confirmField.style.display = 'none';
+      nameField.style.display = 'none';
+      pwStrength.classList.remove('show');
+      magicToggle.textContent = 'Use a password instead';
+    } else {
+      passwordField.style.display = 'flex';
+      if (mode === 'signup') {
+        confirmField.style.display = 'flex';
+        nameField.style.display = 'flex';
+        pwStrength.classList.add('show');
+      }
+      magicToggle.textContent = 'Email me a magic link instead';
+    }
+    updateSubmitLabel();
+    validate();
+    clearMsg();
+  });
+
+  // ── Input validation (real-time feedback) ──────────────────────────────
+  emailInput.addEventListener('input', function () {
+    var v = emailInput.value.trim();
+    var ok = validEmail(v);
+    setFieldError(emailInput, emailError, v.length > 0 && !ok);
+    if (ok) emailInput.classList.add('valid');
+    validate();
+    clearMsg();
+  });
+  emailInput.addEventListener('blur', function () {
+    if (emailInput.value.trim().length > 0 && !validEmail(emailInput.value.trim())) {
+      setFieldError(emailInput, emailError, true);
+    }
+  });
+
+  nameInput.addEventListener('input', function () {
+    var ok = nameInput.value.trim().length >= 2;
+    setFieldError(nameInput, nameError, nameInput.value.length > 0 && !ok);
+    if (ok) nameInput.classList.add('valid');
+    validate();
+  });
+
+  passwordInput.addEventListener('input', function () {
+    updatePwStrength();
+    // Confirm match check in real time
+    if (mode === 'signup' && confirmInput.value.length > 0) {
+      var match = confirmInput.value === passwordInput.value;
+      setFieldError(confirmInput, confirmError, !match);
+      if (match) confirmInput.classList.add('valid');
+    }
+    // Password validity for sign-in (6+) vs sign-up (4/5 strength)
+    var s = pwScore(passwordInput.value);
+    var minOk = mode === 'signup' ? s.score >= 4 : passwordInput.value.length >= 6;
+    setFieldError(passwordInput, passwordError, passwordInput.value.length > 0 && !minOk);
+    if (minOk) passwordInput.classList.add('valid');
+    validate();
+  });
+
+  confirmInput.addEventListener('input', function () {
+    var match = confirmInput.value === passwordInput.value && confirmInput.value.length > 0;
+    setFieldError(confirmInput, confirmError, confirmInput.value.length > 0 && !match);
+    if (match) confirmInput.classList.add('valid');
+    validate();
+  });
+
+  // ── Password visibility toggles ─────────────────────────────────────────
+  pwToggle.addEventListener('click', function () {
+    var isPw = passwordInput.type === 'password';
+    passwordInput.type = isPw ? 'text' : 'password';
+    pwToggle.textContent = isPw ? 'hide' : 'eye';
+    passwordInput.focus();
+  });
+  confirmToggle.addEventListener('click', function () {
+    var isPw = confirmInput.type === 'password';
+    confirmInput.type = isPw ? 'text' : 'password';
+    confirmToggle.textContent = isPw ? 'hide' : 'eye';
+    confirmInput.focus();
+  });
+
+  // ── Submit → real Supabase email/password (+ magic link, + sign-up) ──────
+  btnSubmit.addEventListener('click', async function () {
+    if (btnSubmit.disabled) return;
+    clearMsg();
+    btnSubmit.disabled = true;
+    btnSubmitText.textContent = '…';
+
+    var email = emailInput.value.trim();
+    var password = passwordInput.value;
+
+    try {
+      if (magic) {
+        // Magic link → returns through the SPA's /auth/callback.
+        const { error } = await supabase.auth.signInWithOtp({
+          email: email,
+          options: { emailRedirectTo: callbackUrl(nextUrl) }
+        });
+        if (error) throw error;
+        showMsg('Check your email for the sign-in link.', 'ok');
+        btnSubmit.disabled = false;
+        updateSubmitLabel();
+      } else if (mode === 'signup') {
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: { full_name: nameInput.value.trim() },
+            emailRedirectTo: callbackUrl(nextUrl)
+          }
+        });
+        if (error) throw error;
+        // If email confirmation is on, there's no session yet — tell them to
+        // check their inbox. If it's off, a session is returned and we go in.
+        if (data.session) {
+          showMsg('Account created. Redirecting…', 'ok');
+          window.location.href = nextUrl;
+        } else {
+          showMsg('Account created. Check your email to confirm, then sign in.', 'ok');
+          btnSubmit.disabled = false;
+          updateSubmitLabel();
+        }
+      } else {
+        // Sign in — session is set synchronously; carry straight into the app.
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+        if (error) throw error;
+        showMsg('Signed in. Redirecting…', 'ok');
+        window.location.href = nextUrl;
+      }
+    } catch (e) {
+      showMsg(e?.message || 'Something went wrong. Please try again.', 'err');
+      btnSubmit.disabled = false;
+      updateSubmitLabel();
+    }
+  });
+
+  // Enter key submits
+  emailForm.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !btnSubmit.disabled) {
+      e.preventDefault();
+      btnSubmit.click();
+    }
+  });
+
+  // ── Read query params (mode + next) ─────────────────────────────────────
+  var params = new URLSearchParams(window.location.search);
+  // `next` is an in-app path (e.g. "/?seed=...&mode=policy"); default to the app root.
+  var nextUrl = params.get('next') || '/';
+  var modeParam = params.get('mode');
+  if (modeParam === 'signup') mode = 'signup';
+  else if (modeParam === 'signin') mode = 'signin';
+
+  // ── Already signed in? Skip the form and go straight into the app. ──────
+  // (e.g. the user clicked "Sign in" from the landing nav but already has a
+  // live session in localStorage.)
+  supabase.auth.getSession().then(function (res) {
+    if (res.data.session) window.location.href = nextUrl;
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────────
+  updateCopy();
+})();
+</script>
+
+</body>
+</html>
