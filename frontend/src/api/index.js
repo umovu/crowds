@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { supabase } from '../lib/supabase'
 
 // Create axios instance
 const service = axios.create({
@@ -9,9 +10,16 @@ const service = axios.create({
   }
 })
 
-// Request interceptor
+// Request interceptor — attach the Supabase access token (JWT) so the Flask
+// backend can verify the caller. supabase-js auto-refreshes the token, so
+// getSession() always returns a fresh one.
 service.interceptors.request.use(
-  config => {
+  async config => {
+    const { data } = await supabase.auth.getSession()
+    const token = data.session?.access_token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   error => {
@@ -50,6 +58,17 @@ service.interceptors.response.use(
     // failure (network / 5xx) from a permanent one (4xx — won't self-heal).
     if (error.response && error.response.status != null) {
       error.httpStatus = error.response.status
+    }
+
+    // 401 from the backend = token missing/expired/invalid. Drop the session
+    // and send the user to the auth page (preserving where they were).
+    if (error.httpStatus === 401) {
+      supabase.auth.signOut().finally(() => {
+        const next = encodeURIComponent(window.location.pathname + window.location.search)
+        if (!window.location.pathname.startsWith('/auth.html')) {
+          window.location.assign(`/auth.html?next=${next}`)
+        }
+      })
     }
 
     return Promise.reject(error)

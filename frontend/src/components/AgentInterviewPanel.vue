@@ -28,6 +28,7 @@
           @click="selectAgent(agent)"
         >
           <div class="agent-item-header">
+            <img :src="getAvatarUrl(agent.name, 32)" :alt="agent.name" class="agent-item-avatar" />
             <span class="agent-item-name">{{ agent.name }}</span>
             <span
               class="stance-badge"
@@ -58,6 +59,7 @@
       <template v-else>
         <!-- Agent Header -->
         <div class="selected-agent-header">
+          <img :src="getAvatarUrl(selectedAgent.name, 56)" :alt="selectedAgent.name" class="selected-agent-avatar" />
           <div class="agent-title">
             <h2>{{ selectedAgent.name }}</h2>
             <span class="occupation">{{ selectedAgent.occupation }}</span>
@@ -73,6 +75,27 @@
             <span class="radicalism-badge">
               Radicalism: {{ selectedAgent.base_radicalism }}/5
             </span>
+          </div>
+        </div>
+
+        <!-- Simulation Opinions -->
+        <div v-if="selectedAgent.opinions && selectedAgent.opinions.length > 0" class="simulation-opinions">
+          <h4>Simulation Posts ({{ selectedAgent.opinions.length }})</h4>
+          <div class="opinions-list">
+            <div
+              v-for="(opinion, idx) in selectedAgent.opinions"
+              :key="idx"
+              class="opinion-card"
+            >
+              <div class="opinion-header">
+                <span class="opinion-round">Round {{ opinion.round }}</span>
+                <span class="opinion-time">{{ formatTime(opinion.timestamp) }}</span>
+              </div>
+              <div class="opinion-content">{{ opinion.content }}</div>
+              <div v-if="opinion.topics && opinion.topics.length > 0" class="opinion-topics">
+                <span v-for="topic in opinion.topics" :key="topic" class="topic-tag">{{ topic }}</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -245,6 +268,23 @@ const interviewing = ref(false)
 const intervening = ref(false)
 const error = ref(null)
 const loading = ref(false)
+
+// Avatar utility — deterministic DiceBear avatars from agent name
+const getAvatarUrl = (name, size = 40) => {
+  const seed = encodeURIComponent(name || 'agent')
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&size=${size}&backgroundColor=b6e3f4%2Cc0e8d5%2Cfde68a%2Cffd6a5&backgroundType=solid`
+}
+
+// Format timestamp for display
+const formatTime = (timestamp) => {
+  if (!timestamp) return ''
+  try {
+    const date = new Date(timestamp)
+    return date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+  } catch {
+    return ''
+  }
+}
 
 // Structured question definitions
 const structuredQuestions = [
@@ -862,5 +902,100 @@ watch(() => props.simulationId, (newId) => {
   font-weight: 600;
   color: #666;
   margin-right: 6px;
+}
+
+/* Avatar styles */
+.agent-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-item-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.selected-agent-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.selected-agent-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #e0e0e0;
+}
+
+/* Simulation Opinions */
+.simulation-opinions {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.simulation-opinions h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.opinions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.opinion-card {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.opinion-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.opinion-round {
+  font-weight: 600;
+  color: #1e9e5a;
+}
+
+.opinion-time {
+  color: #999;
+}
+
+.opinion-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.opinion-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.opinion-topics .topic-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: #e8f5e9;
+  color: #1e9e5a;
+  border-radius: 10px;
 }
 </style>

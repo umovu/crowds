@@ -502,6 +502,21 @@
                   </div>
                 </template>
 
+                <!-- SYSTEM_EVENT: founder pitch / announcement injected into the
+                     room. Rendered as a plain event row (no highlight) so it reads
+                     as part of the feed rather than a standout block. -->
+                <template v-if="action.action_type === 'SYSTEM_EVENT'">
+                  <div class="founder-event">
+                    <div class="founder-event-label">
+                      <svg class="icon-small" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+                      <span>{{ action.action_args?.event?.title || 'Announcement' }}</span>
+                    </div>
+                    <div class="founder-event-content">
+                      {{ action.action_args?.event?.content || action.action_args?.content || '' }}
+                    </div>
+                  </div>
+                </template>
+
                 <!-- FOLLOW: Follow User -->
                 <template v-if="action.action_type === 'FOLLOW'">
                   <div class="follow-info">
@@ -1415,6 +1430,7 @@ const getActionTypeLabel = (type) => {
     'UPVOTE_POST':   'UPVOTE',
     'DOWNVOTE_POST': 'DOWNVOTE',
     'DO_NOTHING':    'IDLE',
+    'SYSTEM_EVENT':  'FOUNDER',
   }
   return labels[type] || type || 'UNKNOWN'
 }
@@ -1439,6 +1455,7 @@ const getActionTypeClass = (type) => {
     'UPVOTE_POST':   'badge-action',
     'DOWNVOTE_POST': 'badge-action',
     'DO_NOTHING':    'badge-idle',
+    'SYSTEM_EVENT':  'badge-meta',
   }
   return classes[type] || 'badge-default'
 }
@@ -2273,6 +2290,29 @@ onUnmounted(() => {
 .badge-meta { background: #FAFAFA; color: #999; border: 1px dashed #DDD; }
 .badge-idle { opacity: 0.5; }
 .badge-not-engaging { background: #FEE; color: #C00; border: 1px solid #ECC; }
+/* Founder pitch/announcement renders as a plain event row — no highlight,
+   no green standout. Content stays readable as ordinary feed text. */
+.founder-event {
+  padding: 2px 0;
+}
+
+.founder-event-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.founder-event-content {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #333;
+}
 
 .content-text {
   font-size: 13px;

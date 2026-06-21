@@ -3,7 +3,10 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">fubsandbox</div>
+        <div class="brand" @click="router.push('/')">
+          <span class="brand-mark">f</span>
+          <span class="brand-word"><span class="brand-strong">fub</span>sandbox</span>
+        </div>
       </div>
       
       <div class="header-center">
@@ -53,6 +56,8 @@
           :projectData="projectData"
           :graphData="graphData"
           :systemLogs="systemLogs"
+          :mode="mode"
+          :modeIsManual="modeIsManual"
           @go-back="handleGoBack"
           @next-step="handleNextStep"
           @add-log="addLog"
@@ -70,9 +75,16 @@ import GraphPanel from '../components/GraphPanel.vue'
 import Step2EnvSetup from '../components/Step2EnvSetup.vue'
 import { getProject, getGraphData } from '../api/graph'
 import { getSimulation, stopSimulation, getEnvStatus, closeSimulationEnv } from '../api/simulation'
+import { getPendingUpload } from '../store/pendingUpload'
 
 const route = useRoute()
 const router = useRouter()
+
+// Mode + manual-override flag, carried from Home via the pending-upload store. When
+// modeIsManual is false the backend auto-detects mode from the seed at /prepare.
+const pendingMode = getPendingUpload()
+const mode = ref(pendingMode.mode || 'policy')
+const modeIsManual = ref(!!pendingMode.modeIsManual)
 
 // Props
 const props = defineProps({
@@ -332,13 +344,36 @@ onMounted(async () => {
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 800;
   font-size: 18px;
-  letter-spacing: 1px;
   cursor: pointer;
-  color: #1E9E5A;
+  user-select: none;
 }
+.brand:hover .brand-mark {
+  box-shadow: 0 3px 10px rgba(30, 158, 90, 0.35);
+  transform: translateY(-1px);
+}
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(30, 158, 90, 0.28);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.brand-word { line-height: 1; letter-spacing: -0.3px; color: #6b6b6b; font-weight: 700; }
+.brand-strong { color: #1E9E5A; }
 
 .header-center {
   position: absolute;

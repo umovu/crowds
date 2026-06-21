@@ -1,6 +1,27 @@
 <template>
   <div class="env-setup-panel">
     <div class="scroll-container">
+      <!-- Background graph-build status: shown while the document graph is still
+           building so the user knows personas are being grounded, not stalled. -->
+      <div v-if="currentPhase > -1 && currentPhase < 2" class="grounding-banner">
+        <div class="grounding-spinner"></div>
+        <span class="grounding-text">
+          {{ currentPhase === 0
+              ? 'Reading your documents…'
+              : 'Grounding personas in your documents…' }}
+        </span>
+      </div>
+
+      <!-- Mode detection banner: shown when the backend auto-detected the mode from
+           the seed (not when the user pinned it). One click flips + pins the mode. -->
+      <div v-if="showModeBanner" class="mode-detect-banner">
+        <span class="mode-detect-text">
+          Detected: <strong>{{ detectedModeLabel }}</strong>
+          <span v-if="resolvedConverged" class="mode-detect-badge">+ {{ convergedLensLabel }}</span>
+        </span>
+        <button class="mode-detect-btn" @click="switchDetectedMode">Switch to {{ otherModeLabel }}</button>
+      </div>
+
       <!-- Step 01: Simulation Instance -->
       <div class="step-card" :class="{ 'active': phase === 0, 'completed': phase > 0 }">
         <div class="card-header">
@@ -174,7 +195,7 @@
             <div v-if="researchError" class="research-error">{{ researchError }}</div>
           </div>
 
-          <!-- Cost summary panel -->
+            <!-- Cost summary panel -->
           <div v-if="costData" class="cost-summary">
             <div class="cost-row">
               <span class="cost-label">Prepare phase</span>
@@ -191,6 +212,93 @@
             <div class="cost-tokens">
               {{ (costData.prepare.prompt_tokens + costData.simulation.prompt_tokens).toLocaleString() }} in /
               {{ (costData.prepare.completion_tokens + costData.simulation.completion_tokens).toLocaleString() }} out tokens
+            </div>
+          </div>
+
+          <!-- Agent Context for Web Research -->
+          <div v-if="availableAgents.length > 0" class="enrichment-section">
+            <div class="preview-header">
+              <span class="preview-title">Agent Context for Web Research</span>
+              <span class="preview-hint">Select custom agents to shape web research context</span>
+            </div>
+            
+            <div class="profiles-preview">
+              <div class="preview-header">
+                <span class="preview-title">Available Custom Agents ({{ availableAgents.length }})</span>
+                <button 
+                  class="action-btn primary" 
+                  :disabled="selectedAgentIds.size === 0 || researchRunning"
+                  @click="runResearchWithAgentContext"
+                >
+                  <span v-if="researchRunning">Researching…</span>
+                  <span v-else>🔍 Research with Selected Agents</span>
+                </button>
+              </div>
+              
+              <div class="agents-cards">
+                <div
+                  v-for="agent in availableAgents"
+                  :key="agent._id"
+                  class="agent-card"
+                  :class="{ 'selected': selectedAgentIds.has(agent._id) }"
+                  @click="toggleAgentSelection(agent._id)"
+                >
+                  <div class="agent-card-header">
+                    <div class="agent-identity">
+                      <div class="agent-name">{{ agent.name }}</div>
+                      <div class="agent-id">{{ agent.username || agent._id }}</div>
+                    </div>
+                    <div class="agent-tags">
+                      <span class="agent-type">{{ agent.archetype || agent.actor_archetype || 'unknown' }}</span>
+                      <span v-if="agent.age" class="pending-bit">{{ agent.age }}y</span>
+                      <span v-if="agent.occupation" class="pending-bit">{{ agent.occupation }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="agent-bio">{{ agent.bio || agent.description || 'No bio available' }}</div>
+                  
+                  <div class="agent-topics">
+                    <span v-if="agent.topics && agent.topics.length > 0" v-for="topic in agent.topics.slice(0, 3)" :key="topic" class="topic-tag">{{ topic }}</span>
+                    <span v-if="agent.topics && agent.topics.length > 3" class="topic-more">+{{ agent.topics.length - 3 }} more</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div v-if="selectedAgentIds.size > 0" class="profiles-preview">
+                <div class="preview-header">
+                  <span class="preview-title">Selected Agents ({{ selectedAgentIds.size }})</span>
+                  <button class="action-btn secondary" @click="() => { selectedAgentIds.clear(); updateAgentContext(); }">
+                    Clear Selection
+                  </button>
+                </div>
+                
+                <div class="agent-list">
+                  <div
+                    v-for="agent in selectedAgents"
+                    :key="agent._id"
+                    class="agent-card selected"
+                  >
+                    <div class="agent-card-header">
+                      <div class="agent-identity">
+                        <div class="agent-name">{{ agent.name }}</div>
+                        <div class="agent-id">{{ agent.username || agent._id }}</div>
+                      </div>
+                      <div class="agent-tags">
+                        <span class="agent-type">{{ agent.archetype || agent.actor_archetype || 'unknown' }}</span>
+                        <span v-if="agent.age" class="pending-bit">{{ agent.age }}y</span>
+                        <span v-if="agent.occupation" class="pending-bit">{{ agent.occupation }}</span>
+                      </div>
+                    </div>
+                    
+                    <div class="agent-bio">{{ agent.bio || agent.description || 'No bio available' }}</div>
+                    
+                    <div class="agent-topics">
+                      <span v-if="agent.topics && agent.topics.length > 0" v-for="topic in agent.topics.slice(0, 3)" :key="topic" class="topic-tag">{{ topic }}</span>
+                      <span v-if="agent.topics && agent.topics.length > 3" class="topic-more">+{{ agent.topics.length - 3 }} more</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -771,7 +879,13 @@ const props = defineProps({
   customAgents: { type: Array, default: () => [] },
   customAgentsEnabled: { type: Boolean, default: false },
   customAgentsOnly: { type: Boolean, default: false },
-  mode: { type: String, default: 'policy' }
+  mode: { type: String, default: 'policy' },
+  // True only when the user pinned the mode on the toggle. When false the backend
+  // auto-detects mode from the seed and we surface the result in a banner.
+  modeIsManual: { type: Boolean, default: false },
+  // Background graph-build phase (-1..2). <2 means the document graph is still
+  // building; personas are best generated once it's grounded (phase 2).
+  currentPhase: { type: Number, default: 2 }
 })
 
 const emit = defineEmits(['go-back', 'next-step', 'add-log', 'update-status'])
@@ -785,6 +899,11 @@ const progressMessage = ref('')
 const profiles = ref([])
 const entityTypes = ref([])
 const expectedTotal = ref(null)
+// Mode detection result echoed by /prepare — drives the detection banner.
+const resolvedMode = ref(null)
+const resolvedConverged = ref(false)
+const resolvedSecondaryLens = ref(null)
+const resolvedModeIsManual = ref(false)
 const enrichmentData = ref({})
 const expandedEnrichment = ref(new Set())
 const costData = ref(null)
@@ -942,17 +1061,20 @@ const toggleEnrichment = (archetype) => {
   expandedEnrichment.value = s
 }
 
-const rerunResearch = async () => {
+const rerunResearch = async (agentContext = null) => {
   if (!props.simulationId || researchRunning.value) return
   researchRunning.value = true
   researchError.value = ''
   researchCurrentArchetype.value = ''
-  emit('add-log', '🔍 Re-running deep web research...')
+  emit('add-log', agentContext ? '🔍 Re-running deep web research with custom agent context...' : '🔍 Re-running deep web research...')
   try {
-    const res = await rerunResearchApi(props.simulationId)
+    const res = await rerunResearchApi(props.simulationId, agentContext)
     if (res.success) {
       enrichmentData.value = res.data.enrichment || {}
       emit('add-log', `✓ Research complete — ${res.data.enriched_count} archetypes enriched`)
+      if (agentContext && agentContext.agents && agentContext.agents.length > 0) {
+        emit('add-log', `  └─ Research shaped by ${agentContext.agents.length} custom agent(s): ${agentContext.agents.map(a => a.name).join(', ')}`)
+      }
     } else {
       researchError.value = res.error || 'Research failed'
       emit('add-log', `✗ Research failed: ${researchError.value}`)
@@ -963,6 +1085,47 @@ const rerunResearch = async () => {
   } finally {
     researchRunning.value = false
   }
+}
+
+// Agent context for web research
+const agentContextForResearch = ref(null)
+const selectedAgentIds = ref(new Set())
+
+const availableAgents = computed(() => {
+  return props.customAgents.filter(agent => agent && agent._id)
+})
+
+const selectedAgents = computed(() => {
+  return availableAgents.value.filter(agent => selectedAgentIds.value.has(agent._id))
+})
+
+const updateAgentContext = () => {
+  if (selectedAgentIds.value.size > 0) {
+    agentContextForResearch.value = {
+      agents: selectedAgents.value.map(agent => ({
+        name: agent.name,
+        archetype: agent.archetype || agent.actor_archetype || '',
+        description: agent.description || agent.bio || '',
+        background: agent.background_story || agent.background || ''
+      })),
+      context_focus: selectedAgents.value.map(a => a.name).join(', ')
+    }
+  } else {
+    agentContextForResearch.value = null
+  }
+}
+
+const toggleAgentSelection = (agentId) => {
+  if (selectedAgentIds.value.has(agentId)) {
+    selectedAgentIds.value.delete(agentId)
+  } else {
+    selectedAgentIds.value.add(agentId)
+  }
+  updateAgentContext()
+}
+
+const runResearchWithAgentContext = () => {
+  rerunResearch(agentContextForResearch.value)
 }
 
 // Methods
@@ -1004,8 +1167,30 @@ const selectProfile = (profile) => {
   selectedProfile.value = profile
 }
 
-// Automatically start preparing simulation
-const startPrepareSimulation = async () => {
+// --- Detection banner ---
+// Show only after the backend has resolved a mode and only when it auto-detected
+// (no banner needed when the user already pinned the mode themselves).
+const showModeBanner = computed(() => !!resolvedMode.value && !resolvedModeIsManual.value)
+const detectedModeLabel = computed(() =>
+  resolvedMode.value === 'product' ? 'Product market test' : 'Policy test'
+)
+const otherModeLabel = computed(() =>
+  resolvedMode.value === 'product' ? 'Policy' : 'Product'
+)
+const convergedLensLabel = computed(() =>
+  resolvedSecondaryLens.value === 'product' ? 'affordability lens' : 'civic lens'
+)
+// Flip to the other mode and pin it (force-regenerate via override).
+const switchDetectedMode = async () => {
+  const other = resolvedMode.value === 'product' ? 'policy' : 'product'
+  addLog(`Overriding detected mode → ${other}`)
+  await startPrepareSimulation({ mode: other })
+}
+
+// Automatically start preparing simulation.
+// `override` (optional): { mode } pins a user-chosen mode and forces a regenerate —
+// used by the detection banner's "Switch to ..." button.
+const startPrepareSimulation = async (override = null) => {
   if (!props.simulationId) {
     addLog('Error：Missing simulationId')
     emit('update-status', 'error')
@@ -1019,13 +1204,24 @@ const startPrepareSimulation = async () => {
   emit('update-status', 'processing')
 
   try {
+    // When the user pinned a mode (toggle or override) send it as manual so the
+    // backend skips auto-detection. Otherwise send nothing for mode and let the
+    // backend detect from the seed.
+    const isManual = override ? true : props.modeIsManual
+    const chosenMode = override ? override.mode : props.mode
     const payload = {
       simulation_id: props.simulationId,
       use_llm_for_profiles: true,
       parallel_profile_count: 5,
-      mode: props.mode || 'policy'
+      mode_is_manual: isManual,
     }
-    if (props.mode === 'product') {
+    if (isManual && chosenMode) {
+      payload.mode = chosenMode
+    }
+    if (override) {
+      payload.force_regenerate = true
+    }
+    if (isManual && chosenMode === 'product') {
       addLog('Product mode: generating a South African market to stress-test the product idea')
     }
     if (props.customAgentsEnabled && props.customAgents.length > 0) {
@@ -1040,12 +1236,27 @@ const startPrepareSimulation = async () => {
     const res = await prepareSimulation(payload)
     
     if (res.success && res.data) {
+      // Capture the mode the backend resolved (detected or pinned) so we can show
+      // the detection banner with a one-click override.
+      if (res.data.mode) {
+        resolvedMode.value = res.data.mode
+        resolvedConverged.value = !!res.data.converged
+        resolvedSecondaryLens.value = res.data.secondary_lens || null
+        resolvedModeIsManual.value = !!res.data.mode_is_manual
+        const label = res.data.mode === 'product' ? 'Product market test' : 'Policy test'
+        if (res.data.mode_is_manual) {
+          addLog(`Mode pinned: ${label}`)
+        } else {
+          addLog(`Detected mode: ${label}${res.data.converged ? ' (+ ' + (res.data.secondary_lens === 'product' ? 'affordability' : 'civic') + ' lens)' : ''}`)
+        }
+      }
+
       if (res.data.already_prepared) {
         addLog('Detected existing completed preparation work，Use directly')
         await loadPreparedData()
         return
       }
-      
+
       taskId.value = res.data.task_id
       addLog(`Preparation task started`)
       addLog(`  └─ Task ID: ${res.data.task_id}`)
@@ -1352,6 +1563,38 @@ onMounted(() => {
   }
 })
 
+// Also restart when simulationId changes (route navigation without remount)
+watch(() => props.simulationId, (newId, oldId) => {
+  if (newId && newId !== oldId) {
+    addLog(`Simulation changed: ${oldId} → ${newId}, restarting preparation`)
+    stopPolling()
+    stopProfilesPolling()
+    stopConfigPolling()
+    phase.value = 0
+    taskId.value = null
+    prepareProgress.value = 0
+    currentStage.value = ''
+    progressMessage.value = ''
+    profiles.value = []
+    entityTypes.value = []
+    expectedTotal.value = null
+    enrichmentData.value = {}
+    expandedEnrichment.value = new Set()
+    costData.value = null
+    researchRunning.value = false
+    researchCurrentArchetype.value = ''
+    researchError.value = ''
+    simulationConfig.value = null
+    selectedPreset.value = 'balanced'
+    useCustomRounds.value = false
+    customMaxRounds.value = 40
+    lastLoggedMessage = ''
+    lastLoggedProfileCount = 0
+    lastLoggedConfigStage = ''
+    startPrepareSimulation()
+  }
+})
+
 onUnmounted(() => {
   stopPolling()
   stopProfilesPolling()
@@ -1360,6 +1603,71 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.grounding-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  background: #F0F9F4;
+  border: 1px solid #C8E6D2;
+  border-radius: 8px;
+  color: #1E9E5A;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.grounding-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #C8E6D2;
+  border-top-color: #1E9E5A;
+  border-radius: 50%;
+  animation: grounding-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes grounding-spin { to { transform: rotate(360deg); } }
+
+.mode-detect-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  background: #F0F9F4;
+  border: 1px solid #C8E6D2;
+  border-radius: 8px;
+  color: #1E9E5A;
+  font-size: 13px;
+}
+
+.mode-detect-text { flex: 1; }
+.mode-detect-text strong { font-weight: 600; }
+
+.mode-detect-badge {
+  margin-left: 8px;
+  padding: 1px 8px;
+  border: 1px solid #C8E6D2;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.mode-detect-btn {
+  background: #1E9E5A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.mode-detect-btn:hover { background: #178048; }
+
 .env-setup-panel {
   height: 100%;
   display: flex;

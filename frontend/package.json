@@ -4,11 +4,15 @@
   "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
+    "gen:config": "node scripts/gen-public-config.js",
+    "dev": "npm run gen:config && vite --host",
+    "build": "npm run gen:config && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dicebear/collection": "^9.4.2",
+    "@dicebear/core": "^9.4.2",
+    "@supabase/supabase-js": "^2.108.2",
     "axios": "^1.13.2",
     "d3": "^7.9.0",
     "vue": "^3.5.24",

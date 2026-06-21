@@ -1,0 +1,1555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crowds — Test the room before you walk into it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #1E9E5A;
+    --accent-deep: #178048;
+    --accent-soft: #F0FAF4;
+    --accent-tint: rgba(30,158,90,0.10);
+    --ink: #141414;
+    --ink-2: #4a4a4a;
+    --ink-3: #888;
+    --line: #E8E8E8;
+    --line-2: #F0F0F0;
+    --bg: #ffffff;
+    --bg-2: #FAFAFA;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── Nav ──────────────────────────────────────────────────────────────── */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.86);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; cursor: pointer; }
+  .brand-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 9px;
+    background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+    color: #fff;
+    font-family: var(--mono); font-weight: 800; font-size: 1.18rem; line-height: 1;
+    box-shadow: 0 2px 6px rgba(30,158,90,0.28);
+  }
+  .brand-word {
+    font-family: var(--mono); font-weight: 800; font-size: 1.22rem;
+    letter-spacing: -0.4px; color: var(--ink);
+  }
+  .brand-word .accent { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 30px; }
+  .nav-links a {
+    font-family: var(--mono); font-size: 0.82rem; font-weight: 600;
+    color: var(--ink-2); transition: color .15s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .btn {
+    font-family: var(--mono); font-weight: 700; font-size: 0.82rem;
+    padding: 9px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid transparent; transition: all .15s;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .btn.ghost { color: var(--ink-2); background: transparent; }
+  .btn.ghost:hover { color: var(--accent); }
+  .btn.solid { background: #141414; color: #fff; }
+  .btn.solid:hover { background: #000; }
+  .btn.line { border-color: var(--line); color: var(--ink); background: #fff; }
+  .btn.line:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.lg { padding: 13px 22px; font-size: 0.9rem; }
+
+  /* ── Hero ─────────────────────────────────────────────────────────────── */
+  header.hero {
+    padding: 92px 0 64px;
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, #fbfdfc 0%, #ffffff 100%);
+  }
+  /* Animated graph background — canvas of nodes building up, dimmed to blend */
+  .hero-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    opacity: 0.85;
+  }
+  /* Left-side scrim keeps the headline crisp; graph shows through at edges */
+  .hero-scrim {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse 70% 80% at 50% 45%,
+      rgba(255,255,255,0.80) 0%,
+      rgba(255,255,255,0.40) 45%,
+      rgba(255,255,255,0.00) 100%);
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+  .hero-grid {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    max-width: 720px; margin: 0 auto; gap: 0;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(30,158,90,0.18);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(30,158,90,0.18);
+  }
+  h1.hero-title {
+    font-family: var(--sans);
+    font-size: clamp(2.2rem, 4.6vw, 3.5rem);
+    line-height: 1.05; letter-spacing: -1.5px;
+    font-weight: 600; margin: 20px 0 0;
+  }
+  h1.hero-title .accent { color: var(--accent); }
+  h1.hero-title em {
+    font-style: normal; position: relative; white-space: nowrap;
+  }
+  h1.hero-title em::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 10px;
+    background: rgba(30,158,90,0.18); z-index: -1; border-radius: 3px;
+  }
+  p.hero-sub {
+    font-size: 1.08rem; line-height: 1.55; color: var(--ink-2);
+    max-width: 520px; margin: 18px 0 0;
+  }
+  .hero-cta { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+  .hero-meta {
+    display: flex; gap: 22px; margin-top: 22px;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3);
+  }
+  .hero-meta span { display: inline-flex; align-items: center; gap: 7px; }
+  .hero-meta span::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+
+  /* ── Seed box (working prompt, mirrors Home.vue simple-prompt) ────────── */
+  .seed-box {
+    width: 100%; max-width: 760px; margin-top: 36px;
+    background: #fff; border: 1px solid var(--line); border-radius: 18px;
+    padding: 18px 20px 14px;
+    box-shadow: 0 24px 60px -32px rgba(20,20,20,0.30), 0 4px 16px -10px rgba(20,20,20,0.10);
+    transition: border-color .15s, box-shadow .15s;
+    text-align: left;
+  }
+  .seed-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 24px 60px -32px rgba(30,158,90,0.35), 0 4px 16px -10px rgba(30,158,90,0.15);
+  }
+  .seed-input {
+    width: 100%; border: none; outline: none; resize: none;
+    background: transparent;
+    font-family: var(--sans); font-size: 1.02rem; line-height: 1.55; color: var(--ink);
+    min-height: 56px; max-height: 200px;
+  }
+  .seed-input::placeholder { color: #9a9a9a; }
+  .seed-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    margin-top: 10px;
+  }
+  .seed-modes { display: flex; gap: 5px; flex-wrap: wrap; }
+  .seed-mode, .seed-ground {
+    padding: 6px 14px; border: 1px solid var(--line); background: #fff;
+    border-radius: 999px; font-family: var(--mono); font-size: 0.72rem;
+    font-weight: 600; color: var(--ink-3); cursor: pointer;
+    transition: all .15s;
+  }
+  .seed-mode:hover:not(:disabled), .seed-ground:hover:not(:disabled) {
+    border-color: var(--accent); color: var(--accent);
+  }
+  .seed-mode.active { background: #141414; border-color: #141414; color: #fff; }
+  .seed-ground.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .seed-mode:disabled, .seed-ground:disabled { opacity: 0.5; cursor: not-allowed; }
+  .seed-send {
+    width: 38px; height: 38px; border-radius: 50%; border: none;
+    background: #141414; color: #fff; font-size: 1.25rem; font-weight: 700;
+    line-height: 1; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .seed-send:hover:not(:disabled) { background: #000; }
+  .seed-send:disabled { background: var(--line); cursor: not-allowed; }
+  .seed-hint {
+    margin: 10px 0 0; text-align: center;
+    font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3);
+  }
+  .seed-hint kbd {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 4px;
+    padding: 1px 5px; font-family: var(--mono); font-size: 0.64rem; color: var(--ink-2);
+  }
+
+  /* ── Pre-templates (clickable chips under the seed box) ───────────────── */
+  .seed-templates {
+    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+    margin-top: 20px; width: 100%; max-width: 760px;
+  }
+  .seed-templates-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  .seed-template {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; background: rgba(255,255,255,0.88);
+    border: 1px solid var(--line); border-radius: 10px;
+    font-family: var(--sans); font-size: 0.76rem; font-weight: 500;
+    color: var(--ink-2); cursor: pointer; text-align: left;
+    transition: all .15s; backdrop-filter: blur(4px);
+    min-height: 42px;
+  }
+  .seed-template:hover {
+    border-color: var(--accent); color: var(--ink);
+    background: var(--accent-soft); transform: translateY(-1px);
+    box-shadow: 0 8px 18px -14px rgba(30,158,90,0.30);
+  }
+  .seed-template .tpl-tag {
+    font-family: var(--mono); font-size: 0.54rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+    padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+  }
+  .seed-template .tpl-tag.policy { background: var(--accent-soft); color: var(--accent); }
+  .seed-template .tpl-tag.product { background: #EAF2FB; color: #3A6EA5; }
+  .seed-template:hover .tpl-tag.policy { background: #fff; }
+  .seed-template:hover .tpl-tag.product { background: #fff; }
+  .seed-template .tpl-q {
+    flex: 1; line-height: 1.35;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  @media (max-width: 720px) {
+    .seed-templates-grid { grid-template-columns: 1fr; }
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+
+  /* ── Trust strip ──────────────────────────────────────────────────────── */
+  .trust {
+    border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2);
+    background: var(--bg-2);
+    padding: 22px 0;
+  }
+  .trust-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  .trust-label {
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--ink-3);
+  }
+  .trust-items { display: flex; gap: 32px; flex-wrap: wrap; }
+  .trust-item {
+    font-family: var(--mono); font-size: 0.82rem; font-weight: 700;
+    color: var(--ink-2); letter-spacing: -.2px;
+  }
+
+  /* ── Section scaffolding ──────────────────────────────────────────────── */
+  section { padding: 88px 0; }
+  .sec-head { max-width: 680px; margin-bottom: 52px; }
+  .sec-eyebrow {
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent);
+  }
+  .sec-title {
+    font-size: clamp(1.9rem, 3.4vw, 2.7rem); font-weight: 600;
+    letter-spacing: -1px; line-height: 1.1; margin: 14px 0 0;
+  }
+  .sec-sub {
+    font-size: 1.08rem; color: var(--ink-2); margin-top: 16px; line-height: 1.55;
+  }
+
+  /* ── Mode cards ───────────────────────────────────────────────────────── */
+  .modes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+  }
+  .mode {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 20px;
+    padding: 36px 34px; position: relative; overflow: hidden;
+  }
+  .mode::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--accent);
+  }
+  .mode-tag {
+    font-family: var(--mono); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent);
+  }
+  .mode-title {
+    font-size: 1.7rem; font-weight: 600; letter-spacing: -.5px;
+    margin: 12px 0 6px;
+  }
+  .mode-sub { color: var(--ink-2); font-size: 1rem; margin: 0 0 22px; line-height: 1.55; }
+  .mode-list { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-direction: column; gap: 12px; }
+  .mode-list li {
+    display: flex; gap: 11px; align-items: flex-start;
+    font-size: 0.92rem; color: var(--ink); line-height: 1.5;
+  }
+  .mode-list li::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+    margin-top: 8px; flex-shrink: 0;
+  }
+  .mode-list li b { font-weight: 600; }
+  .mode-cta {
+    font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--accent);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .mode-cta:hover { gap: 10px; }
+
+  /* ── Capabilities ─────────────────────────────────────────────────────── */
+  .caps {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .cap {
+    padding: 28px 26px; border: 1px solid var(--line); border-radius: 16px;
+    background: #fff;
+  }
+  .cap-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; margin-bottom: 16px;
+  }
+  .cap-title { font-size: 1.1rem; font-weight: 600; margin: 0 0 8px; letter-spacing: -.2px; }
+  .cap-text { font-size: 0.9rem; color: var(--ink-2); margin: 0; line-height: 1.55; }
+
+  /* ── Honest scope ─────────────────────────────────────────────────────── */
+  .scope {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 20px;
+    padding: 44px 48px; display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 40px;
+    align-items: center;
+  }
+  .scope-eyebrow {
+    font-family: var(--mono); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-3);
+  }
+  .scope-title {
+    font-size: 1.85rem; font-weight: 600; letter-spacing: -.6px; line-height: 1.15;
+    margin: 10px 0 0;
+  }
+  .scope-pairs { display: flex; flex-direction: column; gap: 18px; }
+  .scope-pair {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    padding-bottom: 18px; border-bottom: 1px solid var(--line);
+  }
+  .scope-pair:last-child { border-bottom: none; padding-bottom: 0; }
+  .scope-cell .label {
+    font-family: var(--mono); font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--ink-3);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+  }
+  .scope-cell .label.is::before { content: '✓'; color: var(--accent); font-weight: 800; }
+  .scope-cell .label.not::before { content: '✕'; color: #C0392B; font-weight: 800; }
+  .scope-cell .text { font-size: 0.96rem; color: var(--ink); line-height: 1.45; }
+
+  /* ── Final CTA ────────────────────────────────────────────────────────── */
+  .final {
+    text-align: center; padding: 110px 0 100px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(30,158,90,0.10), transparent 60%),
+      var(--bg);
+  }
+  .final h2 {
+    font-size: clamp(2.1rem, 4vw, 3.1rem); font-weight: 600;
+    letter-spacing: -1.2px; line-height: 1.08; margin: 0 auto; max-width: 760px;
+  }
+  .final h2 .accent { color: var(--accent); }
+  .final p {
+    color: var(--ink-2); font-size: 1.1rem; margin: 22px auto 0; max-width: 540px;
+  }
+  .final .hero-cta { justify-content: center; }
+
+  /* ── Footer ───────────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line); padding: 36px 0;
+    background: var(--bg-2);
+  }
+  .foot-row {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 18px;
+  }
+  .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
+  .foot-links a {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--ink-3); font-weight: 600;
+  }
+  .foot-links a:hover { color: var(--accent); }
+  .foot-meta {
+    font-family: var(--mono); font-size: 0.74rem; color: var(--ink-3);
+  }
+
+  /* ── How-it-works: single concise visual flow ─────────────────────────── */
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; }
+  .flow-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 18px 44px -28px rgba(20,20,20,0.20), 0 2px 10px -6px rgba(20,20,20,0.06);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .flow-card:hover { transform: translateY(-3px); box-shadow: 0 24px 52px -28px rgba(30,158,90,0.30); }
+  .flow-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 16px; border-bottom: 1px solid var(--line-2);
+  }
+  .flow-num {
+    font-family: var(--mono); font-size: 0.66rem; font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); padding: 3px 8px; border-radius: 7px; flex-shrink: 0;
+  }
+  .flow-name { font-size: 0.98rem; font-weight: 600; letter-spacing: -.2px; color: var(--ink); }
+  .flow-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .flow-cap {
+    font-size: 0.76rem; color: var(--ink-3); line-height: 1.45;
+    padding: 0 16px 14px; margin-top: auto;
+  }
+  .flow-cap b { color: var(--ink-2); font-weight: 600; }
+
+  /* Compact mock elements (reused across the 4 cards) */
+  .cm-prompt {
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; background: #fff;
+  }
+  .cm-prompt-txt {
+    font-size: 0.78rem; line-height: 1.45; color: var(--ink); min-height: 32px;
+  }
+  .cm-prompt-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .cm-pills { display: flex; gap: 4px; }
+  .cm-pill {
+    padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px;
+    font-family: var(--mono); font-size: 0.58rem; font-weight: 600; color: var(--ink-3);
+  }
+  .cm-pill.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .cm-pill.gr { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .cm-send {
+    width: 22px; height: 22px; border-radius: 50%; border: none;
+    background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .cm-card { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .cm-card-h {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 11px; border-bottom: 1px solid var(--line-2);
+    font-size: 0.72rem;
+  }
+  .cm-card-h .n { font-family: var(--mono); font-weight: 700; color: var(--accent); margin-right: 6px; }
+  .cm-card-h .t { font-weight: 600; color: var(--ink); }
+  .cm-badge {
+    font-family: var(--mono); font-size: 0.54rem; font-weight: 700;
+    padding: 2px 6px; border-radius: 999px; text-transform: uppercase; letter-spacing: .3px;
+  }
+  .cm-badge.done { background: var(--accent-soft); color: var(--accent); }
+  .cm-badge.proc { background: #FFF6E8; color: #C77F1A; }
+  .cm-card-b { padding: 9px 11px; display: flex; flex-direction: column; gap: 6px; }
+  .cm-row {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 0.62rem;
+  }
+  .cm-row .l { color: var(--ink-3); }
+  .cm-row .v { color: var(--ink); font-weight: 600; }
+  .cm-prog { height: 5px; background: var(--line-2); border-radius: 999px; overflow: hidden; }
+  .cm-prog > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+
+  .cm-ctrl {
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .cm-ctrl-top { display: flex; align-items: center; justify-content: space-between; }
+  .cm-ctrl-name { display: flex; align-items: center; gap: 7px; font-size: 0.76rem; font-weight: 600; color: var(--ink); }
+  .cm-ctrl-name .ic {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 0.6rem;
+  }
+  .cm-live {
+    font-family: var(--mono); font-size: 0.54rem; font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); padding: 2px 7px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .cm-live .d { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: pulse 1.4s infinite; }
+  .cm-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .cm-stat .l { font-family: var(--mono); font-size: 0.52rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--ink-3); }
+  .cm-stat .v { font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+  .cm-stat .v .t { color: var(--ink-3); font-weight: 500; font-size: 0.7rem; }
+  .cm-post {
+    display: flex; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px;
+  }
+  .cm-av {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; font-size: 0.62rem;
+    background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(30,158,90,0.25);
+  }
+  .cm-av.amb { background: #FFF6E8; color: #C77F1A; border-color: rgba(199,127,26,0.25); }
+  .cm-av.neg { background: #FEEEEC; color: #C0392B; border-color: rgba(192,57,43,0.22); }
+  .cm-post-b { flex: 1; min-width: 0; }
+  .cm-post-n { font-size: 0.72rem; font-weight: 600; color: var(--ink); display: flex; gap: 6px; align-items: baseline; }
+  .cm-post-a { font-family: var(--mono); font-size: 0.52rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: .3px; }
+  .cm-post-t { font-size: 0.72rem; color: var(--ink-2); line-height: 1.4; margin-top: 2px; }
+  .cm-st {
+    font-family: var(--mono); font-size: 0.5rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .3px; padding: 2px 6px; border-radius: 999px; align-self: center; flex-shrink: 0;
+  }
+  .cm-st.s { background: var(--accent-soft); color: var(--accent); }
+  .cm-st.o { background: #FEEEEC; color: #C0392B; }
+  .cm-st.n { background: var(--bg-2); color: var(--ink-3); }
+
+  .cm-chart { border: 1px solid var(--line); border-radius: 10px; padding: 11px; }
+  .cm-chart-t { font-size: 0.74rem; font-weight: 600; color: var(--ink); margin: 0 0 8px; }
+  .cm-chart-leg { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .cm-chart-leg span { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 0.54rem; color: var(--ink-3); }
+  .cm-chart-leg span::before { content: ''; width: 11px; height: 2px; border-radius: 2px; }
+  .cm-chart-leg .i::before { background: var(--accent); }
+  .cm-chart-leg .r::before { background: #C77F1A; }
+  .cm-chart-leg .e::before { background: #C0392B; width: 5px; height: 5px; border-radius: 50%; }
+  .cm-stance { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .cm-stc { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .cm-stc .h { font-family: var(--mono); font-size: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+  .cm-stc.s .h { color: var(--accent); }
+  .cm-stc.o .h { color: #C0392B; }
+  .cm-stc.n .h { color: var(--ink-3); }
+  .cm-stc .v { font-family: var(--mono); font-size: 0.92rem; font-weight: 800; color: var(--ink); margin: 2px 0; }
+  .cm-stc .bar { height: 3px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
+  .cm-stc .bar > i { display: block; height: 100%; }
+  .cm-stc.s .bar > i { background: var(--accent); }
+  .cm-stc.o .bar > i { background: #C0392B; }
+  .cm-stc.n .bar > i { background: var(--ink-3); }
+
+  /* ── Responsive ───────────────────────────────────────────────────────── */
+  @media (max-width: 920px) {
+    .hero-grid { max-width: 100%; }
+    .flow { grid-template-columns: 1fr 1fr; }
+    .modes { grid-template-columns: 1fr; }
+    .caps { grid-template-columns: 1fr; }
+    .scope { grid-template-columns: 1fr; padding: 32px; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 560px) {
+    .flow { grid-template-columns: 1fr; }
+    .scope-pair { grid-template-columns: 1fr; }
+    .hero-meta { gap: 14px; flex-wrap: wrap; }
+    .wrap { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────────────────────────────────── -->
+<nav class="top">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <span class="brand-mark">C</span>
+      <span class="brand-word"><span class="accent">Crowds</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#modes">Modes</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#scope">What it isn't</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn ghost" id="nav-signin" href="auth.html?mode=signin">Sign in</a>
+      <a class="btn solid" id="nav-start" href="auth.html?mode=signup">Start a sim <span aria-hidden="true">↑</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<header class="hero">
+  <canvas class="hero-bg" id="hero-graph" aria-hidden="true"></canvas>
+  <div class="hero-scrim" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <span class="eyebrow"><span class="dot"></span> A synthetic public for every decision</span>
+    <h1 class="hero-title">
+      Run it past a <span class="accent">crowd</span><br />
+      before you run it past the <em>public</em>.
+    </h1>
+    <p class="hero-sub">
+      Describe a policy, an announcement, a product pitch, or an event.
+      Crowds generates a population of AI agents — each with its own
+      background, biases, and viewpoint — and plays your message past them.
+    </p>
+
+    <!-- Working seed box — mirrors Home.vue's simple-prompt -->
+    <div class="seed-box" id="seed-box">
+      <textarea
+        class="seed-input"
+        id="seed-input"
+        placeholder="Describe the policy, event, or product idea you want to stress-test. What is it? Who is the audience?"
+        rows="2"
+      ></textarea>
+      <div class="seed-bar">
+        <div class="seed-modes">
+          <button class="seed-mode active" id="mode-policy" type="button">Policy</button>
+          <button class="seed-mode" id="mode-product" type="button">Product</button>
+          <button class="seed-ground" id="seed-ground" type="button" disabled>🌐 Ground in web research</button>
+        </div>
+        <button class="seed-send" id="seed-send" type="button" disabled title="Start simulation">↑</button>
+      </div>
+    </div>
+    <p class="seed-hint">Press <kbd>Enter</kbd> to start · or scroll to <a href="#how" style="color:var(--accent);text-decoration:none">see how it works</a></p>
+
+    <!-- Pre-templates — click to populate the seed box -->
+    <div class="seed-templates" id="seed-templates">
+      <div class="seed-templates-grid">
+        <button class="seed-template" data-mode="policy" data-seed="Free learner transport during exam season, funded by a 1% levy on ride-hailing trips.">
+          <span class="tpl-tag policy">Policy</span>
+          <span class="tpl-q">How would the public react to free learner transport funded by a ride-hailing levy?</span>
+        </button>
+        <button class="seed-template" data-mode="product" data-seed="Solar WiFi router for low-income homes: R49/mo, 30GB, runs through load-shedding, mesh-networks with neighbours.">
+          <span class="tpl-tag product">Product</span>
+          <span class="tpl-q">Would a SA market adopt a solar WiFi router at R49/month that runs through load-shedding?</span>
+        </button>
+        <button class="seed-template" data-mode="policy" data-seed="Mandatory 2FA for all SASSA grant withdrawals within 90 days, across SAPO and retail pay-points.">
+          <span class="tpl-tag policy">Policy</span>
+          <span class="tpl-q">What happens if SASSA makes 2FA mandatory for all grant withdrawals in 90 days?</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-meta">
+      <span>Policy &amp; product modes</span>
+      <span>Intervene mid-run</span>
+      <span>Bring your own personas</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── How it works ────────────────────────────────────────────────────── -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">How it works</div>
+      <h2 class="sec-title">From a sentence to a crowd in four moves.</h2>
+      <p class="sec-sub">No surveys to field. No panels to recruit. Describe the situation, Crowds builds a synthetic public around it — then runs your message through them.</p>
+    </div>
+
+    <div class="flow">
+      <!-- 01 Seed -->
+      <div class="flow-card">
+        <div class="flow-head">
+          <span class="flow-num">01</span>
+          <span class="flow-name">Seed</span>
+        </div>
+        <div class="flow-body">
+          <div class="cm-prompt">
+            <div class="cm-prompt-txt">Free public transport for learners during exam season, funded by a 1% levy on ride-hailing trips.</div>
+            <div class="cm-prompt-bar">
+              <div class="cm-pills">
+                <span class="cm-pill on">Policy</span>
+                <span class="cm-pill gr">✓ Grounded</span>
+              </div>
+              <span class="cm-send">↑</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-cap"><b>Describe</b> the scenario in plain language. Optionally ground it in live web research.</div>
+      </div>
+
+      <!-- 02 Populate -->
+      <div class="flow-card">
+        <div class="flow-head">
+          <span class="flow-num">02</span>
+          <span class="flow-name">Populate</span>
+        </div>
+        <div class="flow-body">
+          <div class="cm-card">
+            <div class="cm-card-h">
+              <span><span class="n">02</span><span class="t">Generate Personas</span></span>
+              <span class="cm-badge proc">68%</span>
+            </div>
+            <div class="cm-card-b">
+              <div class="cm-row"><span class="l">Entities</span><span class="v">42</span></div>
+              <div class="cm-row"><span class="l">Personas</span><span class="v">168 / 247</span></div>
+              <div class="cm-prog"><i style="width:68%"></i></div>
+            </div>
+          </div>
+          <div class="cm-card">
+            <div class="cm-card-h">
+              <span><span class="n">03</span><span class="t">Build Society</span></span>
+              <span class="cm-badge proc">12%</span>
+            </div>
+            <div class="cm-card-b">
+              <div class="cm-prog"><i style="width:12%"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="flow-cap"><b>Generate</b> a population of agents — learners, guardians, traders, educators — grounded in real SA data.</div>
+      </div>
+
+      <!-- 03 Run -->
+      <div class="flow-card">
+        <div class="flow-head">
+          <span class="flow-num">03</span>
+          <span class="flow-name">Run</span>
+        </div>
+        <div class="flow-body">
+          <div class="cm-ctrl">
+            <div class="cm-ctrl-top">
+              <div class="cm-ctrl-name"><span class="ic">◉</span> Opinion Space</div>
+              <span class="cm-live"><span class="d"></span> Run</span>
+            </div>
+            <div class="cm-stats">
+              <div class="cm-stat"><div class="l">Round</div><div class="v">3<span class="t">/8</span></div></div>
+              <div class="cm-stat"><div class="l">Agents</div><div class="v">187<span class="t">/247</span></div></div>
+            </div>
+          </div>
+          <div class="cm-post">
+            <div class="cm-av">T</div>
+            <div class="cm-post-b">
+              <div class="cm-post-n">Thandi <span class="cm-post-a">guardian</span></div>
+              <div class="cm-post-t">My daughter walks 4km — this means she can rest before exams.</div>
+            </div>
+            <span class="cm-st s">Sup</span>
+          </div>
+          <div class="cm-post">
+            <div class="cm-av neg">K</div>
+            <div class="cm-post-b">
+              <div class="cm-post-n">Khaya <span class="cm-post-a">trader</span></div>
+              <div class="cm-post-t">Trains don't run on time in my area — this only helps some.</div>
+            </div>
+            <span class="cm-st o">Opp</span>
+          </div>
+        </div>
+        <div class="flow-cap"><b>Watch</b> agents post, argue, and shift. Pause mid-run and intervene with a follow-up.</div>
+      </div>
+
+      <!-- 04 Analyse -->
+      <div class="flow-card">
+        <div class="flow-head">
+          <span class="flow-num">04</span>
+          <span class="flow-name">Analyse</span>
+        </div>
+        <div class="flow-body">
+          <div class="cm-chart">
+            <div class="cm-chart-t">Sentiment Timeline</div>
+            <svg viewBox="0 0 280 70" width="100%" height="70" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="0" y1="58" x2="280" y2="58" stroke="#F0F0F0" stroke-width="1"/>
+              <line x1="0" y1="35" x2="280" y2="35" stroke="#F0F0F0" stroke-width="1" stroke-dasharray="3 3"/>
+              <path d="M0 48 L40 42 L80 32 L120 26 L160 30 L200 20 L240 24 L280 18"
+                    fill="none" stroke="#1E9E5A" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0 52 L40 50 L80 46 L120 48 L160 42 L200 44 L240 38 L280 36"
+                    fill="none" stroke="#C77F1A" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="120" cy="26" r="3" fill="#C0392B"/>
+              <line x1="120" y1="10" x2="120" y2="62" stroke="#C0392B" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+            </svg>
+            <div class="cm-chart-leg">
+              <span class="i">Impact</span>
+              <span class="r">Radicalism</span>
+              <span class="e">Event</span>
+            </div>
+          </div>
+          <div class="cm-stance">
+            <div class="cm-stc s"><div class="h">Sup</div><div class="v">54%</div><div class="bar"><i style="width:54%"></i></div></div>
+            <div class="cm-stc n"><div class="h">Neu</div><div class="v">23%</div><div class="bar"><i style="width:23%"></i></div></div>
+            <div class="cm-stc o"><div class="h">Opp</div><div class="v">23%</div><div class="bar"><i style="width:23%"></i></div></div>
+          </div>
+        </div>
+        <div class="flow-cap"><b>Read</b> the room — sentiment over time, stance distribution, and a full prediction report.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Modes ───────────────────────────────────────────────────────────── -->
+<section id="modes" style="background:var(--bg-2); border-top:1px solid var(--line-2); border-bottom:1px solid var(--line-2);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Two modes</div>
+      <h2 class="sec-title">A wind tunnel for words and offers.</h2>
+      <p class="sec-sub">Same engine, two lenses. Pick the one that matches what you're about to ship.</p>
+    </div>
+    <div class="modes">
+      <div class="mode">
+        <div class="mode-tag">Policy wind tunnel</div>
+        <h3 class="mode-title">Citizens reacting to an announcement.</h3>
+        <p class="mode-sub">Pressure-test policy drafts, press releases, and crisis comms against a synthetic public before they meet the real one.</p>
+        <ul class="mode-list">
+          <li><span><b>Red-team a policy</b> — surface likely objections, blind spots, and ways a rule gets gamed before you commit.</span></li>
+          <li><span><b>Test framing</b> — see how different groups read or misread your wording.</span></li>
+          <li><span><b>Rehearse crisis comms</b> — pressure-test an announcement and the reactions you'd need to handle.</span></li>
+        </ul>
+        <a class="mode-cta" href="#">Try policy mode →</a>
+      </div>
+      <div class="mode">
+        <div class="mode-tag">Product wind tunnel</div>
+        <h3 class="mode-title">A market reacting to an idea.</h3>
+        <p class="mode-sub">Stress-test a product pitch against a South African market — qualitative willingness and adoption barriers, not purchase predictions.</p>
+        <ul class="mode-list">
+          <li><span><b>Stress-test product ideas</b> — see objections, confusion, and qualitative willingness (not purchase forecasts).</span></li>
+          <li><span><b>Identify market segments</b> — understand which customer types are receptive vs. resistant.</span></li>
+          <li><span><b>Uncover adoption barriers</b> — real-world constraints like price sensitivity, data costs, and trust.</span></li>
+        </ul>
+        <a class="mode-cta" href="#">Try product mode →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Capabilities ────────────────────────────────────────────────────── -->
+<section id="capabilities">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">What makes it a sandbox</div>
+      <h2 class="sec-title">Don't just watch it. Step into it.</h2>
+      <p class="sec-sub">A passive demo shows you reactions. A sandbox lets you change the inputs and see what moves.</p>
+    </div>
+    <div class="caps">
+      <div class="cap">
+        <div class="cap-icon">⏸</div>
+        <h3 class="cap-title">Intervene mid-run</h3>
+        <p class="cap-text">Pause a live simulation, pose a follow-up — "we'll add a subsidy" — and watch how opinions shift in the next round.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">◔</div>
+        <h3 class="cap-title">Probe after the fact</h3>
+        <p class="cap-text">Read each agent's expressed opinion post-run, then pose interventions and see how specific personas respond.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">＋</div>
+        <h3 class="cap-title">Bring your own people</h3>
+        <p class="cap-text">Inject custom agents — named stakeholders, specific groups — merged into the population, or run on their own.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Honest scope ────────────────────────────────────────────────────── -->
+<section id="scope" style="background:var(--bg-2); border-top:1px solid var(--line-2);">
+  <div class="wrap">
+    <div class="scope">
+      <div>
+        <div class="scope-eyebrow">Read this before you rely on it</div>
+        <h2 class="scope-title">Coverage, not prediction. Personas, not people.</h2>
+      </div>
+      <div class="scope-pairs">
+        <div class="scope-pair">
+          <div class="scope-cell">
+            <div class="label is">What it is</div>
+            <div class="text">A broad survey of the <i>kinds</i> of responses your content might draw — directional signal to prepare against.</div>
+          </div>
+          <div class="scope-cell">
+            <div class="label not">What it isn't</div>
+            <div class="text">A forecast, a poll, or a statistically representative sample of public opinion.</div>
+          </div>
+        </div>
+        <div class="scope-pair">
+          <div class="scope-cell">
+            <div class="label is">What it is</div>
+            <div class="text">Personas grounded in real socio-economic context, so reactions are plausible.</div>
+          </div>
+          <div class="scope-cell">
+            <div class="label not">What it isn't</div>
+            <div class="text">A claim that any agent mirrors a real individual. Grounding makes them plausible, not accurate.</div>
+          </div>
+        </div>
+        <div class="scope-pair">
+          <div class="scope-cell">
+            <div class="label is">What it is</div>
+            <div class="text">A fast rehearsal whose value rises with the richness of your seed scenario.</div>
+          </div>
+          <div class="scope-cell">
+            <div class="label not">What it isn't</div>
+            <div class="text">A replacement for field research. Vague input produces generic agents.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Final CTA ───────────────────────────────────────────────────────── -->
+<section class="final">
+  <div class="wrap">
+    <h2>The next announcement you write<br />has already been <span class="accent">heard</span>.</h2>
+    <p>Hear it through a crowd first — then decide what to change before it ships.</p>
+    <div class="hero-cta">
+      <a class="btn solid lg" id="final-start" href="auth.html?mode=signup">Start a simulation <span aria-hidden="true">↑</span></a>
+      <a class="btn line lg" href="#how">Read the method</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="wrap foot-row">
+    <div class="brand">
+      <span class="brand-mark">C</span>
+      <span class="brand-word"><span class="accent">Crowds</span></span>
+    </div>
+    <div class="foot-links">
+      <a href="#how">How it works</a>
+      <a href="#modes">Modes</a>
+      <a href="#scope">Scope &amp; limitations</a>
+      <a href="#">Documentation</a>
+      <a href="#">GitHub</a>
+    </div>
+    <div class="foot-meta">AGPL-3.0</div>
+  </div>
+</footer>
+
+<script>
+/* Hero seed box — working prompt that mirrors Home.vue's simple-prompt.
+   - Mode toggle (Policy / Product) swaps the placeholder copy
+   - Send + Ground buttons enable when there's text
+   - Enter submits, Shift+Enter for newline
+   - "Ground in web research" toggles a grounded state (visual only on the
+     landing page — the real app calls /api/research/generate-seed) */
+(function () {
+  var input = document.getElementById('seed-input');
+  if (!input) return;
+  var send = document.getElementById('seed-send');
+  var ground = document.getElementById('seed-ground');
+  var modePolicy = document.getElementById('mode-policy');
+  var modeProduct = document.getElementById('mode-product');
+
+  var PLACEHOLDERS = {
+    policy: 'Describe the policy, event, or scenario you want to simulate. What are you testing? Who is the audience?',
+    product: 'Describe the product idea, pitch, or positioning you want to stress-test. What is it? Who is it for? What problem does it solve?'
+  };
+  var mode = 'policy';
+
+  function hasText() { return input.value.trim().length > 0; }
+  function refresh() {
+    var ok = hasText();
+    send.disabled = !ok;
+    ground.disabled = !ok;
+  }
+
+  function setMode(m) {
+    mode = m;
+    modePolicy.classList.toggle('active', m === 'policy');
+    modeProduct.classList.toggle('active', m === 'product');
+    input.placeholder = PLACEHOLDERS[m];
+  }
+
+  modePolicy.addEventListener('click', function () { setMode('policy'); });
+  modeProduct.addEventListener('click', function () { setMode('product'); });
+
+  input.addEventListener('input', refresh);
+
+  // Enter to submit, Shift+Enter for newline (matches Home.vue's keydown.enter.exact.prevent)
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+      e.preventDefault();
+      if (!send.disabled) submit();
+    }
+  });
+
+  // Ground-in-web toggle — visual state only on the landing page
+  var grounded = false;
+  ground.addEventListener('click', function () {
+    if (ground.disabled) return;
+    grounded = !grounded;
+    ground.classList.toggle('active', grounded);
+    ground.textContent = grounded ? '✓ Grounded' : '🌐 Ground in web research';
+  });
+
+  function submit() {
+    // Carry the seed into the app via query params. The SPA's Home view reads
+    // ?seed=&mode= and pre-fills the prompt (gated by the Supabase session
+    // check in useAuth → startSimulation → /api/simulation/create).
+    var seed = input.value.trim();
+    var appPath = '/?seed=' + encodeURIComponent(seed) + '&mode=' + mode;
+    send.textContent = '…';
+    setTimeout(function () {
+      if (window.__crowdsSignedIn) {
+        // Already authenticated → straight into the app with the seed.
+        window.location.href = appPath;
+      } else {
+        // Not signed in → through auth, carrying the seed so it survives sign-in.
+        window.location.href = 'auth.html?mode=signup&next=' + encodeURIComponent(appPath);
+      }
+    }, 350);
+  }
+  send.addEventListener('click', function () { if (!send.disabled) submit(); });
+
+  // Pre-templates — click to populate the seed box with a ready-made scenario.
+  // Also flips the mode pill to match the template's tag (Policy / Product).
+  var templates = document.querySelectorAll('.seed-template');
+  templates.forEach(function (tpl) {
+    tpl.addEventListener('click', function () {
+      var m = tpl.getAttribute('data-mode') || 'policy';
+      var seed = tpl.getAttribute('data-seed') || '';
+      setMode(m);
+      input.value = seed;
+      refresh();
+      input.focus();
+      // Move cursor to the end so the user can edit from there
+      input.setSelectionRange(seed.length, seed.length);
+      // Reset grounded state — a new seed isn't grounded yet
+      if (grounded) {
+        grounded = false;
+        ground.classList.remove('active');
+        ground.textContent = '🌐 Ground in web research';
+      }
+    });
+  });
+
+  // ── Restore seed + mode from query params (e.g. after returning from auth) ──
+  var qp = new URLSearchParams(window.location.search);
+  var qSeed = qp.get('seed');
+  var qMode = qp.get('mode');
+  if (qMode === 'product' || qMode === 'policy') setMode(qMode);
+  else setMode('policy');
+  if (qSeed) { input.value = qSeed; }
+  refresh();
+})();
+</script>
+
+<script type="module">
+/* Session awareness — if the visitor already has a live Supabase session
+   (same localStorage entry the SPA uses), flip the auth CTAs to "Open app"
+   and set window.__crowdsSignedIn so the seed box routes straight into the
+   app instead of bouncing through auth.html. */
+import { supabase } from './supabase-client.js';
+
+supabase.auth.getSession().then(function (res) {
+  if (!res.data.session) return;
+  window.__crowdsSignedIn = true;
+
+  var navSignin = document.getElementById('nav-signin');
+  var navStart = document.getElementById('nav-start');
+  var finalStart = document.getElementById('final-start');
+
+  if (navSignin) navSignin.style.display = 'none';
+  if (navStart) { navStart.href = '/'; navStart.innerHTML = 'Open app <span aria-hidden="true">→</span>'; }
+  if (finalStart) { finalStart.href = '/'; finalStart.innerHTML = 'Open app <span aria-hidden="true">→</span>'; }
+});
+</script>
+
+<script type="module">
+/* Pre-generate DiceBear avataaars avatars for the hero graph — mirrors the
+   actual app (GraphPanel.vue uses @dicebear/core@9 + avataaars for person
+   nodes, initials badges for orgs, pin glyphs for locations). We generate a
+   pool of ~20 avatar Image objects seeded by archetype + SA person names, then
+   expose them on window.__crowdsAvatars for the canvas animation to draw. */
+import { createAvatar } from 'https://cdn.jsdelivr.net/npm/@dicebear/core@9.4.2/+esm';
+import { avataaars } from 'https://cdn.jsdelivr.net/npm/@dicebear/collection@9.4.2/+esm';
+
+const SEEDS = [
+  'learner','guardian','gogo_guardian','educator','informal_trader',
+  'small_biz','grant_dep','youth','employed','unemployed',
+  'Thandi','Riaan','Khaya','Lerato','Nompumeleo',
+  'Sipho','Aisha','Johan','Zanele','Pieter'
+];
+
+const pool = {};
+let loaded = 0;
+const total = SEEDS.length;
+
+SEEDS.forEach(seed => {
+  try {
+    const svg = createAvatar(avataaars, { seed, radius: 50, backgroundColor: ['ffffff'] }).toString();
+    const uri = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    const img = new Image();
+    img.onload = () => { loaded++; if (loaded >= total) window.__crowdsAvatarsReady = true; };
+    img.onerror = () => { loaded++; if (loaded >= total) window.__crowdsAvatarsReady = true; };
+    img.src = uri;
+    pool[seed] = img;
+  } catch (e) {
+    loaded++;
+    if (loaded >= total) window.__crowdsAvatarsReady = true;
+  }
+});
+
+window.__crowdsAvatars = pool;
+window.__crowdsAvatarsReady = false;
+</script>
+
+<script>
+/* Hero background — the real Crowds build pipeline, visualised.
+   Mirrors the actual graph architecture from the backend:
+     1. SEED   → typed entity nodes extracted (Person, Organization,
+                 GovernmentAgency, MediaOutlet, Location, Product, …)
+     2. LINK   → structural edges form (WORKS_FOR, STUDIES_AT,
+                 AFFILIATED_WITH, REGULATES, REPRESENTS, …)
+     3. CAST   → individual-type entities bud persona nodes carrying
+                 real archetypes (learner, gogo_guardian, informal_trader,
+                 educator, grant_dependent_survivor, …) + SA location
+     4. RUN    → discourse edges form (COMMENTS_ON, RESPONDS_TO,
+                 SUPPORTS, OPPOSES) and personas pulse as they "post"
+   All dimmed so the copy stays the focus. */
+(function () {
+  var canvas = document.getElementById('hero-graph');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var nodes = [], edges = [], pulses = [];
+  var started = false, t0 = 0, lastEntSpawn = 0, lastEdgeForm = 0, lastBud = 0, lastPost = 0;
+  var phase = 0; // 0=seed, 1=link, 2=cast, 3=run
+
+  // ── Real entity types from ontology_generator.py / agent_profile_generator.py ──
+  var ENTITY_TYPES = {
+    individual: ['Person','Student','Journalist','Official','Activist','Expert','Professor','PublicFigure','Citizen','Caregiver','Commuter','Voter'],
+    institutional: ['Organization','GovernmentAgency','University','MediaOutlet','NGO','Company','School','Hospital','Union','Ministry','Council'],
+    context: ['Location','Product','Brand','App','Platform']
+  };
+  // ── Real persona archetypes from panel_service.SEGMENTS ──
+  var ARCHETYPES = ['learner','guardian','gogo_guardian','educator','informal_trader','small_biz','grant_dep','youth','employed','unemployed'];
+  // ── SA person name seeds (for entity person-node avatars) ──
+  var PERSON_SEEDS = ['Thandi','Riaan','Khaya','Lerato','Nompumeleo','Sipho','Aisha','Johan','Zanele','Pieter'];
+  // ── Real SA grounding (provinces + townships from the library) ──
+  var PLACES = ['Gauteng','W.Cape','KZN','E.Cape','Limpopo','Soshanguve','Khayelitsha','Tembisa','Fourways','Gugulethu'];
+  // ── Real edge types from ontology_generator.py ──
+  var STRUCTURAL = ['WORKS_FOR','STUDIES_AT','AFFILIATED_WITH','MEMBER_OF','PART_OF','REPRESENTS','REGULATES'];
+  var DISCOURSE  = ['COMMENTS_ON','RESPONDS_TO','SUPPORTS','OPPOSES','REPORTS_ON'];
+
+  var COL = {
+    individual:   { r:30,  g:158, b:90  }, // accent green
+    institutional:{ r:58,  g:124, b:165 }, // slate teal
+    context:      { r:150, g:150, b:150 }, // neutral grey
+    persona:      { r:30,  g:158, b:90  }, // accent green (brighter)
+    support:      { r:30,  g:158, b:90  },
+    oppose:       { r:192, g:57,  b:43  },
+    neutral:      { r:120, g:120, b:120 }
+  };
+  function rgba(c, a) { return 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + a.toFixed(3) + ')'; }
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function dist2(a, b) { var dx = a.x - b.x, dy = a.y - b.y; return dx*dx + dy*dy; }
+
+  function resize() {
+    var r = canvas.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // Spawn a typed entity node. Category shapes the graph:
+  //   individuals → person avatar (DiceBear avataaars), bud personas later
+  //   institutional → initials badge (like the app's DiceBear initials)
+  //   context Location → pin glyph; context Product/Brand → plain dot
+  function spawnEntity() {
+    var catRoll = Math.random();
+    var cat = catRoll < 0.55 ? 'individual' : (catRoll < 0.85 ? 'institutional' : 'context');
+    var type = pick(ENTITY_TYPES[cat]);
+    // Visual kind mirrors GraphPanel.vue's nodeKind() classification
+    var vk;
+    if (cat === 'individual') vk = 'person';
+    else if (cat === 'institutional') vk = 'org';
+    else vk = (type === 'Location') ? 'location' : 'dot';
+    // Seed point: emit from top-left (where the "seed text" glow sits)
+    var sx = W * 0.06, sy = H * 0.18;
+    // Avatar-bearing nodes are bigger so faces/badges are visible (app uses NODE_R=14)
+    var r = vk === 'person' ? rand(9, 11) : vk === 'org' ? rand(9, 11) : vk === 'location' ? rand(7, 8) : rand(3, 4);
+    var n = {
+      kind: 'entity',
+      cat: cat,
+      type: type,
+      vk: vk,
+      avatarSeed: vk === 'person' ? pick(PERSON_SEEDS) : null,
+      x: sx + rand(-30, 30),
+      y: sy + rand(-20, 20),
+      vx: rand(0.15, 0.55) * (Math.random() < 0.5 ? 1 : 0.6), // drift rightward into the canvas
+      vy: rand(-0.12, 0.12),
+      r: r,
+      born: performance.now(),
+      age: 0,
+      buds: 0,
+      maxBuds: cat === 'individual' ? Math.floor(rand(2, 5)) : 0
+    };
+    nodes.push(n);
+    // Pull toward a comfortable resting zone (right 70% of canvas)
+    n.tx = rand(W * 0.30, W * 0.94);
+    n.ty = rand(H * 0.12, H * 0.92);
+    return n;
+  }
+
+  // Form a structural edge between two entities using a real edge type
+  function formStructuralEdge() {
+    var ents = nodes.filter(function (n) { return n.kind === 'entity'; });
+    if (ents.length < 2) return;
+    var a = pick(ents);
+    // Prefer cross-category links (Person→Org, Person→GovAgency) like WORKS_FOR / STUDIES_AT
+    var candidates = ents.filter(function (n) {
+      return n !== a && dist2(n, a) < 240 * 240 &&
+        ((a.cat === 'individual' && n.cat === 'institutional') ||
+         (a.cat === 'institutional' && n.cat === 'individual') ||
+         (a.cat !== a.cat && n.cat !== 'context'));
+    });
+    if (!candidates.length) candidates = ents.filter(function (n) { return n !== a && dist2(n, a) < 200 * 200; });
+    if (!candidates.length) return;
+    var b = pick(candidates);
+    // Pick an edge type that fits the pair
+    var etype;
+    if ((a.cat === 'individual' && b.cat === 'institutional') || (b.cat === 'individual' && a.cat === 'institutional')) {
+      etype = pick(['WORKS_FOR','STUDIES_AT','AFFILIATED_WITH','MEMBER_OF']);
+    } else if (a.cat === 'institutional' && b.cat === 'institutional') {
+      etype = pick(['REGULATES','REPRESENTS','PART_OF','COLLABORATES_WITH']);
+    } else {
+      etype = pick(['REPRESENTS','AFFILIATED_WITH']);
+    }
+    edges.push({ a: a, b: b, kind: 'structural', etype: etype, born: performance.now(), age: 0 });
+  }
+
+  // Bud a persona off an individual-type entity (the CAST phase)
+  function budPersona() {
+    var individuals = nodes.filter(function (n) {
+      return n.kind === 'entity' && n.cat === 'individual' && n.buds < n.maxBuds;
+    });
+    if (!individuals.length) return;
+    var anchor = pick(individuals);
+    anchor.buds++;
+    var ang = rand(0, Math.PI * 2);
+    var rad = rand(38, 80);
+    var arch = pick(ARCHETYPES);
+    var place = pick(PLACES);
+    var p = {
+      kind: 'persona',
+      arch: arch,
+      place: place,
+      avatarSeed: arch,
+      x: anchor.x + Math.cos(ang) * rad,
+      y: anchor.y + Math.sin(ang) * rad,
+      vx: rand(-0.08, 0.08),
+      vy: rand(-0.08, 0.08),
+      r: rand(8, 10),
+      born: performance.now(),
+      age: 0,
+      anchor: anchor,
+      lastPost: 0
+    };
+    nodes.push(p);
+    edges.push({ a: anchor, b: p, kind: 'buds', etype: 'GENERATES', born: performance.now(), age: 0 });
+  }
+
+  // Form a discourse edge between two personas (the RUN phase)
+  function formDiscourseEdge() {
+    var ps = nodes.filter(function (n) { return n.kind === 'persona'; });
+    if (ps.length < 2) return;
+    var a = pick(ps);
+    var near = ps.filter(function (n) { return n !== a && dist2(n, a) < 180 * 180; });
+    if (!near.length) return;
+    var b = pick(near);
+    var roll = Math.random();
+    var etype = roll < 0.35 ? 'SUPPORTS' : (roll < 0.6 ? 'OPPOSES' : pick(['COMMENTS_ON','RESPONDS_TO','REPORTS_ON']));
+    edges.push({ a: a, b: b, kind: 'discourse', etype: etype, born: performance.now(), age: 0 });
+  }
+
+  // A persona "posts" — emit a pulse ring
+  function personaPosts() {
+    var ps = nodes.filter(function (n) { return n.kind === 'persona' && n.age > 400; });
+    if (!ps.length) return;
+    var p = pick(ps);
+    pulses.push({ x: p.x, y: p.y, born: performance.now(), r0: p.r });
+  }
+
+  function init() {
+    resize();
+    nodes = []; edges = []; pulses = [];
+    phase = 0;
+    t0 = performance.now();
+    // Seed a few entities immediately so the canvas isn't empty
+    for (var i = 0; i < 4; i++) spawnEntity();
+  }
+
+  function step(now) {
+    if (!started) { started = true; init(); }
+    var elapsed = now - t0;
+
+    // Phase machine mirrors the real pipeline:
+    //   0–2.5s   SEED   (entities emit from the seed-text point)
+    //   2.5–5s   LINK   (structural edges form)
+    //   5–9s     CAST   (personas bud off individuals)
+    //   9s+      RUN    (discourse edges + posting pulses)
+    if (elapsed > 2500 && phase < 1) phase = 1;
+    if (elapsed > 5000 && phase < 2) phase = 2;
+    if (elapsed > 9000 && phase < 3) phase = 3;
+
+    // Continuous spawning — entities trickle in throughout
+    var maxEnts = 22;
+    var entsCount = nodes.filter(function (n) { return n.kind === 'entity'; }).length;
+    if (entsCount < maxEnts && now - lastEntSpawn > (entsCount < 10 ? 200 : 460)) {
+      spawnEntity();
+      lastEntSpawn = now;
+    }
+
+    if (phase >= 1 && now - lastEdgeForm > 300 && edges.filter(function (e) { return e.kind === 'structural'; }).length < 30) {
+      formStructuralEdge();
+      lastEdgeForm = now;
+    }
+    if (phase >= 2 && now - lastBud > 300) {
+      var personaCount = nodes.filter(function (n) { return n.kind === 'persona'; }).length;
+      if (personaCount < 42) budPersona();
+      lastBud = now;
+    }
+    if (phase >= 3) {
+      if (now - lastEdgeForm > 700 && edges.filter(function (e) { return e.kind === 'discourse'; }).length < 50) {
+        formDiscourseEdge();
+      }
+      if (now - lastPost > 900) {
+        personaPosts();
+        lastPost = now;
+      }
+    }
+
+    // Slow rebuild cycle — fade everything out at ~24s and restart
+    if (elapsed > 24000) {
+      var fadeStart = 24000, fadeDur = 1600;
+      var fa = Math.min(1, (elapsed - fadeStart) / fadeDur);
+      // When fully faded, reinit
+      if (fa >= 1) { init(); }
+    }
+
+    // Motion
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      // Gentle pull toward target rest position for entities
+      if (n.kind === 'entity' && n.tx != null) {
+        n.vx += (n.tx - n.x) * 0.00006;
+        n.vy += (n.ty - n.y) * 0.00006;
+      }
+      // Personas drift around their anchor
+      if (n.kind === 'persona' && n.anchor) {
+        n.vx += (n.anchor.x - n.x) * 0.00005;
+        n.vy += (n.anchor.y - n.y) * 0.00005;
+      }
+      n.vx *= 0.992; n.vy *= 0.992;
+      // Wrap softly
+      if (n.x < -30) n.x = W + 30;
+      if (n.x > W + 30) n.x = -30;
+      if (n.y < -30) n.y = H + 30;
+      if (n.y > H + 30) n.y = -30;
+      n.age = now - n.born;
+    }
+    for (var e = 0; e < edges.length; e++) edges[e].age = now - edges[e].born;
+
+    draw(elapsed);
+    requestAnimationFrame(step);
+  }
+
+  function typeLabel(t) {
+    // Shorten the institutional labels so they fit on the node
+    return t.replace('GovernmentAgency','GovAgency').replace('MediaOutlet','Media').replace('PublicFigure','PubFigure');
+  }
+
+  // Get a DiceBear avatar Image for a seed, or null if not loaded yet
+  function getAvatar(seed) {
+    var pool = window.__crowdsAvatars;
+    if (!pool) return null;
+    var img = pool[seed];
+    return (img && img.complete && img.naturalWidth > 0) ? img : null;
+  }
+
+  // Initials for an org type — mirrors DiceBear initials collection (e.g. "GovAgency" → "GA")
+  function orgInitials(type) {
+    return type.replace(/[^A-Z]/g, '').slice(0, 2) || type.slice(0, 2).toUpperCase();
+  }
+
+  // Draw a clipped circular avatar — white fill + colored ring + face image inside.
+  // Mirrors GraphPanel.vue: ring(r=NODE_R, fill=#fff, stroke=typeColor, width=2.5)
+  // + image clipped to circle.
+  function drawAvatarNode(x, y, r, ringColor, img, alpha) {
+    // White fill
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.92 * alpha).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    // Colored ring
+    ctx.strokeStyle = rgba(ringColor, 0.7 * alpha);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+    // Clipped avatar image
+    if (img) {
+      ctx.save();
+      ctx.beginPath(); ctx.arc(x, y, r - 1, 0, Math.PI * 2); ctx.clip();
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(img, x - r, y - r, r * 2, r * 2);
+      ctx.restore();
+    }
+  }
+
+  // Draw an initials badge — white fill + colored ring + initials text (for orgs)
+  function drawInitialsNode(x, y, r, ringColor, initials, alpha) {
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.92 * alpha).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = rgba(ringColor, 0.7 * alpha);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = rgba(ringColor, 0.85 * alpha);
+    ctx.font = '700 ' + Math.max(7, r * 0.7) + 'px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(initials, x, y + 0.5);
+  }
+
+  // Draw a location pin glyph — teardrop pin inside ring (matches GraphPanel.vue)
+  function drawPinNode(x, y, r, pinColor, alpha) {
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.92 * alpha).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = rgba(pinColor, 0.7 * alpha);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+    // Pin glyph (scaled to node radius)
+    var s = r * 0.55;
+    ctx.fillStyle = rgba(pinColor, 0.8 * alpha);
+    ctx.beginPath();
+    ctx.moveTo(x, y - s * 1.1);
+    ctx.bezierCurveTo(x - s * 0.9, y - s * 1.1, x - s * 1.3, y - s * 0.3, x - s * 1.3, y + s * 0.2);
+    ctx.bezierCurveTo(x - s * 1.3, y + s * 0.9, x, y + s * 1.3, x, y + s * 1.3);
+    ctx.bezierCurveTo(x, y + s * 1.3, x + s * 1.3, y + s * 0.9, x + s * 1.3, y + s * 0.2);
+    ctx.bezierCurveTo(x + s * 1.3, y - s * 0.3, x + s * 0.9, y - s * 1.1, x, y - s * 1.1);
+    ctx.fill();
+  }
+
+  function draw(elapsed) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Global fade for the rebuild cycle
+    var fade = 1;
+    if (elapsed > 24000) fade = Math.max(0, 1 - (elapsed - 24000) / 1600);
+    if (fade <= 0) return;
+
+    // Seed-text glow at the emission point (top-left) — the "document" being parsed
+    if (phase < 3 || elapsed < 12000) {
+      var g = ctx.createRadialGradient(W * 0.06, H * 0.18, 0, W * 0.06, H * 0.18, 120);
+      g.addColorStop(0, rgba(COL.individual, 0.18 * fade));
+      g.addColorStop(1, rgba(COL.individual, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(W * 0.06, H * 0.18, 120, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Edges — styled by kind
+    ctx.lineWidth = 1;
+    for (var i = 0; i < edges.length; i++) {
+      var e = edges[i];
+      var ef = Math.min(1, e.age / 700);
+      var a, b = e.b, c;
+      if (e.kind === 'structural') {
+        c = COL.neutral;
+        ctx.strokeStyle = rgba(c, 0.12 * ef * fade);
+      } else if (e.kind === 'buds') {
+        c = COL.individual;
+        ctx.strokeStyle = rgba(c, 0.10 * ef * fade);
+        ctx.setLineDash([2, 3]);
+      } else { // discourse
+        c = e.etype === 'SUPPORTS' ? COL.support : (e.etype === 'OPPOSES' ? COL.oppose : COL.neutral);
+        ctx.strokeStyle = rgba(c, (e.etype === 'OPPOSES' ? 0.16 : 0.12) * ef * fade);
+      }
+      ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(e.b.x, e.b.y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Nodes — styled per visual kind, mirroring GraphPanel.vue:
+    //   person  → DiceBear avataaars face in a white-circle + colored-ring
+    //   org     → initials badge in a white-circle + colored-ring
+    //   location→ pin glyph in a white-circle + colored-ring
+    //   dot     → plain colored fill (context products, no identity mark)
+    //   persona → avataaars face in a white-circle + green-ring (the "crowd")
+    for (var j = 0; j < nodes.length; j++) {
+      var n = nodes[j];
+      var nf = Math.min(1, n.age / 500);
+      if (n.kind === 'entity') {
+        var c = COL[n.cat];
+        // Soft halo behind avatar-bearing nodes
+        if (n.vk === 'person' || n.vk === 'org') {
+          var gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 2.2);
+          gr.addColorStop(0, rgba(c, 0.10 * nf * fade));
+          gr.addColorStop(1, rgba(c, 0));
+          ctx.fillStyle = gr;
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 2.2, 0, Math.PI * 2); ctx.fill();
+        }
+        if (n.vk === 'person') {
+          var av = getAvatar(n.avatarSeed);
+          if (av) {
+            drawAvatarNode(n.x, n.y, n.r, c, av, nf * fade);
+          } else {
+            // Fallback: plain dot while avatars load
+            ctx.fillStyle = rgba(c, 0.62 * nf * fade);
+            ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+          }
+        } else if (n.vk === 'org') {
+          drawInitialsNode(n.x, n.y, n.r, c, orgInitials(n.type), nf * fade);
+        } else if (n.vk === 'location') {
+          drawPinNode(n.x, n.y, n.r, c, nf * fade);
+        } else {
+          // Context dot (Product/Brand/App) — plain, no identity mark
+          ctx.fillStyle = rgba(c, 0.45 * nf * fade);
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+        }
+        // Type label above the node (once settled)
+        if (n.age > 800 && n.vk !== 'dot') {
+          ctx.fillStyle = rgba(c, 0.5 * nf * fade);
+          ctx.font = '600 8px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(typeLabel(n.type), n.x, n.y - n.r - 7);
+        }
+      } else { // persona — DiceBear avatar face in a green ring
+        var pa = getAvatar(n.avatarSeed);
+        if (pa) {
+          drawAvatarNode(n.x, n.y, n.r, COL.persona, pa, nf * fade);
+        } else {
+          // Fallback: green dot while avatars load
+          ctx.fillStyle = rgba(COL.persona, 0.55 * nf * fade);
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = rgba(COL.persona, 0.35 * nf * fade);
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 2.5, 0, Math.PI * 2); ctx.stroke();
+        }
+        // Archetype label above (subset, to avoid clutter)
+        if (n.age > 600 && Math.random() < 0.4) {
+          ctx.fillStyle = rgba(COL.persona, 0.45 * nf * fade);
+          ctx.font = '600 7px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(n.arch, n.x, n.y - n.r - 5);
+        }
+      }
+    }
+
+    // Pulses — a persona "posting" (ring expands + fades)
+    for (var k = pulses.length - 1; k >= 0; k--) {
+      var p = pulses[k];
+      var age = performance.now() - p.born;
+      var dur = 1400;
+      if (age > dur) { pulses.splice(k, 1); continue; }
+      var t = age / dur;
+      var r = p.r0 + t * 60;
+      var a = (1 - t) * 0.4 * fade;
+      ctx.strokeStyle = rgba(COL.persona, a);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    // Phase pip — tiny phase indicator bottom-left of the canvas
+    var pips = ['SEED','LINK','CAST','RUN'];
+    ctx.font = '700 9px "JetBrains Mono", monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = rgba(COL.individual, 0.5 * fade);
+    ctx.fillText('▸ ' + pips[phase], 16, H - 14);
+  }
+
+  var rz;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz);
+    rz = setTimeout(function () { if (started) resize(); }, 120);
+  });
+  // Pause when the hero scrolls out of view
+  var io = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting && started) requestAnimationFrame(step);
+  }, { threshold: 0 });
+  io.observe(canvas);
+  requestAnimationFrame(step);
+})();
+</script>
+
+</body>
+</html>
