@@ -17,6 +17,7 @@ Framework integration points:
 """
 
 import json
+import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -26,6 +27,62 @@ from .document_context_engine import sanitize_language_drift
 from ..utils.logger import get_logger
 
 logger = get_logger("fub.opinion_agent")
+
+
+# ── Self-reported stance ────────────────────────────────────────────────────
+# Interview answers end with a structured "STANCE: <x>" line the agent writes
+# about itself — its own judgement of its position, parsed here. This replaces
+# keyword-sniffing the prose (which barely fires outside policy vocabulary) as
+# the primary stance signal; the keyword heuristic stays as fallback. Product
+# reaction labels are accepted as aliases so a "STANCE: unconvinced" still maps
+# into the canonical taxonomy.
+_SELF_STANCE_ALIASES = {
+    "support": "support", "won over": "support",
+    "neutral": "neutral", "curious": "neutral",
+    "concerned": "concerned", "unconvinced": "concerned",
+    "oppose": "oppose", "resistant": "oppose", "put off": "oppose",
+    "resist": "resist", "hostile": "resist",
+}
+
+_SELF_STANCE_RE = re.compile(
+    r"(?:^|\n)\s*\**\s*STANCE\s*\**\s*[:\-]\s*\**\s*[\[<]?\s*([A-Za-z ]+?)\s*[\]>]?\s*\**\s*(?=$|\n)",
+    re.IGNORECASE,
+)
+
+
+def extract_self_reported_stance(response: str) -> Tuple[Optional[str], str]:
+    """Parse the trailing self-reported stance from an interview answer.
+
+    Returns (canonical_stance | None, response_without_the_stance_line).
+    Unknown stance words return (None, original_response) so the caller falls
+    back to the keyword heuristic without losing text.
+    """
+    if not response:
+        return None, response
+    matches = list(_SELF_STANCE_RE.finditer(response))
+    if not matches:
+        return None, response
+    m = matches[-1]
+    stance = _SELF_STANCE_ALIASES.get(m.group(1).strip().lower())
+    if stance is None:
+        return None, response
+    cleaned = (response[:m.start()] + response[m.end():]).strip()
+    return stance, cleaned
+
+
+def stance_check_footer(mode: str = "policy") -> str:
+    """Instruction appended to interview questions asking for the stance line."""
+    if mode == "product":
+        gloss = ("Meaning here: support = won over by the pitch, neutral = curious but no position yet, "
+                 "concerned = unconvinced, oppose = put off, resist = hostile to it.")
+    else:
+        gloss = "Your honest current position toward what was discussed."
+    return (
+        "\n\n=== STANCE CHECK ===\n"
+        "After your answer, end with ONE final line, exactly in this format:\n"
+        "STANCE: <support | neutral | concerned | oppose | resist>\n"
+        f"{gloss}"
+    )
 
 
 class OpinionCitizenAgent(PersonAgent):
@@ -94,6 +151,7 @@ class OpinionCitizenAgent(PersonAgent):
         base_radicalism: int = 1,
         activation_triggers: Optional[List[str]] = None,
         is_institutional: bool = False,
+        is_core_focus: bool = False,
     ):
         # Build profile for PersonAgent
         agent_profile = {
@@ -102,9 +160,14 @@ class OpinionCitizenAgent(PersonAgent):
             **profile,
         }
 
-        # Initialize skill state with simulation fields
-        skill_state = init_state or {}
-        skill_state.update({
+        # Initialize skill state with simulation fields.
+        # A caller-supplied init_state is authoritative: defaults only fill keys
+        # it doesn't carry. (The sim path passes kwargs and no init_state, so it
+        # gets the full defaults dict; the interview path passes init_state with
+        # restored interview_memory / posts_history / stance, which an
+        # unconditional update() here used to silently wipe.)
+        skill_state = dict(init_state or {})
+        defaults = {
             "interested_topics": interested_topics or [],
             "stance": self._normalize_stance(stance),
             "previous_stance": None,
@@ -118,17 +181,35 @@ class OpinionCitizenAgent(PersonAgent):
             "current_radicalism": max(1, min(5, base_radicalism)),
             "activation_triggers": activation_triggers or [],
             "is_institutional": is_institutional,
+            "is_core_focus": is_core_focus,
             "posts_history": [],
             "interview_memory": [],
             "interview_count": 0,
             "mobilization_level": 0,  # 0=none, 1=discussing, 2=organizing, 3=acting
             "last_post_round": -1,
-        })
+        }
+        for k, v in defaults.items():
+            if k not in skill_state:
+                skill_state[k] = v
 
         # Carry occupation/background so downstream (budget tier, grant detection)
         # can read them from init_state without re-opening the profile.
         skill_state.setdefault("occupation", profile.get("occupation"))
         skill_state.setdefault("background_story", profile.get("background_story"))
+        # GHS-library personas carry surveyed household income — the budget tier's
+        # strongest real signal; ride it into init_state for _budget_tier_for.
+        if profile.get("monthly_household_income_rand") is not None:
+            skill_state.setdefault("monthly_household_income_rand",
+                                   profile.get("monthly_household_income_rand"))
+        # Carry the persona's OWN real economic anchors (GHS fee bands, province)
+        # so the economic lens can show the agent the actual numbers it owns —
+        # income + what it pays in school fees — instead of only a one-word budget
+        # tier. Without these surfaced, the agent has no concrete cost to reason
+        # against and free-associates a plausible-but-wrong figure (the "two tanks"
+        # failure). Displayed only; never authored or changed by the LLM.
+        for _k in ("fees_band", "learner_fee_bands", "province"):
+            if profile.get(_k) is not None:
+                skill_state.setdefault(_k, profile.get(_k))
 
         # Grant beneficiary detection — deterministic, from existing signals only.
         # SASSA amounts are published policy → a real KNOWN income for this cohort.
@@ -175,6 +256,7 @@ class OpinionCitizenAgent(PersonAgent):
 
         # Store init_state locally since PersonAgent doesn't expose it
         self.init_state = skill_state
+        self.is_core_focus = is_core_focus
 
         # Initialize psychological state from profile (if present)
         self._init_psychological_state(profile)
@@ -630,6 +712,7 @@ class OpinionCitizenAgent(PersonAgent):
         question: str,
         t: Optional[datetime] = None,
         response_type: str = "text",
+        mode: str = "policy",
     ) -> Dict[str, Any]:
         """Policy-maker interview using agentsociety2's answer_external_question().
 
@@ -641,6 +724,7 @@ class OpinionCitizenAgent(PersonAgent):
             question: The policy maker's question.
             t: Current simulation time (defaults to now).
             response_type: "text", "choice", or "json".
+            mode: "policy" or "product" — shapes the stance-check gloss.
 
         Returns:
             Dict with "response", "stance_before", "stance_after", "stance_changed".
@@ -654,7 +738,7 @@ class OpinionCitizenAgent(PersonAgent):
         # This injects _build_external_question_context() automatically
         try:
             response = await self.answer_external_question(
-                prompt=question,
+                prompt=question + stance_check_footer(mode),
                 t=t,
                 response_type=response_type,
             )
@@ -669,8 +753,11 @@ class OpinionCitizenAgent(PersonAgent):
                 "error": str(e),
             }
 
-        # Detect stance change from response (heuristic)
-        stance_after = self._detect_stance_from_response(response, stance_before)
+        # Stance: the agent's own declared position, falling back to the keyword
+        # heuristic when the structured line is missing/garbled.
+        stance_after, response = extract_self_reported_stance(response)
+        if stance_after is None:
+            stance_after = self._detect_stance_from_response(response, stance_before)
 
         # Record the interview
         self._record_interview(question, response, stance_before, stance_after)
@@ -695,6 +782,7 @@ class OpinionCitizenAgent(PersonAgent):
         original_question: str = "",
         t: Optional[datetime] = None,
         response_type: str = "text",
+        mode: str = "policy",
     ) -> Dict[str, Any]:
         """Impact-extraction interview with structured metadata output.
 
@@ -706,6 +794,7 @@ class OpinionCitizenAgent(PersonAgent):
             original_question: The user's raw question (for reference).
             t: Simulation time.
             response_type: "text" or "json".
+            mode: "policy" or "product" — shapes the stance-check gloss.
 
         Returns:
             Dict with "response", "internal_state", "impact_metadata", etc.
@@ -718,7 +807,7 @@ class OpinionCitizenAgent(PersonAgent):
 
         try:
             response = await self.answer_external_question(
-                prompt=reframed_question,
+                prompt=reframed_question + stance_check_footer(mode),
                 t=t,
                 response_type=response_type,
             )
@@ -736,7 +825,10 @@ class OpinionCitizenAgent(PersonAgent):
                 "original_question": original_question,
             }
 
-        stance_after = self._detect_stance_from_response(response, stance_before)
+        # Self-declared stance first; keyword heuristic only as fallback.
+        stance_after, response = extract_self_reported_stance(response)
+        if stance_after is None:
+            stance_after = self._detect_stance_from_response(response, stance_before)
         self._record_interview(reframed_question, response, stance_before, stance_after)
 
         if stance_after != stance_before:

@@ -42,59 +42,6 @@ from app import create_app
 from app.config import Config
 
 
-def _start_miroflow_mcp():
-    """Start MiroFlow MCP server as a background process."""
-    mcp_port = 8001
-    mcp_url = os.environ.get('WEB_SEARCH_API_URL', f'http://localhost:{mcp_port}/mcp/')
-
-    # Check if already running
-    import requests
-    try:
-        resp = requests.get(mcp_url.replace('/mcp/', ''), timeout=2)
-        print(f"MiroFlow MCP server already running on port {mcp_port}")
-        return
-    except Exception:
-        pass
-
-    mcp_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'miroflow_mcp_server.py')
-    if not os.path.exists(mcp_script):
-        print(f"WARNING: MiroFlow MCP server script not found at {mcp_script}")
-        return
-
-    print(f"Starting MiroFlow MCP server on port {mcp_port}...")
-    os.environ['WEB_SEARCH_API_URL'] = mcp_url
-
-    # Pass all required env vars to the MCP server process
-    mcp_env = os.environ.copy()
-    mcp_env['WEB_SEARCH_API_URL'] = mcp_url
-    mcp_env['WEB_SEARCH_API_TOKEN'] = os.environ.get('WEB_SEARCH_API_TOKEN', 'local-dev-token')
-    mcp_env['LLM_API_KEY'] = os.environ.get('LLM_API_KEY', '')
-    mcp_env['LLM_BASE_URL'] = os.environ.get('LLM_BASE_URL', '')
-    mcp_env['LLM_MODEL_NAME'] = os.environ.get('LLM_MODEL_NAME', '')
-    mcp_env['OPENAI_API_KEY'] = os.environ.get('LLM_API_KEY', '')
-    mcp_env['OPENAI_API_BASE'] = os.environ.get('LLM_BASE_URL', '')
-    mcp_env['FIRECRAWL_API_KEY'] = os.environ.get('FIRECRAWL_API_KEY', '')
-    mcp_env['SERPER_API_KEY'] = os.environ.get('SERPER_API_KEY', '')
-
-    subprocess.Popen(
-        [sys.executable, mcp_script],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0,
-        env=mcp_env,
-    )
-    # Wait for it to start
-    for _ in range(10):
-        time.sleep(0.5)
-        try:
-            resp = requests.get(mcp_url.replace('/mcp/', ''), timeout=2)
-            print(f"MiroFlow MCP server started successfully on port {mcp_port}")
-            return
-        except Exception:
-            pass
-    print(f"WARNING: MiroFlow MCP server may not have started on port {mcp_port}")
-
-
 def _get_version() -> str:
     version_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "VERSION")
     try:
@@ -108,7 +55,7 @@ def main():
     """Main function"""
     import argparse
     parser = argparse.ArgumentParser(description="Fub Simulation backend server")
-    parser.add_argument("-v", "--version", action="version", version=f"fub-sandbox v{_get_version()}")
+    parser.add_argument("-v", "--version", action="version", version=f"crowds v{_get_version()}")
     parser.parse_args()
 
     # Validate configuration
@@ -119,9 +66,6 @@ def main():
             print(f"  - {err}")
         print("\nPlease check configuration in .env file")
         sys.exit(1)
-
-    # Start MiroFlow MCP server
-    _start_miroflow_mcp()
 
     # Create application
     app = create_app()

@@ -2,7 +2,7 @@
 Serper Service — Google Search via Serper API.
 
 Direct Google search capability for Fub. Used alongside Firecrawl
-to provide web research without MiroFlow.
+for deep web research.
 """
 
 import requests

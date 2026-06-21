@@ -1459,6 +1459,32 @@ class SimulationRunner:
             }
     
     @classmethod
+    def _dead_env_message(cls, sim_dir: str, action: str) -> str:
+        """Human-readable reason a control action (pause/resume/intervene) can't run
+        because the sim's environment isn't alive. Surfaces the recorded error/status
+        from env_status.json when present, so a quota-exhausted sim says so plainly
+        instead of throwing the raw 'environment not running'."""
+        status, recorded_error = None, None
+        try:
+            status_path = os.path.join(sim_dir, "env_status.json")
+            if os.path.exists(status_path):
+                with open(status_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                status = data.get("status")
+                recorded_error = data.get("error") or data.get("message")
+        except Exception:
+            pass
+
+        if status == "error" and recorded_error:
+            return f"Cannot {action}: this simulation stopped. {recorded_error}"
+        if status == "completed":
+            return f"Cannot {action}: this simulation has already finished."
+        return (
+            f"Cannot {action}: this simulation is no longer running. "
+            f"It may have finished, been stopped, or the backend was restarted."
+        )
+
+    @classmethod
     def pause_simulation(cls, simulation_id: str, timeout: float = 30.0) -> Dict[str, Any]:
         """Pause a running simulation between rounds."""
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
@@ -1466,7 +1492,7 @@ class SimulationRunner:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
         ipc_client = SimulationIPCClient(sim_dir)
         if not ipc_client.check_env_alive():
-            raise ValueError(f"Simulation environment not running: {simulation_id}")
+            raise ValueError(cls._dead_env_message(sim_dir, "pause"))
         response = ipc_client.send_pause(timeout=timeout)
         return {
             "success": response.status.value == "completed",
@@ -1482,7 +1508,7 @@ class SimulationRunner:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
         ipc_client = SimulationIPCClient(sim_dir)
         if not ipc_client.check_env_alive():
-            raise ValueError(f"Simulation environment not running: {simulation_id}")
+            raise ValueError(cls._dead_env_message(sim_dir, "resume"))
         response = ipc_client.send_resume(timeout=timeout)
         return {
             "success": response.status.value == "completed",
@@ -1504,7 +1530,7 @@ class SimulationRunner:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
         ipc_client = SimulationIPCClient(sim_dir)
         if not ipc_client.check_env_alive():
-            raise ValueError(f"Simulation environment not running: {simulation_id}")
+            raise ValueError(cls._dead_env_message(sim_dir, "apply intervention"))
         response = ipc_client.send_apply_intervention(
             agent_id=agent_id,
             intervention_text=intervention_text,
@@ -1537,7 +1563,7 @@ class SimulationRunner:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
         ipc_client = SimulationIPCClient(sim_dir)
         if not ipc_client.check_env_alive():
-            raise ValueError(f"Simulation environment not running: {simulation_id}")
+            raise ValueError(cls._dead_env_message(sim_dir, "broadcast"))
         response = ipc_client.send_broadcast_intervention(
             intervention_text=intervention_text,
             founder_name=founder_name,

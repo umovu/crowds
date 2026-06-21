@@ -93,9 +93,11 @@ class JinaService:
                 "error": "Jina search requires JINA_API_KEY. Set it in .env",
                 "query": query,
             }
+        # Jina rejects long queries with 422; also encode '/' so it doesn't become a path segment.
+        safe_query = quote(query[:200].strip(), safe="")
         try:
             r = requests.get(
-                self.SEARCH_URL + quote(query),
+                self.SEARCH_URL + safe_query,
                 headers={
                     "Authorization": f"Bearer {self.api_key}",
                     "Accept": "application/json",
@@ -120,11 +122,11 @@ class JinaService:
                 "source": "jina",
             }
         except requests.HTTPError as e:
-            logger.warning(f"Jina search HTTP {e.response.status_code} for '{query}'")
-            return {"success": False, "error": f"HTTP {e.response.status_code}", "query": query}
+            logger.warning(f"Jina search HTTP {e.response.status_code} for '{safe_query}'")
+            return {"success": False, "error": f"HTTP {e.response.status_code}", "query": safe_query}
         except Exception as e:
-            logger.warning(f"Jina search failed for '{query}': {e}")
-            return {"success": False, "error": str(e), "query": query}
+            logger.warning(f"Jina search failed for '{safe_query}': {e}")
+            return {"success": False, "error": str(e), "query": safe_query}
 
     def search_and_scrape(self, query: str, num_results: int = 6, timeout: float = 90.0) -> Dict[str, Any]:
         """
@@ -137,9 +139,11 @@ class JinaService:
                 "error": "Jina search_and_scrape requires JINA_API_KEY",
                 "query": query,
             }
+        # Jina rejects long queries with 422; also encode '/' so it doesn't become a path segment.
+        safe_query = quote(query[:200].strip(), safe="")
         try:
             r = requests.get(
-                self.SEARCH_URL + quote(query),
+                self.SEARCH_URL + safe_query,
                 headers={
                     "Authorization": f"Bearer {self.api_key}",
                     "Accept": "application/json",
@@ -165,8 +169,8 @@ class JinaService:
                 "source": "jina",
             }
         except requests.HTTPError as e:
-            logger.warning(f"Jina search_and_scrape HTTP {e.response.status_code} for '{query}'")
-            return {"success": False, "error": f"HTTP {e.response.status_code}", "query": query}
+            logger.warning(f"Jina search_and_scrape HTTP {e.response.status_code} for '{safe_query}'")
+            return {"success": False, "error": f"HTTP {e.response.status_code}", "query": safe_query}
         except Exception as e:
-            logger.warning(f"Jina search_and_scrape failed for '{query}': {e}")
-            return {"success": False, "error": str(e), "query": query}
+            logger.warning(f"Jina search_and_scrape failed for '{safe_query}': {e}")
+            return {"success": False, "error": str(e), "query": safe_query}

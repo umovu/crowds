@@ -35,11 +35,29 @@ Therefore, **entities must be real-world entities that can voice and interact on
 - Abstract concepts (such as "public opinion", "emotion", "trend")
 - Topics/subjects (such as "academic integrity", "education reform")
 - Views/attitudes (such as "supporters", "opponents")
+- **Products, apps, devices, brands, or competitor solutions** (such as "WeWALK", a smart
+  cane, an app, a software platform, a gadget). A product does NOT hold opinions — the PEOPLE
+  who make, sell, regulate, or use it do. Never give a product a person-like entity type
+  (no "TechDeveloper", "Provider", etc. assigned to a product/brand name). The maker is a
+  Company; the user is a Person; the product itself is context only.
 
 **Also extract but do NOT make opinion agents**:
 - `Location`: Geographic places — cities, provinces, townships, neighborhoods, suburbs, regions.
   Examples: "Cape Town", "Western Cape", "Manenberg", "Khayelitsha", "Soweto", "Gauteng".
   These are CONTEXT, not voices. They should NOT be given personas or participate in the simulation.
+- `Product` / competitor solutions: named products, apps, devices, brands, or rival offerings
+   (e.g. "WeWALK", "a smart cane", a software tool). These are the COMPETITIVE/CONTEXT landscape —
+   the simulation reacts ABOUT them, never AS them. Extract them so the context is rich, but they
+   are NOT opinion agents. The people around a product (makers, sellers, users, regulators) ARE.
+
+**HARD RULE — PRODUCTS AND COMPETITORS ARE NEVER SIMULATION AGENTS**:
+- Products, apps, devices, brands, competitor solutions, programmes — these exist ONLY as context to enrich the simulation.
+- They do NOT voice opinions, do NOT participate in social media interactions, do NOT influence other entities.
+- They do NOT get personas. They do NOT get agent profiles. They do NOT appear in the simulation as actors.
+- The simulation reacts TO them (discusses, compares, adopts, rejects, reviews) — never AS them.
+- If a product/brand/app name appears in the text, its entity type MUST be `Product` (context only).
+- Never assign person-like types (`TechDeveloper`, `Provider`, `Founder`, `Expert`, `Creator`, `Manufacturer`, `Distributor`, `Reseller`, etc.) to a product/brand/app.
+- The maker is `Company`; the user is `Person`; the product itself is `Product` (context only).
 
 ## Output Format
 
@@ -145,6 +163,12 @@ B. **Specific types (8, designed based on text content)**:
 
 **Location types (for context extraction only — NOT simulation agents)**:
 - Location: Any geographic place — city, province, township, suburb, neighborhood, region, district.
+
+**Product/competitor types (for context extraction only — NOT simulation agents)**:
+- Product: A named product, app, device, brand, software tool, or competitor solution
+  (e.g. "WeWALK", "a smart cane"). Assign this type to anything that is a thing-people-use,
+  NOT a person or institution. A product is competitive/context landscape; it does not get a
+  persona. Its maker → Company; its user → Person; the product itself → Product.
 
 ## Relationship Type Reference
 

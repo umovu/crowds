@@ -1303,7 +1303,7 @@ class DocumentContextEngine:
         self.domain_profile: Dict[str, Any] = {}
         self.dynamic_rules: List[Dict[str, Any]] = []
         self.document_context_block: str = ""
-        self.competitive_landscape: List[str] = []
+        self.competitive_landscape: List[dict] = []
 
     def build_from_graph(self, graph_id: str) -> Dict[str, Any]:
         """
@@ -1630,7 +1630,31 @@ class DocumentContextEngine:
             lines.extend(["CORE PRODUCT FEATURES / VALUE PROPS:", ", ".join(dp["domain_topics"]), ""])
 
         if self.competitive_landscape:
-            lines.extend(["COMPETITIVE LANDSCAPE:", ", ".join(self.competitive_landscape), ""])
+            # Group competitors by priority tier
+            local = [c for c in self.competitive_landscape if c.get("priority") == "local"]
+            present = [c for c in self.competitive_landscape if c.get("priority") == "present"]
+            context = [c for c in self.competitive_landscape if c.get("priority") == "context"]
+
+            if local:
+                lines.append("COMPETITIVE LANDSCAPE — SOUTH AFRICA (PRIMARY WEIGHT):")
+                for c in local:
+                    reason = f" — {c['reason']}" if c.get("reason") else ""
+                    lines.append(f"  - {c['name']}{reason}")
+                lines.append("")
+
+            if present:
+                lines.append("COMPETITIVE LANDSCAPE — INTERNATIONAL WITH SA PRESENCE (SECONDARY WEIGHT):")
+                for c in present:
+                    reason = f" — {c['reason']}" if c.get("reason") else ""
+                    lines.append(f"  - {c['name']}{reason}")
+                lines.append("")
+
+            if context:
+                lines.append("COMPETITIVE LANDSCAPE — GLOBAL CONTEXT (REFERENCE ONLY, DO NOT DOMINATE):")
+                for c in context:
+                    reason = f" — {c['reason']}" if c.get("reason") else ""
+                    lines.append(f"  - {c['name']}{reason}")
+                lines.append("")
 
         lines.extend([
             "SA MARKET REALITIES TO CONSIDER:",
@@ -1648,6 +1672,14 @@ class DocumentContextEngine:
             "- Consider price in rands, data usage, offline capability, and trust before adoption.",
             "- Do NOT give a buy/no-buy verdict — express objections, conditions, confusion, or willingness.",
             "- Do not drift into generic SA issues unless they directly affect this product.",
+            "",
+            "COMPETITOR WEIGHTING RULES:",
+            "- SA-local competitors: weight heavily. These are your primary comparison points.",
+            "- International competitors with SA presence: weight moderately. They operate in your market.",
+            "- Global context competitors (no SA presence): use ONLY for customer insight reference.",
+            "  Example: If WeWALK smart cane has no SA presence, reference it only to understand",
+            "  what blind users value globally — but your adoption decision depends on SA availability,",
+            "  pricing in rands, and local support. Do NOT let global competitors dominate your reaction.",
             "",
             "=" * 60,
         ])
@@ -1760,14 +1792,25 @@ Return ONLY a JSON array of strings. No explanation."""
             logger.warning(f"Product fact extraction failed: {e}")
             return []
 
-    def extract_competitive_landscape(self, document_text: str, llm_client=None, model_name: str = "") -> List[str]:
-        """Extract mentioned competitors and alternatives from the document."""
+    def extract_competitive_landscape(self, document_text: str, llm_client=None, model_name: str = "") -> List[dict]:
+        """Extract mentioned competitors and alternatives from the document.
+
+        Returns a list of dicts: [{"name": str, "priority": "local"|"present"|"context", "reason": str}]
+        - local: South Africa-based or primarily SA-focused competitor (dominates the sim)
+        - present: has confirmed South African operations/market presence (significant weight)
+        - context: global/foreign competitor with no clear SA presence (reference only, do not dominate)
+        """
         if not document_text or not llm_client or self.mode != "product":
             return []
 
         try:
-            prompt = f"""Extract all competitors, alternatives, and existing solutions mentioned or implied in this product document.
+            base_prompt = f"""Extract all competitors, alternatives, and existing solutions mentioned or implied in this product document.
 Include both named competitors and generic alternatives (e.g. "cash", "WhatsApp", "Excel spreadsheets").
+
+For EACH competitor, classify its geographic relevance to South Africa:
+- "local": Based in South Africa, or primarily serves the SA market
+- "present": Has confirmed South African operations, users, or market presence (e.g. international brands with SA subsidiaries)
+- "context": Foreign/global competitor with NO clear SA presence — included for customer insight reference only
 
 DOCUMENT:
 {document_text[:6000]}
@@ -1776,38 +1819,85 @@ RULES:
 1. Include explicitly named competitors.
 2. Include status-quo alternatives people currently use.
 3. Include any market context (e.g. "dominated by X", "fragmented market").
-4. Format as a flat JSON array of short strings (max 10 words each).
+4. For global competitors, add a brief reason why they matter for context (e.g. "WeWALK smart cane — customer reviews show blind users value obstacle detection").
+5. Format as a JSON array of objects: [{{"name": "...", "priority": "local|present|context", "reason": "..."}}]
 
-Return ONLY a JSON array of strings. No explanation."""
+Return ONLY a JSON array. No explanation."""
 
-            response = llm_client.chat.completions.create(
-                model=model_name or "gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": "You extract competitive landscape from product documents. Return ONLY JSON."},
-                    {"role": "user", "content": prompt},
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.2,
-                max_tokens=800,
-            )
-            content = response.choices[0].message.content
-            data = json.loads(content)
-            if isinstance(data, list):
-                competitors = data
-            elif isinstance(data, dict):
-                competitors = data.get("competitors", data.get("alternatives", []))
-            else:
-                competitors = []
+            priority_order = {"local": 0, "present": 1, "context": 2}
 
-            competitors = [sanitize_language_drift(c, label="competitor") for c in competitors if isinstance(c, str)]
-            self.competitive_landscape = competitors[:15]
+            # Extraction factored into a callable so the advisory judge can
+            # regenerate ONCE on a low score. The retry hint is qualitative only
+            # and must stay grounded in the document (no invented competitors).
+            def extract_competitors(prev_judge=None):
+                retry_hint = ""
+                if prev_judge is not None and prev_judge.reasoning:
+                    retry_hint = (
+                        f"\n\nA previous extraction scored low. Improve on this feedback while staying "
+                        f"grounded in the DOCUMENT (do NOT invent competitors):\n{prev_judge.reasoning}\n"
+                    )
+                response = llm_client.chat.completions.create(
+                    model=model_name or "gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": "You extract competitive landscape from product documents. Return ONLY JSON."},
+                        {"role": "user", "content": base_prompt + retry_hint},
+                    ],
+                    response_format={"type": "json_object"},
+                    temperature=0.2,
+                    max_tokens=1200,
+                )
+                content = response.choices[0].message.content
+                data = json.loads(content)
+                if isinstance(data, list):
+                    competitors = data
+                elif isinstance(data, dict):
+                    competitors = data.get("competitors", data.get("alternatives", []))
+                else:
+                    competitors = []
+
+                # Normalize and sanitize
+                out = []
+                for c in competitors:
+                    if not isinstance(c, dict):
+                        continue
+                    name = sanitize_language_drift(c.get("name", ""), label="competitor")
+                    priority = c.get("priority", "context")
+                    reason = c.get("reason", "")
+                    if name and priority in ("local", "present", "context"):
+                        out.append({"name": name, "priority": priority, "reason": reason})
+
+                # Sort: local first, then present, then context
+                out.sort(key=lambda x: priority_order.get(x["priority"], 2))
+                return out
+
+            # Advisory judge — scores competitor tiering, regenerating once on a
+            # low score. Off by default (JUDGE_ENABLED), so it costs nothing normally.
+            try:
+                from .judge_service import judge_enabled, get_judge_service, judge_best_of
+                if judge_enabled():
+                    svc = get_judge_service()
+                    cleaned, judge_result, regenerated = judge_best_of(
+                        generate=extract_competitors,
+                        judge=lambda comps: svc.judge_competitor_tiering(comps[:15], document_text),
+                    )
+                    if judge_result and not judge_result.pass_:
+                        logger.warning(f"Competitor tiering judge low score after retry: {judge_result.reasoning}")
+                    elif regenerated:
+                        logger.info("Competitor tiering regenerated once on judge feedback")
+                else:
+                    cleaned = extract_competitors()
+            except Exception as e:
+                logger.warning(f"Competitor tiering judge evaluation skipped: {e}")
+                cleaned = extract_competitors()
+
+            self.competitive_landscape = cleaned[:15]
             logger.info(f"Extracted {len(self.competitive_landscape)} competitors/alternatives")
             return self.competitive_landscape
         except Exception as e:
             logger.warning(f"Competitive landscape extraction failed: {e}")
             return []
         except Exception as e:
-            logger.warning(f"Fact extraction failed: {e}")
+            logger.warning(f"Product fact extraction failed: {e}")
             return []
 
     def _build_generic(self) -> None:

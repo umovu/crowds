@@ -43,8 +43,8 @@ _DEFAULT_PRICING: Dict[str, Tuple[float, float]] = {
     "deepseek-chat":     (0.14,    0.28),
     "deepseek-coder":    (0.14,    0.28),
     "deepseek-reasoner": (0.55,    2.19),
-    "deepseek-v4-flash": (0.10,    0.30),   # approximate — verify with DeepSeek
-    "deepseek-v4-pro":   (0.50,    2.00),   # approximate — verify with DeepSeek
+    "deepseek-v4-flash": (0.14,    0.28),   # cache-miss; cache-hit input is $0.0028/1M
+    "deepseek-v4-pro":   (0.435,   0.87),   # cache-miss; cache-hit input is $0.0036/1M
     # Groq-hosted models (https://groq.com/pricing)
     "llama-3.3-70b-versatile": (0.59, 0.79),
     "llama-3.1-8b-instant":    (0.05, 0.08),

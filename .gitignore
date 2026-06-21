@@ -13,6 +13,10 @@ Thumbs.db
 # Generated at build from VITE_SUPABASE_* env (keeps keys out of the repo)
 frontend/public/supabase-config.js
 
+# Curated persona library — kept private, not shipped in the public repo.
+# (B2B taxonomy + world-facts under data/ are NOT personas and stay tracked.)
+backend/app/data/persona_library/personas*.json
+
 # Python
 __pycache__/
 *.py[cod]

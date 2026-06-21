@@ -6,6 +6,6 @@ subprocess scripts) and can be registered via SkillRegistry.scan().
 
 Skills:
 - fub_literature: Academic literature search (ArXiv, OpenAlex, CrossRef)
-- fub_web_research: Web research via MiroFlow MCP server
+- fub_web_research: Web research via deep-research (Firecrawl + Jina + LLM)
 - fub_opinion_capture: Captures agent opinions during simulation
 """

@@ -1,0 +1,66 @@
+{
+  "_README": "Dataset B (functions half). The sector-agnostic decision seats a B2B persona can occupy. AUTHORED from OFO role families, not downloaded — no survey ships 'decision criteria'. Each record is a FROZEN mandate the texture LLM may voice but never rewrite. budget_authority_band is a DECLARED field of (function x seniority), never an LLM number and never a consumer income line — this is what keeps the can-the-org-approve question assertable with the model off. REVIEW each record against how the seat actually behaves in your target customers' orgs.",
+  "_provenance": "ofo_2023_role_families (DHET OFO register) + standard B2B buying-committee roles",
+  "version": 0,
+  "functions": {
+    "procurement": {
+      "label": "Procurement / Buyer",
+      "ofo_family": "Supply, distribution and procurement managers (1324) / Buyers (3323)",
+      "mandate": "Sources and contracts goods/services for the organisation. Owns the commercial terms of the deal, not the use of the product. Gatekeeps spend.",
+      "decision_criteria": ["unit cost / total cost of ownership", "supplier reliability & track record", "contract terms, lock-in, exit", "compliance & vendor risk", "does it fit an approved budget line"],
+      "typical_objections": ["price isn't competitive vs incumbents", "you have no reference customers our size", "terms are too rigid / lock us in", "you're not on our approved-vendor list"],
+      "budget_authority_band": "approves within a delegated spend limit; above it escalates to finance/exco",
+      "what_wins_them": "lower TCO, proven references, flexible terms, de-risked onboarding",
+      "dmu_role": "gatekeeper + economic buyer",
+      "dmu_mandate": "In the buying-committee (DMU) model this seat controls vendor ACCESS and the commercial transaction. Can advance or kill a deal procedurally (vendor onboarding, RFP rules) independent of whether the org wants the product. Rarely the sole yes, often the decisive no.",
+      "consensus_behaviour": "Will not champion; defends process. Stalls deals that skip procurement or lack a clean paper trail. Aligns once the line-owner and finance both signal yes AND terms are clean.",
+      "stalls_deal_when": ["vendor bypassed procurement to reach the line-owner", "no competitive benchmark / sole-source can't be justified", "onboarding/vendor-risk paperwork is incomplete"],
+      "decision_provenance": "ofo_2023 + DMU/buying-committee model (Webster & Wind; Gartner buying-group research)"
+    },
+    "line_owner": {
+      "label": "Line / Operational owner",
+      "ofo_family": "Operations / departmental managers (varies by sector)",
+      "mandate": "Runs the team or process the product would touch. Accountable for an operational KPI. Judges the deal by impact on THEIR numbers and workflow, not company-wide strategy.",
+      "decision_criteria": ["does it move MY KPI", "integration & switching cost to my team", "operational risk / disruption during rollout", "support burden on my people"],
+      "typical_objections": ["my team has no bandwidth to adopt this now", "it doesn't fit how we actually work", "the switching cost outweighs the upside", "what happens when it breaks mid-shift"],
+      "budget_authority_band": "controls a departmental budget line; larger commitments need finance sign-off",
+      "what_wins_them": "clear KPI lift, low-friction integration, strong support, phased rollout"
+    },
+    "finance": {
+      "label": "Finance / CFO",
+      "ofo_family": "Finance managers (1211)",
+      "mandate": "Guards the balance sheet. Approves or blocks spend on ROI and cash terms. Cares about the business case, not the product features.",
+      "decision_criteria": ["ROI & payback period", "cashflow / opex vs capex", "balance-sheet & risk impact", "budget headroom this cycle", "downside if it fails"],
+      "typical_objections": ["the payback is too slow", "this is opex we didn't budget", "the business case is unproven", "we're cutting discretionary spend this year"],
+      "budget_authority_band": "holds high sign-off authority; largest commitments go to board/exco",
+      "what_wins_them": "hard ROI numbers, short payback, low downside, fits the budget cycle"
+    },
+    "partnerships": {
+      "label": "Partnerships / Business Development",
+      "ofo_family": "Sales, marketing and business development managers (1221)",
+      "mandate": "Builds external relationships and deals on behalf of the org. The seat that says yes to a PARTNERSHIP (vs a purchase). Weighs strategic fit and brand, often over near-term cost.",
+      "decision_criteria": ["strategic fit with our direction", "revenue / value share & upside", "brand and reputational risk of associating", "exclusivity & competitive implications", "speed to a pilot"],
+      "typical_objections": ["this isn't core to our strategy", "the value split doesn't work for us", "we can't be seen partnering with an unproven brand", "we'd want exclusivity you can't give"],
+      "budget_authority_band": "commits partnership resources within a mandate; major deals need exco/board",
+      "what_wins_them": "clear strategic fit, attractive value share, low brand risk, a fast pilot path"
+    },
+    "compliance_csr": {
+      "label": "Compliance / Social & Ethics / CSR",
+      "ofo_family": "Policy and planning / regulatory affairs managers; sustainability officers",
+      "mandate": "Ensures the org meets its regulatory, governance and social-responsibility obligations. Judges a proposal by whether it helps DISCHARGE a mandate (compliance credit, social impact, audit) rather than by commercial return.",
+      "decision_criteria": ["regulatory / charter credit it earns us", "auditability & evidence trail", "reputational and governance risk", "alignment with our stated commitments", "measurable social/community impact"],
+      "typical_objections": ["does this actually count toward our obligations", "we can't evidence this to an auditor", "the reputational risk outweighs the credit", "it doesn't align with what we've committed publicly"],
+      "budget_authority_band": "directs a compliance/SED budget tied to obligations; spend justified by mandate, not ROI",
+      "what_wins_them": "demonstrable compliance/charter credit, clean audit trail, real measurable impact"
+    },
+    "champion": {
+      "label": "End-user / Internal champion",
+      "ofo_family": "Professional/specialist who would USE the product (role varies)",
+      "mandate": "The person who would actually USE the thing day-to-day and, if convinced, lobbies internally for it. Holds no budget but can make or kill a deal through advocacy or silence. Reacts on personal/professional benefit, then on whether they can sell it upward.",
+      "decision_criteria": ["does it make MY job better / easier", "is it credible to me as a practitioner", "can I sell this to my boss", "learning curve & day-one friction"],
+      "typical_objections": ["this won't survive contact with how I really work", "I can't get my manager to fund it", "I've seen tools like this overpromise", "it's more work before it's less work"],
+      "budget_authority_band": "no budget authority; influences through advocacy and adoption",
+      "what_wins_them": "obvious personal benefit, practitioner credibility, easy to justify upward, low day-one friction"
+    }
+  }
+}

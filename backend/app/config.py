@@ -32,6 +32,11 @@ class Config:
     LLM_BASE_URL = os.environ.get('LLM_BASE_URL', 'http://localhost:11434/v1')
     LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'llama-3.3-70b-versatile')
 
+    # LLM-as-judge: advisory quality scorer (Plus tier). Off by default — each
+    # judged setup path costs an extra Plus-tier call, so only enable when you
+    # are actively evaluating output quality. Never gates/regenerates; it scores.
+    JUDGE_ENABLED = os.environ.get('JUDGE_ENABLED', 'false').lower() == 'true'
+
     # LLM pricing (USD per 1 million tokens) — used for cost estimation
     # Set these when using paid APIs (DeepSeek, OpenAI, Groq) so simulations
     # can report estimated spend.  If unset, built-in defaults are used.
@@ -47,7 +52,14 @@ class Config:
         "thinking" tokens that count against output usage. For an opinion-
         simulation workload we want concise persona outputs, not chain-of-
         thought, so we disable thinking. For other providers returns {}.
+
+        Per-model opt-in: set ENABLE_LLM_THINKING=1 in the environment to
+        force-enable thinking for a specific run (e.g. for a research call
+        that benefits from CoT). Default is OFF for qwen — keeps texture
+        fast (~10x faster on qwen3.7-plus-2026-05-26).
         """
+        if os.environ.get('ENABLE_LLM_THINKING', '').lower() in ('1', 'true', 'yes'):
+            return {'enable_thinking': True}
         model = (os.environ.get('LLM_MODEL_NAME') or '').lower()
         if model.startswith('qwen') or 'qwen' in model:
             return {'enable_thinking': False}
@@ -75,9 +87,15 @@ class Config:
     DEFAULT_CHUNK_SIZE = 500  # Default chunk size
     DEFAULT_CHUNK_OVERLAP = 50  # Default overlap size
 
-    # OASIS simulation configuration
-    OASIS_DEFAULT_MAX_ROUNDS = int(os.environ.get('OASIS_DEFAULT_MAX_ROUNDS', '10'))
+    # Simulation configuration
+    # NOTE: currently unreferenced — the actual round count comes from the API
+    # max_rounds param / preset, or time_config (total_hours / minutes_per_round).
+    MAX_ROUNDS = int(os.environ.get('MAX_ROUNDS', '10'))
     OASIS_SIMULATION_DATA_DIR = os.path.join(os.path.dirname(__file__), '../uploads/simulations')
+
+    # Panel pitch sessions (library-backed casts, no simulation) live apart from
+    # sim dirs so simulation listings never pick them up.
+    PANEL_SESSION_DATA_DIR = os.path.join(os.path.dirname(__file__), '../uploads/panel_sessions')
 
     # Coverage simulator configuration — this tool surfaces the RANGE of distinct
     # reactions, not a majority. Convergence is the failure mode. The run stops on
@@ -101,12 +119,6 @@ class Config:
     REPORT_AGENT_MAX_TOOL_CALLS = int(os.environ.get('REPORT_AGENT_MAX_TOOL_CALLS', '5'))
     REPORT_AGENT_MAX_REFLECTION_ROUNDS = int(os.environ.get('REPORT_AGENT_MAX_REFLECTION_ROUNDS', '2'))
     REPORT_AGENT_TEMPERATURE = float(os.environ.get('REPORT_AGENT_TEMPERATURE', '0.5'))
-
-    # MiroFlow / Web Research configuration
-    WEB_SEARCH_API_URL = os.environ.get('WEB_SEARCH_API_URL', '')
-    WEB_SEARCH_API_TOKEN = os.environ.get('WEB_SEARCH_API_TOKEN', '')
-    MIROFLOW_DEFAULT_LLM = os.environ.get('MIROFLOW_DEFAULT_LLM', 'qwen-3')
-    MIROFLOW_DEFAULT_AGENT = os.environ.get('MIROFLOW_DEFAULT_AGENT', 'mirothinker_v1.5_keep5_max200')
 
     # Firecrawl configuration (used by deep-research-python for full-page scraping)
     FIRECRAWL_API_KEY = os.environ.get('FIRECRAWL_API_KEY', '')
