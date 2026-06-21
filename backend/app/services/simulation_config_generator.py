@@ -347,54 +347,55 @@ class SimulationConfigGenerator:
         custom_profiles: List[Dict[str, Any]],
     ) -> SimulationParameters:
         """
-        Inject agent configs for custom agents that are marked as core focus.
+        Inject agent configs for ALL custom agents that don't already have one.
 
-        These agents need proper AgentActivityConfig entries so they are guaranteed
-        to participate in the simulation with high activity and influence.
+        Custom agents need proper AgentActivityConfig entries so their stance,
+        activity level, and active hours are respected by the runtime.
+        Core-focus agents get higher activity and influence; non-core agents get
+        a standard config that still honours their profile stance.
 
         Args:
             params: Existing SimulationParameters from generate_config()
             custom_profiles: List of custom agent profile dicts (from agentsociety_profiles.json)
 
         Returns:
-            Updated SimulationParameters with core focus configs injected
+            Updated SimulationParameters with custom configs injected
         """
-        from .agent_profile_generator import AgentProfile
-
         existing_ids = {ac.agent_id for ac in params.agent_configs}
-        core_focus_agents = [
+        missing_custom = [
             p for p in custom_profiles
-            if p.get("is_core_focus", False) and p.get("id") not in existing_ids
+            if p.get("id") not in existing_ids
         ]
 
-        if not core_focus_agents:
-            logger.info("No core focus agents need config injection")
+        if not missing_custom:
+            logger.info("No custom agents need config injection")
             return params
 
-        logger.info(f"Injecting configs for {len(core_focus_agents)} core focus agents")
+        logger.info(f"Injecting configs for {len(missing_custom)} custom agents")
 
-        for profile_data in core_focus_agents:
+        for profile_data in missing_custom:
             agent_id = profile_data.get("id")
             name = profile_data.get("name", f"Agent_{agent_id}")
             archetype = profile_data.get("actor_archetype", "civic_moderate")
+            is_core = bool(profile_data.get("is_core_focus", False))
 
             config = AgentActivityConfig(
                 agent_id=agent_id,
                 entity_uuid=profile_data.get("source_entity_uuid", ""),
                 entity_name=name,
                 entity_type="custom_agent",
-                activity_level=1.0,
-                posts_per_hour=1.5,
-                comments_per_hour=2.5,
-                active_hours=list(range(24)),
+                activity_level=1.0 if is_core else 0.7,
+                posts_per_hour=1.5 if is_core else 0.8,
+                comments_per_hour=2.5 if is_core else 1.5,
+                active_hours=list(range(24)) if is_core else list(range(8, 23)),
                 response_delay_min=3,
-                response_delay_max=30,
+                response_delay_max=30 if is_core else 60,
                 sentiment_bias=0.0,
-                stance="neutral",
-                influence_weight=1.5,
+                stance=profile_data.get("stance", "neutral"),
+                influence_weight=1.5 if is_core else 1.0,
             )
             params.agent_configs.append(config)
-            logger.info(f"  Core focus config injected: {name} (id={agent_id}, archetype={archetype})")
+            logger.info(f"  Custom config injected: {name} (id={agent_id}, archetype={archetype}, stance={config.stance})")
 
         return params
 

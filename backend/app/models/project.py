@@ -55,7 +55,7 @@ class Project:
     custom_agents: List[Dict[str, Any]] = field(default_factory=list)
     custom_agents_enabled: bool = False
 
-    # MiroFlow enrichment data (archetype → research text)
+    # Web enrichment data (archetype → research text)
     enrichment_data: Dict[str, str] = field(default_factory=dict)
 
     # Literature papers saved to this project (used as agent-grounding context).

@@ -13,14 +13,14 @@ Maintains the same 5 actions as the v1 Block:
 import json
 import random
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from agentsociety2 import PersonAgent
 
 from .agentsociety_opinion_block import (
     OpinionActionType,
     OpinionEnvironment,
-    SA_POLICY_CONTEXT,
+    build_sa_context,
 )
 from .mode_specs import build_economic_lens, seed_willingness_band, budget_tier, disposition
 from .document_context_engine import sanitize_language_drift
@@ -48,6 +48,26 @@ def _extract_llm_content(response) -> str:
         return response.choices[0].message.content or ""
     except Exception:
         return str(response) if response is not None else ""
+
+
+def _extract_usage(response) -> Optional[Tuple[int, int]]:
+    """Extract (prompt_tokens, completion_tokens) from a litellm ModelResponse.
+
+    Returns the provider's REAL billed usage when present — this is the only
+    number that includes hidden "thinking" tokens (charged but absent from the
+    visible content) and reflects provider-side cache-hit discounts. Returns
+    None for plain-string responses or when the provider omits usage, so the
+    caller can fall back to a local tiktoken estimate.
+    """
+    if isinstance(response, str) or response is None:
+        return None
+    try:
+        u = response.usage
+        pt = int(getattr(u, "prompt_tokens", None))
+        ct = int(getattr(u, "completion_tokens", None))
+        return (pt, ct)
+    except (AttributeError, TypeError, ValueError):
+        return None
 
 
 async def llm_call_with_retry(
@@ -314,8 +334,30 @@ def _calculate_impact_score(internal_thought: str, action_type: str) -> float:
 
 
 def _build_identity_anchor(archetype: str, agent: PersonAgent) -> str:
-    """Return the closing instruction that locks the LLM into this actor's voice."""
-    base = _ARCHETYPE_ANCHORS.get(archetype, _ARCHETYPE_ANCHORS["civic_moderate"])
+    """Return the closing instruction that locks the LLM into this actor's voice.
+
+    Custom-agent-first: a known archetype uses its curated anchor. An UNKNOWN
+    archetype (custom personas define their own) builds the anchor from the
+    agent's OWN behavioral_tendencies + voice_guide rather than collapsing to the
+    generic civic_moderate policy voice — so custom agents stay first-class and
+    self-describing.
+    """
+    st = agent.init_state if hasattr(agent, 'init_state') else {}
+    if archetype in _ARCHETYPE_ANCHORS:
+        base = _ARCHETYPE_ANCHORS[archetype]
+    else:
+        tendencies = (st.get("behavioral_tendencies") or "").strip()
+        voice = (st.get("voice_guide") or "").strip()
+        parts = []
+        if archetype:
+            parts.append(f"You are a '{archetype}'.")
+        if tendencies:
+            parts.append(f"Act on these tendencies: {tendencies}")
+        if voice:
+            parts.append(f"Speak this way: {voice}")
+        # If the custom agent carries neither, fall back to the neutral anchor
+        # (in-character, grounded) rather than the policy civic_moderate framing.
+        base = " ".join(parts) if parts else _ARCHETYPE_ANCHORS["civic_moderate"]
     group = agent.init_state.get("group_affiliation") if hasattr(agent, 'init_state') else None
     if group:
         base += f" You speak FROM INSIDE {group} — not as an outside observer of it."
@@ -398,6 +440,8 @@ class OpinionCaptureSkill:
             occupation=st.get("occupation"),
             group_affiliation=st.get("group_affiliation"),
             grant_income=grant_income,
+            # GHS-library personas: surveyed household income wins over everything.
+            household_income_rand=st.get("monthly_household_income_rand"),
         )
 
     def _get_econ_state(self, agent: PersonAgent, archetype: str) -> Dict[str, Any]:
@@ -428,6 +472,13 @@ class OpinionCaptureSkill:
                 "is_grant_dependent": bool(st.get("is_grant_dependent", False)),
                 "grant_type": st.get("grant_type"),
                 "income_provenance": st.get("income_provenance"),
+                # The persona's OWN real figures (GHS), shown to the agent as
+                # concrete anchors it must reason against. Static facts, displayed
+                # never authored by the LLM. Absent for non-library personas →
+                # lens degrades to tier-only (current behaviour).
+                "real_household_income_rand": st.get("monthly_household_income_rand"),
+                "real_fees_band": st.get("fees_band"),
+                "real_learner_fee_bands": st.get("learner_fee_bands"),
             }
             try:
                 agent.set_skill_state(self._ECON_STATE_KEY, state)
@@ -541,11 +592,35 @@ class OpinionCaptureSkill:
 
         # Topic anchor: use simulation topic from initial_prompt or document context,
         # NOT the agent's personal interested_topics (which causes off-topic drift).
+        # In PRODUCT mode the founder's pitch IS the subject — anchor on it directly
+        # so "stay on topic" points at the actual product, not the document's first
+        # sentence or a random personal interest.
         interested_topics = agent.init_state.get("interested_topics", []) if hasattr(agent, 'init_state') else []
-        sim_topic = self._extract_simulation_topic(initial_prompt)
-        topic_hint = sim_topic if sim_topic else (
-            random.choice(interested_topics) if interested_topics else "the current situation"
-        )
+        pitch_topic = (self._pitch.get("what_it_is") or "").strip() if self._mode == "product" else ""
+        if pitch_topic:
+            topic_hint = pitch_topic
+        else:
+            sim_topic = self._extract_simulation_topic(initial_prompt)
+            topic_hint = sim_topic if sim_topic else (
+                random.choice(interested_topics) if interested_topics else "the current situation"
+            )
+
+        # Anti-drift rule. Product mode pins every reaction to the founder's pitch
+        # — but objections (cost, trust, load-shedding, fit) are still allowed AS
+        # reactions to the pitch, never scrubbed.
+        if self._mode == "product" and pitch_topic:
+            stay_on_topic_rule = (
+                f"5. STAY ON THE PITCH. The founder is pitching: {topic_hint}. EVERY reaction must be "
+                f"ABOUT this product. You MAY object, doubt it, raise its cost/data/load-shedding/trust "
+                f"problems, or compare it to how you cope now — but those must be reactions TO the pitch, "
+                f"not a tangent. Do NOT drift into unrelated politics or news. If it doesn't touch this "
+                f"product, don't say it.\n"
+            )
+        else:
+            stay_on_topic_rule = (
+                f"5. STAY ON TOPIC. The discussion is about: {topic_hint}. Do NOT drift to unrelated "
+                f"issues. Use your background to explain how the TOPIC affects YOU.\n"
+            )
 
         respond_target = recent_feed[-1] if recent_feed else None
         respond_ctx = (
@@ -595,14 +670,17 @@ class OpinionCaptureSkill:
                 f"You are {agent.name}. {char_ctx.split(chr(10))[0]}\n"  # Only first line of persona
             )
         else:
+            # SA context is mode-aware: policy mode gets the full unrest priming;
+            # product / custom casts get core grounding only (no riot nudge).
+            sa_context = build_sa_context(self._mode)
             if self._document_context:
                 context_section = (
                     f"{self._document_context}\n\n"
                     f"GENERAL SOUTH AFRICAN CONTEXT (for background understanding only):\n"
-                    f"{SA_POLICY_CONTEXT}\n\n"
+                    f"{sa_context}\n\n"
                 )
             else:
-                context_section = f"{SA_POLICY_CONTEXT}\n\n"
+                context_section = f"{sa_context}\n\n"
             context_section += f"You are {agent.name}.\n{char_ctx}\n\n"
 
         prompt = (
@@ -622,8 +700,9 @@ class OpinionCaptureSkill:
             f"   GOOD (stance): 'This policy is going to fail because those implementing it have no skin in the game. They don't see what we deal with daily.'\n"
             f"2. USE LOCAL VOICE. Reference real places, real hardships, real slang. Speak from lived experience.\n"
             f"3. GROUND YOUR OPINIONS IN DOCUMENT FACTS. If the DOCUMENT FACTS section lists specific actors, dates, or events, use them accurately. Do NOT invent facts. You may DISAGREE with facts, but you must not distort them.\n"
+            f"   FIGURES ARE FOR REASONING, NOT RECITING. If the document gives numbers (a price, a cost, an income), weigh them against YOUR OWN situation in your own words — e.g. 'that's half my grant' — do NOT read them out like a report ('the price is R50 and data costs R85'). Never state how many people would buy, adopt, or approve; speak only for yourself.\n"
             f"4. DO NOT REPEAT OR ECHO OTHER AGENTS. If [Someone] said a view, do NOT say 'I agree with them' or repeat their point. Say something DIFFERENT — your own view, your own experience, your own angle. NEVER repeat someone else's point.\n"
-            f"5. STAY ON TOPIC. The discussion is about: {topic_hint}. Do NOT drift to unrelated issues. Use your background to explain how the TOPIC affects YOU.\n"
+            f"{stay_on_topic_rule}"
             f"6. If action is EXPRESS_OPINION or RESPOND_TO_OPINION, content MUST be a non-empty string of 1-3 sentences in your character's voice.\n"
             f"7. If action is OBSERVE, SEARCH_TOPIC, or DO_NOTHING, content must be an empty string.\n"
             f"8. You MUST provide 'reason' (why you chose this action) and 'internal_thought' (what you actually think/feel - your true reaction).\n"
@@ -715,10 +794,18 @@ class OpinionCaptureSkill:
             {"role": "user", "content": prompt}
         ]
 
-        async def do_llm_call():
-            return _extract_llm_content(await agent.acompletion(messages))
+        # Capture the raw response so we can read the provider's real billed
+        # usage (includes hidden thinking tokens + cache-hit discounts), not
+        # just a local tiktoken estimate of the visible content.
+        last_response = {"obj": None}
 
-        # Count prompt tokens before sending
+        async def do_llm_call():
+            resp = await agent.acompletion(messages)
+            last_response["obj"] = resp
+            return _extract_llm_content(resp)
+
+        # Local estimate of prompt tokens — used only as a fallback when the
+        # provider doesn't return a usage object.
         prompt_tokens = self._token_counter.count_messages(messages)
 
         for attempt in range(2):
@@ -751,8 +838,16 @@ class OpinionCaptureSkill:
                 last_error = e
                 logger.warning(f"LLM call failed for {agent.name} attempt {attempt+1}: {e}")
 
-        # Count completion tokens from raw response
-        completion_tokens = self._token_counter.count_text(raw)
+        # Prefer the provider's REAL billed usage (thinking tokens + cache-hit
+        # discounts are only visible here). Fall back to the local tiktoken
+        # estimate when the provider omits usage. A real completion count far
+        # above the visible text length is the signature of "thinking" tokens
+        # leaking onto the sim path — that's what this measurement surfaces.
+        real_usage = _extract_usage(last_response["obj"])
+        if real_usage is not None:
+            prompt_tokens, completion_tokens = real_usage
+        else:
+            completion_tokens = self._token_counter.count_text(raw)
         token_cost = self._token_counter.estimate_cost(prompt_tokens, completion_tokens)
         self._total_prompt_tokens += prompt_tokens
         self._total_completion_tokens += completion_tokens
@@ -760,7 +855,8 @@ class OpinionCaptureSkill:
 
         logger.debug(
             f"Agent {agent.name} tokens  prompt={prompt_tokens}  "
-            f"completion={completion_tokens}  cost=${token_cost:.6f}"
+            f"completion={completion_tokens}  cost=${token_cost:.6f}  "
+            f"({'real' if real_usage else 'estimated'})"
         )
 
         token_info = {
@@ -794,9 +890,17 @@ class OpinionCaptureSkill:
         # Product mode: merge the LLM's economic block into the agent's evolving
         # state and serialize it for persistence on posting actions. None in policy.
         economic_reasoning_json: Optional[str] = None
+        # needed_fact: a transient per-round signal that the agent wanted a real
+        # cost not provided in WORLD FACTS / YOUR REAL NUMBERS. Collected by the
+        # runner into fact_gaps.jsonl — NOT persisted into econ state. "" / None
+        # when the agent didn't need anything.
+        needed_fact: Optional[str] = None
         if self._mode == "product":
             merged_econ = self._update_econ_state(agent, economic_block)
             economic_reasoning_json = json.dumps(merged_econ, ensure_ascii=False)
+            _nf = economic_block.get("needed_fact")
+            if isinstance(_nf, str) and _nf.strip() and _nf.strip().lower() not in ("none", "n/a", "na"):
+                needed_fact = sanitize_language_drift(_nf.strip(), label="needed_fact")[:160]
 
         if action_type == OpinionActionType.EXPRESS_OPINION:
             if not content:
@@ -863,6 +967,8 @@ class OpinionCaptureSkill:
             }
             if economic_reasoning_json is not None:
                 result["economic_reasoning"] = economic_reasoning_json
+            if needed_fact:
+                result["needed_fact"] = needed_fact
             return result
 
         elif action_type == OpinionActionType.RESPOND_TO_OPINION:
@@ -901,6 +1007,8 @@ class OpinionCaptureSkill:
             }
             if economic_reasoning_json is not None:
                 result["economic_reasoning"] = economic_reasoning_json
+            if needed_fact:
+                result["needed_fact"] = needed_fact
             return result
 
         elif action_type == OpinionActionType.SEARCH_TOPIC:

@@ -1,8 +1,8 @@
 """
 Firecrawl Service — Direct web scraping via Firecrawl API.
 
-Alternative to MiroFlow for web content retrieval. Used when
-MiroFlow MCP server is not available or when simpler scraping is needed.
+Web content retrieval for deep research. Used for scraping webpages
+when performing deep web research.
 """
 
 import requests
@@ -119,7 +119,7 @@ class FirecrawlService:
     def search_and_scrape(self, query: str, num_results: int = 3) -> Dict[str, Any]:
         """
         Placeholder for search + scrape functionality.
-        For true web search, use MiroFlow. This method provides
+        For web search, use deep research service. This method provides
         a simple scrape of a known URL.
 
         Args:
@@ -130,6 +130,6 @@ class FirecrawlService:
         """
         return {
             "success": False,
-            "error": "Search not available via Firecrawl alone. Use /api/research/search for literature or set up MiroFlow for web search.",
+            "error": "Search not available via Firecrawl alone. Use /api/research/search for literature or use deep research for web search.",
             "query": query
         }

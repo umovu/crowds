@@ -449,6 +449,10 @@ def seed_willingness_band(archetype: str) -> str:
 _TIGHT_ARCHETYPES = {
     "budget_holder", "laggard", "skeptic", "end_user", "casual_skimmer",
     "grant_dependent_survivor", "economic_migrant", "disillusioned_dropout",
+    # Education roles (GHS library): learners have no own income; gogo households
+    # are typically grant/pension-funded. Only the fallback — GHS personas normally
+    # carry real household income, which overrides this path entirely.
+    "learner", "gogo_guardian",
 }
 _LOOSE_ARCHETYPES = {
     "early_adopter", "champion", "power_user",
@@ -468,6 +472,13 @@ def _shift_tier(tier: str, steps: int) -> str:
 _GRANT_TIGHT_CEILING = 1500
 _GRANT_MODERATE_CEILING = 3500
 
+# Net household income (rand/month) cut points for the REAL-income override
+# (GHS-reported fin_reqinc). Calibrated to the GHS 2025 distribution: quartiles
+# R3 000 / R5 000 / R12 000 — so ≤R4 500 covers roughly the bottom 40%
+# (tight), and >R20 000 the top ~15% (loose).
+_HH_INCOME_TIGHT_CEILING = 4500
+_HH_INCOME_MODERATE_CEILING = 20000
+
 
 def budget_tier(
     archetype: Optional[str],
@@ -476,6 +487,7 @@ def budget_tier(
     occupation: Optional[str] = None,
     group_affiliation: Optional[str] = None,
     grant_income: Optional[int] = None,
+    household_income_rand: Optional[float] = None,
 ) -> str:
     """Compute a deterministic budget headroom tier from REAL persona data.
 
@@ -492,7 +504,19 @@ def budget_tier(
       grant_income     — REAL monthly grant amount (rands) for a grant-dependent
                          persona. When present it OVERRIDES the archetype path:
                          a published grant figure is known income, not a guess.
+      household_income_rand — REAL reported net household income (rands/month,
+                         GHS fin_reqinc). The strongest signal of the lot: it
+                         covers the whole household including grants, so when
+                         present it takes precedence over everything else.
     """
+    # Real-household-income override: surveyed rand income beats every inference.
+    if household_income_rand is not None and household_income_rand > 0:
+        if household_income_rand <= _HH_INCOME_TIGHT_CEILING:
+            return "tight"
+        if household_income_rand <= _HH_INCOME_MODERATE_CEILING:
+            return "moderate"
+        return "loose"
+
     # Grant override: a grant-dependent persona's tier comes from the REAL grant
     # amount (published SASSA policy), not from archetype inference.
     if grant_income is not None:
@@ -542,6 +566,15 @@ def budget_tier(
     return tier
 
 
+# One gloss per tier, shown to the agent as a fixed budget reality it cannot
+# wish away. Shared by the sim economic lens and the panel-pitch reframer.
+BUDGET_TIER_GLOSS = {
+    "tight":    "Money is tight. New spending has to clear a high bar; most extras get cut.",
+    "moderate": "There's some room to spend, but it has to be justified against the cost.",
+    "loose":    "Budget is not the main obstacle; the question is whether it's worth it.",
+}
+
+
 # Deterministic (impulse band × tier) → qualitative disposition. The OUTCOME of
 # gating the want by the constraint. No probability, no "% would buy" — ever.
 _DISPOSITION_MAP = {
@@ -582,6 +615,49 @@ def disposition(impulse: float, tier: str) -> str:
     return _DISPOSITION_MAP[t][_impulse_band(impulse)]
 
 
+def _build_real_numbers_block(econ_state: Dict[str, Any]) -> str:
+    """Render the persona's OWN real figures (income + school fees) as a prompt
+    block, or "" when none are present (non-library personas).
+
+    Pure / LLM-free. Fee bands are shown AS BANDS (e.g. "R0–R500/year"), never
+    as fake point precision. Income is shown as an approximate monthly rand
+    figure. These are anchors the agent reasons against — it must use these
+    rather than invent a cost (the fix for the "two tanks" hallucination).
+    """
+    lines = []
+
+    income = econ_state.get("real_household_income_rand")
+    if isinstance(income, (int, float)) and income > 0:
+        lines.append(f"- Your household earns about R{int(round(income)):,}/month (real, surveyed).")
+
+    # Fee bands: a learner's own (real_fees_band) and/or a guardian's across their
+    # learners (real_learner_fee_bands). Show every distinct PAID band; skip the
+    # "No fees" markers (surface those as a single statement instead).
+    bands = []
+    if econ_state.get("real_fees_band"):
+        bands.append(econ_state["real_fees_band"])
+    lb = econ_state.get("real_learner_fee_bands")
+    if isinstance(lb, (list, tuple)):
+        bands.extend([b for b in lb if b])
+    elif lb:
+        bands.append(lb)
+    paid = [b for b in dict.fromkeys(bands) if b and b != "No fees"]
+    has_no_fee = bool(bands) and not paid
+    if paid:
+        lines.append(f"- You pay school fees in the {', '.join(paid)} band (real, surveyed).")
+    elif has_no_fee:
+        lines.append("- Your learners are at a no-fee school (you pay no school fees).")
+
+    if not lines:
+        return ""
+
+    return (
+        "\n=== YOUR REAL NUMBERS (surveyed — reason against THESE, do not invent figures) ===\n"
+        + "\n".join(lines)
+        + "\n  Weigh the pitch's cost against these actual figures in your own voice.\n"
+    )
+
+
 def build_economic_lens(pitch: Dict[str, Any], econ_state: Dict[str, Any]) -> str:
     """Build the economic-reasoning block injected into a product-mode prompt.
 
@@ -605,11 +681,14 @@ def build_economic_lens(pitch: Dict[str, Any], econ_state: Dict[str, Any]) -> st
     # computed from the persona's real data, not chosen by the agent. We show it
     # so the LLM grounds its desire against a budget it cannot wish away.
     tier = econ_state.get("budget_tier") or "moderate"
-    _tier_gloss = {
-        "tight":    "Money is tight. New spending has to clear a high bar; most extras get cut.",
-        "moderate": "There's some room to spend, but it has to be justified against the cost.",
-        "loose":    "Budget is not the main obstacle; the question is whether it's worth it.",
-    }.get(tier, "There's some room to spend, but it has to be justified against the cost.")
+    _tier_gloss = BUDGET_TIER_GLOSS.get(tier, BUDGET_TIER_GLOSS["moderate"])
+
+    # YOUR REAL NUMBERS — the persona's OWN surveyed figures (GHS income + school
+    # fee bands), shown as concrete anchors so the agent reasons against what it
+    # actually has instead of inventing a plausible-but-wrong cost. These are
+    # DISPLAYED facts, never authored by the LLM. Absent for non-library personas,
+    # in which case the block is empty and the lens is unchanged.
+    real_numbers_block = _build_real_numbers_block(econ_state)
 
     return (
         f"\n=== PRODUCT UNDER STRESS-TEST ===\n"
@@ -619,7 +698,8 @@ def build_economic_lens(pitch: Dict[str, Any], econ_state: Dict[str, Any]) -> st
         f"- How you currently solve this (status quo): {status_quo}\n\n"
         f"=== YOUR BUDGET REALITY (fixed — set by your real circumstances) ===\n"
         f"- Budget headroom: {tier.upper()}. {_tier_gloss}\n"
-        f"  This is your real constraint. You may WANT something and still not be able to justify it.\n\n"
+        f"  This is your real constraint. You may WANT something and still not be able to justify it.\n"
+        f"{real_numbers_block}\n"
         f"=== YOUR CURRENT ECONOMIC STANCE (evolves as you read the feed) ===\n"
         f"- Perceived real cost (incl. data/load-shedding/time): {perceived_cost}\n"
         f"- Your willingness band: {willingness}\n"
@@ -633,13 +713,18 @@ def build_economic_lens(pitch: Dict[str, Any], econ_state: Dict[str, Any]) -> st
         f"- Speak the economics in your own voice (rands, data, running cost, switching effort).\n"
         f"- NEVER state a purchase probability, a '% would buy', or any buy/validation verdict.\n"
         f"  Surface objections, conditions, confusion, and qualitative willingness ONLY.\n"
+        f"- If you need a real SA cost to reason properly and it is NOT in the WORLD FACTS or\n"
+        f"  YOUR REAL NUMBERS above, do NOT invent a figure. Instead name what you need in the\n"
+        f"  'needed_fact' field (e.g. 'petrol price per litre', 'cost of 1GB data') and reason\n"
+        f"  qualitatively without a number. Never state a rand amount you are not sure of.\n"
         f"- In your JSON, ALSO include an 'economic' object with these fields, reflecting your\n"
         f"  stance AFTER this round (keep prior values if unchanged):\n"
         f'  "economic": {{"impulse": 0.0-1.0, "perceived_cost": "...", "willingness_band": "...", '
-        f'"primary_objection": "...", "reconsider_condition": "..."}}\n'
+        f'"primary_objection": "...", "reconsider_condition": "...", "needed_fact": "..."}}\n'
         f"  'impulse' is how much you WANT to spend on it right now (0 = no desire, 1 = strong pull\n"
         f"  to spend) — it is DESIRE, NOT a prediction that you will buy. Be honest: you can have\n"
-        f"  high impulse and still be unable to afford it.\n"
+        f"  high impulse and still be unable to afford it. 'needed_fact' is \"\" unless you genuinely\n"
+        f"  needed a cost that wasn't provided.\n"
     )
 
 

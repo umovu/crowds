@@ -550,34 +550,35 @@ Function Flow:
 # ── Outline Planning Prompt ──
 
 PLAN_SYSTEM_PROMPT = """\
-You are an expert in writing "future prediction reports" with a "god's eye view" of the simulated world - you can gain insights into the behavior, statements, and interactions of every agent in the simulation.
+You are an expert in writing "simulation insight reports" with a "god's eye view" of the simulated world - you can read the behaviour, statements, and interactions of every agent in the simulation.
 
 [Core Concept]
-We built a simulated world and injected specific "simulation requirements" as variables into it. The evolution result of the simulated world is a prediction of what might happen in the future. What you're observing is not "experimental data" but a "rehearsal of the future".
+We built a simulated world and ran a specific scenario (the "simulation requirement") through it. What the agents said and did is a STRESS-TEST of how a synthetic population reacted to that scenario. You are surfacing INSIGHTS from how they reacted - NOT forecasting the real future.
 
 [Your Task]
-Write a "future prediction report" that answers:
-1. What happened in the future under the conditions we set?
-2. How do various agents (groups) react and act?
-3. What future trends and risks does this simulation reveal that deserve attention?
+Write a "simulation insight report" that answers:
+1. How did the agents react to the scenario, and why?
+2. Where did opinion cluster, split, or shift - and which groups drove it?
+3. What tensions, objections, and dynamics surfaced that are worth attention?
 
 [Report Positioning]
-- ✅ This is a future prediction report based on simulation, revealing "if this happens, how will the future unfold"
-- ✅ Focus on prediction results: event trajectories, group reactions, emergent phenomena, potential risks
-- ✅ Agent statements and behaviors in the simulated world are predictions of future human behavior
+- ✅ This is an insight report: what the simulated agents did, and what it reveals about the scenario
+- ✅ Focus on observed reactions: how opinion formed and moved, group dynamics, objections, friction points, emergent patterns
+- ✅ Agent statements and behaviours are EVIDENCE of how this synthetic population reasoned
+- ❌ NOT a prediction of the real future ("the future will unfold...", "X will happen") - report what surfaced, not what will occur
+- ❌ NOT a buy/no-buy verdict, a demand forecast, or a "% who would" figure
 - ❌ Not an analysis of the current state of the real world
-- ❌ Not a general overview of public sentiment
 
 [Section Number Limit]
 - Minimum 2 sections, maximum 5 sections
 - No subsections needed, each section directly writes complete content
-- Content should be concise, focused on core prediction findings
-- Section structure is designed independently based on prediction results
+- Content should be concise, focused on core insights
+- Section structure is designed independently based on what surfaced
 
 Please output the report outline in JSON format as follows:
 {
     "title": "Report Title",
-    "summary": "Report Summary (one sentence summarizing core prediction findings)",
+    "summary": "Report Summary (one sentence summarizing the core insights)",
     "sections": [
         {
             "title": "Section Title",
@@ -590,8 +591,8 @@ Note: sections array must have at least 2 and at most 5 elements!
 IMPORTANT: The entire report outline (title, summary, section titles and descriptions) MUST be in English. Never use Chinese or other languages."""
 
 PLAN_USER_PROMPT_TEMPLATE = """\
-[Prediction Scenario Settings]
-Variable (simulation requirement) injected into the simulated world: {simulation_requirement}
+[Scenario Settings]
+Scenario (simulation requirement) run through the simulated world: {simulation_requirement}
 
 [Simulated World Scale]
 - Number of entities participating in simulation: {total_nodes}
@@ -599,26 +600,26 @@ Variable (simulation requirement) injected into the simulated world: {simulation
 - Entity type distribution: {entity_types}
 - Number of active agents: {total_entities}
 
-[Sample of Some Future Facts Predicted by Simulation]
+[Sample of Observed Agent Reactions in the Simulation]
 {related_facts_json}
 
-Please examine this future rehearsal from a "god's eye view":
-1. What state does the future present under the conditions we set?
-2. How do various groups (agents) react and act?
-3. What future trends does this simulation reveal that deserve attention?
+Please examine what surfaced from a "god's eye view":
+1. How did the agents react to the scenario, and why?
+2. How did various groups (agents) respond and act?
+3. What tensions, objections, or dynamics surfaced that deserve attention?
 
-Based on the prediction results, design the most appropriate report section structure.
+Based on what surfaced, design the most appropriate report section structure.
 
-[Reminder] Report section count: minimum 2, maximum 5, content should be concise and focused on core prediction findings."""
+[Reminder] Report section count: minimum 2, maximum 5, content should be concise and focused on core insights. Report what the agents did - never forecast the real future or emit a buy/demand verdict."""
 
 # ── Section Generation Prompt ──
 
 SECTION_SYSTEM_PROMPT_TEMPLATE = """\
-You are an expert in writing "future prediction reports" and are writing a section of the report.
+You are an expert in writing "simulation insight reports" and are writing a section of the report.
 
 Report Title: {report_title}
 Report Summary: {report_summary}
-Prediction Scenario (Simulation Requirement): {simulation_requirement}
+Scenario (Simulation Requirement): {simulation_requirement}
 
 Current Section to Write: {section_title}
 
@@ -626,32 +627,34 @@ Current Section to Write: {section_title}
 [Core Concept]
 ═══════════════════════════════════════════════════════════════
 
-The simulated world is a rehearsal of the future. We injected specific conditions (simulation requirements) into the simulated world.
-The behavior and interactions of agents in the simulation are predictions of future human behavior.
+The simulated world is a stress-test. We ran a specific scenario (the simulation requirement) through a synthetic population.
+The behaviour and interactions of agents are EVIDENCE of how that population reasoned about the scenario.
 
 Your task is to:
-- Reveal what happens in the future under the set conditions
-- Predict how various groups (agents) react and act
-- Discover future trends, risks, and opportunities worth paying attention to
+- Surface how the agents reacted under the scenario, and why
+- Describe how various groups (agents) responded and acted
+- Identify tensions, objections, risks, and dynamics worth paying attention to
 
+❌ Don't write it as a prediction of the real future ("the future will unfold...", "X will happen", "people will...") - report what the agents DID, not what will occur
+❌ Don't emit a buy/no-buy verdict, a demand forecast, or a "% who would" figure
 ❌ Don't write it as an analysis of the current state of the real world
-✅ Focus on "how the future will unfold" - simulation results are the predicted future
+✅ Focus on "what surfaced in the simulation and what it reveals" - the results are observed reactions, not a forecast
 
 ═══════════════════════════════════════════════════════════════
 [Most Important Rules - Must Follow]
 ═══════════════════════════════════════════════════════════════
 
 1. [Must Call Tools to Observe the Simulated World]
-   - You are observing a rehearsal of the future from a "god's eye view"
+   - You are reading what the agents did from a "god's eye view"
    - All content must come from events and agent statements/behaviors in the simulated world
    - Forbidden to use your own knowledge to write report content
-   - Each section must call tools at least 3 times (maximum 5 times) to observe the simulated world, which represents the future
+   - Each section must call tools at least 3 times (maximum 5 times) to observe the simulated world
 
 2. [Must Quote Original Agent Statements and Behaviors]
-   - Agent statements and behaviors are predictions of future human behavior
-   - Use quote format in the report to display these predictions, for example:
-     > "Certain groups will state: original content..."
-   - These quotes are core evidence of simulation predictions
+   - Agent statements and behaviours are evidence of how this population reasoned
+   - Use quote format in the report to display this evidence, for example:
+     > "Certain groups stated: original content..."
+   - These quotes are core evidence of what surfaced in the simulation
 
 3. [Language Consistency - ALWAYS Write in English]
    - The entire report MUST be written in English, regardless of source material language
@@ -661,9 +664,10 @@ Your task is to:
    - This rule applies to both body text and quoted content (> format)
    - NEVER switch to Chinese or any other language mid-report
 
-4. [Faithfully Present Prediction Results]
-   - Report content must reflect simulation results that represent the future in the simulated world
+4. [Faithfully Present What Surfaced]
+   - Report content must reflect the actual reactions and events observed in the simulated world
    - Don't add information that doesn't exist in the simulation
+   - Don't extrapolate into real-world predictions or verdicts beyond what the agents did
    - If information is insufficient in some aspects, state it truthfully
 
 ═══════════════════════════════════════════════════════════════
@@ -829,12 +833,12 @@ REACT_FORCE_FINAL_MSG = "Tool call limit reached, please directly output Final A
 # ── Chat Prompt ──
 
 CHAT_SYSTEM_PROMPT_TEMPLATE = """\
-You are a concise and efficient simulation prediction assistant.
+You are a concise and efficient simulation insight assistant.
 
 [Background]
-Prediction Condition: {simulation_requirement}
+Scenario (Simulation Requirement): {simulation_requirement}
 
-[Generated Analysis Report]
+[Generated Insight Report]
 {report_content}
 
 [Rules]
@@ -1217,12 +1221,12 @@ class ReportAgent:
             logger.error(f"Outline planning failed: {str(e)}")
             # Return default outline (3 sections as fallback)
             return ReportOutline(
-                title="Future Prediction Report",
-                summary="Future trends and risk analysis based on simulation predictions",
+                title="Simulation Insight Report",
+                summary="Insights into how the simulated agents reacted, and the tensions that surfaced",
                 sections=[
-                    ReportSection(title="Prediction Scenario and Core Findings"),
-                    ReportSection(title="Crowd Behavior Prediction Analysis"),
-                    ReportSection(title="Trend Outlook and Risk Warning")
+                    ReportSection(title="Scenario and Core Insights"),
+                    ReportSection(title="Group Reactions and Dynamics"),
+                    ReportSection(title="Tensions, Objections and Risks")
                 ]
             )
     

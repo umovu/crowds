@@ -1,0 +1,86 @@
+{
+  "_README": "Dataset B (sectors half). The SA-specific context a decision-maker carries: who regulates them, what incentives/levers move them, what a deal here must respect. AUTHORED from each sector's public regulator/charter/SETA frame. qlfs_industry is the REAL QLFS 'Indus' label whose mgr/professional rows supply the persona's demographic BODY (verified 2026-06-15). govt shares Community industry with NGO, so its split is ASSIGNED, not read from QLFS — note assign_split. decision_lens='commercial' uses ROI/cost logic; govt uses 'procedural' (tender/compliance) logic instead. REVIEW the sectors closest to your real customers — I grounded these from public sources but you know your buyers.",
+  "_provenance": "qlfs_2026_q1 (bodies) + sector regulator/charter/SETA frames (authored)",
+  "version": 0,
+  "sectors": {
+    "banking": {
+      "label": "Banking & Financial services",
+      "qlfs_industry": "Financial intermediation; insurance; real estate and business services",
+      "bodies_available": 818,
+      "regulator": "SARB / Prudential Authority; FSCA (market conduct)",
+      "incentive_levers": ["financial inclusion mandates", "FSC (Financial Sector) B-BBEE Charter points", "POPIA data-protection duties", "conduct & treating-customers-fairly obligations"],
+      "deal_must_respect": ["regulatory approval & conduct risk", "data protection (POPIA)", "vendor/security due diligence", "reputational caution typical of regulated finance"],
+      "decision_lens": "commercial",
+      "notes": "Slow, risk-averse, compliance-heavy buying. Fintech pitches land here. Inclusion + FS-charter angles can unlock budget that pure ROI can't.",
+      "governance_frame": "King IV (apply-and-explain) + Companies Act s76 directors' fiduciary duty to act in the best interests of the company. Decision-makers must weigh stakeholder interests, risk governance and ethics — not just return.",
+      "scoreable_levers": ["FS-sector B-BBEE Charter scorecard points (ownership, ESD, access to financial services)", "financial-inclusion targets that count toward regulatory/charter standing", "King IV stakeholder & ethics outcomes the board reports against"],
+      "in_org_interest_means": "A proposal serves the bank's interest when it advances commercial return AND defends regulatory standing/conduct AND earns charter/inclusion credit. A pitch that scores on only one of these stalls — e.g. great ROI but POPIA/conduct risk dies at risk committee.",
+      "risk_committee_gate": "Material vendor/data decisions pass a risk & compliance committee before commercial sign-off — this is why banking buying is slow and why the compliance_csr function carries unusual veto weight here.",
+      "decision_provenance": "King IV + Companies Act s76 + FS-sector B-BBEE Charter (authored)"
+    },
+    "retail": {
+      "label": "Wholesale & Retail",
+      "qlfs_industry": "Wholesale and retail trade",
+      "bodies_available": 389,
+      "regulator": "—  (Consumer Protection Act applies; no single sector regulator)",
+      "incentive_levers": ["margin & shelf velocity", "supplier-development / ESD B-BBEE scorecard points", "W&RSETA skills levers", "footfall & basket size"],
+      "deal_must_respect": ["thin margins & price sensitivity", "shelf/listing economics", "supplier scorecard & payment terms", "fast, transactional decision style"],
+      "decision_lens": "commercial",
+      "notes": "Afoody's grocer/category-buyer target. Moves on margin and velocity; ESD points can sweeten a supplier deal."
+    },
+    "mining": {
+      "label": "Mining & Resources",
+      "qlfs_industry": "Mining and quarrying",
+      "bodies_available": 47,
+      "regulator": "DMRE (Dept of Mineral Resources & Energy)",
+      "incentive_levers": ["MPRDA Social & Labour Plan (SLP) obligations", "Mining Charter (community & host-community development)", "MQA skills levers", "social licence to operate"],
+      "deal_must_respect": ["SLP/charter compliance credit", "host-community benefit & expectations", "safety & environmental regime", "long approval chains"],
+      "decision_lens": "commercial",
+      "notes": "THIN body pool (47) — personas recombine from a small QLFS slice; flag if showcasing. SED/CSR officer is the partnership seat (compliance_csr function). SLP/charter credit is the real currency, often above commercial ROI."
+    },
+    "foodbev": {
+      "label": "Food & Beverage / Manufacturing",
+      "qlfs_industry": "Manufacturing",
+      "bodies_available": 228,
+      "regulator": "DTIC; food-safety & labelling authorities (DoH/NRCS)",
+      "incentive_levers": ["input cost & supply-chain reliability", "food-safety & quality compliance", "localisation / master-plan incentives", "waste & throughput efficiency"],
+      "deal_must_respect": ["food-safety & traceability rules", "supply-chain continuity", "margin pressure & cost control", "throughput / volume economics"],
+      "decision_lens": "commercial",
+      "notes": "Producers/suppliers behind the retail shelf. Cost, reliability and food-safety compliance dominate."
+    },
+    "ict_telecoms": {
+      "label": "ICT / Telecoms",
+      "qlfs_industry": "Transport; storage and communication",
+      "bodies_available": 196,
+      "regulator": "ICASA",
+      "incentive_levers": ["spectrum & licensing conditions", "network coverage & data-cost obligations", "MICT SETA skills levers", "POPIA & cybersecurity duties"],
+      "deal_must_respect": ["interoperability & integration", "data protection & security", "scale/performance expectations", "regulatory licence conditions"],
+      "decision_lens": "commercial",
+      "notes": "Fast-moving vs banking, but integration- and security-conscious. Champion (end-user) function matters more here — technical practitioners gate adoption."
+    },
+    "ngo": {
+      "label": "NGO / Civil society",
+      "qlfs_industry": "Community; social and personal services",
+      "qlfs_industry_shared_with": "govt",
+      "assign_split": "NGO vs Govt cannot be told apart by QLFS industry — assign this tag deliberately at sample time; mark occupation_provenance accordingly.",
+      "bodies_available": "subset of 1456 (shared with govt)",
+      "regulator": "NPO directorate (DSD); donor & grant compliance",
+      "incentive_levers": ["donor/funder reporting & outcomes", "beneficiary impact & reach", "cost-stretch on constrained budgets", "partnership & co-funding leverage"],
+      "deal_must_respect": ["tight, restricted budgets", "donor-reporting & M&E demands", "mission alignment", "beneficiary safeguarding"],
+      "decision_lens": "commercial",
+      "notes": "Afoody's food-security-NGO partner (the 'David' profile). Moves on impact-per-rand and donor-reportable outcomes, not profit."
+    },
+    "govt": {
+      "label": "Government / Public sector",
+      "qlfs_industry": "Community; social and personal services",
+      "qlfs_industry_shared_with": "ngo",
+      "assign_split": "Shares Community industry with NGO — assign deliberately, mark provenance.",
+      "bodies_available": "subset of 1456 (shared with ngo)",
+      "regulator": "National Treasury (PFMA/MFMA); B-BBEE & PPPFA procurement rules",
+      "incentive_levers": ["service-delivery mandates", "B-BBEE & local-content procurement points", "budget-vote allocations", "political & oversight accountability"],
+      "deal_must_respect": ["tender / RFP process (PPPFA)", "PFMA/MFMA spending rules", "audit (AGSA) scrutiny", "B-BBEE & local-content requirements", "procedural fairness & paper trail"],
+      "decision_lens": "procedural",
+      "notes": "DISTINCT logic: the question is not 'good ROI' but 'will this survive a tender and an audit'. decision_lens='procedural' — criteria are compliance/process/B-BBEE, not commercial return. Do not let a govt persona reason like a private buyer."
+    }
+  }
+}

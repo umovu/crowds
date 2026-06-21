@@ -34,7 +34,13 @@ class ImpactReframer:
         "political": ["government", "policy", "election", "party", "minister", "vote", "politician", "ANC", "DA", "EFF"],
     }
 
-    def reframe(self, user_question: str, agent_profile: Dict[str, Any]) -> str:
+    def reframe(
+        self,
+        user_question: str,
+        agent_profile: Dict[str, Any],
+        mode: str = "policy",
+        secondary_lens: Optional[str] = None,
+    ) -> str:
         """
         Transform a generic user question into a persona-specific impact question.
 
@@ -42,6 +48,18 @@ class ImpactReframer:
         1. Detect policy domain from question keywords
         2. Search agent profile for highest-stake connection at multiple layers
         3. Build 4-layer prompt: Identity Lock + Memory Tether + Seed Anchor + Impact Question
+
+        mode="product" swaps the impact question for pitch-reaction wording and, when
+        the profile carries a computed budget_tier, injects it as a fixed budget
+        reality (real-data constraint — never written by the LLM).
+
+        secondary_lens (converged runs only) ADDS a second lens onto the primary mode
+        WITHOUT replacing the primary question:
+          - lens="product" on a policy primary: also injects the computed budget
+            reality and appends an affordability sub-question.
+          - lens="policy" on a product primary: appends a civic-impact sub-question.
+        The lens is purely additive prompt text + the already-deterministic budget
+        block; it never emits a number and never merges wanting with affording.
         """
         domain = self._detect_domain(user_question)
         stake = self._find_personal_stake(agent_profile, domain, user_question)
@@ -61,14 +79,41 @@ class ImpactReframer:
         if stake:
             layers.append(f"\n{stake}")
 
-        # Layer 4: Impact Question (reframed)
-        impact_question = self._build_impact_question(user_question, agent_profile, domain)
+        # Layer 3b: fixed budget reality, computed from real persona data. Shown when
+        # the product lens is in play — either as the primary mode, or as a secondary
+        # lens layered onto a policy-primary converged run.
+        if mode == "product" or secondary_lens == "product":
+            budget_layer = self._build_budget_reality(agent_profile)
+            if budget_layer:
+                layers.append(f"\n{budget_layer}")
+
+        # Layer 4: Impact Question (reframed), plus any additive secondary lens.
+        impact_question = self._build_impact_question(
+            user_question, agent_profile, domain, mode=mode, secondary_lens=secondary_lens
+        )
         layers.append(f"\n{impact_question}")
 
         # Layer 5: Output constraints
         layers.append(self._build_constraints())
 
         return "\n".join(layers)
+
+    def _build_budget_reality(self, profile: Dict[str, Any]) -> Optional[str]:
+        """Render the persona's computed budget tier as a fixed constraint.
+
+        The tier comes from mode_specs.budget_tier (real persona data, deterministic);
+        this only verbalises it so the agent grounds desire against a budget it
+        cannot wish away. Wanting and affording stay separate.
+        """
+        tier = profile.get("budget_tier")
+        if not tier:
+            return None
+        from .mode_specs import BUDGET_TIER_GLOSS
+        gloss = BUDGET_TIER_GLOSS.get(tier, BUDGET_TIER_GLOSS["moderate"])
+        return (
+            f"YOUR BUDGET REALITY (fixed — set by your real circumstances): {tier.upper()}. {gloss}\n"
+            "You may WANT something and still not be able to justify the spend."
+        )
 
     def _detect_domain(self, question: str) -> str:
         """Detect policy domain from question text."""
@@ -209,19 +254,23 @@ class ImpactReframer:
             "Use 'I', 'my', 'my family'. Never speak in generalities about 'the government should'."
         )
 
-    def _build_impact_question(self, user_question: str, profile: Dict[str, Any], domain: str) -> str:
-        """Layer 4: Rewrite the question as a personal impact query."""
+    def _build_impact_question(
+        self,
+        user_question: str,
+        profile: Dict[str, Any],
+        domain: str,
+        mode: str = "policy",
+        secondary_lens: Optional[str] = None,
+    ) -> str:
+        """Layer 4: Rewrite the question as a personal impact query.
+
+        The primary `mode` chooses the main question. A `secondary_lens` (converged
+        runs only) APPENDS a second sub-question — it never replaces the primary.
+        """
         name = profile.get("name", "You")
 
         # Extract core event from user question
         event = self._extract_event(user_question)
-
-        # Build persona-specific framing
-        bg = profile.get("background_story", "")
-        occupation = profile.get("occupation", "")
-
-        # Find a proper noun from the background story
-        proper_noun = self._extract_proper_noun(bg or persona)
 
         # Construct impact question
         lines = ["QUESTION:", ""]
@@ -232,11 +281,35 @@ class ImpactReframer:
             lines.append(f"{user_question}")
 
         lines.append("")
-        lines.append(
-            f"What does this mean for YOU, {name}? "
-            "Be specific. Reference real people, real places, real moments from your life. "
-            "What changes in your daily routine? What are you afraid of? What do you plan to do?"
-        )
+        if mode == "product":
+            lines.append(
+                f"How do you react to this pitch, {name}? "
+                "Be specific: what works for you, what puts you off, and what would have to "
+                "change for you to reconsider. Be honest about whether you could justify the "
+                "spend — wanting it and affording it are different things."
+            )
+        else:
+            lines.append(
+                f"What does this mean for YOU, {name}? "
+                "Be specific. Reference real people, real places, real moments from your life. "
+                "What changes in your daily routine? What are you afraid of? What do you plan to do?"
+            )
+
+        # Additive secondary lens for converged runs (never replaces the above).
+        if secondary_lens == "product" and mode != "product":
+            lines.append("")
+            lines.append(
+                "Also, separately: if this came at a real rand cost to you, could you "
+                "justify the spend against your budget reality above? Wanting it and "
+                "affording it are different things — speak to both."
+            )
+        elif secondary_lens == "policy" and mode != "policy":
+            lines.append("")
+            lines.append(
+                "And separately: beyond your own wallet, how does this sit with you as a "
+                "citizen and for your community? What would it mean if everyone around you "
+                "faced the same thing?"
+            )
 
         return "\n".join(lines)
 

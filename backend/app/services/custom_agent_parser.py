@@ -314,9 +314,15 @@ Extract ALL distinct agents or stakeholder personas described in this document. 
 - mbti: e.g. "INFJ", "ESTP"
 - skills: array of strings
 - personality_traits: string description
-- group_affiliation: e.g. "ANC member", "EFF supporter"
-- actor_archetype: one of [civic_moderate, political_activist, violent_agitator, opportunist_looter, mob_follower, conspiracy_spreader, community_leader, institutional_loyalist, disillusioned_dropout, criminal_opportunist, community_protector, grant_dependent_survivor, economic_migrant, whistleblower]
-- behavioral_tendencies: 2-3 sentences describing how they act in simulations
+- group_affiliation: e.g. "ANC member", "EFF supporter", "Stokvel treasurer"
+- actor_archetype: a short free-text label for how this agent behaves in the simulation.
+  Use whatever fits the document — a market segment ("early_adopter", "budget_holder"),
+  a stakeholder role, or any precise descriptor. These policy examples are NOT a closed
+  list, only illustrations: civic_moderate, political_activist, community_leader,
+  institutional_loyalist, grant_dependent_survivor, whistleblower. Prefer the label the
+  document actually implies over forcing one of these.
+- behavioral_tendencies: 2-3 sentences describing how they act in simulations. This is
+  what drives their behaviour, so make it concrete and specific to this agent.
 - voice_guide: 2-3 sentences of speech style instructions
 - is_institutional: true/false
 
@@ -444,6 +450,7 @@ Return ONLY a valid JSON array of agent objects. No explanation outside the JSON
             behavioral_tendencies=data.get("behavioral_tendencies"),
             is_institutional=data.get("is_institutional", False),
             is_core_focus=data.get("is_core_focus", False),
+            stance=data.get("stance"),
             emotions=emotions,
             emotion_keyword=data.get("emotion_keyword"),
             emotion_thought=data.get("emotion_thought"),
@@ -455,52 +462,68 @@ Return ONLY a valid JSON array of agent objects. No explanation outside the JSON
         )
 
     @staticmethod
-    def merge_profiles(auto_profiles: List[AgentProfile], custom_profiles: List[AgentProfile]) -> List[AgentProfile]:
+    def merge_profiles(auto_profiles, custom_profiles) -> List[Dict[str, Any]]:
         """
         Merge auto-generated and custom agent profiles.
         Custom agents override auto-generated ones by name (case-insensitive).
 
+        Accepts either List[AgentProfile] or List[Dict] for either side — the
+        simulation manager passes a list of dicts (from panel_service._build_profile)
+        for the auto side and a list of AgentProfile (from parse_raw) for the custom
+        side. Always returns a list of plain dicts so the caller can json.dump it
+        straight to disk; the AgentProfile side is normalised via to_agentsociety_format,
+        and dataclass-side mutations (custom.id = auto.id) are mirrored as dict writes.
+
         Args:
-            auto_profiles: Auto-generated profiles from knowledge graph
-            custom_profiles: User-provided custom profiles
+            auto_profiles: Auto-generated profiles (dict or AgentProfile list)
+            custom_profiles: User-provided custom profiles (dict or AgentProfile list)
 
         Returns:
-            Merged list of profiles with custom priority
+            Merged list of plain-dict profiles with custom priority
         """
+        def _to_dict(p):
+            if isinstance(p, dict):
+                return dict(p)
+            if isinstance(p, AgentProfile):
+                return p.to_agentsociety_format()
+            raise TypeError(f"merge_profiles: unsupported profile type {type(p).__name__}")
+
+        def _name_of(p):
+            if isinstance(p, dict):
+                return (p.get("name") or "").strip().lower()
+            return (getattr(p, "name", "") or "").strip().lower()
+
         if not custom_profiles:
-            return auto_profiles
+            return [_to_dict(p) for p in auto_profiles]
 
-        # Build name -> profile map from custom agents
-        custom_by_name = {}
-        for p in custom_profiles:
-            key = p.name.strip().lower()
-            custom_by_name[key] = p
+        # Build name -> custom dict map
+        custom_by_name = {_name_of(c): _to_dict(c) for c in custom_profiles}
 
-        merged = []
-        overridden = set()
+        merged: List[Dict[str, Any]] = []
+        overridden: set = set()
 
-        # Process auto profiles: keep unless overridden by custom
         for auto in auto_profiles:
-            key = auto.name.strip().lower()
+            key = _name_of(auto)
             if key in custom_by_name:
-                custom = custom_by_name[key]
-                # Preserve the auto-generated ID but use custom data
-                custom.id = auto.id
-                merged.append(custom)
+                # Preserve the auto-generated ID but use the custom data
+                replacement = custom_by_name[key]
+                replacement["id"] = _to_dict(auto).get("id", len(merged))
+                merged.append(replacement)
                 overridden.add(key)
             else:
-                merged.append(auto)
+                merged.append(_to_dict(auto))
 
-        # Add custom agents that didn't override any auto agent
-        for custom in custom_profiles:
-            key = custom.name.strip().lower()
+        # Append customs that didn't override anyone
+        for c in custom_profiles:
+            key = _name_of(c)
             if key not in overridden:
-                custom.id = len(merged)
-                merged.append(custom)
+                d = custom_by_name[key]
+                d["id"] = len(merged)
+                merged.append(d)
 
-        # Reassign sequential IDs
+        # Reassign sequential IDs so the cast reads 0..N-1 cleanly
         for i, profile in enumerate(merged):
-            profile.id = i
+            profile["id"] = i
 
         logger.info(f"Merged profiles: {len(auto_profiles)} auto + {len(custom_profiles)} custom = {len(merged)} total ({len(overridden)} overrides)")
         return merged

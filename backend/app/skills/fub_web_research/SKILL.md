@@ -1,12 +1,12 @@
 ---
 name: fub_web_research
-description: Multi-step web research using MiroFlow MCP server
+description: Multi-step web research using deep-research (Firecrawl + Jina + LLM)
 user_invocable: true
 ---
 
 # Fub Web Research Skill
 
-Perform deep, multi-step web research using MiroFlow's research agent framework.
+Perform deep, multi-step web research using deep-research (Firecrawl + Jina + LLM).
 Searches Google, reads webpages, and synthesizes findings — useful for grounding
 simulations in current events and real-world context.
 
@@ -20,7 +20,7 @@ simulations in current events and real-world context.
 ## How to Use
 
 1. Provide a research query (e.g., "current minimum wage debate South Africa 2026")
-2. MiroFlow autonomously:
+2. Deep research autonomously:
    - Searches Google for relevant results
    - Reads and extracts content from top articles
    - Searches for additional context as needed
@@ -30,9 +30,8 @@ simulations in current events and real-world context.
 
 ## Requirements
 
-- MiroFlow MCP server must be running
-- API keys configured: OpenRouter, Serper, Jina
-- Set `WEB_SEARCH_API_URL` in configuration
+- API keys configured: Firecrawl, Jina, Serper, LLM
+- Set `FIRECRAWL_API_KEY` and `JINA_API_KEY` in configuration
 
 ## Output
 

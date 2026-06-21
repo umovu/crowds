@@ -29,6 +29,8 @@ dependencies = [
     "ladybug>=0.16.0",
     "firecrawl-py>=0.0.8",
     "aiohttp>=3.9.0",
+    # Supabase auth — verify access-token JWTs on the backend
+    "pyjwt[crypto]>=2.8.0",
 ]
 
 [project.optional-dependencies]

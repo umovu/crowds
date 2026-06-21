@@ -125,7 +125,7 @@
                   class="dropdown-item"
                   @click="selectAgent(agent, idx)"
                 >
-                  <div class="agent-avatar">{{ (agentDisplayName(agent) || 'A')[0].toUpperCase() }}</div>
+                  <img :src="getAvatarUrl(agentDisplayName(agent), 28)" :alt="agentDisplayName(agent)" class="agent-avatar" />
                   <div class="agent-info">
                     <span class="agent-name">{{ agentDisplayName(agent) }}</span>
                     <span class="agent-role">{{ agent.occupation || agent.profession || agent.actor_archetype || 'Unknown' }}</span>
@@ -154,7 +154,7 @@
           <!-- Report Agent Tools Card -->
           <div v-if="chatTarget === 'report_agent'" class="report-agent-tools-card">
             <div class="tools-card-header">
-              <div class="tools-card-avatar">R</div>
+              <img :src="getAvatarUrl('Report Agent', 44)" alt="Report Agent" class="tools-card-avatar" />
               <div class="tools-card-info">
                 <div class="tools-card-name">Report Agent - Chat</div>
                 <div class="tools-card-subtitle">Quick chat version of Report Agent with 4 professional tools, has full simulation memory</div>
@@ -218,10 +218,25 @@
             </div>
           </div>
 
+          <!-- Agent picker (panel-style grid): shown when choosing who to talk to -->
+          <div v-if="chatTarget === 'agent' && (!selectedAgent || showAgentPicker)" class="agent-picker-wrap">
+            <div class="agent-picker-head">
+              <span>Choose who to talk to ({{ profiles.length }} agents)</span>
+              <button v-if="selectedAgent" class="agent-picker-cancel" @click="showAgentPicker = false">Cancel</button>
+            </div>
+            <AgentPicker
+              :agents="profiles"
+              :selected="selectedAgent"
+              :mode="simulationMode"
+              @select="onPickAgent"
+            />
+          </div>
+
           <!-- Agent Profile Card -->
-          <div v-if="chatTarget === 'agent' && selectedAgent" class="agent-profile-card">
+          <div v-if="chatTarget === 'agent' && selectedAgent && !showAgentPicker" class="agent-profile-card">
+            <button class="profile-card-change" @click="showAgentPicker = true" title="Choose a different agent">⇄ Change agent</button>
             <div class="profile-card-header">
-              <div class="profile-card-avatar">{{ (agentDisplayName(selectedAgent) || 'A')[0].toUpperCase() }}</div>
+              <img :src="getAvatarUrl(agentDisplayName(selectedAgent), 40)" :alt="agentDisplayName(selectedAgent)" class="profile-card-avatar" />
               <div class="profile-card-info">
                 <div class="profile-card-name">{{ agentDisplayName(selectedAgent) }}</div>
                 <div class="profile-card-meta">
@@ -266,8 +281,9 @@
               :class="msg.role"
             >
               <div class="message-avatar">
-                <span v-if="msg.role === 'user'">U</span>
-                <span v-else>{{ msg.role === 'assistant' && chatTarget === 'report_agent' ? 'R' : (selectedAgent ? agentDisplayName(selectedAgent)[0].toUpperCase() : 'A') }}</span>
+                <img v-if="msg.role === 'user'" :src="getAvatarUrl('You', 28)" alt="You" />
+                <img v-else-if="chatTarget === 'report_agent'" :src="getAvatarUrl('Report Agent', 28)" alt="Report Agent" />
+                <img v-else :src="getAvatarUrl(agentDisplayName(selectedAgent), 28)" :alt="agentDisplayName(selectedAgent)" />
               </div>
               <div class="message-content">
                 <div class="message-header">
@@ -281,7 +297,8 @@
             </div>
             <div v-if="isSending" class="chat-message assistant">
               <div class="message-avatar">
-                <span>{{ chatTarget === 'report_agent' ? 'R' : (selectedAgent ? agentDisplayName(selectedAgent)[0].toUpperCase() : 'A') }}</span>
+                <img v-if="chatTarget === 'report_agent'" :src="getAvatarUrl('Report Agent', 28)" alt="Report Agent" />
+                <img v-else :src="getAvatarUrl(agentDisplayName(selectedAgent), 28)" :alt="agentDisplayName(selectedAgent)" />
               </div>
               <div class="message-content">
                 <div class="typing-indicator">
@@ -338,7 +355,7 @@
                     :checked="selectedAgents.has(idx)"
                     @change="toggleAgentSelection(idx)"
                   >
-                  <div class="checkbox-avatar">{{ (agent.username || 'A')[0] }}</div>
+                  <img :src="getAvatarUrl(agent.username || agent.name, 24)" :alt="agent.username" class="checkbox-avatar" />
                   <div class="checkbox-info">
                     <span class="checkbox-name">{{ agent.username }}</span>
                     <span class="checkbox-role">{{ agent.profession || 'Unknown profession' }}</span>
@@ -392,7 +409,7 @@
                 class="result-card"
               >
                 <div class="result-header">
-                  <div class="result-avatar">{{ (result.agent_name || 'A')[0] }}</div>
+                  <img :src="getAvatarUrl(result.agent_name, 32)" :alt="result.agent_name" class="result-avatar" />
                   <div class="result-info">
                     <span class="result-name">{{ result.agent_name }}</span>
                     <span class="result-role">{{ result.profession || 'Unknown profession' }}</span>
@@ -420,6 +437,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { chatWithReport, getReport, getAgentLog } from '../api/report'
 import { interviewAgents, interviewAgentsPostSimulation, getSimulationProfilesRealtime } from '../api/simulation'
+import AgentPicker from './AgentPicker.vue'
 
 const props = defineProps({
   reportId: String,
@@ -432,8 +450,12 @@ const emit = defineEmits(['add-log', 'update-status'])
 const activeTab = ref('chat')
 const chatTarget = ref('report_agent')
 const showAgentDropdown = ref(false)
+const showAgentPicker = ref(false)
 const selectedAgent = ref(null)
 const selectedAgentIndex = ref(null)
+// Sim mode drives stance labels in the picker (product → reaction ladder).
+// Read from the loaded profiles' document context if present, else policy.
+const simulationMode = ref('policy')
 const showFullProfile = ref(true)
 const showToolsDetail = ref(true)
 
@@ -486,6 +508,12 @@ const toggleSectionCollapse = (idx) => {
 // Agentsociety profiles use `name` not `username` — normalise here
 const agentDisplayName = (agent) => {
   return agent?.username || agent?.name || `Agent ${agent?.id ?? ''}`
+}
+
+// Avatar utility — deterministic DiceBear avatars from agent name
+const getAvatarUrl = (name, size = 40) => {
+  const seed = encodeURIComponent(name || 'agent')
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&size=${size}&backgroundColor=b6e3f4%2Cc0e8d5%2Cfde68a%2Cffd6a5&backgroundType=solid`
 }
 
 const selectChatTarget = (target) => {
@@ -543,10 +571,20 @@ const selectAgent = (agent, idx) => {
   selectedAgentIndex.value = idx
   chatTarget.value = 'agent'
   showAgentDropdown.value = false
+  showAgentPicker.value = false
 
   // Restore this Agent's chat history
   chatHistory.value = chatHistoryCache.value[`agent_${idx}`] || []
-  addLog(`Selected conversation target: ${agent.username}`)
+  addLog(`Selected conversation target: ${agentDisplayName(agent)}`)
+}
+
+// Panel-style picker emits the agent object — resolve its index for the
+// existing index-keyed chat-history cache, then reuse selectAgent.
+const onPickAgent = (agent) => {
+  const idx = profiles.value.findIndex(
+    p => (p.id ?? p.agent_id ?? p.name) === (agent.id ?? agent.agent_id ?? agent.name)
+  )
+  selectAgent(agent, idx >= 0 ? idx : selectedAgentIndex.value)
 }
 
 const formatTime = (timestamp) => {
@@ -1015,6 +1053,47 @@ watch(() => props.simulationId, (newId) => {
 </script>
 
 <style scoped>
+/* Panel-style agent picker in the sim chat tab */
+.agent-picker-wrap {
+  border: 1px solid #E5E5E5;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+.agent-picker-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #666;
+}
+.agent-picker-cancel {
+  background: none;
+  border: 1px solid #DDD;
+  padding: 3px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #666;
+  cursor: pointer;
+}
+.agent-picker-cancel:hover { border-color: #1E9E5A; color: #1E9E5A; }
+.profile-card-change {
+  background: none;
+  border: 1px solid #DDD;
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #1E9E5A;
+  cursor: pointer;
+  margin-left: auto;
+}
+.profile-card-change:hover { border-color: #1E9E5A; background: #F0FAF4; }
+
 .interaction-panel {
   height: 100%;
   display: flex;
@@ -1561,14 +1640,10 @@ watch(() => props.simulationId, (newId) => {
   height: 44px;
   min-width: 44px;
   min-height: 44px;
-  background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
-  color: #FFFFFF;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #e0e0e0;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(31, 41, 55, 0.2);
 }
@@ -2630,5 +2705,57 @@ watch(() => props.simulationId, (newId) => {
   border: none;
   border-top: 1px solid #E5E7EB;
   margin: 24px 0;
+}
+
+/* Avatar styles for chat, profiles, dropdowns */
+.agent-avatar {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.profile-card-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #e0e0e0;
+}
+
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.checkbox-avatar {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.result-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 </style>

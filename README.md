@@ -1,6 +1,6 @@
 <div align="center">
 
-# Fub Sandbox
+# Crowds
 
 **Pressure-test your policies, announcements, product ideas, and events against a synthetic public — before they meet the real one.**
 
@@ -12,7 +12,7 @@
 
 ## What is this?
 
-Fub Sandbox generates a population of AI personas — each with its own background, biases, and viewpoint — then plays your policy draft, press release, product pitch, or event brief past them. You see **the range of reactions your content might provoke**: where resistance builds, how an idea gets read or misread, and which objections you hadn't considered.
+Crowds generates a population of AI personas — each with its own background, biases, and viewpoint — then plays your policy draft, press release, product pitch, or event brief past them. You see **the range of reactions your content might provoke**: where resistance builds, how an idea gets read or misread, and which objections you hadn't considered.
 
 It's built for **coverage, not prediction.** The agents are LLM-driven personas, not a statistically representative sample. Treat the output as a fast, broad rehearsal of the *kinds* of responses your content might draw — directional signal to prepare against, not a forecast of what real people will do. Used that way, it's genuinely useful. Read as a poll, it will mislead you.
 
@@ -65,8 +65,8 @@ You can run the full stack with Docker (provisions Neo4j + Ollama for a self-con
 ### Option A: Docker (self-contained, local models)
 
 ```bash
-git clone https://github.com/umovu/fub-sandbox.git
-cd fub-sandbox
+git clone https://github.com/umovu/crowds.git
+cd crowds
 cp .env.example .env
 
 docker compose up -d
@@ -83,8 +83,8 @@ Open `http://localhost:3000`
 The lightest path: the embedded **LadybugDB** graph backend (no Docker, no Neo4j) and any OpenAI-compatible LLM endpoint — hosted (e.g. Qwen/DashScope, Groq) or local (Ollama).
 
 ```bash
-git clone https://github.com/umovu/fub-sandbox.git
-cd fub-sandbox
+git clone https://github.com/umovu/crowds.git
+cd crowds
 cp .env.example .env
 # Edit .env: set GRAPH_BACKEND=ladybug and your LLM_* endpoint/key
 

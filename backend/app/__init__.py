@@ -38,11 +38,7 @@ def _setup_agentsociety2_env():
     if not os.environ.get("AGENTSOCIETY_LLM_API_BASE"):
         os.environ["AGENTSOCIETY_LLM_API_BASE"] = _sim_base
 
-    # Web research (MiroFlow) — bridge if user has configured in .env
-    if Config.WEB_SEARCH_API_URL and not os.environ.get("WEB_SEARCH_API_URL"):
-        os.environ["WEB_SEARCH_API_URL"] = Config.WEB_SEARCH_API_URL
-    if not os.environ.get("WEB_SEARCH_API_TOKEN"):
-        os.environ["WEB_SEARCH_API_TOKEN"] = Config.WEB_SEARCH_API_TOKEN or "dummy_token"
+
 
 
 def create_app(config_class=Config):
@@ -96,6 +92,18 @@ def create_app(config_class=Config):
     if should_log_startup:
         logger.info("Simulation process cleanup function registered")
 
+    # Auth guard: every /api/* request must carry a valid Supabase JWT.
+    # Non-/api routes (e.g. /health) and CORS preflight (OPTIONS) are exempt.
+    from .auth import verify_request
+
+    @app.before_request
+    def require_supabase_auth():
+        if request.method == 'OPTIONS':
+            return None
+        if not request.path.startswith('/api/'):
+            return None
+        return verify_request()
+
     # Request logging middleware
     @app.before_request
     def log_request():
@@ -111,13 +119,13 @@ def create_app(config_class=Config):
         return response
 
     # Register blueprints
-    from .api import graph_bp, simulation_bp, report_bp, config_bp, analysis_bp, research_bp
+    from .api import graph_bp, simulation_bp, report_bp, config_bp, research_bp, panel_bp
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(config_bp, url_prefix='/api/config')
-    app.register_blueprint(analysis_bp, url_prefix='/api/analysis')
     app.register_blueprint(research_bp, url_prefix='/api/research')
+    app.register_blueprint(panel_bp, url_prefix='/api/panel')
 
     # Health check
     @app.route('/health')

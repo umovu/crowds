@@ -1543,6 +1543,24 @@ wheels = [
 ]
 
 [[package]]
+name = "firecrawl-py"
+version = "4.30.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "httpx" },
+    { name = "nest-asyncio" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "requests" },
+    { name = "websockets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/11/e1/ae543db5901e6c8625b2cb42b05fd8d355b87e8cbb548aadbe1efc8c8d44/firecrawl_py-4.30.1.tar.gz", hash = "sha256:06e806302e0d1e5428dc16a9aab9e61caa3ee320cb49839029be79b8258ed736", size = 196270 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cb/15/1a0eed2c1b6c12ad0660059ff89c42e93bc6f32a62bbb5fac59ceff48a43/firecrawl_py-4.30.1-py3-none-any.whl", hash = "sha256:cedd6727edf538731375a616f4f646fc84851d7a37fe67d2e39a066f45f31172", size = 244536 },
+]
+
+[[package]]
 name = "flask"
 version = "3.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1761,8 +1779,10 @@ version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "agentsociety2" },
+    { name = "aiohttp" },
     { name = "chardet" },
     { name = "charset-normalizer" },
+    { name = "firecrawl-py" },
     { name = "flask" },
     { name = "flask-cors" },
     { name = "ladybug" },
@@ -1789,8 +1809,10 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "agentsociety2", specifier = ">=2.0.0" },
+    { name = "aiohttp", specifier = ">=3.9.0" },
     { name = "chardet", specifier = ">=5.0.0" },
     { name = "charset-normalizer", specifier = ">=3.0.0" },
+    { name = "firecrawl-py", specifier = ">=0.0.8" },
     { name = "flask", specifier = ">=3.0.0" },
     { name = "flask-cors", specifier = ">=6.0.0" },
     { name = "ladybug", specifier = ">=0.16.0" },
@@ -3633,6 +3655,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e1/14/86f149430f2e6ffe63f5726951720b7cf4136ee1676eb077c4ade94959df/neo4j-5.23.0.tar.gz", hash = "sha256:26b06dac3a4b93d882a61714c5ca8d06fe68f697cbdfe113ab840d651a2d46a2", size = 215255 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6f/10/0feaa10a342f5c06ffc5bfe3e5e52a9950094186889208251de39092237b/neo4j-5.23.0-py3-none-any.whl", hash = "sha256:5d8d2f45227c12d6ba564720cbc3e2f57aac472e4fa14fe69270e4f952791020", size = 293671 },
+]
+
+[[package]]
+name = "nest-asyncio"
+version = "1.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/83/f8/51569ac65d696c8ecbee95938f89d4abf00f47d58d48f6fbabfe8f0baefe/nest_asyncio-1.6.0.tar.gz", hash = "sha256:6f172d5449aca15afd6c646851f4e31e02c598d553a667e38cafa997cfec55fe", size = 7418 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a0/c4/c2971a3ba4c6103a3d10c4b0f24f461ddc027f0f09763220cf35ca1401b3/nest_asyncio-1.6.0-py3-none-any.whl", hash = "sha256:87af6efd6b5e897c81050477ef65c62e2b2f35d51703cae01aff2905b1852e1c", size = 5195 },
 ]
 
 [[package]]

@@ -238,6 +238,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick, computed } from 'vue'
 import * as d3 from 'd3'
+import { createAvatar } from '@dicebear/core'
+import { avataaars, initials } from '@dicebear/collection'
 
 const props = defineProps({
   graphData: Object,
@@ -247,6 +249,94 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['refresh', 'toggle-maximize'])
+
+// Entity types are LLM-generated per simulation (see ontology_generator.py) but
+// always drawn from a known vocabulary. We classify each node into one of three
+// visual kinds so each gets an identity mark appropriate to what it is:
+//   person   -> human face avatar (DiceBear avataaars)
+//   org      -> initials badge from the org name (DiceBear initials) — like a logo
+//   location -> map-pin glyph
+// Anything unrecognised falls back to a plain coloured dot.
+// Known exact type names (fast path). Real graphs also contain LLM-invented,
+// domain-specific types per simulation (e.g. EndUser, Regulator, TelecomProvider,
+// RepairTechnician), so exact matching alone misses most nodes — we fall back to
+// keyword matching below.
+const PERSON_TYPES = new Set([
+  'Person', 'Student', 'Professor', 'Journalist', 'Celebrity', 'Executive',
+  'Official', 'Lawyer', 'Doctor', 'CEO', 'Employee', 'Politician', 'Activist',
+  'Expert', 'Resident', 'Citizen', 'Worker', 'Teacher', 'Nurse', 'Farmer'
+])
+const ORG_TYPES = new Set([
+  'Organization', 'University', 'Company', 'GovernmentAgency', 'MediaOutlet',
+  'Hospital', 'School', 'NGO', 'Agency', 'Institution', 'Party', 'Union',
+  'Department', 'Committee', 'Council', 'Ministry'
+])
+const LOCATION_TYPES = new Set(['Location', 'City', 'Province', 'Region', 'District', 'Suburb', 'Place'])
+
+// Strong person keywords — only give a FACE when the type is *confidently* a
+// natural person. Deliberately conservative: ambiguous role-ish words (developer,
+// engineer, operator, manager…) are NOT here, because a "TechDeveloper" or
+// "TelecomProvider" is as likely an org/role as a human. When unsure, we fall
+// through to an initials badge rather than slap a face on it.
+const PERSON_KEYWORDS = [
+  'person', 'individual', 'citizen', 'resident', 'caregiver', 'patient',
+  'parent', 'voter', 'commuter', 'student', 'teacher', 'doctor', 'nurse',
+  'farmer', 'lawyer', 'activist', 'journalist', 'professor', 'advocate'
+]
+const LOCATION_KEYWORDS = [
+  'location', 'city', 'province', 'region', 'district', 'suburb', 'township',
+  'place', 'area', 'neighborhood', 'neighbourhood', 'zone', 'site', 'venue'
+]
+
+const matchesKeyword = (lower, keywords) => keywords.some(k => lower.includes(k))
+
+// Which visual kind a node's entity type maps to.
+//   - exact person/org/location sets first (cheap, unambiguous)
+//   - then location keywords, then strong person keywords
+//   - ANYTHING ELSE that has a real type -> 'org' (initials badge). Initials are
+//     the safe default: when we're not sure a node is a person, we never put a
+//     face on it. Only the bare 'Entity' fallback (no real type) stays a dot.
+const nodeKind = (type) => {
+  if (!type || type === 'Entity') return 'other'
+  if (PERSON_TYPES.has(type)) return 'person'
+  if (ORG_TYPES.has(type)) return 'org'
+  if (LOCATION_TYPES.has(type)) return 'location'
+
+  const lower = type.toLowerCase()
+  if (matchesKeyword(lower, LOCATION_KEYWORDS)) return 'location'
+  if (matchesKeyword(lower, PERSON_KEYWORDS)) return 'person'
+  return 'org'  // unknown-but-typed -> initials, never a face
+}
+
+// Nodes that carry a clipped DiceBear image (person face or org shape mark).
+const hasAvatar = (type) => {
+  const k = nodeKind(type)
+  return k === 'person' || k === 'org'
+}
+
+// Deterministic DiceBear avatar, generated locally (no network call), seeded by the
+// node's stable UUID so the same entity always gets the same mark. People get human
+// faces (avataaars); organizations get an initials badge derived from the org
+// name (e.g. "ANC Youth" -> "AY"), like a logo fallback. Returns a data: URI for
+// use as an SVG <image> href. Memoised per seed.
+const _avatarCache = new Map()
+const avatarUrl = (node) => {
+  const kind = nodeKind(node.type)
+  // Orgs key on the display name so the initials read from real words; people key
+  // on the stable UUID so the same entity always gets the same face.
+  const seed = kind === 'org'
+    ? (node.name || node.id || 'Org')
+    : (node.id || node.name || 'unknown')
+  const cacheKey = `${kind}:${seed}`
+  let uri = _avatarCache.get(cacheKey)
+  if (!uri) {
+    const collection = kind === 'org' ? initials : avataaars
+    const svg = createAvatar(collection, { seed, radius: 50 }).toString()
+    uri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+    _avatarCache.set(cacheKey, uri)
+  }
+  return uri
+}
 
 const graphContainer = ref(null)
 const graphSvg = ref(null)
@@ -650,15 +740,80 @@ const renderGraph = () => {
   // Nodes group
   const nodeGroup = g.append('g').attr('class', 'nodes')
 
-  // Node circles
-  const node = nodeGroup.selectAll('circle')
+  // clipPath defs — one shared circle clip so face images render as round avatars
+  const NODE_R = 14
+  const defs = svg.append('defs')
+  defs.append('clipPath')
+    .attr('id', 'avatar-clip')
+    .append('circle')
+    .attr('r', NODE_R)
+    .attr('cx', 0)
+    .attr('cy', 0)
+
+  // One <g> per node, holding a ring + (face image | colored dot)
+  const node = nodeGroup.selectAll('g.node')
     .data(nodes)
-    .enter().append('circle')
-    .attr('r', 10)
+    .enter().append('g')
+    .attr('class', 'node')
+    .style('cursor', 'pointer')
+
+  // A node has an enlarged identity mark (avatar image or location pin) for any
+  // kind except the plain-dot fallback.
+  const hasMark = (d) => nodeKind(d.type) !== 'other'
+
+  // Outer ring — present for every node so the type colour + selection highlight
+  // is consistent across avatars, pins and plain dots. Marked nodes get a coloured
+  // ring on white (so the mark sits inside); plain dots are a coloured fill.
+  node.append('circle')
+    .attr('class', 'node-ring')
+    .attr('r', d => hasMark(d) ? NODE_R : 10)
+    .attr('fill', d => hasMark(d) ? '#fff' : getColor(d.type))
+    .attr('stroke', d => hasMark(d) ? getColor(d.type) : '#fff')
+    .attr('stroke-width', 2.5)
+
+  // Avatar image for person (face) and org (shape mark) nodes, clipped to the ring.
+  node.filter(d => hasAvatar(d.type))
+    .append('image')
+    .attr('class', 'node-avatar')
+    .attr('href', d => avatarUrl(d))
+    .attr('x', -NODE_R)
+    .attr('y', -NODE_R)
+    .attr('width', NODE_R * 2)
+    .attr('height', NODE_R * 2)
+    .attr('clip-path', 'url(#avatar-clip)')
+    .attr('preserveAspectRatio', 'xMidYMid slice')
+    .style('pointer-events', 'none')
+
+  // Map-pin glyph for location nodes, centred in the ring and tinted by type colour.
+  node.filter(d => nodeKind(d.type) === 'location')
+    .append('path')
+    .attr('class', 'node-pin')
+    // Classic teardrop pin, drawn ~18px tall and centred on (0,0).
+    .attr('d', 'M0,-9 C-5,-9 -8,-5.5 -8,-1.5 C-8,3.5 0,9 0,9 C0,9 8,3.5 8,-1.5 C8,-5.5 5,-9 0,-9 Z')
     .attr('fill', d => getColor(d.type))
     .attr('stroke', '#fff')
-    .attr('stroke-width', 2.5)
-    .style('cursor', 'pointer')
+    .attr('stroke-width', 1.2)
+    .style('pointer-events', 'none')
+
+  // Inner dot of the map pin.
+  node.filter(d => nodeKind(d.type) === 'location')
+    .append('circle')
+    .attr('class', 'node-pin-dot')
+    .attr('r', 2.4)
+    .attr('cy', -2)
+    .attr('fill', '#fff')
+    .style('pointer-events', 'none')
+
+  // Restore a node's ring to its resting style (marked nodes = type-coloured ring,
+  // plain dots = white ring around a coloured fill).
+  const resetNodeRing = (sel, d) => {
+    sel.select('.node-ring')
+      .attr('stroke', hasMark(d) ? getColor(d.type) : '#fff')
+      .attr('stroke-width', 2.5)
+  }
+  const resetNodeRings = () => node.each(function (d) { resetNodeRing(d3.select(this), d) })
+
+  node
     .call(d3.drag()
       .on('start', (event, d) => {
         // Only record position, don't restart simulation (distinguish click from drag)
@@ -697,11 +852,12 @@ const renderGraph = () => {
     )
     .on('click', (event, d) => {
       event.stopPropagation()
-      // Reset all node styles
-      node.attr('stroke', '#fff').attr('stroke-width', 2.5)
+      // Reset all node rings to their resting style
+      resetNodeRings()
       linkGroup.selectAll('path').attr('stroke', '#C0C0C0').attr('stroke-width', 1.5)
-      // Highlight selected node
-      d3.select(event.target).attr('stroke', '#E91E63').attr('stroke-width', 4)
+      // Highlight selected node's ring
+      d3.select(event.currentTarget).select('.node-ring')
+        .attr('stroke', '#E91E63').attr('stroke-width', 4)
       // Highlight edges connected to this node
       link.filter(l => l.source.id === d.id || l.target.id === d.id)
         .attr('stroke', '#E91E63')
@@ -716,12 +872,13 @@ const renderGraph = () => {
     })
     .on('mouseenter', (event, d) => {
       if (!selectedItem.value || selectedItem.value.data?.uuid !== d.rawData.uuid) {
-        d3.select(event.target).attr('stroke', '#333').attr('stroke-width', 3)
+        d3.select(event.currentTarget).select('.node-ring')
+          .attr('stroke', '#333').attr('stroke-width', 3)
       }
     })
     .on('mouseleave', (event, d) => {
       if (!selectedItem.value || selectedItem.value.data?.uuid !== d.rawData.uuid) {
-        d3.select(event.target).attr('stroke', '#fff').attr('stroke-width', 2.5)
+        resetNodeRing(d3.select(event.currentTarget), d)
       }
     })
 
@@ -733,7 +890,7 @@ const renderGraph = () => {
     .attr('font-size', '11px')
     .attr('fill', '#333')
     .attr('font-weight', '500')
-    .attr('dx', 14)
+    .attr('dx', d => nodeKind(d.type) !== 'other' ? 18 : 14)
     .attr('dy', 4)
     .style('pointer-events', 'none')
     .style('font-family', 'system-ui, sans-serif')
@@ -765,8 +922,7 @@ const renderGraph = () => {
     })
 
     node
-      .attr('cx', d => d.x)
-      .attr('cy', d => d.y)
+      .attr('transform', d => `translate(${d.x},${d.y})`)
 
     nodeLabels
       .attr('x', d => d.x)
@@ -776,7 +932,7 @@ const renderGraph = () => {
   // Click on blank area to close detail panel
   svg.on('click', () => {
     selectedItem.value = null
-    node.attr('stroke', '#fff').attr('stroke-width', 2.5)
+    resetNodeRings()
     linkGroup.selectAll('path').attr('stroke', '#C0C0C0').attr('stroke-width', 1.5)
     linkLabelBg.attr('fill', 'rgba(255,255,255,0.95)')
     linkLabels.attr('fill', '#666')

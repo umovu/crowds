@@ -157,7 +157,7 @@ export function generateSeedFromWeb(data) {
     url: '/api/research/seed',
     method: 'post',
     data,
-    timeout: 180000 // 3 minutes — search+scrape+synthesize can be slow
+    timeout: 360000 // 6 minutes — scrape (4 live pages) + qwen-max synthesis can be slow
   })
 }
 
