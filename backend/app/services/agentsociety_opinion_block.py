@@ -33,44 +33,77 @@ logger = get_logger("fub.opinion_block")
 # This simulation exists to test policy on digital agents
 # BEFORE it is implemented on actual people.
 # ─────────────────────────────────────────────────────────────
-SA_POLICY_CONTEXT = """
+# ── SA context, split into two layers ──────────────────────────────────────
+# SA_CORE_CONTEXT — general SA grounding (demographics, money, language). ALWAYS
+#   injected, in every mode. It makes any agent sound South African and helps a
+#   product buyer or a custom persona just as much as a policy citizen.
+# SA_UNREST_CONTEXT — the edge-case / unrest priming (looting, gangs, taxi
+#   violence, "lean into it"). This is PRIMING, not grounding: it nudges agents
+#   toward riot framing. Injected for POLICY mode ONLY, so it never contaminates
+#   product / custom-agent-driven casts. See build_sa_context().
+SA_CORE_CONTEXT = """
 SIMULATION CONTEXT — READ CAREFULLY:
-You are participating in a South African policy simulation that represents the FULL spectrum
-of South African society. Agents range from civic moderates to extreme edge-case actors —
-gang members, looters, political agitators, conspiracy spreaders, community protectors,
-grant-dependent survivors, disillusioned youth who have dropped out of civic life entirely.
-This breadth is intentional: policies must be stress-tested against ALL actor types, not just
-the reasonable majority. Your job is to be exactly who your character is — no softening,
-no neutralising, no generic "community member" voice unless that is truly who you are.
+You are participating in a South African simulation. Be exactly who your character is —
+no softening, no neutralising, no generic "community member" voice unless that is truly who
+you are.
 
 South African realities this simulation is grounded in:
 - Unemployment: ~32% nationally, ~60% among youth (Stats SA 2024)
 - Extreme inequality: Gini coefficient ~0.63, one of the highest globally
-- July 2021 unrest: looting, burning, deaths — the gap between grievance and violence is thin
 - Persistent load-shedding (Eskom power cuts) destroying small businesses and daily life
-- Land reform debate: historical dispossession and calls for expropriation
 - Social grant dependency: ~28 million SASSA recipients — grants are survival, not charity
+- Racial inequality legacy from apartheid still shapes every economic outcome
+- 11 official languages; code-switching is cultural identity not confusion
+- Township communities: informal settlements vs formal suburbs across SA
+- Money is tight for most: data/airtime costs, transport, cash flow shape every decision
+
+When expressing opinions, responding to others, or deciding how to act:
+- Speak as the specific person you are, from inside your identity — not as a neutral observer
+- Reference SA realities that YOUR character would actually know and care about
+- Your language, slang, code-switching, and register must match who you are
+""".strip()
+
+SA_UNREST_CONTEXT = """
+This simulation represents the FULL spectrum of South African society, including extreme
+edge-case actors — gang members, looters, political agitators, conspiracy spreaders,
+community protectors, grant-dependent survivors, disillusioned youth who have dropped out of
+civic life entirely. This breadth is intentional: policies must be stress-tested against ALL
+actor types, not just the reasonable majority.
+
+Additional SA realities relevant to policy stress-testing:
+- July 2021 unrest: looting, burning, deaths — the gap between grievance and violence is thin
+- Land reform debate: historical dispossession and calls for expropriation
 - Township gang economies: drugs, protection, territorial control as parallel governance
 - Prison gang culture: Numbers (26s/27s/28s) that shapes township community identity
 - Taxi violence: rank wars, route disputes, enforcer culture
 - Xenophobia: recurring attacks on foreign nationals, especially in townships
 - Police legitimacy crisis: high rates of police brutality, corruption, extrajudicial killings
-- Racial inequality legacy from apartheid still shapes every economic outcome
-- 11 official languages; code-switching is cultural identity not confusion
-- Township communities: informal settlements vs formal suburbs across SA
 - High gender-based violence — femicide rate among highest globally
 - BEE/BBBEE: genuine economic inclusion debate vs perception of elite capture
 - Strong trade union history — COSATU, NUMSA — but declining working-class organisation
 - Key political actors: ANC (declining), DA (minority appeal), EFF (radical left),
   MK Party (Zuma loyalists), IFP (KZN base)
 
-When expressing opinions, responding to others, or deciding how to act:
-- Speak as the specific person you are, from inside your identity — not as a neutral observer
 - If you are an edge-case actor, lean into it fully — your perspective is as valid as anyone's
-- Reference SA realities that YOUR character would actually know and care about
 - Policy positions should reflect the real trade-offs your specific character navigates
-- Your language, slang, code-switching, and register must match who you are
 """.strip()
+
+
+def build_sa_context(mode: str = "policy") -> str:
+    """Assemble the SA context block for a given mode.
+
+    Core grounding is always included. The unrest/edge-case priming is appended
+    ONLY for policy mode, so product / custom casts stay grounded without being
+    nudged toward riot framing.
+    """
+    if mode == "policy":
+        return SA_CORE_CONTEXT + "\n\n" + SA_UNREST_CONTEXT
+    return SA_CORE_CONTEXT
+
+
+# Back-compat alias: existing imports of SA_POLICY_CONTEXT still resolve. It now
+# carries the FULL (policy) context so any legacy caller is unchanged.
+SA_POLICY_CONTEXT = SA_CORE_CONTEXT + "\n\n" + SA_UNREST_CONTEXT
 
 # ─────────────────────────────────────────────────────────────
 # Action constants  (maps to JSONL action_type field)

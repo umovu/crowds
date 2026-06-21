@@ -799,6 +799,22 @@ def generate_seed():
     )
     citations = ", ".join(f"[{i+1}]" for i in range(len(scraped)))
 
+    # Shared "Key figures" section — real numbers that GROUND the scenario the
+    # personas react to (prices, incomes, costs, market sizes, adoption rates).
+    # Framed hard as CONTEXT to reason against, never lines to recite and never
+    # a forecast: the sim must not turn these into a "% who would buy" verdict.
+    key_figures_section = (
+        f"## Key figures\n"
+        f"  - Pull the CONCRETE NUMBERS from the sources that define the real magnitudes of this\n"
+        f"    situation: prices (in rand), incomes/grants, data/transport/other costs, market sizes,\n"
+        f"    adoption or pilot rates, percentages, timelines. Give each as 'figure — what it means'\n"
+        f"    with an inline source {citations}.\n"
+        f"  - Only real figures FROM THE SOURCES. Do NOT invent, estimate, or round into a made-up number.\n"
+        f"  - These are the magnitudes the simulated people will REASON AGAINST (e.g. weighing a price\n"
+        f"    against their real income). They are CONTEXT, not predictions — never state or imply how\n"
+        f"    many people would buy, adopt, or approve. No forecasts, no success scores.\n\n"
+    )
+
     if mode == "product":
         synthesis_prompt = (
             f"You are preparing a seed briefing document for a South African product stress-test simulation.\n\n"
@@ -817,6 +833,7 @@ def generate_seed():
             f"  - What is the product idea? What problem does it solve? Where in SA is this relevant?\n\n"
             f"## SA market context\n"
             f"  - What exists in South Africa today for this problem? Local competitors, alternatives, status-quo.\n\n"
+            + key_figures_section +
             f"## Key customer segments\n"
             f"  - List 5-8 distinct South African customer types who would use this product.\n"
             f"  - These MUST be REAL HUMAN people-types (e.g. 'blind commuters in Soweto', 'spaza owners',\n"
@@ -846,6 +863,7 @@ def generate_seed():
             f"REQUIRED STRUCTURE:\n"
             f"## Background\n"
             f"  - Set the scene. What is the situation? Where (province, township, sector)? Recent timeline.\n\n"
+            + key_figures_section +
             f"## Key actors and their interests\n"
             f"  - List 5-8 distinct actor types involved (e.g. taxi_operator, community_leader, police_officer).\n"
             f"  - These MUST be REAL HUMAN people-types — NOT organisations-as-names, programmes, or campaigns.\n"
@@ -1336,6 +1354,7 @@ def deep_research():
     query = data.get("query", "").strip()
     document_text = data.get("document_text", "")
     archetypes = data.get("archetypes", [])
+    mode = (data.get("mode") or "policy").strip().lower()
 
     if not isinstance(archetypes, list):
         return jsonify({"error": "archetypes must be a list"}), 400
@@ -1345,7 +1364,7 @@ def deep_research():
 
     # Auto-detect archetypes from document text if not provided
     if not archetypes and document_text:
-        archetypes = _detect_archetypes_from_document(document_text, query)
+        archetypes = _detect_archetypes_from_document(document_text, query, mode)
         if not archetypes:
             return jsonify({
                 "error": "Could not detect archetypes from document. Please provide archetypes manually."
@@ -1403,10 +1422,14 @@ def deep_research():
         return jsonify({"error": str(e)}), 500
 
 
-def _detect_archetypes_from_document(document_text: str, query: str = "") -> list:
+def _detect_archetypes_from_document(document_text: str, query: str = "", mode: str = "policy") -> list:
     """
-    Use LLM to detect actor archetypes from document text.
-    Returns a list of archetype strings matching the known archetype taxonomy.
+    Use the LLM to detect actor archetypes from the seed document — the document
+    is the source of truth for who is in the cast. We deliberately do NOT keyword-
+    guess archetypes from the text: substring matching on generic words ("crime",
+    "reform") pulled SECURITY/policy actors (e.g. SAPS) into product sims that had
+    no link to policing. If the LLM can't infer a cast, we fall back to a single
+    neutral, mode-appropriate set rather than guessing institutions.
     """
     from ..config import Config
     from openai import OpenAI
@@ -1414,8 +1437,31 @@ def _detect_archetypes_from_document(document_text: str, query: str = "") -> lis
     client = OpenAI(api_key=Config.LLM_API_KEY, base_url=Config.LLM_BASE_URL)
     model = Config.LLM_MODEL_NAME
 
+    is_product = mode == "product"
+
+    # Product sims model a market (customers/users/competitors), never the policy/
+    # security cast — so those taxonomy lines are omitted from the product prompt.
+    if is_product:
+        taxonomy = """CUSTOMERS/USERS: civic_moderate, unemployed_youth, gig_worker, student_activist
+ECONOMIC: informal_trader, small_business_owner, spaza_shop_owner, taxi_operator
+PROFESSIONAL: nurse_healthcare_worker, teacher, community_journalist, ngo_worker
+COMMUNITY: community_leader, community_organizer
+VULNERABLE: foreign_national, person_with_disability, elderly_grant_recipient, grant_dependent_survivor"""
+        intent = "These archetypes are the customer/user types for a product simulation."
+    else:
+        taxonomy = """CIVIC/ESTABLISHMENT: civic_moderate, community_leader, institutional_loyalist
+ACTIVISM: political_activist, student_activist
+COMMUNITY: street_committee_chair, traditional_authority, community_organizer, spaza_shop_owner
+ECONOMIC: taxi_operator, informal_trader, small_business_owner, gig_worker, unemployed_youth
+CRIMINAL/GANG: gang_member, syndicates, mob_follower, opportunist_looter, violent_agitator, criminal_opportunist, community_protector
+VULNERABLE: gbv_advocate, foreign_national, person_with_disability, elderly_grant_recipient, grant_dependent_survivor
+DISENGAGED: disillusioned_dropout, conspiracy_spreader, whistleblower
+PROFESSIONAL: nurse_healthcare_worker, teacher, community_journalist, ngo_worker
+SECURITY: police_officer, soldier, private_security, park_ranger"""
+        intent = "These archetypes will be used to research current real-world conditions for a policy simulation."
+
     prompt = f"""Analyze this document and identify the key actor archetypes present.
-These archetypes will be used to research current real-world conditions for a policy simulation.
+{intent}
 
 Document excerpt (first 3000 chars):
 {document_text[:3000]}
@@ -1424,15 +1470,7 @@ Document excerpt (first 3000 chars):
 
 Choose archetypes from this taxonomy (pick only those clearly present in the document):
 
-CIVIC/ESTABLISHMENT: civic_moderate, community_leader, institutional_loyalist
-ACTIVISM: political_activist, student_activist
-COMMUNITY: street_committee_chair, traditional_authority, community_organizer, spaza_shop_owner
-ECONOMIC: taxi_operator, informal_trader, small_business_owner, gig_worker, unemployed_youth
-CRIMINAL/GANG: gang_member, syndicates, mob_follower, opportunist_looter, violent_agitator, criminal_opportunist, community_protector
-VULNERABLE: gbv_advocate, foreign_national, person_with_disability, elderly_grant_recipient, grant_dependent_survivor
-DISENGAGED: disillusioned_dropout, conspiracy_spreader, whistleblower
-PROFESSIONAL: nurse_healthcare_worker, teacher, community_journalist, ngo_worker
-SECURITY: police_officer, soldier, private_security, park_ranger
+{taxonomy}
 
 Return ONLY a JSON array of archetype strings, e.g. ["informal_trader", "unemployed_youth", "taxi_operator"]
 No explanation, no extra text."""
@@ -1464,44 +1502,16 @@ No explanation, no extra text."""
     except Exception as e:
         logger.warning(f"Archetype LLM detection failed: {e}")
 
-    # Fallback: try to extract from known keywords in text
-    known_archetypes = [
-        "informal_trader", "unemployed_youth", "taxi_operator", "spaza_shop_owner",
-        "gang_member", "political_activist", "community_organizer", "student_activist",
-        "civic_moderate", "institutional_loyalist", "opportunist_looter", "violent_agitator",
-        "grant_dependent_survivor", "foreign_national", "nurse_healthcare_worker", "teacher",
-        "police_officer", "soldier", "private_security", "community_leader",
-    ]
-    text_lower = document_text.lower()
-    detected = []
-    for arch in known_archetypes:
-        keywords = arch.replace("_", " ").split()
-        if all(kw in text_lower for kw in keywords):
-            detected.append(arch)
-    if detected:
-        return detected
-
-    # Final fallback: infer from topic keywords
-    topic_archetype_map = {
-        "murder": ["gang_member", "police_officer", "community_leader", "victim"],
-        "crime": ["gang_member", "police_officer", "community_protector", "civic_moderate"],
-        "deployment": ["soldier", "police_officer", "community_leader", "civic_moderate"],
-        "protest": ["political_activist", "community_organizer", "unemployed_youth", "student_activist"],
-        "wage": ["informal_trader", "unemployed_youth", "taxi_operator", "spaza_shop_owner"],
-        "housing": ["community_organizer", "grant_dependent_survivor", "civic_moderate", "institutional_loyalist"],
-        "water": ["community_organizer", "grant_dependent_survivor", "civic_moderate"],
-        "electricity": ["community_organizer", "small_business_owner", "civic_moderate"],
-        "health": ["nurse_healthcare_worker", "grant_dependent_survivor", "elderly_grant_recipient"],
-        "education": ["teacher", "student_activist", "community_organizer"],
-    }
-    for topic, archetypes in topic_archetype_map.items():
-        if topic in text_lower:
-            logger.info(f"Topic-based fallback: '{topic}' → {archetypes}")
-            return archetypes
-
-    # Ultimate fallback: general civic archetypes
-    logger.info("Using ultimate fallback archetypes")
-    return ["civic_moderate", "community_leader", "unemployed_youth"]
+    # Neutral fallback only — used when the LLM call fails or returns nothing, so a
+    # run is never killed. No keyword/topic guessing: it must not invent a cast the
+    # seed document doesn't support (this is what leaked SAPS into product sims).
+    fallback = (
+        ["civic_moderate", "small_business_owner", "unemployed_youth"]
+        if is_product
+        else ["civic_moderate", "community_leader", "unemployed_youth"]
+    )
+    logger.info(f"Archetype detection fell back to neutral {mode} cast: {fallback}")
+    return fallback
 
 
 # ============================================================================

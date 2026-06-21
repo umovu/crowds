@@ -19,11 +19,20 @@ from .entity_reader import EntityReader, FilteredEntities
 from .agent_profile_generator import AgentProfileGenerator, AgentProfile
 from .simulation_config_generator import SimulationConfigGenerator, SimulationParameters
 from .document_context_engine import DocumentContextEngine
+from . import mode_detector
 from .custom_agent_parser import CustomAgentParser
 from .deep_research_service import research_archetypes as _deep_research_archetypes
 from .agent_enricher import AgentContextEnricher
+from .persona_library import get_library
+from .persona_retrieval import select_for_query
+from .panel_service import _build_profile, assert_library_cast, MAX_CAST_SIZE
 
 logger = get_logger('fub.simulation')
+
+# Main-simulation cast size. Larger than the panel default (12) — a full sim feed
+# wants a fuller room. The cast is drawn from the persona library, never from seed
+# entities, so brands/products can't leak in as agents.
+DEFAULT_MAIN_CAST_SIZE = 24
 
 
 class SimulationStatus(str, Enum):
@@ -229,6 +238,8 @@ class SimulationManager:
         custom_profiles: Optional[List] = None,
         custom_only: bool = False,
         mode: str = 'policy',
+        detection: Optional[Dict[str, Any]] = None,
+        mode_is_manual: bool = False,
     ) -> SimulationState:
         """
         Prepare simulation environment (fully automated)
@@ -262,7 +273,7 @@ class SimulationManager:
             
             sim_dir = self._get_simulation_dir(simulation_id)
 
-            # Load enrichment data if it exists (from MiroFlow deep research)
+            # Load enrichment data if it exists (from deep web research)
             enrichment_data = {}
             enrichment_file = os.path.join(sim_dir, "enrichment.json")
             if os.path.exists(enrichment_file):
@@ -359,11 +370,14 @@ class SimulationManager:
                     total=filtered.filtered_count
                 )
             
+            # The cast comes from the persona library, not from these entities, so an
+            # empty graph is no longer fatal — it only means thinner CONTEXT. The graph
+            # entities feed DocumentContextEngine + archetype enrichment below.
             if filtered.filtered_count == 0:
-                state.status = SimulationStatus.FAILED
-                state.error = "No entities matching criteria found, check if graph is correctly constructed"
-                self._save_simulation_state(state)
-                return state
+                logger.warning(
+                    "No graph entities matched — context will be thin, but the cast is "
+                    "drawn from the persona library so the simulation can still run."
+                )
             
             # ========== Phase 1.5: Deep research enrichment ==========
             # Run only if no enrichment already loaded and Firecrawl is configured.
@@ -383,7 +397,7 @@ class SimulationManager:
                         document_text=seed,
                     )
                     if raw_research:
-                        enrichment_data = AgentContextEnricher.enrich_from_miroflow(raw_research, entity_types)
+                        enrichment_data = AgentContextEnricher.enrich_from_web_research(raw_research, entity_types)
                         # Persist raw research so the API endpoint can serve it
                         with open(enrichment_file, 'w', encoding='utf-8') as f:
                             json.dump(raw_research, f, ensure_ascii=False, indent=2)
@@ -391,142 +405,105 @@ class SimulationManager:
                 except Exception as research_err:
                     logger.warning(f"Deep research failed (continuing without enrichment): {research_err}")
 
-            # ========== Phase 2: Generate Agent Profile ==========
-            total_entities = len(filtered.entities)
-
-            if progress_callback:
-                progress_callback(
-                    "generating_profiles", 0,
-                    "Starting generation...",
-                    current=0,
-                    total=total_entities
-                )
-
-            # Pass graph_id to enable graph retrieval functionality, get richer context
-            generator = AgentProfileGenerator(
-                storage=storage,
-                graph_id=state.graph_id,
-                enrichment_data=enrichment_data,
-                mode=mode
+            # ========== Build prepare-time client + finalise mode (before cast) ==========
+            # The mode tiebreak must run BEFORE cast selection, because the cast's
+            # product economics (budget_tier) are computed at build time from `mode`.
+            # The LLM_* client built here is reused for context extraction below.
+            from openai import OpenAI
+            client = OpenAI(
+                api_key=Config.LLM_API_KEY,
+                base_url=Config.LLM_BASE_URL,
             )
-            
-            def profile_progress(current, total, msg):
-                if progress_callback:
-                    progress_callback(
-                        "generating_profiles", 
-                        int(current / total * 100), 
-                        msg,
-                        current=current,
-                        total=total,
-                        item_name=msg
-                    )
-            
-            realtime_output_path = os.path.join(sim_dir, "agentsociety_profiles.json")
 
-            # ========== Custom-only mode: skip auto-generation entirely ==========
-            # When the user opts to run on custom agents alone, we don't read the
-            # graph population or LLM-expand — the run consists solely of their
-            # hand-defined agents. Falls back to normal generation if custom_only
-            # was requested but no usable custom profiles came through.
+            # Mode tiebreak: only when the keyword margin was thin AND the user did not
+            # manually pin the mode. Manual choice always wins. Any failure falls back to
+            # the keyword decision (mode unchanged), so the final mode is authoritative
+            # for the cast economics, the rule engine, and framing.
+            converged = bool(detection.get("converged")) if detection else False
+            secondary_lens = detection.get("secondary_lens") if detection else None
+            used_llm_tiebreak = False
+            if detection and not mode_is_manual:
+                try:
+                    refined = mode_detector.llm_tiebreak(
+                        simulation_requirement, document_text, detection,
+                        llm_client=client, model_name=Config.LLM_MODEL,
+                    )
+                    used_llm_tiebreak = bool(refined.get("used_llm_tiebreak"))
+                    if used_llm_tiebreak:
+                        mode = refined["mode"]
+                        converged = bool(refined.get("converged"))
+                        secondary_lens = refined.get("secondary_lens")
+                        logger.info(
+                            f"Mode tiebreak refined mode -> {mode} "
+                            f"(converged={converged}, lens={secondary_lens})"
+                        )
+                except Exception as e:
+                    logger.warning(f"Mode tiebreak failed, keeping keyword mode: {e}")
+
+            # ========== Phase 2: Assemble the cast from the persona library ==========
+            # CAST comes from the curated, survey-grounded library — NEVER from seed
+            # entities. This is what stops brands/products/labels (Netflix, YouthX,
+            # "Parents or Guardians") leaking in as agents: they aren't in the library.
+            # The seed/document only shapes CONTEXT (Phase 2.5 below). All of this is
+            # deterministic and LLM-free.
+            if progress_callback:
+                progress_callback("generating_profiles", 0, "Selecting cast from persona library...")
+
             run_custom_only = bool(custom_only and custom_profiles and len(custom_profiles) > 0)
 
             if run_custom_only:
-                logger.info(f"Custom-only mode: running on {len(custom_profiles)} custom agents, skipping auto-generation")
-                if progress_callback:
-                    progress_callback(
-                        "generating_profiles", 90,
-                        f"Custom-only mode — using {len(custom_profiles)} custom agents...",
-                        current=len(custom_profiles),
-                        total=len(custom_profiles)
-                    )
-                # merge against an empty auto population to assign sequential IDs
+                # The run consists solely of the user's hand-defined agents. No library
+                # cast, and no leak guard (customs legitimately carry their own provenance).
+                logger.info(f"Custom-only mode: running on {len(custom_profiles)} custom agents")
                 profiles = CustomAgentParser.merge_profiles([], custom_profiles)
-                state.profiles_count = len(profiles)
-                logger.info(f"Custom-only population: {len(profiles)} agents")
             else:
                 if custom_only:
-                    logger.warning("custom_only requested but no usable custom profiles — falling back to auto-generation")
+                    logger.warning("custom_only requested but no usable custom profiles — using library cast")
 
-                profiles = generator.generate_profiles_from_entities(
-                    entities=filtered.entities,
-                    use_llm=use_llm_for_profiles,
-                    progress_callback=profile_progress,
-                    graph_id=state.graph_id,
-                    parallel_count=parallel_profile_count,
-                    realtime_output_path=realtime_output_path,
-                    output_platform="opinion_space"
-                )
+                library = get_library()
+                if library.is_empty() and not (custom_profiles and len(custom_profiles) > 0):
+                    state.status = SimulationStatus.FAILED
+                    state.error = "Persona library is empty — run build_library.py to populate it."
+                    self._save_simulation_state(state)
+                    return state
 
-                state.profiles_count = len(profiles)
+                n = max(1, min(DEFAULT_MAIN_CAST_SIZE, MAX_CAST_SIZE))
+                cast_query = simulation_requirement or document_text or ""
+                cast = select_for_query(n, cast_query, library=library, seed=0)
+                # Convert library identities to sim-ready profiles (stamps library
+                # provenance + deterministic budget economics in product mode).
+                library_profiles = [_build_profile(p, i, mode) for i, p in enumerate(cast)]
+                # Leak guard — runs on the LIBRARY portion only, before any custom merge.
+                assert_library_cast(library_profiles)
+                logger.info(f"Selected {len(library_profiles)} library personas as the cast")
 
-            # ========== Expand population if needed (LLM self-generation) ==========
-            # Always expand if we have fewer than 20 agents — richer simulations need scale.
-            # Skipped in custom-only mode (the cast is deliberately exactly what the user defined).
-            target_min = 20
-            if not run_custom_only and len(profiles) < target_min and document_text:
-                needed = target_min - len(profiles)
-                logger.info(f"Seed population small ({len(profiles)}), expanding by {needed} via LLM...")
-                if progress_callback:
-                    progress_callback(
-                        "generating_profiles", 85,
-                        f"Expanding agent population by {needed}...",
-                        current=len(profiles),
-                        total=target_min
-                    )
-                
-                profiles = generator.expand_population(
-                    seed_profiles=profiles,
-                    document_text=document_text,
-                    target_count=target_min,
-                    progress_callback=lambda curr, tot, msg: progress_callback(
-                        "generating_profiles", 85 + int(curr / tot * 10),
-                        msg,
-                        current=curr,
-                        total=tot
-                    ) if progress_callback else None,
-                )
-                
-                state.profiles_count = len(profiles)
-                logger.info(f"Population expanded to {len(profiles)} agents")
+                # Merge custom agents (mixed mode). Custom overrides library by name and
+                # gets sequential IDs reassigned. Do NOT re-guard after merge — customs
+                # carry their own (non-library) provenance by design.
+                if custom_profiles and len(custom_profiles) > 0:
+                    profiles = CustomAgentParser.merge_profiles(library_profiles, custom_profiles)
+                    logger.info(f"Merged {len(custom_profiles)} custom agents: final count = {len(profiles)}")
+                else:
+                    profiles = library_profiles
 
-            # ========== Merge custom agents if provided ==========
-            # In custom-only mode the custom profiles are already the population, so skip.
-            if not run_custom_only and custom_profiles and len(custom_profiles) > 0:
-                if progress_callback:
-                    progress_callback(
-                        "generating_profiles", 92,
-                        f"Merging {len(custom_profiles)} custom agents...",
-                        current=len(profiles),
-                        total=len(profiles) + len(custom_profiles)
-                    )
-                profiles = CustomAgentParser.merge_profiles(profiles, custom_profiles)
-                state.profiles_count = len(profiles)
-                logger.info(f"Merged custom agents: final count = {len(profiles)}")
+            state.profiles_count = len(profiles)
+            # The cast no longer equals the graph entity count — report the cast size so
+            # the status endpoint's expected-count converges to reality.
+            state.entities_count = len(profiles)
 
-            if progress_callback:
-                progress_callback(
-                    "generating_profiles", 95,
-                    "Saving Profile files...",
-                    current=total_entities,
-                    total=total_entities
-                )
-
-            generator.save_profiles(
-                profiles=profiles,
-                file_path=os.path.join(sim_dir, "agentsociety_profiles.json"),
-                platform="opinion_space"
-            )
-
-            usage = generator.get_usage_stats()
-            state.prepare_prompt_tokens = usage["prompt_tokens"]
-            state.prepare_completion_tokens = usage["completion_tokens"]
-            state.prepare_cost_usd = usage["estimated_cost_usd"]
+            # Save the cast. No LLM ran on this path, so prepare token/cost stays zero —
+            # which keeps "no model in the cast path" assertable.
+            with open(os.path.join(sim_dir, "agentsociety_profiles.json"), 'w', encoding='utf-8') as f:
+                json.dump(profiles, f, ensure_ascii=False, indent=2)
+            state.prepare_prompt_tokens = 0
+            state.prepare_completion_tokens = 0
+            state.prepare_cost_usd = 0.0
             self._save_simulation_state(state)
 
             if progress_callback:
                 progress_callback(
                     "generating_profiles", 100,
-                    f"Completed, total {len(profiles)} Profiles",
+                    f"Cast ready, total {len(profiles)} agents",
                     current=len(profiles),
                     total=len(profiles)
                 )
@@ -548,11 +525,6 @@ class SimulationManager:
                 competitive_landscape = []
                 if document_text:
                     try:
-                        from openai import OpenAI
-                        client = OpenAI(
-                            api_key=Config.LLM_API_KEY,
-                            base_url=Config.LLM_BASE_URL,
-                        )
                         facts = ctx_engine.extract_facts(
                             document_text=document_text,
                             llm_client=client,
@@ -569,7 +541,16 @@ class SimulationManager:
                         logger.warning(f"LLM extraction skipped: {e}")
 
                 doc_context = {
-                    "mode": mode,
+                    "mode": mode,  # PRIMARY mode — authoritative for runtime + rules
+                    "converged": converged,
+                    "secondary_lens": secondary_lens,  # "product"|"policy"|None
+                    "mode_detection": {
+                        "scores": (detection or {}).get("scores", {}),
+                        "decided_mode": (detection or {}).get("mode"),
+                        "confidence": (detection or {}).get("confidence"),
+                        "used_llm_tiebreak": used_llm_tiebreak,
+                        "manual_override": mode_is_manual,
+                    },
                     "domain": ctx_engine.domain,
                     "domain_profile": ctx_engine.get_domain_profile(),
                     "document_context_block": ctx_engine.get_document_context_block(),
@@ -613,22 +594,25 @@ class SimulationManager:
                     total=3
                 )
             
+            # The cast is library personas, not graph entities, so pass entities=[] —
+            # time/event config still generate from the requirement + document context,
+            # and per-agent activity configs come from the cast below (not EntityNodes).
             sim_params = config_generator.generate_config(
                 simulation_id=simulation_id,
                 project_id=state.project_id,
                 graph_id=state.graph_id,
                 simulation_requirement=simulation_requirement,
                 document_text=document_text,
-                entities=filtered.entities,
+                entities=[],
             )
 
-            if custom_profiles:
-                core_focus_custom = [p for p in custom_profiles if p.get("is_core_focus", False)]
-                if core_focus_custom:
-                    sim_params = config_generator.inject_core_focus_configs(
-                        sim_params, custom_profiles
-                    )
-                    logger.info(f"Injected core focus configs for {len(core_focus_custom)} agents")
+            # Give every cast member an AgentActivityConfig. With entities=[] there are
+            # no existing configs, so this injects one per profile (library agents get
+            # the standard config honouring their stance; is_core_focus customs get the
+            # elevated one).
+            sim_params = config_generator.inject_core_focus_configs(
+                sim_params, profiles
+            )
             
             if progress_callback:
                 progress_callback(

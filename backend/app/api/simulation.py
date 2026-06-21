@@ -19,6 +19,7 @@ from ..services.topic_extractor import TopicExtractor
 from ..services.interview_service import InterviewService
 from ..services.custom_agent_parser import CustomAgentParser
 from ..services.agent_enricher import AgentContextEnricher
+from ..services import mode_detector
 from ..services.deep_research_service import research_archetypes as _deep_research_archetypes
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
@@ -544,9 +545,20 @@ def prepare_simulation():
         # Run only on the user's custom agents (skip graph-derived population).
         # Defaults to False = merge custom agents into the auto-generated population.
         custom_agents_only = bool(data.get('custom_agents_only', False))
-        # Simulation mode: 'policy' (default) or 'product'. Drives persona framing +
-        # archetype taxonomy. Anything unrecognised degrades to 'policy' (never errors).
-        mode = (data.get('mode') or 'policy').strip().lower()
+        # Simulation mode: 'policy' or 'product'. Drives persona framing + archetype
+        # taxonomy. If the user explicitly chose a mode (touched the toggle/override)
+        # `mode_is_manual` is True and that choice is pinned. Otherwise we auto-detect
+        # from the seed (+ document) so users don't silently get the wrong mode.
+        manual_mode = (data.get('mode') or '').strip().lower()
+        if manual_mode not in ('policy', 'product'):
+            manual_mode = ''
+        mode_is_manual = bool(data.get('mode_is_manual')) and bool(manual_mode)
+
+        # Keyword detection runs synchronously so the response can echo the banner
+        # data immediately. The (optional) LLM tiebreak happens later in
+        # prepare_simulation, where the LLM_* client is already constructed.
+        detection = mode_detector.detect(simulation_requirement, document_text, llm_client=None)
+        mode = manual_mode if mode_is_manual else detection["mode"]
         if mode not in ('policy', 'product'):
             mode = 'policy'
 
@@ -592,10 +604,13 @@ def prepare_simulation():
                 defined_entity_types=entity_types_list,
                 enrich_with_edges=False  # No edge information，Speed up
             )
-            # Save entity count to status（For frontend to get immediately）
-            state.entities_count = filtered_preview.filtered_count
+            # The cast is drawn from the persona library, not these graph entities, so
+            # the expected agent count is the library cast size — not filtered_count.
+            # We still read entity_types here for display/context.
+            from ..services.simulation_manager import DEFAULT_MAIN_CAST_SIZE
+            state.entities_count = DEFAULT_MAIN_CAST_SIZE
             state.entity_types = list(filtered_preview.entity_types)
-            logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
+            logger.info(f"Graph entities (context only): {filtered_preview.filtered_count}, types: {filtered_preview.entity_types}")
         except Exception as e:
             logger.warning(f"Synchronously get entity countFailed（Will retry in background task）: {e}")
             # Failure does not affect subsequent process，Background task will retry
@@ -701,6 +716,8 @@ def prepare_simulation():
                     custom_profiles=custom_profiles,
                     custom_only=custom_agents_only,
                     mode=mode,
+                    detection=detection,
+                    mode_is_manual=mode_is_manual,
                 )
 
                 # prepare_simulation returns a FAILED state (instead of raising)
@@ -741,7 +758,19 @@ def prepare_simulation():
                 "message": "Preparation task started，Please via /api/simulation/prepare/status Query progress",
                 "already_prepared": False,
                 "expected_entities_count": state.entities_count,  # Expected number of entities to process
-                "entity_types": state.entity_types  # Entity type list
+                "entity_types": state.entity_types,  # Entity type list
+                # Mode resolution — frontend renders the detection banner from this.
+                # Note: the keyword decision is echoed here; an LLM tiebreak may still
+                # refine the persisted mode during the async prepare task.
+                "mode": mode,
+                "mode_is_manual": mode_is_manual,
+                "converged": detection["converged"],
+                "secondary_lens": detection["secondary_lens"],
+                "mode_detection": {
+                    "decided_mode": detection["mode"],
+                    "confidence": detection["confidence"],
+                    "scores": detection["scores"],
+                },
             }
         })
         
@@ -1108,6 +1137,43 @@ def get_simulation_history():
         }), 500
 
 
+@simulation_bp.route('/<simulation_id>', methods=['DELETE'])
+def delete_simulation(simulation_id: str):
+    """Delete a simulation's data directory from disk.
+
+    Refuses while the simulation is running. The id is validated against the
+    directory's actual children so a crafted id can never escape the data dir.
+    """
+    try:
+        import shutil
+
+        if simulation_id in SimulationRunner.get_running_simulations():
+            return jsonify({
+                "success": False,
+                "error": "Simulation is currently running — stop it before deleting."
+            }), 409
+
+        base_dir = os.path.abspath(Config.OASIS_SIMULATION_DATA_DIR)
+        if simulation_id not in os.listdir(base_dir):
+            return jsonify({"success": False, "error": f"Simulation {simulation_id} not found"}), 404
+
+        target = os.path.join(base_dir, simulation_id)
+        if not os.path.isdir(target):
+            return jsonify({"success": False, "error": f"Simulation {simulation_id} not found"}), 404
+
+        shutil.rmtree(target)
+        logger.info(f"Deleted simulation {simulation_id} from disk")
+        return jsonify({"success": True, "data": {"simulation_id": simulation_id}})
+
+    except Exception as e:
+        logger.error(f"Failed to delete simulation {simulation_id}: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }), 500
+
+
 @simulation_bp.route('/<simulation_id>/profiles', methods=['GET'])
 def get_simulation_profiles(simulation_id: str):
     """
@@ -1169,6 +1235,21 @@ def rerun_simulation_research(simulation_id: str):
 
     Reads entity types from the graph that this simulation is built on,
     runs the deep research pipeline, overwrites enrichment.json.
+    
+    Request body:
+    {
+        "agent_context": {
+            "agents": [
+                {
+                    "name": "agent_name",
+                    "archetype": "agent_archetype",
+                    "description": "agent_description",
+                    "background": "agent_background"
+                }
+            ],
+            "context_focus": "specific_focus_area"
+        }   // optional, custom agent context to shape research
+    }
     """
     try:
         import re as _re
@@ -1197,10 +1278,14 @@ def rerun_simulation_research(simulation_id: str):
         project = ProjectManager().get_project(state.project_id) if state.project_id else None
         seed = (project.simulation_requirement if project else "") or ""
 
+        # Get agent context from request body
+        agent_context = request.get_json() or {}
+
         raw_research = _research(
             archetypes=entity_types,
             query=seed or "current socio-economic conditions South Africa 2025",
             document_text=seed,
+            agent_context=agent_context,
         )
 
         if not raw_research:
@@ -1209,7 +1294,7 @@ def rerun_simulation_research(simulation_id: str):
                 "error": "Research returned no results. Check FIRECRAWL_API_KEY and Firecrawl quota."
             }), 500
 
-        enrichment = AgentContextEnricher.enrich_from_miroflow(raw_research, entity_types)
+        enrichment = AgentContextEnricher.enrich_from_web_research(raw_research, entity_types)
         sim_dir = manager._get_simulation_dir(simulation_id)
         enrichment_file = os.path.join(sim_dir, "enrichment.json")
         with open(enrichment_file, 'w', encoding='utf-8') as f:
@@ -1221,6 +1306,7 @@ def rerun_simulation_research(simulation_id: str):
                 "archetypes": entity_types,
                 "enriched_count": len(enrichment),
                 "enrichment": raw_research,
+                "agent_context": agent_context,
             }
         })
     except Exception as e:
@@ -1687,7 +1773,7 @@ def generate_profiles():
                     document_text=seed_message,
                     max_workers=3,
                 )
-                enrichment_data = AgentContextEnricher.enrich_from_miroflow(raw_content, entity_types)
+                enrichment_data = AgentContextEnricher.enrich_from_web_research(raw_content, entity_types)
                 logger.info(f"Web enrichment complete: {len(enrichment_data)} archetypes enriched")
         except Exception as enrich_err:
             logger.warning(f"Web enrichment failed (continuing without it): {enrich_err}")
@@ -3770,9 +3856,13 @@ def intervene_live(simulation_id: str, agent_id: int):
             intervention_text=intervention_text,
         )
 
+        # No judge on the live-intervention path: it's interactive and judging it
+        # would add a blocking Plus-tier call per poke while gating nothing.
+        response_data = result.get("result") or result
+
         return jsonify({
             "success": result.get("success", False),
-            "data": result.get("result") or result
+            "data": response_data
         })
 
     except ValueError as e:
@@ -3819,9 +3909,13 @@ def broadcast_intervention(simulation_id: str):
             founder_name=founder_name,
         )
 
+        # No judge on the broadcast path: interactive, and a blocking Plus-tier
+        # call per broadcast gates nothing.
+        response_data = result.get("result") or result
+
         return jsonify({
             "success": result.get("success", False),
-            "data": result.get("result") or result
+            "data": response_data
         })
 
     except ValueError as e:

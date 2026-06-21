@@ -1,0 +1,97 @@
+{
+  "_README": "Curated South African world-facts: real current costs agents reason against so they never invent magnitudes (the 'two tanks' failure). Every fact is inspectable and assertable with the LLM OFF. provenance: 'curated' (hand-authored, authoritative — wins on conflict) | 'web' (harvested, overridable) | 'discovered' (promoted from a sim fact-gap). Each fact MUST carry a numeric value + unit so it can be validated. 'derived' is an optional human-readable consequence shown to agents. Update by editing this file or via scripts/promote_fact.py. Keep as_of current; stale facts (older than ~12 months) should be reviewed.",
+  "version": 1,
+  "currency": "ZAR",
+  "facts": [
+    {
+      "item": "petrol",
+      "value": 22.0,
+      "unit": "R/litre",
+      "derived": "R100 buys about 4.5 litres of petrol — nowhere near a full tank (a small car tank is ~45 L).",
+      "source": "AA / DMRE fuel price (inland 95)",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "diesel",
+      "value": 21.0,
+      "unit": "R/litre",
+      "derived": "R100 buys roughly 4.8 litres of diesel.",
+      "source": "AA / DMRE fuel price (inland)",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "mobile_data",
+      "value": 85.0,
+      "unit": "R/GB",
+      "derived": "A typical out-of-bundle/prepaid gig of data is about R85; bundles are cheaper but still a real monthly cost on a tight budget.",
+      "source": "ICASA data cost reporting / major SA networks prepaid rates",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "taxi_fare_local",
+      "value": 18.0,
+      "unit": "R/trip (local)",
+      "derived": "A single local minibus-taxi trip is roughly R15–R20; a daily commute is two trips, so ~R36/day, ~R720/month.",
+      "source": "SANTACO regional fare schedules (indicative)",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "bread_loaf",
+      "value": 16.0,
+      "unit": "R/loaf",
+      "derived": "A standard loaf of brown bread is about R16.",
+      "source": "Stats SA CPI food basket (indicative)",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "electricity_prepaid",
+      "value": 3.0,
+      "unit": "R/kWh",
+      "derived": "Prepaid electricity is roughly R3/kWh; R100 buys about 33 units, a few days for a modest household.",
+      "source": "Eskom / municipal prepaid tariffs (indicative)",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "grant_child_support",
+      "value": 560.0,
+      "unit": "R/month per child",
+      "derived": "The SASSA Child Support Grant is R560/month per child.",
+      "source": "SASSA grant schedule",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "grant_old_age",
+      "value": 2310.0,
+      "unit": "R/month",
+      "derived": "The SASSA Older Persons (old-age) grant is about R2,310/month.",
+      "source": "SASSA grant schedule",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "grant_disability",
+      "value": 2310.0,
+      "unit": "R/month",
+      "derived": "The SASSA Disability Grant is about R2,310/month.",
+      "source": "SASSA grant schedule",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    },
+    {
+      "item": "grant_srd",
+      "value": 370.0,
+      "unit": "R/month",
+      "derived": "The SRD (Social Relief of Distress) grant is R370/month — survival money, not discretionary.",
+      "source": "SASSA SRD schedule",
+      "as_of": "2026-06",
+      "provenance": "curated"
+    }
+  ]
+}

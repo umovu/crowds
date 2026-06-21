@@ -104,6 +104,30 @@ logger = logging.getLogger("agentsociety.runner")
 # Kept generic by design (no name detection) per product-framing decision.
 FOUNDER_LABEL = "The founder"
 
+# Substrings that mark an LLM failure as *fatal for the whole run* — i.e. retrying
+# won't help because it's an account/quota/auth problem, not a transient blip. When
+# every active agent in a round fails with one of these, we stop the sim and mark it
+# errored instead of silently looping all remaining rounds (the "dead but looks
+# running" trap). Kept as plain text matching so it works across providers without
+# importing provider-specific exception types.
+_FATAL_LLM_ERROR_MARKERS = (
+    "free tier of the model has been exhausted",
+    "insufficient_quota",
+    "exceeded your current quota",
+    "quota exceeded",
+    "invalid api key",
+    "incorrect api key",
+    "authenticationerror",
+    "401",
+    "403",
+)
+
+
+def _is_fatal_llm_error(exc: BaseException) -> bool:
+    """True if the exception text looks like an unrecoverable auth/quota error."""
+    msg = str(exc).lower()
+    return any(marker in msg for marker in _FATAL_LLM_ERROR_MARKERS)
+
 _shutdown_event: Optional[asyncio.Event] = None
 _cleanup_done = False
 
@@ -461,6 +485,26 @@ class AgentSocietyRunner:
         replay_db_path = os.path.join(self.output_dir, "replay.db")
         self._replay = ReplayStorage(replay_db_path)
 
+    def _log_fact_gap(self, round_num: int, agent: "PersonAgent", needed_fact: str) -> None:
+        """Append one fact-gap (an agent needed a real cost not provided) to
+        fact_gaps.jsonl in the output dir. Append-only, best-effort — a logging
+        failure must never disturb the sim."""
+        try:
+            rec = {
+                "round": round_num,
+                "agent_id": agent.id,
+                "agent_name": getattr(agent, "name", str(agent.id)),
+                "archetype": agent.init_state.get("actor_archetype", "unknown")
+                if hasattr(agent, "init_state") else "unknown",
+                "needed_fact": needed_fact,
+                "timestamp": datetime.now().isoformat(),
+            }
+            path = os.path.join(self.output_dir, "fact_gaps.jsonl")
+            with open(path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        except Exception as e:
+            logger.debug(f"fact-gap log skipped: {e}")
+
     def _get_active_agents(
         self,
         all_agents: Dict[int, PersonAgent],
@@ -570,7 +614,7 @@ class AgentSocietyRunner:
                     user=os.environ.get("NEO4J_USER", Config.NEO4J_USER),
                     password=os.environ.get("NEO4J_PASSWORD", Config.NEO4J_PASSWORD),
                 )
-                sim_mode = config.get("mode", "policy")
+                sim_mode = self.config.get("mode", "policy")
                 ctx_engine = DocumentContextEngine(storage, mode=sim_mode)
                 profile = ctx_engine.build_from_graph(graph_id)
                 document_context = ctx_engine.get_document_context_block()
@@ -599,6 +643,19 @@ class AgentSocietyRunner:
                 + "\n" + "=" * 60 + "\n"
             )
             document_context = (document_context or "") + fact_block
+
+        # 3b. Append curated WORLD FACTS — real current SA costs (fuel, data,
+        # taxi fare, grants) the whole room reasons against, so no agent invents a
+        # magnitude ("R100 = two tanks"). Mode-agnostic: real costs are universal.
+        # Empty block when the facts file is missing → context unchanged.
+        try:
+            from app.services.world_facts import render_block as _world_facts_block
+            _wf = _world_facts_block()
+            if _wf:
+                document_context = (document_context or "") + _wf
+                print(f"  World     : injected curated world-facts ({_wf.count(chr(10)) - 8} facts)")
+        except Exception as e:
+            logger.warning(f"World-facts injection skipped: {e}")
 
         # ── Shared opinion feed (SQLite) ───────────────────────
         db_path = os.path.join(self.output_dir, "opinion_simulation.db")
@@ -673,7 +730,11 @@ class AgentSocietyRunner:
         )
         
         # ── Event Rule Engine with dynamic rules ──────────────────
-        self._event_engine = EventRuleEngine(dynamic_rules=dynamic_rules)
+        # Mode-gated: the bundled static rules are policy-domain (SAPS, Parliament,
+        # Eskom…). A product sim loads none of them and relies on dynamic rules
+        # from the document context, so riot police never deploy into a product
+        # stress-test.
+        self._event_engine = EventRuleEngine(dynamic_rules=dynamic_rules, mode=sim_mode)
 
         # ── Load profiles → cap agents → create agents ──────
         profiles      = load_profiles(self.simulation_dir)
@@ -731,14 +792,21 @@ class AgentSocietyRunner:
             ac  = agent_cfg_map.get(uid, {})
 
             archetype = p.get("actor_archetype") or "civic_moderate"
-            activity_level = _ARCHETYPE_ACTIVITY.get(archetype, ac.get("activity_level", 0.6))
+            # Custom-agent-first: a known archetype uses its tuned activity weight.
+            # An unknown (custom) archetype uses the agent's OWN activity_level
+            # (from its profile / agent_config), falling back to a neutral 0.6 —
+            # so custom agents aren't silently flattened to the policy default.
+            if archetype in _ARCHETYPE_ACTIVITY:
+                activity_level = _ARCHETYPE_ACTIVITY[archetype]
+            else:
+                activity_level = p.get("activity_level", ac.get("activity_level", 0.6))
 
             agent = OpinionCitizenAgent(
                 id=uid,
                 profile=p,
                 name=p.get("name", f"agent_{uid}"),
                 interested_topics=p.get("interested_topics", []),
-                stance=ac.get("stance", "neutral"),
+                stance=ac.get("stance", p.get("stance", "neutral")),
                 activity_level=activity_level,
                 active_hours=ac.get("active_hours", list(range(8, 23))),
                 group_affiliation=p.get("group_affiliation"),
@@ -746,6 +814,7 @@ class AgentSocietyRunner:
                 behavioral_tendencies=p.get("behavioral_tendencies"),
                 source_entity_uuid=p.get("source_entity_uuid"),
                 is_institutional=p.get("is_institutional", False),
+                is_core_focus=p.get("is_core_focus", False),
             )
             all_agents[uid] = agent
             # Register similarity attrs for homophily-biased feeds. init_state is
@@ -935,6 +1004,30 @@ class AgentSocietyRunner:
                     break
             results = await gather_task
 
+            # ── Fatal LLM failure guard ─────────────────────────────────
+            # If every active agent this round failed with an auth/quota error,
+            # the model is unavailable and retrying further rounds is pointless
+            # (and would spin a tight failure loop). Stop, mark the sim errored
+            # with a human reason, and break — so the UI reflects reality instead
+            # of showing a "running" sim that can't be paused.
+            exc_results = [r for r in results if isinstance(r, BaseException)]
+            if active and len(exc_results) == len(results) and all(
+                _is_fatal_llm_error(r) for r in exc_results
+            ):
+                reason = "LLM unavailable — quota exhausted or invalid credentials"
+                logger.error(
+                    f"Round {round_num + 1}: all {len(active)} agents failed with a "
+                    f"fatal LLM error; stopping simulation. ({exc_results[0]})"
+                )
+                print(f"\n  [STOPPED] {reason}. Halting at round {round_num + 1}.")
+                ipc.update_status("error", {
+                    "current_round": round_num + 1,
+                    "total_rounds": total_rounds,
+                    "error": reason,
+                    "message": f"Simulation stopped at round {round_num + 1}: {reason}",
+                })
+                break
+
             # ── Collect actions with archetype for event engine ─────────
             actions_for_rules = []
             posted_agent_ids = set()
@@ -953,6 +1046,13 @@ class AgentSocietyRunner:
 
                 record = result if isinstance(result, dict) else {"result": str(result)}
                 writer.write_action(round_num, agent.id, agent.name, record)
+
+                # Fact-gap loop: when an agent flagged it needed a real cost that
+                # wasn't in WORLD FACTS / its own numbers, log it (instead of the
+                # agent inventing a figure). Reviewed after the run and promoted
+                # into the curated world-facts via scripts/promote_fact.py.
+                if isinstance(record, dict) and record.get("needed_fact"):
+                    self._log_fact_gap(round_num, agent, record["needed_fact"])
 
                 # Store in replay
                 if isinstance(record, dict):

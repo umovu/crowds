@@ -1,7 +1,7 @@
 """
 Agent Enricher — Uses research findings to enhance agent persona context.
 
-Takes structured research (from literature search or MiroFlow web research)
+Takes structured research (from literature search or deep web research)
 and transforms it into prompt context injected into agent profiles during
 simulation setup.
 """
@@ -71,7 +71,7 @@ class AgentContextEnricher:
         Create enriched context for archetypes based on web research.
 
         Args:
-            research_result: Result from MiroFlowService.research()
+            research_result: Result from deep research service
             archetypes: List of archetype names to target
 
         Returns:
@@ -94,15 +94,15 @@ class AgentContextEnricher:
         return context
 
     @staticmethod
-    def enrich_from_miroflow(
+    def enrich_from_web_research(
         research_results: Dict[str, str],
         archetypes: List[str]
     ) -> Dict[str, str]:
         """
-        Create enriched context from MiroFlow deep research.
+        Create enriched context from deep web research.
 
         Args:
-            research_results: Dict mapping archetype → research text from MiroFlow
+            research_results: Dict mapping archetype → research text from web research
             archetypes: List of archetype names to target
 
         Returns:

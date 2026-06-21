@@ -1,8 +1,7 @@
 """
 Web Research Skill — Agentsociety2-compatible subprocess script.
 
-Wraps Fub's MiroFlowService for use as an AgentSociety2 subprocess skill.
-Calls Fub's Flask API endpoint to trigger MiroFlow web research.
+Calls Fub's Flask API endpoint to trigger deep web research (Firecrawl + Jina + LLM).
 """
 
 import json
@@ -18,6 +17,7 @@ def run_web_research(args_json: str) -> dict:
 
     Args from --args-json:
         - query: Research question
+        - agent_context: Optional dict with custom agent context to shape research
 
     Returns:
         Dict with research results
@@ -28,6 +28,7 @@ def run_web_research(args_json: str) -> dict:
         return {"success": False, "error": f"Invalid JSON args: {e}"}
 
     query = args.get("query", "")
+    agent_context = args.get("agent_context", {})
     if not query:
         return {"success": False, "error": "Query is required"}
 
@@ -35,7 +36,7 @@ def run_web_research(args_json: str) -> dict:
     api_url = os.environ.get("FUB_API_URL", "http://localhost:5001")
     url = f"{api_url}/api/research/web"
 
-    data = json.dumps({"query": query}).encode("utf-8")
+    data = json.dumps({"query": query, "agent_context": agent_context}).encode("utf-8")
     req = urllib.request.Request(
         url,
         data=data,

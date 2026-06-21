@@ -37,14 +37,16 @@ class EventRuleEngine:
     Supports both static rules (from JSON) and dynamic rules (from DocumentContextEngine).
     """
 
-    def __init__(self, rules_path: Optional[str] = None, dynamic_rules: Optional[List[Dict[str, Any]]] = None):
+    def __init__(self, rules_path: Optional[str] = None, dynamic_rules: Optional[List[Dict[str, Any]]] = None,
+                 mode: str = "policy"):
         self.rules_path = rules_path or DEFAULT_RULES_PATH
+        self.mode = (mode or "policy").strip().lower()
         self.rules: List[Dict[str, Any]] = []
         self.trigger_history: List[Dict[str, Any]] = []
         self.cooldowns: Dict[str, int] = {}  # rule_id -> last_triggered_round
         self.trigger_counts: Dict[str, int] = {}  # rule_id -> total_triggers
         self._load_rules()
-        
+
         # Inject dynamic rules from document context if provided
         if dynamic_rules:
             self._inject_dynamic_rules(dynamic_rules)
@@ -73,11 +75,32 @@ class EventRuleEngine:
         try:
             with open(self.rules_path, "r", encoding="utf-8") as f:
                 config = json.load(f)
-                self.rules = config.get("rules", [])
-            logger.info(f"Loaded {len(self.rules)} event rules from {self.rules_path}")
+                all_rules = config.get("rules", [])
+            # The static rules are POLICY-domain reactive events (SAPS deployment,
+            # parliamentary debates, Eskom shocks, taxi strikes). They make no sense
+            # in a PRODUCT stress-test — riot police don't deploy because parents
+            # dislike an app's price. A rule applies to a mode if its
+            # `applies_to_modes` list contains it, OR (default) if it's unset and
+            # the sim is in policy mode. Product sims rely on dynamic rules derived
+            # from the document context instead.
+            self.rules = [r for r in all_rules if self._rule_applies(r)]
+            skipped = len(all_rules) - len(self.rules)
+            logger.info(
+                f"Loaded {len(self.rules)} event rules ({skipped} skipped for mode="
+                f"'{self.mode}') from {self.rules_path}"
+            )
         except Exception as e:
             logger.error(f"Failed to load event rules: {e}")
             self.rules = []
+
+    def _rule_applies(self, rule: Dict[str, Any]) -> bool:
+        """Whether a static rule applies in the current sim mode. Rules may declare
+        `applies_to_modes`; unset = policy-only (the legacy default, since every
+        bundled static rule is a policy/civic event)."""
+        modes = rule.get("applies_to_modes")
+        if modes is None:
+            return self.mode == "policy"
+        return self.mode in modes
 
     def evaluate(self, round_num: int, actions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """

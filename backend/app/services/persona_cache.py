@@ -61,7 +61,7 @@ def make_key(
     the broader cross-project fallback.
     """
     payload = {
-        "v": 3,                                 # bump if prompt template changes
+        "v": 4,                                 # bump if prompt template changes
         "kind": "exact",
         "model": (model_name or "").strip(),
         "name": (entity_name or "").strip(),
@@ -90,7 +90,7 @@ def make_archetype_key(
     web-research data for this archetype, which is topic-specific).
     """
     payload = {
-        "v": 3,
+        "v": 4,
         "kind": "archetype",
         "model": (model_name or "").strip(),
         "type": (entity_type or "").strip().lower(),

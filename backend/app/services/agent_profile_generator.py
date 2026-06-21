@@ -71,6 +71,10 @@ class AgentProfile:
     # or priority agents that should always be part of the narrative.
     is_core_focus: bool = False
 
+    # Initial stance in the simulation: support / neutral / concerned / oppose / resist.
+    # When absent, the simulation config generator or runtime defaults to neutral.
+    stance: Optional[str] = None
+
     # === AgentSociety Psychological Architecture ===
     # Emotions (0-10 scale for each)
     emotions: Optional[Dict[str, float]] = None
@@ -97,18 +101,38 @@ class AgentProfile:
             "name": self.name,
             "persona": self.persona,
             "background_story": self.background_story,
+            "age": self.age,
+            "gender": self.gender,
+            "education": self.education,
+            "occupation": self.occupation,
+            "marriage_status": self.marriage_status,
+            "province": self.province,
             "interested_topics": self.interested_topics or [],
+            "group_affiliation": self.group_affiliation,
+            "voice_guide": self.voice_guide,
+            "actor_archetype": self.actor_archetype,
+            "behavioral_tendencies": self.behavioral_tendencies,
+            "is_institutional": self.is_institutional,
+            "is_core_focus": self.is_core_focus,
+            "stance": self.stance,
             "source_entity_uuid": self.source_entity_uuid,
             "source_entity_type": self.source_entity_type,
             "created_at": self.created_at,
-            "is_core_focus": self.is_core_focus,
         }
-
+        # Psychological state (used by OpinionCitizenAgent._init_psychological_state)
+        if self.emotions:
+            profile["emotion"] = self.emotions
+        if self.needs:
+            profile["needs"] = self.needs
+        if self.attitudes:
+            profile["attitudes"] = self.attitudes
+        if self.beliefs:
+            profile["beliefs"] = self.beliefs
         return profile
 
     def to_dict(self) -> Dict[str, Any]:
         """Full dict (useful for debugging / logging)."""
-        return {
+        d = {
             "id": self.id,
             "name": self.name,
             "persona": self.persona,
@@ -122,10 +146,24 @@ class AgentProfile:
             "country": self.country,
             "province": self.province,
             "interested_topics": self.interested_topics,
+            "group_affiliation": self.group_affiliation,
+            "voice_guide": self.voice_guide,
+            "actor_archetype": self.actor_archetype,
+            "behavioral_tendencies": self.behavioral_tendencies,
+            "is_institutional": self.is_institutional,
+            "is_core_focus": self.is_core_focus,
+            "stance": self.stance,
+            "emotions": self.emotions,
+            "emotion_keyword": self.emotion_keyword,
+            "emotion_thought": self.emotion_thought,
+            "needs": self.needs,
+            "attitudes": self.attitudes,
+            "beliefs": self.beliefs,
             "source_entity_uuid": self.source_entity_uuid,
             "source_entity_type": self.source_entity_type,
             "created_at": self.created_at,
         }
+        return {k: v for k, v in d.items() if v is not None}
 
 
 class AgentProfileGenerator:
@@ -298,6 +336,25 @@ class AgentProfileGenerator:
         if graph_id:
             self.graph_id = graph_id
 
+        # Drop products / brands / apps / programmes — they are context, not
+        # agents (a competitor product must not become a person). Genuine orgs and
+        # people stay. Fast deterministic rules decide the clear cases; ambiguous
+        # org/entity names (possible mistyped product-brands) get a cheap LLM
+        # classification in parallel. Errors default to KEEP (never over-delete).
+        import concurrent.futures as _cf
+        _before = len(entities)
+        with _cf.ThreadPoolExecutor(max_workers=min(8, max(1, len(entities)))) as _ex:
+            _flags = list(_ex.map(self.is_non_agent_entity_llm, entities))
+        kept, dropped_names = [], []
+        for e, is_non_agent in zip(entities, _flags):
+            (dropped_names.append(e.name) if is_non_agent else kept.append(e))
+        entities = kept
+        if dropped_names:
+            logger.info(
+                f"Excluded {len(dropped_names)} non-agent entities (products/brands/apps): "
+                f"{', '.join(dropped_names[:10])}"
+            )
+
         total = len(entities)
         profiles: List[Optional[AgentProfile]] = [None] * total
         completed_count = [0]
@@ -408,8 +465,30 @@ class AgentProfileGenerator:
         if len(seed_profiles) >= 30:
             return len(seed_profiles)
         
-        prompt = f"""Analyze this document and determine how many distinct agent personas are needed 
-to create a meaningful simulation of the events described.
+        # Mode-aware sizing guidance: product casts size by MARKET-SEGMENT
+        # coverage, policy casts by STAKEHOLDER-GROUP coverage. (The old prompt
+        # was policy-only — "protesters, police, victims" — which sized product
+        # sims badly.)
+        if self.mode == "product":
+            consider_block = (
+                "- How many distinct MARKET SEGMENTS need representing? "
+                "(e.g. early adopters, skeptics, budget holders, integrators, "
+                "compliance gatekeepers, laggards — the full range of how a market receives a product)\n"
+                "- How broad is the product's potential market? (niche vs. mass-market)\n"
+                "- What regions / income bands / business types are implied?"
+            )
+            framing = "a meaningful market stress-test of the product described"
+        else:
+            consider_block = (
+                "- How many distinct stakeholder groups are present? "
+                "(e.g., protesters, police, victims, witnesses, officials, media)\n"
+                "- How complex is the event? (single incident vs. widespread unrest)\n"
+                "- What regions/locations are mentioned?"
+            )
+            framing = "a meaningful simulation of the events described"
+
+        prompt = f"""Analyze this document and determine how many distinct agent personas are needed
+to create {framing}.
 
 Seed entities from document: {len(seed_profiles)}
 Document excerpt (first 2000 chars):
@@ -419,9 +498,7 @@ Seed agent types (for reference):
 {', '.join([f"{p.name} ({p.actor_archetype or 'unknown'})" for p in seed_profiles[:10]])}
 
 Consider:
-- How many distinct stakeholder groups are present? (e.g., protesters, police, victims, witnesses, officials, media)
-- How complex is the event? (single incident vs. widespread unrest)
-- What regions/locations are mentioned?
+{consider_block}
 
 Return ONLY a number (integer) representing the recommended total agent count.
 Think about the minimum needed to represent all perspectives fairly."""
@@ -797,6 +874,142 @@ Return ONLY valid JSON array, no explanation."""
         "natal", "freestate", "free", "eastern", "western", "northern",
         "southern", "cape", "northwest", "north-west",
     }
+
+    # Entity TYPES that denote a product / brand / app / programme — context,
+    # not participants. (Genuine orgs/businesses are NOT here — they stay as
+    # group agents.) Category words only; no specific real-world names.
+    _NON_AGENT_ENTITY_TYPES = {
+        "product", "brand", "app", "application", "software", "platform",
+        "service", "tool", "device", "gadget", "programme", "program",
+        "campaign", "initiative", "project", "technology", "feature",
+        "website", "trademark", "model", "appliance", "hardware",
+    }
+    # Generic category words (NOT names) that, when they appear in an entity's
+    # NAME, signal it's a product/app/brand rather than a person or institution.
+    # Used to catch product-brands that the graph mistyped as "Organization".
+    _PRODUCT_NAME_MARKERS = {
+        "app", "platform", "device", "gadget", "wearable", "tracker",
+        "scanner", "sensor", "kit", "software", "system", "suite", "edition",
+        "version", "model",
+    }
+    # Substrings that mark an LLM-invented entity TYPE as a product/mechanic
+    # rather than an agent. Matched against the whole type string so compound
+    # types ("EdtechApp", "RewardCurrency", "CoinToken") are caught without
+    # enumerating every variant. Deliberately excludes person/org words.
+    _NON_AGENT_TYPE_SUBSTRINGS = (
+        "app", "product", "brand", "software", "platform", "gadget", "device",
+        "currency", "coin", "token", "voucher", "reward", "campaign", "website",
+    )
+    # A trailing version/model number ("Some Cane 2", "Foo Pro X1") is a strong
+    # product signal — people are not named with a trailing integer/version.
+    _VERSION_SUFFIX_RE = re.compile(r"\b(v?\d+(\.\d+)?|mk\s?\d+|x\d+|pro|plus|lite|max)\b$", re.I)
+
+    # Entity types that are unambiguously a PERSON — never run a product check.
+    _PERSON_ENTITY_TYPES = {
+        "person", "student", "alumni", "professor", "publicfigure", "expert",
+        "faculty", "official", "journalist", "activist", "citizen", "individual",
+        "caregiver", "resident", "patient", "voter", "commuter", "advocate",
+        "communityadvocate", "regulator", "enduser", "user", "customer",
+    }
+    # Genuine institutional types that hold opinions and participate — keep them
+    # without a product check. Anything NOT here and NOT a person type is treated
+    # as potentially a product brand and routed to the classifier, so an invented
+    # type like "TechDeveloper" can't auto-keep a competitor product as an agent.
+    _INSTITUTIONAL_ENTITY_TYPES = {
+        "university", "school", "hospital", "clinic", "ngo", "foundation",
+        "association", "agency", "governmentagency", "government", "ministry",
+        "department", "committee", "council", "union", "party", "mediaoutlet",
+        "media", "bank", "bureau", "authority", "institution", "institute",
+    }
+
+    @classmethod
+    def _deterministic_non_agent(cls, entity) -> Optional[bool]:
+        """Fast, LLM-free verdict: True = drop, False = keep, None = ambiguous.
+
+        Keys on TYPE and generic name PATTERNS, never specific real-world names.
+        `None` means "a generic org/entity that might be a product brand" — the
+        caller can escalate to an LLM classifier.
+        """
+        etype = (entity.get_entity_type() or "").strip().lower()
+        nlow = (entity.name or "").strip().lower()
+
+        # Clear person type → keep, no product check.
+        if etype in cls._PERSON_ENTITY_TYPES:
+            return False
+        # Explicit product/app/brand entity type → drop.
+        if etype in cls._NON_AGENT_ENTITY_TYPES:
+            return True
+        # LLM-INVENTED compound types ("EdtechApp", "RewardCurrency", "CoinToken",
+        # "MobileProduct") won't match the exact-word set above. Catch them by
+        # SUBSTRING — a type CONTAINING a product marker is non-agent, no LLM needed.
+        # Person/institutional types are already returned above, so this can't
+        # misfire on them. Closes the gap where a brand typed as a bespoke role
+        # slipped to AMBIGUOUS and then KEPT with the LLM off.
+        if any(marker in etype for marker in cls._NON_AGENT_TYPE_SUBSTRINGS):
+            return True
+        # A domain in the name is a product/site, never a person → drop.
+        if any(d in nlow for d in (".com", ".co.za", ".io", ".app", ".org")):
+            return True
+        # Trailing version/model number → a product SKU → drop.
+        if cls._VERSION_SUFFIX_RE.search(nlow):
+            return True
+        # Known institutional types (university, ngo, hospital, mediaoutlet, …) →
+        # keep without a product check. These are genuine orgs that hold opinions.
+        if etype in cls._INSTITUTIONAL_ENTITY_TYPES:
+            return False
+        # Everything else — generic org/entity AND any LLM-invented domain type the
+        # curated sets don't recognise (e.g. "TechDeveloper", "TelecomProvider") —
+        # gets the product-name check, then falls to the LLM classifier if unclear.
+        # This is the path that catches a competitor product (WeWALK) the graph
+        # typed as some bespoke role: an unrecognised type must NOT auto-keep.
+        toks = set(nlow.replace("-", " ").replace("/", " ").split())
+        if toks & cls._PRODUCT_NAME_MARKERS:
+            return True
+        # Ambiguous → let the cheap LLM PRODUCT/PERSON_OR_ORG classifier decide.
+        return None
+
+    @classmethod
+    def is_non_agent_entity(cls, entity) -> bool:
+        """Deterministic-only verdict (no LLM). True = exclude from agents.
+
+        Treats 'ambiguous' as KEEP — safe default when no LLM is available, and
+        keeps this method assertable with the model switched off.
+        """
+        verdict = cls._deterministic_non_agent(entity)
+        return verdict is True
+
+    def is_non_agent_entity_llm(self, entity) -> bool:
+        """Same intent, but escalates AMBIGUOUS cases to a cheap LLM classifier.
+
+        Catches semantic product-brands that generic rules miss (e.g. a device
+        named like a company, "Helix Smart Cane" typed as Organization). Falls
+        back to KEEP on any error so an LLM hiccup never deletes a real entity.
+        """
+        verdict = self._deterministic_non_agent(entity)
+        if verdict is not None:
+            return verdict  # decided without the LLM
+
+        name = (entity.name or "").strip()
+        summary = (getattr(entity, "summary", "") or "")[:300]
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content":
+                        "You classify entities for a multi-agent simulation. Reply with ONE word: "
+                        "PERSON_OR_ORG if the entity is a human or a real organisation/business/institution "
+                        "that could hold opinions and participate; PRODUCT if it is a product, app, device, "
+                        "gadget, brand, software, or campaign (context, not a participant)."},
+                    {"role": "user", "content": f"Entity name: {name}\nContext: {summary}\nAnswer:"},
+                ],
+                temperature=0,
+                max_tokens=4,
+            )
+            answer = (resp.choices[0].message.content or "").strip().upper()
+            return "PRODUCT" in answer
+        except Exception as e:
+            logger.warning(f"Entity classification LLM failed for '{name}' ({e}); keeping it.")
+            return False
 
     @classmethod
     def _is_abstract_name(cls, name: str) -> bool:
@@ -1219,7 +1432,23 @@ Output ALL sections as JSON with fields:
         return re.sub(r'[\s\-]+', '_', s.strip())
 
     def _get_enrichment_block(self, entity_type: str, context_str: str = "") -> str:
-        """Get enrichment data block for this entity's archetype."""
+        """Get enrichment data block for this entity's archetype.
+
+        DISABLED (Phase 3): web-research text must NOT author personas. Pasting
+        scraped learnings into the persona prompt produced slop (foreign-product
+        leaks like WeWALK, and a homogenising "first 3 entries" fallback that put
+        the same web soup into every persona). Persona IDENTITY now comes only
+        from survey-grounded sources (QLFS / Afrobarometer / GHS) and custom
+        agents; persona VOICE from their own voice_guide. Web research is demoted
+        to the curated WORLD-FACTS layer (world_facts.py), which grounds the
+        shared SCENARIO, not individual personas.
+
+        Returns "" so all callers are no-ops. The body below is kept (unreached)
+        as a reference for the disabled behaviour and is trivially revertible.
+        """
+        return ""
+
+        # --- disabled (see docstring) ---
         if not self.enrichment_data:
             return ""
 
@@ -1498,7 +1727,10 @@ The name field MUST be a personal name (first + last), not the original entity l
             if "gang" in entity_name.lower() or "criminal" in entity_name.lower():
                 arch = "criminal_opportunist"
                 voice = "Speak as a collective. Use 'our turf', 'the organization protects its own'. Territorial, coded, threatening when challenged. No personal stories."
-            elif "police" in entity_name.lower() or "saps" in entity_name.lower() or "defence" in entity_name.lower() or "army" in entity_name.lower() or "military" in entity_name.lower():
+            elif self.mode != "product" and ("police" in entity_name.lower() or "saps" in entity_name.lower() or "defence" in entity_name.lower() or "army" in entity_name.lower() or "military" in entity_name.lower()):
+                # Policy-only: a security/SAPS spokesperson voice has no place in a
+                # product market sim. In product mode such an entity falls through to
+                # the neutral institutional spokesperson voice above.
                 arch = "institutional_loyalist"
                 voice = "Speak as a police/military spokesperson. Use 'operational capacity', 'in accordance with', 'the public is assured'. Formal, defensive, data-driven. Never emotional."
             elif "eff" in entity_name.lower() or "anc" in entity_name.lower() or "da" in entity_name.lower() or "party" in entity_name.lower() or "union" in entity_name.lower():
