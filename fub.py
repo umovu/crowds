@@ -25,7 +25,7 @@ def main():
     parser.add_argument(
         "-v", "--version",
         action="version",
-        version=f"fub-sandbox v{_get_version()}",
+        version=f"crowds v{_get_version()}",
     )
     args, remaining = parser.parse_known_args()
 

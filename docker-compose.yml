@@ -1,7 +1,7 @@
 services:
-  fub-sandbox:
+  crowds:
     build: .
-    container_name: fub-sandbox
+    container_name: crowds
     env_file:
       - .env
     ports:

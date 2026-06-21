@@ -1,4 +1,4 @@
-# Claude Code project guidance — fub-sandbox
+# Claude Code project guidance — crowds
 
 Notes Claude should follow when working in this repo.
 
