@@ -60,6 +60,19 @@ service.interceptors.response.use(
       error.httpStatus = error.response.status
     }
 
+    // 402 from the backend = the action needs a paid plan. Flag it and broadcast
+    // an app-wide event so the UI can prompt an upgrade instead of erroring out.
+    if (error.httpStatus === 402 || error.response?.data?.code === 'upgrade_required') {
+      error.upgradeRequired = true
+      error.upgradeMessage = error.response?.data?.error || 'Upgrade required'
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('billing:upgrade-required', {
+          detail: { message: error.upgradeMessage }
+        }))
+      }
+      return Promise.reject(error)
+    }
+
     // 401 from the backend = token missing/expired/invalid. Drop the session
     // and send the user to the auth page (preserving where they were).
     if (error.httpStatus === 401) {

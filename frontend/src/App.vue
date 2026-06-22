@@ -1,9 +1,11 @@
 <template>
   <router-view />
+  <UpgradeModal />
 </template>
 
 <script setup>
 // Use Vue Router to manage pages
+import UpgradeModal from './components/UpgradeModal.vue'
 </script>
 
 <style>
