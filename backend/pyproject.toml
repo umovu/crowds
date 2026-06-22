@@ -35,8 +35,8 @@ dependencies = [
     # we can pin them to the CPU-only index below — the GPU/CUDA wheels add ~5GB
     # and blow past hosted (Railway) build limits. We use remote LLM/embeddings,
     # so CPU torch is all that's needed.
-    "torch",
-    "torchvision",
+    "torch==2.9.1",
+    "torchvision==0.24.1",
 ]
 
 [project.optional-dependencies]
@@ -60,7 +60,8 @@ dev = [
 packages = ["app"]
 
 # Pin torch/torchvision to CPU-only wheels (drops the multi-GB NVIDIA CUDA
-# stack). Required for hosted builds without a GPU (e.g. Railway).
+# stack). Required for hosted builds without a GPU (e.g. Railway). Versions are
+# pinned to releases that have Linux x86_64 CPU wheels (the Railway target).
 [tool.uv.sources]
 torch = [{ index = "pytorch-cpu" }]
 torchvision = [{ index = "pytorch-cpu" }]
