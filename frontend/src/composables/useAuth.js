@@ -55,6 +55,15 @@ async function signInWithMagicLink(email) {
   return data
 }
 
+async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: redirectTo() }
+  })
+  if (error) throw error
+  return data
+}
+
 async function signOut() {
   const { error } = await supabase.auth.signOut()
   if (error) throw error
@@ -76,6 +85,7 @@ export function useAuth() {
     signInWithPassword,
     signUpWithPassword,
     signInWithMagicLink,
+    signInWithGoogle,
     signOut,
     getAccessToken
   }
