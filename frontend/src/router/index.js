@@ -83,6 +83,14 @@ const router = createRouter({
 // These are plain HTML outside the Vue router, so we hard-navigate with
 // window.location and cancel the in-app navigation.
 router.beforeEach(async (to) => {
+  // A magic-link / OAuth code can land on a non-callback path (e.g. the root)
+  // when Supabase falls back to the Site URL. Route it through the callback
+  // view — which settles the session — instead of letting the guard below
+  // bounce it to the login page and discard the code.
+  if (to.path !== '/auth/callback' && (to.query.code || to.query.error)) {
+    return { path: '/auth/callback', query: to.query }
+  }
+
   const { initAuth, isAuthenticated } = useAuth()
   await initAuth()
 
