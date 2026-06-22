@@ -31,6 +31,12 @@ dependencies = [
     "aiohttp>=3.9.0",
     # Supabase auth — verify access-token JWTs on the backend
     "pyjwt[crypto]>=2.8.0",
+    # torch/torchvision come in transitively via agentsociety2. Declared here so
+    # we can pin them to the CPU-only index below — the GPU/CUDA wheels add ~5GB
+    # and blow past hosted (Railway) build limits. We use remote LLM/embeddings,
+    # so CPU torch is all that's needed.
+    "torch",
+    "torchvision",
 ]
 
 [project.optional-dependencies]
@@ -52,3 +58,14 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]
+
+# Pin torch/torchvision to CPU-only wheels (drops the multi-GB NVIDIA CUDA
+# stack). Required for hosted builds without a GPU (e.g. Railway).
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+torchvision = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
