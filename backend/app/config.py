@@ -77,6 +77,13 @@ class Config:
     # Embedding configuration
     EMBEDDING_MODEL = os.environ.get('EMBEDDING_MODEL', 'nomic-embed-text')
     EMBEDDING_BASE_URL = os.environ.get('EMBEDDING_BASE_URL', 'http://localhost:11434')
+    # When set, embeddings use an OpenAI-compatible /embeddings endpoint (hosted
+    # provider, e.g. DashScope/Jina/OpenAI) instead of local Ollama. Leave blank
+    # for local Ollama dev.
+    EMBEDDING_API_KEY = os.environ.get('EMBEDDING_API_KEY', '')
+    # Vector size. Hosted models that support a `dimensions` param are pinned to
+    # this so vectors stay compatible with existing storage (default 768).
+    EMBEDDING_DIMENSIONS = int(os.environ.get('EMBEDDING_DIMENSIONS', '768'))
 
     # Root for all persisted data (graph DB + uploads). Defaults to the backend
     # dir so local dev is unchanged; set DATA_ROOT=/data on hosts with a mounted
