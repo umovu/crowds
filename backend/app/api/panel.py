@@ -13,6 +13,7 @@ import traceback
 from flask import jsonify, request
 
 from . import panel_bp
+from .. import billing
 from ..config import Config
 from ..services import panel_service
 from ..services.interview_service import InterviewService
@@ -65,6 +66,10 @@ def create_session():
     Session creation is LLM-free: cast selection, grant detection and budget
     tiers are computed from real persona data.
     """
+    # Free plan: capped at FREE_PANEL_LIMIT panels; paid: unlimited.
+    gate = billing.check_panel_quota()
+    if gate is not None:
+        return gate
     try:
         data = request.get_json() or {}
         meta = panel_service.create_session(
@@ -76,6 +81,8 @@ def create_session():
             segment=data.get('segment'),
             segments=data.get('segments'),
         )
+        # Count this panel against the user's quota (no-op on paid / billing off).
+        billing.increment_panel_used(billing.current_user_id())
         return jsonify({"success": True, "data": meta}), 201
     except (ValueError, RuntimeError) as e:
         return jsonify({"success": False, "error": str(e)}), 400

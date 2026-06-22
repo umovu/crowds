@@ -10,6 +10,7 @@ from typing import Dict, Any, List, Optional
 from flask import request, jsonify, send_file, current_app
 
 from . import simulation_bp
+from .. import billing
 from ..config import Config
 from ..services.entity_reader import EntityReader
 from ..services.agent_profile_generator import AgentProfileGenerator
@@ -269,9 +270,13 @@ def create_simulation():
             }
         }
     """
+    # Simulations are a paid feature (free plan is panels only).
+    gate = billing.require_paid()
+    if gate is not None:
+        return gate
     try:
         data = request.get_json() or {}
-        
+
         project_id = data.get('project_id')
         if not project_id:
             return jsonify({
@@ -475,10 +480,15 @@ def prepare_simulation():
     import os
     from ..models.task import TaskManager, TaskStatus
     from ..config import Config
-    
+
+    # Simulations are a paid feature (free plan is panels only).
+    gate = billing.require_paid()
+    if gate is not None:
+        return gate
+
     try:
         data = request.get_json() or {}
-        
+
         simulation_id = data.get('simulation_id')
         if not simulation_id:
             return jsonify({

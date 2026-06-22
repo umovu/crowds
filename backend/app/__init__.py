@@ -102,6 +102,10 @@ def create_app(config_class=Config):
             return None
         if not request.path.startswith('/api/'):
             return None
+        # Paystack calls the webhook server-to-server (no JWT); it's verified by
+        # HMAC signature inside the handler instead.
+        if request.path == '/api/billing/webhook':
+            return None
         return verify_request()
 
     # Request logging middleware
@@ -119,13 +123,14 @@ def create_app(config_class=Config):
         return response
 
     # Register blueprints
-    from .api import graph_bp, simulation_bp, report_bp, config_bp, research_bp, panel_bp
+    from .api import graph_bp, simulation_bp, report_bp, config_bp, research_bp, panel_bp, billing_bp
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(config_bp, url_prefix='/api/config')
     app.register_blueprint(research_bp, url_prefix='/api/research')
     app.register_blueprint(panel_bp, url_prefix='/api/panel')
+    app.register_blueprint(billing_bp, url_prefix='/api/billing')
 
     # Health check
     @app.route('/health')
