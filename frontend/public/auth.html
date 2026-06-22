@@ -598,9 +598,9 @@ import { supabase, callbackUrl } from './supabase-client.js';
   tabSignin.addEventListener('click', function () { mode = 'signin'; updateCopy(); clearMsg(); });
   tabSignup.addEventListener('click', function () { mode = 'signup'; updateCopy(); clearMsg(); });
 
-  // ── Social OAuth (Google / Apple) → real Supabase OAuth. Redirects to the
-  //    provider, returns to the SPA's /auth/callback which settles the session
-  //    and routes to `next`. Shared handler so both buttons behave identically. ─
+  // ── Social OAuth (Google) → real Supabase OAuth. Redirects to the provider,
+  //    returns to the SPA's /auth/callback which settles the session and routes
+  //    to `next`. Helper is provider-agnostic so more can be added later. ─
   function wireOAuth(btn, provider, label) {
     if (!btn) return;
     btn.addEventListener('click', async function () {
