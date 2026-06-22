@@ -62,6 +62,11 @@ packages = ["app"]
 # Pin torch/torchvision to CPU-only wheels (drops the multi-GB NVIDIA CUDA
 # stack). Required for hosted builds without a GPU (e.g. Railway). Versions are
 # pinned to releases that have Linux x86_64 CPU wheels (the Railway target).
+# required-environments forces uv to lock a wheel valid on Linux x86_64 — the
+# pytorch CPU index exposes that as the `+cpu` build, which uv must select.
+[tool.uv]
+required-environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+
 [tool.uv.sources]
 torch = [{ index = "pytorch-cpu" }]
 torchvision = [{ index = "pytorch-cpu" }]

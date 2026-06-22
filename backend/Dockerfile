@@ -1,7 +1,7 @@
 FROM python:3.11
 
 # uv for fast, lockfile-pinned installs
-COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.11.23 /uv /uvx /bin/
 
 WORKDIR /app
 
