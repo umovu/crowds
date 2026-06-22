@@ -78,9 +78,16 @@ class Config:
     EMBEDDING_MODEL = os.environ.get('EMBEDDING_MODEL', 'nomic-embed-text')
     EMBEDDING_BASE_URL = os.environ.get('EMBEDDING_BASE_URL', 'http://localhost:11434')
 
+    # Root for all persisted data (graph DB + uploads). Defaults to the backend
+    # dir so local dev is unchanged; set DATA_ROOT=/data on hosts with a mounted
+    # volume (e.g. Railway) so data survives redeploys.
+    DATA_ROOT = os.environ.get('DATA_ROOT') or os.path.abspath(
+        os.path.join(os.path.dirname(__file__), '..')
+    )
+
     # File upload configuration
     MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '../uploads')
+    UPLOAD_FOLDER = os.path.join(DATA_ROOT, 'uploads')
     ALLOWED_EXTENSIONS = {'pdf', 'md', 'txt', 'markdown'}
 
     # Text processing configuration
@@ -91,11 +98,11 @@ class Config:
     # NOTE: currently unreferenced — the actual round count comes from the API
     # max_rounds param / preset, or time_config (total_hours / minutes_per_round).
     MAX_ROUNDS = int(os.environ.get('MAX_ROUNDS', '10'))
-    OASIS_SIMULATION_DATA_DIR = os.path.join(os.path.dirname(__file__), '../uploads/simulations')
+    OASIS_SIMULATION_DATA_DIR = os.path.join(DATA_ROOT, 'uploads', 'simulations')
 
     # Panel pitch sessions (library-backed casts, no simulation) live apart from
     # sim dirs so simulation listings never pick them up.
-    PANEL_SESSION_DATA_DIR = os.path.join(os.path.dirname(__file__), '../uploads/panel_sessions')
+    PANEL_SESSION_DATA_DIR = os.path.join(DATA_ROOT, 'uploads', 'panel_sessions')
 
     # Coverage simulator configuration — this tool surfaces the RANGE of distinct
     # reactions, not a majority. Convergence is the failure mode. The run stops on

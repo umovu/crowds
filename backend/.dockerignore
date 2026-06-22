@@ -1,0 +1,20 @@
+# Python caches
+__pycache__/
+*.pyc
+
+# Local virtualenvs
+.venv/
+venv/
+
+# Ephemeral / volume-backed data — must NOT be baked into the image
+ladybug_data*
+kuzu_data*
+uploads/
+data/
+*.bak
+*.bak2
+*.corrupt*
+*.wal
+
+# Local secrets (provided via Railway env vars)
+.env

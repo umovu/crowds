@@ -53,12 +53,17 @@ class LadybugStorage(GraphStorage):
     ):
         ladybug = _import_ladybug()
 
-        # Default to a project-local directory if no path given
+        # Default to the data root (DATA_ROOT env on hosted volumes; otherwise a
+        # project-local directory) if no path given.
         if db_path is None:
-            db_path = os.path.join(
-                os.path.dirname(__file__),
-                "../../ladybug_data"
-            )
+            data_root = os.environ.get('DATA_ROOT')
+            if data_root:
+                db_path = os.path.join(data_root, "ladybug_data")
+            else:
+                db_path = os.path.join(
+                    os.path.dirname(__file__),
+                    "../../ladybug_data"
+                )
 
         self._db_path = db_path
         # Ladybug creates the directory itself; pre-creating it can cause
