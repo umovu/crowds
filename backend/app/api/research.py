@@ -1558,20 +1558,17 @@ def list_personas():
         # overrides the library version. Library fills fee data onto cache
         # entries that lack it.
         lib_index: Dict[Tuple[str, str], Dict] = {}
-        lib_path = os.path.join(
-            os.path.dirname(__file__), "..", "data", "persona_library", "personas.json"
-        )
-        if os.path.exists(lib_path):
-            try:
-                with open(lib_path, "r", encoding="utf-8") as f:
-                    lib_data = _json.load(f)
-                for lp in (lib_data.get("personas") if isinstance(lib_data, dict) else lib_data) or []:
-                    name = (lp.get("name") or "").strip()
-                    arch = (lp.get("actor_archetype") or "").strip()
-                    if name and arch:
-                        lib_index[(name, arch)] = lp
-            except Exception as e:
-                logger.warning(f"Persona library load failed: {e}")
+        try:
+            # Source the library via the shared loader so it uses the seeded
+            # volume copy on hosts (PERSONA_LIBRARY_PATH), not a baked-in path.
+            from ..services.persona_library import get_library
+            for lp in get_library().all():
+                name = (lp.get("name") or "").strip()
+                arch = (lp.get("actor_archetype") or "").strip()
+                if name and arch:
+                    lib_index[(name, arch)] = lp
+        except Exception as e:
+            logger.warning(f"Persona library load failed: {e}")
 
         # 1) Read every library persona — they're real, selectable personas
         #    and the only source of fee-band data. Use the library's stable
@@ -1695,23 +1692,18 @@ def get_persona(persona_id: str):
 
     # 2) Library fallback — survey-grounded personas. Wrap in the cache
     #    shape so the frontend's getPersona() consumer doesn't branch.
-    lib_path = os.path.join(
-        os.path.dirname(__file__), "..", "data", "persona_library", "personas.json"
-    )
-    if os.path.exists(lib_path):
-        try:
-            with open(lib_path, "r", encoding="utf-8") as f:
-                lib_data = _json.load(f)
-            for lp in (lib_data.get("personas") if isinstance(lib_data, dict) else lib_data) or []:
-                if lp.get("id") == persona_id:
-                    return jsonify({
-                        "success":  True,
-                        "profile":  lp,
-                        "meta":     {"level": "library", "entity": lp.get("name"), "type": lp.get("actor_archetype")},
-                        "markdown": "",  # library personas don't have a rendered sidecar
-                    })
-        except Exception as e:
-            logger.error(f"Library lookup for persona {persona_id[:12]} failed: {e}")
+    try:
+        from ..services.persona_library import get_library
+        lp = get_library().get(persona_id)
+        if lp:
+            return jsonify({
+                "success":  True,
+                "profile":  lp,
+                "meta":     {"level": "library", "entity": lp.get("name"), "type": lp.get("actor_archetype")},
+                "markdown": "",  # library personas don't have a rendered sidecar
+            })
+    except Exception as e:
+        logger.error(f"Library lookup for persona {persona_id[:12]} failed: {e}")
 
     return jsonify({"success": False, "error": "Persona not found"}), 404
 
