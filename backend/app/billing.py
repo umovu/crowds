@@ -201,12 +201,13 @@ def paystack_init_transaction(email: str, user_id, callback_url: str) -> dict:
     }
     if callback_url:
         body["callback_url"] = callback_url
+    # Paystack's transaction/initialize requires an amount even when a plan is
+    # supplied — plan-only returns "Invalid Amount Sent". (minor units: R80 = 8000)
+    body["amount"] = int(os.environ.get("PAYSTACK_AMOUNT", "8000"))
     plan_code = os.environ.get("PAYSTACK_PLAN_CODE", "")
     if plan_code:
         body["plan"] = plan_code
     else:
-        # One-off fallback (minor units, e.g. ZAR cents). R80 = 8000.
-        body["amount"] = int(os.environ.get("PAYSTACK_AMOUNT", "8000"))
         body["currency"] = os.environ.get("PAYSTACK_CURRENCY", "ZAR")
     resp = requests.post(
         f"{PAYSTACK_BASE}/transaction/initialize",
