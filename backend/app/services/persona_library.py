@@ -24,17 +24,62 @@ from ..utils.logger import get_logger
 
 logger = get_logger("fub.persona_library")
 
-_DEFAULT_PATH = os.path.join(
+# Where the library JSON lives. Locally it's the in-repo path (gitignored, built
+# by scripts/build_library.py). On hosts it lives on the persistent volume —
+# set PERSONA_LIBRARY_PATH=/data/persona_library/personas.json — and is seeded
+# once from Supabase Storage on first boot (see _seed_from_storage). It is NOT
+# shipped in git.
+_IMAGE_PATH = os.path.join(
     os.path.dirname(__file__), "..", "data", "persona_library", "personas.json"
 )
+
+
+def _default_library_path() -> str:
+    return os.environ.get("PERSONA_LIBRARY_PATH") or _IMAGE_PATH
+
+
+def _seed_from_storage(dest_path: str) -> bool:
+    """Download the library from a private Supabase Storage bucket to dest_path.
+
+    Lets the persistent volume be seeded on first boot without the file ever
+    being in git. No-op (returns False) unless the storage env vars are set.
+    Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, PERSONA_LIBRARY_BUCKET,
+         PERSONA_LIBRARY_OBJECT (default "personas.json").
+    """
+    url = os.environ.get("SUPABASE_URL", "").rstrip("/")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+    bucket = os.environ.get("PERSONA_LIBRARY_BUCKET", "")
+    obj = os.environ.get("PERSONA_LIBRARY_OBJECT", "personas.json")
+    if not (url and key and bucket):
+        return False
+    try:
+        import requests
+        endpoint = f"{url}/storage/v1/object/{bucket}/{obj}"
+        resp = requests.get(
+            endpoint,
+            headers={"apikey": key, "Authorization": f"Bearer {key}"},
+            timeout=60,
+        )
+        resp.raise_for_status()
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        with open(dest_path, "wb") as f:
+            f.write(resp.content)
+        logger.info(
+            "Seeded persona library from Supabase Storage (%d bytes) -> %s",
+            len(resp.content), dest_path,
+        )
+        return True
+    except Exception as e:
+        logger.error("Could not seed persona library from storage: %s", e)
+        return False
 
 
 class PersonaLibrary:
     """JSON-backed persona library. The query/filter/sample interface is the contract
     a future SupabasePersonaLibrary would implement unchanged."""
 
-    def __init__(self, path: str = _DEFAULT_PATH):
-        self.path = path
+    def __init__(self, path: Optional[str] = None):
+        self.path = path or _default_library_path()
         self._personas: List[Dict] = []
         self._loaded = False
 
@@ -42,9 +87,12 @@ class PersonaLibrary:
     def load(self) -> "PersonaLibrary":
         if self._loaded:
             return self
+        # On hosts the volume starts empty — seed it once from Supabase Storage.
+        if not os.path.exists(self.path):
+            _seed_from_storage(self.path)
         if not os.path.exists(self.path):
             logger.warning(f"Persona library not found at {self.path}; library is empty. "
-                           f"Run scripts/build_library.py to populate it.")
+                           f"Seed Supabase Storage or run scripts/build_library.py to populate it.")
             self._personas = []
         else:
             try:
