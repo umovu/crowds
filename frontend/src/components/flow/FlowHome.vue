@@ -68,7 +68,7 @@
           <span class="profile-avatar">JS</span>
           <span class="profile-body">
             <span class="profile-name">Jabu Swartbooi</span>
-            <span class="profile-sub">Free plan</span>
+            <span class="profile-sub">{{ isPaid ? 'Paid plan' : 'Free plan' }}</span>
           </span>
           <span class="profile-chevron">⋯</span>
         </button>
@@ -232,6 +232,7 @@ import { setPendingUpload } from '../../store/pendingUpload'
 import { createSession, listSessions } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
+import { useBilling } from '../../composables/useBilling'
 import ProfileModal from './ProfileModal.vue'
 
 const emit = defineEmits(['submit', 'open'])
@@ -243,6 +244,9 @@ const activeTab = ref('sim')
 
 // ── Profile modal ──────────────────────────────────────────────────────────
 const profileModalOpen = ref(false)
+
+// Real plan for the sidebar profile badge.
+const { isPaid, refresh: refreshBilling } = useBilling()
 
 function onModalOpenSim(sim) {
   profileModalOpen.value = false
@@ -410,6 +414,7 @@ watch(activeTab, (tab) => {
 })
 
 onMounted(() => {
+  refreshBilling()  // load real plan for the sidebar badge
   // Seed handoff from the marketing landing page: /?seed=...&mode=policy|product.
   // Pre-fill the sim prompt so the visitor lands mid-thought, then strip the
   // params from the URL so a refresh doesn't re-seed.

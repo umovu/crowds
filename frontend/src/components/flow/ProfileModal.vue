@@ -9,7 +9,7 @@
         <div class="menu-head-avatar">JS</div>
         <div class="menu-head-info">
           <span class="menu-head-name">Jabu Swartbooi</span>
-          <span class="menu-head-plan">Free plan</span>
+          <span class="menu-head-plan">{{ isPaid ? 'Paid plan' : 'Free plan' }}</span>
         </div>
       </div>
       <div class="menu-list">
@@ -102,48 +102,33 @@
           <div class="current-plan-banner">
             <div class="cpb-left">
               <span class="cpb-label">Current plan</span>
-              <span class="cpb-name">Free — local mode</span>
+              <span class="cpb-name">{{ isPaid ? 'Paid — R80/mo' : 'Free' }}</span>
             </div>
-            <span class="cpb-right">no monthly cap</span>
+            <span class="cpb-right">
+              {{ isPaid ? 'unlimited panels + simulations' : `${status?.panel_used ?? 0} / 1 panel used` }}
+            </span>
           </div>
           <div class="plan-grid">
-            <div class="plan-card-opt current">
+            <div class="plan-card-opt" :class="{ current: !isPaid }">
               <div class="pco-head"><span class="pco-name">Free</span><span class="pco-price">R0/mo</span></div>
               <ul class="pco-features">
-                <li>Bring your own LLM keys</li>
-                <li>Unlimited local sims</li>
-                <li>48-persona library</li>
+                <li>1 panel (focus group)</li>
+                <li>Full reaction report</li>
+                <li>Simulations not included</li>
               </ul>
-              <button class="pco-btn disabled" disabled>Current plan</button>
+              <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>
-            <div class="plan-card-opt">
-              <div class="pco-head"><span class="pco-name">Pro</span><span class="pco-price">R199/mo</span></div>
+            <div class="plan-card-opt" :class="{ current: isPaid }">
+              <div class="pco-head"><span class="pco-name">Paid</span><span class="pco-price">R80/mo</span></div>
               <ul class="pco-features">
-                <li>Hosted LLM — no keys needed</li>
-                <li>20 sims / month included</li>
-                <li>Up to 100 agents per sim</li>
-                <li>Web grounding included</li>
+                <li>Unlimited panels</li>
+                <li>Full simulations</li>
+                <li>Every report &amp; interview</li>
               </ul>
-              <button class="pco-btn">Upgrade to Pro →</button>
-            </div>
-            <div class="plan-card-opt">
-              <div class="pco-head"><span class="pco-name">Team</span><span class="pco-price">R799/mo</span></div>
-              <ul class="pco-features">
-                <li>Everything in Pro</li>
-                <li>100 sims / month</li>
-                <li>Shared persona library</li>
-                <li>Priority queue</li>
-              </ul>
-              <button class="pco-btn">Upgrade to Team →</button>
-            </div>
-            <div class="plan-card-opt">
-              <div class="pco-head"><span class="pco-name">Enterprise</span><span class="pco-tag">Contact us</span></div>
-              <ul class="pco-features">
-                <li>Custom volume</li>
-                <li>SSO + audit logs</li>
-                <li>On-prem option</li>
-              </ul>
-              <button class="pco-btn">Talk to us →</button>
+              <button v-if="isPaid" class="pco-btn disabled" disabled>Current plan</button>
+              <button v-else class="pco-btn" :disabled="upgrading" @click="doUpgrade">
+                {{ upgrading ? 'Redirecting…' : 'Upgrade — R80/mo →' }}
+              </button>
             </div>
           </div>
         </div>
@@ -197,8 +182,22 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import DashboardPanel from './DashboardPanel.vue'
+import { useBilling } from '../../composables/useBilling'
 
 const emit = defineEmits(['close', 'open-sim'])
+
+const { status, isPaid, refresh: refreshBilling, upgrade } = useBilling()
+const upgrading = ref(false)
+
+async function doUpgrade() {
+  upgrading.value = true
+  try {
+    await upgrade(window.location.href)  // Paystack redirect; returns here after pay
+  } catch (e) {
+    upgrading.value = false
+    alert(e?.message || 'Could not start checkout. Please try again.')
+  }
+}
 
 const menuOpen = ref(true)
 const modalOpen = ref(false)
@@ -244,7 +243,10 @@ function onKeydown(e) {
   }
 }
 
-onMounted(() => document.addEventListener('keydown', onKeydown))
+onMounted(() => {
+  document.addEventListener('keydown', onKeydown)
+  refreshBilling()  // load real plan + usage
+})
 onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 </script>
 
