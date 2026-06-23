@@ -105,34 +105,22 @@
               class="persona-filter-chip"
               :class="{ active: personaFilter === chip.id }"
               @click="personaFilter = chip.id"
-            >{{ chip.label }}</button>
+            >{{ chip.label }} <span class="chip-count">{{ chip.count }}</span></button>
           </div>
           <div v-if="personasLoading" class="persona-loading">Loading personas…</div>
           <div v-else-if="!filteredPersonas.length" class="persona-loading">No personas match your search.</div>
-          <div v-else class="persona-groups">
+          <div v-else class="persona-grid">
             <div
-              v-for="g in groupedPersonas"
-              :key="g.archetype"
-              class="persona-group"
+              v-for="p in filteredPersonas"
+              :key="p.id || p.name"
+              class="persona-card"
             >
-              <div class="persona-group-head">
-                <span class="persona-group-name">{{ g.label }}</span>
-                <span class="persona-group-count">{{ g.personas.length }}</span>
-              </div>
-              <div class="persona-grid">
-                <div
-                  v-for="p in g.personas"
-                  :key="p.id || p.name"
-                  class="persona-card"
-                >
-                  <div class="persona-card-avatar">{{ initials(p.name) }}</div>
-                  <div class="persona-card-info">
-                    <div class="persona-card-name">{{ p.name || 'Unnamed' }}</div>
-                    <div class="persona-card-arch">{{ (p.archetype || p.actor_archetype || 'unknown').replace(/_/g, ' ') }}</div>
-                    <div class="persona-card-occ">{{ p.occupation || '—' }}</div>
-                    <div class="persona-card-meta">{{ p.age || '?' }} · {{ p.province || '—' }}</div>
-                  </div>
-                </div>
+              <div class="persona-card-avatar">{{ initials(p.name) }}</div>
+              <div class="persona-card-info">
+                <div class="persona-card-name">{{ p.name || 'Unnamed' }}</div>
+                <div class="persona-card-arch">{{ (p.archetype || p.actor_archetype || 'unknown').replace(/_/g, ' ') }}</div>
+                <div class="persona-card-occ">{{ p.occupation || '—' }}</div>
+                <div class="persona-card-meta">{{ p.age || '?' }} · {{ p.province || '—' }}</div>
               </div>
             </div>
           </div>
@@ -270,14 +258,20 @@ const personas = ref([])
 const personasLoading = ref(false)
 const personaSearch = ref('')
 const personaFilter = ref('all')
-const personaFilterChips = [
-  { id: 'all', label: 'All' },
-  { id: 'employed', label: 'Employed' },
-  { id: 'unemployed', label: 'Unemployed' },
-  { id: 'youth', label: 'Youth' },
-  { id: 'learners', label: 'Learners' },
-  { id: 'guardians', label: 'Guardians' },
-]
+// One tab per archetype, derived from the loaded library (+ an "All" tab).
+const personaFilterChips = computed(() => {
+  const counts = {}
+  for (const p of personas.value) {
+    const a = (p.archetype || p.actor_archetype || '').toLowerCase()
+    if (a) counts[a] = (counts[a] || 0) + 1
+  }
+  const chips = Object.keys(counts).sort().map(a => ({
+    id: a,
+    label: a.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    count: counts[a],
+  }))
+  return [{ id: 'all', label: 'All', count: personas.value.length }, ...chips]
+})
 
 const personaCount = computed(() => personas.value.length)
 
@@ -295,20 +289,6 @@ const filteredPersonas = computed(() => {
       (p.archetype || p.actor_archetype || '').toLowerCase().includes(q)
     )
   })
-})
-
-// Personas grouped by archetype, each group alphabetised, for the sectioned grid.
-const groupedPersonas = computed(() => {
-  const groups = {}
-  for (const p of filteredPersonas.value) {
-    const key = (p.archetype || p.actor_archetype || 'unknown')
-    ;(groups[key] = groups[key] || []).push(p)
-  }
-  return Object.keys(groups).sort().map(k => ({
-    archetype: k,
-    label: k.replace(/_/g, ' '),
-    personas: groups[k].sort((a, b) => (a.name || '').localeCompare(b.name || '')),
-  }))
 })
 
 function initials(name) {
@@ -691,29 +671,13 @@ onMounted(() => {
 }
 .persona-filter-chip:hover { border-color: #1E9E5A; color: #1E9E5A; }
 .persona-filter-chip.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
+.chip-count { opacity: 0.6; font-size: 0.62rem; margin-left: 2px; }
 
 .persona-loading {
   padding: 40px; text-align: center;
   font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #999;
 }
 
-.persona-groups { display: flex; flex-direction: column; gap: 26px; }
-.persona-group-head {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 12px; padding-bottom: 8px;
-  border-bottom: 1px solid #ECECEC;
-}
-.persona-group-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px;
-  text-transform: uppercase; color: #1a1a1a;
-}
-.persona-group-count {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem; font-weight: 700;
-  color: #1E9E5A; background: #F0FAF4;
-  padding: 2px 8px; border-radius: 999px;
-}
 .persona-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
