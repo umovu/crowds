@@ -109,18 +109,30 @@
           </div>
           <div v-if="personasLoading" class="persona-loading">Loading personas…</div>
           <div v-else-if="!filteredPersonas.length" class="persona-loading">No personas match your search.</div>
-          <div v-else class="persona-grid">
+          <div v-else class="persona-groups">
             <div
-              v-for="p in filteredPersonas"
-              :key="p.id || p.name"
-              class="persona-card"
+              v-for="g in groupedPersonas"
+              :key="g.archetype"
+              class="persona-group"
             >
-              <div class="persona-card-avatar">{{ initials(p.name) }}</div>
-              <div class="persona-card-info">
-                <div class="persona-card-name">{{ p.name || 'Unnamed' }}</div>
-                <div class="persona-card-arch">{{ (p.archetype || p.actor_archetype || 'unknown').replace(/_/g, ' ') }}</div>
-                <div class="persona-card-occ">{{ p.occupation || '—' }}</div>
-                <div class="persona-card-meta">{{ p.age || '?' }} · {{ p.province || '—' }}</div>
+              <div class="persona-group-head">
+                <span class="persona-group-name">{{ g.label }}</span>
+                <span class="persona-group-count">{{ g.personas.length }}</span>
+              </div>
+              <div class="persona-grid">
+                <div
+                  v-for="p in g.personas"
+                  :key="p.id || p.name"
+                  class="persona-card"
+                >
+                  <div class="persona-card-avatar">{{ initials(p.name) }}</div>
+                  <div class="persona-card-info">
+                    <div class="persona-card-name">{{ p.name || 'Unnamed' }}</div>
+                    <div class="persona-card-arch">{{ (p.archetype || p.actor_archetype || 'unknown').replace(/_/g, ' ') }}</div>
+                    <div class="persona-card-occ">{{ p.occupation || '—' }}</div>
+                    <div class="persona-card-meta">{{ p.age || '?' }} · {{ p.province || '—' }}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -283,6 +295,20 @@ const filteredPersonas = computed(() => {
       (p.archetype || p.actor_archetype || '').toLowerCase().includes(q)
     )
   })
+})
+
+// Personas grouped by archetype, each group alphabetised, for the sectioned grid.
+const groupedPersonas = computed(() => {
+  const groups = {}
+  for (const p of filteredPersonas.value) {
+    const key = (p.archetype || p.actor_archetype || 'unknown')
+    ;(groups[key] = groups[key] || []).push(p)
+  }
+  return Object.keys(groups).sort().map(k => ({
+    archetype: k,
+    label: k.replace(/_/g, ' '),
+    personas: groups[k].sort((a, b) => (a.name || '').localeCompare(b.name || '')),
+  }))
 })
 
 function initials(name) {
@@ -671,6 +697,23 @@ onMounted(() => {
   font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #999;
 }
 
+.persona-groups { display: flex; flex-direction: column; gap: 26px; }
+.persona-group-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid #ECECEC;
+}
+.persona-group-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; color: #1a1a1a;
+}
+.persona-group-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; font-weight: 700;
+  color: #1E9E5A; background: #F0FAF4;
+  padding: 2px 8px; border-radius: 999px;
+}
 .persona-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
