@@ -137,6 +137,25 @@ def create_app(config_class=Config):
     def health():
         return {'status': 'ok', 'service': 'Fub Simulation Backend'}
 
+    # TEMP diagnostic — confirms the persona library loaded on the host. Remove
+    # once verified. Non-/api path so it's auth-exempt.
+    @app.route('/debug/library')
+    def _debug_library():
+        from .services.persona_library import get_library, _default_library_path
+        path = _default_library_path()
+        info = {
+            'library_path': path,
+            'path_exists': os.path.exists(path),
+            'bucket_env_set': bool(os.environ.get('PERSONA_LIBRARY_BUCKET')),
+            'path_env_set': bool(os.environ.get('PERSONA_LIBRARY_PATH')),
+            'data_root': os.environ.get('DATA_ROOT'),
+        }
+        try:
+            info['count'] = len(get_library().all())
+        except Exception as e:
+            info['count'] = f'error: {e}'
+        return info
+
     if should_log_startup:
         logger.info("Fub Simulation Backend startup complete")
 
