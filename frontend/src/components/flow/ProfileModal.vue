@@ -99,13 +99,15 @@
 
         <!-- Billing panel -->
         <div v-if="activeTab === 'billing'" class="tab-panel">
-          <div class="current-plan-banner">
+          <div class="current-plan-banner" :class="{ cancelled: isCancelled }">
             <div class="cpb-left">
-              <span class="cpb-label">Current plan</span>
-              <span class="cpb-name">{{ isPaid ? 'Paid — R80/mo' : 'Free' }}</span>
+              <span class="cpb-label">{{ isCancelled ? 'Subscription cancelled' : 'Current plan' }}</span>
+              <span class="cpb-name">{{ isPaid ? 'Pro — R80/mo' : 'Free' }}</span>
             </div>
             <span class="cpb-right">
-              {{ isPaid ? 'unlimited panels + simulations' : `${status?.panel_used ?? 0} / 1 panel used` }}
+              {{ isCancelled
+                ? 'Access continues until the end of your paid month'
+                : (isPaid ? 'unlimited panels + simulations' : `${status?.panel_used ?? 0} / 1 panel used`) }}
             </span>
           </div>
           <div class="plan-grid">
@@ -119,18 +121,26 @@
               <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>
             <div class="plan-card-opt" :class="{ current: isPaid }">
-              <div class="pco-head"><span class="pco-name">Paid</span><span class="pco-price">R80/mo</span></div>
+              <div class="pco-head"><span class="pco-name">Pro</span><span class="pco-price">R80/mo</span></div>
               <ul class="pco-features">
                 <li>Unlimited panels</li>
                 <li>Full simulations</li>
                 <li>Every report &amp; interview</li>
               </ul>
-              <button v-if="isPaid" class="pco-btn disabled" disabled>Current plan</button>
-              <button v-else class="pco-btn" :disabled="upgrading" @click="doUpgrade">
+              <button v-if="!isPaid" class="pco-btn" :disabled="upgrading" @click="doUpgrade">
                 {{ upgrading ? 'Redirecting…' : 'Upgrade — R80/mo →' }}
+              </button>
+              <button v-else-if="isCancelled" class="pco-btn disabled" disabled>Cancels at period end</button>
+              <button v-else class="pco-btn ghost" :disabled="cancelling" @click="doCancel">
+                {{ cancelling ? 'Cancelling…' : 'Cancel subscription' }}
               </button>
             </div>
           </div>
+          <p class="billing-note">
+            Payments are processed securely by Paystack (cards, in ZAR). Cancelling stops future
+            billing; your Pro access runs to the end of the current paid month — no pro-rata refund.
+            See the <a href="/refunds.html" target="_blank" rel="noopener">refund &amp; cancellation policy</a>.
+          </p>
         </div>
 
         <!-- API Keys panel -->
@@ -186,8 +196,9 @@ import { useBilling } from '../../composables/useBilling'
 
 const emit = defineEmits(['close', 'open-sim'])
 
-const { status, isPaid, refresh: refreshBilling, upgrade } = useBilling()
+const { status, isPaid, isCancelled, refresh: refreshBilling, upgrade, cancel } = useBilling()
 const upgrading = ref(false)
+const cancelling = ref(false)
 
 async function doUpgrade() {
   upgrading.value = true
@@ -196,6 +207,18 @@ async function doUpgrade() {
   } catch (e) {
     upgrading.value = false
     alert(e?.message || 'Could not start checkout. Please try again.')
+  }
+}
+
+async function doCancel() {
+  if (!confirm('Cancel your Pro subscription? You\'ll keep access until the end of the current paid month.')) return
+  cancelling.value = true
+  try {
+    await cancel()
+  } catch (e) {
+    alert(e?.response?.data?.error || e?.message || 'Could not cancel. Please try again.')
+  } finally {
+    cancelling.value = false
   }
 }
 
@@ -404,6 +427,14 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 .cpb-label { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #1E9E5A; }
 .cpb-name { font-size: 1rem; font-weight: 700; color: #1a1a1a; }
 .cpb-right { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #555; }
+.current-plan-banner.cancelled { background: #FFF6E8; border-color: rgba(199,127,26,0.35); }
+.current-plan-banner.cancelled .cpb-label { color: #C77F1A; }
+
+.billing-note {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: #999;
+  line-height: 1.6; margin: 4px 0 0;
+}
+.billing-note a { color: #1E9E5A; }
 
 .plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .plan-card-opt {
@@ -431,6 +462,9 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 }
 .pco-btn:hover { background: #178048; }
 .pco-btn.disabled { background: #EEE; color: #bbb; cursor: not-allowed; }
+.pco-btn.ghost { background: #fff; color: #C0392B; border: 1px solid #E8C9C5; }
+.pco-btn.ghost:hover { background: #FEEEEC; border-color: #C0392B; }
+.pco-btn.ghost:disabled { opacity: 0.6; cursor: not-allowed; }
 .pco-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.4px; }
 
 .keys-section { display: flex; flex-direction: column; gap: 18px; }

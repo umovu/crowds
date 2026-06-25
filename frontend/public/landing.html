@@ -533,11 +533,35 @@
   .cm-stc.o .bar > i { background: #C0392B; }
   .cm-stc.n .bar > i { background: var(--ink-3); }
 
+  /* ── Pricing ──────────────────────────────────────────────────────────── */
+  .pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 820px; margin: 0 auto; }
+  .price-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 20px;
+    padding: 34px 32px; display: flex; flex-direction: column;
+  }
+  .price-card.feature { border-color: var(--accent); box-shadow: 0 24px 60px -36px rgba(30,158,90,0.35); }
+  .price-name { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-3); }
+  .price-amt { font-size: 2.6rem; font-weight: 600; letter-spacing: -1.5px; margin: 10px 0 2px; color: var(--ink); }
+  .price-amt .per { font-family: var(--mono); font-size: 0.86rem; font-weight: 600; color: var(--ink-3); letter-spacing: 0; }
+  .price-tag { font-size: 0.92rem; color: var(--ink-2); margin: 0 0 22px; line-height: 1.5; }
+  .price-list { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+  .price-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 0.92rem; color: var(--ink); line-height: 1.45; }
+  .price-list li::before { content: '✓'; color: var(--accent); font-weight: 800; flex-shrink: 0; }
+  .price-list li.off { color: var(--ink-3); }
+  .price-list li.off::before { content: '✕'; color: var(--ink-3); }
+  .price-card .btn { justify-content: center; width: 100%; }
+  .price-pay {
+    margin: 26px auto 0; text-align: center; max-width: 520px;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); line-height: 1.6;
+  }
+  .price-pay b { color: var(--ink-2); font-weight: 600; }
+
   /* ── Responsive ───────────────────────────────────────────────────────── */
   @media (max-width: 920px) {
     .hero-grid { max-width: 100%; }
     .flow { grid-template-columns: 1fr 1fr; }
     .modes { grid-template-columns: 1fr; }
+    .pricing { grid-template-columns: 1fr; }
     .caps { grid-template-columns: 1fr; }
     .scope { grid-template-columns: 1fr; padding: 32px; }
     .nav-links { display: none; }
@@ -563,11 +587,11 @@
       <a href="#how">How it works</a>
       <a href="#modes">Modes</a>
       <a href="#capabilities">Capabilities</a>
+      <a href="#pricing">Pricing</a>
       <a href="#scope">What it isn't</a>
     </div>
     <div class="nav-cta">
-      <a class="btn ghost" id="nav-signin" href="auth.html?mode=signin">Sign in</a>
-      <a class="btn solid" id="nav-start" href="auth.html?mode=signup">Start a sim <span aria-hidden="true">↑</span></a>
+      <a class="btn solid" id="nav-start" href="auth.html?mode=signup" style="border-radius:8px">Start a sim <span aria-hidden="true">↑</span></a>
     </div>
   </div>
 </nav>
@@ -577,10 +601,9 @@
   <canvas class="hero-bg" id="hero-graph" aria-hidden="true"></canvas>
   <div class="hero-scrim" aria-hidden="true"></div>
   <div class="wrap hero-grid">
-    <span class="eyebrow"><span class="dot"></span> A synthetic public for every decision</span>
     <h1 class="hero-title">
-      Run it past a <span class="accent">crowd</span><br />
-      before you run it past the <em>public</em>.
+      Test it with a synthetic <span class="accent">crowd</span><br />
+      before you run it past <em>real people</em>.
     </h1>
     <p class="hero-sub">
       Describe a policy, an announcement, a product pitch, or an event.
@@ -876,6 +899,54 @@
   </div>
 </section>
 
+<!-- ── Pricing ─────────────────────────────────────────────────────────── -->
+<section id="pricing" style="background:var(--bg-2); border-top:1px solid var(--line-2); border-bottom:1px solid var(--line-2);">
+  <div class="wrap">
+    <div class="sec-head" style="margin-left:auto;margin-right:auto;text-align:center;">
+      <div class="sec-eyebrow">Pricing</div>
+      <h2 class="sec-title">Start free. Upgrade when you need the room.</h2>
+      <p class="sec-sub">A free panel to try it, then one simple subscription for the full engine. No per-run charges, no annual lock-in.</p>
+    </div>
+
+    <div class="pricing">
+      <!-- Free -->
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-amt">R0</div>
+        <p class="price-tag">One panel a month. Enough to know if Crowds earns a place.</p>
+        <ul class="price-list">
+          <li>1 panel (focus-group run)</li>
+          <li>Policy &amp; product modes</li>
+          <li>Full reaction report</li>
+          <li class="off">Multi-round simulations</li>
+          <li class="off">Intervene mid-run &amp; interviews</li>
+        </ul>
+        <a class="btn line lg" href="auth.html?mode=signup">Start free</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="price-card feature">
+        <div class="price-name">Pro</div>
+        <div class="price-amt">R80<span class="per"> / mo</span></div>
+        <p class="price-tag">The full engine — unlimited runs, billed monthly. Cancel anytime.</p>
+        <ul class="price-list">
+          <li>Unlimited panels &amp; simulations</li>
+          <li>Every report &amp; agent interview</li>
+          <li>Intervene mid-run with follow-ups</li>
+          <li>Bring your own custom personas</li>
+        </ul>
+        <a class="btn solid lg" href="auth.html?mode=signup">Get Pro</a>
+      </div>
+    </div>
+
+    <p class="price-pay">
+      Every plan runs the full engine. Card payments are processed securely by <b>Paystack</b> in South African
+      Rand (ZAR). Pro is a monthly subscription — cancel anytime; access runs to the end of the paid month, with
+      no pro-rata refund. See our <a href="refunds.html" style="color:var(--accent)">Refund &amp; Cancellation policy</a>.
+    </p>
+  </div>
+</section>
+
 <!-- ── Final CTA ───────────────────────────────────────────────────────── -->
 <section class="final">
   <div class="wrap">
@@ -897,12 +968,13 @@
     </div>
     <div class="foot-links">
       <a href="#how">How it works</a>
-      <a href="#modes">Modes</a>
-      <a href="#scope">Scope &amp; limitations</a>
-      <a href="#">Documentation</a>
-      <a href="#">GitHub</a>
+      <a href="#pricing">Pricing</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="refunds.html">Refunds</a>
+      <a href="contact.html">Contact</a>
     </div>
-    <div class="foot-meta">AGPL-3.0</div>
+    <div class="foot-meta">© 2026 Umovu Technology</div>
   </div>
 </footer>
 

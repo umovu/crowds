@@ -3,6 +3,7 @@ Billing API — plan status, Paystack checkout, and the Paystack webhook.
 
   GET  /api/billing/status    current plan + usage (drives the upgrade UI)
   POST /api/billing/checkout  start a Paystack payment, returns a redirect URL
+  POST /api/billing/cancel    disable the user's Paystack subscription
   POST /api/billing/webhook   Paystack -> us; flips plan on payment events
                               (auth-exempt; verified via HMAC signature instead)
 """
@@ -26,6 +27,7 @@ def status():
     panel_used = int(ent.get("panel_used", 0) or 0)
     return jsonify({"success": True, "data": {
         "plan": plan,
+        "status": ent.get("status", "active"),
         "panel_used": panel_used,
         "panel_limit": billing.FREE_PANEL_LIMIT if plan != "paid" else None,
         "can_simulate": plan == "paid",
@@ -54,6 +56,30 @@ def checkout():
         return jsonify({"success": False, "error": "Could not start checkout"}), 502
 
 
+@billing_bp.route('/cancel', methods=['POST'])
+def cancel():
+    uid = billing.current_user_id()
+    if not billing._paystack_secret():
+        return jsonify({"success": False, "error": "Payments are not configured"}), 503
+    customer = billing.get_customer_code(uid)
+    if not customer:
+        return jsonify({"success": False, "error": "No active subscription found"}), 404
+    try:
+        ok = billing.paystack_cancel_subscription(customer)
+    except Exception as e:
+        logger.error("Paystack cancel failed: %s", e)
+        return jsonify({"success": False, "error": "Could not cancel subscription"}), 502
+    if not ok:
+        return jsonify({"success": False, "error": "No active subscription found"}), 404
+    # Mark cancelled but keep access until the period ends; the webhook
+    # (subscription.disable) downgrades to free at the end of the cycle.
+    try:
+        billing.set_plan(uid, "paid", status="cancelled")
+    except Exception as e:
+        logger.warning("Cancel succeeded at Paystack but local status update failed: %s", e)
+    return jsonify({"success": True, "data": {"status": "cancelled"}})
+
+
 @billing_bp.route('/webhook', methods=['POST'])
 def webhook():
     raw = request.get_data()
@@ -72,8 +98,16 @@ def webhook():
                 billing.set_plan(uid, "paid", status="active",
                                  paystack_customer_code=customer)
                 logger.info("Upgraded user %s to paid", uid)
-        elif etype in ("subscription.disable", "subscription.not_renew",
-                       "invoice.payment_failed"):
+        elif etype == "subscription.not_renew":
+            # Cancellation requested — won't renew, but keep access until the
+            # current paid cycle ends (Paystack fires subscription.disable then).
+            customer = (data.get("customer") or {}).get("customer_code")
+            row = billing.get_user_by_customer(customer)
+            if row:
+                billing.set_plan(row["user_id"], "paid", status="cancelled")
+                logger.info("Marked user %s non-renewing (%s)", row["user_id"], etype)
+        elif etype in ("subscription.disable", "invoice.payment_failed"):
+            # Cycle ended (or renewal failed) — drop to free.
             customer = (data.get("customer") or {}).get("customer_code")
             row = billing.get_user_by_customer(customer)
             if row:

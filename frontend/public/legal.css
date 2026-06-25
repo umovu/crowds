@@ -1,0 +1,78 @@
+/* Shared styling for Crowds legal/info pages (terms, privacy, refunds, contact).
+   Mirrors landing.html's brand tokens so the pages read as one site. */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --accent: #1E9E5A;
+  --accent-deep: #178048;
+  --accent-soft: #F0FAF4;
+  --ink: #141414;
+  --ink-2: #4a4a4a;
+  --ink-3: #888;
+  --line: #E8E8E8;
+  --line-2: #F0F0F0;
+  --bg: #ffffff;
+  --bg-2: #FAFAFA;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans); color: var(--ink); background: var(--bg);
+  -webkit-font-smoothing: antialiased; line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 28px; }
+
+/* Nav */
+nav.top {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid var(--line-2);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 9px;
+  background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+  color: #fff; font-family: var(--mono); font-weight: 800; font-size: 1.18rem; line-height: 1;
+  box-shadow: 0 2px 6px rgba(30,158,90,0.28);
+}
+.brand-word { font-family: var(--mono); font-weight: 800; font-size: 1.22rem; letter-spacing: -0.4px; color: var(--ink); }
+.brand-word .accent { color: var(--accent); }
+.nav-back { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; color: var(--ink-2); }
+.nav-back:hover { color: var(--accent); text-decoration: none; }
+
+/* Document body */
+main { padding: 56px 0 80px; }
+.doc-eyebrow {
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent);
+}
+h1.doc-title { font-size: 2.1rem; font-weight: 600; letter-spacing: -1px; line-height: 1.1; margin: 12px 0 6px; }
+.doc-meta { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-3); margin: 0 0 36px; }
+main h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -.3px; margin: 36px 0 10px; }
+main p { color: var(--ink-2); margin: 0 0 14px; }
+main ul { color: var(--ink-2); padding-left: 22px; margin: 0 0 14px; }
+main li { margin: 6px 0; }
+main strong { color: var(--ink); font-weight: 600; }
+.callout {
+  background: var(--accent-soft); border: 1px solid rgba(30,158,90,0.18);
+  border-radius: 12px; padding: 16px 18px; margin: 22px 0; color: var(--ink-2);
+}
+.todo {
+  background: #FFF6E8; border: 1px solid rgba(199,127,26,0.30);
+  border-radius: 12px; padding: 16px 18px; margin: 22px 0;
+  font-family: var(--mono); font-size: 0.82rem; color: #9a6a14;
+}
+
+/* Footer */
+footer { border-top: 1px solid var(--line); padding: 30px 0; background: var(--bg-2); }
+.foot-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+.foot-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.foot-links a { font-family: var(--mono); font-size: 0.78rem; color: var(--ink-3); font-weight: 600; }
+.foot-meta { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-3); }

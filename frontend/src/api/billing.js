@@ -11,6 +11,12 @@ export function createCheckout(callbackUrl) {
   return service.post('/api/billing/checkout', { callback_url: callbackUrl })
 }
 
+// Cancel the active Paystack subscription. Access continues until the end of
+// the current paid cycle.
+export function cancelSubscription() {
+  return service.post('/api/billing/cancel')
+}
+
 // Kick off the upgrade: get a Paystack URL and send the browser there.
 export async function startUpgrade(callbackUrl) {
   const fallback = `${window.location.origin}/billing/callback`

@@ -147,6 +147,25 @@ def set_plan(user_id, plan: str, **extra) -> None:
     resp.raise_for_status()
 
 
+def get_customer_code(user_id):
+    """Return the stored Paystack customer code for a user (or '')."""
+    if not billing_enabled() or not user_id:
+        return ""
+    try:
+        resp = requests.get(
+            f"{_supabase_url()}/rest/v1/subscriptions",
+            params={"user_id": f"eq.{user_id}", "select": "paystack_customer_code"},
+            headers=_rest_headers(),
+            timeout=10,
+        )
+        resp.raise_for_status()
+        rows = resp.json()
+        return (rows[0].get("paystack_customer_code") if rows else "") or ""
+    except Exception as e:
+        logger.warning("Customer-code lookup failed for %s: %s", user_id, e)
+        return ""
+
+
 def get_user_by_customer(customer_code: str):
     """Find a subscription row by Paystack customer code (for downgrades)."""
     if not billing_enabled() or not customer_code:
@@ -218,6 +237,48 @@ def paystack_init_transaction(email: str, user_id, callback_url: str) -> dict:
     )
     resp.raise_for_status()
     return resp.json()["data"]
+
+
+def paystack_cancel_subscription(customer_code: str) -> bool:
+    """Disable the customer's active Paystack subscription (stops future billing).
+
+    Paystack's /subscription/disable needs the subscription's `code` and
+    `email_token`, which we look up live from the customer. Returns True if a
+    subscription was found and disabled. Paystack then fires
+    `subscription.not_renew` (access runs to period end) and, at the end of the
+    cycle, `subscription.disable` (handled by the webhook).
+    """
+    secret = _paystack_secret()
+    if not secret or not customer_code:
+        return False
+    headers = {"Authorization": f"Bearer {secret}",
+               "Content-Type": "application/json"}
+    # Find the customer's subscription(s).
+    resp = requests.get(
+        f"{PAYSTACK_BASE}/subscription",
+        params={"customer": customer_code},
+        headers=headers,
+        timeout=15,
+    )
+    resp.raise_for_status()
+    subs = resp.json().get("data", []) or []
+    # Prefer an active subscription; fall back to the first returned.
+    target = next((s for s in subs if s.get("status") == "active"), None) \
+        or (subs[0] if subs else None)
+    if not target:
+        return False
+    code = target.get("subscription_code")
+    token = target.get("email_token")
+    if not code or not token:
+        return False
+    dis = requests.post(
+        f"{PAYSTACK_BASE}/subscription/disable",
+        json={"code": code, "token": token},
+        headers=headers,
+        timeout=15,
+    )
+    dis.raise_for_status()
+    return True
 
 
 def verify_paystack_signature(raw_body: bytes, signature: str) -> bool:
