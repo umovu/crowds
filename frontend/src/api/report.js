@@ -9,11 +9,12 @@ export const generateReport = (data) => {
 }
 
 /**
- * Get report generation status
- * @param {string} reportId
+ * Get report generation status. The backend route is POST and keys off the
+ * task_id (or simulation_id, which short-circuits to a completed report).
+ * @param {Object} data - { task_id?, simulation_id? }
  */
-export const getReportStatus = (reportId) => {
-  return service.get(`/api/report/generate/status`, { params: { report_id: reportId } })
+export const getReportStatus = (data) => {
+  return service.post(`/api/report/generate/status`, data)
 }
 
 /**

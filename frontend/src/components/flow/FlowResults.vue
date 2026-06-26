@@ -84,7 +84,20 @@
 
           <!-- Summary of what agents feel -->
           <div class="spectrum-summary">
-            <div class="spectrum-summary-head">Summary</div>
+            <div class="spectrum-summary-head">
+              <span>Summary</span>
+              <button
+                v-if="!isPanel && simulationId"
+                class="report-dl-btn"
+                :disabled="reportBusy || feedLive"
+                :title="feedLive ? 'Available once the run finishes' : 'Generate and download the full insight report (.md)'"
+                @click="downloadReport"
+              >
+                <span v-if="reportBusy" class="btn-spinner"></span>
+                {{ reportBusy ? (reportMsg || 'Generating…') : '⤓ Download report' }}
+              </button>
+            </div>
+            <p v-if="!reportBusy && reportMsg" class="report-dl-msg">{{ reportMsg }}</p>
             <div class="spectrum-summary-body">
               <p>{{ summaryText }}</p>
             </div>
@@ -257,6 +270,7 @@ import {
   stopSimulation
 } from '../../api/simulation'
 import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
+import { generateReport, getReportStatus, getReport } from '../../api/report'
 
 const props = defineProps({
   query: { type: String, default: '' },
@@ -267,6 +281,62 @@ const props = defineProps({
 const emit = defineEmits(['back'])
 
 const isPanel = computed(() => props.mode === 'panel')
+
+// ── Report download (sim mode) ──────────────────────────────────────────────
+// Generate the full insight report on the backend, poll until it's written,
+// then download the markdown. No-op for panels (no graph/sim to report on).
+const reportBusy = ref(false)
+const reportMsg = ref('')
+
+const _sleep = (ms) => new Promise(r => setTimeout(r, ms))
+
+const _saveMarkdown = (text, name) => {
+  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = name
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
+
+const downloadReport = async () => {
+  if (reportBusy.value || !props.simulationId) return
+  reportBusy.value = true
+  reportMsg.value = 'Generating report…'
+  try {
+    const gen = await generateReport({ simulation_id: props.simulationId })
+    const d = gen?.data?.data || gen?.data || {}
+    let reportId = d.report_id
+    const taskId = d.task_id
+
+    // Poll until the task completes (≈3 min cap), unless it was already done.
+    if (d.status !== 'completed' && !d.already_generated) {
+      const deadline = Date.now() + 3 * 60 * 1000
+      while (Date.now() < deadline) {
+        await _sleep(3000)
+        const st = await getReportStatus({ task_id: taskId, simulation_id: props.simulationId })
+        const s = st?.data?.data || st?.data || {}
+        if (s.progress != null) reportMsg.value = `Generating report… ${s.progress}%`
+        if (s.status === 'completed') { reportId = s.report_id || s.result?.report_id || reportId; break }
+        if (s.status === 'failed') throw new Error(s.error || s.message || 'Report generation failed')
+      }
+    }
+    if (!reportId) throw new Error('Report timed out — try again in a moment.')
+
+    const rep = await getReport(reportId)
+    const md = (rep?.data?.data || rep?.data || {}).markdown_content
+    if (!md) throw new Error('Report was empty.')
+    _saveMarkdown(md, `${reportId}.md`)
+    reportMsg.value = ''
+  } catch (e) {
+    reportMsg.value = e?.message || 'Could not generate the report.'
+  } finally {
+    reportBusy.value = false
+  }
+}
 
 // ── DiceBear avatar helper ──────────────────────────────────────────────────
 const _avatarCache = new Map()
@@ -1000,11 +1070,22 @@ onUnmounted(() => {
   overflow: hidden;
 }
 .spectrum-summary-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 14px 20px;
   border-bottom: 1px solid #E5E7EB;
   background: #F9FAFB;
   font-size: 14px; font-weight: 600; color: #1F2937;
 }
+.report-dl-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border: none; border-radius: 8px; cursor: pointer;
+  background: #1E9E5A; color: #fff; font-weight: 700; font-size: 12.5px;
+  font-family: 'JetBrains Mono', monospace; transition: background .15s;
+}
+.report-dl-btn:hover:not(:disabled) { background: #178048; }
+.report-dl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.report-dl-btn .btn-spinner { border-color: #fff; border-top-color: transparent; }
+.report-dl-msg { margin: 8px 20px 0; font-size: 12.5px; color: #C0392B; }
 .spectrum-summary-body {
   padding: 16px 20px;
 }
