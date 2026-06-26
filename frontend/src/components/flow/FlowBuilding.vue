@@ -66,7 +66,7 @@ import { createAvatar } from '@dicebear/core'
 import { avataaars, initials } from '@dicebear/collection'
 import { getPendingUpload } from '../../store/pendingUpload'
 import { generateOntology, buildGraph, getTaskStatus, getProject, getGraphData } from '../../api/graph'
-import { createSimulation, prepareSimulation, getPrepareStatus, startSimulation } from '../../api/simulation'
+import { createSimulation, prepareSimulation, getPrepareStatus, startSimulation, getSimulationProfilesRealtime } from '../../api/simulation'
 
 const props = defineProps({
   query: { type: String, default: '' }
@@ -77,7 +77,7 @@ const PHASES = [
   'Searching sources',
   'Constructing graph',
   'Matching entities',
-  'Pulling personas',
+  'Drawing the cast',
   'Preparing simulation'
 ]
 
@@ -101,7 +101,7 @@ const svgEl = ref(null)
 // vocabulary so nodeKind() + avatarUrl() render identically to the main app.
 let NODES = []   // [{ id, label, type, reveal }]
 let EDGES = []   // [{ s, t, reveal }]
-const PERSONAS = []  // real personas come later (the sim run); kept empty here
+let PERSONAS = []  // the selected cast — filled at "Drawing the cast" by ingestPersonas()
 
 // Map a backend graph payload ({ nodes:[{uuid,name,labels}], edges:[{source_node_uuid,target_node_uuid}] })
 // into the reveal-phased node/edge model the canvas animates. Spread nodes across
@@ -123,6 +123,62 @@ const ingestGraphData = (gd) => {
     .map(e => ({ s: e.source_node_uuid, t: e.target_node_uuid, reveal: 2 }))
   // Re-reveal from scratch so the freshly-loaded real nodes appear up to the
   // current phase.
+  lastRevealedPhase = -1
+  revealUpTo(Math.min(activePhase.value, PHASES.length - 1))
+}
+
+// Build a graph from the CAST itself, not just the extracted document entities.
+// A one-line seed produces an almost-empty knowledge graph (e.g. one "government"
+// node), so the document path can't show a meaningful graph. But the cast carries
+// REAL attributes — province, archetype — so we synthesise structure from them:
+//
+//     Scenario (the seed)  →  Province nodes  →  Persona faces (orbiting)
+//
+// Every node/edge here is real data (no document, no LLM). This is why the graph
+// no longer needs a doc to be useful: the room IS the graph.
+const _scenarioLabel = () => {
+  const q = (props.query || '').trim()
+  if (!q) return 'Scenario'
+  return q.length > 32 ? q.slice(0, 32) + '…' : q
+}
+
+const ingestPersonas = (profiles) => {
+  if (!profiles || !profiles.length) return
+
+  // 1. Scenario hub — the seed everyone is reacting to.
+  const scenarioId = 'scenario'
+  if (!NODES.some(n => n.id === scenarioId)) {
+    NODES.push({ id: scenarioId, label: _scenarioLabel(), type: 'Scenario', reveal: 2 })
+  }
+
+  // 2. Province nodes (one per distinct province), linked to the scenario.
+  // 3. Persona faces, each orbiting its own province.
+  const provNodeId = {}
+  profiles.forEach((pr, i) => {
+    const raw = pr.id ?? pr.agent_id ?? i
+    const id = `persona-${raw}`
+    if (PERSONAS.some(p => p.id === id)) return
+
+    const prov = (pr.province || '').trim() || 'South Africa'
+    let pnode = provNodeId[prov]
+    if (!pnode) {
+      pnode = `prov-${prov.replace(/\s+/g, '_')}`
+      provNodeId[prov] = pnode
+      if (!NODES.some(n => n.id === pnode)) {
+        NODES.push({ id: pnode, label: prov, type: 'Province', reveal: 2 })
+        EDGES.push({ s: scenarioId, t: pnode, reveal: 2 })
+      }
+    }
+
+    PERSONAS.push({
+      id,
+      label: pr.name || pr.agent_name || `Agent ${i + 1}`,
+      archetype: (pr.actor_archetype || pr.archetype || pr.occupation || '').replace(/_/g, ' '),
+      parent: pnode,   // orbit their province
+      reveal: 3,
+    })
+  })
+
   lastRevealedPhase = -1
   revealUpTo(Math.min(activePhase.value, PHASES.length - 1))
 }
@@ -204,7 +260,8 @@ const typeColor = (type) => {
 }
 
 const NODE_R = 14
-const nodeRadius = (n) => (n.type === 'persona' ? 5 : NODE_R)
+const PERSONA_R = 12   // cast avatars — close to entity size so they read as people
+const nodeRadius = (n) => (n.type === 'persona' ? PERSONA_R : NODE_R)
 
 // ── d3 persistent simulation ────────────────────────────────────────────────
 let simulation = null
@@ -245,6 +302,13 @@ const initSim = () => {
     .attr('id', 'flow-avatar-clip')
     .append('circle')
     .attr('r', NODE_R)
+    .attr('cx', 0)
+    .attr('cy', 0)
+  // Separate clip sized for persona avatars (the cast).
+  defs.append('clipPath')
+    .attr('id', 'flow-persona-clip')
+    .append('circle')
+    .attr('r', PERSONA_R)
     .attr('cx', 0)
     .attr('cy', 0)
 
@@ -292,11 +356,15 @@ const revealUpTo = (phase) => {
   // persona dots
   for (const p of PERSONAS) {
     if (p.reveal <= phase && !simPersonas.some(sp => sp.id === p.id)) {
-      const parent = nodeById.get(p.parent)
+      const parent = p.parent ? nodeById.get(p.parent) : null
       const sp = { ...p, type: 'persona', x: parent ? parent.x : cx, y: parent ? parent.y : cy }
       simPersonas.push(sp)
-      // link persona to parent with a short spring so it orbits
-      simLinks.push({ source: p.id, target: p.parent, __key: `persona-${p.id}`, __persona: true })
+      // link persona to its parent entity with a short spring so it orbits.
+      // No parent (sparse/empty graph) → leave it free; the centre force keeps
+      // the cast clustered. Linking to a missing node would break forceLink.
+      if (parent) {
+        simLinks.push({ source: p.id, target: p.parent, __key: `persona-${p.id}`, __persona: true })
+      }
       // persona must also be a sim node so forceLink resolves it
       if (!simNodes.some(n => n.id === p.id)) simNodes.push(sp)
       nodeById.set(p.id, sp)
@@ -393,18 +461,46 @@ const joinNodes = () => {
 }
 
 const joinPersonas = () => {
-  const sel = personaLayer.selectAll('circle.pdot').data(simPersonas, d => d.id)
+  const sel = personaLayer.selectAll('g.pnode').data(simPersonas, d => d.id)
   sel.exit().remove()
-  const enter = sel.enter().append('circle')
-    .attr('class', 'pdot')
-    .attr('r', 0)
-    .attr('fill', '#1E9E5A')
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 1.5)
+  const enter = sel.enter().append('g')
+    .attr('class', 'pnode')
     .attr('opacity', 0)
-  enter.transition().duration(500).delay(120)
-    .attr('r', 5)
+    .attr('transform', d => `translate(${d.x},${d.y}) scale(0.2)`)
+
+  // Green-ringed white circle marks the cast apart from grey entity rings.
+  enter.append('circle')
+    .attr('r', PERSONA_R)
+    .attr('fill', '#fff')
+    .attr('stroke', '#1E9E5A')
+    .attr('stroke-width', 2.5)
+
+  // DiceBear face, seeded by the persona's name so it's stable + recognisable.
+  enter.append('image')
+    .attr('href', d => avatarUrl({ type: 'Person', id: d.label || d.id, label: d.label }))
+    .attr('x', -PERSONA_R)
+    .attr('y', -PERSONA_R)
+    .attr('width', PERSONA_R * 2)
+    .attr('height', PERSONA_R * 2)
+    .attr('clip-path', 'url(#flow-persona-clip)')
+    .attr('preserveAspectRatio', 'xMidYMid slice')
+    .style('pointer-events', 'none')
+
+  // Hover tooltip + a short name label so the cast is legible at a glance.
+  enter.append('title').text(d => d.archetype ? `${d.label} — ${d.archetype}` : d.label)
+  enter.append('text')
+    .text(d => (d.label || '').length > 10 ? d.label.slice(0, 10) + '…' : d.label)
+    .attr('x', PERSONA_R + 3)
+    .attr('y', 3)
+    .attr('font-size', '9px')
+    .attr('font-weight', '600')
+    .attr('font-family', 'system-ui, sans-serif')
+    .attr('fill', '#1E7A47')
+    .style('pointer-events', 'none')
+
+  enter.transition().duration(500).delay(120).ease(d3.easeCubicOut)
     .attr('opacity', 1)
+    .attr('transform', d => `translate(${d.x},${d.y}) scale(1)`)
 }
 
 const drawTick = () => {
@@ -415,9 +511,9 @@ const drawTick = () => {
   // nodes
   nodeLayer.selectAll('g.node')
     .attr('transform', d => `translate(${d.x},${d.y})`)
-  // persona dots
-  personaLayer.selectAll('circle.pdot')
-    .attr('cx', d => d.x).attr('cy', d => d.y)
+  // persona avatar nodes
+  personaLayer.selectAll('g.pnode')
+    .attr('transform', d => `translate(${d.x},${d.y})`)
 }
 
 const phaseState = (i) => {
@@ -511,7 +607,6 @@ const runPipeline = async () => {
 
     const preparePayload = {
       simulation_id: simulationId,
-      use_llm_for_profiles: true,
       parallel_profile_count: 5,
       mode_is_manual: modeIsManual,
     }
@@ -541,13 +636,23 @@ const runPipeline = async () => {
     }
     if (cancelled) return
 
+    // Cast is ready — pull the selected roster and draw it into the graph so the
+    // "Drawing the cast" phase actually shows which agents will run. Best-effort:
+    // a failure here doesn't block the run.
+    try {
+      const pr = await getSimulationProfilesRealtime(simulationId, 'opinion_space')
+      const profiles = Array.isArray(pr.data) ? pr.data : (pr.data?.profiles || [])
+      ingestPersonas(profiles)
+    } catch (_) { /* persona overlay is best-effort */ }
+    if (cancelled) return
+
     // ── Phase 4: Preparing simulation — start the run ──
     setPhase(4)
     progress.value = 92
     const started = await startSimulation({
       simulation_id: simulationId,
       platform: 'opinion_space',
-      preset: 'balanced',
+      preset: ['quick', 'balanced', 'deep'].includes(pending.preset) ? pending.preset : 'balanced',
       enable_graph_memory_update: true,
     })
     if (cancelled) return

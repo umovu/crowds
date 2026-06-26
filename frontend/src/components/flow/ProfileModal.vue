@@ -107,7 +107,8 @@
             <span class="cpb-right">
               {{ isCancelled
                 ? 'Access continues until the end of your paid month'
-                : (isPaid ? 'unlimited panels + simulations' : `${status?.panel_used ?? 0} / 1 panel used`) }}
+                : (isPaid ? 'unlimited panels + simulations'
+                          : `${status?.panel_used ?? 0} / 1 panel · ${status?.sim_used ?? 0} / ${status?.sim_limit ?? 3} trial sims used`) }}
             </span>
           </div>
           <div class="plan-grid">
@@ -116,7 +117,7 @@
               <ul class="pco-features">
                 <li>1 panel (focus group)</li>
                 <li>Full reaction report</li>
-                <li>Simulations not included</li>
+                <li>3 trial simulations</li>
               </ul>
               <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>

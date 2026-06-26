@@ -106,7 +106,7 @@
         <div v-else-if="!useSim2 && currentStep === 2" class="step-content">
           <div class="step-header">
             <h2>Create Simulation</h2>
-            <p class="step-description">Initialize simulation environment with generated personas</p>
+            <p class="step-description">Initialize simulation environment with a cast drawn from the persona library</p>
           </div>
           <div v-if="loading" class="creating-simulation">
             <div class="spinner"></div>
@@ -114,7 +114,7 @@
           </div>
           <div v-else-if="error" class="error-message">{{ error }}</div>
           <div v-else class="simulation-ready">
-            <p>Graph complete. Ready to initialize simulation with {{ projectData?.graph_id ? 'generated personas' : 'custom agents' }}.</p>
+            <p>Graph complete. Ready to initialize simulation with {{ projectData?.graph_id ? 'a library cast' : 'custom agents' }}.</p>
             <button class="action-btn primary" @click="createSimulation" :disabled="loading">
               Create Simulation
             </button>

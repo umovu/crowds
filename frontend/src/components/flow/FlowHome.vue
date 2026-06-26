@@ -8,19 +8,11 @@
       <nav class="side-section">
         <button
           class="side-item"
-          :class="{ active: activeTab === 'sim' }"
-          @click="activeTab = 'sim'"
-        >
-          <span class="side-icon">✳</span>
-          <span class="side-label">Sim</span>
-        </button>
-        <button
-          class="side-item"
           :class="{ active: activeTab === 'panel' }"
           @click="activeTab = 'panel'"
         >
           <span class="side-icon">◇</span>
-          <span class="side-label">Panel Pitch</span>
+          <span class="side-label">New test</span>
         </button>
         <button
           class="side-item"
@@ -33,33 +25,29 @@
         </button>
       </nav>
 
-      <!-- Recents — tab-aware -->
+      <!-- Recents — panels + sims together (one entry point now) -->
       <div v-if="activeTab !== 'personas'" class="side-recents">
-        <div class="side-recents-head">{{ activeTab === 'sim' ? 'Previous sims' : 'Previous panels' }}</div>
+        <div class="side-recents-head">Previous panels</div>
+        <div v-if="panelsLoading" class="side-recents-empty">Loading…</div>
+        <div v-else-if="!panels.length" class="side-recents-empty">No previous panels yet.</div>
+        <button
+          v-for="p in panels"
+          :key="p.session_id"
+          class="flow-recent"
+          :title="p.pitch || '(no pitch)'"
+          @click="openPanel(p)"
+        >{{ (p.pitch || '(no pitch)').slice(0, 46) }}</button>
 
-        <template v-if="activeTab === 'sim'">
-          <div v-if="simsLoading" class="side-recents-empty">Loading…</div>
-          <div v-else-if="!sims.length" class="side-recents-empty">No previous sims yet.</div>
-          <button
-            v-for="s in sims"
-            :key="s.simulation_id"
-            class="flow-recent"
-            :title="s.simulation_requirement || 'Untitled simulation'"
-            @click="openSim(s)"
-          >{{ (s.simulation_requirement || 'Untitled simulation').slice(0, 46) }}</button>
-        </template>
-
-        <template v-else>
-          <div v-if="panelsLoading" class="side-recents-empty">Loading…</div>
-          <div v-else-if="!panels.length" class="side-recents-empty">No previous panels yet.</div>
-          <button
-            v-for="p in panels"
-            :key="p.session_id"
-            class="flow-recent"
-            :title="p.pitch || '(no pitch)'"
-            @click="openPanel(p)"
-          >{{ (p.pitch || '(no pitch)').slice(0, 46) }}</button>
-        </template>
+        <div class="side-recents-head" style="margin-top: 10px">Previous sims</div>
+        <div v-if="simsLoading" class="side-recents-empty">Loading…</div>
+        <div v-else-if="!sims.length" class="side-recents-empty">No previous sims yet.</div>
+        <button
+          v-for="s in sims"
+          :key="s.simulation_id"
+          class="flow-recent"
+          :title="s.simulation_requirement || 'Untitled simulation'"
+          @click="openSim(s)"
+        >{{ (s.simulation_requirement || 'Untitled simulation').slice(0, 46) }}</button>
       </div>
 
       <!-- Profile button — bottom of sidebar -->
@@ -81,6 +69,51 @@
       @close="profileModalOpen = false"
       @open-sim="onModalOpenSim"
     />
+
+    <!-- Crowd picker modal — organises the library into selectable groups -->
+    <div v-if="crowdPickerOpen" class="crowd-backdrop" @click.self="crowdPickerOpen = false">
+      <div class="crowd-modal">
+        <div class="crowd-modal-head">
+          <span class="crowd-modal-title">Select your crowd</span>
+          <button class="crowd-modal-close" @click="crowdPickerOpen = false">✕</button>
+        </div>
+        <div class="crowd-modal-body">
+          <div class="pp-field-label">Who's in the room?</div>
+          <div class="pp-segments">
+            <button
+              v-for="seg in segments"
+              :key="seg.id"
+              class="pp-segment"
+              :class="{ selected: selectedSegments.includes(seg.id) }"
+              @click="toggleSegment(seg.id)"
+            >
+              <span class="pp-segment-top">
+                <span class="pp-segment-label">{{ seg.label }}</span>
+                <span class="pp-segment-count">{{ seg.count }}</span>
+              </span>
+              <span class="pp-segment-desc">{{ seg.description }}</span>
+            </button>
+          </div>
+
+          <div class="pp-control-row">
+            <span class="pp-control-label">Panel size</span>
+            <div class="pp-size-btns">
+              <button
+                v-for="opt in sizeOptions"
+                :key="opt"
+                class="pp-size-btn"
+                :class="{ active: panelSize === opt }"
+                @click="panelSize = opt"
+              >{{ opt }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="crowd-modal-foot">
+          <span class="crowd-foot-summary">{{ crowdSummary }} · {{ panelSize }} people</span>
+          <button class="crowd-done-btn" @click="crowdPickerOpen = false">Done</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Main column -->
     <main class="app-main">
@@ -126,95 +159,80 @@
           </div>
         </div>
 
-        <!-- ════ SIM + PANEL TABS (centered) ════ -->
+        <!-- ════ NEW TEST (centered) ════ -->
         <div v-else class="simple-view">
           <div class="simple-center">
 
-            <!-- ════ SIM TAB ════ -->
-            <div v-if="activeTab === 'sim'" class="simple-ask">
-              <h1 class="simple-greeting">How would the public react to your policy or announcement?</h1>
-              <div class="simple-prompt" :class="{ focused: focused }">
-                <textarea
-                  ref="simInput"
-                  v-model="simQuery"
-                  class="simple-prompt-input"
-                  placeholder="Describe the policy, event, or scenario you want to simulate. What are you testing? Who is the audience?"
-                  @focus="focused = true"
-                  @blur="focused = false"
-                  @keydown.enter.exact.prevent="submitSim"
-                ></textarea>
-                <div class="simple-prompt-bar">
-                  <div class="simple-modes">
-                    <button class="simple-mode" :class="{ active: simMode === 'policy' }" @click="pickSimMode('policy')">Policy</button>
-                    <button class="simple-mode" :class="{ active: simMode === 'product' }" @click="pickSimMode('product')">Product</button>
-                  </div>
-                  <button class="simple-send" @click="submitSim" :disabled="!simQuery.trim()" title="Start Engine">
-                    <span>↑</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ════ PANEL PITCH TAB ════ -->
-            <div v-else-if="activeTab === 'panel'" class="simple-ask">
-              <h1 class="simple-greeting">Pitch it straight to the people it's for.</h1>
+            <!-- ════ NEW TEST (panel + optional direct sim) ════ -->
+            <div v-if="activeTab === 'panel'" class="simple-ask">
+              <h1 class="simple-greeting">See how South Africa reacts — before it's real.</h1>
 
               <div class="simple-prompt" :class="{ focused: panelFocused }">
                 <textarea
                   ref="panelInput"
                   v-model="panelPitch"
                   class="simple-prompt-input"
-                  placeholder="Describe the product and the price. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
+                  placeholder="What do you want to test? Describe a policy or announcement, or a product and its price — the way you'd explain it to someone. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
                   @focus="panelFocused = true"
                   @blur="panelFocused = false"
                 ></textarea>
                 <div class="simple-prompt-bar">
-                  <div class="simple-modes">
-                    <button class="simple-mode" :class="{ active: panelMode === 'product' }" @click="panelMode = 'product'">Product</button>
-                    <button class="simple-mode" :class="{ active: panelMode === 'policy' }" @click="panelMode = 'policy'">Policy</button>
+                  <button class="crowd-btn" @click="crowdPickerOpen = true">
+                    <span class="crowd-btn-icon">◇</span>
+                    <span>Select crowds</span>
+                    <span class="crowd-btn-summary">{{ crowdSummary }}</span>
+                  </button>
+
+                  <!-- Run speed — collapsible dropdown (sim depth/rounds) -->
+                  <div ref="speedDdEl" class="speed-dd">
+                    <button class="crowd-btn" @click="speedMenuOpen = !speedMenuOpen">
+                      <span class="crowd-btn-icon">⚡</span>
+                      <span>{{ currentPreset.label }}</span>
+                      <span class="crowd-btn-summary">{{ currentPreset.rounds }}</span>
+                      <span class="speed-caret" :class="{ open: speedMenuOpen }">▾</span>
+                    </button>
+                    <Transition name="speed-pop">
+                      <div v-if="speedMenuOpen" class="speed-menu" role="listbox">
+                        <button
+                          v-for="opt in SIM_PRESETS"
+                          :key="opt.id"
+                          class="speed-item"
+                          :class="{ active: simPreset === opt.id }"
+                          role="option"
+                          :aria-selected="simPreset === opt.id"
+                          @click="selectPreset(opt.id)"
+                        >
+                          <span class="speed-item-top">
+                            <span class="speed-item-name">{{ opt.label }}</span>
+                            <span class="speed-item-rounds">{{ opt.rounds }}</span>
+                          </span>
+                          <span class="speed-item-hint">{{ opt.hint }}</span>
+                        </button>
+                      </div>
+                    </Transition>
                   </div>
                 </div>
               </div>
 
-              <div class="pp-field-group">
-                <div class="pp-field-label">Who's in the room?</div>
-                <div class="pp-segments">
+              <div class="pp-controls">
+                <div class="pp-actions">
                   <button
-                    v-for="seg in segments"
-                    :key="seg.id"
-                    class="pp-segment"
-                    :class="{ selected: selectedSegments.includes(seg.id) }"
-                    @click="toggleSegment(seg.id)"
+                    class="pp-sim-btn"
+                    :disabled="!panelPitch.trim() || panelSubmitting"
+                    title="Run a full simulation — the deeper, slower process: a population reacts and the reaction spreads over rounds."
+                    @click="submitDirectSim"
+                  >Run full simulation</button>
+                  <button
+                    class="pp-assemble-btn"
+                    :disabled="!panelPitch.trim() || panelSubmitting"
+                    @click="submitPanel"
                   >
-                    <span class="pp-segment-top">
-                      <span class="pp-segment-label">{{ seg.label }}</span>
-                      <span class="pp-segment-count">{{ seg.count }}</span>
-                    </span>
-                    <span class="pp-segment-desc">{{ seg.description }}</span>
+                    <span>Assemble panel</span>
+                    <span>→</span>
                   </button>
                 </div>
               </div>
-
-              <div class="pp-controls">
-                <span class="pp-control-label">Panel size</span>
-                <div class="pp-size-btns">
-                  <button
-                    v-for="opt in sizeOptions"
-                    :key="opt"
-                    class="pp-size-btn"
-                    :class="{ active: panelSize === opt }"
-                    @click="panelSize = opt"
-                  >{{ opt }}</button>
-                </div>
-                <button
-                  class="pp-assemble-btn"
-                  :disabled="!panelPitch.trim() || panelSubmitting"
-                  @click="submitPanel"
-                >
-                  <span>Assemble panel</span>
-                  <span>→</span>
-                </button>
-              </div>
+              <p class="pp-hint">Policy or product is detected automatically. Panel is the fast read; the full simulation is an additional, deeper run.</p>
             </div>
 
           </div>
@@ -226,10 +244,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { setPendingUpload } from '../../store/pendingUpload'
-import { createSession, listSessions } from '../../api/panel'
+import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
+import { createSession, listSessions, listSegments } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
@@ -240,7 +258,7 @@ const emit = defineEmits(['submit', 'open'])
 const route = useRoute()
 const router = useRouter()
 
-const activeTab = ref('sim')
+const activeTab = ref('panel')
 
 // ── Profile modal ──────────────────────────────────────────────────────────
 const profileModalOpen = ref(false)
@@ -332,42 +350,51 @@ const openSim = (s) =>
 const openPanel = (p) =>
   emit('open', { mode: 'panel', sessionId: p.session_id, query: p.pitch || '' })
 
-// ── Sim state ───────────────────────────────────────────────────────────────
-const simQuery = ref('')
-const simMode = ref('policy')
-const simModeTouched = ref(false)
-const focused = ref(false)
-const simInput = ref(null)
-
-const submitSim = () => {
-  const q = simQuery.value.trim()
-  if (!q) return
-  setPendingUpload([], q, [], false, false, simMode.value, simModeTouched.value)
-  emit('submit', { query: q, mode: 'sim', simMode: simMode.value })
-}
-
-const pickSimMode = (m) => { simMode.value = m; simModeTouched.value = true }
-
-// ── Panel pitch state ───────────────────────────────────────────────────────
+// ── New-test state (one input, drives both panel and direct sim) ─────────────
 const panelPitch = ref('')
-const panelMode = ref('product')
 const panelFocused = ref(false)
 const panelInput = ref(null)
 const panelSize = ref(12)
 const sizeOptions = [8, 12, 20]
 const selectedSegments = ref(['everyone'])
 
-const segments = [
-  { id: 'everyone', label: 'Everyone', count: 48, description: 'Full mixed population' },
-  { id: 'employed', label: 'Employed', count: 18, description: 'Formal and informal employment' },
-  { id: 'unemployed', label: 'Unemployed', count: 12, description: 'Seeking work' },
-  { id: 'youth', label: 'Youth', count: 14, description: 'Aged 18–25' },
-  { id: 'small_business', label: 'Small business', count: 9, description: 'Spaza, tuck shops, traders' },
-  { id: 'informal_traders', label: 'Informal traders', count: 7, description: 'Street vendors, market sellers' },
-  { id: 'grant_recipients', label: 'Grant recipients', count: 11, description: 'SASSA grant holders' },
-  { id: 'learners', label: 'Learners', count: 10, description: 'School learners' },
-  { id: 'guardians', label: 'Guardians', count: 8, description: 'Parents and caregivers' },
-]
+// Crowd picker (segments + size live behind a modal, off the home view).
+const crowdPickerOpen = ref(false)
+const crowdSummary = computed(() => {
+  const sel = selectedSegments.value
+  if (!sel.length || (sel.length === 1 && sel[0] === 'everyone')) return 'Everyone'
+  const labelOf = (id) => (segments.value.find(s => s.id === id)?.label || id)
+  if (sel.length <= 2) return sel.map(labelOf).join(' + ')
+  return `${sel.length} groups`
+})
+
+// Real library segments with live counts come from /api/panel/segments on mount.
+// Seeded with a fallback list (ids match backend SEGMENTS) so the picker isn't
+// empty before the fetch resolves or if it fails.
+const segments = ref([
+  { id: 'everyone', label: 'Everyone', count: 0, description: 'Full mixed population' },
+  { id: 'employed', label: 'Employed', count: 0, description: 'Formal and informal employment' },
+  { id: 'unemployed', label: 'Unemployed', count: 0, description: 'Seeking work' },
+  { id: 'youth', label: 'Youth', count: 0, description: 'Aged under 35' },
+  { id: 'small_business', label: 'Small business', count: 0, description: 'Spaza, tuck shops, traders' },
+  { id: 'informal_traders', label: 'Informal traders', count: 0, description: 'Street vendors, market sellers' },
+  { id: 'grant_recipients', label: 'Grant recipients', count: 0, description: 'SASSA grant holders' },
+  { id: 'learners', label: 'Learners', count: 0, description: 'School learners' },
+  { id: 'guardians', label: 'Guardians', count: 0, description: 'Parents and caregivers' },
+])
+
+const loadSegments = async () => {
+  try {
+    const res = await listSegments()
+    const real = res.data?.segments
+    // Show only segments that actually have members in the library.
+    if (Array.isArray(real) && real.length) {
+      segments.value = real.filter(s => s.id === 'everyone' || s.count > 0)
+    }
+  } catch (e) {
+    console.error('Failed to load segments (using fallback):', e)
+  }
+}
 
 const toggleSegment = (id) => {
   if (id === 'everyone') {
@@ -380,6 +407,8 @@ const toggleSegment = (id) => {
 }
 
 const panelSubmitting = ref(false)
+// Panel: fast read. Mode (policy/product) is inferred backend-side from the pitch
+// (no toggle); omit `mode` so the server detects it.
 const submitPanel = async () => {
   const q = panelPitch.value.trim()
   if (!q || panelSubmitting.value) return
@@ -387,7 +416,6 @@ const submitPanel = async () => {
   try {
     const res = await createSession({
       pitch: q,
-      mode: panelMode.value,
       n: panelSize.value,
       segments: selectedSegments.value
     })
@@ -396,7 +424,6 @@ const submitPanel = async () => {
     emit('submit', {
       query: q,
       mode: 'panel',
-      panelMode: panelMode.value,
       segments: selectedSegments.value,
       size: panelSize.value,
       sessionId
@@ -408,11 +435,38 @@ const submitPanel = async () => {
   }
 }
 
-// Focus the active tab's input. Load personas when switching to that tab.
+// Run-speed presets — rounds map to backend quick/balanced/deep (6/12/24).
+const SIM_PRESETS = [
+  { id: 'quick',    label: 'Quick',    rounds: '6 rounds',  hint: 'Fastest, cheapest — a shallow read (6 rounds).' },
+  { id: 'balanced', label: 'Balanced', rounds: '12 rounds', hint: 'Default — a solid read over 12 rounds.' },
+  { id: 'deep',     label: 'Deep',     rounds: '24 rounds', hint: 'Slowest, most thorough — lets reactions spread over 24 rounds.' },
+]
+const simPreset = ref('balanced')
+const speedMenuOpen = ref(false)
+const speedDdEl = ref(null)
+const currentPreset = computed(() => SIM_PRESETS.find(o => o.id === simPreset.value) || SIM_PRESETS[1])
+const selectPreset = (id) => { simPreset.value = id; speedMenuOpen.value = false }
+// Close the speed dropdown on any click outside it.
+const onSpeedOutside = (e) => {
+  if (speedMenuOpen.value && speedDdEl.value && !speedDdEl.value.contains(e.target)) {
+    speedMenuOpen.value = false
+  }
+}
+
+// Direct sim: the deeper, additional run off the same pitch. No mode toggle —
+// modeIsManual stays false so the backend auto-detects policy/product at /prepare.
+const submitDirectSim = () => {
+  const q = panelPitch.value.trim()
+  if (!q || panelSubmitting.value) return
+  setPendingUpload([], q, [], false, false)
+  setSimPreset(simPreset.value)
+  emit('submit', { query: q, mode: 'sim' })
+}
+
+// Focus the input. Load personas when switching to that tab.
 watch(activeTab, (tab) => {
   nextTick(() => {
-    if (tab === 'sim') simInput.value?.focus()
-    else if (tab === 'panel') panelInput.value?.focus()
+    if (tab === 'panel') panelInput.value?.focus()
   })
   if (tab === 'personas' && !personas.value.length && !personasLoading.value) {
     loadPersonas()
@@ -421,23 +475,27 @@ watch(activeTab, (tab) => {
 
 onMounted(() => {
   refreshBilling()  // load real plan for the sidebar badge
-  // Seed handoff from the marketing landing page: /?seed=...&mode=policy|product.
-  // Pre-fill the sim prompt so the visitor lands mid-thought, then strip the
-  // params from the URL so a refresh doesn't re-seed.
+  // Seed handoff from the marketing landing page: /?seed=... (mode is ignored now —
+  // policy/product is always inferred). Pre-fill the prompt, then strip the params
+  // so a refresh doesn't re-seed.
   const seed = typeof route.query.seed === 'string' ? route.query.seed : ''
-  const seedMode = route.query.mode
-  if (seedMode === 'policy' || seedMode === 'product') pickSimMode(seedMode)
   if (seed) {
-    activeTab.value = 'sim'
-    simQuery.value = seed
+    activeTab.value = 'panel'
+    panelPitch.value = seed
   }
-  if (seed || seedMode) {
+  if (seed || route.query.mode) {
     router.replace({ query: {} })
   }
 
-  simInput.value?.focus()
+  panelInput.value?.focus()
+  loadSegments()
   loadSims()
   loadPanels()
+  document.addEventListener('mousedown', onSpeedOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('mousedown', onSpeedOutside)
 })
 </script>
 
@@ -522,24 +580,59 @@ onMounted(() => {
   font-size: 1.05rem; line-height: 1.55; color: #1a1a1a;
 }
 .simple-prompt-input::placeholder { color: #9a9a9a; }
-.simple-prompt-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
-.simple-modes { display: flex; flex-wrap: wrap; gap: 4px; }
-.simple-mode {
-  padding: 5px 14px; border: 1px solid #E5E5E5; background: #fff;
-  border-radius: 999px; font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem; font-weight: 600; color: #777; cursor: pointer;
-  transition: all 0.15s;
+.simple-prompt-bar { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+
+/* ── Select-crowds button (opens the picker modal) ────────────────────────── */
+.crowd-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border: 1px solid #E5E5E5; background: #fff;
+  border-radius: 999px; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;
+  font-weight: 600; color: #555; transition: border-color 0.15s, color 0.15s;
 }
-.simple-mode:hover { border-color: #1E9E5A; color: #1E9E5A; }
-.simple-mode.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
-.simple-send {
-  width: 36px; height: 36px; border-radius: 50%; border: none;
-  background: #1E9E5A; color: #fff; font-size: 1.2rem; font-weight: 700;
-  line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background 0.15s;
+.crowd-btn:hover { border-color: #1E9E5A; color: #1E9E5A; }
+.crowd-btn-icon { font-size: 0.85rem; line-height: 1; }
+.crowd-btn-summary {
+  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  padding: 1px 8px; border-radius: 8px; font-size: 0.68rem;
 }
-.simple-send:hover:not(:disabled) { background: #178048; }
-.simple-send:disabled { background: #DDD; cursor: not-allowed; }
+
+/* ── Crowd picker modal ───────────────────────────────────────────────────── */
+.crowd-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(0, 0, 0, 0.32);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.crowd-modal {
+  width: 100%; max-width: 680px; max-height: 84vh;
+  display: flex; flex-direction: column;
+  background: #fff; border-radius: 16px; overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+}
+.crowd-modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid #ECECEC;
+}
+.crowd-modal-title { font-size: 1.05rem; font-weight: 600; color: #1a1a1a; }
+.crowd-modal-close {
+  border: none; background: transparent; cursor: pointer;
+  font-size: 1rem; color: #999; line-height: 1; padding: 4px;
+}
+.crowd-modal-close:hover { color: #1a1a1a; }
+.crowd-modal-body { padding: 20px 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.pp-control-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.crowd-modal-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 22px; border-top: 1px solid #ECECEC;
+}
+.crowd-foot-summary { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #999; }
+.crowd-done-btn {
+  background: #1E9E5A; color: #fff; border: none; border-radius: 999px;
+  padding: 9px 24px; font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.4px;
+  cursor: pointer; transition: background 0.15s;
+}
+.crowd-done-btn:hover { background: #178048; }
 
 /* ── Panel pitch fields — copied from PanelPitchPanel ─────────────────────── */
 .pp-field-group { display: flex; flex-direction: column; gap: 10px; }
@@ -584,8 +677,37 @@ onMounted(() => {
 }
 .pp-size-btn:hover { border-color: #1E9E5A; color: #1E9E5A; }
 .pp-size-btn.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
+/* Run-speed dropdown — lives in the seed-box bar next to Select crowds */
+.speed-dd { position: relative; }
+.speed-caret { font-size: 0.6rem; color: #9CA3AF; transition: transform 0.15s; }
+.speed-caret.open { transform: rotate(180deg); }
+.speed-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 30;
+  min-width: 240px; background: #fff; border: 1px solid #E5E7EB;
+  border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 6px; display: flex; flex-direction: column; gap: 2px;
+}
+.speed-item {
+  display: flex; flex-direction: column; gap: 2px; align-items: flex-start;
+  padding: 8px 10px; border: none; background: transparent; border-radius: 8px;
+  cursor: pointer; text-align: left; transition: background 0.12s;
+}
+.speed-item:hover { background: #F5F5F5; }
+.speed-item.active { background: #F0FAF4; }
+.speed-item-top { display: flex; align-items: baseline; gap: 8px; }
+.speed-item-name {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #444;
+}
+.speed-item.active .speed-item-name { color: #1E9E5A; }
+.speed-item-rounds { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: #9CA3AF; }
+.speed-item-hint { font-size: 0.7rem; color: #888; line-height: 1.35; }
+
+.speed-pop-enter-active, .speed-pop-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
+.speed-pop-enter-from, .speed-pop-leave-to { opacity: 0; transform: translateY(-4px); }
+
+.pp-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .pp-assemble-btn {
-  margin-left: auto; display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 12px;
   background: #1E9E5A; color: #fff; border: none; border-radius: 999px;
   padding: 11px 24px; font-family: 'JetBrains Mono', monospace;
   font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px;
@@ -593,6 +715,21 @@ onMounted(() => {
 }
 .pp-assemble-btn:hover:not(:disabled) { background: #178048; }
 .pp-assemble-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Direct sim — secondary action (the deeper, additional run) */
+.pp-sim-btn {
+  background: #fff; color: #1E9E5A; border: 1px solid #1E9E5A;
+  border-radius: 999px; padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.3px;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.pp-sim-btn:hover:not(:disabled) { background: #F0FAF4; }
+.pp-sim-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pp-hint {
+  margin: 12px 0 0; font-size: 0.76rem; color: #999; line-height: 1.5;
+}
 
 @media (max-width: 860px) {
   .simple-ask { margin-top: 0; }

@@ -62,12 +62,12 @@
         </div>
       </div>
 
-      <!-- Step 02: Generate Agent Personas -->
+      <!-- Step 02: Assemble Persona Cast -->
       <div class="step-card" :class="{ 'active': phase === 1, 'completed': phase > 1 }">
         <div class="card-header">
           <div class="step-info">
             <span class="step-num">02</span>
-            <span class="step-title">Generate Agent Personas</span>
+            <span class="step-title">Assemble Persona Cast</span>
           </div>
           <div class="step-status">
             <span v-if="phase > 1" class="badge success">Completed</span>
@@ -79,7 +79,7 @@
         <div class="card-content">
           <p class="api-note">POST /api/simulation/prepare</p>
           <p class="description">
-            Combined with context，Automatically invoke tools to organize entities and relationships from knowledge graph，Initialize simulation individuals，and give them unique behaviors and memories based on reality seed
+            Draw a representative cast from the curated persona library (survey-grounded), tilted toward the reality seed. The knowledge graph supplies context only — it never authors personas.
           </p>
 
           <!-- Profiles Stats -->
@@ -101,7 +101,7 @@
           <!-- Profiles List Preview -->
           <div v-if="profiles.length > 0" class="profiles-preview">
             <div class="preview-header">
-              <span class="preview-title">Generated Agent Personas</span>
+              <span class="preview-title">Persona Cast</span>
             </div>
             <div class="profiles-list">
               <div 
@@ -1211,7 +1211,6 @@ const startPrepareSimulation = async (override = null) => {
     const chosenMode = override ? override.mode : props.mode
     const payload = {
       simulation_id: props.simulationId,
-      use_llm_for_profiles: true,
       parallel_profile_count: 5,
       mode_is_manual: isManual,
     }

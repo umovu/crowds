@@ -14,9 +14,16 @@ const state = reactive({
   // True only when the user actively chose a mode (touched the toggle). When false,
   // the backend auto-detects mode from the seed instead of taking 'policy' silently.
   modeIsManual: false,
+  // Run speed/depth preset chosen before the sim: 'quick' | 'balanced' | 'deep'.
+  // Maps to rounds (6/12/24) at startSimulation. Defaults to balanced.
+  preset: 'balanced',
   enrichmentData: {},
   isPending: false
 })
+
+export function setSimPreset(preset) {
+  if (['quick', 'balanced', 'deep'].includes(preset)) state.preset = preset
+}
 
 export function setPendingUpload(files, requirement, customAgents = [], customAgentsEnabled = false, customAgentsOnly = false, mode = 'policy', modeIsManual = false) {
   state.files = files
@@ -42,6 +49,7 @@ export function getPendingUpload() {
     customAgentsOnly: state.customAgentsOnly,
     mode: state.mode,
     modeIsManual: state.modeIsManual,
+    preset: state.preset,
     enrichmentData: state.enrichmentData,
     isPending: state.isPending
   }

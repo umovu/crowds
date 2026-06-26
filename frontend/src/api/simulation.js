@@ -27,7 +27,7 @@ export const createSimulation = (data) => {
 
 /**
  * Prepare simulation environment (async task)
- * @param {Object} data - { simulation_id, entity_types?, use_llm_for_profiles?, parallel_profile_count?, force_regenerate?,
+ * @param {Object} data - { simulation_id, entity_types?, parallel_profile_count?, force_regenerate?,
  *   mode?, mode_is_manual? }
  *   mode_is_manual=true pins `mode`; when false (or omitted) the backend auto-detects
  *   mode from the seed. The response echoes { mode, converged, secondary_lens, mode_detection }.

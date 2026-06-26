@@ -41,166 +41,44 @@
             <span class="step-name">Reactions</span>
           </div>
           <div class="step-divider"></div>
-          <span class="status-indicator" :class="feedLive ? 'processing' : 'completed'">
+          <span class="status-indicator" :class="statusClass">
             <span class="dot"></span>
-            {{ feedLive ? 'Simulating' : 'Settled' }}
+            {{ statusLabel }}
           </span>
+
+          <!-- Live run controls (sim mode only, while the run is alive) -->
+          <template v-if="!isPanel && feedLive">
+            <div class="step-divider"></div>
+            <button class="run-ctrl" :disabled="controlBusy" @click="togglePause">
+              {{ paused ? '▶ Resume' : '❚❚ Pause' }}
+            </button>
+            <button class="run-ctrl danger" :disabled="controlBusy" @click="stopRun">
+              ■ Stop
+            </button>
+          </template>
         </div>
       </header>
 
       <!-- ── Simulation panel ──────────────────────────────────────────── -->
       <div class="simulation-panel">
 
-        <!-- ── Timeline feed (sim mode) — exact copy of Step3Simulation ─── -->
-        <div v-if="!isPanel" class="main-content-area" ref="scrollContainer">
-          <div class="timeline-header" v-if="feed.length > 0">
-            <div class="timeline-stats">
-              <span class="total-count">TOTAL EVENTS: <span class="mono">{{ feed.length }}</span></span>
-              <span class="platform-breakdown">
-                <span class="breakdown-item opinion-space">
-                  <svg class="mini-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
-                  <span class="mono">{{ feed.length }}</span>
-                </span>
-              </span>
-            </div>
-          </div>
-
-          <div class="timeline-feed">
-            <div class="timeline-axis"></div>
-
-            <TransitionGroup name="timeline-item">
-              <div
-                v-for="action in feed"
-                :key="action.uid"
-                class="timeline-item opinion-space"
-                @click="openChat(action.agent_id)"
-                style="cursor: pointer;"
-              >
-                <div class="timeline-marker">
-                  <div class="marker-dot"></div>
-                </div>
-
-                <div class="timeline-card">
-                  <div class="card-header">
-                    <div class="agent-info">
-                      <div class="avatar-placeholder">{{ (action.agent_name || 'A')[0] }}</div>
-                      <span class="agent-name">{{ action.agent_name }}</span>
-                      <span v-if="action.stance_changed" class="agent-custom-badge">shifted</span>
-                      <span class="chat-hint">💬</span>
-                    </div>
-
-                    <div class="header-meta">
-                      <div class="platform-indicator">
-                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
-                      </div>
-                      <div class="action-badge" :class="action.round === 1 ? 'badge-post' : 'badge-comment'">
-                        {{ action.action_type }}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="card-body">
-                    <div class="content-text main-text">
-                      {{ action.content }}
-                    </div>
-
-                    <div v-if="action.stance_changed" class="quoted-block">
-                      <div class="quote-header">
-                        <span class="quote-label">Stance shift</span>
-                      </div>
-                      <div class="quote-content">
-                        {{ stanceLabel(action.stance_before) }} → {{ stanceLabel(action.stance_after) }}
-                      </div>
-                    </div>
-
-                    <div v-if="action.round > 1" class="comment-context">
-                      <svg class="icon-small" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                      <span>Round {{ action.round }} reaction</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </TransitionGroup>
-
-            <!-- Typing indicator while sim is live -->
-            <div v-if="feedLive" class="timeline-item opinion-space">
-              <div class="timeline-marker">
-                <div class="marker-dot" style="background: #1E9E5A; animation: pulse 1s infinite;"></div>
-              </div>
-              <div class="timeline-card" style="opacity: 0.6;">
-                <div class="chat-typing-indicator">
-                  <span class="typing-dot"></span>
-                  <span class="typing-dot"></span>
-                  <span class="typing-dot"></span>
-                  <span class="typing-text">More reactions forming…</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── Stance spectrum (panel mode) ─────────────────────────────── -->
-        <div v-else class="main-content-area" ref="scrollContainer">
-          <!-- Pitched banner -->
+        <!-- ── Results body — shared layout for both modes ──────────────── -->
+        <!-- Sim and panel now read the same way: a scenario banner, the stance
+             spectrum, a summary, then mode-specific detail (sim = a live
+             reaction feed; panel = room replies). -->
+        <div class="main-content-area" ref="scrollContainer">
+          <!-- Scenario banner -->
           <div class="spectrum-pitched">
-            <span class="spectrum-pitched-label">PITCHED:</span> {{ query }}
+            <span class="spectrum-pitched-label">{{ isPanel ? 'PITCHED:' : 'SCENARIO:' }}</span> {{ query }}
           </div>
 
-          <!-- The stance spectrum box -->
-          <div class="spectrum-box">
-            <div class="spectrum-header">
-              <span class="spectrum-title">Stance spectrum</span>
-              <span class="spectrum-count">{{ panelAgents.length }} personas</span>
-            </div>
-
-            <!-- Stance groups — each a row with heading + avatar line -->
-            <div class="spectrum-groups">
-              <div
-                v-for="s in STANCES"
-                :key="s.key"
-                class="spectrum-group"
-                :class="{ empty: agentsByStance(s.key).length === 0 }"
-              >
-                <div class="spectrum-group-head">
-                  <span class="spectrum-group-dot" :style="{ background: s.color }"></span>
-                  <span class="spectrum-group-label">{{ s.label }}</span>
-                  <span class="spectrum-group-count">{{ agentsByStance(s.key).length }}</span>
-                </div>
-                <div class="spectrum-group-avatars">
-                  <div
-                    v-for="agent in agentsByStance(s.key)"
-                    :key="agent.id"
-                    class="spectrum-avatar-wrap"
-                    @mouseenter="hoveredAgent = agent"
-                    @mouseleave="hoveredAgent = null"
-                    @click="openChat(agent.id)"
-                  >
-                    <img :src="agent.avatarUrl" :alt="agent.name" class="spectrum-avatar" :style="{ '--ring': s.color }" />
-                    <span class="spectrum-avatar-name">{{ agent.name }}</span>
-                    <span v-if="agent.stance_changed" class="spectrum-shift-badge">shifted</span>
-
-                    <!-- Hover popover: agent's opinion -->
-                    <Transition name="pop">
-                      <div v-if="hoveredAgent && hoveredAgent.id === agent.id" class="spectrum-popover">
-                        <span class="spectrum-pop-name">{{ agent.name }}</span>
-                        <span class="spectrum-pop-arch">{{ agent.archetype }}</span>
-                        <span class="spectrum-pop-stance" :style="{ color: s.color }">{{ stanceLabel(agent.stance_after) }}</span>
-                        <span class="spectrum-pop-text">{{ agent.currentReaction }}</span>
-                      </div>
-                    </Transition>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Typing indicator while panel is live -->
+          <!-- Typing indicator while the room is live -->
           <div v-if="feedLive" class="spectrum-typing">
             <div class="chat-typing-indicator">
               <span class="typing-dot"></span>
               <span class="typing-dot"></span>
               <span class="typing-dot"></span>
-              <span class="typing-text">Panel is reacting…</span>
+              <span class="typing-text">{{ isPanel ? 'Panel is reacting…' : 'The room is reacting…' }}</span>
             </div>
           </div>
 
@@ -221,6 +99,36 @@
                 {{ agentsByStance(s.key).length }} {{ s.label.toLowerCase() }}
               </span>
             </div>
+          </div>
+
+          <!-- ── Live reaction feed (sim mode) — clean single column ─────── -->
+          <div v-if="!isPanel && feed.length" class="sim-feed">
+            <div class="sim-feed-head">
+              <span>Reactions</span>
+              <span class="sim-feed-count">{{ feed.length }} events</span>
+            </div>
+            <TransitionGroup name="reaction-item" tag="div" class="sim-feed-list">
+              <div
+                v-for="action in feed"
+                :key="action.uid"
+                class="reaction-card"
+                @click="openChat(action.agent_id)"
+              >
+                <img :src="avatarFor(action.agent_id, action.agent_name)" :alt="action.agent_name" class="reaction-avatar" />
+                <div class="reaction-body">
+                  <div class="reaction-meta">
+                    <span class="reaction-name">{{ action.agent_name }}</span>
+                    <span class="reaction-badge" :class="action.round === 1 ? 'badge-post' : 'badge-comment'">{{ action.action_type }}</span>
+                    <span v-if="action.round > 1" class="reaction-round">round {{ action.round }}</span>
+                    <span v-if="action.stance_changed" class="reaction-shift">
+                      {{ stanceLabel(action.stance_before) }} → {{ stanceLabel(action.stance_after) }}
+                    </span>
+                    <span class="reaction-chat-hint">💬</span>
+                  </div>
+                  <p class="reaction-text">{{ action.content }}</p>
+                </div>
+              </div>
+            </TransitionGroup>
           </div>
 
           <!-- Room broadcast replies -->
@@ -343,7 +251,10 @@ import {
   getRunStatusDetail,
   getSimulationActions,
   interviewAgent,
-  broadcastIntervention
+  broadcastIntervention,
+  pauseSimulation,
+  resumeSimulation,
+  stopSimulation
 } from '../../api/simulation'
 import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
 
@@ -370,6 +281,13 @@ const getAvatarUrl = (name) => {
   const uri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
   _avatarCache.set(seed, uri)
   return uri
+}
+
+// Avatar for a feed row — prefer the roster agent's avatar (so the feed and the
+// spectrum show the same face), falling back to a name-seeded one.
+const avatarFor = (id, name) => {
+  const a = agents.value.find(x => x.id === id)
+  return a?.avatarUrl || getAvatarUrl(name)
 }
 
 // ── Normalised agent roster ─────────────────────────────────────────────────
@@ -399,31 +317,98 @@ const STANCES = [
 
 const agentsByStance = (stance) => panelAgents.value.filter(a => a.stance_after === stance)
 
-// Panel-specific state
-const hoveredAgent = ref(null)
-
-// Panel agents — the spectrum reads straight off the live roster.
+// The roster the summary counts read off (live for both modes).
 const panelAgents = computed(() => agents.value)
 
-// Summary text — qualitative read of where the room sits
+// How many personas changed their mind so far (drives the "experience" read).
+const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_changed).length)
+
+// Summary text — a short summary report of where the room sits, grounded in the
+// live roster: the prevailing mood, the actual breakdown, and how many have
+// moved as the scenario plays out. No LLM — pure real counts.
 const summaryText = computed(() => {
   const total = panelAgents.value.length
+  if (!total) return 'No reactions yet — the room is still forming its view.'
+  const subject = isPanel.value ? 'pitch' : 'scenario'
   const support = agentsByStance('support').length
   const concerned = agentsByStance('concerned').length
   const oppose = agentsByStance('oppose').length
   const neutral = agentsByStance('neutral').length
 
-  if (support > total / 2) return 'The room leans positive. Most personas are won over or warming to the pitch, though a few still have conditions before they would commit.'
-  if (oppose > total / 2) return 'The room leans resistant. Most personas are unconvinced or actively opposed — the pitch is not landing with this group as it stands.'
-  if (concerned > total / 3) return 'The room is cautious. A large share is unconviced — they see potential but have specific conditions or objections before they would engage.'
-  if (neutral >= total / 2) return 'The room is curious but undecided. Most personas are open to hearing more, but nobody is committed yet.'
-  return 'The room is mixed. Opinions are spread across the spectrum with no clear majority in any direction.'
+  let mood
+  if (support > total / 2) mood = `The room leans positive — most are won over or warming to the ${subject}.`
+  else if (oppose > total / 2) mood = `The room leans resistant — the ${subject} is not landing with this group as it stands.`
+  else if (concerned > total / 3) mood = `The room is cautious — a large share is unconvinced, with specific conditions before they would engage.`
+  else if (neutral >= total / 2) mood = `The room is curious but undecided — open to hearing more about the ${subject}, but nobody is committed yet.`
+  else mood = 'The room is mixed — opinions are spread with no clear majority.'
+
+  // A one-line breakdown of the real split, in plain language.
+  const parts = []
+  if (support) parts.push(`${support} won over`)
+  if (neutral) parts.push(`${neutral} curious`)
+  if (concerned) parts.push(`${concerned} unconvinced`)
+  if (oppose) parts.push(`${oppose} resistant`)
+  const breakdown = `Of ${total} personas: ${parts.join(', ')}.`
+
+  // How the room has actually moved so far.
+  const moved = shiftedCount.value
+  const shift = moved > 0
+    ? ` ${moved === 1 ? 'One persona has' : moved + ' personas have'} changed their mind so far.`
+    : ''
+
+  return `${mood} ${breakdown}${shift}`
 })
 
 // ── Feed — timeline actions ─────────────────────────────────────────────────
 const feed = ref([])
 const feedLive = ref(true)
 const scrollContainer = ref(null)
+
+// ── Live run controls (sim mode): pause / resume / stop ─────────────────────
+const paused = ref(false)
+const controlBusy = ref(false)
+
+const statusClass = computed(() => {
+  if (!feedLive.value) return 'completed'
+  return paused.value ? 'paused' : 'processing'
+})
+const statusLabel = computed(() => {
+  if (!feedLive.value) return 'Settled'
+  return paused.value ? 'Paused' : 'Simulating'
+})
+
+const togglePause = async () => {
+  if (controlBusy.value || !props.simulationId) return
+  controlBusy.value = true
+  try {
+    if (paused.value) {
+      await resumeSimulation(props.simulationId)
+      paused.value = false
+    } else {
+      await pauseSimulation(props.simulationId)
+      paused.value = true
+    }
+  } catch (e) {
+    console.warn('Pause/resume failed:', e)
+  } finally {
+    controlBusy.value = false
+  }
+}
+
+const stopRun = async () => {
+  if (controlBusy.value || !props.simulationId) return
+  controlBusy.value = true
+  try {
+    await stopSimulation({ simulation_id: props.simulationId })
+    paused.value = false
+    feedLive.value = false
+    stopSimPolling()
+  } catch (e) {
+    console.warn('Stop failed:', e)
+  } finally {
+    controlBusy.value = false
+  }
+}
 
 const STANCE_LABELS = {
   support: 'won over', neutral: 'curious', concerned: 'unconvinced',
@@ -478,6 +463,17 @@ const pushActionToFeed = (action) => {
     stance_after: action.stance_after || null,
     stance_changed: !!action.stance_changed
   })
+  // Keep the live roster in sync so the stance spectrum reflects the latest
+  // round as reactions stream in (the spectrum reads off agents.value).
+  if (action.stance_after) {
+    const ag = agents.value.find(a => a.id === action.agent_id)
+    if (ag) {
+      if (action.stance_after !== ag.stance_after) ag.stance_before = ag.stance_after
+      ag.stance_after = action.stance_after
+      if (action.stance_changed) ag.stance_changed = true
+      ag.currentReaction = content
+    }
+  }
 }
 
 const pollSimActions = async () => {
@@ -796,7 +792,20 @@ onUnmounted(() => {
 .status-indicator .dot { width: 8px; height: 8px; border-radius: 50%; background: #CCC; }
 .status-indicator.processing .dot { background: #FF5722; animation: pulse 1s infinite; }
 .status-indicator.completed .dot { background: #4CAF50; }
+.status-indicator.paused .dot { background: #F59E0B; }
 @keyframes pulse { 50% { opacity: 0.5; } }
+
+/* Live run controls — pause / resume / stop */
+.run-ctrl {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border: 1px solid #E5E7EB; border-radius: 999px;
+  background: #FFF; color: #555; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.run-ctrl:hover:not(:disabled) { border-color: #1E9E5A; color: #1E9E5A; background: #F0FAF4; }
+.run-ctrl.danger:hover:not(:disabled) { border-color: #C0392B; color: #C0392B; background: #FDF2F1; }
+.run-ctrl:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Simulation panel — exact copy of Step3Simulation ─────────────────────── */
 .simulation-panel {
@@ -926,61 +935,52 @@ onUnmounted(() => {
 .scrim-enter-active, .scrim-leave-active { transition: opacity 0.3s ease; }
 .scrim-enter-from, .scrim-leave-to { opacity: 0; }
 
-/* ── Timeline feed — exact copy of Step3Simulation ────────────────────────── */
 .main-content-area { flex: 1; overflow-y: auto; }
-.timeline-header { padding: 16px 24px; border-bottom: 1px solid #F0F0F0; }
-.timeline-stats { display: flex; align-items: center; gap: 16px; }
-.total-count { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
-.platform-breakdown { display: flex; align-items: center; gap: 8px; }
-.breakdown-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #666; }
-.breakdown-item.opinion-space { color: #000; }
-.mini-icon { opacity: 0.6; }
 
-.timeline-feed { padding: 24px 0; position: relative; min-height: 100%; max-width: 900px; margin: 0 auto; }
-.timeline-axis { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #EAEAEA; transform: translateX(-50%); }
-.timeline-item { display: flex; justify-content: center; margin-bottom: 32px; position: relative; width: 100%; }
-.timeline-marker { position: absolute; left: 50%; top: 24px; width: 10px; height: 10px; background: #FFF; border: 1px solid #CCC; border-radius: 50%; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; justify-content: center; }
-.marker-dot { width: 4px; height: 4px; background: #CCC; border-radius: 50%; }
-.timeline-item.opinion-space .marker-dot { background: #000; }
-.timeline-item.opinion-space .timeline-marker { border-color: #000; }
+/* ── Live reaction feed (sim mode) — clean single column ───────────────────── */
+.sim-feed {
+  margin: 16px 24px;
+  background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+.sim-feed-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; border-bottom: 1px solid #E5E7EB; background: #F9FAFB;
+  font-size: 14px; font-weight: 600; color: #1F2937;
+}
+.sim-feed-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 400; color: #9CA3AF; }
+.sim-feed-list { display: flex; flex-direction: column; }
 
-/* Card */
-.timeline-card { width: calc(100% - 48px); background: #FFF; border-radius: 2px; padding: 16px 20px; border: 1px solid #EAEAEA; box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: relative; transition: all 0.2s; }
-.timeline-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: #DDD; }
-.timeline-item.opinion-space { justify-content: flex-start; padding-right: 50%; }
-.timeline-item.opinion-space .timeline-card { margin-left: auto; margin-right: 32px; }
-
-/* Card content */
-.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #F5F5F5; }
-.agent-info { display: flex; align-items: center; gap: 10px; }
-.avatar-placeholder { width: 24px; height: 24px; background: #000; color: #FFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-.agent-name { font-size: 13px; font-weight: 600; color: #000; }
-.chat-hint { margin-left: 6px; font-size: 14px; opacity: 0; transition: opacity 0.2s; }
-.timeline-item:hover .chat-hint { opacity: 1; }
-.agent-custom-badge { margin-left: 6px; font-size: 10px; font-weight: 600; line-height: 1; color: #1E9E5A; background: rgba(30, 158, 90, 0.10); border: 1px solid rgba(30, 158, 90, 0.35); padding: 2px 6px; border-radius: 10px; white-space: nowrap; }
-.header-meta { display: flex; align-items: center; gap: 8px; }
-.platform-indicator { color: #999; display: flex; align-items: center; }
-.action-badge { font-size: 9px; padding: 2px 6px; border-radius: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid transparent; }
+.reaction-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 20px; border-bottom: 1px solid #F0F0F0;
+  cursor: pointer; transition: background 0.15s;
+}
+.reaction-card:last-child { border-bottom: none; }
+.reaction-card:hover { background: #F9FAFB; }
+.reaction-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #E5E7EB; background: #FFF; flex-shrink: 0; }
+.reaction-body { flex: 1; min-width: 0; }
+.reaction-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.reaction-name { font-size: 13px; font-weight: 700; color: #1F2937; }
+.reaction-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid transparent; }
 .badge-post { background: #F0F0F0; color: #333; border-color: #E0E0E0; }
 .badge-comment { background: #F0F0F0; color: #666; border-color: #E0E0E0; }
+.reaction-round { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #9CA3AF; }
+.reaction-shift {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  border: 1px solid rgba(30, 158, 90, 0.3); padding: 1px 6px; border-radius: 999px;
+}
+.reaction-chat-hint { margin-left: auto; font-size: 13px; opacity: 0; transition: opacity 0.15s; }
+.reaction-card:hover .reaction-chat-hint { opacity: 1; }
+.reaction-text { margin: 0; font-size: 14px; line-height: 1.55; color: #374151; }
 
-.content-text { font-size: 13px; line-height: 1.6; color: #333; margin-bottom: 10px; }
-.content-text.main-text { font-size: 14px; color: #000; }
+/* Reaction feed transitions */
+.reaction-item-enter-active { transition: all 0.4s ease; }
+.reaction-item-enter-from { opacity: 0; transform: translateY(12px); }
 
-.quoted-block { background: #F9F9F9; border: 1px solid #EEE; padding: 10px 12px; border-radius: 2px; margin-top: 8px; font-size: 12px; color: #555; }
-.quote-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; color: #666; }
-.quote-label { font-weight: 600; }
-.quote-content { font-size: 12px; color: #555; }
-
-.comment-context { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; color: #666; }
-.icon-small { opacity: 0.6; }
-
-/* Timeline transitions */
-.timeline-item-enter-active, .timeline-item-leave-active { transition: all 0.4s ease; }
-.timeline-item-enter-from { opacity: 0; transform: translateY(20px); }
-.timeline-item-leave-to { opacity: 0; transform: translateX(-20px); }
-
-/* ── Stance spectrum (panel mode) ─────────────────────────────────────────── */
+/* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
   margin: 16px 24px 0;
   padding: 10px 14px;
@@ -988,112 +988,6 @@ onUnmounted(() => {
   font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #555; line-height: 1.5;
 }
 .spectrum-pitched-label { color: #1E9E5A; font-weight: 700; margin-right: 6px; }
-
-.spectrum-box {
-  margin: 16px 24px;
-  background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  /* visible so the reaction popover can extend below an avatar row without being clipped */
-  overflow: visible;
-}
-.spectrum-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 20px; border-bottom: 1px solid #E5E7EB; background: #F9FAFB;
-}
-.spectrum-title { font-size: 14px; font-weight: 600; color: #1F2937; }
-.spectrum-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; }
-
-/* Stance groups — each stance is a row with heading + avatar line, separated by dividers */
-.spectrum-groups {
-  padding: 4px 0;
-}
-.spectrum-group {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 16px 20px;
-  border-bottom: 1px solid #F0F0F0;
-}
-.spectrum-group:last-child { border-bottom: none; }
-.spectrum-group.empty { opacity: 0.4; }
-
-.spectrum-group-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  width: 140px;
-}
-.spectrum-group-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  flex-shrink: 0;
-}
-.spectrum-group-label {
-  font-size: 13px; font-weight: 600; color: #1F2937;
-}
-.spectrum-group-count {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; color: #9CA3AF;
-}
-
-.spectrum-group-avatars {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  flex: 1;
-}
-
-.spectrum-avatar-wrap {
-  position: relative; display: flex; flex-direction: column;
-  align-items: center; gap: 4px; cursor: pointer;
-}
-.spectrum-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 3px solid var(--ring, #E5E7EB);
-  background: #FFF;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  transition: transform 0.16s ease, box-shadow 0.16s ease;
-}
-.spectrum-avatar-wrap:hover .spectrum-avatar {
-  transform: scale(1.15);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
-}
-.spectrum-avatar-name {
-  font-size: 10px; font-weight: 600; color: #374151;
-  white-space: nowrap;
-}
-.spectrum-shift-badge {
-  font-size: 7px; font-weight: 700; color: #1E9E5A;
-  background: rgba(30, 158, 90, 0.1);
-  border: 1px solid rgba(30, 158, 90, 0.35);
-  padding: 0 4px; border-radius: 6px;
-  white-space: nowrap;
-}
-
-/* Reaction popover — sits below the avatar and pops up from the bottom.
-   Wider + larger type so the full reaction is comfortable to read. */
-.spectrum-popover {
-  position: absolute; top: calc(100% + 12px); left: 50%;
-  transform: translateX(-50%);
-  width: 340px; max-width: 78vw; background: #FFF; border: 1px solid #E5E7EB;
-  border-radius: 12px; padding: 16px 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
-  display: flex; flex-direction: column; gap: 6px;
-  z-index: 30; pointer-events: none;
-}
-.spectrum-popover::after {
-  content: ''; position: absolute; bottom: 100%; left: 50%;
-  transform: translateX(-50%);
-  border: 7px solid transparent; border-bottom-color: #FFF;
-}
-.spectrum-pop-name { font-size: 15px; font-weight: 700; color: #1F2937; }
-.spectrum-pop-arch { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; }
-.spectrum-pop-stance { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-.spectrum-pop-text { font-size: 14px; line-height: 1.55; color: #374151; margin-top: 4px; }
-
-/* Rise up into place from below — "pop out from the bottom". */
-.pop-enter-active, .pop-leave-active { transition: opacity 0.18s ease, transform 0.18s ease; }
-.pop-enter-from, .pop-leave-to { opacity: 0; transform: translateX(-50%) translateY(8px); }
 
 .spectrum-typing { padding: 16px 24px; }
 
@@ -1172,11 +1066,4 @@ onUnmounted(() => {
 }
 .room-bar-send:hover:not(:disabled) { background: #178048; }
 .room-bar-send:disabled { background: #DDD; cursor: not-allowed; }
-
-@media (max-width: 760px) {
-  .timeline-axis { left: 20px; }
-  .timeline-marker { left: 20px; }
-  .timeline-item.opinion-space { padding-right: 0; padding-left: 40px; }
-  .timeline-item.opinion-space .timeline-card { margin-right: 0; margin-left: 0; }
-}
 </style>
