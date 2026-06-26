@@ -9,7 +9,7 @@
         <div class="menu-head-avatar">JS</div>
         <div class="menu-head-info">
           <span class="menu-head-name">Jabu Swartbooi</span>
-          <span class="menu-head-plan">{{ isPaid ? 'Paid plan' : 'Free plan' }}</span>
+          <span class="menu-head-plan">{{ isPaid ? 'Beta plan' : 'Free plan' }}</span>
         </div>
       </div>
       <div class="menu-list">
@@ -102,7 +102,7 @@
           <div class="current-plan-banner" :class="{ cancelled: isCancelled }">
             <div class="cpb-left">
               <span class="cpb-label">{{ isCancelled ? 'Subscription cancelled' : 'Current plan' }}</span>
-              <span class="cpb-name">{{ isPaid ? 'Pro — R80/mo' : 'Free' }}</span>
+              <span class="cpb-name">{{ isPaid ? 'Pro (Beta) — R80/mo' : 'Free' }}</span>
             </div>
             <span class="cpb-right">
               {{ isCancelled
@@ -122,14 +122,14 @@
               <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>
             <div class="plan-card-opt" :class="{ current: isPaid }">
-              <div class="pco-head"><span class="pco-name">Pro</span><span class="pco-price">R80/mo</span></div>
+              <div class="pco-head"><span class="pco-name">Pro <em class="pco-beta">Beta</em></span><span class="pco-price">R80/mo</span></div>
               <ul class="pco-features">
                 <li>Unlimited panels</li>
                 <li>Full simulations</li>
                 <li>Every report &amp; interview</li>
               </ul>
               <button v-if="!isPaid" class="pco-btn" :disabled="upgrading" @click="doUpgrade">
-                {{ upgrading ? 'Redirecting…' : 'Upgrade — R80/mo →' }}
+                {{ upgrading ? 'Redirecting…' : 'Join the beta — R80/mo →' }}
               </button>
               <button v-else-if="isCancelled" class="pco-btn disabled" disabled>Cancels at period end</button>
               <button v-else class="pco-btn ghost" :disabled="cancelling" @click="doCancel">
@@ -449,6 +449,12 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 .plan-card-opt.current { border-color: rgba(30,158,90,0.3); background: #F0FAF4; }
 .pco-head { display: flex; justify-content: space-between; align-items: baseline; }
 .pco-name { font-size: 0.95rem; font-weight: 700; color: #1a1a1a; }
+.pco-beta {
+  font-family: 'JetBrains Mono', monospace; font-style: normal;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: #1E9E5A; background: #F0FAF4; border-radius: 999px; padding: 2px 7px; margin-left: 6px;
+  vertical-align: middle;
+}
 .pco-price { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #1E9E5A; }
 .pco-features { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; }
 .pco-features li { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: #555; padding-left: 14px; position: relative; }

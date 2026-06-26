@@ -56,7 +56,7 @@
           <span class="profile-avatar">JS</span>
           <span class="profile-body">
             <span class="profile-name">Jabu Swartbooi</span>
-            <span class="profile-sub">{{ isPaid ? 'Paid plan' : 'Free plan' }}</span>
+            <span class="profile-sub">{{ isPaid ? 'Beta plan' : 'Free plan' }}</span>
           </span>
           <span class="profile-chevron">⋯</span>
         </button>

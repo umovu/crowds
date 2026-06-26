@@ -1,7 +1,7 @@
 <template>
   <div v-if="open" class="upgrade-overlay" @click.self="close">
     <div class="upgrade-card">
-      <div class="upgrade-badge">Upgrade</div>
+      <div class="upgrade-badge">Beta</div>
       <h2 class="upgrade-title">Unlock the full thing</h2>
       <p class="upgrade-msg">{{ message }}</p>
       <ul class="upgrade-feats">
@@ -10,7 +10,7 @@
         <li>Every report &amp; interview</li>
       </ul>
       <button class="upgrade-btn" :disabled="busy" @click="doUpgrade">
-        {{ busy ? 'Redirecting…' : 'Upgrade — R80/mo' }}
+        {{ busy ? 'Redirecting…' : 'Join the beta — R80/mo' }}
       </button>
       <button class="upgrade-later" @click="close">Maybe later</button>
     </div>
