@@ -32,10 +32,10 @@ from flask import g, jsonify
 
 logger = logging.getLogger("fub.billing")
 
-FREE_PANEL_LIMIT = 1
+FREE_PANEL_LIMIT = 3
 # Closed-beta trial: free plan may run this many simulations before the paywall.
 # Lets us hand out access for user testing while Paystack approval is pending.
-FREE_SIM_LIMIT = 3
+FREE_SIM_LIMIT = 1
 PAYSTACK_BASE = "https://api.paystack.co"
 
 
@@ -227,9 +227,10 @@ def check_sim_quota():
     if ent.get("plan") == "paid":
         return None
     if int(ent.get("sim_used", 0) or 0) >= FREE_SIM_LIMIT:
+        _s = "" if FREE_SIM_LIMIT == 1 else "s"
         return jsonify({
             "success": False,
-            "error": (f"Your free trial of {FREE_SIM_LIMIT} simulations is used up. "
+            "error": (f"Your free trial of {FREE_SIM_LIMIT} simulation{_s} is used up. "
                       "Upgrade for unlimited simulations."),
             "code": "upgrade_required",
         }), 402
@@ -241,9 +242,10 @@ def check_panel_quota():
     if ent.get("plan") == "paid":
         return None
     if int(ent.get("panel_used", 0) or 0) >= FREE_PANEL_LIMIT:
+        _s = "" if FREE_PANEL_LIMIT == 1 else "s"
         return jsonify({
             "success": False,
-            "error": (f"The free plan includes {FREE_PANEL_LIMIT} panel. "
+            "error": (f"The free plan includes {FREE_PANEL_LIMIT} panel{_s}. "
                       "Upgrade for unlimited panels and simulations."),
             "code": "upgrade_required",
         }), 402

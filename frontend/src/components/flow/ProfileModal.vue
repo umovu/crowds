@@ -108,16 +108,16 @@
               {{ isCancelled
                 ? 'Access continues until the end of your paid month'
                 : (isPaid ? 'unlimited panels + simulations'
-                          : `${status?.panel_used ?? 0} / 1 panel · ${status?.sim_used ?? 0} / ${status?.sim_limit ?? 3} trial sims used`) }}
+                          : `${status?.panel_used ?? 0} / ${status?.panel_limit ?? 3} panels · ${status?.sim_used ?? 0} / ${status?.sim_limit ?? 1} trial sims used`) }}
             </span>
           </div>
           <div class="plan-grid">
             <div class="plan-card-opt" :class="{ current: !isPaid }">
               <div class="pco-head"><span class="pco-name">Free</span><span class="pco-price">R0/mo</span></div>
               <ul class="pco-features">
-                <li>1 panel (focus group)</li>
+                <li>3 panels (focus groups)</li>
                 <li>Full reaction report</li>
-                <li>3 trial simulations</li>
+                <li>1 trial simulation</li>
               </ul>
               <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>
