@@ -90,8 +90,15 @@ def load_facts(path: Optional[str] = None) -> List[Dict[str, Any]]:
     return list(best.values())
 
 
-def _format_fact_line(fact: Dict[str, Any]) -> str:
-    """One human-readable line: the number, its unit, and the derived consequence."""
+def _format_fact_line(fact: Dict[str, Any], include_derived: bool = True) -> str:
+    """One human-readable line: the number and its unit (and, optionally, the
+    derived consequence).
+
+    The `derived` text is a ready-made sentence ("R100 buys about 33 units").
+    It's useful as documentation, but when shown to agents it gets copied back
+    verbatim and turns the reference into a recital — so the prompt block renders
+    WITHOUT it (include_derived=False).
+    """
     value = fact["value"]
     # Drop a trailing .0 so 'R22/litre' reads cleanly, keep real decimals.
     num = int(value) if float(value).is_integer() else value
@@ -100,14 +107,21 @@ def _format_fact_line(fact: Dict[str, Any]) -> str:
     # 'R22 R/litre'. Units without it (e.g. 'kWh') get the leading 'R'.
     amount = f"R{num}{unit[1:]}" if unit.startswith("R/") else f"R{num} {unit}"
     line = f"- {fact['item'].replace('_', ' ')}: {amount}"
-    derived = (fact.get("derived") or "").strip()
-    if derived:
-        line += f" — {derived}"
+    if include_derived:
+        derived = (fact.get("derived") or "").strip()
+        if derived:
+            line += f" — {derived}"
     return line
 
 
 def render_block(facts: Optional[List[Dict[str, Any]]] = None) -> str:
     """Render the world-facts block for injection into document_context.
+
+    This is a PASSIVE reference layer, not a directive. It exists so that an
+    agent who genuinely talks about an everyday cost cites the real figure
+    instead of inventing one — it must NOT push every agent to weigh prices
+    against their income or turn an unrelated topic into a cost complaint
+    (that's what dragged whole policy rooms off-topic onto cost-of-living).
 
     Returns "" when there are no valid facts, so the document context is
     unchanged in that case.
@@ -115,16 +129,16 @@ def render_block(facts: Optional[List[Dict[str, Any]]] = None) -> str:
     facts = load_facts() if facts is None else facts
     if not facts:
         return ""
-    lines = [_format_fact_line(f) for f in facts]
+    # No derived consequences here — they get recited verbatim. Bare figures only.
+    lines = [_format_fact_line(f, include_derived=False) for f in facts]
     return (
-        "\n" + "=" * 60 + "\n"
-        "WORLD FACTS — real current South African costs. Reason AGAINST these.\n"
-        "These are true figures. Do NOT invent your own prices, and never claim a\n"
-        "rand amount buys more than these figures allow. Weigh them against YOUR\n"
-        "own income and budget in your own words.\n"
-        + "=" * 60 + "\n"
+        "\n"
+        "SA cost reference (for accuracy only — ignore unless the topic is actually about these costs):\n"
+        "If — and only if — your reaction naturally involves one of these everyday costs, use the\n"
+        "real figure below instead of inventing one. Do NOT recite this list, do NOT bring prices\n"
+        "into an unrelated topic, and never claim a rand amount stretches further than these allow.\n"
         + "\n".join(lines)
-        + "\n" + "=" * 60 + "\n"
+        + "\n"
     )
 
 

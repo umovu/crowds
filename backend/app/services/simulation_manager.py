@@ -16,7 +16,6 @@ from enum import Enum
 from ..config import Config
 from ..utils.logger import get_logger
 from .entity_reader import EntityReader, FilteredEntities
-from .agent_profile_generator import AgentProfileGenerator, AgentProfile
 from .simulation_config_generator import SimulationConfigGenerator, SimulationParameters
 from .document_context_engine import DocumentContextEngine
 from . import mode_detector
@@ -231,7 +230,6 @@ class SimulationManager:
         simulation_requirement: str,
         document_text: str,
         defined_entity_types: Optional[List[str]] = None,
-        use_llm_for_profiles: bool = True,
         progress_callback: Optional[callable] = None,
         parallel_profile_count: int = 3,
         storage: 'GraphStorage' = None,
@@ -256,7 +254,6 @@ class SimulationManager:
             simulation_requirement: Simulation requirement description (for LLM config generation)
             document_text: Original document content (for LLM background understanding)
             defined_entity_types: Predefined entity types (optional)
-            use_llm_for_profiles: Whether to use LLM to generate detailed profiles
             progress_callback: Progress callback function (stage, progress, message)
             parallel_profile_count: Number of parallel profile generations, default 3
             

@@ -644,18 +644,15 @@ class AgentSocietyRunner:
             )
             document_context = (document_context or "") + fact_block
 
-        # 3b. Append curated WORLD FACTS — real current SA costs (fuel, data,
-        # taxi fare, grants) the whole room reasons against, so no agent invents a
-        # magnitude ("R100 = two tanks"). Mode-agnostic: real costs are universal.
-        # Empty block when the facts file is missing → context unchanged.
-        try:
-            from app.services.world_facts import render_block as _world_facts_block
-            _wf = _world_facts_block()
-            if _wf:
-                document_context = (document_context or "") + _wf
-                print(f"  World     : injected curated world-facts ({_wf.count(chr(10)) - 8} facts)")
-        except Exception as e:
-            logger.warning(f"World-facts injection skipped: {e}")
+        # 3b. WORLD FACTS injection intentionally removed. Dropping a list of
+        # generic SA costs (bread/petrol/taxi/electricity) into every prompt made
+        # agents fixate on those costs — reciting and even policing them ("bread
+        # is R16 not R10") — and drift off the actual scenario, in both policy and
+        # product runs. Affordability that genuinely matters is still grounded:
+        # product mode's economic lens supplies each persona's REAL budget. The
+        # world_facts module/JSON remain for inspection + scripts/promote_fact.py,
+        # just not force-fed to the room. (Re-add here if a future scenario needs
+        # specific, scenario-relevant costs rather than a blanket cost list.)
 
         # ── Shared opinion feed (SQLite) ───────────────────────
         db_path = os.path.join(self.output_dir, "opinion_simulation.db")
@@ -880,6 +877,18 @@ class AgentSocietyRunner:
         # not just to ambient background context. Rides the same _pending_events
         # rail as manual founder broadcasts; drained at round 0 below.
         self._pitch_event = None  # the re-anchor reminder source, set when posted
+
+        # ── Policy mode: hold the scenario for re-anchoring on a cadence ────
+        # The scenario is seeded once at round 0; without a reminder the room
+        # drifts off the question within a round or two (cost-of-living capture).
+        # Mirror the product pitch re-anchor: keep the scenario text so the loop
+        # can re-post it every N rounds. None in product mode (pitch covers it).
+        self._scenario_reanchor = None
+        if sim_mode != "product":
+            _scenario = (self.config.get("simulation_requirement", "") or "").strip()
+            if _scenario:
+                self._scenario_reanchor = _scenario
+
         if sim_mode == "product" and pitch:
             try:
                 from app.services.mode_specs import build_pitch_announcement
@@ -911,11 +920,14 @@ class AgentSocietyRunner:
 
         # Re-anchor cadence: re-post a short pitch reminder every N rounds so the
         # room keeps returning to the pitch instead of drifting. 0 disables.
-        from app.config import Config as _ReCfg
-        pitch_reanchor_every = int(
-            self.config.get("pitch_reanchor_every",
-                            getattr(_ReCfg, "PITCH_REANCHOR_EVERY", 4))
-        )
+        # Cadence is preset-aware: scale with run length so a short run still gets
+        # re-anchored (every-4 would only fire once on a 6-round Quick run). Aim
+        # for ~3-4 re-anchors regardless of length. An explicit override wins:
+        # run-config value first, then an explicitly-set PITCH_REANCHOR_EVERY env.
+        _auto_cadence = max(2, total_rounds // 4)
+        _env_cadence = os.environ.get("PITCH_REANCHOR_EVERY")
+        _default_cadence = int(_env_cadence) if _env_cadence else _auto_cadence
+        pitch_reanchor_every = int(self.config.get("pitch_reanchor_every", _default_cadence))
 
         for round_num in range(total_rounds):
             simulated_minutes = round_num * minutes_per_round
@@ -938,6 +950,23 @@ class AgentSocietyRunner:
                     })
                 except Exception as e:
                     logger.debug(f"Pitch re-anchor skipped at round {round_num}: {e}")
+
+            # ── Policy mode: re-anchor the scenario on the same cadence ────
+            # Re-post the original question as a News_Source item so agents
+            # respond to the TOPIC again instead of only to each other's drift.
+            # They stay free to object or relate it to their lives.
+            if (self._scenario_reanchor and pitch_reanchor_every > 0
+                    and round_num > 0 and round_num % pitch_reanchor_every == 0):
+                self._pending_events.append({
+                    "rule_id": f"scenario_reanchor_r{round_num}",
+                    "source": "News_Source",
+                    "title": "The question still stands",
+                    "content": (
+                        f"Back to the matter at hand: {self._scenario_reanchor} "
+                        f"Where do you stand on THIS specifically?"
+                    ),
+                    "category": "news",
+                })
 
             # ── Inject pending events as "News_Source" opinions ─────────
             # Snapshot the events to inject this round. Anything appended to

@@ -228,19 +228,6 @@ def main():
     check("created session cast is all library-sourced",
           all(a.get("library_id") for a in svc_leak.list_agents()))
 
-    # ── brand filter: Thuto-class entities don't become agents (LLM-off) ──
-    from app.services.agent_profile_generator import AgentProfileGenerator as _G
-    class _E:
-        def __init__(s, name, t): s.name, s._t, s.summary = name, t, ""
-        def get_entity_type(s): return s._t
-    drop = lambda n, t: _G._deterministic_non_agent(_E(n, t)) is True
-    keep = lambda n, t: _G._deterministic_non_agent(_E(n, t)) is False
-    check("brand: Thuto.io dropped", drop("Thuto.io", "Organization"))
-    check("brand: Thuto/Product dropped", drop("Thuto", "Product"))
-    check("brand: EdtechApp type dropped (substring)", drop("Thuto", "EdtechApp"))
-    check("brand: Coins/Currency type dropped (substring)", drop("Thuto Coins", "RewardCurrency"))
-    check("real person kept", keep("Sipho Khumalo", "Person"))
-
     # ── fee-status predicates (pure, library-independent) ────────────────
     from app.services.panel_service import _pays_school_fees, _no_fee_only
     check("fee predicate: learner paying", _pays_school_fees({"fees_band": "R501-R1 000"}))

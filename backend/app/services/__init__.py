@@ -6,7 +6,7 @@ from .ontology_generator import OntologyGenerator
 from .graph_builder import GraphBuilderService
 from .text_processor import TextProcessor
 from .entity_reader import EntityReader, EntityNode, FilteredEntities
-from .agent_profile_generator import AgentProfileGenerator, AgentProfile
+from .agent_profile_generator import AgentProfile
 from .simulation_manager import SimulationManager, SimulationState, SimulationStatus
 from .simulation_config_generator import (
     SimulationConfigGenerator,
@@ -44,7 +44,6 @@ __all__ = [
     'EntityReader',
     'EntityNode',
     'FilteredEntities',
-    'AgentProfileGenerator',
     'AgentProfile',
     'SimulationManager',
     'SimulationState',

@@ -44,6 +44,7 @@ from typing import Dict, List, Optional
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.utils.llm_client import LLMClient  # noqa: E402
+from sa_names import pick_unique_name  # noqa: E402  — sibling script, LLM-free name pool
 
 # Non-Latin script ranges — same set as document_context_engine.sanitize_language_drift.
 # Inlined (not imported) so this offline build script doesn't pull the whole
@@ -71,8 +72,11 @@ def sanitize_language_drift(text: str, label: str = "") -> str:
 # Texture fields the model writes. Everything else on the persona comes from the
 # skeleton (fixed) or a later stance pass. Kept explicit so the validator can check
 # exactly these were produced and nothing demographic was overwritten.
+# NOTE: "name" is deliberately NOT here. Names are assigned from a curated pool
+# (sa_names.pick_unique_name), never authored by the LLM — independent LLM name
+# generation mode-collapses onto a few prototypes (the "55 Thabo Mokoenas" bug).
 TEXTURE_FIELDS = [
-    "name", "persona", "background_story",
+    "persona", "background_story",
     "voice_guide", "behavioral_tendencies",
     "group_affiliation", "interested_topics",
 ]
@@ -163,9 +167,6 @@ with exactly these):
 {json.dumps(facts, ensure_ascii=False, indent=2)}
 {attitude_block}
 Produce a JSON object with ONLY these fields:
-- name: a realistic South African full name appropriate to the person. Must NOT be a
-  real public figure. Province-plausible, but the name's language origin does not
-  force non-English speech.
 - persona: 1-2 sentences on who they are and their situation. Reference a real local
   setting consistent with the province. English only.
 - background_story: ~120 words of life history consistent with the fixed facts
@@ -201,14 +202,21 @@ def generate_texture(
     skeleton: Dict,
     client: Optional[LLMClient] = None,
     max_retries: int = 2,
+    used_names: Optional[set] = None,
+    rng=None,
 ) -> Dict:
     """Return the skeleton merged with English-only texture fields.
 
     The returned dict preserves every FROZEN_FIELD verbatim (texture can reference but
     never overwrite them) and adds the TEXTURE_FIELDS. Raises on repeated LLM failure
     rather than silently returning an unusable persona.
+
+    `name` is assigned from the curated pool (never the LLM), unique against the
+    `used_names` set the caller passes (defaults to a fresh, call-local set — pass a
+    shared set across a build to guarantee library-wide uniqueness).
     """
     client = client or LLMClient()
+    used = used_names if used_names is not None else set()
     last_err = None
     for attempt in range(max_retries + 1):
         try:
@@ -220,7 +228,7 @@ def generate_texture(
                 temperature=0.7,
                 max_tokens=900,
             )
-            if not isinstance(raw, dict) or not raw.get("name"):
+            if not isinstance(raw, dict) or not raw.get("persona"):
                 raise ValueError("texture LLM returned no usable object")
 
             merged = dict(skeleton)  # frozen fields win — texture never overwrites them
@@ -229,6 +237,14 @@ def generate_texture(
                     merged[f] = _clean(raw[f])
             merged.setdefault("interested_topics", [])
             merged.setdefault("group_affiliation", "")
+            # Name comes from the pool, not the model — unique across the build.
+            merged["name"] = pick_unique_name(
+                used,
+                gender=merged.get("gender"),
+                home_language=merged.get("home_language"),
+                province=merged.get("province"),
+                rng=rng,
+            )
             return merged
         except Exception as e:  # noqa: BLE001 — retry then surface
             last_err = e
@@ -238,10 +254,11 @@ def generate_texture(
 def generate_batch(skeletons: List[Dict], client: Optional[LLMClient] = None) -> List[Dict]:
     """Generate texture for a list of mapped skeletons (sequential; this is offline)."""
     client = client or LLMClient()
+    used_names: set = set()  # shared so names stay unique across the batch
     out = []
     for i, sk in enumerate(skeletons):
         try:
-            out.append(generate_texture(sk, client=client))
+            out.append(generate_texture(sk, client=client, used_names=used_names))
         except Exception as e:  # noqa: BLE001
             print(f"[texture] skipped skeleton {i}: {e}", file=sys.stderr)
     return out

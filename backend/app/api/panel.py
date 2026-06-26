@@ -16,6 +16,7 @@ from . import panel_bp
 from .. import billing
 from ..config import Config
 from ..services import panel_service
+from ..services import mode_detector
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger
 
@@ -72,9 +73,14 @@ def create_session():
         return gate
     try:
         data = request.get_json() or {}
+        # Mode is inferred from the pitch unless the caller pins one explicitly.
+        # Keyword-only detection (no llm_client) — pure, deterministic, cheap.
+        mode = data.get('mode')
+        if not mode:
+            mode = mode_detector.detect(data.get('pitch', '') or '').get('mode', 'product')
         meta = panel_service.create_session(
             pitch=data.get('pitch', ''),
-            mode=data.get('mode', 'product'),
+            mode=mode,
             n=data.get('n', panel_service.DEFAULT_CAST_SIZE),
             province=data.get('province'),
             seed=data.get('seed'),

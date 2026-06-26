@@ -25,12 +25,15 @@ def status():
     ent = billing.get_entitlement(uid)
     plan = ent.get("plan", "free")
     panel_used = int(ent.get("panel_used", 0) or 0)
+    sim_used = int(ent.get("sim_used", 0) or 0)
     return jsonify({"success": True, "data": {
         "plan": plan,
         "status": ent.get("status", "active"),
         "panel_used": panel_used,
         "panel_limit": billing.FREE_PANEL_LIMIT if plan != "paid" else None,
-        "can_simulate": plan == "paid",
+        "sim_used": sim_used,
+        "sim_limit": billing.FREE_SIM_LIMIT if plan != "paid" else None,
+        "can_simulate": plan == "paid" or sim_used < billing.FREE_SIM_LIMIT,
         "can_create_panel": plan == "paid" or panel_used < billing.FREE_PANEL_LIMIT,
     }})
 

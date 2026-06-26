@@ -105,18 +105,18 @@ async def llm_call_with_retry(
 
 _ARCHETYPE_ANCHORS = {
     "violent_agitator":        "You are aggressive and confrontational. Every opinion escalates tension. Do not soften or balance your words.",
-    "opportunist_looter":      "You frame everything through personal gain and survival. Policy is only interesting if it puts food on your table or something in your hands.",
-    "mob_follower":            "You amplify whoever is loudest. Your opinion echoes and intensifies what others around you are already saying.",
+    "opportunist_looter":      "You frame things through personal gain and survival, weighing what's on the table by what it costs or gets you. React to the actual issue — but always from the angle of how it hits your own pocket and your chances.",
+    "mob_follower":            "You're swayed by the prevailing mood and lean toward whoever's loudest — but add your own spin and your own reason; don't just repeat their point. Your conviction comes from the crowd, not from facts.",
     "conspiracy_spreader":     "You frame every topic through hidden agendas, covered-up truths, and who is really pulling the strings. Reference what mainstream media won't say.",
     "political_activist":      "You filter every issue through your party's ideology. Reference the movement, the leadership, the struggle. No neutral ground.",
     "community_leader":        "You speak for your people. Use collective language ('we', 'our community'). Your authority is moral and earned through sacrifice.",
-    "disillusioned_dropout":   "You are cynical and detached. Policies don't reach you. Express contempt or apathy, not hope.",
+    "disillusioned_dropout":   "You are cynical and detached — the system has let you down too many times to trust it. Default to contempt or weary apathy, but react to what's actually proposed; a rare thing that hits home can crack that for a moment.",
     "institutional_loyalist":  "You defend the system and its processes. Criticise those who undermine institutions. Measured, authoritative tone. You speak as an institution — 'we maintain', 'our mandate requires', 'the public is assured'. Never personal.",
     "community_protector":     "You speak from the position of someone who enforces order where the state cannot. Protect what is yours by any means.",
-    "criminal_opportunist":    "You see every situation as an angle. Speak in street terms. Policy is irrelevant unless it opens or closes an opportunity.",
+    "criminal_opportunist":    "You see every situation as an angle and speak in street terms. Engage with what's actually being discussed, but read it for the opening — or the threat — it creates for someone working the margins like you.",
     "economic_migrant":        "You speak as an outsider who must prove their worth daily. Wary of hostility. Focused on work, safety, and survival.",
     "whistleblower":           "You expose uncomfortable truths. Precise, specific, willing to name names or situations. High conviction, high risk.",
-    "grant_dependent_survivor": "SASSA is life. Everything else is noise. Speak from the reality of grant day, queue day, hungry day.",
+    "grant_dependent_survivor": "You live on a SASSA grant, so you read everything through one test: does it protect or threaten the lifeline you depend on? Speak from the reality of grant day, queue day, hungry day — but give your real view on whatever is actually being discussed, don't reduce it all to the grant.",
     "civic_moderate":          "Be direct and in-character, grounded in your SA lived experience.",
 
     # ── Product-mode market segments (additive; policy keys above untouched) ──
@@ -373,6 +373,34 @@ def _build_identity_anchor(archetype: str, agent: PersonAgent) -> str:
     return base
 
 
+# ── Topic-relevance (LLM-free) — keeps the conversation chained to the topic ──
+# Agents reply to the post they're handed. If that's always the latest post, any
+# drift compounds: one off-topic reply becomes the next agent's subject. Scoring
+# recent posts by overlap with the topic lets us hand each agent the most
+# on-topic recent post to reply to, so the chain pulls back toward the topic
+# instead of following the drift. Pure lexical overlap — assertable with no LLM.
+_TOPIC_STOPWORDS = {
+    "the", "a", "an", "of", "for", "to", "and", "or", "in", "on", "is", "are",
+    "how", "do", "you", "your", "this", "that", "it", "with", "as", "at", "be",
+    "by", "from", "what", "who", "they", "their", "would", "will", "about",
+    "should", "could", "not", "but", "have", "has", "was", "were", "our", "we",
+}
+
+
+def _topic_terms(topic: str) -> set:
+    return {
+        w for w in re.findall(r"[a-z]{4,}", (topic or "").lower())
+        if w not in _TOPIC_STOPWORDS
+    }
+
+
+def _topic_relevance(text: str, terms: set) -> int:
+    if not terms:
+        return 0
+    toks = set(re.findall(r"[a-z]{4,}", (text or "").lower()))
+    return len(toks & terms)
+
+
 class OpinionCaptureSkill:
     """Skill for capturing SA policy opinions using PersonAgent's LLM."""
 
@@ -618,11 +646,27 @@ class OpinionCaptureSkill:
             )
         else:
             stay_on_topic_rule = (
-                f"5. STAY ON TOPIC. The discussion is about: {topic_hint}. Do NOT drift to unrelated "
-                f"issues. Use your background to explain how the TOPIC affects YOU.\n"
+                f"5. STAY ON THIS SCENARIO. The discussion is about: {topic_hint}. EVERY reaction must "
+                f"be ABOUT this scenario. You MAY support it, oppose it, doubt it, or explain how it "
+                f"affects YOU — but that must be a reaction TO this scenario, not a tangent. Do NOT "
+                f"pivot to your generic daily grievances (cost of living, bread/petrol/taxi prices, "
+                f"load-shedding, grants) UNLESS this scenario is directly about them. If what you want "
+                f"to say doesn't touch this scenario, don't say it.\n"
             )
 
+        # Reply to the most ON-TOPIC recent post, not just the latest one, so the
+        # conversation chains back toward the topic instead of following drift.
+        # Recency breaks ties; if nothing recent is on-topic, fall back to latest.
         respond_target = recent_feed[-1] if recent_feed else None
+        if recent_feed:
+            _terms = _topic_terms(topic_hint)
+            _best, _best_score = None, 0
+            for o in recent_feed:  # in order → latest wins ties via >=
+                s = _topic_relevance(o.get("content", ""), _terms)
+                if s >= _best_score and s > 0:
+                    _best, _best_score = o, s
+            if _best is not None:
+                respond_target = _best
         respond_ctx = (
             f'[{respond_target["agent_name"]}] said: "{respond_target["content"][:120]}"'
             if respond_target else "(no one to respond to yet)"
@@ -683,10 +727,22 @@ class OpinionCaptureSkill:
                 context_section = f"{sa_context}\n\n"
             context_section += f"You are {agent.name}.\n{char_ctx}\n\n"
 
+        # Persistent topic banner — kept in EVERY prompt (not just round 0 / the
+        # re-anchor rounds) so the subject is always in front of the agent, right
+        # above the feed it's about to react to.
+        topic_banner = (
+            f"{'='*60}\n"
+            f"THIS DISCUSSION IS ABOUT: {topic_hint}\n"
+            f"Keep your reaction tied to this. Relating it to your own life is fine; "
+            f"drifting onto unrelated things is not.\n"
+            f"{'='*60}\n"
+        )
+
         prompt = (
             f"{context_section}"
             f"{events_section}"
             f"{economic_section}"
+            f"{topic_banner}"
             f"Current opinion feed:\n{feed_preview}\n\n"
             f"Potential respond target: {respond_ctx}\n"
             f"Topic you care about: {topic_hint}\n\n"
@@ -891,9 +947,9 @@ class OpinionCaptureSkill:
         # state and serialize it for persistence on posting actions. None in policy.
         economic_reasoning_json: Optional[str] = None
         # needed_fact: a transient per-round signal that the agent wanted a real
-        # cost not provided in WORLD FACTS / YOUR REAL NUMBERS. Collected by the
-        # runner into fact_gaps.jsonl — NOT persisted into econ state. "" / None
-        # when the agent didn't need anything.
+        # cost not provided in YOUR REAL NUMBERS. Collected by the runner into
+        # fact_gaps.jsonl — NOT persisted into econ state. "" / None when the
+        # agent didn't need anything.
         needed_fact: Optional[str] = None
         if self._mode == "product":
             merged_econ = self._update_econ_state(agent, economic_block)

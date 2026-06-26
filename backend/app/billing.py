@@ -33,6 +33,9 @@ from flask import g, jsonify
 logger = logging.getLogger("fub.billing")
 
 FREE_PANEL_LIMIT = 1
+# Closed-beta trial: free plan may run this many simulations before the paywall.
+# Lets us hand out access for user testing while Paystack approval is pending.
+FREE_SIM_LIMIT = 3
 PAYSTACK_BASE = "https://api.paystack.co"
 
 
@@ -80,12 +83,12 @@ def get_entitlement(user_id) -> dict:
     configured or a lookup errors. Creates a default free row when missing.
     """
     if not billing_enabled() or not user_id:
-        return {"plan": "paid", "panel_used": 0, "status": "active"}
+        return {"plan": "paid", "panel_used": 0, "sim_used": 0, "status": "active"}
     url = f"{_supabase_url()}/rest/v1/subscriptions"
     try:
         resp = requests.get(
             url,
-            params={"user_id": f"eq.{user_id}", "select": "plan,panel_used,status"},
+            params={"user_id": f"eq.{user_id}", "select": "plan,panel_used,sim_used,status"},
             headers=_rest_headers(),
             timeout=10,
         )
@@ -96,12 +99,12 @@ def get_entitlement(user_id) -> dict:
         return _create_default(user_id)
     except Exception as e:
         logger.warning("Entitlement lookup failed for %s: %s (failing open)", user_id, e)
-        return {"plan": "paid", "panel_used": 0, "status": "active"}
+        return {"plan": "paid", "panel_used": 0, "sim_used": 0, "status": "active"}
 
 
 def _create_default(user_id) -> dict:
     url = f"{_supabase_url()}/rest/v1/subscriptions"
-    body = {"user_id": user_id, "plan": "free", "panel_used": 0, "status": "active"}
+    body = {"user_id": user_id, "plan": "free", "panel_used": 0, "sim_used": 0, "status": "active"}
     try:
         resp = requests.post(
             url,
@@ -133,6 +136,23 @@ def increment_panel_used(user_id) -> None:
         )
     except Exception as e:
         logger.warning("Could not increment panel_used for %s: %s", user_id, e)
+
+
+def increment_sim_used(user_id) -> None:
+    if not billing_enabled() or not user_id:
+        return
+    ent = get_entitlement(user_id)
+    new_count = int(ent.get("sim_used", 0) or 0) + 1
+    try:
+        requests.patch(
+            f"{_supabase_url()}/rest/v1/subscriptions",
+            params={"user_id": f"eq.{user_id}"},
+            json={"sim_used": new_count},
+            headers=_rest_headers(),
+            timeout=10,
+        )
+    except Exception as e:
+        logger.warning("Could not increment sim_used for %s: %s", user_id, e)
 
 
 def set_plan(user_id, plan: str, **extra) -> None:
@@ -192,6 +212,25 @@ def require_paid():
         return jsonify({
             "success": False,
             "error": "Simulations are a paid feature. Upgrade to run simulations.",
+            "code": "upgrade_required",
+        }), 402
+    return None
+
+
+def check_sim_quota():
+    """Gate a simulation create. Paid = unlimited; free = FREE_SIM_LIMIT trial runs.
+
+    Closed-beta path: lets us hand out sim access for user testing before Paystack
+    approval. Returns a 402 response once the free trial is exhausted, else None.
+    """
+    ent = get_entitlement(current_user_id())
+    if ent.get("plan") == "paid":
+        return None
+    if int(ent.get("sim_used", 0) or 0) >= FREE_SIM_LIMIT:
+        return jsonify({
+            "success": False,
+            "error": (f"Your free trial of {FREE_SIM_LIMIT} simulations is used up. "
+                      "Upgrade for unlimited simulations."),
             "code": "upgrade_required",
         }), 402
     return None

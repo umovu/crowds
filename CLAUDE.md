@@ -12,10 +12,9 @@ test announcements / events before committing them in real life.
 ## Where things live
 
 - `backend/app/api/` — Flask routes (most logic is in `simulation.py`)
-- `backend/app/services/` — sim engine, persona generation, research
+- `backend/app/services/` — sim engine, persona library, research
 - `backend/scripts/run_simulation_as.py` — the sim subprocess (runs in
   its own process, talks to Flask via file-based IPC)
-- `backend/uploads/persona_cache/` — on-disk persona cache (gitignored)
 - `frontend/src/views/` — routed pages
 - `frontend/src/components/Step{1..5}*.vue` — the workflow steps
 - `frontend/src/components/PersonaLibraryDrawer.vue` — global personas drawer
@@ -24,9 +23,13 @@ test announcements / events before committing them in real life.
 
 - **LLM split:** `LLM_*` env vars = research/personas (Plus tier);
   `SIM_LLM_*` = simulation runtime (Flash/cheap tier). Keep them split.
-- **Persona cache:** `agent_profile_generator._generate_profile_with_llm`
-  short-circuits via `persona_cache` (exact + archetype keys). If you
-  change the prompt template, bump the `v:` byte in `persona_cache.make_key`.
+- **No LLM-generated personas (hard rule):** WHO populates a room is the
+  curated library first, custom agents second — never LLM-authored. The
+  cast is assembled in `simulation_manager.prepare_simulation` (library via
+  `select_for_query` + `panel_service._build_profile`, guarded by
+  `assert_library_cast`); panels use the same path. The LLM only produces
+  runtime STANCE/economics (`mode_specs.build_economic_lens`), never identity.
+  Don't reintroduce a persona-generation path or a `/generate-profiles` route.
 - **Pause/intervene:** lives in `simulation_runner.pause_simulation` and
   IPC commands routed through `simulation_ipc.py`. Env-status accepts
   `alive` / `running` / `paused` — don't tighten this back.

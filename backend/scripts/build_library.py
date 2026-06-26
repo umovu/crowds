@@ -21,6 +21,7 @@ import argparse
 import hashlib
 import json
 import os
+import random
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -122,10 +123,24 @@ def build(
 
     print(f"Generating English-only texture for {len(mapped)} personas (LLM, offline)...")
     client = tg.LLMClient()
+    # Shared name state: names come from a curated pool (not the LLM) and must be
+    # unique across the whole library. Seed the used-set with any existing names
+    # when appending, so new personas never collide with already-built ones.
+    name_rng = random.Random(seed)
+    used_names: set = set()
+    if append and os.path.exists(out_path):
+        try:
+            with open(out_path, "r", encoding="utf-8") as f:
+                for ep in json.load(f).get("personas", []):
+                    nm = (ep.get("name") or "").strip().lower()
+                    if nm:
+                        used_names.add(nm)
+        except Exception:  # noqa: BLE001 — best-effort seed; collisions still resolved downstream
+            pass
     personas = []
     for i, sk in enumerate(mapped):
         try:
-            p = tg.generate_texture(sk, client=client)
+            p = tg.generate_texture(sk, client=client, used_names=used_names, rng=name_rng)
         except Exception as e:  # noqa: BLE001
             print(f"  [skip {i}] {e}", file=sys.stderr)
             continue

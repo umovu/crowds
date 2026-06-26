@@ -122,7 +122,13 @@ def select_for_query(
     weighted = [(p, weight(p)) for p in personas]
 
     # Weighted sampling WITHOUT replacement, deterministic.
+    # Names are de-duplicated: the library reuses common SA names heavily (e.g.
+    # ~55 personas literally named "Thabo Mokoena"), and a cast with duplicate
+    # names breaks the run — the feed shows "[Thabo Mokoena] said …" for several
+    # different people, agents respond to a smeared namesake, and name-keyed UI
+    # (chat, stance spectrum) merges them. One name per cast.
     chosen: List[Dict] = []
+    chosen_names: set = set()
     pool = list(weighted)
     while pool and len(chosen) < n:
         total = sum(w for _, w in pool)
@@ -131,8 +137,13 @@ def select_for_query(
         for idx, (p, w) in enumerate(pool):
             acc += w
             if acc >= r:
-                chosen.append(p)
                 pool.pop(idx)
+                nm = (p.get("name") or "").strip().lower()
+                if nm and nm in chosen_names:
+                    break  # drop this namesake; redraw on the next iteration
+                chosen.append(p)
+                if nm:
+                    chosen_names.add(nm)
                 break
 
     # Anti-echo-chamber floor: if the tilt collapsed diversity, swap in personas of
@@ -144,14 +155,20 @@ def select_for_query(
         leftovers = [p for p, _ in pool]
         rng.shuffle(leftovers)
         for p in leftovers:
-            if p.get("actor_archetype") not in distinct:
+            nm = (p.get("name") or "").strip().lower()
+            # Don't reintroduce a duplicate name via the diversity swap.
+            if p.get("actor_archetype") not in distinct and not (nm and nm in chosen_names):
                 # Replace the most over-represented archetype's last pick.
                 from collections import Counter
                 counts = Counter(c.get("actor_archetype") for c in chosen)
                 most_common_arch = counts.most_common(1)[0][0]
                 for i in range(len(chosen) - 1, -1, -1):
                     if chosen[i].get("actor_archetype") == most_common_arch:
+                        removed_nm = (chosen[i].get("name") or "").strip().lower()
                         chosen[i] = p
+                        chosen_names.discard(removed_nm)
+                        if nm:
+                            chosen_names.add(nm)
                         break
                 distinct = {c.get("actor_archetype") for c in chosen}
                 if len(distinct) >= target_distinct:

@@ -13,7 +13,6 @@ from . import simulation_bp
 from .. import billing
 from ..config import Config
 from ..services.entity_reader import EntityReader
-from ..services.agent_profile_generator import AgentProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner, RunnerStatus
 from ..services.topic_extractor import TopicExtractor
@@ -21,7 +20,6 @@ from ..services.interview_service import InterviewService
 from ..services.custom_agent_parser import CustomAgentParser
 from ..services.agent_enricher import AgentContextEnricher
 from ..services import mode_detector
-from ..services.deep_research_service import research_archetypes as _deep_research_archetypes
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
 
@@ -270,8 +268,10 @@ def create_simulation():
             }
         }
     """
-    # Simulations are a paid feature (free plan is panels only).
-    gate = billing.require_paid()
+    # Simulations are paid, with a free trial (FREE_SIM_LIMIT) for closed-beta
+    # testing while Paystack approval is pending. Counted once here at create;
+    # prepare/run of an already-created sim are not re-gated.
+    gate = billing.check_sim_quota()
     if gate is not None:
         return gate
     try:
@@ -303,7 +303,11 @@ def create_simulation():
             project_id=project_id,
             graph_id=graph_id,
         )
-        
+
+        # Trial accounting: one created sim = one trial credit. Counts for every
+        # plan, but only free plans are gated on it (paid passes the quota check).
+        billing.increment_sim_used(billing.current_user_id())
+
         return jsonify({
             "success": True,
             "data": state.to_dict()
@@ -459,7 +463,6 @@ def prepare_simulation():
         {
             "simulation_id": "sim_xxxx",                   // Required，Simulation ID
             "entity_types": ["Student", "PublicFigure"],  // Optional，Specified entity type
-            "use_llm_for_profiles": true,                 // Optional，IsOtherwise useLLMGeneratepersona
             "parallel_profile_count": 5,                  // Optional, number of personas to generate in parallel, default 5
             "force_regenerate": false                     // Optional，ForceGenerate，Defaultfalse
         }
@@ -481,10 +484,8 @@ def prepare_simulation():
     from ..models.task import TaskManager, TaskStatus
     from ..config import Config
 
-    # Simulations are a paid feature (free plan is panels only).
-    gate = billing.require_paid()
-    if gate is not None:
-        return gate
+    # No paywall here: a sim is gated + counted once at create (check_sim_quota).
+    # Preparing an already-created sim must always be allowed for its owner.
 
     try:
         data = request.get_json() or {}
@@ -549,7 +550,6 @@ def prepare_simulation():
         document_text = ProjectManager.get_extracted_text(state.project_id) or ""
         
         entity_types_list = data.get('entity_types')
-        use_llm_for_profiles = data.get('use_llm_for_profiles', True)
         parallel_profile_count = data.get('parallel_profile_count', 5)
         custom_agents_raw = data.get('custom_agents', [])
         # Run only on the user's custom agents (skip graph-derived population).
@@ -719,7 +719,6 @@ def prepare_simulation():
                     simulation_requirement=simulation_requirement,
                     document_text=document_text,
                     defined_entity_types=entity_types_list,
-                    use_llm_for_profiles=use_llm_for_profiles,
                     progress_callback=progress_callback,
                     parallel_profile_count=parallel_profile_count,
                     storage=storage,
@@ -1712,101 +1711,6 @@ def download_simulation_script(script_name: str):
         
     except Exception as e:
         logger.error(f"Failed to download script: {str(e)}")
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
-
-
-# ============== ProfileGeneration interface（StandaloneUse） ==============
-
-@simulation_bp.route('/generate-profiles', methods=['POST'])
-def generate_profiles():
-    """
-    Generate agent profiles directly from the knowledge graph (no simulation created).
-
-    Request (JSON):
-        {
-            "graph_id": "fub_xxxx",          // Required
-            "entity_types": ["Student"],     // Optional — filter entity types
-            "use_llm": true,                 // Optional — use LLM for generation
-            "seed_message": "..."            // Optional — policy/event text; used to
-                                             //   ground web research queries per entity type
-        }
-
-    Web enrichment runs automatically when SERPER_API_KEY is set in .env.
-    Each entity type is researched in parallel (Serper search + LLM synthesis),
-    and the findings are injected into persona prompts before generation.
-    """
-    try:
-        data = request.get_json() or {}
-        
-        graph_id = data.get('graph_id')
-        if not graph_id:
-            return jsonify({
-                "success": False,
-                "error": "Please provide graph_id"
-            }), 400
-        
-        entity_types = data.get('entity_types')
-        use_llm = data.get('use_llm', True)
-        storage = current_app.extensions.get('graph_storage')
-        if not storage:
-            raise ValueError("GraphStorage not initialized")
-        reader = EntityReader(storage)
-        filtered = reader.filter_defined_entities(
-            graph_id=graph_id,
-            defined_entity_types=entity_types,
-            enrich_with_edges=True
-        )
-
-        if filtered.filtered_count == 0:
-            return jsonify({
-                "success": False,
-                "error": "No matching entities found"
-            }), 400
-
-        # --- Web research enrichment ---
-        # Runs automatically when FIRECRAWL_API_KEY is set (deep-research-python).
-        # Falls back gracefully if the library is not installed or keys are missing.
-        enrichment_data = {}
-        seed_message = data.get('seed_message') or data.get('document_text', '')
-        try:
-            entity_types = list({e.type.lower() for e in filtered.entities if e.type})
-            if entity_types:
-                logger.info(f"Running deep-research enrichment for entity types: {entity_types}")
-                query = seed_message or "current socio-economic conditions South Africa 2025"
-                raw_content = _deep_research_archetypes(
-                    archetypes=entity_types,
-                    query=query,
-                    document_text=seed_message,
-                    max_workers=3,
-                )
-                enrichment_data = AgentContextEnricher.enrich_from_web_research(raw_content, entity_types)
-                logger.info(f"Web enrichment complete: {len(enrichment_data)} archetypes enriched")
-        except Exception as enrich_err:
-            logger.warning(f"Web enrichment failed (continuing without it): {enrich_err}")
-
-        generator = AgentProfileGenerator(enrichment_data=enrichment_data)
-        profiles = generator.generate_profiles_from_entities(
-            entities=filtered.entities,
-            use_llm=use_llm
-        )
-        profiles_data = [p.to_agentsociety_format() for p in profiles]
-
-        return jsonify({
-            "success": True,
-            "data": {
-                "platform": "opinion_space",
-                "entity_types": list(filtered.entity_types),
-                "count": len(profiles_data),
-                "profiles": profiles_data
-            }
-        })
-        
-    except Exception as e:
-        logger.error(f"GenerateProfileFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
