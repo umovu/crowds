@@ -9,10 +9,8 @@
         <li>Full simulations</li>
         <li>Every report &amp; interview</li>
       </ul>
-      <button class="upgrade-btn" :disabled="busy" @click="doUpgrade">
-        {{ busy ? 'Redirecting…' : 'Join the beta — R80/mo' }}
-      </button>
-      <button class="upgrade-later" @click="close">Maybe later</button>
+      <button class="upgrade-btn" disabled>Paid — coming soon</button>
+      <button class="upgrade-later" @click="close">Close</button>
     </div>
   </div>
 </template>

@@ -128,9 +128,7 @@
                 <li>Full simulations</li>
                 <li>Every report &amp; interview</li>
               </ul>
-              <button v-if="!isPaid" class="pco-btn" :disabled="upgrading" @click="doUpgrade">
-                {{ upgrading ? 'Redirecting…' : 'Join the beta — R80/mo →' }}
-              </button>
+              <button v-if="!isPaid" class="pco-btn disabled" disabled>Paid — coming soon</button>
               <button v-else-if="isCancelled" class="pco-btn disabled" disabled>Cancels at period end</button>
               <button v-else class="pco-btn ghost" :disabled="cancelling" @click="doCancel">
                 {{ cancelling ? 'Cancelling…' : 'Cancel subscription' }}
