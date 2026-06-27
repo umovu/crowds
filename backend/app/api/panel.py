@@ -78,10 +78,18 @@ def create_session():
         mode = data.get('mode')
         if not mode:
             mode = mode_detector.detect(data.get('pitch', '') or '').get('mode', 'product')
+        # Free tier: cap the panel cast at 12 (paid may go up to MAX_CAST_SIZE).
+        n = data.get('n', panel_service.DEFAULT_CAST_SIZE)
+        ent = billing.get_entitlement(billing.current_user_id())
+        if ent.get('plan') != 'paid':
+            try:
+                n = min(int(n), 12)
+            except (ValueError, TypeError):
+                n = 12
         meta = panel_service.create_session(
             pitch=data.get('pitch', ''),
             mode=mode,
-            n=data.get('n', panel_service.DEFAULT_CAST_SIZE),
+            n=n,
             province=data.get('province'),
             seed=data.get('seed'),
             segment=data.get('segment'),

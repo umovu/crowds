@@ -1778,6 +1778,12 @@ def start_simulation():
 
         # New: Preset and simulation params
         preset = data.get('preset')  # 'quick', 'balanced', 'deep'
+        # Free tier: force the smallest preset ('quick' = 6 rounds, ≤10 agents/round)
+        # regardless of what was requested, to bound token spend on the trial sim.
+        # Paid plans keep whatever they chose.
+        ent = billing.get_entitlement(billing.current_user_id())
+        if ent.get('plan') != 'paid':
+            preset = 'quick'
         convergence_threshold = data.get('convergence_threshold')
         convergence_window = data.get('convergence_window')
         max_agents_per_round = data.get('max_agents_per_round')
