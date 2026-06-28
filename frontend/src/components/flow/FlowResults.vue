@@ -101,16 +101,23 @@
             <div class="spectrum-summary-body">
               <p>{{ summaryText }}</p>
             </div>
-            <div class="spectrum-summary-tags">
-              <span
+            <!-- Stance distribution — proportional bar per stance, matches
+                 PolicyComparisonPanel's "Stance Distribution" pattern. -->
+            <div class="stance-dist">
+              <div
                 v-for="s in STANCES"
                 :key="s.key"
-                v-show="agentsByStance(s.key).length > 0"
-                class="spectrum-summary-tag"
-                :style="{ '--tag-color': s.color }"
+                class="stance-dist-row"
               >
-                {{ agentsByStance(s.key).length }} {{ s.label.toLowerCase() }}
-              </span>
+                <span class="stance-dist-label">{{ s.label }}</span>
+                <div class="stance-dist-track">
+                  <div
+                    class="stance-dist-fill"
+                    :style="{ width: stancePct(s.key) + '%', background: s.color }"
+                  ></div>
+                </div>
+                <span class="stance-dist-count">{{ agentsByStance(s.key).length }}</span>
+              </div>
             </div>
           </div>
 
@@ -417,6 +424,12 @@ const STANCES = [
 ]
 
 const agentsByStance = (stance) => panelAgents.value.filter(a => a.stance_after === stance)
+
+// Share of the cast sitting at a given stance (for the distribution bar).
+const stancePct = (stance) => {
+  const total = panelAgents.value.length || 1
+  return (agentsByStance(stance).length / total) * 100
+}
 
 // The roster the summary counts read off (live for both modes).
 const panelAgents = computed(() => agents.value)
@@ -1131,17 +1144,29 @@ onUnmounted(() => {
   margin: 0;
   font-size: 14px; line-height: 1.6; color: #374151;
 }
-.spectrum-summary-tags {
-  display: flex; flex-wrap: wrap; gap: 8px;
+/* Stance distribution — proportional bar per stance (matches PolicyComparisonPanel). */
+.stance-dist {
+  display: flex; flex-direction: column; gap: 8px;
   padding: 0 20px 16px;
 }
-.spectrum-summary-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; font-weight: 600;
-  color: var(--tag-color, #666);
-  background: #F9FAFB;
-  border: 1px solid #E5E7EB;
-  padding: 3px 10px; border-radius: 999px;
+.stance-dist-row {
+  display: flex; align-items: center; gap: 12px;
+}
+.stance-dist-label {
+  width: 96px; flex-shrink: 0;
+  font-size: 12px; font-weight: 600; color: #555;
+}
+.stance-dist-track {
+  flex: 1; height: 18px;
+  background: #F1F3F5; border-radius: 5px; overflow: hidden;
+}
+.stance-dist-fill {
+  height: 100%; border-radius: 5px; min-width: 2px;
+  transition: width 0.3s ease;
+}
+.stance-dist-count {
+  min-width: 18px; text-align: right;
+  font-size: 12px; font-weight: 600; color: #444;
 }
 
 /* ── Room replies ─────────────────────────────────────────────────────────── */
