@@ -144,6 +144,37 @@
             </TransitionGroup>
           </div>
 
+          <!-- ── Panel reactions (panel mode) — one card per persona ──────── -->
+          <!-- Panels store each persona's pitch reaction on the agent
+               (currentReaction); the sim feed above is sim-only, so render the
+               cast's reactions here. Clicking a card opens the follow-up chat. -->
+          <div v-if="isPanel && panelReactions.length" class="sim-feed">
+            <div class="sim-feed-head">
+              <span>Reactions</span>
+              <span class="sim-feed-count">{{ panelReactions.length }} personas</span>
+            </div>
+            <div class="sim-feed-list">
+              <div
+                v-for="a in panelReactions"
+                :key="a.id"
+                class="reaction-card"
+                @click="openChat(a.id)"
+              >
+                <img :src="a.avatarUrl" :alt="a.name" class="reaction-avatar" />
+                <div class="reaction-body">
+                  <div class="reaction-meta">
+                    <span class="reaction-name">{{ a.name }}</span>
+                    <span v-if="a.stance_changed" class="reaction-shift">
+                      {{ stanceLabel(a.stance_before) }} → {{ stanceLabel(a.stance_after) }}
+                    </span>
+                    <span class="reaction-chat-hint">💬</span>
+                  </div>
+                  <p class="reaction-text">{{ a.currentReaction }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Room broadcast replies -->
           <div v-if="roomReplies.length" class="room-replies">
             <div class="room-replies-head">The room responded</div>
@@ -389,6 +420,13 @@ const agentsByStance = (stance) => panelAgents.value.filter(a => a.stance_after 
 
 // The roster the summary counts read off (live for both modes).
 const panelAgents = computed(() => agents.value)
+
+// Panel reaction cards: only personas that actually returned reaction text.
+// (Stance can be set without a response, so guard on currentReaction to avoid
+// rendering blank cards.)
+const panelReactions = computed(() =>
+  panelAgents.value.filter(a => (a.currentReaction || '').trim())
+)
 
 // How many personas changed their mind so far (drives the "experience" read).
 const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_changed).length)
