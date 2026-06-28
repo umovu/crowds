@@ -128,10 +128,11 @@ class SimulationManager:
     """
     
     # Simulation data storage directory
-    SIMULATION_DATA_DIR = os.path.join(
-        os.path.dirname(__file__), 
-        '../../uploads/simulations'
-    )
+    # Use the configured data root (DATA_ROOT/uploads/simulations) so saved sim
+    # state lives on the mounted volume in prod — not the ephemeral container
+    # filesystem, which is wiped on every redeploy. Matches the path the rest of
+    # the code (Config.OASIS_SIMULATION_DATA_DIR, API routes, exporter) uses.
+    SIMULATION_DATA_DIR = Config.OASIS_SIMULATION_DATA_DIR
     
     def __init__(self):
         # Ensure directory exists
