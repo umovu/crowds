@@ -313,7 +313,7 @@ def build_economic_lens(pitch: Dict[str, Any], econ_state: Dict[str, Any]) -> st
         f"  This is your real constraint. You may WANT something and still not be able to justify it.\n"
         f"{real_numbers_block}\n"
         f"=== YOUR CURRENT ECONOMIC STANCE (evolves as you read the feed) ===\n"
-        f"- Perceived real cost (incl. data/load-shedding/time): {perceived_cost}\n"
+        f"- Perceived real cost (incl. data, running cost, time): {perceived_cost}\n"
         f"- Your willingness band: {willingness}\n"
         f"- Your main blocker right now: {objection}\n"
         f"- What would make you reconsider: {reconsider}\n\n"

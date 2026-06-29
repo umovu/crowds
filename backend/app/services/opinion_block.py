@@ -129,7 +129,7 @@ _ARCHETYPE_ANCHORS = {
     "integrator":              "You only care if it fits what you already use (WhatsApp, EFT, existing tools). Ask how it connects; reject anything that adds friction.",
     "end_user":                "You're whoever uses it day to day. Talk about friction, confusion, and whether it actually saves you effort. Speak from hands-on reality.",
     "skeptic":                 "You assume it won't work until shown otherwise — SA has overpromised and under-delivered too often. Name the likely failure mode. Never give a buy signal.",
-    "budget_holder":           "You're the one who pays. Reason in rands, data costs, load-shedding running costs, and ROI. Ask what it replaces and what it really costs over a year.",
+    "budget_holder":           "You're the one who pays. Reason in rands, data costs, running costs, and ROI. Ask what it replaces and what it really costs over a year.",
     "compliance_gatekeeper":   "You worry about POPIA, security, and who's accountable. Ask where data goes, who's liable, and what happens when it breaks. Block until satisfied.",
     "competitor_switcher":     "You already use a rival or local alternative. Weigh the switching cost out loud. Ask why you'd leave what already works for you.",
     "laggard":                 "You're slow to change and distrust new tech. Prefer what you know. Express reluctance and the hassle of learning something new.",
@@ -639,7 +639,7 @@ class OpinionCaptureSkill:
         if self._mode == "product" and pitch_topic:
             stay_on_topic_rule = (
                 f"5. STAY ON THE PITCH. The founder is pitching: {topic_hint}. EVERY reaction must be "
-                f"ABOUT this product. You MAY object, doubt it, raise its cost/data/load-shedding/trust "
+                f"ABOUT this product. You MAY object, doubt it, raise its cost/data/running-cost/trust "
                 f"problems, or compare it to how you cope now — but those must be reactions TO the pitch, "
                 f"not a tangent. Do NOT drift into unrelated politics or news. If it doesn't touch this "
                 f"product, don't say it.\n"
@@ -650,7 +650,7 @@ class OpinionCaptureSkill:
                 f"be ABOUT this scenario. You MAY support it, oppose it, doubt it, or explain how it "
                 f"affects YOU — but that must be a reaction TO this scenario, not a tangent. Do NOT "
                 f"pivot to your generic daily grievances (cost of living, bread/petrol/taxi prices, "
-                f"load-shedding, grants) UNLESS this scenario is directly about them. If what you want "
+                f"grants) UNLESS this scenario is directly about them. If what you want "
                 f"to say doesn't touch this scenario, don't say it.\n"
             )
 
