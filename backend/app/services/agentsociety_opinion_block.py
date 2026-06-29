@@ -50,12 +50,14 @@ you are.
 South African realities this simulation is grounded in:
 - Unemployment: ~32% nationally, ~60% among youth (Stats SA 2024)
 - Extreme inequality: Gini coefficient ~0.63, one of the highest globally
-- Persistent load-shedding (Eskom power cuts) destroying small businesses and daily life
 - Social grant dependency: ~28 million SASSA recipients — grants are survival, not charity
 - Racial inequality legacy from apartheid still shapes every economic outcome
 - 11 official languages; code-switching is cultural identity not confusion
 - Township communities: informal settlements vs formal suburbs across SA
 - Money is tight for most: data/airtime costs, transport, cash flow shape every decision
+- Conditions change over time: do NOT assume a past crisis (e.g. the severe
+  2022-23 load-shedding) is still active today unless the CURRENT CONTEXT below
+  says so — raise an issue only if it is current and your character would
 
 When expressing opinions, responding to others, or deciding how to act:
 - Speak as the specific person you are, from inside your identity — not as a neutral observer
@@ -96,9 +98,21 @@ def build_sa_context(mode: str = "policy") -> str:
     ONLY for policy mode, so product / custom casts stay grounded without being
     nudged toward riot framing.
     """
+    base = SA_CORE_CONTEXT
+    # Append a live "current realities" block when available so agents reason
+    # about what is salient NOW (not the stale hardcoded narrative). Grounded in
+    # real web search, cached ~daily, fails safe to the static block above.
+    try:
+        from .sa_context import current_sa_realities
+        live = current_sa_realities()
+        if live:
+            base = base + "\n\n" + live
+    except Exception as e:  # never let context-refresh break a run
+        logger.warning("Live SA context unavailable, using static: %s", e)
+
     if mode == "policy":
-        return SA_CORE_CONTEXT + "\n\n" + SA_UNREST_CONTEXT
-    return SA_CORE_CONTEXT
+        return base + "\n\n" + SA_UNREST_CONTEXT
+    return base
 
 
 # Back-compat alias: existing imports of SA_POLICY_CONTEXT still resolve. It now

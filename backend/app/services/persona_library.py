@@ -87,9 +87,13 @@ class PersonaLibrary:
     def load(self) -> "PersonaLibrary":
         if self._loaded:
             return self
-        # On hosts the volume starts empty — seed it once from Supabase Storage.
-        if not os.path.exists(self.path):
-            _seed_from_storage(self.path)
+        # Supabase Storage is the source of truth on hosts. Re-sync on load (not
+        # only when the file is missing) so library updates — e.g. a deduped-names
+        # pass — propagate to the persistent volume instead of staying pinned to
+        # the stale first-boot copy. No-op when storage env vars are unset (local
+        # dev uses the in-repo JSON); a failed download leaves any existing file
+        # untouched (see _seed_from_storage).
+        _seed_from_storage(self.path)
         if not os.path.exists(self.path):
             logger.warning(f"Persona library not found at {self.path}; library is empty. "
                            f"Seed Supabase Storage or run scripts/build_library.py to populate it.")
