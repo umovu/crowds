@@ -101,24 +101,6 @@
             <div class="spectrum-summary-body">
               <p>{{ summaryText }}</p>
             </div>
-            <!-- Stance distribution — proportional bar per stance, matches
-                 PolicyComparisonPanel's "Stance Distribution" pattern. -->
-            <div class="stance-dist">
-              <div
-                v-for="s in STANCES"
-                :key="s.key"
-                class="stance-dist-row"
-              >
-                <span class="stance-dist-label">{{ s.label }}</span>
-                <div class="stance-dist-track">
-                  <div
-                    class="stance-dist-fill"
-                    :style="{ width: stancePct(s.key) + '%', background: s.color }"
-                  ></div>
-                </div>
-                <span class="stance-dist-count">{{ agentsByStance(s.key).length }}</span>
-              </div>
-            </div>
           </div>
 
           <!-- ── Live reaction feed (sim mode) — clean single column ─────── -->
@@ -173,7 +155,9 @@
                     class="pp-av-btn"
                     :class="{ active: popAgentId === a.id }"
                     :title="a.name"
-                    @click.stop="openReactionPop(a, $event)"
+                    @mouseenter="showReactionPop(a, $event)"
+                    @mouseleave="scheduleClosePop"
+                    @click="interviewFromAvatar(a)"
                   >
                     <img :src="a.avatarUrl" :alt="a.name" />
                   </button>
@@ -182,22 +166,26 @@
             </div>
           </div>
 
-          <!-- Persona popover — anchored to the clicked avatar -->
-          <div v-if="popAgent" class="pp-pop-backdrop" @click="closeReactionPop"></div>
-          <div v-if="popAgent" class="pp-pop" :style="popStyle" @click.stop>
+          <!-- Opinion popover — appears on hover; click the avatar to interview -->
+          <div
+            v-if="popAgent"
+            class="pp-pop"
+            :style="popStyle"
+            @mouseenter="cancelClosePop"
+            @mouseleave="scheduleClosePop"
+          >
             <div class="pp-pop-head">
               <img :src="popAgent.avatarUrl" :alt="popAgent.name" />
               <div class="pp-pop-id">
                 <span class="pp-pop-name">{{ popAgent.name }}</span>
                 <span v-if="popAgent.archetype" class="pp-pop-role">{{ popAgent.archetype.replace(/_/g, ' ') }}</span>
               </div>
-              <button class="pp-pop-close" @click="closeReactionPop">×</button>
             </div>
             <div v-if="popAgent.stance_changed" class="pp-pop-tags">
               <span class="reaction-shift">{{ stanceLabel(popAgent.stance_before) }} → {{ stanceLabel(popAgent.stance_after) }}</span>
             </div>
             <p class="pp-pop-text">{{ popAgent.currentReaction }}</p>
-            <button class="pp-pop-chat" @click="openChatFromPop(popAgent.id)">💬 Ask a follow-up</button>
+            <div class="pp-pop-hint">Click to interview →</div>
           </div>
 
           <!-- Room broadcast replies -->
@@ -443,12 +431,6 @@ const STANCES = [
 
 const agentsByStance = (stance) => panelAgents.value.filter(a => a.stance_after === stance)
 
-// Share of the cast sitting at a given stance (for the distribution bar).
-const stancePct = (stance) => {
-  const total = panelAgents.value.length || 1
-  return (agentsByStance(stance).length / total) * 100
-}
-
 // The roster the summary counts read off (live for both modes).
 const panelAgents = computed(() => agents.value)
 
@@ -479,12 +461,15 @@ const reactionClusters = computed(() => {
   return ordered.filter(o => byStance[o.key]?.length).map(o => ({ ...o, members: byStance[o.key] }))
 })
 
-// Avatar popover, anchored to the clicked face.
+// Opinion popover: appears on hover (read-only); clicking the avatar opens the
+// interview side panel instead. A short close delay lets the cursor travel from
+// the avatar onto the popover without it vanishing.
 const popAgentId = ref(null)
 const popStyle = ref({})
+let _popCloseTimer = null
 const popAgent = computed(() => agents.value.find(a => a.id === popAgentId.value) || null)
-const openReactionPop = (a, ev) => {
-  if (popAgentId.value === a.id) { popAgentId.value = null; return }
+const showReactionPop = (a, ev) => {
+  if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
   const W = 360
@@ -492,8 +477,9 @@ const openReactionPop = (a, ev) => {
   left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
   popStyle.value = { left: left + 'px', top: (rect.bottom + 10) + 'px' }
 }
-const closeReactionPop = () => { popAgentId.value = null }
-const openChatFromPop = (id) => { popAgentId.value = null; openChat(id) }
+const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
+const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
+const interviewFromAvatar = (a) => { cancelClosePop(); popAgentId.value = null; openChat(a.id) }
 
 // Summary text — a short summary report of where the room sits, grounded in the
 // live roster: the prevailing mood, the actual breakdown, and how many have
@@ -1173,7 +1159,6 @@ onUnmounted(() => {
 .pp-av-btn:hover img, .pp-av-btn.active img { border-color: #1E9E5A; box-shadow: 0 0 0 3px rgba(30, 158, 90, 0.1); }
 
 /* Persona popover */
-.pp-pop-backdrop { position: fixed; inset: 0; z-index: 60; background: transparent; }
 .pp-pop {
   position: fixed; z-index: 61; width: 360px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
@@ -1184,17 +1169,12 @@ onUnmounted(() => {
 .pp-pop-id { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
-.pp-pop-close { background: none; border: none; font-size: 22px; line-height: 1; color: #aaa; cursor: pointer; padding: 0 2px; }
-.pp-pop-close:hover { color: #333; }
 .pp-pop-tags { margin-bottom: 10px; }
-.pp-pop-text { margin: 0 0 14px; font-size: 14px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
-.pp-pop-chat {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border: 1px solid #1E9E5A; border-radius: 999px;
-  background: #fff; color: #1E9E5A; font-weight: 700; font-size: 12.5px;
-  font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all 0.15s;
+.pp-pop-text { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+.pp-pop-hint {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  color: #1E9E5A; letter-spacing: 0.3px;
 }
-.pp-pop-chat:hover { background: #1E9E5A; color: #fff; }
 
 /* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
@@ -1239,31 +1219,6 @@ onUnmounted(() => {
   margin: 0;
   font-size: 14px; line-height: 1.6; color: #374151;
 }
-/* Stance distribution — proportional bar per stance (matches PolicyComparisonPanel). */
-.stance-dist {
-  display: flex; flex-direction: column; gap: 8px;
-  padding: 0 20px 16px;
-}
-.stance-dist-row {
-  display: flex; align-items: center; gap: 12px;
-}
-.stance-dist-label {
-  width: 96px; flex-shrink: 0;
-  font-size: 12px; font-weight: 600; color: #555;
-}
-.stance-dist-track {
-  flex: 1; height: 18px;
-  background: #F1F3F5; border-radius: 5px; overflow: hidden;
-}
-.stance-dist-fill {
-  height: 100%; border-radius: 5px; min-width: 2px;
-  transition: width 0.3s ease;
-}
-.stance-dist-count {
-  min-width: 18px; text-align: right;
-  font-size: 12px; font-weight: 600; color: #444;
-}
-
 /* ── Room replies ─────────────────────────────────────────────────────────── */
 .room-replies { margin: 0 24px 16px; display: flex; flex-direction: column; gap: 8px; }
 .room-replies-head {
