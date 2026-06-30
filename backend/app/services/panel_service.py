@@ -336,6 +336,7 @@ def create_session(
     seed: Optional[int] = None,
     segment: Optional[str] = None,
     segments: Optional[List[str]] = None,
+    user_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
@@ -393,6 +394,7 @@ def create_session(
 
     meta = {
         "session_id": session_id,
+        "user_id": user_id,  # owner; scopes the session to its creator
         "pitch": pitch,
         "mode": mode,
         "segments": seg_list,
@@ -428,14 +430,23 @@ def get_session(session_id: str) -> Optional[Dict[str, Any]]:
     return _read_json(os.path.join(session_dir(session_id), META_FILE))
 
 
-def list_sessions() -> List[Dict[str, Any]]:
-    """All session metas, newest first."""
+def list_sessions(user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    """Session metas, newest first.
+
+    When `user_id` is given, returns only that user's sessions plus legacy
+    ownerless ones (no `user_id` in meta) — never another user's. Pass None for
+    the unscoped listing.
+    """
     out = []
     base = _base_dir()
     for name in os.listdir(base):
         meta = _read_json(os.path.join(base, name, META_FILE))
-        if meta:
-            out.append(meta)
+        if not meta:
+            continue
+        owner = meta.get("user_id")
+        if user_id is not None and owner and owner != user_id:
+            continue
+        out.append(meta)
     out.sort(key=lambda m: m.get("created_at") or "", reverse=True)
     return out
 

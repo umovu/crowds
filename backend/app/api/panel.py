@@ -94,6 +94,7 @@ def create_session():
             seed=data.get('seed'),
             segment=data.get('segment'),
             segments=data.get('segments'),
+            user_id=billing.current_user_id(),
         )
         # Count this panel against the user's quota (no-op on paid / billing off).
         billing.increment_panel_used(billing.current_user_id())
@@ -108,7 +109,7 @@ def create_session():
 @panel_bp.route('/sessions', methods=['GET'])
 def list_sessions():
     try:
-        return jsonify({"success": True, "data": {"sessions": panel_service.list_sessions()}})
+        return jsonify({"success": True, "data": {"sessions": panel_service.list_sessions(billing.current_user_id())}})
     except Exception as e:
         logger.error(f"Failed to list panel sessions: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
