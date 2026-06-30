@@ -3,8 +3,8 @@
     <!-- ── Sidebar — exact copy of Home.vue ─────────────────────────────── -->
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <span class="brand-mark">f</span>
-        <span class="brand-word"><span class="brand-strong">fub</span>sandbox</span>
+        <span class="brand-mark">c</span>
+        <span class="brand-word"><span class="brand-strong">crowds</span></span>
       </div>
       <nav class="side-section">
         <button class="side-item" :class="{ active: !isPanel }">
@@ -32,8 +32,8 @@
             <span>Back</span>
           </button>
           <div class="brand">
-            <span class="brand-mark">f</span>
-            <span class="brand-word"><span class="brand-strong">fub</span>sandbox</span>
+            <span class="brand-mark">c</span>
+            <span class="brand-word"><span class="brand-strong">crowds</span></span>
           </div>
         </div>
         <div class="header-right">
@@ -151,35 +151,53 @@
             </TransitionGroup>
           </div>
 
-          <!-- ── Panel reactions (panel mode) — one card per persona ──────── -->
-          <!-- Panels store each persona's pitch reaction on the agent
-               (currentReaction); the sim feed above is sim-only, so render the
-               cast's reactions here. Clicking a card opens the follow-up chat. -->
+          <!-- ── Panel reactions (panel mode) — avatars clustered by stance ── -->
+          <!-- Personas group into deterministic stance buckets; clicking a face
+               opens an anchored popover with their reaction, and "Ask a
+               follow-up" hands off to the existing chat slide-out. -->
           <div v-if="isPanel && panelReactions.length" class="sim-feed">
             <div class="sim-feed-head">
               <span>Reactions</span>
               <span class="sim-feed-count">{{ panelReactions.length }} personas</span>
             </div>
-            <div class="sim-feed-list">
-              <div
-                v-for="a in panelReactions"
-                :key="a.id"
-                class="reaction-card"
-                @click="openChat(a.id)"
-              >
-                <img :src="a.avatarUrl" :alt="a.name" class="reaction-avatar" />
-                <div class="reaction-body">
-                  <div class="reaction-meta">
-                    <span class="reaction-name">{{ a.name }}</span>
-                    <span v-if="a.stance_changed" class="reaction-shift">
-                      {{ stanceLabel(a.stance_before) }} → {{ stanceLabel(a.stance_after) }}
-                    </span>
-                    <span class="reaction-chat-hint">💬</span>
-                  </div>
-                  <p class="reaction-text">{{ a.currentReaction }}</p>
+            <div class="pp-clusters">
+              <div v-for="c in reactionClusters" :key="c.key" class="pp-cluster">
+                <div class="pp-cluster-head">
+                  <span class="pp-cluster-name">{{ c.label }}</span>
+                  <span class="pp-cluster-count">{{ c.members.length }}</span>
+                </div>
+                <div class="pp-cluster-avatars">
+                  <button
+                    v-for="a in c.members"
+                    :key="a.id"
+                    class="pp-av-btn"
+                    :class="{ active: popAgentId === a.id }"
+                    :title="a.name"
+                    @click.stop="openReactionPop(a, $event)"
+                  >
+                    <img :src="a.avatarUrl" :alt="a.name" />
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Persona popover — anchored to the clicked avatar -->
+          <div v-if="popAgent" class="pp-pop-backdrop" @click="closeReactionPop"></div>
+          <div v-if="popAgent" class="pp-pop" :style="popStyle" @click.stop>
+            <div class="pp-pop-head">
+              <img :src="popAgent.avatarUrl" :alt="popAgent.name" />
+              <div class="pp-pop-id">
+                <span class="pp-pop-name">{{ popAgent.name }}</span>
+                <span v-if="popAgent.archetype" class="pp-pop-role">{{ popAgent.archetype.replace(/_/g, ' ') }}</span>
+              </div>
+              <button class="pp-pop-close" @click="closeReactionPop">×</button>
+            </div>
+            <div v-if="popAgent.stance_changed" class="pp-pop-tags">
+              <span class="reaction-shift">{{ stanceLabel(popAgent.stance_before) }} → {{ stanceLabel(popAgent.stance_after) }}</span>
+            </div>
+            <p class="pp-pop-text">{{ popAgent.currentReaction }}</p>
+            <button class="pp-pop-chat" @click="openChatFromPop(popAgent.id)">💬 Ask a follow-up</button>
           </div>
 
           <!-- Room broadcast replies -->
@@ -443,6 +461,39 @@ const panelReactions = computed(() =>
 
 // How many personas changed their mind so far (drives the "experience" read).
 const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_changed).length)
+
+// ── Reaction map: cluster personas into stance columns (deterministic) ───────
+// Buckets follow the STANCES spread (won over → resistant); any stray stance
+// falls into its own column. No LLM, no scoring — holds with the model off.
+const reactionClusters = computed(() => {
+  const byStance = {}
+  for (const a of panelReactions.value) {
+    const key = a.stance_after || 'neutral'
+    ;(byStance[key] || (byStance[key] = [])).push(a)
+  }
+  const extra = Object.keys(byStance).filter(k => !STANCES.some(s => s.key === k))
+  const ordered = [
+    ...STANCES.map(s => ({ key: s.key, label: s.label })),
+    ...extra.map(k => ({ key: k, label: stanceLabel(k) })),
+  ]
+  return ordered.filter(o => byStance[o.key]?.length).map(o => ({ ...o, members: byStance[o.key] }))
+})
+
+// Avatar popover, anchored to the clicked face.
+const popAgentId = ref(null)
+const popStyle = ref({})
+const popAgent = computed(() => agents.value.find(a => a.id === popAgentId.value) || null)
+const openReactionPop = (a, ev) => {
+  if (popAgentId.value === a.id) { popAgentId.value = null; return }
+  popAgentId.value = a.id
+  const rect = ev.currentTarget.getBoundingClientRect()
+  const W = 360
+  let left = rect.left + rect.width / 2 - W / 2
+  left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
+  popStyle.value = { left: left + 'px', top: (rect.bottom + 10) + 'px' }
+}
+const closeReactionPop = () => { popAgentId.value = null }
+const openChatFromPop = (id) => { popAgentId.value = null; openChat(id) }
 
 // Summary text — a short summary report of where the room sits, grounded in the
 // live roster: the prevailing mood, the actual breakdown, and how many have
@@ -1100,6 +1151,50 @@ onUnmounted(() => {
 /* Reaction feed transitions */
 .reaction-item-enter-active { transition: all 0.4s ease; }
 .reaction-item-enter-from { opacity: 0; transform: translateY(12px); }
+
+/* ── Reaction map — avatars clustered into stance columns ──────────────────── */
+.pp-clusters { display: flex; flex-wrap: wrap; padding: 16px 20px 20px; }
+.pp-cluster { flex: 1; min-width: 190px; padding: 0 18px; border-right: 1px dashed #E5E7EB; }
+.pp-cluster:last-child { border-right: none; }
+.pp-cluster:first-child { padding-left: 0; }
+.pp-cluster-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+.pp-cluster-name { font-size: 14px; font-weight: 700; color: #111; }
+.pp-cluster-count {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  color: #1E9E5A; background: rgba(30, 158, 90, 0.1); padding: 1px 8px; border-radius: 999px;
+}
+.pp-cluster-avatars { display: flex; flex-wrap: wrap; gap: 8px; }
+.pp-av-btn { padding: 0; border: none; background: none; cursor: pointer; border-radius: 50%; line-height: 0; transition: transform 0.12s; }
+.pp-av-btn:hover, .pp-av-btn.active { transform: translateY(-3px); }
+.pp-av-btn img {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 2px solid #E5E7EB; background: #fff; transition: border-color 0.12s, box-shadow 0.12s;
+}
+.pp-av-btn:hover img, .pp-av-btn.active img { border-color: #1E9E5A; box-shadow: 0 0 0 3px rgba(30, 158, 90, 0.1); }
+
+/* Persona popover */
+.pp-pop-backdrop { position: fixed; inset: 0; z-index: 60; background: transparent; }
+.pp-pop {
+  position: fixed; z-index: 61; width: 360px; max-width: 92vw;
+  background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
+}
+.pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
+.pp-pop-id { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
+.pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
+.pp-pop-close { background: none; border: none; font-size: 22px; line-height: 1; color: #aaa; cursor: pointer; padding: 0 2px; }
+.pp-pop-close:hover { color: #333; }
+.pp-pop-tags { margin-bottom: 10px; }
+.pp-pop-text { margin: 0 0 14px; font-size: 14px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+.pp-pop-chat {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1px solid #1E9E5A; border-radius: 999px;
+  background: #fff; color: #1E9E5A; font-weight: 700; font-size: 12.5px;
+  font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all 0.15s;
+}
+.pp-pop-chat:hover { background: #1E9E5A; color: #fff; }
 
 /* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
