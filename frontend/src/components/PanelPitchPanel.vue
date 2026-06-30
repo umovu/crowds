@@ -200,42 +200,67 @@
           </div>
         </div>
 
-        <!-- Reaction wall -->
-        <div class="pp-reactions">
-          <div v-for="r in currentRound.results" :key="r.agent_id" class="pp-card" :class="{ failed: r.error }">
-            <div class="pp-card-head">
-              <div>
-                <span class="pp-card-name">{{ r.agent_name || ('Agent ' + r.agent_id) }}</span>
-                <span class="pp-card-meta">{{ pretty(r.actor_archetype) }}</span>
-              </div>
-              <span v-if="r.budget_tier" class="pp-tier" :class="'tier-' + r.budget_tier" title="Computed from real persona data — not the model's opinion">{{ r.budget_tier }}</span>
+        <!-- Reaction map — avatars clustered by stance, click a face to open
+             that persona's reaction + follow-up. Clustering is deterministic
+             (stance buckets), so it holds with the LLM switched off. -->
+        <div class="pp-clusters">
+          <div v-for="c in reactionClusters" :key="c.key" class="pp-cluster">
+            <div class="pp-cluster-head">
+              <span class="pp-cluster-name">{{ c.label }}</span>
+              <span class="pp-cluster-count">{{ c.members.length }}</span>
             </div>
-            <div v-if="r.stance_before" class="pp-card-stance">
-              {{ session && session.mode === 'product' ? 'reaction' : 'stance' }}: {{ stanceLabel(r.stance_before) }}
-              <template v-if="r.stance_changed"> → <strong>{{ stanceLabel(r.stance_after) }}</strong></template>
-              <template v-else> (unchanged)</template>
-            </div>
-            <p class="pp-card-response">{{ r.response }}</p>
-
-            <!-- Follow-up thread -->
-            <div v-if="followups[r.agent_id] && followups[r.agent_id].thread.length" class="pp-thread">
-              <div v-for="(qa, i) in followups[r.agent_id].thread" :key="i" class="pp-thread-item">
-                <div class="pp-thread-q">You: {{ qa.q }}</div>
-                <div class="pp-thread-a">{{ qa.a }}</div>
-              </div>
-            </div>
-            <div class="pp-followup">
-              <input
-                v-model="followupDrafts[r.agent_id]"
-                class="pp-followup-input"
-                :placeholder="'Ask ' + firstName(r.agent_name) + ' a follow-up…'"
-                :disabled="isAsking(r.agent_id)"
-                @keyup.enter="ask(r.agent_id)"
-              />
-              <button class="pp-followup-btn" :disabled="!(followupDrafts[r.agent_id] || '').trim() || isAsking(r.agent_id)" @click="ask(r.agent_id)">
-                {{ isAsking(r.agent_id) ? '…' : 'Ask' }}
+            <div class="pp-cluster-avatars">
+              <button
+                v-for="r in c.members"
+                :key="r.agent_id"
+                class="pp-av-btn"
+                :class="{ active: activeAgentId === r.agent_id, failed: r.error }"
+                :title="r.agent_name"
+                @click.stop="openReaction(r, $event)"
+              >
+                <img :src="avatarFor(r.agent_name || ('Agent ' + r.agent_id))" :alt="r.agent_name" />
               </button>
             </div>
+          </div>
+        </div>
+
+        <!-- Persona popover — anchored to the clicked avatar -->
+        <div v-if="activeResult" class="pp-pop-backdrop" @click="closeReaction"></div>
+        <div v-if="activeResult" class="pp-pop" :style="popStyle" @click.stop>
+          <div class="pp-pop-head">
+            <img :src="avatarFor(activeResult.agent_name || ('Agent ' + activeResult.agent_id))" :alt="activeResult.agent_name" />
+            <div class="pp-pop-id">
+              <span class="pp-pop-name">{{ activeResult.agent_name || ('Agent ' + activeResult.agent_id) }}</span>
+              <span class="pp-pop-role">{{ pretty(activeResult.actor_archetype) }}</span>
+            </div>
+            <button class="pp-pop-close" @click="closeReaction">×</button>
+          </div>
+          <div class="pp-pop-tags">
+            <span v-if="activeResult.stance_changed" class="pp-feed-shift">
+              {{ stanceLabel(activeResult.stance_before) }} → {{ stanceLabel(activeResult.stance_after) }}
+            </span>
+            <span v-if="activeResult.budget_tier" class="pp-tier" :class="'tier-' + activeResult.budget_tier" title="Computed from real persona data — not the model's opinion">{{ activeResult.budget_tier }}</span>
+          </div>
+          <p class="pp-pop-text">{{ activeResult.response }}</p>
+
+          <!-- Follow-up thread -->
+          <div v-if="followups[activeResult.agent_id] && followups[activeResult.agent_id].thread.length" class="pp-thread">
+            <div v-for="(qa, i) in followups[activeResult.agent_id].thread" :key="i" class="pp-thread-item">
+              <div class="pp-thread-q">You: {{ qa.q }}</div>
+              <div class="pp-thread-a">{{ qa.a }}</div>
+            </div>
+          </div>
+          <div class="pp-followup">
+            <input
+              v-model="followupDrafts[activeResult.agent_id]"
+              class="pp-followup-input"
+              :placeholder="'Ask ' + firstName(activeResult.agent_name) + ' a follow-up…'"
+              :disabled="isAsking(activeResult.agent_id)"
+              @keyup.enter="ask(activeResult.agent_id)"
+            />
+            <button class="pp-followup-btn" :disabled="!(followupDrafts[activeResult.agent_id] || '').trim() || isAsking(activeResult.agent_id)" @click="ask(activeResult.agent_id)">
+              {{ isAsking(activeResult.agent_id) ? '…' : 'Ask' }}
+            </button>
           </div>
         </div>
       </template>
@@ -245,7 +270,25 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted } from 'vue'
+import { createAvatar } from '@dicebear/core'
+import { avataaars } from '@dicebear/collection'
 import { listSegments, createSession, getSession, pitchSession, askAgent, listSessions, listRounds } from '../api/panel'
+
+// DiceBear avatar per persona — seeded by name so the same face is stable
+// across rounds and reopens.
+const _avatarCache = new Map()
+const avatarFor = (name) => {
+  const seed = name || 'unknown'
+  if (_avatarCache.has(seed)) return _avatarCache.get(seed)
+  const svg = createAvatar(avataaars, {
+    seed, radius: 50,
+    backgroundColor: ['b6e3f4', 'c0e8d5', 'fde68a', 'ffd6a5'],
+    backgroundType: ['solid'],
+  }).toString()
+  const uri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+  _avatarCache.set(seed, uri)
+  return uri
+}
 
 const ACTIVE_KEY = 'panelPitch.activeSession'
 
@@ -320,6 +363,38 @@ const emotionLine = computed(() => {
 })
 
 const pretty = (s) => (s || '').replace(/_/g, ' ')
+
+// ── Reaction map: cluster personas by stance, deterministically ──────────────
+// Buckets in a fixed spread (won-over → resistant), labelled via stanceLabel so
+// product mode reads "won over / curious / unconvinced …". No LLM, no scoring.
+const STANCE_ORDER = ['support', 'neutral', 'concerned', 'oppose', 'resist']
+const reactionClusters = computed(() => {
+  const results = currentRound.value?.results || []
+  const groups = {}
+  for (const r of results) {
+    const key = r.stance_after || r.stance_before || 'neutral'
+    ;(groups[key] || (groups[key] = [])).push(r)
+  }
+  const keys = [...STANCE_ORDER, ...Object.keys(groups).filter(k => !STANCE_ORDER.includes(k))]
+  return keys.filter(k => groups[k]?.length).map(k => ({ key: k, label: stanceLabel(k), members: groups[k] }))
+})
+
+// Popover anchored to the clicked avatar.
+const activeAgentId = ref(null)
+const popStyle = ref({})
+const activeResult = computed(() =>
+  (currentRound.value?.results || []).find(r => r.agent_id === activeAgentId.value) || null
+)
+const openReaction = (r, ev) => {
+  if (activeAgentId.value === r.agent_id) { activeAgentId.value = null; return }
+  activeAgentId.value = r.agent_id
+  const rect = ev.currentTarget.getBoundingClientRect()
+  const POP_W = 380
+  let left = rect.left + rect.width / 2 - POP_W / 2
+  left = Math.max(12, Math.min(left, window.innerWidth - POP_W - 12))
+  popStyle.value = { left: left + 'px', top: (rect.bottom + 10) + 'px' }
+}
+const closeReaction = () => { activeAgentId.value = null }
 
 // Product mode shows the reaction ladder instead of policy stance words.
 const PRODUCT_STANCE_LABELS = {
@@ -873,42 +948,52 @@ onMounted(async () => {
   margin-top: 4px;
 }
 
-/* Reaction wall */
-.pp-reactions {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 12px;
+/* Reaction map — avatars clustered into stance columns */
+.pp-clusters { display: flex; gap: 0; flex-wrap: wrap; }
+.pp-cluster {
+  flex: 1; min-width: 200px;
+  padding: 0 18px;
+  border-right: 1px dashed #E5E5E5;
 }
-.pp-card {
-  border: 1px solid #E5E5E5;
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+.pp-cluster:last-child { border-right: none; }
+.pp-cluster:first-child { padding-left: 0; }
+.pp-cluster-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+.pp-cluster-name { font-size: 0.92rem; font-weight: 700; color: #111; }
+.pp-cluster-count {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700;
+  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  padding: 1px 8px; border-radius: 999px;
 }
-.pp-card.failed { opacity: 0.55; }
-.pp-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
+.pp-cluster-avatars { display: flex; flex-wrap: wrap; gap: 8px; }
+.pp-av-btn { padding: 0; border: none; background: none; cursor: pointer; border-radius: 50%; line-height: 0; transition: transform 0.12s; }
+.pp-av-btn:hover, .pp-av-btn.active { transform: translateY(-3px); }
+.pp-av-btn img {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 2px solid #E5E7EB; background: #fff; transition: border-color 0.12s, box-shadow 0.12s;
 }
-.pp-card-name { font-weight: 700; font-size: 0.9rem; color: #000; display: block; }
-.pp-card-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: #999; }
-.pp-card-stance {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  color: #777;
+.pp-av-btn:hover img, .pp-av-btn.active img { border-color: #1E9E5A; box-shadow: 0 0 0 3px rgba(30, 158, 90, 0.1); }
+.pp-av-btn.failed img { opacity: 0.45; }
+
+/* Persona popover */
+.pp-pop-backdrop { position: fixed; inset: 0; z-index: 60; background: transparent; }
+.pp-pop {
+  position: fixed; z-index: 61; width: 380px; max-width: 92vw;
+  background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
 }
-.pp-card-stance strong { color: #1E9E5A; }
-.pp-card-response {
-  margin: 0;
-  font-size: 0.84rem;
-  color: #333;
-  line-height: 1.55;
+.pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
+.pp-pop-id { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.pp-pop-name { font-weight: 700; font-size: 0.92rem; color: #111; }
+.pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #999; }
+.pp-pop-close { background: none; border: none; font-size: 1.4rem; line-height: 1; color: #aaa; cursor: pointer; padding: 0 2px; }
+.pp-pop-close:hover { color: #333; }
+.pp-pop-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.pp-pop-text { margin: 0 0 12px; font-size: 0.86rem; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+.pp-feed-shift {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700;
+  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  border: 1px solid rgba(30, 158, 90, 0.3); padding: 1px 7px; border-radius: 999px;
 }
 
 /* Follow-up */
