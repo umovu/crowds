@@ -302,6 +302,7 @@ def create_simulation():
         state = manager.create_simulation(
             project_id=project_id,
             graph_id=graph_id,
+            user_id=billing.current_user_id(),
         )
 
         # Trial accounting: one created sim = one trial credit. Counts for every
@@ -954,9 +955,9 @@ def list_simulations():
     """
     try:
         project_id = request.args.get('project_id')
-        
+
         manager = SimulationManager()
-        simulations = manager.list_simulations(project_id=project_id)
+        simulations = manager.list_simulations(project_id=project_id, user_id=billing.current_user_id())
         
         return jsonify({
             "success": True,
@@ -1071,7 +1072,7 @@ def get_simulation_history():
         limit = request.args.get('limit', 20, type=int)
         
         manager = SimulationManager()
-        simulations = manager.list_simulations()[:limit]
+        simulations = manager.list_simulations(user_id=billing.current_user_id())[:limit]
         
         # Enhance simulation data，Only from Simulation FileRead
         enriched_simulations = []

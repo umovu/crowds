@@ -75,6 +75,10 @@ class SimulationState:
     # Error message
     error: Optional[str] = None
 
+    # Owner (Supabase user id / JWT sub). None on legacy sims created before
+    # scoping — treated as ownerless and visible to the requester for back-compat.
+    user_id: Optional[str] = None
+
     # Cost tracking
     prepare_prompt_tokens: int = 0
     prepare_completion_tokens: int = 0
@@ -96,6 +100,7 @@ class SimulationState:
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "error": self.error,
+            "user_id": self.user_id,
             "prepare_prompt_tokens": self.prepare_prompt_tokens,
             "prepare_completion_tokens": self.prepare_completion_tokens,
             "prepare_cost_usd": self.prepare_cost_usd,
@@ -187,6 +192,7 @@ class SimulationManager:
             created_at=data.get("created_at", datetime.now().isoformat()),
             updated_at=data.get("updated_at", datetime.now().isoformat()),
             error=data.get("error"),
+            user_id=data.get("user_id"),
             prepare_prompt_tokens=data.get("prepare_prompt_tokens", 0),
             prepare_completion_tokens=data.get("prepare_completion_tokens", 0),
             prepare_cost_usd=data.get("prepare_cost_usd", 0.0),
@@ -199,6 +205,7 @@ class SimulationManager:
         self,
         project_id: str,
         graph_id: str,
+        user_id: Optional[str] = None,
     ) -> SimulationState:
         """
         Create new simulation.
@@ -206,6 +213,7 @@ class SimulationManager:
         Args:
             project_id: Project ID
             graph_id: Graph ID
+            user_id: Owner (Supabase JWT sub); scopes the sim to its creator
 
         Returns:
             SimulationState
@@ -218,6 +226,7 @@ class SimulationManager:
             project_id=project_id,
             graph_id=graph_id,
             status=SimulationStatus.CREATED,
+            user_id=user_id,
         )
         
         self._save_simulation_state(state)
@@ -661,22 +670,37 @@ class SimulationManager:
         """Get simulation state"""
         return self._load_simulation_state(simulation_id)
     
-    def list_simulations(self, project_id: Optional[str] = None) -> List[SimulationState]:
-        """List all simulations"""
+    def list_simulations(
+        self,
+        project_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+    ) -> List[SimulationState]:
+        """List simulations.
+
+        When `user_id` is given, returns only sims owned by that user plus legacy
+        ownerless sims (no `user_id` stored) — sims owned by a different user are
+        excluded so accounts can't see each other's runs. Pass None for the
+        unscoped internal listing.
+        """
         simulations = []
-        
+
         if os.path.exists(self.SIMULATION_DATA_DIR):
             for sim_id in os.listdir(self.SIMULATION_DATA_DIR):
                 # Skip hidden files (such as .DS_Store) and non-directory files
                 sim_path = os.path.join(self.SIMULATION_DATA_DIR, sim_id)
                 if sim_id.startswith('.') or not os.path.isdir(sim_path):
                     continue
-                
+
                 state = self._load_simulation_state(sim_id)
-                if state:
-                    if project_id is None or state.project_id == project_id:
-                        simulations.append(state)
-        
+                if not state:
+                    continue
+                if project_id is not None and state.project_id != project_id:
+                    continue
+                # Scope to owner: own sims + legacy ownerless; never another user's.
+                if user_id is not None and state.user_id and state.user_id != user_id:
+                    continue
+                simulations.append(state)
+
         return simulations
     
     def get_profiles(self, simulation_id: str, platform: str = "opinion_space") -> List[Dict[str, Any]]:
