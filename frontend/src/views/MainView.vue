@@ -4,8 +4,8 @@
     <header class="app-header">
       <div class="header-left">
         <div class="brand" @click="router.push('/')">
-          <span class="brand-mark">f</span>
-          <span class="brand-word"><span class="brand-strong">fub</span>sandbox</span>
+          <span class="brand-mark">c</span>
+          <span class="brand-word"><span class="brand-strong">crowds</span></span>
         </div>
       </div>
       

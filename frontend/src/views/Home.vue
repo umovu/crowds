@@ -4,8 +4,8 @@
          Full-height app-shell rail shared by both views. -->
     <aside class="sidebar">
       <div class="sidebar-brand" @click="router.push('/')">
-        <span class="brand-mark">f</span>
-        <span class="brand-word"><span class="brand-strong">fub</span>sandbox</span>
+        <span class="brand-mark">c</span>
+        <span class="brand-word"><span class="brand-strong">crowds</span></span>
       </div>
 
       <!-- Primary view switch -->
