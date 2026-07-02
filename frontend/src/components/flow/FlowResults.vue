@@ -471,13 +471,17 @@ const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
-  const W = 360, GAP = 10, MARGIN = 12
-  let left = rect.left + rect.width / 2 - W / 2
-  left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
-  // Open below and let the box grow down toward the bottom of the screen; it
-  // scrolls internally only when the reaction is longer than the space available.
-  const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
-  popStyle.value = { left: left + 'px', top: (rect.bottom + GAP) + 'px', maxHeight: spaceBelow + 'px' }
+  const W = 500, GAP = 10, MARGIN = 12
+  const container = scrollContainer.value
+  if (!container) { popStyle.value = { left: MARGIN + 'px', top: (rect.bottom + GAP) + 'px' }; return }
+  // Position the box inside the scrolling results area (not the viewport), so a
+  // long opinion grows the box to full height and extends the PAGE scroll — you
+  // scroll the page to read it, instead of a cramped scrollbar inside the box.
+  const crect = container.getBoundingClientRect()
+  let left = rect.left - crect.left + container.scrollLeft + rect.width / 2 - W / 2
+  left = Math.max(MARGIN, Math.min(left, container.clientWidth - W - MARGIN))
+  const top = rect.bottom - crect.top + container.scrollTop + GAP
+  popStyle.value = { left: left + 'px', top: top + 'px' }
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1099,7 +1103,7 @@ onUnmounted(() => {
 .scrim-enter-active, .scrim-leave-active { transition: opacity 0.3s ease; }
 .scrim-enter-from, .scrim-leave-to { opacity: 0; }
 
-.main-content-area { flex: 1; overflow-y: auto; }
+.main-content-area { flex: 1; overflow-y: auto; position: relative; }
 
 /* ── Live reaction feed (sim mode) — clean single column ───────────────────── */
 .sim-feed {
@@ -1166,10 +1170,11 @@ onUnmounted(() => {
 
 /* Persona popover */
 .pp-pop {
-  position: fixed; z-index: 61; width: 360px; max-width: 92vw;
+  position: absolute; z-index: 61; width: 500px; max-width: calc(100% - 24px);
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
-  overflow-y: auto;  /* max-height set inline from the space below the avatar */
+  /* No inner scroll: the box grows to the full opinion; a long one extends the
+     results-area scroll so you scroll the page to read it. */
 }
 .pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
