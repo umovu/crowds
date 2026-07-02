@@ -169,6 +169,7 @@
           <!-- Opinion popover — appears on hover; click the avatar to interview -->
           <div
             v-if="popAgent"
+            ref="popEl"
             class="pp-pop"
             :style="popStyle"
             @mouseenter="cancelClosePop"
@@ -465,6 +466,7 @@ const reactionClusters = computed(() => {
 // the avatar onto the popover without it vanishing.
 const popAgentId = ref(null)
 const popStyle = ref({})
+const popEl = ref(null)
 let _popCloseTimer = null
 const popAgent = computed(() => agents.value.find(a => a.id === popAgentId.value) || null)
 const showReactionPop = (a, ev) => {
@@ -472,16 +474,30 @@ const showReactionPop = (a, ev) => {
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
   const W = 500, GAP = 10, MARGIN = 12
-  const container = scrollContainer.value
-  if (!container) { popStyle.value = { left: MARGIN + 'px', top: (rect.bottom + GAP) + 'px' }; return }
-  // Position the box inside the scrolling results area (not the viewport), so a
-  // long opinion grows the box to full height and extends the PAGE scroll — you
-  // scroll the page to read it, instead of a cramped scrollbar inside the box.
-  const crect = container.getBoundingClientRect()
-  let left = rect.left - crect.left + container.scrollLeft + rect.width / 2 - W / 2
-  left = Math.max(MARGIN, Math.min(left, container.clientWidth - W - MARGIN))
-  const top = rect.bottom - crect.top + container.scrollTop + GAP
-  popStyle.value = { left: left + 'px', top: top + 'px' }
+  const vw = window.innerWidth
+  let left = rect.left + rect.width / 2 - W / 2
+  left = Math.max(MARGIN, Math.min(left, vw - W - MARGIN))
+  // Render below first, then measure and settle so the box is never cut off:
+  // below if it fits, flipped above if the avatar is too low, and only when the
+  // opinion is taller than the whole screen do we cap it and scroll.
+  popStyle.value = { left: left + 'px', top: (rect.bottom + GAP) + 'px' }
+  nextTick(() => {
+    const vh = window.innerHeight
+    const h = popEl.value ? popEl.value.offsetHeight : 0
+    const roomBelow = vh - rect.bottom - GAP - MARGIN
+    const roomAbove = rect.top - GAP - MARGIN
+    const style = { left: left + 'px' }
+    if (h <= roomBelow) {
+      style.top = (rect.bottom + GAP) + 'px'
+    } else if (h <= roomAbove) {
+      style.top = (rect.top - GAP - h) + 'px'
+    } else if (roomBelow >= roomAbove) {
+      style.top = (rect.bottom + GAP) + 'px'; style.maxHeight = roomBelow + 'px'; style.overflowY = 'auto'
+    } else {
+      style.top = MARGIN + 'px'; style.maxHeight = (rect.top - GAP - MARGIN) + 'px'; style.overflowY = 'auto'
+    }
+    popStyle.value = style
+  })
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1170,11 +1186,11 @@ onUnmounted(() => {
 
 /* Persona popover */
 .pp-pop {
-  position: absolute; z-index: 61; width: 500px; max-width: calc(100% - 24px);
+  position: fixed; z-index: 61; width: 500px; max-width: calc(100vw - 24px);
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
-  /* No inner scroll: the box grows to the full opinion; a long one extends the
-     results-area scroll so you scroll the page to read it. */
+  /* Grows to the full opinion; positioned in JS to flip below/above so it is
+     never cut off. Inner scroll only when an opinion exceeds the screen. */
 }
 .pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
