@@ -185,7 +185,6 @@
               <span class="reaction-shift">{{ stanceLabel(popAgent.stance_before) }} → {{ stanceLabel(popAgent.stance_after) }}</span>
             </div>
             <p class="pp-pop-text">{{ popAgent.currentReaction }}</p>
-            <div class="pp-pop-hint">Click to read full reaction →</div>
           </div>
 
           <!-- Room broadcast replies -->
@@ -481,8 +480,10 @@ const showReactionPop = (a, ev) => {
   const style = { left: left + 'px' }
   if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
     style.top = (rect.bottom + GAP) + 'px'
+    style.maxHeight = Math.max(180, spaceBelow) + 'px'
   } else {
     style.bottom = (window.innerHeight - rect.top + GAP) + 'px'
+    style.maxHeight = Math.max(180, spaceAbove) + 'px'
   }
   popStyle.value = style
 }
@@ -1175,6 +1176,7 @@ onUnmounted(() => {
   position: fixed; z-index: 61; width: 360px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 0 18px 18px;
+  overflow-y: auto;  /* max-height set inline from available viewport space */
 }
 .pp-pop-head {
   display: flex; gap: 12px; align-items: center;
@@ -1186,15 +1188,7 @@ onUnmounted(() => {
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
 .pp-pop-tags { margin-bottom: 10px; }
-.pp-pop-text {
-  margin: 0 0 12px; font-size: 13.5px; line-height: 1.6; color: #333;
-  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.pp-pop-hint {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  color: #1E9E5A; letter-spacing: 0.3px;
-}
+.pp-pop-text { margin: 0; font-size: 13.5px; line-height: 1.6; color: #333; }
 
 /* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
