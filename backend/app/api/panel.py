@@ -178,6 +178,17 @@ def pitch(session_id: str):
             concurrency=concurrency,
         ))
 
+        # One cheap LLM pass: a qualitative read of the room (objections + what
+        # would move them). Real counts stay deterministic; this is themes only,
+        # and never a buy/validation score. Persisted with the round so it
+        # survives reload. Failure leaves the deterministic summary standing.
+        try:
+            result["summary_narrative"] = panel_service.synthesize_panel_summary(
+                pitch_text, result.get("results", []), meta.get('mode', 'product')
+            )
+        except Exception as _e:
+            logger.warning(f"Panel summary synthesis skipped for {session_id}: {_e}")
+
         round_num = panel_service.save_round(session_id, {
             "pitch": pitch_text,
             "framed_pitch": framed,

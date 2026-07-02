@@ -547,3 +547,67 @@ def frame_pitch(pitch: str, mode: str) -> str:
         f"I'm putting this in front of you: {text}\n"
         "I want your honest reaction — what works, what doesn't, what would put you off."
     )
+
+
+def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: str = "product") -> str:
+    """A short qualitative read of how the room reacted — the recurring
+    objections and (qualitatively) what would move them — synthesized from the
+    actual reaction text by the cheap sim-tier LLM (SIM_LLM_*).
+
+    Deliberately bounded: the prompt forbids numbers, prices, percentages and any
+    "who would buy" / validation score, so this never becomes a purchase metric.
+    The real figures (stance split, who moved) are computed deterministically and
+    shown alongside — never authored here. Returns "" on any failure so the
+    deterministic summary stands on its own.
+    """
+    reactions = [r for r in (results or []) if r.get("response") and "error" not in r]
+    if not reactions:
+        return ""
+
+    lines = []
+    for r in reactions[:24]:  # cap the roster to keep the call cheap
+        name = r.get("agent_name") or f"Persona {r.get('agent_id')}"
+        stance = r.get("stance_after") or "neutral"
+        text = (r.get("response") or "").strip().replace("\n", " ")
+        if len(text) > 320:
+            text = text[:320] + "…"
+        lines.append(f"- {name} [{stance}]: {text}")
+    roster = "\n".join(lines)
+
+    subject = "pitch" if mode == "product" else "announcement"
+    system = (
+        f"You brief a founder on how a room of real people reacted to their {subject}. "
+        "Write 2-4 short, plain sentences: the prevailing mood, the recurring objections "
+        "or themes across the reactions, and — qualitatively — what would move the room. "
+        "Ground every claim in the reactions given. Hard rules: do NOT output any numbers, "
+        "counts, percentages, prices, or a 'who would buy' / validation / conversion score; "
+        "do NOT invent affordability figures. Qualitative synthesis only."
+    )
+    user = f"The {subject}:\n{pitch}\n\nThe reactions:\n{roster}\n\nBrief the founder:"
+
+    api_key = os.environ.get("SIM_LLM_API_KEY") or os.environ.get("LLM_API_KEY") or ""
+    base_url = os.environ.get("SIM_LLM_BASE_URL") or os.environ.get("LLM_BASE_URL") or ""
+    model = os.environ.get("SIM_LLM_MODEL") or os.environ.get("LLM_MODEL_NAME") or ""
+    if not (api_key and base_url and model):
+        return ""
+
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key, base_url=base_url)
+        kwargs = dict(
+            model=model,
+            messages=[{"role": "system", "content": system},
+                      {"role": "user", "content": user}],
+            temperature=0.3,
+            max_tokens=240,
+        )
+        try:
+            # Skip Qwen/DeepSeek "thinking" tokens where supported; retry plain if
+            # the provider rejects the flag.
+            resp = client.chat.completions.create(extra_body={"enable_thinking": False}, **kwargs)
+        except Exception:
+            resp = client.chat.completions.create(**kwargs)
+        return (resp.choices[0].message.content or "").strip()
+    except Exception as e:
+        logger.warning(f"Panel summary synthesis failed: {e}")
+        return ""

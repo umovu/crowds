@@ -100,6 +100,7 @@
             <p v-if="!reportBusy && reportMsg" class="report-dl-msg">{{ reportMsg }}</p>
             <div class="spectrum-summary-body">
               <p>{{ summaryText }}</p>
+              <p v-if="llmSummary" class="summary-read">{{ llmSummary }}</p>
             </div>
           </div>
 
@@ -444,6 +445,11 @@ const panelReactions = computed(() =>
 // How many personas changed their mind so far (drives the "experience" read).
 const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_changed).length)
 
+// A short qualitative read of the room from the backend (LLM synthesis of the
+// reactions — objections + what would move them). Real counts stay in
+// summaryText; this only adds the "why". Empty when unavailable.
+const llmSummary = ref('')
+
 // ── Reaction map: cluster personas into stance columns (deterministic) ───────
 // Buckets follow the STANCES spread (won over → resistant); any stray stance
 // falls into its own column. No LLM, no scoring — holds with the model off.
@@ -752,11 +758,13 @@ const loadPanel = async () => {
       if (rounds.length) {
         const last = rounds[rounds.length - 1]
         results = (last.result || {}).results || []
+        llmSummary.value = (last.result || {}).summary_narrative || ''
       }
     } catch (_) { /* fall through to a fresh pitch */ }
     if (!results) {
       const res = await pitchSession(props.sessionId, { concurrency: 6 })
       results = res.data?.results || []
+      llmSummary.value = res.data?.summary_narrative || ''
     }
     const byId = {}
     for (const r of results) byId[r.agent_id] = r
@@ -1253,6 +1261,11 @@ onUnmounted(() => {
 .spectrum-summary-body p {
   margin: 0;
   font-size: 14px; line-height: 1.6; color: #374151;
+}
+/* The LLM qualitative read sits under the deterministic counts, set apart. */
+.summary-read {
+  margin-top: 12px !important; padding-top: 12px;
+  border-top: 1px solid #EEF0F2; color: #4B5563 !important;
 }
 /* ── Room replies ─────────────────────────────────────────────────────────── */
 .room-replies { margin: 0 24px 16px; display: flex; flex-direction: column; gap: 8px; }
