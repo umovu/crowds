@@ -24,6 +24,22 @@ import jwt
 from jwt import PyJWKClient
 from flask import request, jsonify, g
 
+from .utils.logger import get_logger
+
+logger = get_logger("fub.auth")
+
+
+def _unverified_issuer(token: str):
+    """Best-effort read of a token's `iss` without verifying — for logging only.
+
+    Lets us spot a project mismatch (token issued by project A, backend verifying
+    against project B) in the logs, which otherwise surfaces only as an opaque 401.
+    """
+    try:
+        return jwt.decode(token, options={"verify_signature": False}).get("iss")
+    except Exception:
+        return "?"
+
 # Supabase tokens carry aud="authenticated" for signed-in users.
 _EXPECTED_AUDIENCE = "authenticated"
 
@@ -104,10 +120,19 @@ def verify_request():
     try:
         claims = _decode(token)
     except jwt.ExpiredSignatureError:
+        logger.warning("Auth rejected: token expired (iss=%s)", _unverified_issuer(token))
         return jsonify({"success": False, "error": "Token expired"}), 401
     except jwt.InvalidTokenError as e:
+        logger.warning(
+            "Auth rejected: invalid token: %s | token iss=%s vs backend SUPABASE_URL=%s",
+            e, _unverified_issuer(token), _supabase_url() or "(unset)",
+        )
         return jsonify({"success": False, "error": f"Invalid token: {e}"}), 401
     except Exception as e:  # JWKS fetch error, etc.
+        logger.warning(
+            "Auth rejected: %s | token iss=%s vs backend SUPABASE_URL=%s",
+            e, _unverified_issuer(token), _supabase_url() or "(unset)",
+        )
         return jsonify({"success": False, "error": f"Auth error: {e}"}), 401
 
     g.user = claims
