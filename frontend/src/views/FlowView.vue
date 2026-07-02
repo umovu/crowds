@@ -39,6 +39,11 @@ const state = ref('home')       // 'home' | 'building' | 'results'
 const query = ref('')
 const mode = ref('sim')         // 'sim' | 'panel'
 
+// The open results view lives only in memory, so a browser refresh would drop
+// you back to home and the reactions would vanish. Persist the open sim/panel
+// to localStorage and restore it on load so a refresh keeps you where you were.
+const FLOW_VIEW_KEY = 'flow.activeView'
+
 // Real backend handles, carried into the results overlay. Sim mode fills in
 // simulationId once the build pipeline has created+started the simulation;
 // panel mode fills in sessionId at submit (the assembled panel session).
@@ -97,7 +102,35 @@ const onPopState = () => {
   }
   if (overlayDepth > 0) overlayDepth--
 }
-onMounted(() => window.addEventListener('popstate', onPopState))
+// Persist the open results view (panel/sim) so a refresh restores it; clear it
+// once collapsed back home so a refresh at home stays at home.
+watch([state, sessionId, simulationId, query, mode], () => {
+  if (state.value === 'results' && (sessionId.value || simulationId.value)) {
+    localStorage.setItem(FLOW_VIEW_KEY, JSON.stringify({
+      mode: mode.value,
+      query: query.value,
+      sessionId: sessionId.value,
+      simulationId: simulationId.value,
+    }))
+  } else if (state.value === 'home') {
+    localStorage.removeItem(FLOW_VIEW_KEY)
+  }
+})
+
+onMounted(() => {
+  window.addEventListener('popstate', onPopState)
+  // Restore the last open results view after a refresh.
+  try {
+    const saved = JSON.parse(localStorage.getItem(FLOW_VIEW_KEY) || 'null')
+    if (saved && (saved.sessionId || saved.simulationId)) {
+      query.value = saved.query || ''
+      mode.value = saved.mode || 'sim'
+      sessionId.value = saved.sessionId || null
+      simulationId.value = saved.simulationId || null
+      state.value = 'results'
+    }
+  } catch (_) { /* corrupt entry — ignore, start at home */ }
+})
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
 // Revisit a saved sim/panel from the sidebar — straight to results, no rebuild
