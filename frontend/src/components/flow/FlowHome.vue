@@ -23,6 +23,10 @@
           <span class="side-label">Personas</span>
           <span v-if="personaCount" class="side-badge">{{ personaCount }}</span>
         </button>
+        <button class="side-item" @click="openHelp">
+          <span class="side-icon">?</span>
+          <span class="side-label">How it works</span>
+        </button>
       </nav>
 
       <!-- Recents — panels + sims together (one entry point now) -->
@@ -69,6 +73,38 @@
       @close="profileModalOpen = false"
       @open-sim="onModalOpenSim"
     />
+
+    <!-- ════ Onboarding: first-visit welcome card ════ -->
+    <div v-if="showWelcome" class="ob-backdrop" @click.self="dismissWelcome">
+      <div class="ob-card">
+        <div class="ob-card-kicker">Welcome to crowds</div>
+        <div class="ob-card-title">See how South Africa reacts — before it's real.</div>
+        <ol class="ob-list">
+          <li><b>Describe</b> what you want to test — a policy, an announcement, or a product and its price.</li>
+          <li><b>Pick your crowd</b>, or leave the default South African mix.</li>
+          <li><b>Run it</b> — read each person's honest reaction, then ask the room follow-ups.</li>
+        </ol>
+        <div class="ob-card-actions">
+          <button class="ob-btn ghost" @click="dismissWelcome">Got it</button>
+          <button class="ob-btn ghost" @click="tryExample">Try an example</button>
+          <button class="ob-btn primary" @click="startTour">Take a tour →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ Onboarding: guided tour spotlight ════ -->
+    <div v-if="tourStep" class="tour-overlay">
+      <div class="tour-spot" :style="tourSpotStyle"></div>
+      <div class="tour-tip" :style="tourTipStyle">
+        <div class="tour-tip-step">Step {{ tourStep }} of {{ tourSteps.length }}</div>
+        <div class="tour-tip-title">{{ currentTourStep.title }}</div>
+        <div class="tour-tip-body">{{ currentTourStep.body }}</div>
+        <div class="tour-tip-actions">
+          <button class="ob-btn ghost" @click="endTour">Skip</button>
+          <button class="ob-btn primary" @click="nextTourStep">{{ tourStep >= tourSteps.length ? 'Done' : 'Next ›' }}</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Crowd picker modal — organises the library into selectable groups -->
     <div v-if="crowdPickerOpen" class="crowd-backdrop" @click.self="crowdPickerOpen = false">
@@ -167,7 +203,7 @@
             <div v-if="activeTab === 'panel'" class="simple-ask">
               <h1 class="simple-greeting">See how South Africa reacts — before it's real.</h1>
 
-              <div class="simple-prompt" :class="{ focused: panelFocused }">
+              <div ref="tourPrompt" class="simple-prompt" :class="{ focused: panelFocused }">
                 <textarea
                   ref="panelInput"
                   v-model="panelPitch"
@@ -177,7 +213,7 @@
                   @blur="panelFocused = false"
                 ></textarea>
                 <div class="simple-prompt-bar">
-                  <button class="crowd-btn" @click="crowdPickerOpen = true">
+                  <button ref="tourCrowd" class="crowd-btn" @click="crowdPickerOpen = true">
                     <span class="crowd-btn-icon">◇</span>
                     <span>Select crowds</span>
                     <span class="crowd-btn-summary">{{ crowdSummary }}</span>
@@ -214,6 +250,17 @@
                 </div>
               </div>
 
+              <!-- First-timer examples: click to prefill the prompt -->
+              <div v-if="!panelPitch.trim()" class="ob-examples">
+                <span class="ob-examples-label">Try:</span>
+                <button
+                  v-for="(ex, i) in EXAMPLES"
+                  :key="i"
+                  class="ob-example"
+                  @click="useExample(ex)"
+                >⊕ {{ ex.label }}</button>
+              </div>
+
               <div class="pp-controls">
                 <div class="pp-actions">
                   <button
@@ -223,6 +270,7 @@
                     @click="submitDirectSim"
                   >Run full simulation</button>
                   <button
+                    ref="tourRun"
                     class="pp-assemble-btn"
                     :disabled="!panelPitch.trim() || panelSubmitting"
                     @click="submitPanel"
@@ -349,6 +397,90 @@ const openSim = (s) =>
   emit('open', { mode: 'sim', simulationId: s.simulation_id, query: s.simulation_requirement || '' })
 const openPanel = (p) =>
   emit('open', { mode: 'panel', sessionId: p.session_id, query: p.pitch || '' })
+
+// ── Onboarding: welcome card + example prompts + guided tour ─────────────────
+const ONBOARD_KEY = 'crowds_onboarded_v1'
+const showWelcome = ref(false)
+const tourStep = ref(0)               // 0 = off; 1..N = active step
+const tourTargetRect = ref(null)
+const tourPrompt = ref(null)
+const tourCrowd = ref(null)
+const tourRun = ref(null)
+
+// Example pitches — click to prefill so a first-timer sees a good input at once.
+const EXAMPLES = [
+  { label: 'R99/mo solar lantern', text: 'A R99/month prepaid solar lantern subscription for township households, paid via airtime.' },
+  { label: 'New e-toll on the N3', text: 'A new e-toll on the N3 between Durban and Johannesburg at R85 per trip.' },
+  { label: 'Free scholar transport', text: 'Free scholar transport for high-school learners in Soweto, funded by the province.' },
+]
+function useExample(ex) {
+  panelPitch.value = ex.text
+  nextTick(() => panelInput.value && panelInput.value.focus())
+}
+
+// The tour walks the four things a first-timer needs to find, in order.
+const tourSteps = computed(() => [
+  { el: tourPrompt, title: 'Describe what to test', body: 'Type a policy, an announcement, or a product and its price — the way you’d explain it to a person.' },
+  { el: tourCrowd,  title: 'Pick your crowd',       body: 'Choose who’s in the room, or leave the default South African mix.' },
+  { el: speedDdEl,  title: 'Set the depth',         body: 'Panel is the fast read; higher depth runs more rounds for a richer result.' },
+  { el: tourRun,    title: 'Run it',                body: 'Assemble the panel to get each person’s honest reaction — then hover to read, click to interview, and ask the room follow-ups.' },
+])
+const currentTourStep = computed(() => tourSteps.value[tourStep.value - 1] || {})
+
+function updateTourRect() {
+  const node = currentTourStep.value.el && currentTourStep.value.el.value
+  tourTargetRect.value = node ? node.getBoundingClientRect() : null
+}
+function startTour() {
+  showWelcome.value = false
+  activeTab.value = 'panel'
+  tourStep.value = 1
+  nextTick(updateTourRect)
+}
+function nextTourStep() {
+  if (tourStep.value >= tourSteps.value.length) { endTour(); return }
+  tourStep.value += 1
+  nextTick(updateTourRect)
+}
+function endTour() {
+  tourStep.value = 0
+  tourTargetRect.value = null
+  localStorage.setItem(ONBOARD_KEY, '1')
+}
+function dismissWelcome() {
+  showWelcome.value = false
+  localStorage.setItem(ONBOARD_KEY, '1')
+}
+function tryExample() {
+  useExample(EXAMPLES[0])
+  dismissWelcome()
+}
+function openHelp() { showWelcome.value = true }
+
+const tourSpotStyle = computed(() => {
+  const r = tourTargetRect.value
+  if (!r) return { display: 'none' }
+  const pad = 8
+  return {
+    left: (r.left - pad) + 'px', top: (r.top - pad) + 'px',
+    width: (r.width + pad * 2) + 'px', height: (r.height + pad * 2) + 'px',
+  }
+})
+const tourTipStyle = computed(() => {
+  const r = tourTargetRect.value
+  if (!r) return { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }
+  const W = 300, GAP = 16, EST_H = 168
+  const left = Math.min(Math.max(16, r.left), window.innerWidth - W - 16)
+  let top = r.bottom + GAP
+  if (top + EST_H > window.innerHeight) top = Math.max(16, r.top - EST_H - GAP)
+  return { left: left + 'px', top: top + 'px', width: W + 'px' }
+})
+
+onMounted(() => {
+  if (!localStorage.getItem(ONBOARD_KEY)) showWelcome.value = true
+  window.addEventListener('resize', updateTourRect)
+})
+onUnmounted(() => window.removeEventListener('resize', updateTourRect))
 
 // ── New-test state (one input, drives both panel and direct sim) ─────────────
 const panelPitch = ref('')
@@ -598,6 +730,64 @@ onUnmounted(() => {
 }
 
 /* ── Crowd picker modal ───────────────────────────────────────────────────── */
+/* ── Onboarding: welcome card, example chips, guided tour ─────────────────── */
+.ob-backdrop {
+  position: fixed; inset: 0; z-index: 120;
+  background: rgba(15, 23, 42, 0.42);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.ob-card {
+  width: 100%; max-width: 460px;
+  background: #fff; border-radius: 16px; padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.ob-card-kicker {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.6px; text-transform: uppercase; color: #1E9E5A;
+}
+.ob-card-title { margin: 6px 0 16px; font-size: 20px; font-weight: 700; color: #111827; line-height: 1.3; }
+.ob-list { margin: 0 0 22px; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; }
+.ob-list li { font-size: 14px; line-height: 1.55; color: #374151; }
+.ob-list b { color: #111827; }
+.ob-card-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.ob-btn {
+  padding: 9px 16px; border-radius: 9px; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: 1px solid transparent; transition: background .15s, border-color .15s;
+}
+.ob-btn.ghost { background: #fff; border-color: #E5E7EB; color: #374151; }
+.ob-btn.ghost:hover { background: #F3F4F6; }
+.ob-btn.primary { background: #1E9E5A; color: #fff; }
+.ob-btn.primary:hover { background: #178048; }
+
+.ob-examples { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 2px 0; }
+.ob-examples-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.ob-example {
+  padding: 6px 12px; border-radius: 999px; border: 1px solid #E5E7EB; background: #fff;
+  font-size: 12.5px; color: #374151; cursor: pointer; transition: border-color .15s, background .15s;
+}
+.ob-example:hover { border-color: #1E9E5A; background: #F0FBF4; color: #178048; }
+
+.tour-overlay { position: fixed; inset: 0; z-index: 200; }
+.tour-spot {
+  position: fixed; border-radius: 10px; pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.55);
+  outline: 2px solid #1E9E5A; transition: left .2s, top .2s, width .2s, height .2s;
+}
+.tour-tip {
+  position: fixed; background: #fff; border-radius: 12px; padding: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+}
+.tour-tip-step {
+  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700;
+  color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+}
+.tour-tip-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px; }
+.tour-tip-body { font-size: 13px; line-height: 1.55; color: #4B5563; margin-bottom: 14px; }
+.tour-tip-actions { display: flex; justify-content: space-between; gap: 8px; }
+
 .crowd-backdrop {
   position: fixed; inset: 0; z-index: 50;
   background: rgba(0, 0, 0, 0.32);
