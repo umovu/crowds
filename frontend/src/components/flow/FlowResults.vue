@@ -472,10 +472,23 @@ const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
-  const W = 360
+  const W = 360, GAP = 10, MARGIN = 16
   let left = rect.left + rect.width / 2 - W / 2
   left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
-  popStyle.value = { left: left + 'px', top: (rect.bottom + 10) + 'px' }
+  // Place below by default; flip above when there's more room up top. Cap the
+  // height to the available space so long opinions scroll inside the popover
+  // instead of spilling off-screen.
+  const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
+  const spaceAbove = rect.top - GAP - MARGIN
+  const style = { left: left + 'px' }
+  if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
+    style.top = (rect.bottom + GAP) + 'px'
+    style.maxHeight = Math.max(180, spaceBelow) + 'px'
+  } else {
+    style.bottom = (window.innerHeight - rect.top + GAP) + 'px'
+    style.maxHeight = Math.max(180, spaceAbove) + 'px'
+  }
+  popStyle.value = style
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1052,7 +1065,7 @@ onUnmounted(() => {
   padding: 3px 10px; border-radius: 999px; flex-shrink: 0;
 }
 /* The reaction they already gave — full text, readable */
-.chat-agent-reaction { padding: 14px 20px; border-bottom: 1px solid #F0F0F0; background: #F9FAFB; flex-shrink: 0; }
+.chat-agent-reaction { padding: 14px 20px; border-bottom: 1px solid #F0F0F0; background: #F9FAFB; flex-shrink: 0; max-height: 34vh; overflow-y: auto; }
 .chat-agent-reaction-label {
   display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
   letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF; margin-bottom: 6px;
@@ -1162,15 +1175,20 @@ onUnmounted(() => {
 .pp-pop {
   position: fixed; z-index: 61; width: 360px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 0 18px 18px;
+  overflow-y: auto;  /* max-height set inline from available viewport space */
 }
-.pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.pp-pop-head {
+  display: flex; gap: 12px; align-items: center;
+  position: sticky; top: 0; background: #fff; z-index: 1;
+  padding: 16px 0 10px;
+}
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
 .pp-pop-id { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
 .pp-pop-tags { margin-bottom: 10px; }
-.pp-pop-text { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+.pp-pop-text { margin: 0 0 12px; font-size: 13.5px; line-height: 1.6; color: #333; }
 .pp-pop-hint {
   font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
   color: #1E9E5A; letter-spacing: 0.3px;
