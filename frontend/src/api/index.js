@@ -15,10 +15,19 @@ const service = axios.create({
 // getSession() always returns a fresh one.
 service.interceptors.request.use(
   async config => {
-    const { data } = await supabase.auth.getSession()
-    const token = data.session?.access_token
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    let { data } = await supabase.auth.getSession()
+    let session = data.session
+    // Refresh proactively when the access token is expired / near expiry, so a
+    // stale token after a page refresh doesn't fire a doomed request that trips
+    // the 401 sign-out below.
+    if (session?.expires_at && session.expires_at * 1000 < Date.now() + 10000) {
+      try {
+        const r = await supabase.auth.refreshSession()
+        if (r.data?.session) session = r.data.session
+      } catch (_) { /* keep the stale token; the 401 path will retry once */ }
+    }
+    if (session?.access_token) {
+      config.headers.Authorization = `Bearer ${session.access_token}`
     }
     return config
   },
@@ -41,7 +50,7 @@ service.interceptors.response.use(
 
     return res
   },
-  error => {
+  async error => {
     console.error('Response error:', error)
 
     // Handle timeout
@@ -73,9 +82,24 @@ service.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    // 401 from the backend = token missing/expired/invalid. Drop the session
-    // and send the user to the auth page (preserving where they were).
+    // 401 = token missing/expired/invalid. Before nuking the session (which
+    // would drop the user's whole view on a mere token blip after a refresh),
+    // try refreshing the session once and replaying the request. Only if that
+    // refresh genuinely fails do we sign out and send them to the auth page.
     if (error.httpStatus === 401) {
+      const original = error.config
+      if (original && !original._retried401) {
+        original._retried401 = true
+        try {
+          const { data } = await supabase.auth.refreshSession()
+          const token = data?.session?.access_token
+          if (token) {
+            original.headers = original.headers || {}
+            original.headers.Authorization = `Bearer ${token}`
+            return service(original)   // replay once with the fresh token
+          }
+        } catch (_) { /* fall through to sign-out */ }
+      }
       supabase.auth.signOut().finally(() => {
         const next = encodeURIComponent(window.location.pathname + window.location.search)
         if (!window.location.pathname.startsWith('/auth.html')) {
