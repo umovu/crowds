@@ -41,6 +41,46 @@ def _setup_agentsociety2_env():
 
 
 
+def _log_storage_persistence(logger):
+    """Report where persisted data lands, and whether it survives redeploys.
+
+    Panels, sims and the graph DB all live under Config.DATA_ROOT. On hosts like
+    Railway that must point at a mounted volume (via the DATA_ROOT env var) or the
+    data is written to the ephemeral container filesystem and wiped on every
+    redeploy. This prints the resolved paths + a clear verdict so the persistence
+    state is visible in the deploy logs — no dashboard spelunking required.
+    """
+    data_root = Config.DATA_ROOT
+    env_set = bool(os.environ.get("DATA_ROOT"))
+
+    # Confirm the directory is actually writable (a mount can exist but be RO).
+    writable = False
+    try:
+        os.makedirs(data_root, exist_ok=True)
+        probe = os.path.join(data_root, ".write_probe")
+        with open(probe, "w") as fh:
+            fh.write("ok")
+        os.remove(probe)
+        writable = True
+    except Exception as e:  # pragma: no cover - environment dependent
+        logger.error("DATA_ROOT write probe failed: %s", e)
+
+    logger.info("Storage: DATA_ROOT = %s (writable=%s)", data_root, writable)
+    logger.info("Storage: panels   -> %s", Config.PANEL_SESSION_DATA_DIR)
+    logger.info("Storage: sims     -> %s", Config.OASIS_SIMULATION_DATA_DIR)
+    if env_set:
+        logger.info(
+            "Storage: DATA_ROOT is set via env -> data should persist on the "
+            "mounted volume across redeploys."
+        )
+    else:
+        logger.warning(
+            "Storage: DATA_ROOT is NOT set -> using the ephemeral container path. "
+            "Panels, sims and the graph DB will be WIPED on every redeploy. "
+            "Set DATA_ROOT to your Railway volume mount path (e.g. /data)."
+        )
+
+
 def create_app(config_class=Config):
     """Flask application factory function"""
     # Ensure agentsociety2 env vars are set before any imports trigger it
@@ -66,6 +106,7 @@ def create_app(config_class=Config):
         logger.info("=" * 50)
         logger.info("Fub Simulation Backend starting...")
         logger.info("=" * 50)
+        _log_storage_persistence(logger)
 
     # Enable CORS
     CORS(app, resources={r"/api/*": {"origins": "*"}})
