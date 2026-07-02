@@ -185,7 +185,6 @@
               <span class="reaction-shift">{{ stanceLabel(popAgent.stance_before) }} → {{ stanceLabel(popAgent.stance_after) }}</span>
             </div>
             <p class="pp-pop-text">{{ popAgent.currentReaction }}</p>
-            <div class="pp-pop-hint">Click to read full reaction →</div>
           </div>
 
           <!-- Room broadcast replies -->
@@ -472,10 +471,13 @@ const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
-  const W = 360
+  const W = 360, GAP = 10, MARGIN = 12
   let left = rect.left + rect.width / 2 - W / 2
   left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
-  popStyle.value = { left: left + 'px', top: (rect.bottom + 10) + 'px' }
+  // Open below and let the box grow down toward the bottom of the screen; it
+  // scrolls internally only when the reaction is longer than the space available.
+  const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
+  popStyle.value = { left: left + 'px', top: (rect.bottom + GAP) + 'px', maxHeight: spaceBelow + 'px' }
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1167,6 +1169,7 @@ onUnmounted(() => {
   position: fixed; z-index: 61; width: 360px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
+  overflow-y: auto;  /* max-height set inline from the space below the avatar */
 }
 .pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
@@ -1174,16 +1177,9 @@ onUnmounted(() => {
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
 .pp-pop-tags { margin-bottom: 10px; }
-/* Preview only: clamp to 4 lines and clip — never scrolls. Full text is in the
-   read panel opened on click. */
-.pp-pop-text {
-  margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #333;
-  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
-}
-.pp-pop-hint {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  color: #1E9E5A; letter-spacing: 0.3px;
-}
+/* Full reaction fills the box; the box itself scrolls (see .pp-pop) when the
+   text is longer than the space below the avatar. */
+.pp-pop-text { margin: 0; font-size: 14px; line-height: 1.6; color: #333; }
 
 /* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
