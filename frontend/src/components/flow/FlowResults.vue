@@ -483,18 +483,20 @@ const showReactionPop = (a, ev) => {
   left = Math.max(MARGIN, Math.min(left, container.clientWidth - W - MARGIN))
   const avatarTop = rect.top - crect.top + container.scrollTop
   const avatarBottom = rect.bottom - crect.top + container.scrollTop
-  // Open below the avatar when the viewport has room; flip up above it when the
-  // box would be clipped at the bottom edge. Render hidden first so the flip
-  // call uses the box's real height.
-  popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px', visibility: 'hidden' }
-  nextTick(() => {
-    const h = popEl.value ? popEl.value.offsetHeight : 0
-    const spaceBelow = crect.bottom - rect.bottom - GAP
-    const top = h <= spaceBelow
-      ? avatarBottom + GAP
-      : Math.max(container.scrollTop + MARGIN, avatarTop - GAP - h)
-    popStyle.value = { left: left + 'px', top: top + 'px' }
-  })
+  // Direction follows the scrollbar: open DOWN by default; only when scrolled to
+  // the BOTTOM (where down would be cut) does it flip UP, above the agent.
+  const atBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 8
+  if (!atBottom) {
+    popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px' }
+  } else {
+    // Render hidden at the down spot, measure, then place above the agent.
+    popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px', visibility: 'hidden' }
+    nextTick(() => {
+      const h = popEl.value ? popEl.value.offsetHeight : 0
+      const top = Math.max(container.scrollTop + MARGIN, avatarTop - GAP - h)
+      popStyle.value = { left: left + 'px', top: top + 'px' }
+    })
+  }
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
