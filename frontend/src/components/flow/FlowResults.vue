@@ -471,13 +471,15 @@ const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
-  const W = 360, GAP = 10, MARGIN = 16
-  let left = rect.left + rect.width / 2 - W / 2
-  left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
+  const GAP = 10, MARGIN = 16
+  const maxW = Math.min(560, window.innerWidth * 0.92)
+  const half = maxW / 2
+  let center = rect.left + rect.width / 2
+  center = Math.max(half + MARGIN, Math.min(center, window.innerWidth - half - MARGIN))
+  const style = { left: center + 'px', transform: 'translateX(-50%)' }
   // Place below by default; flip above when there's more room up top.
   const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
   const spaceAbove = rect.top - GAP - MARGIN
-  const style = { left: left + 'px' }
   if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
     style.top = (rect.bottom + GAP) + 'px'
     style.maxHeight = Math.max(180, spaceBelow) + 'px'
@@ -1173,7 +1175,9 @@ onUnmounted(() => {
 
 /* Persona popover */
 .pp-pop {
-  position: fixed; z-index: 61; width: 360px; max-width: 92vw;
+  position: fixed; z-index: 61;
+  width: fit-content; min-width: 320px; max-width: min(560px, 92vw);
+  height: auto;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 0 18px 18px;
   overflow-y: auto;  /* max-height set inline from available viewport space */
