@@ -185,7 +185,7 @@
               <span class="reaction-shift">{{ stanceLabel(popAgent.stance_before) }} → {{ stanceLabel(popAgent.stance_after) }}</span>
             </div>
             <p class="pp-pop-text">{{ popAgent.currentReaction }}</p>
-            <div class="pp-pop-hint">Click to interview →</div>
+            <div class="pp-pop-hint">Click to read full reaction →</div>
           </div>
 
           <!-- Room broadcast replies -->
@@ -1025,6 +1025,10 @@ onUnmounted(() => {
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
   display: flex; flex-direction: column;
 }
+/* Phones: give long reactions the whole screen to read. */
+@media (max-width: 640px) {
+  .chat-side-panel { width: 100vw; max-width: 100vw; border-left: none; }
+}
 .chat-panel-header {
   display: flex; justify-content: space-between; align-items: center;
   padding: 16px 20px; border-bottom: 1px solid #F0F0F0; flex-shrink: 0;
@@ -1170,7 +1174,12 @@ onUnmounted(() => {
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
 .pp-pop-tags { margin-bottom: 10px; }
-.pp-pop-text { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+/* Preview only: clamp to 4 lines and clip — never scrolls. Full text is in the
+   read panel opened on click. */
+.pp-pop-text {
+  margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #333;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
 .pp-pop-hint {
   font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
   color: #1E9E5A; letter-spacing: 0.3px;
