@@ -81,6 +81,33 @@ def _log_storage_persistence(logger):
         )
 
 
+def _log_auth_config(logger):
+    """Report the Supabase auth config so token-rejection (401) causes are visible.
+
+    Every /api/* request must carry a Supabase JWT verified against the project's
+    JWKS (needs SUPABASE_URL) or the legacy HS256 secret (SUPABASE_JWT_SECRET). If
+    neither is set — or SUPABASE_URL points at a different project than the one the
+    frontend signs against — every token is rejected with 401 and the app bounces
+    users to the login page. Surfacing this in the deploy logs turns a silent
+    "nothing loads" into an obvious misconfiguration.
+    """
+    disabled = os.environ.get("AUTH_DISABLED", "").lower() == "true"
+    url = os.environ.get("SUPABASE_URL", "")
+    has_secret = bool(os.environ.get("SUPABASE_JWT_SECRET"))
+
+    if disabled:
+        logger.warning("Auth: AUTH_DISABLED=true -> ALL requests bypass auth (dev only)")
+        return
+    logger.info("Auth: SUPABASE_URL = %s | SUPABASE_JWT_SECRET set = %s",
+                url or "(UNSET!)", has_secret)
+    if not url and not has_secret:
+        logger.error(
+            "Auth: neither SUPABASE_URL nor SUPABASE_JWT_SECRET is set -> every "
+            "token will be rejected with 401 and users can't stay logged in. Set "
+            "SUPABASE_URL to your project URL (e.g. https://<ref>.supabase.co)."
+        )
+
+
 def create_app(config_class=Config):
     """Flask application factory function"""
     # Ensure agentsociety2 env vars are set before any imports trigger it
@@ -107,6 +134,7 @@ def create_app(config_class=Config):
         logger.info("Fub Simulation Backend starting...")
         logger.info("=" * 50)
         _log_storage_persistence(logger)
+        _log_auth_config(logger)
 
     # Enable CORS
     CORS(app, resources={r"/api/*": {"origins": "*"}})
