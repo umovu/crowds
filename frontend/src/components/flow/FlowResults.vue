@@ -477,15 +477,10 @@ const showReactionPop = (a, ev) => {
   const W = 380, GAP = 10, MARGIN = 12
   let left = rect.left + rect.width / 2 - W / 2
   left = Math.max(MARGIN, Math.min(left, window.innerWidth - W - MARGIN))
-  const style = { left: left + 'px' }
+  // Always open below the avatar. Only cap the height (internal scroll) if the
+  // avatar sits low enough that a full box would run off the bottom.
   const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
-  const spaceAbove = rect.top - GAP - MARGIN
-  if (spaceBelow >= 360 || spaceBelow >= spaceAbove) {
-    style.top = (rect.bottom + GAP) + 'px'
-  } else {
-    style.bottom = (window.innerHeight - rect.top + GAP) + 'px'
-  }
-  popStyle.value = style
+  popStyle.value = { left: left + 'px', top: (rect.bottom + GAP) + 'px', maxHeight: spaceBelow + 'px' }
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1176,6 +1171,7 @@ onUnmounted(() => {
   position: fixed; z-index: 61; width: 380px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
+  overflow-y: auto;  /* only kicks in when a low avatar caps the height inline */
 }
 .pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
