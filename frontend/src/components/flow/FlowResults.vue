@@ -185,6 +185,7 @@
               <span class="reaction-shift">{{ stanceLabel(popAgent.stance_before) }} → {{ stanceLabel(popAgent.stance_after) }}</span>
             </div>
             <p class="pp-pop-text">{{ popAgent.currentReaction }}</p>
+            <div class="pp-pop-hint">Click to interview →</div>
           </div>
 
           <!-- Room broadcast replies -->
@@ -471,16 +472,10 @@ const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
-  // Fixed 380px box (matches the design); anchor it under the avatar, clamped to
-  // the viewport, and flip above when there isn't room below. The box sizes to
-  // its text (the text area itself scrolls only for very long opinions).
-  const W = 380, GAP = 10, MARGIN = 12
+  const W = 360
   let left = rect.left + rect.width / 2 - W / 2
-  left = Math.max(MARGIN, Math.min(left, window.innerWidth - W - MARGIN))
-  // Always open below the avatar. Only cap the height (internal scroll) if the
-  // avatar sits low enough that a full box would run off the bottom.
-  const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
-  popStyle.value = { left: left + 'px', top: (rect.bottom + GAP) + 'px', maxHeight: spaceBelow + 'px' }
+  left = Math.max(12, Math.min(left, window.innerWidth - W - 12))
+  popStyle.value = { left: left + 'px', top: (rect.bottom + 10) + 'px' }
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1057,15 +1052,12 @@ onUnmounted(() => {
   padding: 3px 10px; border-radius: 999px; flex-shrink: 0;
 }
 /* The reaction they already gave — full text, readable */
-.chat-agent-reaction {
-  padding: 14px 20px; border-bottom: 1px solid #F0F0F0; background: #F9FAFB;
-  flex-shrink: 0; height: auto; max-height: 85vh; overflow-y: auto;
-}
+.chat-agent-reaction { padding: 14px 20px; border-bottom: 1px solid #F0F0F0; background: #F9FAFB; flex-shrink: 0; }
 .chat-agent-reaction-label {
   display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
   letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF; margin-bottom: 6px;
 }
-.chat-agent-reaction-text { margin: 0; font-size: 14px; line-height: 1.55; color: #374151; max-width: 60ch; }
+.chat-agent-reaction-text { margin: 0; font-size: 14px; line-height: 1.55; color: #374151; }
 
 .chat-messages-container { flex: 1; overflow-y: auto; background: #F9F9F9; border-radius: 0; padding: 16px; }
 .chat-messages-list { display: flex; flex-direction: column; gap: 10px; }
@@ -1168,10 +1160,9 @@ onUnmounted(() => {
 
 /* Persona popover */
 .pp-pop {
-  position: fixed; z-index: 61; width: 380px; max-width: 92vw;
+  position: fixed; z-index: 61; width: 360px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
-  overflow-y: auto;  /* only kicks in when a low avatar caps the height inline */
 }
 .pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
@@ -1179,8 +1170,11 @@ onUnmounted(() => {
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
 .pp-pop-tags { margin-bottom: 10px; }
-/* Text wraps to fill the box; scrolls only when an opinion is very long. */
-.pp-pop-text { margin: 0; font-size: 13.5px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+.pp-pop-text { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
+.pp-pop-hint {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  color: #1E9E5A; letter-spacing: 0.3px;
+}
 
 /* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
@@ -1266,8 +1260,4 @@ onUnmounted(() => {
 }
 .room-bar-send:hover:not(:disabled) { background: #178048; }
 .room-bar-send:disabled { background: #DDD; cursor: not-allowed; }
-
-@media (max-width: 640px) {
-  .chat-side-panel { max-height: 100vh; max-width: 100vw; border-radius: 0; }
-}
 </style>
