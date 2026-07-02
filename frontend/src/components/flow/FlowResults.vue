@@ -471,21 +471,19 @@ const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
-  const GAP = 10, MARGIN = 16
-  const maxW = Math.min(560, window.innerWidth * 0.92)
-  const half = maxW / 2
-  let center = rect.left + rect.width / 2
-  center = Math.max(half + MARGIN, Math.min(center, window.innerWidth - half - MARGIN))
-  const style = { left: center + 'px', transform: 'translateX(-50%)' }
-  // Place below by default; flip above when there's more room up top.
+  // Fixed 380px box (matches the design); anchor it under the avatar, clamped to
+  // the viewport, and flip above when there isn't room below. The box sizes to
+  // its text (the text area itself scrolls only for very long opinions).
+  const W = 380, GAP = 10, MARGIN = 12
+  let left = rect.left + rect.width / 2 - W / 2
+  left = Math.max(MARGIN, Math.min(left, window.innerWidth - W - MARGIN))
+  const style = { left: left + 'px' }
   const spaceBelow = window.innerHeight - rect.bottom - GAP - MARGIN
   const spaceAbove = rect.top - GAP - MARGIN
-  if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
+  if (spaceBelow >= 360 || spaceBelow >= spaceAbove) {
     style.top = (rect.bottom + GAP) + 'px'
-    style.maxHeight = Math.max(180, spaceBelow) + 'px'
   } else {
     style.bottom = (window.innerHeight - rect.top + GAP) + 'px'
-    style.maxHeight = Math.max(180, spaceAbove) + 'px'
   }
   popStyle.value = style
 }
@@ -1175,24 +1173,18 @@ onUnmounted(() => {
 
 /* Persona popover */
 .pp-pop {
-  position: fixed; z-index: 61;
-  width: fit-content; min-width: 320px; max-width: min(560px, 92vw);
-  height: auto;
+  position: fixed; z-index: 61; width: 380px; max-width: 92vw;
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 0 18px 18px;
-  overflow-y: auto;  /* max-height set inline from available viewport space */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
 }
-.pp-pop-head {
-  display: flex; gap: 12px; align-items: center;
-  position: sticky; top: 0; background: #fff; z-index: 1;
-  padding: 16px 0 10px;
-}
+.pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
 .pp-pop-id { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .pp-pop-name { font-weight: 700; font-size: 14px; color: #111; }
 .pp-pop-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; text-transform: lowercase; }
 .pp-pop-tags { margin-bottom: 10px; }
-.pp-pop-text { margin: 0; font-size: 13.5px; line-height: 1.6; color: #333; }
+/* Text wraps to fill the box; scrolls only when an opinion is very long. */
+.pp-pop-text { margin: 0; font-size: 13.5px; line-height: 1.6; color: #333; max-height: 260px; overflow-y: auto; }
 
 /* ── Scenario banner ──────────────────────────────────────────────────────── */
 .spectrum-pitched {
