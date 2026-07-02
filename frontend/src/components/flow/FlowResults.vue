@@ -143,6 +143,11 @@
               <span>Reactions</span>
               <span class="sim-feed-count">{{ panelReactions.length }} personas</span>
             </div>
+            <div v-if="showCoach" class="coach-mark">
+              <span class="coach-dot">👆</span>
+              <span>Hover an agent to read their reaction — click to interview them.</span>
+              <button class="coach-got" @click="dismissCoach">Got it</button>
+            </div>
             <div class="pp-clusters">
               <div v-for="c in reactionClusters" :key="c.key" class="pp-cluster">
                 <div class="pp-cluster-head">
@@ -208,6 +213,10 @@
         </div>
 
         <!-- Bottom broadcast bar — speak to the room -->
+        <div v-if="showCoach && isPanel && panelReactions.length" class="coach-mark coach-mark--room">
+          <span class="coach-dot">💬</span>
+          <span>Ask the room to follow up with everyone at once.</span>
+        </div>
         <div class="room-bar">
           <input
             v-model="roomDraft"
@@ -300,7 +309,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { createAvatar } from '@dicebear/core'
 import { avataaars } from '@dicebear/collection'
 import {
@@ -449,6 +458,18 @@ const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_chang
 // reactions — objections + what would move them). Real counts stay in
 // summaryText; this only adds the "why". Empty when unavailable.
 const llmSummary = ref('')
+
+// First-time coach marks on the results page: show once (per browser) when a
+// panel's reactions first appear, then remember dismissal.
+const COACH_KEY = 'crowds_results_coached_v1'
+const showCoach = ref(false)
+const dismissCoach = () => {
+  showCoach.value = false
+  try { localStorage.setItem(COACH_KEY, '1') } catch (_) { /* ignore */ }
+}
+watch(() => panelReactions.value.length, (n) => {
+  if (n > 0 && isPanel.value && !localStorage.getItem(COACH_KEY)) showCoach.value = true
+}, { immediate: true })
 
 // ── Reaction map: cluster personas into stance columns (deterministic) ───────
 // Buckets follow the STANCES spread (won over → resistant); any stray stance
@@ -1267,6 +1288,22 @@ onUnmounted(() => {
   margin-top: 12px !important; padding-top: 12px;
   border-top: 1px solid #EEF0F2; color: #4B5563 !important;
 }
+
+/* First-time coach marks (results page) */
+.coach-mark {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 24px 12px; padding: 10px 14px;
+  background: #F0FBF4; border: 1px solid #BFE9CF; border-radius: 10px;
+  font-size: 13px; color: #178048;
+}
+.coach-mark--room { margin: 0 24px 8px; }
+.coach-dot { font-size: 15px; line-height: 1; }
+.coach-got {
+  margin-left: auto; padding: 5px 12px; border: none; border-radius: 7px; cursor: pointer;
+  background: #1E9E5A; color: #fff; font-size: 12px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.coach-got:hover { background: #178048; }
 /* ── Room replies ─────────────────────────────────────────────────────────── */
 .room-replies { margin: 0 24px 16px; display: flex; flex-direction: column; gap: 8px; }
 .room-replies-head {
