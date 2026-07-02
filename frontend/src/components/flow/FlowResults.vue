@@ -483,9 +483,11 @@ const showReactionPop = (a, ev) => {
   left = Math.max(MARGIN, Math.min(left, container.clientWidth - W - MARGIN))
   const avatarTop = rect.top - crect.top + container.scrollTop
   const avatarBottom = rect.bottom - crect.top + container.scrollTop
-  // Direction follows the scrollbar: open DOWN by default; only when scrolled to
-  // the BOTTOM (where down would be cut) does it flip UP, above the agent.
-  const atBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 8
+  // Direction follows the scrollbar: open DOWN by default; only flip UP when the
+  // area actually scrolls AND is scrolled to the bottom (where down would be
+  // cut). If the content fits (no scroll), that's "at the top" -> open down.
+  const scrollable = container.scrollHeight - container.clientHeight > 8
+  const atBottom = scrollable && container.scrollTop + container.clientHeight >= container.scrollHeight - 8
   if (!atBottom) {
     popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px' }
   } else {
