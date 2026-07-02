@@ -1118,7 +1118,15 @@ onUnmounted(() => {
 .scrim-enter-active, .scrim-leave-active { transition: opacity 0.3s ease; }
 .scrim-enter-from, .scrim-leave-to { opacity: 0; }
 
-.main-content-area { flex: 1; overflow-y: auto; position: relative; }
+.main-content-area {
+  flex: 1; overflow-y: scroll; position: relative;
+  /* Force a visible scrollbar (override the browser's auto-hiding overlay bar). */
+  scrollbar-width: thin; scrollbar-color: #B8C0C8 transparent;
+}
+.main-content-area::-webkit-scrollbar { width: 10px; }
+.main-content-area::-webkit-scrollbar-track { background: transparent; }
+.main-content-area::-webkit-scrollbar-thumb { background: #B8C0C8; border-radius: 5px; border: 2px solid transparent; background-clip: content-box; }
+.main-content-area::-webkit-scrollbar-thumb:hover { background: #98A2AC; background-clip: content-box; }
 
 /* ── Live reaction feed (sim mode) — clean single column ───────────────────── */
 .sim-feed {
