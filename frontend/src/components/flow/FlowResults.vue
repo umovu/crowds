@@ -474,30 +474,29 @@ const showReactionPop = (a, ev) => {
   popAgentId.value = a.id
   const rect = ev.currentTarget.getBoundingClientRect()
   const W = 500, GAP = 10, MARGIN = 12
-  const vw = window.innerWidth
-  let left = rect.left + rect.width / 2 - W / 2
-  left = Math.max(MARGIN, Math.min(left, vw - W - MARGIN))
-  // Render below first, then measure and settle so the box is never cut off:
-  // below if it fits, flipped above if the avatar is too low, and only when the
-  // opinion is taller than the whole screen do we cap it and scroll.
-  popStyle.value = { left: left + 'px', top: (rect.bottom + GAP) + 'px' }
-  nextTick(() => {
-    const vh = window.innerHeight
-    const h = popEl.value ? popEl.value.offsetHeight : 0
-    const roomBelow = vh - rect.bottom - GAP - MARGIN
-    const roomAbove = rect.top - GAP - MARGIN
-    const style = { left: left + 'px' }
-    if (h <= roomBelow) {
-      style.top = (rect.bottom + GAP) + 'px'
-    } else if (h <= roomAbove) {
-      style.top = (rect.top - GAP - h) + 'px'
-    } else if (roomBelow >= roomAbove) {
-      style.top = (rect.bottom + GAP) + 'px'; style.maxHeight = roomBelow + 'px'; style.overflowY = 'auto'
-    } else {
-      style.top = MARGIN + 'px'; style.maxHeight = (rect.top - GAP - MARGIN) + 'px'; style.overflowY = 'auto'
-    }
-    popStyle.value = style
-  })
+  const container = scrollContainer.value
+  if (!container) { popStyle.value = { left: MARGIN + 'px', top: (rect.bottom + GAP) + 'px' }; return }
+  // Position the box inside the scrolling results area so a long opinion grows
+  // the box and extends the PAGE scroll (you scroll the page to read it).
+  const crect = container.getBoundingClientRect()
+  let left = rect.left - crect.left + container.scrollLeft + rect.width / 2 - W / 2
+  left = Math.max(MARGIN, Math.min(left, container.clientWidth - W - MARGIN))
+  const avatarTop = rect.top - crect.top + container.scrollTop
+  const avatarBottom = rect.bottom - crect.top + container.scrollTop
+  // Direction follows the scrollbar: open DOWN by default; only when scrolled to
+  // the BOTTOM (where down would be cut) does it flip UP, above the agent.
+  const atBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 8
+  if (!atBottom) {
+    popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px' }
+  } else {
+    // Render hidden at the down spot, measure, then place above the agent.
+    popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px', visibility: 'hidden' }
+    nextTick(() => {
+      const h = popEl.value ? popEl.value.offsetHeight : 0
+      const top = Math.max(container.scrollTop + MARGIN, avatarTop - GAP - h)
+      popStyle.value = { left: left + 'px', top: top + 'px' }
+    })
+  }
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -1186,11 +1185,11 @@ onUnmounted(() => {
 
 /* Persona popover */
 .pp-pop {
-  position: fixed; z-index: 61; width: 500px; max-width: calc(100vw - 24px);
+  position: absolute; z-index: 61; width: 500px; max-width: calc(100% - 24px);
   background: #fff; border: 1px solid #E0E0E0; border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18); padding: 18px;
-  /* Grows to the full opinion; positioned in JS to flip below/above so it is
-     never cut off. Inner scroll only when an opinion exceeds the screen. */
+  /* Lives in the scrolling results area: grows to the full opinion (no inner
+     scrollbar); JS opens it down, or up when scrolled to the bottom. */
 }
 .pp-pop-head { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .pp-pop-head img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #1E9E5A; flex-shrink: 0; }
