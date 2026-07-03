@@ -115,9 +115,9 @@
             <div class="plan-card-opt" :class="{ current: !isPaid }">
               <div class="pco-head"><span class="pco-name">Free</span><span class="pco-price">R0/mo</span></div>
               <ul class="pco-features">
-                <li>3 panels (focus groups)</li>
+                <li>4 panels (focus groups)</li>
                 <li>Full reaction report</li>
-                <li>1 trial simulation</li>
+                <li>2 trial simulations</li>
               </ul>
               <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>

@@ -1289,6 +1289,26 @@ class AgentSocietyRunner:
             f"est_cost=${token_stats['estimated_cost_usd']:.4f}"
         )
 
+        # Append this run to the cumulative usage ledger so prepaid credit spend
+        # is visible across runs (DATA_ROOT/usage_ledger.jsonl). Best-effort.
+        try:
+            from app.services.usage_ledger import record_usage
+            totals = record_usage(
+                "simulation",
+                token_stats,
+                meta={"sim_id": sim_id, "rounds": total_rounds,
+                      "agents": len(all_agents)},
+            )
+            print(
+                f"Usage ledger — runs={totals['runs']} "
+                f"cumulative_tokens={totals['total_tokens']} "
+                f"cumulative_cost=${totals['total_cost_usd']:.4f}"
+            )
+        except Exception as _e:
+            logging.getLogger("fub.usage_ledger").warning(
+                "ledger record failed: %s", _e
+            )
+
         # ── Wait for interview calls ──────────────────────────────
         if self.wait_for_commands:
             print("\n" + "=" * 60)

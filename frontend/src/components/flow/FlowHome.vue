@@ -264,6 +264,7 @@
               <div class="pp-controls">
                 <div class="pp-actions">
                   <button
+                    ref="tourSim"
                     class="pp-sim-btn"
                     :disabled="!panelPitch.trim() || panelSubmitting"
                     title="Run a full simulation — the deeper, slower process: a population reacts and the reaction spreads over rounds."
@@ -406,6 +407,7 @@ const tourTargetRect = ref(null)
 const tourPrompt = ref(null)
 const tourCrowd = ref(null)
 const tourRun = ref(null)
+const tourSim = ref(null)
 
 // Example pitches — click to prefill so a first-timer sees a good input at once.
 const EXAMPLES = [
@@ -424,6 +426,7 @@ const tourSteps = computed(() => [
   { el: tourCrowd,  title: 'Pick your crowd',       body: 'Choose who’s in the room, or leave the default South African mix.' },
   { el: speedDdEl,  title: 'Set the depth',         body: 'Panel is the fast read; higher depth runs more rounds for a richer result.' },
   { el: tourRun,    title: 'Run it',                body: 'Assemble the panel to get each person’s honest reaction — then hover to read, click to interview, and ask the room follow-ups.' },
+  { el: tourSim,    title: 'Go deeper: full simulation', body: 'The panel is a one-shot read. A full simulation goes further: a larger population reacts, then those reactions spread and shift each other over several rounds — so you see not just the first impression but how opinion moves. It’s slower and counts toward your trial simulations.' },
 ])
 const currentTourStep = computed(() => tourSteps.value[tourStep.value - 1] || {})
 
