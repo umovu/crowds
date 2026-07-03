@@ -39,6 +39,52 @@ def _setup_agentsociety2_env():
         os.environ["AGENTSOCIETY_LLM_API_BASE"] = _sim_base
 
 
+def _disable_thinking_on_litellm():
+    """Disable reasoning "thinking" on the in-process agentsociety2 path.
+
+    Interviews and panels run answer_external_question() *inside the Flask
+    process* (InterviewService), which reaches the LLM through agentsociety2's
+    litellm client — not our LLMClient. So Config.llm_extra_body() never touches
+    them. The sim subprocess already wraps litellm.acompletion to strip thinking
+    (run_simulation_as.py); this mirrors that wrap for the Flask process.
+
+    Reasoning models (Qwen 3.x, DeepSeek V4) default thinking ON — DeepSeek V4
+    returns the answer in reasoning_content with an empty content field, which
+    surfaces as an empty/failed interview ("I have no comment on that."). Forcing
+    thinking off fixes both the correctness bug and the token cost.
+
+    Provider-specific flag shape (sending the wrong one can 400):
+        Qwen      → extra_body={"enable_thinking": False}
+        DeepSeek  → extra_body={"thinking": {"type": "disabled"}}
+    """
+    model = (os.environ.get("SIM_LLM_MODEL") or Config.LLM_MODEL_NAME or "").lower()
+    if "qwen" in model:
+        nt_key, nt_val = "enable_thinking", False
+    elif "deepseek" in model:
+        nt_key, nt_val = "thinking", {"type": "disabled"}
+    else:
+        return
+
+    try:
+        import litellm
+    except Exception:
+        return
+
+    if getattr(litellm.acompletion, "_fub_no_thinking", False):
+        return  # already wrapped (idempotent across re-inits)
+
+    _orig_acompletion = litellm.acompletion
+
+    async def _acompletion_no_thinking(*args, **kwargs):
+        eb = dict(kwargs.get("extra_body") or {})
+        eb.setdefault(nt_key, nt_val)
+        kwargs["extra_body"] = eb
+        return await _orig_acompletion(*args, **kwargs)
+
+    _acompletion_no_thinking._fub_no_thinking = True
+    litellm.acompletion = _acompletion_no_thinking
+
+
 
 
 def _log_storage_persistence(logger):
@@ -112,6 +158,8 @@ def create_app(config_class=Config):
     """Flask application factory function"""
     # Ensure agentsociety2 env vars are set before any imports trigger it
     _setup_agentsociety2_env()
+    # Strip reasoning "thinking" from the in-process interview/panel LLM path
+    _disable_thinking_on_litellm()
 
     app = Flask(__name__)
     app.config.from_object(config_class)
