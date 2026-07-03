@@ -63,11 +63,13 @@ def _disable_thinking_on_litellm():
     elif "deepseek" in model:
         nt_key, nt_val = "thinking", {"type": "disabled"}
     else:
+        print(f"[thinking-guard] model={model!r} not a reasoning model — no wrap")
         return
 
     try:
         import litellm
-    except Exception:
+    except Exception as e:
+        print(f"[thinking-guard] litellm import failed, cannot wrap: {e}")
         return
 
     if getattr(litellm.acompletion, "_fub_no_thinking", False):
@@ -83,6 +85,7 @@ def _disable_thinking_on_litellm():
 
     _acompletion_no_thinking._fub_no_thinking = True
     litellm.acompletion = _acompletion_no_thinking
+    print(f"[thinking-guard] litellm.acompletion wrapped: extra_body.{nt_key}={nt_val} (model={model})")
 
 
 
