@@ -32,10 +32,10 @@ from flask import g, jsonify
 
 logger = logging.getLogger("fub.billing")
 
-FREE_PANEL_LIMIT = 3
+FREE_PANEL_LIMIT = 4
 # Closed-beta trial: free plan may run this many simulations before the paywall.
 # Lets us hand out access for user testing while Paystack approval is pending.
-FREE_SIM_LIMIT = 1
+FREE_SIM_LIMIT = 2
 PAYSTACK_BASE = "https://api.paystack.co"
 
 
