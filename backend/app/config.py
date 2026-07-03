@@ -48,22 +48,26 @@ class Config:
         """
         Provider-specific extra_body parameters for the configured LLM.
 
-        Qwen 3.x models are reasoning-enabled by default — they emit hidden
-        "thinking" tokens that count against output usage. For an opinion-
-        simulation workload we want concise persona outputs, not chain-of-
-        thought, so we disable thinking. For other providers returns {}.
+        Qwen 3.x and DeepSeek V4 models are reasoning-enabled by default — they
+        emit hidden "thinking" tokens that count against output usage. For an
+        opinion-simulation workload we want concise persona outputs, not chain-
+        of-thought, so we disable thinking. For other providers returns {}.
+
+        The flag shape differs per provider (sending the wrong one can 400):
+            Qwen      → {"enable_thinking": bool}
+            DeepSeek  → {"thinking": {"type": "enabled"|"disabled"}}
 
         Per-model opt-in: set ENABLE_LLM_THINKING=1 in the environment to
-        force-enable thinking for a specific run (e.g. for a research call
-        that benefits from CoT). Default is OFF for qwen — keeps texture
-        fast (~10x faster on qwen3.7-plus-2026-05-26).
+        force-enable thinking for a specific run (e.g. a research call that
+        benefits from CoT). Default is OFF — keeps texture fast.
         """
-        if os.environ.get('ENABLE_LLM_THINKING', '').lower() in ('1', 'true', 'yes'):
-            return {'enable_thinking': True}
+        want_thinking = os.environ.get('ENABLE_LLM_THINKING', '').lower() in ('1', 'true', 'yes')
         model = (os.environ.get('LLM_MODEL_NAME') or '').lower()
-        if model.startswith('qwen') or 'qwen' in model:
-            return {'enable_thinking': False}
-        return {}
+        if 'qwen' in model:
+            return {'enable_thinking': want_thinking}
+        if 'deepseek' in model:
+            return {'thinking': {'type': 'enabled' if want_thinking else 'disabled'}}
+        return {'enable_thinking': True} if want_thinking else {}
 
     # Graph Backend: 'ladybug' (default — embedded, no Docker, persistent),
     # 'neo4j' (server, needs Docker), or 'kglite' (in-memory, dev only)

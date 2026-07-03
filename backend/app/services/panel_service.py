@@ -601,10 +601,21 @@ def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: st
             temperature=0.3,
             max_tokens=240,
         )
+        # Skip "thinking" tokens where supported. Flag shape is provider-specific
+        # (Qwen: enable_thinking; DeepSeek V4: thinking.type) — retry plain if the
+        # provider rejects it.
+        _m = (model or "").lower()
+        if "qwen" in _m:
+            _no_think = {"enable_thinking": False}
+        elif "deepseek" in _m:
+            _no_think = {"thinking": {"type": "disabled"}}
+        else:
+            _no_think = None
         try:
-            # Skip Qwen/DeepSeek "thinking" tokens where supported; retry plain if
-            # the provider rejects the flag.
-            resp = client.chat.completions.create(extra_body={"enable_thinking": False}, **kwargs)
+            if _no_think:
+                resp = client.chat.completions.create(extra_body=_no_think, **kwargs)
+            else:
+                resp = client.chat.completions.create(**kwargs)
         except Exception:
             resp = client.chat.completions.create(**kwargs)
         return (resp.choices[0].message.content or "").strip()
