@@ -709,7 +709,7 @@ import { supabase, callbackUrl } from './supabase-client.js';
           options: { emailRedirectTo: callbackUrl(nextUrl) }
         });
         if (error) throw error;
-        showMsg('Check your email for the sign-in link.', 'ok');
+        showMsg('Sign-in link sent to ' + email + '. Open the email and click the link to finish signing in — it expires in about an hour. No email after a minute? Check your spam folder.', 'ok');
         btnSubmit.disabled = false;
         updateSubmitLabel();
       } else if (mode === 'signup') {
@@ -728,7 +728,7 @@ import { supabase, callbackUrl } from './supabase-client.js';
           showMsg('Account created. Redirecting…', 'ok');
           window.location.href = nextUrl;
         } else {
-          showMsg('Account created. Check your email to confirm, then sign in.', 'ok');
+          showMsg('Account created — we sent a confirmation link to ' + email + '. Click it to verify your address, then sign in. No email after a minute? Check your spam folder.', 'ok');
           btnSubmit.disabled = false;
           updateSubmitLabel();
         }
