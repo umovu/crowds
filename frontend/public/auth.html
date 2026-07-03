@@ -209,7 +209,7 @@
   .field input {
     width: 100%; padding: 11px 14px;
     border: 1px solid var(--line); border-radius: 10px;
-    font-family: var(--sans); font-size: 0.92rem; color: var(--ink);
+    font-family: var(--sans); font-size: 16px; color: var(--ink);
     background: #fff; outline: none; transition: border-color .15s;
   }
   .field input:focus {
@@ -764,6 +764,13 @@ import { supabase, callbackUrl } from './supabase-client.js';
   var modeParam = params.get('mode');
   if (modeParam === 'signup') mode = 'signup';
   else if (modeParam === 'signin') mode = 'signin';
+
+  // Bounced back from /auth/callback without a session — most often because
+  // the link was opened in a different browser/app than the one used to
+  // request it (common on mobile, e.g. an email app's in-app browser).
+  if (params.get('reason') === 'session_lost') {
+    showMsg("Couldn't finish signing in in this browser. If you tapped a link from an email app, try opening it in the same browser you used to sign in, then request a new link.", 'err');
+  }
 
   // ── Already signed in? Skip the form and go straight into the app. ──────
   // (e.g. the user clicked "Sign in" from the landing nav but already has a
