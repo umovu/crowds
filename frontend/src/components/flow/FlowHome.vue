@@ -426,7 +426,7 @@ const tourSteps = computed(() => [
   { el: tourCrowd,  title: 'Pick your crowd',       body: 'Choose who’s in the room, or leave the default South African mix.' },
   { el: speedDdEl,  title: 'Set the depth',         body: 'Panel is the fast read; higher depth runs more rounds for a richer result.' },
   { el: tourRun,    title: 'Run it',                body: 'Assemble the panel to get each person’s honest reaction — then hover to read, click to interview, and ask the room follow-ups.' },
-  { el: tourSim,    title: 'Go deeper: full simulation', body: 'The panel is a one-shot read. A full simulation goes further: a larger population reacts, then those reactions spread and shift each other over several rounds — so you see not just the first impression but how opinion moves. It’s slower and counts toward your trial simulations.' },
+  { el: tourSim,    title: 'Go deeper: full simulation', body: 'The panel is one honest read. A full simulation runs a larger crowd over several rounds, so reactions spread and shift — you see how opinion moves, not just first impressions. Slower, and uses a trial run.' },
 ])
 const currentTourStep = computed(() => tourSteps.value[tourStep.value - 1] || {})
 
@@ -472,10 +472,12 @@ const tourSpotStyle = computed(() => {
 const tourTipStyle = computed(() => {
   const r = tourTargetRect.value
   if (!r) return { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }
-  const W = 300, GAP = 16, EST_H = 168
+  const W = 300, GAP = 16, EST_H = 200
   const left = Math.min(Math.max(16, r.left), window.innerWidth - W - 16)
   let top = r.bottom + GAP
-  if (top + EST_H > window.innerHeight) top = Math.max(16, r.top - EST_H - GAP)
+  if (top + EST_H > window.innerHeight) top = r.top - EST_H - GAP
+  // Keep the whole tip — including the Next/Done button — on screen.
+  top = Math.max(16, Math.min(top, window.innerHeight - EST_H - 16))
   return { left: left + 'px', top: top + 'px', width: W + 'px' }
 })
 
