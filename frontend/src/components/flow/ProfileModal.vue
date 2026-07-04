@@ -224,7 +224,10 @@ function hydrateForm() {
     display_name: m.display_name || '',
   }
 }
-watch(user, hydrateForm, { immediate: true })
+// Key the hydrate on the user id, not the session object: token auto-refresh
+// swaps the session (same user) every hour and would otherwise clobber an
+// in-progress edit. Only re-hydrate when the actual account changes.
+watch(() => user.value?.id, hydrateForm, { immediate: true })
 
 const fullName = computed(() => {
   const m = user.value?.user_metadata || {}
