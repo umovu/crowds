@@ -6,9 +6,9 @@
   <Transition name="menu-pop">
     <div v-if="menuOpen" class="profile-menu">
       <div class="menu-head">
-        <div class="menu-head-avatar">JS</div>
+        <div class="menu-head-avatar">{{ initials }}</div>
         <div class="menu-head-info">
-          <span class="menu-head-name">Jabu Swartbooi</span>
+          <span class="menu-head-name">{{ fullName }}</span>
           <span class="menu-head-plan">{{ isPaid ? 'Beta plan' : 'Free plan' }}</span>
         </div>
       </div>
@@ -69,26 +69,30 @@
             <div class="field-row">
               <div class="field">
                 <label class="field-label">First name</label>
-                <input class="field-input" type="text" value="Jabu">
+                <input class="field-input" type="text" v-model="form.first_name" placeholder="First name">
               </div>
               <div class="field">
                 <label class="field-label">Surname</label>
-                <input class="field-input" type="text" value="Swartbooi">
+                <input class="field-input" type="text" v-model="form.surname" placeholder="Surname">
               </div>
             </div>
             <div class="field">
               <label class="field-label">Email</label>
-              <input class="field-input" type="email" value="jabu@example.com">
+              <input class="field-input" type="email" v-model="form.email" placeholder="you@example.com">
+              <span class="field-help">Changing this sends a confirmation link to the new address; it takes effect once you click it.</span>
             </div>
             <div class="field">
               <label class="field-label">Display name</label>
-              <input class="field-input" type="text" value="jabus">
+              <input class="field-input" type="text" v-model="form.display_name" placeholder="Display name">
               <span class="field-help">Shown on shared sims and panel reports</span>
             </div>
           </div>
           <div class="modal-actions">
+            <span v-if="profileMsg" class="save-msg" :class="profileMsg.type">{{ profileMsg.text }}</span>
             <button class="btn" @click="closeFullpage">Cancel</button>
-            <button class="btn primary">Save changes</button>
+            <button class="btn primary" :disabled="savingProfile" @click="saveProfile">
+              {{ savingProfile ? 'Saving…' : 'Save changes' }}
+            </button>
           </div>
         </div>
 
@@ -189,15 +193,79 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import DashboardPanel from './DashboardPanel.vue'
 import { useBilling } from '../../composables/useBilling'
+import { useAuth } from '../../composables/useAuth'
+import { supabase } from '../../lib/supabase'
 
 const emit = defineEmits(['close', 'open-sim'])
 
 const { status, isPaid, isCancelled, refresh: refreshBilling, upgrade, cancel } = useBilling()
+const { user } = useAuth()
 const upgrading = ref(false)
 const cancelling = ref(false)
+
+// ── Profile: bound to Supabase auth user_metadata ────────────────────────────
+// The form hydrates from the shared reactive `user` and writes back with
+// supabase.auth.updateUser(), which persists to Supabase AND fires USER_UPDATED
+// so `user` (and everything bound to it, incl. the menu header) refreshes live.
+const form = ref({ first_name: '', surname: '', email: '', display_name: '' })
+const savingProfile = ref(false)
+const profileMsg = ref(null)  // { type: 'ok' | 'err', text }
+
+function hydrateForm() {
+  const u = user.value
+  const m = u?.user_metadata || {}
+  form.value = {
+    first_name: m.first_name || '',
+    surname: m.surname || '',
+    email: u?.email || '',
+    display_name: m.display_name || '',
+  }
+}
+watch(user, hydrateForm, { immediate: true })
+
+const fullName = computed(() => {
+  const m = user.value?.user_metadata || {}
+  const name = [m.first_name, m.surname].filter(Boolean).join(' ')
+  return name || m.full_name || m.display_name || user.value?.email || 'Your account'
+})
+const initials = computed(() => {
+  const m = user.value?.user_metadata || {}
+  const a = (m.first_name || '').trim()
+  const b = (m.surname || '').trim()
+  if (a || b) return ((a[0] || '') + (b[0] || '')).toUpperCase()
+  return (user.value?.email || 'me').slice(0, 2).toUpperCase()
+})
+
+async function saveProfile() {
+  if (savingProfile.value) return
+  savingProfile.value = true
+  profileMsg.value = null
+  try {
+    const first_name = form.value.first_name.trim()
+    const surname = form.value.surname.trim()
+    const display_name = form.value.display_name.trim()
+    const full_name = [first_name, surname].filter(Boolean).join(' ')
+    const payload = { data: { first_name, surname, display_name, full_name } }
+
+    const newEmail = form.value.email.trim()
+    const emailChanged = newEmail && newEmail !== (user.value?.email || '')
+    if (emailChanged) payload.email = newEmail
+
+    const { error } = await supabase.auth.updateUser(payload)
+    if (error) throw error
+
+    profileMsg.value = emailChanged
+      ? { type: 'ok', text: `Saved. Confirm your new email via the link sent to ${newEmail}.` }
+      : { type: 'ok', text: 'Profile updated.' }
+  } catch (e) {
+    profileMsg.value = { type: 'err', text: e?.message || 'Could not save. Please try again.' }
+  } finally {
+    savingProfile.value = false
+  }
+}
 
 async function doUpgrade() {
   upgrading.value = true
@@ -416,6 +484,15 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 .btn:hover { border-color: #999; color: #1a1a1a; }
 .btn.primary { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
 .btn.primary:hover { background: #178048; border-color: #178048; }
+.btn.primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.save-msg {
+  margin-right: auto; align-self: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1.4;
+  max-width: 60%;
+}
+.save-msg.ok { color: #1E9E5A; }
+.save-msg.err { color: #C0392B; }
 
 .current-plan-banner {
   display: flex; align-items: center; justify-content: space-between;
