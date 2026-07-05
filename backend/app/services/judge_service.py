@@ -116,17 +116,33 @@ Return JSON only."""
 
     # ==================== Specific Judges ====================
 
-    def judge_seed_briefing(self, briefing: str, mode: str, topic: str) -> JudgeResult:
-        """Evaluate seed briefing quality."""
-        criteria = self._seed_criteria(mode)
-        return self.judge(criteria, briefing, {"mode": mode, "topic": topic})
+    def judge_seed_briefing(self, briefing: str, mode: str, topic: str,
+                            sources: Optional[List[Dict[str, str]]] = None) -> JudgeResult:
+        """Evaluate seed briefing quality.
 
-    def _seed_criteria(self, mode: str) -> str:
-        base = """Evaluate this seed briefing for a South African simulation.
+        `sources` is the list of scraped source excerpts the briefing was
+        synthesized from ({"title", "excerpt"} dicts). When present, the
+        no-invented-facts criterion becomes a real entailment check against
+        them instead of a plausibility guess."""
+        criteria = self._seed_criteria(mode, grounded=bool(sources))
+        context: Dict[str, Any] = {"mode": mode, "topic": topic}
+        if sources:
+            context["sources"] = sources
+        return self.judge(criteria, briefing, context)
+
+    def _seed_criteria(self, mode: str, grounded: bool = False) -> str:
+        if grounded:
+            facts_line = (
+                "2. No invented facts — every factual claim (numbers, names, events) must be "
+                "supported by the SOURCES in context; quote any unsupported claim in evidence"
+            )
+        else:
+            facts_line = "2. No invented facts — all claims traceable to sources"
+        base = f"""Evaluate this seed briefing for a South African simulation.
 
 REQUIRED:
 1. South African specificity — real places, archetypes, constraints (data costs, load-shedding, income, trust)
-2. No invented facts — all claims traceable to sources
+{facts_line}
 3. Clear structure with required sections
 4. ~1200-1800 words"""
 

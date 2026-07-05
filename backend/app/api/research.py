@@ -924,9 +924,15 @@ def generate_seed():
         from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of
         if judge_enabled():
             svc = get_judge_service()
+            # Hand the judge the same sources the briefing was synthesized from,
+            # so "no invented facts" is checked against evidence, not vibes.
+            judge_sources = [
+                {"title": s["title"] or s["url"], "excerpt": s["content"][:600]}
+                for s in scraped[:10]
+            ]
             seed_text, judge_result, regenerated = judge_best_of(
                 generate=generate_briefing,
-                judge=lambda t: svc.judge_seed_briefing(t, mode, topic),
+                judge=lambda t: svc.judge_seed_briefing(t, mode, topic, sources=judge_sources),
             )
             if regenerated:
                 logger.info(f"Seed briefing regenerated once on judge feedback (topic={topic})")
