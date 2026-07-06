@@ -17,7 +17,6 @@
           :class="{ active: activeTab === 'panel' }"
           @click="activeTab = 'panel'"
         >
-          <span class="side-icon">◇</span>
           <span class="side-label">New test</span>
         </button>
         <button
@@ -25,12 +24,10 @@
           :class="{ active: activeTab === 'personas' }"
           @click="activeTab = 'personas'"
         >
-          <span class="side-icon">👥</span>
           <span class="side-label">Personas</span>
           <span v-if="personaCount" class="side-badge">{{ personaCount }}</span>
         </button>
         <button class="side-item" @click="openHelp">
-          <span class="side-icon">?</span>
           <span class="side-label">How it works</span>
         </button>
       </nav>
