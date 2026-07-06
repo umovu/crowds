@@ -292,8 +292,11 @@ async function doCancel() {
   }
 }
 
-const menuOpen = ref(true)
-const modalOpen = ref(false)
+// On mobile there's no intermediate pop-up menu: the profile button opens the
+// full-screen account page directly (it slides up from the bottom).
+const isMobile = window.matchMedia('(max-width: 860px)').matches
+const menuOpen = ref(!isMobile)
+const modalOpen = ref(isMobile)
 const activeTab = ref('profile')
 
 const tabs = [
@@ -592,8 +595,8 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
     border-radius: 0; border: none;
     flex-direction: column;
   }
-  /* Slide up from the bottom instead of the desktop center-scale rise. */
-  .modal-rise-enter-from, .modal-rise-leave-to { transform: translateY(28px); }
+  /* Full page slides up from the bottom edge, like a route push. */
+  .modal-rise-enter-from, .modal-rise-leave-to { transform: translateY(100%); }
 
   /* Tab rail → horizontal scrollable bar under the top edge */
   .modal-tabs {
