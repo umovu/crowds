@@ -974,6 +974,15 @@ onUnmounted(() => {
 /* Main column */
 .app-main { flex: 1; min-width: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
+/* Mobile: the results sidebar is decorative (recents label only) — hide it;
+   the header's Back button is the way home. */
+@media (max-width: 860px) {
+  .sidebar { display: none; }
+  .app-header { padding: 0 12px; flex-wrap: wrap; height: auto; min-height: 56px; row-gap: 4px; }
+  .app-header .brand { display: none; }
+  .header-right { gap: 10px; flex-wrap: wrap; }
+}
+
 /* ── App header — exact copy ──────────────────────────────────────────────── */
 .app-header {
   height: 60px; border-bottom: 1px solid #EAEAEA;

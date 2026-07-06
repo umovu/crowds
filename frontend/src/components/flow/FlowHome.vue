@@ -1,7 +1,13 @@
 <template>
   <div class="app-shell">
+    <!-- Mobile burger (hidden on desktop) -->
+    <button class="burger-btn" :aria-expanded="sidebarOpen" aria-label="Menu" @click="sidebarOpen = !sidebarOpen">
+      <span class="burger-lines" :class="{ open: sidebarOpen }"><i></i><i></i><i></i></span>
+    </button>
+    <div v-if="sidebarOpen" class="sidebar-backdrop" @click="sidebarOpen = false"></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" :class="{ open: sidebarOpen }">
       <div class="sidebar-brand">
         <span class="brand-word">crowds</span>
       </div>
@@ -56,10 +62,10 @@
 
       <!-- Profile button — bottom of sidebar -->
       <div class="side-foot">
-        <button class="profile-item" @click="profileModalOpen = true">
-          <span class="profile-avatar">JS</span>
+        <button class="profile-item" @click="profileModalOpen = true; sidebarOpen = false">
+          <span class="profile-avatar">{{ avatarInitials }}</span>
           <span class="profile-body">
-            <span class="profile-name">Jabu Swartbooi</span>
+            <span class="profile-name">{{ displayName }}</span>
             <span class="profile-sub">{{ isPaid ? 'Beta plan' : 'Free plan' }}</span>
           </span>
           <span class="profile-chevron">⋯</span>
@@ -300,6 +306,7 @@ import { createSession, listSessions, listSegments } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
+import { useAuth } from '../../composables/useAuth'
 import ProfileModal from './ProfileModal.vue'
 
 const emit = defineEmits(['submit', 'open'])
@@ -308,6 +315,28 @@ const route = useRoute()
 const router = useRouter()
 
 const activeTab = ref('panel')
+
+// ── Mobile sidebar (burger) ────────────────────────────────────────────────
+const sidebarOpen = ref(false)
+// Selecting anything in the sidebar closes it on mobile.
+watch(activeTab, () => { sidebarOpen.value = false })
+
+// ── Auth user → sidebar profile ────────────────────────────────────────────
+const { user } = useAuth()
+const displayName = computed(() => {
+  const m = user.value?.user_metadata || {}
+  const name = [m.first_name, m.surname].filter(Boolean).join(' ')
+  return m.display_name || name || m.full_name || user.value?.email || 'Your account'
+})
+const avatarInitials = computed(() => {
+  const m = user.value?.user_metadata || {}
+  const a = (m.first_name || '').trim()
+  const b = (m.surname || '').trim()
+  if (a || b) return ((a[0] || '') + (b[0] || '')).toUpperCase()
+  const dn = (m.display_name || m.full_name || '').trim()
+  if (dn) return dn.split(/\s+/).map(p => p[0]).join('').slice(0, 2).toUpperCase()
+  return (user.value?.email || 'me').slice(0, 2).toUpperCase()
+})
 
 // ── Profile modal ──────────────────────────────────────────────────────────
 const profileModalOpen = ref(false)
@@ -926,10 +955,52 @@ onUnmounted(() => {
   margin: 12px 0 0; font-size: 0.76rem; color: #999; line-height: 1.5;
 }
 
+/* ── Mobile burger + off-canvas sidebar ──────────────────────────────────── */
+.burger-btn {
+  display: none;
+  position: fixed; top: 12px; left: 12px; z-index: 96;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #fff; border: 1px solid #E5E5E5; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  align-items: center; justify-content: center;
+}
+.burger-lines { display: flex; flex-direction: column; gap: 4px; width: 18px; }
+.burger-lines i {
+  display: block; height: 2px; border-radius: 2px; background: #444;
+  transition: transform 0.18s, opacity 0.18s;
+}
+.burger-lines.open i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger-lines.open i:nth-child(2) { opacity: 0; }
+.burger-lines.open i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.sidebar-backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 94;
+  background: rgba(15, 23, 42, 0.35);
+}
+
 @media (max-width: 860px) {
+  .burger-btn { display: flex; }
+  .sidebar-backdrop { display: block; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 95;
+    width: min(280px, 84vw);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.18);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-brand { padding-top: 2px; }
+  .app-main { width: 100%; }
+  .main-inner { padding: 68px 16px 24px; }
+  .simple-greeting { font-size: 1.4rem; }
+  .simple-center { min-height: calc(100vh - 120px); }
+  .simple-prompt-bar { flex-wrap: wrap; }
+  .pp-actions { margin-left: 0; width: 100%; flex-wrap: wrap; }
+  .pp-actions button { flex: 1; justify-content: center; }
   .simple-ask { margin-top: 0; }
   .pp-segments { grid-template-columns: 1fr; }
-  .persona-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .persona-grid { grid-template-columns: 1fr !important; }
+  .persona-view .page-head { flex-direction: column; gap: 4px; }
 }
 
 /* ── Sidebar additions ─────────────────────────────────────────────────── */
@@ -1053,6 +1124,6 @@ onUnmounted(() => {
 }
 
 @media (max-width: 860px) {
-  .persona-grid { grid-template-columns: repeat(2, 1fr); }
+  .persona-grid { grid-template-columns: 1fr; }
 }
 </style>
