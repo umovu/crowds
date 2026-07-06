@@ -157,9 +157,9 @@
                 <span class="keys-block-tier">LLM_*</span>
               </div>
               <span class="keys-block-desc">Stronger model for research, persona generation, and document parsing. Lower volume, benefits from a Plus-tier model.</span>
-              <div class="field"><label class="field-label">Base URL</label><input class="field-input mono" type="text" value="https://api.openai.com/v1"></div>
-              <div class="field"><label class="field-label">API key</label><input class="field-input mono" type="password" value="sk-············································"></div>
-              <div class="field"><label class="field-label">Model</label><input class="field-input mono" type="text" value="qwen2.5-32b-instruct"></div>
+              <div class="field"><label class="field-label">Base URL</label><input class="field-input mono" type="text" placeholder="e.g. https://api.openai.com/v1"></div>
+              <div class="field"><label class="field-label">API key</label><input class="field-input mono" type="password" placeholder="sk-…"></div>
+              <div class="field"><label class="field-label">Model</label><input class="field-input mono" type="text" placeholder="e.g. qwen2.5-32b-instruct"></div>
             </div>
             <div class="keys-block">
               <div class="keys-block-head">
@@ -167,9 +167,9 @@
                 <span class="keys-block-tier">SIM_LLM_*</span>
               </div>
               <span class="keys-block-desc">High-volume sim runtime. A cheaper/faster model is the right tool. Leave blank to reuse the research key.</span>
-              <div class="field"><label class="field-label">Base URL</label><input class="field-input mono" type="text" value="https://api.openai.com/v1"></div>
-              <div class="field"><label class="field-label">API key</label><input class="field-input mono" type="password" value="sk-············································"></div>
-              <div class="field"><label class="field-label">Model</label><input class="field-input mono" type="text" value="qwen2.5:7b"></div>
+              <div class="field"><label class="field-label">Base URL</label><input class="field-input mono" type="text" placeholder="e.g. https://api.openai.com/v1"></div>
+              <div class="field"><label class="field-label">API key</label><input class="field-input mono" type="password" placeholder="sk-…"></div>
+              <div class="field"><label class="field-label">Model</label><input class="field-input mono" type="text" placeholder="e.g. qwen2.5:7b"></div>
             </div>
             <div class="keys-block">
               <div class="keys-block-head">
@@ -178,8 +178,8 @@
               </div>
               <span class="keys-block-desc">Richer, more current personas grounded in live sources. Off by default.</span>
               <div class="field-row">
-                <div class="field"><label class="field-label">Jina key</label><input class="field-input mono" type="password" value=""></div>
-                <div class="field"><label class="field-label">Serper key</label><input class="field-input mono" type="password" value=""></div>
+                <div class="field"><label class="field-label">Jina key</label><input class="field-input mono" type="password" placeholder="jina_…"></div>
+                <div class="field"><label class="field-label">Serper key</label><input class="field-input mono" type="password" placeholder="Your Serper API key"></div>
               </div>
             </div>
           </div>
