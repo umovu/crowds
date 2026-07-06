@@ -96,7 +96,6 @@ router.beforeEach(async (to) => {
 
   if (to.meta.public) return true
 
-  return true // TEMP-DEV-BYPASS: remove to restore auth gate
   if (!isAuthenticated.value) {
     window.location.href = to.path === '/'
       ? '/landing.html'
