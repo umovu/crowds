@@ -428,4 +428,12 @@ td.num { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; text-alig
   .plan-row { grid-template-columns: 1fr; }
   .chart-row { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 640px) {
+  /* Activity table scrolls sideways inside its card instead of squashing. */
+  .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 560px; }
+  thead th, tbody td { padding-left: 12px; padding-right: 12px; }
+  td.title { max-width: 180px; }
+}
 </style>

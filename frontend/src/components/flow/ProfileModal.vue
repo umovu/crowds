@@ -574,4 +574,45 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   .plan-grid { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
 }
+
+/* ── Mobile: menu becomes a bottom sheet; modal goes full-screen ─────────── */
+@media (max-width: 860px) {
+  .profile-menu {
+    left: 12px; right: 12px; bottom: 12px;
+    width: auto;
+    border-radius: 14px;
+  }
+  .menu-option { padding: 13px 12px; font-size: 0.84rem; }
+
+  .fullpage-modal {
+    top: 0; left: 0; right: 0; bottom: 0;
+    transform: none;
+    width: 100%; max-width: 100%;
+    height: 100dvh; max-height: 100dvh;
+    border-radius: 0; border: none;
+    flex-direction: column;
+  }
+  /* Slide up from the bottom instead of the desktop center-scale rise. */
+  .modal-rise-enter-from, .modal-rise-leave-to { transform: translateY(28px); }
+
+  /* Tab rail → horizontal scrollable bar under the top edge */
+  .modal-tabs {
+    flex-direction: row; width: 100%;
+    border-right: none; border-bottom: 1px solid #ECECEC;
+    padding: 10px 12px; gap: 6px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .modal-tabs-head { display: none; }
+  .modal-tab { width: auto; flex-shrink: 0; white-space: nowrap; padding: 8px 12px; }
+
+  .modal-body { padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); }
+
+  .modal-actions { flex-wrap: wrap; }
+  .modal-actions .btn { flex: 1; padding: 12px 18px; }
+  .save-msg { max-width: 100%; flex-basis: 100%; margin-right: 0; }
+
+  .current-plan-banner { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .keys-block .field-row { grid-template-columns: 1fr; }
+  .field-input { font-size: 1rem; }  /* ≥16px stops iOS zoom-on-focus */
+}
 </style>
