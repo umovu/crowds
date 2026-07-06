@@ -13,24 +13,8 @@
         </div>
       </div>
       <div class="menu-list">
-        <button class="menu-option" @click="openFullpage('profile')">
-          <span class="menu-option-icon">👤</span>
-          <span class="menu-option-label">Profile</span>
-          <span class="menu-option-arrow">→</span>
-        </button>
-        <button class="menu-option" @click="openFullpage('dashboard')">
-          <span class="menu-option-icon">📊</span>
-          <span class="menu-option-label">Dashboard</span>
-          <span class="menu-option-arrow">→</span>
-        </button>
-        <button class="menu-option" @click="openFullpage('billing')">
-          <span class="menu-option-icon">💳</span>
-          <span class="menu-option-label">Billing</span>
-          <span class="menu-option-arrow">→</span>
-        </button>
-        <button class="menu-option" @click="openFullpage('keys')">
-          <span class="menu-option-icon">🔑</span>
-          <span class="menu-option-label">API Keys</span>
+        <button v-for="tab in tabs" :key="tab.id" class="menu-option" @click="openFullpage(tab.id)">
+          <span class="menu-option-label">{{ tab.label }}</span>
           <span class="menu-option-arrow">→</span>
         </button>
       </div>
@@ -43,7 +27,7 @@
   </Transition>
   <Transition name="modal-rise">
     <div v-if="modalOpen" class="fullpage-modal">
-      <!-- Tab rail -->
+      <!-- Tab rail (desktop only) -->
       <div class="modal-tabs">
         <div class="modal-tabs-head">Account</div>
         <button
@@ -51,20 +35,38 @@
           class="modal-tab"
           :class="{ active: activeTab === tab.id }"
           @click="activeTab = tab.id"
-        >
-          <span class="modal-tab-icon">{{ tab.icon }}</span> {{ tab.label }}
-        </button>
+        >{{ tab.label }}</button>
       </div>
 
       <!-- Body -->
       <div class="modal-body">
         <div class="modal-body-head">
-          <div class="modal-body-title">{{ activeTabLabel }}</div>
+          <div class="modal-head-left">
+            <button v-if="isMobile && !mobileMenu" class="modal-back" @click="mobileMenu = true">←</button>
+            <div class="modal-body-title">{{ isMobile && mobileMenu ? 'Account' : activeTabLabel }}</div>
+          </div>
           <button class="modal-close" @click="closeFullpage">×</button>
         </div>
 
+        <!-- Mobile: root screen is a plain list of options -->
+        <div v-if="showMobileMenu" class="tab-panel">
+          <div class="mm-head">
+            <div class="mm-avatar">{{ initials }}</div>
+            <div class="mm-info">
+              <span class="mm-name">{{ fullName }}</span>
+              <span class="mm-plan">{{ isPaid ? 'Beta plan' : 'Free plan' }}</span>
+            </div>
+          </div>
+          <div class="mm-list">
+            <button v-for="tab in tabs" :key="tab.id" class="mm-option" @click="activeTab = tab.id; mobileMenu = false">
+              <span class="mm-option-label">{{ tab.label }}</span>
+              <span class="mm-option-arrow">→</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Profile panel -->
-        <div v-if="activeTab === 'profile'" class="tab-panel">
+        <div v-if="activeTab === 'profile' && !showMobileMenu" class="tab-panel">
           <div class="field-group">
             <div class="field-row">
               <div class="field">
@@ -97,12 +99,12 @@
         </div>
 
         <!-- Dashboard panel -->
-        <div v-if="activeTab === 'dashboard'" class="tab-panel">
+        <div v-if="activeTab === 'dashboard' && !showMobileMenu" class="tab-panel">
           <DashboardPanel @open-sim="onOpenSim" />
         </div>
 
         <!-- Billing panel -->
-        <div v-if="activeTab === 'billing'" class="tab-panel">
+        <div v-if="activeTab === 'billing' && !showMobileMenu" class="tab-panel">
           <div class="current-plan-banner" :class="{ cancelled: isCancelled }">
             <div class="cpb-left">
               <span class="cpb-label">{{ isCancelled ? 'Subscription cancelled' : 'Current plan' }}</span>
@@ -147,7 +149,7 @@
         </div>
 
         <!-- API Keys panel -->
-        <div v-if="activeTab === 'keys'" class="tab-panel">
+        <div v-if="activeTab === 'keys' && !showMobileMenu" class="tab-panel">
           <div class="keys-section">
             <div class="keys-block">
               <div class="keys-block-head">
@@ -298,12 +300,16 @@ const isMobile = window.matchMedia('(max-width: 860px)').matches
 const menuOpen = ref(!isMobile)
 const modalOpen = ref(isMobile)
 const activeTab = ref('profile')
+// Mobile root screen: a plain list of the account options. Picking one shows
+// that screen; ← returns to the list. Desktop never sees this.
+const mobileMenu = ref(isMobile)
+const showMobileMenu = computed(() => isMobile && mobileMenu.value)
 
 const tabs = [
-  { id: 'profile', label: 'Profile', icon: '👤' },
-  { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-  { id: 'billing', label: 'Billing', icon: '💳' },
-  { id: 'keys', label: 'API Keys', icon: '🔑' },
+  { id: 'profile', label: 'Profile' },
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'billing', label: 'Billing' },
+  { id: 'keys', label: 'API Keys' },
 ]
 
 const activeTabLabel = computed(() => {
@@ -319,6 +325,7 @@ function closeMenu() {
 function openFullpage(tabName) {
   menuOpen.value = false
   activeTab.value = tabName
+  mobileMenu.value = false
   modalOpen.value = true
 }
 
@@ -394,7 +401,6 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   transition: background 0.15s, color 0.15s;
 }
 .menu-option:hover { background: #F0FAF4; color: #1E9E5A; }
-.menu-option-icon { font-size: 0.88rem; line-height: 1; width: 18px; text-align: center; }
 .menu-option-label { flex: 1; }
 .menu-option-arrow { font-size: 0.7rem; color: #bbb; }
 
@@ -442,7 +448,6 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 }
 .modal-tab:hover { background: #F0F0F0; color: #1a1a1a; }
 .modal-tab.active { background: #F0FAF4; color: #1E9E5A; }
-.modal-tab-icon { font-size: 0.88rem; line-height: 1; width: 16px; text-align: center; }
 
 .modal-body {
   flex: 1; overflow-y: auto;
@@ -456,6 +461,33 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 .modal-body-title { font-size: 1.05rem; font-weight: 600; color: #1a1a1a; letter-spacing: -0.3px; }
 .modal-close { background: none; border: none; font-size: 1.3rem; line-height: 1; color: #bbb; cursor: pointer; padding: 0 4px; font: inherit; }
 .modal-close:hover { color: #1a1a1a; }
+.modal-head-left { display: flex; align-items: center; gap: 10px; }
+.modal-back {
+  background: none; border: 1px solid #E5E5E5; border-radius: 8px;
+  padding: 4px 10px; font: inherit; font-size: 1rem; line-height: 1;
+  color: #555; cursor: pointer;
+}
+
+/* ── Mobile root option list ──────────────────────────────────────────────── */
+.mm-head { display: flex; align-items: center; gap: 12px; padding: 4px 2px 12px; border-bottom: 1px solid #ECECEC; }
+.mm-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+  color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.mm-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mm-name { font-size: 0.95rem; font-weight: 600; color: #1a1a1a; }
+.mm-plan { font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; color: #999; }
+.mm-list { display: flex; flex-direction: column; }
+.mm-option {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 16px 4px;
+  background: transparent; border: none; border-bottom: 1px solid #F0F0F0;
+  cursor: pointer; text-align: left; font: inherit;
+}
+.mm-option-label { font-size: 0.95rem; font-weight: 600; color: #1a1a1a; }
+.mm-option-arrow { color: #bbb; font-size: 0.85rem; }
 
 .tab-panel { display: flex; flex-direction: column; gap: 18px; }
 
@@ -598,15 +630,8 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   /* Full page slides up from the bottom edge, like a route push. */
   .modal-rise-enter-from, .modal-rise-leave-to { transform: translateY(100%); }
 
-  /* Tab rail → horizontal scrollable bar under the top edge */
-  .modal-tabs {
-    flex-direction: row; width: 100%;
-    border-right: none; border-bottom: 1px solid #ECECEC;
-    padding: 10px 12px; gap: 6px;
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-  .modal-tabs-head { display: none; }
-  .modal-tab { width: auto; flex-shrink: 0; white-space: nowrap; padding: 8px 12px; }
+  /* No tab rail on mobile — navigation is the root option list instead. */
+  .modal-tabs { display: none; }
 
   .modal-body { padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); }
 
