@@ -984,9 +984,18 @@ onUnmounted(() => {
   .sidebar {
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 95;
     width: min(280px, 84vw);
+    /* 100dvh, not 100vh — vh overshoots past the browser chrome on mobile
+       and pushes the profile footer off screen. */
+    height: 100dvh;
     transform: translateX(-100%);
     transition: transform 0.2s ease;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.18);
+  }
+  /* Profile stays pinned at the bottom; only the recents list scrolls. */
+  .side-foot {
+    flex-shrink: 0;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom));
+    background: #FAFAFA;
   }
   .sidebar.open { transform: translateX(0); }
   .sidebar-brand { padding-top: 2px; }
