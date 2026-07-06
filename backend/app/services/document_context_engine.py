@@ -1873,13 +1873,14 @@ Return ONLY a JSON array. No explanation."""
             # Advisory judge — scores competitor tiering, regenerating once on a
             # low score. Off by default (JUDGE_ENABLED), so it costs nothing normally.
             try:
-                from .judge_service import judge_enabled, get_judge_service, judge_best_of
+                from .judge_service import judge_enabled, get_judge_service, judge_best_of, record_judgement
                 if judge_enabled():
                     svc = get_judge_service()
                     cleaned, judge_result, regenerated = judge_best_of(
                         generate=extract_competitors,
                         judge=lambda comps: svc.judge_competitor_tiering(comps[:15], document_text),
                     )
+                    record_judgement("competitor_tiering", judge_result, regenerated=regenerated)
                     if judge_result and not judge_result.pass_:
                         logger.warning(f"Competitor tiering judge low score after retry: {judge_result.reasoning}")
                     elif regenerated:

@@ -195,6 +195,37 @@ REQUIRED:
         return self.judge(criteria, json.dumps(reaction, ensure_ascii=False),
                           {"persona": persona, "intervention": intervention})
 
+    def judge_panel_synthesis(self, summary: str, pitch: str, roster: str) -> JudgeResult:
+        """Evaluate a panel summary against the raw reactions it synthesizes.
+
+        `roster` is the per-agent reaction list the summary was written from —
+        the ground truth. Guards against smoothing (objections raised by several
+        panelists missing from the summary) and against invented claims."""
+        criteria = """Evaluate this panel summary against the RAW REACTIONS in context.
+
+REQUIRED:
+1. Grounded — every claim in the summary is supported by the reactions; quote any
+   unsupported claim in evidence
+2. No smoothing — objections or themes raised by several panelists must appear;
+   name any recurring objection the summary omitted
+3. No numbers, counts, percentages, prices, or buy/validation/conversion scores
+4. Qualitative "what would move the room" reflects stated reconsider-conditions
+5. 2-4 plain sentences"""
+        return self.judge(criteria, summary, {"pitch": pitch, "reactions": roster})
+
+    def judge_sa_context(self, block: str, snippets: List[str]) -> JudgeResult:
+        """Evaluate the daily SA current-realities block against the search
+        snippets it was distilled from. Pure entailment check: the block must
+        not contain facts absent from the snippets."""
+        criteria = """Evaluate this list of current South African realities against the SNIPPETS in context.
+
+REQUIRED:
+1. Every bullet is supported by at least one snippet; quote any unsupported bullet in evidence
+2. Numbers appear ONLY if a snippet gives them
+3. No stale-crisis framing the snippets don't support
+4. 6-8 short bullets, plain declarative prose"""
+        return self.judge(criteria, block, {"snippets": snippets})
+
     def judge_competitor_tiering(self, competitors: List[Dict[str, Any]],
                                  document_text: str) -> JudgeResult:
         """Evaluate competitor tier classification."""
@@ -209,6 +240,29 @@ REQUIRED:
 6. Sorted: local first, then present, then context"""
         return self.judge(criteria, json.dumps(competitors, ensure_ascii=False),
                           {"document_excerpt": document_text[:2000]})
+
+
+def record_judgement(kind: str, result: JudgeResult, *, run_id: Optional[str] = None,
+                     regenerated: bool = False) -> None:
+    """Append a judgement to {DATA_ROOT}/judge_log.jsonl so scores survive the
+    request that produced them (per-run inspection + longitudinal trends).
+    Never raises — losing a log line must not fail the judged path."""
+    try:
+        import os
+        import time
+        path = os.path.join(Config.DATA_ROOT, "judge_log.jsonl")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        line = {
+            "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "kind": kind,
+            "run_id": run_id,
+            "regenerated": regenerated,
+            **result.to_dict(),
+        }
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(line, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.warning(f"judge_log append failed ({kind}): {e}")
 
 
 def judge_enabled() -> bool:
