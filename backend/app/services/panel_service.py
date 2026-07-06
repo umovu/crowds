@@ -549,7 +549,8 @@ def frame_pitch(pitch: str, mode: str) -> str:
     )
 
 
-def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: str = "product") -> str:
+def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: str = "product",
+                             session_id: Optional[str] = None) -> str:
     """A short qualitative read of how the room reacted — the recurring
     objections and (qualitatively) what would move them — synthesized from the
     actual reaction text by the cheap sim-tier LLM (SIM_LLM_*).
@@ -591,13 +592,19 @@ def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: st
     if not (api_key and base_url and model):
         return ""
 
-    try:
+    def _generate(prev_judge=None) -> str:
         from openai import OpenAI
+        retry_hint = ""
+        if prev_judge is not None and prev_judge.reasoning:
+            retry_hint = (
+                f"\n\nA previous draft scored low. Fix this while staying grounded in the "
+                f"reactions (no numbers, no invented claims):\n{prev_judge.reasoning}"
+            )
         client = OpenAI(api_key=api_key, base_url=base_url)
         kwargs = dict(
             model=model,
             messages=[{"role": "system", "content": system},
-                      {"role": "user", "content": user}],
+                      {"role": "user", "content": user + retry_hint}],
             temperature=0.3,
             max_tokens=240,
         )
@@ -619,6 +626,21 @@ def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: st
         except Exception:
             resp = client.chat.completions.create(**kwargs)
         return (resp.choices[0].message.content or "").strip()
+
+    try:
+        # Advisory judge: evaluate the summary against the raw reactions (its
+        # ground truth), regenerating once on a low score. Off by default.
+        from .judge_service import judge_enabled, get_judge_service, judge_best_of, record_judgement
+        if judge_enabled():
+            svc = get_judge_service()
+            summary, judge_result, regenerated = judge_best_of(
+                generate=_generate,
+                judge=lambda s: svc.judge_panel_synthesis(s, pitch, roster),
+            )
+            record_judgement("panel_synthesis", judge_result, run_id=session_id,
+                             regenerated=regenerated)
+            return summary
+        return _generate()
     except Exception as e:
         logger.warning(f"Panel summary synthesis failed: {e}")
         return ""

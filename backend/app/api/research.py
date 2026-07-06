@@ -921,7 +921,7 @@ def generate_seed():
 
     judge_result = None
     try:
-        from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of
+        from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of, record_judgement
         if judge_enabled():
             svc = get_judge_service()
             # Hand the judge the same sources the briefing was synthesized from,
@@ -934,6 +934,7 @@ def generate_seed():
                 generate=generate_briefing,
                 judge=lambda t: svc.judge_seed_briefing(t, mode, topic, sources=judge_sources),
             )
+            record_judgement("seed_briefing", judge_result, run_id=topic[:80], regenerated=regenerated)
             if regenerated:
                 logger.info(f"Seed briefing regenerated once on judge feedback (topic={topic})")
         else:
@@ -1123,13 +1124,14 @@ Return ONLY a valid JSON object of the form {{"personas": [ ... ]}}. No explanat
 
     judge_result = None
     try:
-        from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of
+        from ..services.judge_service import judge_enabled, get_judge_service, judge_best_of, record_judgement
         if judge_enabled():
             svc = get_judge_service()
             agents, judge_result, regenerated = judge_best_of(
                 generate=generate_personas,
                 judge=lambda a: svc.judge_personas(a, topic=group),
             )
+            record_judgement("custom_personas", judge_result, run_id=group[:80], regenerated=regenerated)
             if regenerated:
                 logger.info(f"Personas regenerated once on judge feedback (group={group})")
         else:

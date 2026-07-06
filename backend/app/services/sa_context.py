@@ -100,18 +100,39 @@ def _distil(snippets: List[str]) -> Optional[str]:
         "short, plain present-tense bullet lines. No preamble, no closing line."
     )
     user = f"Today is {today}.\n\nSNIPPETS:\n{joined}\n\nCurrent realities (6-8 bullets):"
-    try:
+    def _generate(prev_judge=None) -> str:
         from openai import OpenAI
+        retry_hint = ""
+        if prev_judge is not None and prev_judge.reasoning:
+            retry_hint = (
+                f"\n\nA previous draft scored low. Fix this while using ONLY facts the "
+                f"snippets support:\n{prev_judge.reasoning}"
+            )
         client = OpenAI(api_key=key, base_url=Config.LLM_BASE_URL or None)
         resp = client.chat.completions.create(
             model=model,
             messages=[{"role": "system", "content": system},
-                      {"role": "user", "content": user}],
+                      {"role": "user", "content": user + retry_hint}],
             extra_body=Config.llm_extra_body() or None,
             max_tokens=500,
             temperature=0.2,
         )
-        text = (resp.choices[0].message.content or "").strip()
+        return (resp.choices[0].message.content or "").strip()
+
+    try:
+        # Advisory judge: entailment check of the distilled block against the
+        # snippets it came from, regenerating once on a low score. This block is
+        # cached ~daily and grounds every sim, so one judged call/day buys a lot.
+        from .judge_service import judge_enabled, get_judge_service, judge_best_of, record_judgement
+        if judge_enabled():
+            svc = get_judge_service()
+            text, judge_result, regenerated = judge_best_of(
+                generate=_generate,
+                judge=lambda t: svc.judge_sa_context(t, snippets),
+            )
+            record_judgement("sa_context", judge_result, regenerated=regenerated)
+        else:
+            text = _generate()
         return text or None
     except Exception as e:
         logger.warning("SA context distil failed: %s", e)

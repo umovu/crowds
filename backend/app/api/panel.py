@@ -184,7 +184,8 @@ def pitch(session_id: str):
         # survives reload. Failure leaves the deterministic summary standing.
         try:
             result["summary_narrative"] = panel_service.synthesize_panel_summary(
-                pitch_text, result.get("results", []), meta.get('mode', 'product')
+                pitch_text, result.get("results", []), meta.get('mode', 'product'),
+                session_id=session_id,
             )
         except Exception as _e:
             logger.warning(f"Panel summary synthesis skipped for {session_id}: {_e}")
