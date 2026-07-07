@@ -549,6 +549,12 @@ const runPipeline = async () => {
     fail('No simulation input found. Go back and describe a scenario.')
     return
   }
+  // Mirror the backend's /ontology/generate rule so short seeds fail here with
+  // a clear message instead of a 400 from the server.
+  if (!hasFiles && requirement.trim().length < 100) {
+    fail('Your scenario description is too short. Write at least 100 characters (or attach a document) so the simulation has enough to work with.')
+    return
+  }
 
   try {
     // ── Phase 0: Searching sources — generate the ontology from the seed ──

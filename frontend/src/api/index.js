@@ -69,6 +69,13 @@ service.interceptors.response.use(
       error.httpStatus = error.response.status
     }
 
+    // Surface the backend's own explanation instead of axios's generic
+    // "Request failed with status code NNN" — callers display error.message.
+    const backendMsg = error.response?.data?.error || error.response?.data?.message
+    if (backendMsg && typeof backendMsg === 'string') {
+      error.message = backendMsg
+    }
+
     // 402 from the backend = the action needs a paid plan. Flag it and broadcast
     // an app-wide event so the UI can prompt an upgrade instead of erroring out.
     if (error.httpStatus === 402 || error.response?.data?.code === 'upgrade_required') {
