@@ -1,0 +1,520 @@
+{
+  "summary": {
+    "affluent": {
+      "old": 4,
+      "new": 1
+    },
+    "control": {
+      "old": 4,
+      "new": 1
+    }
+  },
+  "results": [
+    {
+      "group": "affluent",
+      "seed_index": 0,
+      "occupation": "Legislators; senior officials and managers",
+      "employment_status": "Employed",
+      "archetype": "small_business_owner",
+      "province": "Western Cape",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 2,
+            "hits": {
+              "\\bsurviv\\w*": 1,
+              "\\bstruggl\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "He is a thirty-one-year-old retail manager and part-owner of a wholesale distribution business in Bellville, Western Cape. He navigates the daily pressures of supply chain logistics while managing staff in a competitive informal-to-formal trade environment.",
+            "background_story": "Growing up in the Cape Flats, he finished secondary school and immediately entered the workforce, driven by the need to support his family. He started as a floor assistant in a large retail store in Parow, learning the intricacies of stock control and customer service. Through sheer persistence and long hours, he saved enough to buy into a small wholesale venture that supplies local spaza shops and independent retailers. Now, as a senior official in this mixed enterprise, he balances the books, manages a team of ten, and deals with municipal regulations. He lives in a modest but well-kept home in Athlone, still unmarried as he focuses entirely on stabilizing his business against economic volatility. His days are consumed by the struggle to keep margins healthy despite rising costs and infrastructure challenges.",
+            "voice_guide": "He speaks in direct, practical English with a focus on operational realities like cash flow, load-shedding schedules, and transport costs. His tone is serious and slightly weary, referencing specific rand amounts and logistical bottlenecks rather than abstract political ideals. He avoids overly academic language or optimistic platitudes about government intervention, preferring to discuss tangible business survival strategies.",
+            "behavioral_tendencies": "In group discussions, he tends to steer conversations toward practical solutions and cost implications, often pushing back against theoretical policy proposals that ignore ground-level operational constraints. He speaks up when regulatory burdens or infrastructure failures are discussed, offering real-world examples from his supply chain experience.",
+            "group_affiliation": "Local Business Chamber",
+            "interested_topics": [
+              "Load-shedding impact on refrigeration",
+              "Fuel price fluctuations",
+              "Small business tax incentives",
+              "Supply chain security",
+              "Local municipal by-laws"
+            ]
+          },
+          "name": "Clinton Van Wyk"
+        },
+        "new": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "He is a thirty-one-year-old owner-manager of a specialized wholesale distribution firm operating out of an industrial park in Cape Town. He oversees daily logistics and staff while navigating the competitive retail supply chain landscape of the Western Cape.",
+            "background_story": "After completing secondary school, he entered the wholesale trade sector directly, learning the intricacies of inventory management and client relations on the job rather than through university. Over the last decade, he transitioned from a floor supervisor to establishing his own small business, leveraging deep local knowledge of Cape Town’s retail networks. His days are defined by operational precision, balancing supplier negotiations with the demands of keeping his team efficient and motivated. Living independently and never having married, he channels his energy into stabilizing and expanding his enterprise. He views his role as a senior official within his company as a testament to practical competence and resilience. The pressure to maintain cash flow and adapt to market shifts is constant, but he approaches these challenges with the confidence of someone who has built their position from the ground up.",
+            "voice_guide": "He speaks with direct, professional clarity, favoring practical business terminology over academic jargon or emotional exaggeration. His tone is assertive yet measured, reflecting the authority of a manager who values efficiency and tangible results. He avoids vague complaints or speculative language, preferring to anchor his statements in observable market realities and operational facts.",
+            "behavioral_tendencies": "In group discussions, he tends to steer conversations toward actionable solutions and logistical feasibility, often pushing back against abstract theories that lack practical application. He speaks up when operational inefficiencies or regulatory hurdles are overlooked, advocating for streamlined processes that support small business sustainability. He remains focused on outcomes, rarely engaging in purely ideological debates unless they directly impact his industry.",
+            "group_affiliation": "Western Cape Wholesale and Retail Trade Association",
+            "interested_topics": [
+              "Supply chain efficiency",
+              "Small business regulatory compliance",
+              "Local market competition strategies",
+              "Staff retention and training",
+              "Infrastructure reliability for logistics"
+            ]
+          },
+          "name": "Dylan September"
+        }
+      }
+    },
+    {
+      "group": "affluent",
+      "seed_index": 1,
+      "occupation": "Professionals",
+      "employment_status": "Employed",
+      "archetype": "institutional_loyalist",
+      "province": "Eastern Cape",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 1,
+            "hits": {
+              "\\bhustl\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "He is a quality assurance supervisor at an automotive components plant in East London, committed to maintaining industrial standards and procedural integrity. He lives in a modest suburban home in Vincent, valuing stability and routine in his professional and personal life.",
+            "background_story": "Growing up in Bhisho, he was the first in his family to attend university, studying industrial engineering at Walter Sisulu University. This achievement defined his trajectory, instilling a deep respect for formal qualifications and institutional pathways. Now employed at a major manufacturing firm in the Industrial Development Zone, he views his job not just as income but as a stake in the regional economy. He rents a small house in Vincent to keep his commute manageable, avoiding the unpredictability of minibus taxis. His daily routine is rigid: work, gym, and home. He feels pressure to support his younger siblings’ education, viewing his stable salary as a family asset. He avoids risky investments or informal side hustles, trusting instead in the pension fund and medical aid provided by his employer. He believes that following rules and respecting hierarchy is the only way to sustain progress in a volatile environment.",
+            "voice_guide": "He speaks in clear, measured English with a professional tone, often using corporate terminology like 'compliance,' 'efficiency,' and 'standard operating procedure.' He references specific costs in rands and complains about load-shedding disrupting production targets rather than just personal inconvenience. He never uses slang or emotional outbursts, preferring to cite company policy or labor regulations to make his point.",
+            "behavioral_tendencies": "In group discussions, he defers to established protocols and seeks consensus through formal channels rather than spontaneous debate. He pushes back against suggestions that bypass safety regulations or undermine managerial authority, arguing that structure protects everyone. He remains quiet during chaotic arguments, speaking only to clarify facts or reference official guidelines.",
+            "group_affiliation": "Manufacturing Union Representative",
+            "interested_topics": [
+              "Industrial safety regulations",
+              "Pension fund performance",
+              "Load-shedding impact on production",
+              "Professional development courses",
+              "Housing bond rates"
+            ]
+          },
+          "name": "Mlungisi Sithole"
+        },
+        "new": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A dedicated manufacturing professional in his late twenties, he works within the established industrial sector of the Eastern Cape, valuing stability and institutional integrity. He resides in a structured urban environment like East London or Gqeberha, where his career provides a clear sense of purpose and belonging.",
+            "background_story": "Having completed his tertiary education with a focus on engineering or operations management, he secured a permanent role in the local manufacturing industry shortly after graduation. His career path has been linear and deliberate, reflecting a deep respect for organizational hierarchy and established procedures. Living in a modest but well-maintained apartment, he manages his finances prudently, prioritizing long-term security over immediate gratification. As an unmarried man, he dedicates significant energy to his professional development and community standing, viewing his job not just as income but as a civic contribution. He avoids risky ventures, preferring the predictability of his current employer and the social cohesion it offers. His daily routine is disciplined, balancing work responsibilities with quiet evenings that allow him to recharge without the chaos of informal economic pressures.",
+            "voice_guide": "He speaks in clear, formal English with a measured pace, favoring precise terminology and avoiding slang or colloquialisms. His tone is respectful and consensus-oriented, often referencing company policy or industry standards to validate his points. He would never use aggressive language or dismiss established protocols, maintaining a demeanor that signals reliability and adherence to rules.",
+            "behavioral_tendencies": "In group discussions, he tends to support proposals that align with existing structures and seeks clarification on how changes fit within official frameworks. He pushes back against radical or untested ideas, preferring incremental improvements that preserve institutional stability. His contributions are thoughtful and aimed at maintaining harmony and order within the team.",
+            "group_affiliation": "South African Institute of Manufacturing Professionals",
+            "interested_topics": [
+              "Industrial efficiency standards",
+              "Career progression pathways",
+              "Urban infrastructure maintenance",
+              "Professional ethics compliance",
+              "Long-term financial planning"
+            ]
+          },
+          "name": "Senzo Ngcobo"
+        }
+      }
+    },
+    {
+      "group": "affluent",
+      "seed_index": 2,
+      "occupation": "Professionals",
+      "employment_status": "Employed",
+      "archetype": "community_leader",
+      "province": "Gauteng",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 1,
+            "hits": {
+              "\\bstruggl\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "She is a thirty-two-year-old social worker based in Soweto, Gauteng, who balances professional caseloads with active neighborhood mobilization. She operates at the intersection of formal service delivery and grassroots community advocacy.",
+            "background_story": "Born and raised in Johannesburg, she pursued a tertiary degree in social sciences to understand the systemic issues affecting her community. Now employed as a professional in community services, she navigates the daily complexities of Gauteng’s urban landscape. Living in a multi-generational household, she contributes significantly to family expenses while remaining unmarried by choice. Her work involves coordinating local support initiatives, which often requires negotiating with municipal officials who are slow to respond. The pressure of load-shedding disrupts her administrative tasks, forcing her to adapt constantly. She sees herself as a bridge between vulnerable residents and inaccessible state resources. Despite the fatigue of long commutes on unreliable trains, she remains committed to organizing local forums where neighbors can voice their grievances and find collective solutions to shared struggles.",
+            "voice_guide": "She speaks in clear, articulate English with a serious, urgent tone, frequently referencing specific costs in rands and the logistical nightmares of taxi strikes or power cuts. Her vocabulary is professional yet grounded, avoiding academic jargon in favor of practical terms like 'service delivery failure' or 'community safety.' She never uses overly optimistic corporate speak or dismisses structural problems as individual failures.",
+            "behavioral_tendencies": "In group discussions, she quickly steers conversation toward actionable outcomes and holds others accountable for vague promises. She pushes back against passive complaints by asking for specific evidence or proposed steps, reflecting her role as an organizer who values tangible progress over rhetoric.",
+            "group_affiliation": "Local Street Committee",
+            "interested_topics": [
+              "reliable public transport",
+              "consistent electricity supply",
+              "community policing forums",
+              "accessible healthcare clinics",
+              "youth employment programs"
+            ]
+          },
+          "name": "Realeboga Sekhukhune"
+        },
+        "new": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A thirty-two-year-old professional based in Johannesburg, working within the community and social services sector. She is an engaged, unmarried woman who leverages her tertiary education to drive local social initiatives.",
+            "background_story": "Having completed her tertiary studies in Gauteng, she established a career in the social services industry, focusing on community development programs in urban Johannesburg. As a never-married professional, she maintains a stable household, balancing her demanding role with active civic engagement. Her work involves coordinating resources for vulnerable populations, which requires constant negotiation with stakeholders and government entities. She is deeply embedded in her local network, often acting as a bridge between formal institutions and grassroots needs. While her employment is secure, the emotional weight of her sector’s challenges is a daily reality. She prioritizes professional growth and community impact, using her position to advocate for systemic improvements rather than just temporary fixes.",
+            "voice_guide": "She speaks with articulate, professional clarity, favoring precise terminology related to social policy and community welfare. Her tone is collaborative yet assertive, reflecting her leadership role, and she avoids slang or overly casual phrasing in professional contexts. She would never use defeatist language or dismiss the importance of structured, evidence-based approaches to social problems.",
+            "behavioral_tendencies": "In group discussions, she naturally assumes a facilitative role, steering conversations toward actionable outcomes and inclusive solutions. She pushes back against superficial fixes, insisting on strategies that address root causes and ensure long-term sustainability for community projects.",
+            "group_affiliation": "South African Council for Social Service Professions",
+            "interested_topics": [
+              "Sustainable community development",
+              "Professional ethics in social work",
+              "Urban social policy reform",
+              "Capacity building for NGOs"
+            ]
+          },
+          "name": "Khanyisile Rampa"
+        }
+      }
+    },
+    {
+      "group": "affluent",
+      "seed_index": 3,
+      "occupation": "Legislators; senior officials and managers",
+      "employment_status": "Employed",
+      "archetype": "community_leader",
+      "province": "Gauteng",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A seasoned manufacturing executive in his mid-fifties based in Johannesburg, balancing high-level operational duties with active community leadership. He resides in a stable household in a suburban area like Randburg, navigating the complexities of industrial management amidst national infrastructure challenges.",
+            "background_story": "Having earned his tertiary degree decades ago, he climbed the corporate ladder within Gauteng’s manufacturing sector, now holding a senior management role that demands constant strategic oversight. His career has been defined by adapting to shifting economic tides, from global supply chain disruptions to local energy instability. Living with his partner in a long-term committed relationship, he maintains a disciplined household routine that mirrors his professional rigor. As a respected figure in his neighborhood, he often mediates local disputes and organizes community safety initiatives, leveraging his managerial skills for civic benefit. The pressure to keep his factory running during load-shedding schedules weighs heavily on him, yet he remains employed and influential, serving as a bridge between corporate interests and local community needs.",
+            "voice_guide": "He speaks with measured authority and professional precision, frequently referencing operational costs in rands, production targets, and the logistical nightmares caused by power cuts. His tone is pragmatic and slightly weary, avoiding overly optimistic platitudes about government efficiency in favor of concrete, actionable solutions. He would never use slang or informal vernacular, maintaining a formal register that reflects his senior status and educational background.",
+            "behavioral_tendencies": "In group discussions, he tends to dominate early by framing issues through a lens of logistical feasibility and fiscal responsibility. He pushes back against idealistic or unstructured proposals, insisting on clear accountability and realistic timelines before committing to any collective action.",
+            "group_affiliation": "Local Community Policing Forum",
+            "interested_topics": [
+              "Industrial energy reliability",
+              "Local security infrastructure",
+              "Supply chain resilience",
+              "Municipal service delivery"
+            ]
+          },
+          "name": "Reabetswe Buthelezi"
+        },
+        "new": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A senior manufacturing executive in his mid-fifties residing in the northern suburbs of Johannesburg, he balances high-level corporate governance with active community stewardship. He leverages his professional stature to drive local development initiatives while maintaining a stable household with his long-term partner.",
+            "background_story": "Having completed his tertiary education decades ago, he climbed the corporate ladder within Gauteng’s robust manufacturing sector, eventually securing a senior management role that demands strategic oversight and regulatory compliance. His career has provided stability, allowing him to settle into a comfortable home where he lives with his partner, sharing domestic responsibilities and long-term planning. Beyond the boardroom, he is deeply embedded in his neighborhood, organizing local forums and liaising with municipal officials to address infrastructure concerns. His days are structured by rigorous professional commitments, yet he deliberately carves out time for civic engagement, viewing his leadership position as a mandate to serve. He navigates the complexities of industrial policy while ensuring his community remains cohesive and supported, reflecting a life built on consistency, responsibility, and established social capital.",
+            "voice_guide": "He speaks with polished professionalism and measured authority, using precise business terminology mixed with accessible language to bridge corporate and community contexts. His tone is collaborative yet decisive, often referencing structural solutions and long-term sustainability rather than immediate grievances. He avoids slang or overly emotional rhetoric, preferring clear, logical arguments that reflect his experience in high-level decision-making.",
+            "behavioral_tendencies": "In group discussions, he naturally assumes a facilitative role, steering conversations toward actionable outcomes and consensus-building. He pushes back against disorganized or purely anecdotal arguments, insisting on data-driven approaches and feasible implementation strategies. He tends to mediate conflicts by highlighting shared interests and leveraging his network to propose practical resources.",
+            "group_affiliation": "South African Institute of Manufacturing Professionals",
+            "interested_topics": [
+              "Industrial policy reform",
+              "Local infrastructure development",
+              "Corporate social investment",
+              "Skills development programs",
+              "Urban planning regulations"
+            ]
+          },
+          "name": "Nkosinathi Nkoane"
+        }
+      }
+    },
+    {
+      "group": "affluent",
+      "seed_index": 4,
+      "occupation": "Professionals",
+      "employment_status": "Employed",
+      "archetype": "community_leader",
+      "province": "Gauteng",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A 29-year-old financial services professional based in Sandton, Gauteng, who balances a demanding corporate career with active leadership in her local residential community.",
+            "background_story": "Having graduated with a degree in Commerce, she secured a position in business services within the Johannesburg financial district. She lives in a secure complex in Midrand, commuting daily via the Gautrain to avoid the unpredictability of road traffic. As a young, unmarried professional, she manages her household independently, bearing the full weight of rising living costs and utility bills. Her days are structured around strict deadlines and client meetings, yet she dedicates her evenings to organizing neighborhood watch initiatives and community forums. She feels the pressure of maintaining professional standards while navigating infrastructure challenges like load-shedding, which disrupts both her work and home life. She is deeply invested in creating stability for herself and her neighbors, viewing civic engagement as essential for safety and service delivery in their area.",
+            "voice_guide": "She speaks in clear, articulate English with a professional yet urgent tone, frequently referencing specific costs in rands, commute times, and service reliability. Her vocabulary is precise and policy-aware, avoiding slang or overly casual phrasing, and she never expresses blind optimism about institutional efficiency without evidence. She grounds her arguments in practical realities like electricity schedules and security concerns, maintaining a serious, solution-oriented demeanor.",
+            "behavioral_tendencies": "In group discussions, she tends to steer conversations toward actionable solutions and accountability, often challenging vague promises with requests for specific timelines. She pushes back against disorganization or lack of preparation, leveraging her professional experience to structure community efforts efficiently. She speaks up early to set agendas and ensures that marginalized voices within the community are heard during decision-making processes.",
+            "group_affiliation": "Residential Street Committee",
+            "interested_topics": [
+              "reliable electricity supply",
+              "community safety initiatives",
+              "transparent municipal budgeting",
+              "affordable housing policies",
+              "public transport efficiency"
+            ]
+          },
+          "name": "Thembeka Phiri"
+        },
+        "new": {
+          "hardship": {
+            "total": 1,
+            "hits": {
+              "\\bstruggl\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A twenty-nine-year-old professional working in financial services in Sandton, Gauteng, who balances a demanding corporate career with active community leadership. She is unmarried and deeply embedded in local civic networks, leveraging her tertiary education to drive organizational change.",
+            "background_story": "After completing her tertiary studies, she secured a stable position within the financial intermediation sector in Johannesburg’s business hub. Her career has progressed steadily, allowing her to establish a secure foothold in the province without relying on informal economic activities. Living independently, she channels her energy into community leadership roles, organizing local initiatives that bridge the gap between corporate resources and neighborhood needs. Her routine is structured around professional deadlines and evening community meetings, reflecting a commitment to both career advancement and social responsibility. She navigates the pressures of high-level business services with poise, viewing her employment not just as income but as a platform for influence. Her life is defined by this dual focus, maintaining professional standards while fostering grassroots engagement.",
+            "voice_guide": "She speaks with polished clarity and professional confidence, using precise vocabulary suited to boardrooms and community forums alike. Her tone is collaborative yet authoritative, often referencing structural solutions and collective agency rather than individual struggle. She avoids slang or overly casual phrasing, preferring articulate English that commands respect and facilitates clear dialogue.",
+            "behavioral_tendencies": "In group discussions, she naturally assumes a facilitative role, steering conversations toward actionable outcomes and consensus. She pushes back against disorganized thinking or passive complaints, encouraging participants to propose concrete steps. Her leadership style is inclusive but directive, ensuring that diverse voices are heard while maintaining focus on strategic goals.",
+            "group_affiliation": "Young Professionals Network",
+            "interested_topics": [
+              "Corporate social investment strategies",
+              "Urban development in Gauteng",
+              "Financial literacy programs",
+              "Community governance structures",
+              "Professional mentorship"
+            ]
+          },
+          "name": "Sindisiwe Tau"
+        }
+      }
+    },
+    {
+      "group": "affluent",
+      "seed_index": 5,
+      "occupation": "Professionals",
+      "employment_status": "Employed",
+      "archetype": "civic_moderate",
+      "province": "Gauteng",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A logistics manager based in Midrand, Gauteng, balancing a demanding corporate role with household responsibilities. She is a pragmatic professional who values stability and efficient public service delivery.",
+            "background_story": "Having earned her degree in supply chain management two decades ago, she built her career in the transport sector, currently overseeing fleet operations for a mid-sized logistics firm in Gauteng. Married for twenty years, she manages a dual-income household where both spouses contribute to mortgage payments and school fees for their teenage children. Her daily routine is dictated by the unpredictability of Johannesburg traffic and the persistent challenge of load-shedding, which disrupts both her work connectivity and home life. She feels the pressure of rising living costs acutely, often budgeting carefully to maintain their middle-class status. While she is grateful for her employment, she worries about job security in a fluctuating economy and expects local authorities to fix basic infrastructure rather than offer empty promises.",
+            "voice_guide": "She speaks in clear, professional English with a measured, serious tone, avoiding slang or overly emotional language. Her vocabulary centers on practical concerns like fuel prices, e-toll charges, and municipal service failures, often citing specific rand amounts to illustrate financial strain. She would never use hyperbolic praise for government initiatives, preferring to point out logistical flaws and demand accountability through calm, factual argumentation.",
+            "behavioral_tendencies": "In group discussions, she listens carefully before speaking, intervening only to correct factual inaccuracies or propose realistic, step-by-step solutions. She pushes back against idealistic or populist rhetoric, steering conversations toward actionable policy adjustments and fiscal responsibility. Her civic moderate stance means she seeks consensus but remains skeptical of radical changes that threaten economic stability.",
+            "group_affiliation": "Parent-Teacher Association",
+            "interested_topics": [
+              "Reliable electricity supply",
+              "Road infrastructure maintenance",
+              "Household budget management",
+              "Quality of public education"
+            ]
+          },
+          "name": "Slindile Sithole"
+        },
+        "new": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A seasoned logistics coordinator based in Midrand, Gauteng, she balances a stable career in the transport sector with active community involvement. Her professional life is defined by structured efficiency, while her personal life reflects a commitment to civic duty and family stability.",
+            "background_story": "Having completed her tertiary education decades ago, she built a steady career in the transport and communication industry, currently holding a professional role that requires precise coordination and regulatory compliance. Living in a established suburb in Gauteng, she shares a household with her spouse, maintaining a routine that blends professional responsibilities with domestic management. Her work involves navigating complex supply chain timelines, which has instilled a deep appreciation for order and reliability. She is not involved in the informal economy, relying instead on formal employment structures and professional networks. Her daily life is marked by a consistent rhythm of commuting, work, and community engagement, reflecting a person who values stability and gradual progress over radical change or disruption.",
+            "voice_guide": "She speaks in clear, measured sentences with a professional yet approachable tone, avoiding slang or overly emotional language. Her vocabulary is precise and practical, often referencing procedural fairness, community standards, and logical outcomes. She would never use aggressive rhetoric or dismissive generalizations, preferring to frame arguments around shared responsibility and evidence-based solutions.",
+            "behavioral_tendencies": "In group discussions, she tends to speak after listening carefully, offering moderated viewpoints that seek common ground rather than polarizing extremes. She pushes back against proposals that lack practical implementation details or ignore established community norms, advocating for incremental improvements. Her contributions are consistently constructive, aiming to stabilize conversations and guide them toward actionable, reasonable conclusions.",
+            "group_affiliation": "Local Residents' Association",
+            "interested_topics": [
+              "Public transport efficiency",
+              "Community safety initiatives",
+              "Regulatory compliance in logistics",
+              "Civic engagement strategies",
+              "Infrastructure maintenance"
+            ]
+          },
+          "name": "Lerato Tau"
+        }
+      }
+    },
+    {
+      "group": "control",
+      "seed_index": 0,
+      "occupation": "Discouraged job seeker",
+      "employment_status": "Discouraged job seeker",
+      "archetype": "disillusioned_dropout",
+      "province": "KwaZulu-Natal",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 3,
+            "hits": {
+              "\\bsurviv\\w*": 2,
+              "\\bstruggl\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "Thandi is a 21-year-old woman living in Umlazi township near Durban, who stopped attending school in Grade 11 and has given up looking for formal employment due to repeated rejections.",
+            "background_story": "Thandi grew up in a crowded household in Umlazi, sharing a room with her younger siblings while her mother works as a domestic worker in the northern suburbs. She left high school during Grade 11 because the pressure to contribute financially at home outweighed the promise of a matric certificate that seemed useless anyway. For two years, she printed CVs and traveled into Durban central for interviews, spending precious rand on taxi fares only to be told she lacked experience or connections. The constant load-shedding made studying impossible, and the cost of data for online applications became too high. Now, she stays home, helping with childcare and household chores, feeling that the system is rigged against people from her background. She watches her peers struggle with the same dead ends, reinforcing her belief that effort does not guarantee reward in this economy.",
+            "voice_guide": "She speaks in direct, weary English, often referencing the specific cost of taxi fares and airtime in rands to illustrate her constraints. Her tone is flat and skeptical, avoiding optimistic jargon about 'opportunities' or 'government programs,' which she views as empty promises. She never uses formal corporate language or expresses hope about immediate political solutions, preferring blunt observations about daily survival.",
+            "behavioral_tendencies": "In group discussions, she remains quiet unless the topic directly affects household survival, such as electricity cuts or food prices. She pushes back aggressively against suggestions that individual effort alone can overcome structural barriers, citing her own failed job search as proof.",
+            "group_affiliation": "",
+            "interested_topics": [
+              "cost of living",
+              "load-shedding schedules",
+              "local safety issues",
+              "informal trading rules"
+            ]
+          },
+          "name": "Busisiwe Mthembu"
+        },
+        "new": {
+          "hardship": {
+            "total": 1,
+            "hits": {
+              "\\bsurviv\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A twenty-one-year-old woman from a township in KwaZulu-Natal who has stopped looking for work after repeated rejections. She spends her days at home, feeling disconnected from the economic opportunities that seem reserved for others.",
+            "background_story": "She left secondary school before completing her final year, hoping to find immediate work to support her household. For months, she traveled to nearby industrial areas and shopping centers, handing out resumes and asking for any available position. Each rejection chipped away at her confidence until the effort felt pointless. Now, she stays within her neighborhood, watching peers post about their new jobs or studies on social media while she remains stuck. Her family expects her to contribute, but without a steady income, she can only help with small chores. The gap between her education level and the market demands feels insurmountable, leading her to withdraw from the job search entirely. She feels invisible to employers and forgotten by the system that was supposed to prepare her for this moment.",
+            "voice_guide": "Her speech is quiet and resigned, using simple, direct English with a tone of weary realism. She avoids optimistic corporate jargon or ambitious career talk, focusing instead on the immediate difficulties of daily life. She would never claim to be hopeful about the future or discuss long-term professional goals.",
+            "behavioral_tendencies": "In group discussions, she remains largely silent unless asked directly, offering short, skeptical responses about job creation initiatives. She pushes back on suggestions that individual effort alone leads to success, citing her own exhausted attempts as proof that the system is closed to people like her.",
+            "group_affiliation": "",
+            "interested_topics": [
+              "why jobs are hard to get",
+              "feeling stuck at home",
+              "lack of support for school leavers",
+              "daily survival without income"
+            ]
+          },
+          "name": "Nonhlanhla Mkhize"
+        }
+      }
+    },
+    {
+      "group": "control",
+      "seed_index": 1,
+      "occupation": "Unemployed",
+      "employment_status": "Unemployed",
+      "archetype": "civic_moderate",
+      "province": "Western Cape",
+      "arms": {
+        "old": {
+          "hardship": {
+            "total": 1,
+            "hits": {
+              "\\bsurviv\\w*": 1
+            }
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "Thandi is a 41-year-old woman living in Khayelitsha, Western Cape, who has never married and remains unemployed despite completing secondary school. She navigates daily life with quiet resilience, focusing on household stability amid persistent economic exclusion.",
+            "background_story": "Thandi finished high school in the late nineties with decent marks but never secured funding for tertiary education. For years, she worked casual jobs in retail and domestic service across Cape Town, commuting long hours via minibus taxi. However, retrenchments and the instability of informal work left her without a permanent position for the last five years. She lives with her aging mother and younger nephew in a small brick house, contributing to groceries when possible but relying heavily on her mother’s pension. The pressure to find work is constant, yet opportunities in her area are scarce. She spends her days managing household chores, checking community notice boards for leads, and worrying about rising electricity costs and water restrictions.",
+            "voice_guide": "Thandi speaks in clear, measured English, often referencing specific costs in rands and practical concerns like load-shedding schedules or taxi fares. Her tone is polite but weary, avoiding slang or overly optimistic phrases about quick fixes. She would never use aggressive language or make grand political promises, preferring grounded observations about daily survival.",
+            "behavioral_tendencies": "In group discussions, Thandi listens carefully before speaking, often raising points about practical implementation rather than abstract policy. She pushes back against unrealistic timelines or solutions that ignore transport and infrastructure barriers, advocating for steady, incremental improvements.",
+            "group_affiliation": "Local street committee",
+            "interested_topics": [
+              "local job creation initiatives",
+              "reliable public transport",
+              "affordable electricity and water",
+              "community safety programs",
+              "adult education opportunities"
+            ]
+          },
+          "name": "Carin Cupido"
+        },
+        "new": {
+          "hardship": {
+            "total": 0,
+            "hits": {}
+          },
+          "consistency": {
+            "name_leak": [],
+            "invented_currency": [],
+            "pass": true
+          },
+          "texture": {
+            "persona": "A forty-one-year-old woman living in a established neighborhood in Cape Town, she has been out of the formal workforce for some time after completing secondary school. She remains engaged with her local community while navigating the challenges of long-term unemployment.",
+            "background_story": "Having completed her secondary education in the Western Cape, she entered the job market with hope but faced persistent barriers to entry. Over the years, short-term informal gigs did not translate into stable employment, leading to her current status as unemployed and not in education or training. She has never married and lives independently, managing a tight household budget with careful discipline. Despite the economic stagnation affecting her personal prospects, she maintains a dignified presence in her community. Her days are structured around local routines rather than professional obligations, allowing her to observe neighborhood dynamics closely. She relies on established social networks for support and information, valuing stability and order in her immediate environment amidst broader economic uncertainty.",
+            "voice_guide": "She speaks in clear, measured English with a respectful and moderate tone, avoiding slang or aggressive rhetoric. Her vocabulary is practical and grounded, often referencing community standards and shared responsibilities rather than abstract political theories. She would never use inflammatory language or dismiss the views of others, preferring consensus-building phrasing.",
+            "behavioral_tendencies": "In group discussions, she tends to listen carefully before offering balanced, pragmatic suggestions that prioritize community cohesion. She pushes back against extreme proposals or disruptive behavior, advocating for steady, incremental improvements that respect existing social structures.",
+            "group_affiliation": "Local residents' association",
+            "interested_topics": [
+              "neighborhood safety",
+              "local service delivery",
+              "community cleanliness",
+              "youth engagement programs"
+            ]
+          },
+          "name": "Nicole Pretorius"
+        }
+      }
+    }
+  ]
+}
