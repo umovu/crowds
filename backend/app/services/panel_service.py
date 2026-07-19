@@ -19,6 +19,7 @@ simulation listings never pick them up.
 import json
 import os
 import random
+import re
 import shutil
 import time
 import uuid
@@ -29,6 +30,7 @@ from ..config import Config
 from ..utils.logger import get_logger
 from .income_seeder import detect_grant, GRANT_PROVENANCE
 from .mode_specs import budget_tier
+from . import mechanism_card_service
 from .persona_library import get_library
 from .persona_retrieval import select_for_query
 
@@ -52,60 +54,80 @@ DEFAULT_CAST_SIZE = 12
 # representative + tilt path from persona_retrieval.
 SEGMENTS = {
     "everyone": {
-        "label": "Everyone",
-        "description": "Representative cross-section of SA, tilted toward your pitch",
+        "label": "Everyone (representative SA)",
+        "description": "The real SA mix — grant and informal voices dominate, as in the population",
         "predicate": None,
     },
     "unemployed": {
         "label": "Unemployed",
-        "description": "Unemployed and discouraged job seekers (QLFS employment status)",
+        "description": "Unemployed and discouraged job seekers",
         "predicate": lambda p: p.get("employment_status") in ("Unemployed", "Discouraged job seeker"),
     },
     "grant_recipients": {
         "label": "Grant recipients",
-        "description": "Households surviving on SASSA grants",
+        "description": "Households living on SASSA grants",
         "predicate": lambda p: p.get("actor_archetype") == "grant_dependent_survivor",
     },
     "informal_traders": {
         "label": "Informal traders",
-        "description": "Spaza, street and informal-economy operators",
+        "description": "Spaza and street traders",
         "predicate": lambda p: p.get("actor_archetype") == "informal_trader",
     },
     "small_business": {
         "label": "Small business owners",
-        "description": "Formal small-business operators",
+        "description": "Formal small-business owners",
         "predicate": lambda p: p.get("actor_archetype") == "small_business_owner",
     },
     "youth": {
         "label": "Youth (under 35)",
-        "description": "18-34, across employment statuses",
+        "description": "Ages 18–34, all employment statuses",
         "predicate": lambda p: isinstance(p.get("age"), int) and p["age"] < 35,
+    },
+    # Farmers (QLFS 2026Q1 farm-role build) — the agritech customer base.
+    "farmers": {
+        "label": "Farmers & agri",
+        "description": "Subsistence and smallholder farmers — agri products, rural policy",
+        "predicate": lambda p: p.get("actor_archetype") in (
+            "communal_farmer", "smallholder_emerging_farmer"),
+    },
+    "smallholder_owners": {
+        "label": "Smallholder farm owners",
+        "description": "Farm owners who sell for income and control farm spend",
+        "predicate": lambda p: p.get("actor_archetype") == "smallholder_emerging_farmer",
+    },
+    # Salaried professionals (QLFS formal professional/managerial build) — the
+    # segment that can afford recurring-cost products; answers "tune the message
+    # for people who can pay" without guessing from broader employment status.
+    "professionals": {
+        "label": "Salaried professionals",
+        "description": "Salaried professionals and managers — likely paying customers",
+        "predicate": lambda p: p.get("actor_archetype") == "urban_professional",
     },
     "employed": {
         "label": "Employed",
-        "description": "Formally employed (QLFS employment status)",
+        "description": "In formal employment",
         "predicate": lambda p: p.get("employment_status") == "Employed",
     },
     # Education roles (GHS 2025 library build) — counts stay 0 until the
     # education personas are built into the library.
     "learners": {
         "label": "Learners",
-        "description": "High-school-age learners (15-18) in the school system (GHS)",
+        "description": "High-school learners, ages 15–18",
         "predicate": lambda p: p.get("actor_archetype") == "learner",
     },
     "guardians": {
         "label": "Parents & guardians",
-        "description": "Heads/spouses of households with school-age learners (GHS)",
+        "description": "Household heads with school-age children",
         "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian"),
     },
     "gogo_guardians": {
         "label": "Gogo guardians",
-        "description": "Grandparent-headed learner households (~39% of SA learners)",
+        "description": "Grandparents raising learners (~39% of SA)",
         "predicate": lambda p: p.get("actor_archetype") == "gogo_guardian",
     },
     "educators": {
         "label": "Educators",
-        "description": "Teachers (QLFS professional pool, role assigned)",
+        "description": "Teachers from the QLFS professional pool",
         "predicate": lambda p: p.get("actor_archetype") == "educator",
     },
     # Fee status (GHS) — households already spending on education vs no-fee-school
@@ -113,15 +135,81 @@ SEGMENTS = {
     # so a paid-product pitch can target families with proven education spend.
     "fee_paying": {
         "label": "Fee-paying households",
-        "description": "Learners/guardians already paying school fees (GHS) — proven education spend",
+        "description": "Families already paying school fees",
         "predicate": lambda p: _pays_school_fees(p),
     },
     "no_fee_school": {
         "label": "No-fee-school households",
-        "description": "Learners/guardians at no-fee schools (GHS) — tightest affordability test",
+        "description": "No-fee schools — toughest affordability test",
         "predicate": lambda p: _no_fee_only(p),
     },
+    # Role x fee-tier splits (GHS). "Fee-paying" alone mixes R100/yr and R80k/yr
+    # households — different in kind for a priced product. Threshold R4,000/yr is
+    # derived from the library's band distribution (gap between the <=R2k cluster
+    # and the R4k+ cluster; tracks the no-fee/former-Model-C divide). Guardians
+    # are the PAYER panel for a priced pitch; learners are the USER panel.
+    "guardians_low_fee": {
+        "label": "Guardians — low-fee schools",
+        "description": "Parents paying up to R4,000/yr fees — tight budgets",
+        "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
+        and _fee_tier(p) == "low_fee",
+    },
+    "guardians_high_fee": {
+        "label": "Guardians — high-fee schools",
+        "description": "Parents paying over R4,000/yr fees — spend headroom",
+        "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
+        and _fee_tier(p) == "high_fee",
+    },
+    "learners_no_fee": {
+        "label": "Learners — no-fee schools",
+        "description": "Learners at no-fee schools",
+        "predicate": lambda p: p.get("actor_archetype") == "learner" and _fee_tier(p) == "no_fee",
+    },
+    "learners_low_fee": {
+        "label": "Learners — low-fee schools",
+        "description": "Learners at low-fee schools (to R4,000/yr)",
+        "predicate": lambda p: p.get("actor_archetype") == "learner" and _fee_tier(p) == "low_fee",
+    },
+    "learners_high_fee": {
+        "label": "Learners — high-fee schools",
+        "description": "Learners at high-fee schools (over R4,000/yr)",
+        "predicate": lambda p: p.get("actor_archetype") == "learner" and _fee_tier(p) == "high_fee",
+    },
+    "guardians_no_fee": {
+        "label": "Guardians — no-fee schools",
+        "description": "Parents at no-fee schools — no current fee spend",
+        "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
+        and _fee_tier(p) == "no_fee",
+    },
 }
+
+_LOW_FEE_CEILING = 4000  # R/yr — see segment comments above
+
+
+def _band_upper(band: str):
+    """Upper rand bound of a GHS fee-band string; 0 for 'No fees'; None if unparseable."""
+    if not band:
+        return None
+    if band.strip().lower() == "no fees":
+        return 0
+    nums = [int(re.sub(r"[^\d]", "", n)) for n in re.findall(r"R[\d\s,  ]+", band)]
+    if not nums:
+        return None
+    if band.strip().lower().startswith("more than"):
+        return nums[-1] + 1
+    return max(nums)
+
+
+def _fee_tier(p: Dict[str, Any]):
+    """no_fee | low_fee | high_fee | None (no fee data). Highest attached band wins:
+    a guardian with one no-fee and one R8k learner is a high-fee household."""
+    uppers = [u for u in (_band_upper(b) for b in _fee_bands(p)) if u is not None]
+    if not uppers:
+        return None
+    top = max(uppers)
+    if top == 0:
+        return "no_fee"
+    return "low_fee" if top <= _LOW_FEE_CEILING else "high_fee"
 
 
 def _fee_bands(p: Dict[str, Any]) -> List[str]:
@@ -143,6 +231,48 @@ def _no_fee_only(p: Dict[str, Any]) -> bool:
     Excludes personas with no fee data at all — this is a positive no-fee signal."""
     bands = _fee_bands(p)
     return bool(bands) and all(b == "No fees" for b in bands)
+
+
+# Pitch → suggested segment(s). Deterministic keyword match, no LLM. A hit on
+# any keyword suggests that segment; suggestions are ranked by hit count and
+# capped at 2 so the hint stays a hint. The UI must SHOW the suggestion for the
+# user to apply — never silently pre-select (a wrong silent default is worse
+# than no default).
+_SEGMENT_KEYWORDS: Dict[str, Tuple[str, ...]] = {
+    "farmers": ("farm", "farmer", "livestock", "cattle", "herd", "crop", "agri",
+                "maize", "harvest", "veld", "grazing", "abattoir", "kraal"),
+    "professionals": ("professional", "premium", "executive", "corporate",
+                      "salaried", "office worker", "high-income", "affluent"),
+    "learners": ("learner", "student", "matric", "high school", "grade ",
+                 "homework", "exam", "study app", "tutoring", "school subject"),
+    "guardians": ("parent", "guardian", "school fees", "my child", "children's",
+                  "your child", "for kids", "family plan"),
+    "informal_traders": ("spaza", "street vendor", "hawker", "informal trader",
+                         "taxi rank", "stall", "township shop"),
+    "small_business": ("small business", "sme", "entrepreneur", "startup owner",
+                       "merchant", "point of sale"),
+    "unemployed": ("unemployed", "job seeker", "jobless", "work seeker"),
+    "grant_recipients": ("grant", "sassa", "pension", "social relief"),
+}
+
+
+def suggest_segments(pitch: str, cap: int = 2) -> List[str]:
+    """Suggest library segments for a pitch — deterministic keyword scoring.
+
+    Returns up to `cap` segment ids ordered by keyword-hit count (ties broken
+    alphabetically for determinism). Empty list when nothing matches — the
+    caller falls back to 'everyone', which is the honest default.
+    """
+    blob = (pitch or "").lower()
+    if not blob.strip():
+        return []
+    scores = {}
+    for seg_id, keywords in _SEGMENT_KEYWORDS.items():
+        hits = sum(1 for kw in keywords if kw in blob)
+        if hits:
+            scores[seg_id] = hits
+    ranked = sorted(scores, key=lambda s: (-scores[s], s))
+    return ranked[:cap]
 
 
 def list_segments() -> List[Dict[str, Any]]:
@@ -218,6 +348,39 @@ def assert_library_cast(profiles: List[Dict[str, Any]]) -> None:
         )
 
 
+def _economic_fields(persona: Dict[str, Any]) -> Dict[str, Any]:
+    """Deterministic economic fields (grant cohort + budget tier) from REAL
+    persona data only. Pure function; the single source of truth shared by
+    profile stamping (_build_profile) and selection-time affordability
+    filtering (create_session budget_tiers) — one computation, so the tier a
+    persona is FILTERED on is byte-identical to the tier stamped on their
+    profile. Never an LLM estimate, never a purchase probability.
+    """
+    is_grant, grant_type, grant_amount = detect_grant(
+        actor_archetype=persona.get("actor_archetype"),
+        occupation=persona.get("occupation"),
+        background_story=persona.get("background_story"),
+    )
+    fields: Dict[str, Any] = {}
+    if is_grant:
+        fields["is_grant_dependent"] = True
+        fields["grant_type"] = grant_type
+        if grant_amount is not None:
+            fields["monthly_income_rand"] = grant_amount
+            fields["income_provenance"] = GRANT_PROVENANCE
+    fields["budget_tier"] = budget_tier(
+        archetype=persona.get("actor_archetype"),
+        is_institutional=bool(persona.get("is_institutional", False)),
+        occupation=persona.get("occupation"),
+        group_affiliation=persona.get("group_affiliation"),
+        grant_income=grant_amount if is_grant else None,
+        # GHS personas carry surveyed household income — the strongest real
+        # signal; overrides grant/archetype inference inside budget_tier.
+        household_income_rand=persona.get("monthly_household_income_rand"),
+    )
+    return fields
+
+
 def _build_profile(persona: Dict[str, Any], agent_id: int, mode: str) -> Dict[str, Any]:
     """Turn a library persona into an interview-ready agent profile.
 
@@ -237,27 +400,7 @@ def _build_profile(persona: Dict[str, Any], agent_id: int, mode: str) -> Dict[st
     profile.setdefault("source_entity_type", LIBRARY_PROVENANCE)
 
     if mode == "product":
-        is_grant, grant_type, grant_amount = detect_grant(
-            actor_archetype=profile.get("actor_archetype"),
-            occupation=profile.get("occupation"),
-            background_story=profile.get("background_story"),
-        )
-        if is_grant:
-            profile["is_grant_dependent"] = True
-            profile["grant_type"] = grant_type
-            if grant_amount is not None:
-                profile["monthly_income_rand"] = grant_amount
-                profile["income_provenance"] = GRANT_PROVENANCE
-        profile["budget_tier"] = budget_tier(
-            archetype=profile.get("actor_archetype"),
-            is_institutional=bool(profile.get("is_institutional", False)),
-            occupation=profile.get("occupation"),
-            group_affiliation=profile.get("group_affiliation"),
-            grant_income=grant_amount if is_grant else None,
-            # GHS personas carry surveyed household income — the strongest real
-            # signal; overrides grant/archetype inference inside budget_tier.
-            household_income_rand=profile.get("monthly_household_income_rand"),
-        )
+        profile.update(_economic_fields(profile))
 
     return profile
 
@@ -328,6 +471,20 @@ def _mixed_cast(
     return cast, allocation
 
 
+BUDGET_TIERS = ("tight", "moderate", "loose")
+
+
+class _FilteredLibrary:
+    """Minimal PersonaLibrary-shaped view over a pre-filtered persona list, so
+    the affordability lens can reuse select_for_query/_mixed_cast unchanged."""
+
+    def __init__(self, personas: List[Dict[str, Any]]):
+        self._personas = personas
+
+    def all(self) -> List[Dict[str, Any]]:
+        return self._personas
+
+
 def create_session(
     pitch: str,
     mode: str = "product",
@@ -336,14 +493,22 @@ def create_session(
     seed: Optional[int] = None,
     segment: Optional[str] = None,
     segments: Optional[List[str]] = None,
+    budget_tiers: Optional[List[str]] = None,
     user_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
-    Deterministic for a given (pitch, n, province, seed, segments) — no LLM
-    calls. `segments` mixes several named library slices with even seat
+    Deterministic for a given (pitch, n, province, seed, segments, budget_tiers)
+    — no LLM calls. `segments` mixes several named library slices with even seat
     allocation; `segment` is the single-group shorthand. None/"everyone" keeps
-    the representative + pitch-tilted selection. Returns the session metadata
+    the representative + pitch-tilted selection.
+
+    `budget_tiers` is the affordability lens: restrict the candidate pool to
+    personas whose deterministic budget tier (real grant/household income data,
+    archetype inference as fallback — see _economic_fields) is in the given set,
+    e.g. ["moderate", "loose"] for "people whose budgets could absorb a priced
+    product". An affordability FILTER from real data is sanctioned; a "% who
+    would buy" score is not, and none is produced. Returns the session metadata
     including the roster summary.
     """
     if not (pitch or "").strip():
@@ -351,6 +516,14 @@ def create_session(
     mode = (mode or "product").strip().lower()
     if mode not in ("policy", "product"):
         raise ValueError(f"mode must be 'policy' or 'product', got '{mode}'")
+
+    tier_list = [t.strip().lower() for t in (budget_tiers or []) if t and t.strip()]
+    tier_list = list(dict.fromkeys(tier_list))
+    for t in tier_list:
+        if t not in BUDGET_TIERS:
+            raise ValueError(f"unknown budget tier '{t}' — one of {list(BUDGET_TIERS)}")
+    if set(tier_list) == set(BUDGET_TIERS):
+        tier_list = []  # all tiers = no filter
 
     seg_list = [s.strip().lower() for s in (segments or ([segment] if segment else ["everyone"])) if s and s.strip()]
     seg_list = list(dict.fromkeys(seg_list)) or ["everyone"]  # dedupe, keep order
@@ -370,12 +543,32 @@ def create_session(
             "Persona library is empty — run backend/scripts/build_library.py first."
         )
 
+    # Affordability lens: restrict candidates by deterministic budget tier
+    # BEFORE cast selection, using the same _economic_fields computation the
+    # profiles get stamped with — filter and stamp can't drift apart.
+    affordability_pool_size = None
+    if tier_list:
+        qualified = [p for p in library.all()
+                     if _economic_fields(p)["budget_tier"] in tier_list]
+        if not qualified:
+            raise ValueError(
+                f"No personas in budget tier(s) {tier_list}"
+                + (f" in {province}" if province else "")
+            )
+        affordability_pool_size = len(qualified)
+        library = _FilteredLibrary(qualified)
+
     if seg_list == ["everyone"]:
         cast = select_for_query(n, pitch, province=province, seed=seed, library=library)
         allocation = {"everyone": len(cast)}
     else:
         cast, allocation = _mixed_cast(seg_list, n, seed, province, library)
     profiles = [_build_profile(p, i, mode) for i, p in enumerate(cast)]
+    # Research grounding (Phase 5): same card binding as the sim cast path in
+    # simulation_manager — deterministic, LLM-free, no-op per persona when no
+    # card matches or RESEARCH_CONTEXT_ENABLED=0.
+    for p in profiles:
+        mechanism_card_service.attach_research_context(p)
     # Guard: a panel cast is library-only by construction — this asserts it,
     # so a future code path that mixes in graph/research identities fails loud.
     assert_library_cast(profiles)
@@ -412,6 +605,11 @@ def create_session(
     }
     if mode == "product":
         meta["budget_tier_distribution"] = _tier_distribution(profiles)
+    if tier_list:
+        meta["budget_tier_filter"] = tier_list
+        # Affordability share from real data (sanctioned): how many of the whole
+        # library qualified — NOT a purchase probability (banned).
+        meta["affordability_pool_size"] = affordability_pool_size
     _write_json(os.path.join(sdir, META_FILE), meta)
 
     logger.info(f"Created panel session {session_id}: {len(profiles)} personas, mode={mode}, seed={seed}")
@@ -482,7 +680,74 @@ def save_round(session_id: str, round_data: Dict[str, Any]) -> int:
     meta = _read_json(meta_path) or {}
     meta["rounds_run"] = round_num
     _write_json(meta_path, meta)
+
+    # Regenerate the human-readable session report after every round, so a
+    # session dir always carries an inspectable REPORT.md next to the raw JSON.
+    try:
+        write_session_report(session_id)
+    except Exception as e:  # noqa: BLE001 — the report is a convenience, never fail a round over it
+        logger.warning(f"Session report generation failed for {session_id}: {e}")
     return round_num
+
+
+def write_session_report(session_id: str) -> str:
+    """Compose REPORT.md in the session dir: cast (with tiers + research cards),
+    every round's responses and stances — the debugging trail, human-readable.
+    Deterministic assembly of already-persisted JSON; no LLM."""
+    sdir = session_dir(session_id)
+    meta = _read_json(os.path.join(sdir, META_FILE)) or {}
+    profiles = _read_json(os.path.join(sdir, PROFILES_FILE)) or []
+
+    lines = [f"# Panel report — {session_id}", ""]
+    lines.append(f"**Pitch:** {meta.get('pitch', '')}")
+    lines.append(f"**Mode:** {meta.get('mode')} · **Segments:** {meta.get('segment_label')} "
+                 f"· **Seed:** {meta.get('seed')} · **Created:** {meta.get('created_at')}")
+    if meta.get("budget_tier_filter"):
+        lines.append(f"**Affordability filter:** {meta['budget_tier_filter']} "
+                     f"(qualified pool: {meta.get('affordability_pool_size')})")
+    if meta.get("budget_tier_distribution"):
+        lines.append(f"**Budget tiers in cast:** {meta['budget_tier_distribution']}")
+    lines.append("")
+
+    lines.append("## Cast")
+    lines.append("")
+    lines.append("| Name | Archetype | Province | Budget tier | Research cards |")
+    lines.append("|---|---|---|---|---|")
+    for p in profiles:
+        cards = ", ".join(c.get("card_id", "?") for c in p.get("research_citations", [])) or "—"
+        lines.append(f"| {p.get('name')} | {p.get('actor_archetype')} | {p.get('province')} "
+                     f"| {p.get('budget_tier', '—')} | {cards} |")
+    lines.append("")
+
+    rdir = os.path.join(sdir, ROUNDS_DIR)
+    round_files = sorted(f for f in (os.listdir(rdir) if os.path.isdir(rdir) else [])
+                         if f.startswith("round_") and f.endswith(".json"))
+    by_id = {p.get("id"): p for p in profiles}
+    for fname in round_files:
+        rd = _read_json(os.path.join(rdir, fname)) or {}
+        lines.append(f"## Round {rd.get('round')} — {rd.get('timestamp', '')[:19]}")
+        if rd.get("pitch") and rd.get("pitch") != meta.get("pitch"):
+            lines.append(f"**Variant pitch:** {rd['pitch']}")
+        lines.append("")
+        results = (rd.get("result") or {}).get("results") or []
+        for r in results:
+            persona = by_id.get(r.get("agent_id"), {})
+            name = r.get("agent_name") or persona.get("name") or f"agent {r.get('agent_id')}"
+            arch = r.get("actor_archetype") or persona.get("actor_archetype", "")
+            before, after = r.get("stance_before"), r.get("stance_after")
+            if before and after:
+                arrow = f" — {before} → {after}" + (" (changed)" if r.get("stance_changed") else "")
+            else:
+                arrow = ""
+            lines.append(f"### {name} ({arch}, {r.get('budget_tier', persona.get('budget_tier', '—'))}){arrow}")
+            answer = r.get("response") or r.get("answer") or r.get("opinion") or ""
+            lines.append(str(answer).strip())
+            lines.append("")
+
+    path = os.path.join(sdir, "REPORT.md")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+    return path
 
 
 def list_rounds(session_id: str, include_results: bool = False) -> List[Dict[str, Any]]:

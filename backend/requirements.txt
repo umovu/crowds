@@ -5,12 +5,12 @@
 # Install: pip install -r requirements.txt
 # ===========================================
 
-# ============= 核心框架 =============
+# ============= Core framework =============
 flask>=3.0.0
 flask-cors>=6.0.0
 
-# ============= LLM 相关 =============
-# OpenAI SDK（统一使用 OpenAI 格式调用 LLM / Ollama）
+# ============= LLM =============
+# OpenAI SDK (unified OpenAI-format calls for LLM / Ollama)
 openai>=1.0.0
 # HTTP client for Ollama embedding API
 requests>=2.28.0
@@ -20,13 +20,13 @@ neo4j>=5.15.0
 kglite>=0.5.0
 ladybug>=0.16.0
 
-# ============= AgentSociety2 模拟引擎 =============
+# ============= AgentSociety2 simulation engine =============
 # AgentSociety2 — Agent + Block + Memory framework (Tsinghua FIB Lab)
 agentsociety2>=2.0.0
 
-# ============= 文件处理 =============
+# ============= File handling =============
 PyMuPDF>=1.24.0
-# 编码检测（支持非UTF-8编码的文本文件）
+# Encoding detection (supports non-UTF-8 text files)
 charset-normalizer>=3.0.0
 chardet>=5.0.0
 
@@ -37,9 +37,9 @@ firecrawl-py>=0.0.8
 asyncio-throttle>=1.0.2
 aiohttp>=3.9.0
 
-# ============= 工具库 =============
-# 环境变量加载
+# ============= Utilities =============
+# Environment variable loading
 python-dotenv>=1.0.0
 
-# 数据验证
+# Data validation
 pydantic>=2.0.0

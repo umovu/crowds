@@ -1,0 +1,84 @@
+{
+  "id": "parent-digital-learning-perceptions-sa",
+  "citation": [
+    "An ecological perspective on children's play with digital technologies in South Africa and the United Kingdom (Journal of Psychology in Africa)"
+  ],
+  "segment_tags": [
+    "guardian_parent",
+    "institutional_loyalist",
+    "gogo_guardian"
+  ],
+  "economic_tags": [
+    "tight",
+    "moderate"
+  ],
+  "mechanisms": [
+    "Digital engagement is validated by educational utility because technology is valued primarily as a route out of poverty rather than for entertainment",
+    "Shared device scarcity creates parent-child congruence because limited hardware creates overlapping digital practices that put parents in a stronger position to support their child's use, though this does not guarantee active co-play",
+    "Inconsistent connectivity mandates offline functionality because intermittent access renders always-online products impractical despite perceived need",
+    "Home-school projects bridge resource gaps because classroom device scarcity necessitates extending digital ecologies into domestic spaces",
+    "Intergenerational mediation enables adoption because skilled elders provide the family-supported knowledge transfer necessary to navigate technology"
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P3"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P2"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P5",
+        "P8"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P7"
+      ]
+    },
+    {
+      "mechanism_index": 4,
+      "chain_id": "C5",
+      "passages": [
+        "P6"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "route out of poverty",
+    "digital co-play",
+    "congruence",
+    "projects",
+    "off-line",
+    "digital ecologies"
+  ],
+  "objection_patterns": [
+    "Does this help with education or is it just for entertainment?",
+    "Can we use this together on our shared device?",
+    "Will it work when the internet is not consistent?",
+    "Can my grandmother help me understand how to use this?"
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa",
+  "year_range": "Not specified",
+  "confidence": "Qualitative survey and case study data from South Africa and UK; mechanisms derived from author interpretation of parental and teacher perspectives, magnitudes unknown",
+  "comb_gaps": [
+    "capability",
+    "opportunity",
+    "motivation"
+  ]
+}

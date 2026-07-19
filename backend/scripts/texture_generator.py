@@ -93,6 +93,8 @@ FROZEN_FIELDS = [
     "ghs_role", "edu_institution", "current_grade", "fees_band",
     "time_to_school", "guardian_type", "learners_in_household",
     "learner_fee_bands", "guards_grandchildren", "occupation_provenance",
+    # Farmer-role facts (absent on non-farmer personas — None is skipped).
+    "farm_market_orientation", "farm_products", "source_survey",
 ]
 
 _SYSTEM = (
@@ -165,6 +167,10 @@ def _prompt(skeleton: Dict) -> str:
 FIXED FACTS (do not change, contradict, or invent around — write texture consistent
 with exactly these):
 {json.dumps(facts, ensure_ascii=False, indent=2)}
+
+Unit note: fees_band / learner_fee_bands are ANNUAL school-fee amounts (per year);
+monthly_household_income_rand is per month. If the texture mentions fees, it must
+keep them annual — never restate a fee band as a monthly figure.
 {attitude_block}
 Produce a JSON object with ONLY these fields:
 - persona: 1-2 sentences on who they are and their situation. Reference a real local

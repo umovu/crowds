@@ -1,0 +1,86 @@
+{
+  "id": "reward-design-motivation-crowding-sa-v2",
+  "citation": [
+    "The influence of reinforcement on classroom management and learners' performance at secondary schools in South Africa (Frontiers in Education)",
+    "Motivating Grade 12 learners at a quintile 3 secondary school (SciELO IJTL)"
+  ],
+  "segment_tags": [
+    "learner",
+    "guardian_parent"
+  ],
+  "mechanisms": [
+    "Socioeconomic distress renders standard incentives ineffective because family hardship and broader socioeconomic distress override external rewards as drivers of classroom behaviour",
+    "External controls spoil internal motivation because compliance becomes contingent on appreciation rather than intrinsic change",
+    "Negative reinforcement increases disruption because hostility triggers aggression as a coping technique for classroom activities",
+    "Parental care drives academic engagement because learners are motivated to reciprocate love and make caregivers proud through achievement",
+    "Acknowledgement validates effort because visible recognition satisfies the craving for respect and status within the home environment"
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P6",
+        "P7",
+        "P8",
+        "P9"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P4",
+        "P5",
+        "P8",
+        "P10",
+        "P11"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P12"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P19",
+        "P20",
+        "P31"
+      ]
+    },
+    {
+      "mechanism_index": 4,
+      "chain_id": "C5",
+      "passages": [
+        "P22",
+        "P32"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "broken families",
+    "intrinsic motivation",
+    "hostility",
+    "return the love",
+    "certificate",
+    "crave recognition"
+  ],
+  "objection_patterns": [
+    "Will this reward spoil my need to learn for myself?",
+    "Does this punishment just make me angry instead of better?",
+    "Can I show this acknowledgement to my family at home?",
+    "How does this help when I come to school hungry?"
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa",
+  "year_range": "Not specified in provided text",
+  "confidence": "Qualitative studies in South African secondary schools; mechanisms derived from learner and educator voices, magnitudes and generalizability unknown",
+  "comb_gaps": [
+    "opportunity"
+  ]
+}

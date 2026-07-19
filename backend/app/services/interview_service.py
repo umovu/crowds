@@ -151,7 +151,17 @@ class InterviewService:
         # chat_state is follow-up-chat memory keyed off the profile; it must
         # never reach the agent directly (the chat path overlays it explicitly
         # via _chat_profile; pitch rounds must stay blind to it).
-        profile = {k: v for k, v in profile.items() if k != "chat_state"}
+        # research_citations is UI provenance metadata, not prompt material —
+        # the profile dict is injected into the interview system prompt, so
+        # keep it out. research_context normally stays (profile-JSON IS the
+        # designed delivery) — but when RESEARCH_CONTEXT_RENDERED is on, the
+        # reframer renders it as an explicit prompt layer instead, so drop it
+        # here to keep exposure single-channel either way.
+        drop = {"chat_state", "research_citations"}
+        from .prompt_reframer import _render_research_layer
+        if _render_research_layer():
+            drop.add("research_context")
+        profile = {k: v for k, v in profile.items() if k not in drop}
 
         agent_id = profile.get("id", profile.get("agent_id", 0))
         name = profile.get("name", f"Agent_{agent_id}")

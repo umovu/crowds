@@ -2,7 +2,7 @@
 .DS_Store
 Thumbs.db
 
-# 环境变量（保护敏感信息）
+# Environment variables (protect secrets)
 .env
 .env.local
 .env.*.local
@@ -43,7 +43,7 @@ yarn-error.log*
 *.swp
 *.swo
 
-# 测试
+# Tests
 .pytest_cache/
 .coverage
 htmlcov/
@@ -52,21 +52,21 @@ htmlcov/
 .cursor/
 .claude/
 
-# 文档与测试程序
+# Docs and scratch test programs
 mydoc/
 mytest/
 
-# 日志文件
+# Log files
 backend/logs/
 *.log
 
-# 上传文件
+# Uploaded files
 backend/uploads/
 
 # Licensed survey microdata (Stats SA / DataFirst QLFS etc.) — large + not redistributable
 backend/data/microdata/
 
-# Docker 数据
+# Docker data
 data/backend/venv311/
 backend/venv311/
 
@@ -86,3 +86,6 @@ save_prompt.py
 read_all.py
 TODO.md
 .gstack/
+
+# Local planning docs (never committed)
+PERSONA_REMEDIATION_PLAN.md

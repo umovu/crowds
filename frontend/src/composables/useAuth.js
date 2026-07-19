@@ -9,11 +9,31 @@ const loading = ref(true)
 
 let initialized = false
 
+// Local-dev mock session (VITE_AUTH_DISABLED=true in frontend/.env.local):
+// the whole app behaves as if this user is signed in — no Supabase involved.
+// Pairs with the backend's AUTH_DISABLED=true, which stamps requests as the
+// "dev" user, so the ids line up. Dev only; .env.local never ships.
+const AUTH_DISABLED = import.meta.env.VITE_AUTH_DISABLED === 'true'
+const MOCK_SESSION = {
+  access_token: null,
+  user: {
+    id: 'dev',
+    email: 'dev@local',
+    user_metadata: { full_name: 'Jabu Dev', name: 'Jabu Dev' },
+  },
+}
+
 // Initialize once: hydrate the current session and subscribe to changes.
 // Safe to call from main.js before mounting and from the router guard.
 async function initAuth() {
   if (initialized) return
   initialized = true
+
+  if (AUTH_DISABLED) {
+    session.value = MOCK_SESSION
+    loading.value = false
+    return
+  }
 
   const { data } = await supabase.auth.getSession()
   session.value = data.session
@@ -56,12 +76,14 @@ async function signInWithMagicLink(email) {
 }
 
 async function signOut() {
+  if (AUTH_DISABLED) return // mock session: nothing to sign out of
   const { error } = await supabase.auth.signOut()
   if (error) throw error
 }
 
 // Current access token (JWT) for attaching to backend API calls.
 async function getAccessToken() {
+  if (AUTH_DISABLED) return null // backend AUTH_DISABLED accepts tokenless requests
   const { data } = await supabase.auth.getSession()
   return data.session?.access_token ?? null
 }

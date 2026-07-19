@@ -1,0 +1,99 @@
+{
+  "id": "farmer-intervention-adoption",
+  "citation": [
+    "Smallholder perceptions of communal cattle feedlots, Eastern Cape (Frontiers)",
+    "Challenges and opportunities in smallholder agriculture digitization, SA (Frontiers)",
+    "Smallholder adoption of climate-smart agriculture technology, SA (Journal of Development and Agricultural Economics)"
+  ],
+  "segment_tags": [
+    "smallholder_emerging_farmer"
+  ],
+  "mechanisms": [
+    "Financial capacity and secure collateral determine feasibility, because low income and insecure land tenure make high-cost investments unattainable without subsidy.",
+    "Knowledge and openness to innovation shape evaluation, because higher education, youth, or awareness of benefits make new practices seem viable and attractive.",
+    "Perceived risk and incompatibility with traditional methods dominate, because poor connectivity, digital illiteracy, or mistrust make digital tools feel unreliable and alien.",
+    "Management complexity and uncertainty increase, because lack of access to training, extension, or timely inputs leaves farmers feeling incapable of implementing new practices.",
+    "Attachment to customary grazing and scepticism of external interventions prevail, because embeddedness in traditional cultural norms or social inequality makes unfamiliar practices suspect."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P4",
+        "P8",
+        "P11",
+        "P13",
+        "P16",
+        "P22",
+        "P23",
+        "P25"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P2",
+        "P3",
+        "P6",
+        "P28"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P12",
+        "P14",
+        "P15",
+        "P18",
+        "P20",
+        "P21"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P9",
+        "P26",
+        "P27",
+        "P29"
+      ]
+    },
+    {
+      "mechanism_index": 4,
+      "chain_id": "C5",
+      "passages": [
+        "P10",
+        "P17",
+        "P19",
+        "P30"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "financial burden",
+    "traditional grazing practices",
+    "digital illiteracy",
+    "uncoordinated extension services",
+    "trust",
+    "affordability"
+  ],
+  "objection_patterns": [
+    "Can I afford the upfront and running costs without a subsidy?",
+    "Will this work with my current farming methods and traditions?",
+    "Do I trust the people and institutions behind this?",
+    "Will I get the training and timely support needed to make this work?"
+  ],
+  "claim_type": "qualitative",
+  "region": "Eastern Cape, Limpopo",
+  "year_range": "2018-2020",
+  "confidence": "Mixed-methods and review, multiple South African provinces, fieldwork 2018-2020 — mechanisms durable, magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity",
+    "motivation"
+  ]
+}

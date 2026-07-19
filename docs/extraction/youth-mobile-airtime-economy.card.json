@@ -1,0 +1,81 @@
+{
+  "id": "youth-mobile-airtime-economy",
+  "citation": [
+    "Using mobile phones for adolescent research in low/middle-income countries: Birth to Twenty cohort, SA (PMC)",
+    "Assessing cell phone usage in a South African township (IJEDICT)",
+    "A day in the life of a South African teenager (Statistics South Africa)"
+  ],
+  "segment_tags": [
+    "learner"
+  ],
+  "mechanisms": [
+    "Phone ownership is a visible marker of social standing, so a desire for social inclusion drives a preference for functionality and multimedia capability.",
+    "Airtime scarcity and privacy fears make direct questions about phone use unreliable, because adolescents hide their usage behind missed calls and narrow definitions of 'use'.",
+    "Strong aspirations for tertiary education create a willingness to pay for mobile services that are seen as tools for personal advancement.",
+    "Gendered household and public-space routines dictate when and where boys and girls are available, so mobile interactions must match their separate schedules and contexts."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P2",
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P6",
+        "P7",
+        "P12",
+        "P13"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P14",
+        "P15"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P16",
+        "P17"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "socially isolated",
+    "functionality",
+    "missed calls",
+    "airtime",
+    "household maintenance"
+  ],
+  "objection_patterns": [
+    "Will I have enough airtime to respond?",
+    "Who might see my answers?",
+    "Will I understand the questions being asked?",
+    "Does this fit into my daily routine at home or in public?"
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa",
+  "year_range": "not specified",
+  "confidence": "Mixed-methods and survey data from South African adolescent samples; mechanisms are robust for the studied cohorts, but magnitudes and generalisability beyond these groups are unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ]
+}

@@ -213,7 +213,13 @@ def _household_learner_context(df, value_labels) -> Dict[float, Dict[str, Any]]:
 def _fees_band(value_labels, code) -> Optional[str]:
     if code != code or code in _FEES_NON_ANSWERS:
         return None
-    return _label(value_labels, "edu_totfees", code)
+    band = _label(value_labels, "edu_totfees", code)
+    # edu_totfees is an ANNUAL amount but the Stats SA value labels carry no
+    # unit; downstream LLMs read a bare band next to monthly income as
+    # monthly. Stamp the period on paid bands so it survives into prompts.
+    if band and band != "No fees" and "year" not in band.lower():
+        band = f"{band} per year"
+    return band
 
 
 def _base_skeleton(row, value_labels) -> Dict[str, Any]:

@@ -1,0 +1,542 @@
+The influence of parental demographics on school choice decision-making in Western Gauteng, South Africa
+
+ 
+ 
+
+  
+ 
+
+Services on Demand
+
+Journal
+
+SciELO Analytics
+
+Google Scholar H5M5 (
+)
+
+Article
+
+English (pdf)
+ 
+
+Article in xml format
+
+Article references
+
+How to cite this article
+
+SciELO Analytics
+
+Automatic translation
+
+Send this article by e-mail
+
+Indicators
+
+Related links
+
+Cited by Google 
+
+Similars in Google 
+
+Share
+
+More
+
+More
+
+Permalink
+
+South African Journal of Education
+
+On-line version
+ ISSN 
+2076-3433
+Print version
+ ISSN 
+0256-0100
+
+S. Afr. j. educ. vol.41 n.3 Pretoria Aug. 2021
+
+https://doi.org/10.15700/saje.v41n3a1958
+  
+
+ 
+ARTICLES
+ 
+ 
+ 
+The influence of parental demographics on school choice decision-making in Western Gauteng, South Africa
+ 
+ 
+ 
+ 
+ 
+Beverley Blake
+I
+; Raj Mestry
+II
+ 
+I
+Social and Economic Management Sciences, Wits School of Education, University of Witwatersrand, Johannesburg, South Africa 
+beverley.blake@wits.ac.za
+ 
+II
+Educational Management and Leadership, Faculty of Education, University of Johannesburg, Johannesburg, South Africa
+ 
+ 
+ 
+ 
+ 
+ 
+ABSTRACT
+ 
+Major political changes since 1994 have initiated the pace of change in the South African education system. Parents' values, traditions and practices that served in the past were no longer relevant in the new dynamic educational environment. Parental school choice and "the right to choose" movement has subsequently come to the fore. The purpose of this article elucidates findings regarding the demographics of active school choice engagement among middle class parents in Western Gauteng, South Africa. The study, situated in the Gauteng province, South Africa, followed a conclusive research design with a post positivist paradigm. Parent questionnaires were distributed to different types of urban schools to establish the perceptions of parents regarding the factors, anxieties, aspirations and strategies influencing school choice decision-making. Findings reveal that language, income and education not only have a definitive influence on active school choice engagement but also affect the level of importance attached to specific school choice factors. Education in South Africa can thus be viewed as a unique complex system embedded in a political, cultural and economic context.
+ 
+Keywords
+: cost; decision-making; education; parents; principals; quality; school choice
+ 
+ 
+ 
+ 
+ 
+ 
+Introduction
+ 
+Since the advent of democracy in 1994, South Africa has undergone significant and major political, social and economic change. Education, within this broad context of transformation, has not been overlooked. Despite the many positive attributes brought about to the education system through a number of policy initiatives (Republic of South Africa [RSA], 1996a), the quality of education in South Africa remains significantly varied between what has been termed functional and dysfunctional schools (Fleisch, 2008; Modisaotsile, 2012; Van der Berg, Taylor, Gustafsson, Spaull & Armstrong, 2011). Even more alarming, is that many schools have retained the legacy of both their racial and economic character depicted by the apartheid past (Du Toit, 2008). Dysfunctional schools, categorised as those that are historically disadvantaged, continue to serve mainly black and coloured children throughout South Africa. Pockets of excellence, however, are evident among some of these historically disadvantaged schools (Maringe & Moletsane, 2015). Although few and far between, these schools are a beacon of hope for the country. Functional schools represent those that served mainly white children in the past. Currently they display the notion of diversity among the population in South Africa and produce educational achievement closer to the norms of developed countries (Van der Berg et al., 2011). The Organisation for Economic Co-operation and Development (OECD), in its most recent assessment of South Africa's economic progression since 1994, identified substandard public education as one of the key challenges facing the country at present (OECD, 2013). This outcome was ratified by a National School Effectiveness Study (NSES) which demonstrated that Grade 5 learners in historically black schools performed considerably worse than Grade 3 learners in historically white schools (Taylor, 2011).
+ 
+Amid this backdrop exists a growing parental perception that public schooling will not be able to enhance the educational outcomes of their children, and it is no surprise that parents are scrambling for enrolment in the limited functional sub-system (Hoadley, 1999; Maile, 2004; Msila, 2009; Sekete, Shilubane & Moila, 2001). The South African Department of Education (DoE), in its annual report in a chapter on Race, Diversity and Values (DoE, 1999), acknowledges that since 1995 the school system has experienced new patterns of learner movement from poorly resourced schools to better resourced schools; from poorly disciplined schools to better disciplined schools and from schools where learners fail national examinations and tests to schools where learners succeed. Mention of parents' ability to make informed choices also formed part of the report and indicated that "quite often parents are enticed by false expectations and as a result make poor choices if they have little experience of education or are of limited financial means" themselves. This movement, termed "migration of learners" is a telling sign of the aspirations of parents having no confidence in governments' ability to provide a consistent standard quality of education throughout the system. Parents are as such increasingly involved in school choice decision-making in South Africa at present.
+ 
+This study has significance for policy makers, school managers and parents of developing and developed countries concerning the choice of schools. It allows parents to make the decision based on their child' s individual needs, whether it be a public or private education. Policy makers and school managers will develop policies that will guide parents to make good school choices. Parents should be satisfied with choice, that they report using academic preferences to make choices, and that they tend to be more involved with their child's education as a consequence of choice. It should be noted that parents will most likely improve their education about school choice but not necessarily their language or income 
+per se. 
+They will consider various factors to make informed decisions about the schools that they send their children to.
+ 
+Research Context
+ 
+School choice in South Africa has its legal foundation formulated in the Constitution of the Republic of South Africa, 1996 (RSA, 1996b). According to section 29, every citizen has the right to receive an education in a public educational institution of their choice, where the education is reasonably practicable and in the language of their choice. School choice, therefore, is defined as the process through which South African parents move, when they choose one school over another born out of a vision to provide a quality education for their children. School choice is a policy reform idea aimed to increase the involvement of parents in responsibly schooling their children by giving them ownership of the task (Lamdin & Mintrom, 1997). Pre 1994, South African parents were not actively involved in making choices regarding the schools their children would attend. This was simply determined for them by legislation and children were enrolled in schools by residence, language and/or by colour. Very little thought or consideration of other factors were taken into account to determine the school that a child would attend. As an outcome of democracy, school choice became a reality and parents today have the ability to choose which schools to send their children to rather than relying on the methods carried out in the past. Parents are now able to formulate their own ideas and preferences of what they consider the ideal school to be and offer their children (Russell, 2006; Venter, 2011). Assumptions have been made about what parents are looking for in the schools they select for their children, but there has been little real evidence to show what really influences parents when choosing a school in South Africa (Evans & Cleghorn, 2014). What is clear is that parents have been voting with their feet over the past number of years (Msila, 2009). Traditionally, the concept of migration focused on labour and urbanisation trends in response to socioeconomic pressures and there was little attention given to migration in education. Paterson and Kruss (1998) suggest that educational migration patterns are driven either by a lack of local access to educational opportunities, or by the motivation to gain access to educational opportunities that are perceived to be "better." Accordingly, the increased mobility of our population combined with the school choice movement has resulted in increasingly large numbers of parents who want to shop for schools as they do for consumer products. As such, school choice has the ability to bring about a consumer-oriented approach to education that needs to be studied (Sekete et al., 2001). That being said, schools in South Africa, as a result of choice, are under financial pressure to improve quality (Immelman, 2013). As the school market changes and becomes more complex and crowded, school marketing thus has the propensity to complicate the school choice decision for parents. An added complication is the South African DoE online school admission system for Grade 1's and Grade 8's. Within this system a parent may make a maximum of five applications to five different schools per child based on particular admissions criteria. Parents receive offers of placement from schools with available space within a particular feeder zone (Gauteng Province Education, RSA, n.d.). It is held that the move to increase choice and competition in the education system is unlikely to be reversed and thus the challenge that faces policy makers is to devise policies that harness the power of choice and competition to bring about improvement in the educational opportunities provided for all children (Plank & Sykes, 2003).
+ 
+In this context, the problem statement for this article was: 
+"Does the demographics of a parent influence active engagement in school choice decision-making and the value parents attached to specific school choice factors?"
+ 
+In determining a profile for whom has a predisposition to being involved in school choice decision-making, the following objective assisted in realising the aim:
+ 
+•
+ 
+To ascertain items of demographics that predict active school choice engagement in parents.
+ 
+•
+ 
+To determine whether items of demographics influence the relative importance of school choice factors.
+ 
+For the sake of brevity, we only report on those variables that seemed to be the most influential on the factors generated by the empirical study.
+ 
+ 
+ 
+Methodology
+ 
+A quantitative study with questionnaires was used to establish the perceptions of parents regarding their decision-making process with respect to school choice. Literature was reviewed and the items that emerged as important determinates in decision-making was constructed into a questionnaire. Six hundred questionnaires were distributed to middle class parents of urban schools in the Gauteng. The Cronbach-alpha reliability coefficient was used to determine the internal reliability of the questionnaire. All values in the questionnaire demonstrated a Coefficient-Alpha of above 0.60 and were thus considered reliable (Ary, Jacobs & Sorensen 2010). Exploratory factor analysis together with questionnaire design and administration protocol ensured content and construct validity. Final trustworthiness of data was established through statistical measures using the Statistical Package for the Social Sciences (SPSS) 15.0 package. Hypotheses were set and this paved the way for the analysis of data. In testing for significant differences between three independent groups or more, the Kruskal-Wallis test was used. The Kruskal-Wallis test is the nonparametric test equivalent to the one-way ANOVA, and is an extension of the Mann-Whitney 
+U 
+test. It allows for the comparison of more than two independent groups and is used when dictated to do so by the skewness of data. To determine statistical significant differences on groupings for home language, monthly gross income, highest academic qualification and type of school, the Kruskal-Wallis test was employed. To mitigate the unnatural distribution of data the Central Limit Theorem was evoked in which it is held that the sampling distribution of the sampling means approaches a normal distribution as the sample size gets larger regardless of the shape of the population distribution (Statistics Solutions, 2021). This fact holds true for sample sizes over 30, which applies to this study as the sample size equalled 374.
+ 
+Theoretical Framework
+ 
+To engage in the research problem and to theorise and investigate school choice and the decision-making involved, Cultural-Historical Activity theory (CHAT) (Engeström, 2001), coupled with Glasser's Choice theory (1999) were used.
+ 
+CHAT is a cross-disciplinary framework for studying how humans purposefully transform natural and social reality, including themselves, as an ongoing culturally and historically situated, materially and socially mediated process (Roth, Radford & LaCroix, 2012). Within this model, subjects are participants in an activity, motivated toward a purpose or attainment of the object. Parents engaged in school choice decision-making are identified as the subject of the model, with school choice being the object of activity. Since a subjects' interpretation of the object will be shaped by the social practices of the situations in which the object is located, tools are defined as socially shared cognitive or material resources that subjects can use to attain the object. For school choice these include a myriad of factors that could influence a particular person's choice of school as each individual taking part in the activity will have a slightly different view and interpretation of the object and purpose of the activity. The model additionally describes how activity can only exist in relation to rules, community and division of labour, as these societal dimensions effect the systemic organisation of human activity. In this sense, informal or formal rules regulate the subject's participation while engaging in activity. The rules element of the system makes reference to a number of policy initiatives which provide the boundaries for school choice, the most important being the South African Schools Act (RSA, 1996a). Community depicts the activity setting or physical environment in which activity is carried out. Because community includes multiple points of view, traditions and interests for the purpose of school choice, the diversity of South African society as impacted by apartheid is explored. The division of labour is the shared participation responsibilities in the activity determined by the community. It is argued that the primary contradiction/tension that echoes through the entire activity system is the challenges or barriers experienced by parents when exercising choice.
+ 
+Choice theory posits that an individual's behaviour or choices they make are driven by a never-ending quest to satisfy five genetically driven needs and four fundamental psychological needs (Sullo, 2011). In essence the effectiveness of school choice hinges on parents making sound choices. Parents have unique feelings and perceptions regarding the different types of schools available from which to choose in the distinctive South African educational environment as evolved over time. According to Choice theory, these perceptions influence the choices parents make in the quest to meet their basic needs and compare their perception of reality versus the pictures of their individual quality worlds of what they want in an educational sense.
+ 
+Choice theory complements the empirical possibilities of CHAT and provide a means to reveal underlying causal mechanisms structuring learning activity in terms of how a school choice decision is made. Applying a theoretical context of this nature provides structure for the investigation since parental decision-making can be seen not only to be an action but an action continuously influenced by tensions and other elements making up the social construct of a parent.
+ 
+Literature Review
+ 
+As parents increasingly value the importance of education for the life opportunities of their children, so the weight of school choice intensifies. Research indicates that parents who actively choose schools are better educated, have higher levels of income and are less likely to be unemployed than non-choosing parents (Bosetti, 2004:391). It is also held that school choice policies seem to favour middle and upper income families (Plank & Sykes, 2003) and that well-off parents seek strategies to maintain their children's privileges while aspiring parents seek strategies to escape from the schools to which their children are assigned in the quest for better opportunities (Carnoy & McEwan, 2003; Walford, 2003). Poor families it seems, are less likely than higher income families to take full advantage of opportunities to choose their children's schools (Carnoy & McEwan, 2003; Walford, 2003). The reasons for this are twofold. Firstly, poorer families lack equal access to information about schooling options, they cannot afford the cost of transportation and possible voluntary or compulsory school fees and they may be reluctant to send their children to schools where they feel unwelcome (Burgess, Greaves, Vignoles & Wilson, 2010; Carnoy & McEwan, 2003; Hastings, Kane & Staiger, 2005; Walford, 2003). A second reason choice policies favour wealthier families, is often because of the power given to schools to implement their own admission policies. Schools that are able to be selective in their learner intake have an incentive to enrol learners who are the least costly to educate from their application pools, and this strategy discriminates against poorer families (Burgess et al., 2010; Plank & Sykes, 2003).
+ 
+Goldring and Rowley (2006), confer with the above information and add to the literature by indicating that parents who participate in school choice differ from non-choosers in five important ways. These include differences in demographics, satisfaction with previous school, parental involvement, educational priorities, and social networks. Demographic differences are measured in terms of parental education, family income and race. The literature points out that parents with higher levels of educational attainment tend to believe that education is important, are more familiar with types of schools on offer, and as such are able to make more informed decisions. Research also alludes to a direct correlation between high levels of education and high levels of income. As such, parents with increased access to resources are able to choose from a wider pool of educational opportunities. Race, in this particular study, finds that racial minorities on average possess less resources, and as a result are less likely to choose schools with their associated costs (Goldring & Rowley, 2006).
+ 
+Satisfaction with previous school indicates that parents might choose to move from a school because of dissatisfaction experienced with their children's education prior to participating in school choice. Also parents that have chosen a school for their children tend to be more satisfied with that school than if they were assigned to it. Parents who participate in school choice, by nature of this participation, are more likely to be involved in their children's education compared to those parents who do not participate in choice mechanisms. Choosers are also inclined to place more emphasis on educational priorities that are associated with academic outcomes such as student achievement and are also more likely to have social networks that facilitate participation in the process of school choice than those of non-choosers.
+ 
+South Africa presents itself with a similar state of affairs. According to Sekete et al. (2001), choice of perceived better schools is limited to the middle class as most of these schools are found in formerly white suburbs. Because of the legacy of apartheid's Group Areas Act of 1950 (Johnson-Castle, 2014), school choice in South Africa is delineated largely in terms of class. Hoadley (1999) thus questions whether parents from formerly black communities do in fact have a fair choice of schools in these neighbourhoods. With regards to satisfaction, multiple research indicates that South African parents move away from certain schools in the hopes that they might be more satisfied in alternative school environments (Hoadley, 1999; Maile, 2004; Msila, 2009; Sekete et al., 2001).
+ 
+According to Paterson and Kruss (1998), learner migration extends from pre-school to tertiary education and is not bound by any specific factors except the desire by parents for equal opportunity through schooling. South African democracy has resulted in enhanced parental involvement in education across the board and parents send their children to schools they think will serve their best interests (Msila, 2009). Many parents, however, still keep their children in historical black township schools because of economic reasons. In connecting with academic outcomes and social networks in the South African context, Lombard (2007) attests that parents exercise individual preferences for school choice. Consequently, school choice becomes a multifaceted phenomenon that needs to be unpacked from different perspectives. Although much of the literature mentioned focuses on parents exercising choice, it must be mentioned that many parents for many different reasons do not appear to have the disposition or motivation to engage in choice strategies. These parents are not involved in their children's education and are thus isolated by choice from the concept (Bosetti, 2004).
+ 
+Based on the literature above that school choice seems to be limited to middle-class families who have a predisposition to being involved, have clear educational priorities for their children and are socially connected, hypotheses with regard to language, income and academic qualifications were set for this study. The empirical study unpacking the decision-making process of parents in selecting schools, it was felt, would serve to integrate both the international and national literature on school choice by explaining who, from a South African context, engaged in school choice and how this may or may not differ from experiences in other countries.
+ 
+ 
+ 
+Results and Discussion
+ 
+Factor Analysis
+ 
+Factor analysis is a useful statistical method for investigating variable relationships for complex concepts (Statistics Solutions, 2021). It is a process in which the values of observed data are expressed as functions of a number of possible causes in order to find which are the most important. It allows researchers to investigate concepts that are not easily measured directly, by collapsing a large number of variables into a few interpretable underlying factors. To this end, the questionnaire administered to parents was subjected to factor analysis. The 44 items that emerged as important determinates in decision-making were subjected to principal axis factoring (PAF) using the extraction method and oblimin rotation with Kaiser Normalization. Prior to performing PAF, the suitability of data for factor analysis was assessed. An inspection of the correlation matrix revealed the presence of sufficient coefficients of 0.3 and above. The Kaiser-Meyer-Olkin (KMO) value was 0.898, exceeding the recommended value of 0.7. The measures of sampling adequacy (MSA) were also all above 0.6. Based on the pattern matrix, the outcome suggested the presence of eight factors which explained 48.19% of the variance as described in 
+Table 1
+.
+ 
+These eight choice factors realised an overall mean score of above 2.5 indicating that all eight factors play an influential role for parents in school choice decision-making. This paved the way for hypothesis testing. We only discuss two independent variables, namely, monthly gross income and school choice factors and highest academic qualification and school choice factors.
+ 
+Monthly Gross Income and School Choice Factors
+ 
+Income refers to whether parents are economically in a position to make choices beyond the borders of their locality (Hoadley, 1999). Subsequently it was decided to explore whether the importance that parents attached to the various school choice factors differed in any significant way according to their combined monthly income. The income groupings were based on those used by Statistics South Africa. 
+Tables 2
+ and 
+3
+ describe the emergent hypothesis and significance.
+ 
+The data in 
+Table 3
+ show that there is a statistically significant difference between the parents' combined monthly income at the multivariate level. 
+Hom 
+is thus rejected in favour of the research hypothesis HaM. At the univariate level the mean rank scores of the different income groups differ from one another in respect of intrinsic child-related influences (5% level), school infrastructure (5% level), value-added incentives (1% level) and geographic location (5% level). HoA1, HoA2, HoA4 and H0A7 are consequently rejected in favour of HaA1, HaA2, HaA4, and HaA7.
+ 
+The data thus illustrate that the importance that parents attach to the various choice factors differs according to their monthly income and as such it could be inferred that parents who actively choose schools or engage in school choice have higher levels of income. This concurs with findings by the OECD (2012) that parental school choice is often restricted by family income and is reiterated in the findings of Carnoy and McEwan (2003), Plank and Sykes (2003) and Walford (2003).
+ 
+From a consumer decision-making perspective, individual factors reflected by a parent's self-concept and lifestyle often evolve as a result of combined monthly income. The way that parents live or enact their self-concept greatly influences the choices parents make. Parents would seldom associate with schools that may jeopardise their self-image (McDaniel, Lamb & Hair, 2012). Monthly income available to spend on education would thus influence school choice in terms of affordability, price sensitivity and the social value attached to a specific school (Cant, 2010). This relates directly to the second key concept of Choice theory, where Sullo (2011) explains that people build up through interaction with others, an idea of a perfect existence that becomes the source of all motivation.
+ 
+Further to this, contradictions and disturbances in CHAT could also explain this empirical evidence. In this context, school choice decision-making is not only embedded within the CHAT activity system but is also continuously influenced by both individual and social tensions evident between the various elements of the system. The primary contradiction or tension that echoes through the entire activity system is the challenges or barriers that parents experience when exercising choice. Income is a definitive barrier to school choice and this tension can most certainly preclude some parents from choosing a specific school and its perceived benefits (Yamagata-Lynch, 2010). This finding is echoed by Hastings et al. (2005) who found that better-off parents are more likely to enrol their children in high quality schools as they have more information and resources available to making this choice. In contrast, more disadvantaged parents tend to exercise choice less and send their children to local neighbourhood schools. The positive correlation between income and education is well documented and analysed in the next hypothesis.
+ 
+Highest Academic Qualification and School Choice Factors
+ 
+In determining who chooses, research indicates that more educated parents are better equipped to exercise choice (Bosetti, 2004; Goldring & Rowley, 2006). It is asserted that some parents may have the best intentions for their children, but may not have the competencies or information necessary to select the most appropriate schools. Consequently, it was decided to investigate whether any significant differences between parent's highest academic qualification was evident in terms of the various school choice factors. Five groups depicting various levels of education were presented and parents were asked to indicate which was the most appropriate to them. 
+Tables 4
+ and 
+5
+ show the emergent hypotheses and significance.
+ 
+The data in 
+Table 5
+ shows that there is a statistical significant difference between the parents' highest academic qualification at the multivariate level. Hom is thus rejected in favour of research hypothesis HaM. At the univariate level the mean rank scores of the different educational groups differ from one another in respect of value-added incentives (1% level) and school size (5% level). HoA4 and HoA8 are consequently rejected in favour of HaA4, and HaA8. The data reveal that a parent's level of qualification does have an influence on school choice. In particular, value-added incentives rate more highly with lower educated groups and interestingly school size is more of an influencing factor for the more educated.
+ 
+Value-added incentives as a factor in this study includes aspects relating to school uniform, aftercare facilities, transport to school, friends attending the school and special educational needs being catered for by the school. Empirical evidence suggests that these aspects may be more important for lower educated groups as a result of the aspirations that these parents have for their children. This is in agreement with the findings of Longfield (2011) and Msila (2009) who found that education is regarded as a liberator from poverty and an opportunity for parents to invest in their children's education. Parents with limited education have a directly proportionate amount of disposable income to spend on education. As such costs associated with school choice become important considerations (Du Toit, 2008; Evans & Cleghorn, 2014). On examination of the items encapsulated in the value-added incentive factor it can be noted that many of the items relate to the financial cost of education and school choice. Accordingly, these associated costs of uniforms, travel, aftercare and extra lessons would resonate more with the lower income group in terms of practical considerations that need to be taken than with more educated parents who may have more disposable income to work with.
+ 
+School size as a factor in this study, included not only the total number of learners enrolled at a school but also the teacher/child ratio policy employed by the school for an individual class. In suggesting possibilities for empirical evidence related to school size, teacher/child ratios are thought to be a central issue. These ratios impact the quality of children's early educational experiences, with lower ratios typically being more favourable. Broad agreement in research indicates that a smaller class size enables teachers to provide better quality education (Huntsman, 2008; Torquati, Raikes & Huddleston-Casas, 2007). This is true, since a smaller class size is believed to allow more time for individualised and responsive teacher attention and interactions (De Schipper, Riksen-Walraven & Geurts, 2006). In reality, however, many schools struggle to maintain low teacher/child ratios due to limited resources at both local and national level. Findings in this study thus suggest that more educated parents are of a similar opinion that the predisposition to quality education is the physical number of learners in a classroom linked to one teacher. Private schools use this ratio as a major marketing strategy in claiming the provision of a superior quality of education to that of government schools. It is also used as a justification for high fees. Accordingly, as a result of the direct correlation between high levels of education and high levels of income (Goldring & Rowley, 2006), parents with increased access to resources are able to choose from a wider pool of educational opportunities providing credence to these findings.
+ 
+Although parents may be concerned with different factors according to their situation and circumstance, in general parents participating in choice seek the best possible educational opportunities for their children.
+ 
+ 
+ 
+Conclusion
+ 
+Education is sometimes described as the great equaliser, a powerful social force that can level the playing field of opportunity among citizens (Byanyima, 2014). The current education system in South Africa only provides some children with this opportunity insofar as their parents can actually choose for them to attend good schools. Other parents, without the resources, are left, it seems, with little or no choice. All parents - not only those who can afford it - should have a say in where their children go to school and have the opportunity to choose excellent schools for their children. Parents, it seems, desire to be informed education consumers regardless of social situation or circumstance and have many reasons for making the choices they do. Often choice, as explained by CHAT and Choice theory, is not only a matter of accessing better resources but involves making trade-offs in pursuit of perceived quality education and positive academic outcomes. Often the individual choices that South African parents make are not so much about the reasons for choice but more about the constraints within which their choices are made. Choice is synonymous with democracy and parents exercising school choice may have the ability to force all schools - public and private - to compete and innovate in order to offer the best education possible to attract and retain learners. Parents need to be able to exercise choice and this choice should be unrestricted.
+ 
+ 
+ 
+Authors' Contributions
+ 
+Beverley Blake conducted the research survey and all statistical analyses. Raj Mestry and Beverley Blake jointly prepared the final manuscript.
+ 
+ 
+ 
+Notes
+ 
+i. This article is based on the doctoral thesis of Beverley Blake.
+ 
+ii. Published under a Creative Commons Attribution Licence.
+ 
+iii. DATES: Received: 16 November 2019; Revised: 21 April 2020; Accepted: 6 July 2020; Published: 31 August 2021.
+ 
+ 
+ 
+References
+ 
+Ary D, Jacobs LC & Sorensen C 2010. 
+Introduction to research in education 
+(8th ed). Belmont, CA: Wadsworth, Cengage Learning.         [ 
+Links
+ ]
+ 
+Bosetti L 2004. Determinants of school choice: Understanding how parents choose elementary schools in Alberta. 
+Journal of Education Policy, 
+19(4):387-405. 
+https://doi.org/10.1080/0268093042000227465
+        [ 
+Links
+ ]
+Burgess S, Greaves E, Vignoles A & Wilson D 2010. 
+What parents want: School preferences and school choice 
+(Department of Quantitative Social Science [DoQSS] Working Paper No. 09-01). London, England: Institute of Education, University of London. Available at 
+https://repec.ucl.ac.uk/REPEc/pdf/qsswp0901.pdf
+. Accessed 18 August 2021.         [ 
+Links
+ ]
+ 
+Byanyima W 2014. 
+Education is the great equalizer. 
+Available at 
+https://www.globalpartnership.org/blog/education-great-equalizer
+. Accessed 13 December 2014.         [ 
+Links
+ ]
+ 
+Cant M 2010. 
+Essentials of marketing 
+(3rd ed). Claremont, South Africa: Juta.         [ 
+Links
+ ]
+ 
+Carnoy M & McEwan PJ 2003. Does privatization improve education? The case of Chile's national voucher plan. In DN Plank & G Sykes (eds). 
+Choosing choice: School choice in international perspective. 
+New York, NY: Teachers College Press.         [ 
+Links
+ ]
+ 
+Department of Education 1999. 
+Race, diversity and values. Annual report. 
+Cape Town, South Africa: Government Printers.         [ 
+Links
+ ]
+ 
+De Schipper EJ, Riksen-Walraven JM & Geurts SAE 2006. Effects of child-caregiver ratio on the interactions between caregivers and children in child-care centers: An experimental study. 
+Child Development, 
+77(4):861-874. 
+https://doi.org/10.1111/j.1467-8624.2006.00907.x
+        [ 
+Links
+ ]
+Du Toit S 2008. Parental choice in South African high schools - An urban Cape Town case study. PhD thesis. Bellville, South Africa: University of the Western Cape. Available at 
+https://etd.uwc.ac.za/bitstream/handle/11394/2397/Du%20Toit_PHD_2008.pdf?sequence=1&isAllowed=y
+. Accessed 18 August 2021.         [ 
+Links
+ ]
+ 
+Engeström Y 2001. Expansive learning at work: Toward an activity theoretical reconceptualization. 
+Journal of Education and Work, 
+14(1):133-156.         [ 
+Links
+ ]
+ 
+Evans R & Cleghorn A 2014. Parental perceptions: A case study of school choice amidst language waves. 
+South African Journal of Education, 
+34(2):Art. # 819, 19 pages. 
+https://doi.org/10.15700/201412071203
+        [ 
+Links
+ ]
+Fleisch B 2008. 
+Primary education in crisis: Why South African schoolchildren underachieve in reading and mathematics. 
+Cape Town, South Africa: Juta. Gauteng Province Education, Republic of South Africa n.d. 
+Admissions. 
+Available at 
+https://www.gdeadmissions.gov.za
+. Accessed 11 May 2020.         [ 
+Links
+ ]
+ 
+Glasser W 1999. 
+Choice theory: A new psychology of personal freedom. 
+New York, NY: Harper Perennial.         [ 
+Links
+ ]
+ 
+Goldring E & Rowley KJ 2006. 
+Parent preferences and parent choices: The public-private decision about school choice. 
+Paper presented at the annual meeting of the American Educational Research Association, San Francisco, CA, 8 April.         [ 
+Links
+ ]
+ 
+Hastings JS, Kane TJ & Staiger DO 2005. 
+Parental preferences and school competition: Evidence from a public school choice program 
+(Discussion Paper No. 10). New Haven, CT: Department of Economics, Yale University. Available at 
+http://economics.yale.edu/sites/default/files/files/Working-Papers/wp000/ddp0010.pdf
+. Accessed 20 August 2021.         [ 
+Links
+ ]
+ 
+Hoadley UK 1999. For better or worse: School choice in a South African working class context. In L Chisholm (ed). 
+Critical perspectives in South African education: Reconstituting the educational realm. 
+Cape Town, South Africa: Juta.         [ 
+Links
+ ]
+ 
+Huntsman L 2008. 
+Determinants of quality in child care: A review of the research evidence. 
+New South Wales, Australia: New South Wales Department of Community Services. Available at 
+http://www.community.nsw.gov.au/data/assets/pdf_file/0020/321617/research_qualitychildcare.pdf
+. Accessed 20 August 2021.         [ 
+Links
+ ]
+ 
+Immelman R 2013. Choice factors for parents selecting independent primary schools in Gauteng. PhD thesis. Johannesburg, South Africa: University of Johannesburg.         [ 
+Links
+ ]
+ 
+Johnson-Castle P 2014. 
+The Group Areas Act of 1950. 
+Available at 
+https://www.sahistory.org.za/article/group-areas-act-1950
+. Accessed 11 May 2020.         [ 
+Links
+ ]
+ 
+Lamdin DJ & Mintrom M 1997. School choice in theory and practise: Taking stock and looking ahead. 
+Education Economics, 
+5(3):211-244. 
+https://doi.org/10.1080/09645299700000021
+        [ 
+Links
+ ]
+Lombard BJJ 2007. Reasons why educator-parents based at township schools transfer their own children from township schools to former Model C schools. 
+Education as Change, 
+11(1):43-57.         [ 
+Links
+ ]
+ 
+Longfield D 2011. A case study looking at aspects of parental choice in five schools in Ghana. MEd dissertation. Tyne, England: Newcastle University.         [ 
+Links
+ ]
+ 
+Maile S 2004. School choice in South Africa. 
+Education and Urban Society, 
+37(1):94-116. 
+https://doi.org/10.1177/0013124504268279
+        [ 
+Links
+ ]
+Maringe F & Moletsane R 2015. Leading schools in circumstances of multiple deprivation in South Africa: Mapping some conceptual, contextual and research dimensions. 
+Educational Management Administration & Leadership, 
+43(3):347-362. 
+https://doi.org/10.1177/1741143215575533
+        [ 
+Links
+ ]
+McDaniel C, Lamb CW & Hair JF 2012. 
+Marketing essentials 
+(7th ed). Mason, OH: South Western Cengage Learning.         [ 
+Links
+ ]
+ 
+Modisaotsile BM 2012. The failing standard of basic education in South Africa. 
+Africa Institute of South Africa (AISA) p POLICYbrief, 
+72:1-7. Available at 
+http://www.ai.org.za/wp-content/uploads/downloads/2012/03/No.-72.The-Failing-Standard-of-Basic-Education-in-South-Africa1.pdf
+. Accessed 13 May 2013.         [ 
+Links
+ ]
+ 
+Msila V 2009. School choice and intra-township migration: Black parents scrambling for quality education in South Africa. 
+Journal of Education, 
+46:81-98. Available at 
+http://joe.ukzn.ac.za/Libraries/No_46_June_2009/Completeissue_No_46.sflb.ashx#page=85
+. Accessed 15 August 2021.         [ 
+Links
+ ]
+ 
+Organisation for Economic Co-operation and Development 2012. 
+Equity and quality in education: Supporting disadvantaged students and schools. 
+Paris, France: OECD Publishing. 
+https://doi.org/10.1787/9789264130852-en
+        [ 
+Links
+ ]
+Organisation for Economic Co-operation and Development 2013. 
+OECD economic surveys: South Africa 2013. 
+Paris, France: OECD Publishing. 
+https://doi.org/10.1787/eco_surveys-zaf-2013-en
+        [ 
+Links
+ ]
+Paterson A & Kruss G 1998. Educational migration and its effect on access to schooling in South Africa. 
+South African Journal of Education, 
+18(3): 149-155.         [ 
+Links
+ ]
+ 
+Plank DN & Sykes G (eds.) 2003. 
+Choosing choice: School choice in international perspective. 
+New York, NY: Teachers College Press.         [ 
+Links
+ ]
+ 
+Republic of South Africa 1996a. Act No. 84, 1996: South African Schools Act, 1996. 
+Government Gazette, 
+377(17579), November 15.         [ 
+Links
+ ]
+ 
+Republic of South Africa 1996b. 
+The Constitution of the Republic of South Africa (Act 108 of 1996). 
+Pretoria: Government Printer.         [ 
+Links
+ ]
+ 
+Roth WM, Radford L & LaCroix L 2012. Working with cultural-historical activity theory. 
+Forum Qualitative Social Research, 
+13(2). 
+https://doi.org/10.17169/fqs-13.2.1814
+        [ 
+Links
+ ]
+Russell AM 2006. School choice and Christian education. MEd dissertation. Johannesburg, South Africa: University of Johannesburg.         [ 
+Links
+ ]
+ 
+Sekete P, Shilubane M & Moila B 2001. 
+Deracialisation and migration of learners in South African schools: Challenges and implications. 
+Cape Town, South Africa: Human Sciences Research Council.         [ 
+Links
+ ]
+ 
+Statistics Solutions 2021. Available at 
+https://www.statisticssolutions.com/
+. Accessed 26 August 2021.         [ 
+Links
+ ]
+ 
+Sullo B 2011. 
+Choice theory. 
+Available at 
+http://www.funderstanding.com/educators/choice-theory/#sthash.rzEcCef7.dpuf
+. Accessed 10 April 2016.         [ 
+Links
+ ]
+ 
+Taylor S 2011. 
+Uncovering indicators of effective school management in South Africa using the National School Effectiveness Study 
+(Stellenbosch Economic Working Papers: 10/11). Stellenbosch, South Africa: Department of Economics and the Bureau for Economic Research, Stellenbosch University. Available at 
+https://resep.sun.ac.za/wp-content/uploads/2017/10/wp-10-2011.pdf
+. Accessed 21 August 2021.         [ 
+Links
+ ]
+ 
+Torquati J, Raikes H & Huddleston-Casas CA 2007. Teacher education, motivation, compensation, workplace support, and links to quality of center-based child care and teachers' intention to stay in the early childhood profession. 
+Early Childhood Research Quarterly, 
+22(2):261-275. 
+https://doi.org/10.10167j.ecresq.2007.03.004
+        [ 
+Links
+ ]
+Van der Berg S, Taylor S, Gustafsson M, Spaull N & Armstrong P 2011. 
+Improving education quality in South Africa. 
+Stellenbosch, South Africa: Department of Economics, University of Stellenbosch. Available at 
+https://resep.sun.ac.za/wp-content/uploads/2017/10/2011-Report-for-NPC.pdf
+. Accessed 21 August 2021.         [ 
+Links
+ ]
+ 
+Venter E 2011. Parental reasons for choice of school: Implications for school management. MEd dissertation. Johannesburg, South Africa: University of Johannesburg.         [ 
+Links
+ ]
+ 
+Walford G 2003. School choice and educational change in England and Wales. In DN Plank & G Sykes (eds). 
+Choosing choice: School choice in international perspective. 
+New York, NY: Teachers College Press.         [ 
+Links
+ ]
+ 
+Yamagata-Lynch LC 2010. 
+Activity systems analysis methods: Understanding complex learning environments. 
+New York, NY: Springer. 
+https://doi.org/10.1007/978-1-4419-6321-5
+        [ 
+Links
+ ]
+ 
+
+ ©  2026  
+ 
+Educational Association of South Africa
+Education Association of South Africa (EASA)
+Faculty of Education, University of Pretoria, Groenkloof Campus,
+Lleyds Street, Pretoria, Gauteng, ZA, 0002, 
+Tel: +27 12 420 2337 
+estelle.botha@up.ac.za

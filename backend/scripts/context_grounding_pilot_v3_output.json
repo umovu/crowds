@@ -1,0 +1,642 @@
+{
+  "model": "qwen3.6-plus",
+  "temperature": 0.7,
+  "repeats": 5,
+  "cases": [
+    "edtech-free-to-paid",
+    "locked-savings-app"
+  ],
+  "results": [
+    {
+      "case": "edtech-free-to-paid",
+      "persona": "Mamello Phiri",
+      "archetype": "guardian_parent",
+      "card": "education-payment-conversion",
+      "arms": {
+        "A": {
+          "summary": {
+            "impulse_mean": 0.52,
+            "impulse_stdev": 0.11,
+            "vocab_hits_total": 0,
+            "objection_grounded_count": 2,
+            "near_duplicate_objection_pairs": 0,
+            "leaks": 1,
+            "parse_errors": 0
+          },
+          "runs": [
+            {
+              "impulse": 0.6,
+              "primary_objection": "Uncertainty about whether the premium features offer enough value over the free tier to justify the recurring monthly deduction from our limited household income.",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I like the idea of seeing my child's progress weekly instead of waiting for report cards, especially since I work full-time and can't always check their books. However, R79 a month is a significant chunk of our grocery budget, and I am not sure if the free version is enough to start with. Crime is already a worry when they walk to school, so I don't want them glued to phones, but tutor chats could help if teachers are unavailable. I need to know if the app works well on older, cheaper smartphones because we don't have the latest devices. If it truly saves us from paying for expensive extra lessons, it might be worth it, but I must be careful with every rand.",
+              "economic": {
+                "impulse": 0.6,
+                "perceived_cost": "R79/month is manageable but tight; it equals about two days of groceries or a portion of our transport fare.",
+                "willingness_band": "Low to Moderate; only if it clearly replaces more expensive tutoring costs.",
+                "primary_objection": "Uncertainty about whether the premium features offer enough value over the free tier to justify the recurring monthly deduction from our limited household income.",
+                "reconsider_condition": "If I can try the premium features for a free trial period to see if my child actually uses them and improves, or if the school confirms it significantly reduces the need for paid extra classes.",
+                "needed_fact": "Does the app consume a lot of mobile data, and will it run smoothly on our current mid-range Android phones without needing upgrades?"
+              }
+            },
+            {
+              "impulse": 0.6,
+              "primary_objection": "Uncertainty whether the app aligns with the specific curriculum and resource levels of our no-fee school",
+              "vocab_hits": [],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I like the idea of seeing my child's progress weekly instead of waiting for a report card, especially since I work long hours at the department and can't always check their books. R79 is not a huge amount, but when you add it to rent, transport, and groceries on a ten-thousand rand income, every rand must fight for its place. I worry about safety when they walk to school, so if this app keeps them studying safely at home instead of going to distant extra lessons, that has value. However, I need to know if the content matches what our no-fee school actually teaches, as resources there are limited. I am tempted by the convenience, but I must be sure it is not just another subscription that eats into our grocery money without delivering real results.",
+              "economic": {
+                "impulse": 0.6,
+                "perceived_cost": "R79 per month",
+                "willingness_band": "Low to Moderate",
+                "primary_objection": "Uncertainty whether the app aligns with the specific curriculum and resource levels of our no-fee school",
+                "reconsider_condition": "If I can verify that the past papers and tutor chats specifically support the CAPS curriculum used in our local public school",
+                "needed_fact": "Does the premium content cover the specific textbooks and syllabus used in Gauteng no-fee schools?"
+              }
+            },
+            {
+              "impulse": 0.6,
+              "primary_objection": "Budget tightness and uncertainty about data consumption on limited bundles",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I really like the idea of seeing weekly progress reports, because right now I only find out how my son is doing when the term ends, which is too late to fix things. R79 is not a huge amount, but with our rent and groceries taking up almost everything from my salary and Thabo's driving income, every rand has to fight for its place. I am worried about the data costs since we rely on mobile bundles, and I need to know if the app works well on a basic smartphone without eating up all our airtime. The safety aspect appeals to me because it keeps my children studying at home instead of traveling to expensive tutors in town. However, I need to be sure it actually helps them pass, otherwise, it is just another subscription I cannot afford to waste.",
+              "economic": {
+                "impulse": 0.6,
+                "perceived_cost": "R79 per month plus potential mobile data usage",
+                "willingness_band": "Low to Moderate; depends heavily on proof of educational value",
+                "primary_objection": "Budget tightness and uncertainty about data consumption on limited bundles",
+                "reconsider_condition": "If the school confirms it significantly improves pass rates or if it offers a zero-rated data option",
+                "needed_fact": "Does the app consume significant mobile data, and is it zero-rated by major SA networks?"
+              }
+            },
+            {
+              "impulse": 0.4,
+              "primary_objection": "The monthly subscription adds up to nearly R1000 a year, which is a significant portion of our disposable income that currently goes to food and transport",
+              "vocab_hits": [],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [
+                "R1000"
+              ],
+              "parse_error": null,
+              "reaction": "R79 a month is steep when my grocery bill is already stretching our ten thousand rand income to the limit. I like the idea of seeing how my children are doing before the report card comes, especially since I worry about their safety walking to extra classes elsewhere. However, I currently help them with homework myself and speak to teachers when necessary, which costs me nothing but time. The premium features sound useful, but I need to know if the free version is enough to keep them on track without breaking the bank. If the free tier is too limited, I might feel forced to pay, but I will hesitate because every rand counts in this economy.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month plus potential data costs for streaming tutor chats or downloading past papers",
+                "willingness_band": "Low to Moderate; only if the free version proves insufficient for exam prep",
+                "primary_objection": "The monthly subscription adds up to nearly R1000 a year, which is a significant portion of our disposable income that currently goes to food and transport",
+                "reconsider_condition": "If the school explicitly states that the free version lacks critical exam resources needed for passing, or if there is a family discount for multiple children",
+                "needed_fact": "What specific content is locked behind the paywall versus what is available in the free basic tier?"
+              }
+            },
+            {
+              "impulse": 0.4,
+              "primary_objection": "Uncertainty whether the premium features offer better value than my current free effort of helping with homework myself",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "R79 a month is not a huge amount, but when you add it to rent and groceries, every rand has to fight for its place in my budget. I like the idea of seeing progress reports on my phone because I worry about my children falling behind at their no-fee school. However, I already help them with homework every night, so I need to know if this app actually saves me time or just adds another thing to manage. The safety aspect appeals to me since I hate the idea of them traveling far for extra lessons, but I am skeptical if an app can replace a real teacher's attention. I would need to see if the free version is enough before I even think about paying.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month subscription",
+                "willingness_band": "Low to Moderate; only if it clearly replaces costly tutoring or significant parental effort",
+                "primary_objection": "Uncertainty whether the premium features offer better value than my current free effort of helping with homework myself",
+                "reconsider_condition": "If I can try the premium features for free for a month and see a tangible improvement in my child's marks or my own time savings",
+                "needed_fact": "Does the free basic tier include enough past papers and feedback to be useful without paying?"
+              }
+            }
+          ]
+        },
+        "B": {
+          "summary": {
+            "impulse_mean": 0.52,
+            "impulse_stdev": 0.11,
+            "vocab_hits_total": 1,
+            "objection_grounded_count": 1,
+            "near_duplicate_objection_pairs": 0,
+            "leaks": 0,
+            "parse_errors": 0
+          },
+          "runs": [
+            {
+              "impulse": 0.4,
+              "primary_objection": "The monthly subscription competes directly with essential household needs like groceries",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I appreciate that the school recommends this, as it shows they are trying to bridge the gap in resources, but R79 is a significant portion of my monthly grocery budget. I already spend my evenings helping my children with their homework, so I am not sure if a digital report adds enough value to justify taking money from our food or transport fund. The promise of one-on-one tutor chats is tempting because private lessons are far too expensive for us, but I worry about the data costs on my phone which are already tight. If the free version gives me basic updates, I will likely stick to that and only pay if my child is truly struggling in a specific subject. I need to know if this app works well on low-end smartphones before I even consider downloading it.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month plus mobile data usage",
+                "willingness_band": "Low; only justifiable if it replaces costly physical tutoring",
+                "primary_objection": "The monthly subscription competes directly with essential household needs like groceries",
+                "reconsider_condition": "If the free tier proves insufficient during exam periods and the premium feature guarantees tangible grade improvements",
+                "needed_fact": "Does the app consume high amounts of mobile data, and is there a zero-rated option for major SA networks?"
+              }
+            },
+            {
+              "impulse": 0.6,
+              "primary_objection": "Uncertainty about data consumption costs and whether it effectively replaces paid extra lessons",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I like the idea of seeing my child's progress weekly instead of waiting for a report card that comes too late to help. R79 is not a huge amount, but when you have two children and transport costs are rising, every rand must fight for its place in our budget. I worry that if the app uses too much data, the hidden cost will make it expensive for us since we rely on prepaid bundles. The safety aspect appeals to me because it means less time worrying about them traveling to extra lessons across Tembisa. However, I need to know if this truly replaces the need for physical tutoring before I commit my limited funds.",
+              "economic": {
+                "impulse": 0.6,
+                "perceived_cost": "R79 monthly subscription plus potential high mobile data usage",
+                "willingness_band": "Low to Moderate; only if it clearly saves money on other educational support",
+                "primary_objection": "Uncertainty about data consumption costs and whether it effectively replaces paid extra lessons",
+                "reconsider_condition": "If the school confirms it aligns with their curriculum and offers a data-light mode or zero-rated access",
+                "needed_fact": "Average monthly data volume required to use the premium features effectively"
+              }
+            },
+            {
+              "impulse": 0.6,
+              "primary_objection": "The monthly fee competes directly with essential groceries and transport costs in a tight budget",
+              "vocab_hits": [
+                "learner-teacher ratios"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I appreciate that the school recommends this, as I worry about the large learner-teacher ratios and whether my children are truly keeping up until report cards arrive. The idea of weekly progress reports gives me peace of mind, especially since crime makes it unsafe for them to stay late for extra lessons at physical centers. However, R79 a month is a significant portion of our grocery budget, and I am already stretching our ten thousand rand income to cover rent and transport. I currently help with homework myself, so I need to be sure this app offers more value than my own time and effort. It feels like a helpful tool, but I must weigh if the premium features are a luxury we can truly afford right now.",
+              "economic": {
+                "impulse": 0.6,
+                "perceived_cost": "R79 per month subscription",
+                "willingness_band": "Low to Moderate; requires strict justification against essential household expenses",
+                "primary_objection": "The monthly fee competes directly with essential groceries and transport costs in a tight budget",
+                "reconsider_condition": "If the free tier provides sufficient visibility into performance without needing the premium past papers or tutor chats",
+                "needed_fact": "What specific content or support is included in the free basic tier compared to the premium version?"
+              }
+            },
+            {
+              "impulse": 0.4,
+              "primary_objection": "The recurring monthly cost is hard to justify on a tight budget without proof of superior academic outcomes.",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I appreciate that the school recommends this, as it shows they are trying to bridge the gap in resources, but R79 is a significant portion of my monthly grocery budget. I already spend my evenings helping my children with their work, so I need to know if this app actually saves me time or just adds another screen to manage. The promise of seeing progress before report cards is tempting because I worry about surprises, but I cannot commit to a monthly subscription unless I am certain it replaces the expensive extra lessons we sometimes scramble to find. Safety is also a concern; I prefer tools that keep my children studying safely at home rather than traveling to tutors.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month feels like a luxury when weighed against essential household needs like food and transport.",
+                "willingness_band": "Low to Moderate; only if it demonstrably reduces other educational costs.",
+                "primary_objection": "The recurring monthly cost is hard to justify on a tight budget without proof of superior academic outcomes.",
+                "reconsider_condition": "If I can trial the premium features for free for a month and see a tangible improvement in my child's understanding or my own time savings.",
+                "needed_fact": "Does the app align specifically with the CAPS curriculum used in our no-fee school, and are the 'tutor chats' available during hours I am not working?"
+              }
+            },
+            {
+              "impulse": 0.6,
+              "primary_objection": "The recurring monthly cost strains our tight household budget where every rand is allocated",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I am interested because the teachers at our no-fee school are overwhelmed, and I often feel blind to my children's progress until the term ends. The idea of weekly reports on my phone appeals to me, as it helps me stay involved despite my long hours in administration. However, R79 a month is a significant portion of our grocery budget, and I must weigh this against the free help I already give them at home. I worry that once I subscribe, I might find the content doesn't match what they are actually taught in class. Safety is also a concern; if the app requires data usage, I need to know if it works well on low bandwidth since we manage our airtime carefully.",
+              "economic": {
+                "impulse": 0.6,
+                "perceived_cost": "R79 per month plus potential mobile data costs",
+                "willingness_band": "Low to Moderate; only if it clearly replaces costly extra lessons",
+                "primary_objection": "The recurring monthly cost strains our tight household budget where every rand is allocated",
+                "reconsider_condition": "If I can trial it for free to confirm the content aligns with the school curriculum and see immediate improvement in their homework",
+                "needed_fact": "Does the app consume a lot of mobile data, and is there a zero-rated option for major South African networks?"
+              }
+            }
+          ]
+        },
+        "C": {
+          "summary": {
+            "impulse_mean": 0.38,
+            "impulse_stdev": 0.045,
+            "vocab_hits_total": 3,
+            "objection_grounded_count": 3,
+            "near_duplicate_objection_pairs": 1,
+            "leaks": 0,
+            "parse_errors": 0
+          },
+          "runs": [
+            {
+              "impulse": 0.4,
+              "primary_objection": "Can I afford the transport and fees, or is proximity my only real filter? (Adapted: Can I justify this recurring cost against our tight household budget?)",
+              "vocab_hits": [],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I worry about my children's safety walking to school, so an app that helps them study at home sounds appealing for keeping them indoors. However, R79 a month is a significant portion of our disposable income after rent and groceries, so I must weigh this against the free help I currently give them. I need to know if the premium features truly offer better academic outcomes than what I can provide myself or what the no-fee school already does. The promise of weekly reports is tempting because I often feel blind to their progress until report cards arrive, but I cannot afford to pay for something that doesn't guarantee improved marks. I will only consider this if it clearly outperforms the free version and justifies the monthly drain on our budget.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month subscription plus potential data costs",
+                "willingness_band": "Low to Moderate; requires strong proof of academic value",
+                "primary_objection": "Can I afford the transport and fees, or is proximity my only real filter? (Adapted: Can I justify this recurring cost against our tight household budget?)",
+                "reconsider_condition": "If I can see concrete evidence that the premium tier significantly improves test scores compared to the free tier or my own assistance.",
+                "needed_fact": "Does the app consume a lot of mobile data, given that data costs are high in South Africa?"
+              }
+            },
+            {
+              "impulse": 0.4,
+              "primary_objection": "Uncertainty about the tangible academic return on investment compared to free teacher consultations",
+              "vocab_hits": [],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I appreciate that the school recommends this, as it signals some level of trust in the content, but R79 a month is a significant portion of my disposable income after rent and groceries are paid. My main concern is whether the premium features actually help my children pass, or if I am just paying for reports I can get from teachers during term meetings for free. Safety is my biggest worry, so if this app keeps them studying safely at home instead of traveling to extra lessons, that has value, but I need to know if the 'one-on-one tutor' is a real person or just a bot. I cannot afford to subscribe and cancel later if it doesn't work; I need to be sure before I commit even this small amount. The free version might be enough for now, but I worry it won't give the detailed support my kids need to compete with learners from better-resourced schools.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month plus potential data costs for streaming video or downloading past papers",
+                "willingness_band": "Low to Moderate; only if proven to directly improve grades",
+                "primary_objection": "Uncertainty about the tangible academic return on investment compared to free teacher consultations",
+                "reconsider_condition": "If I can see a demo of the progress reports and verify that the tutors are qualified humans who can explain concepts in a way my children understand",
+                "needed_fact": "Does the app require high-data usage which would incur additional costs on my prepaid bundle?"
+              }
+            },
+            {
+              "impulse": 0.3,
+              "primary_objection": "Affordability constraint relative to household income",
+              "vocab_hits": [
+                "learner-teacher ratios"
+              ],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I appreciate that the school recommends this, as it signals some level of trust in the content, but R79 is a significant portion of my monthly grocery budget. My children are already at a no-fee school, so while I worry about the quality gaps and large learner-teacher ratios, I cannot simply add another recurring cost without cutting elsewhere. The promise of weekly reports is tempting because I often feel blind to their progress until term ends, but I currently rely on free teacher meetings and my own help with homework. Safety is my bigger daily stress, so spending on digital prep feels secondary unless it directly prevents costly exam failures or extra tutoring later. I need to know if the free version offers enough value before I even consider opening my wallet for the premium tier.",
+              "economic": {
+                "impulse": 0.3,
+                "perceived_cost": "R79/month subscription",
+                "willingness_band": "Low; requires strong proof of academic ROI",
+                "primary_objection": "Affordability constraint relative to household income",
+                "reconsider_condition": "If the free tier proves insufficient and I see tangible grade improvements from other parents using the premium feature",
+                "needed_fact": "What specific features are locked behind the paywall versus available in the free basic tier?"
+              }
+            },
+            {
+              "impulse": 0.4,
+              "primary_objection": "Uncertainty whether the premium features offer tangible academic improvement over my current free support",
+              "vocab_hits": [
+                "learner-teacher ratios"
+              ],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I worry constantly about my children's safety walking to school, so an app that helps them study at home sounds like a good way to keep them indoors and focused. However, R79 a month is a significant chunk of our grocery budget, and I need to know if this actually improves their marks in our no-fee school where resources are scarce. I usually help them myself, but I often feel out of depth with the newer curriculum methods. If the free version gives me enough insight into their progress without the premium cost, I might stick to that. I need to be sure this isn't just another expense that doesn't solve the real issue of large learner-teacher ratios in their classrooms.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month subscription plus potential data costs for streaming content",
+                "willingness_band": "Low to Moderate; only if it replaces expensive extra lessons",
+                "primary_objection": "Uncertainty whether the premium features offer tangible academic improvement over my current free support",
+                "reconsider_condition": "If I can see a trial period showing improved test scores or if other parents in Tembisa vouch for its effectiveness",
+                "needed_fact": "Does the app align specifically with the CAPS curriculum used in our local no-fee school?"
+              }
+            },
+            {
+              "impulse": 0.4,
+              "primary_objection": "Can I afford the transport and fees, or is proximity my only real filter? (In this context: Can I justify the recurring cost against tight household budget?)",
+              "vocab_hits": [
+                "learner-teacher ratios"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I am always worried about my children's grades because I cannot afford private tutors, so the idea of getting weekly progress reports on my phone appeals to me greatly. However, R79 a month is a significant portion of our grocery budget, and I must consider if this is better than saving that money for emergencies or transport. The free version might be enough for now, but I doubt it will give me the detailed insights into teacher quality or learner-teacher ratios that I truly need. Safety is also a concern; if the app keeps them home studying instead of walking to extra classes, that adds value, but only if the content is high quality. I need to know if the premium features are truly superior to just talking to the teachers at the no-fee school during meetings.",
+              "economic": {
+                "impulse": 0.4,
+                "perceived_cost": "R79/month subscription plus potential data costs",
+                "willingness_band": "Low to Moderate; requires strong proof of academic impact",
+                "primary_objection": "Can I afford the transport and fees, or is proximity my only real filter? (In this context: Can I justify the recurring cost against tight household budget?)",
+                "reconsider_condition": "If I can see a clear link between the premium reports and improved exam results without needing expensive physical extra lessons",
+                "needed_fact": "Does the premium tier include specific past papers for the exact curriculum used in our no-fee school?"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "locked-savings-app",
+      "persona": "Thandeka Nene",
+      "archetype": "grant_dependent_survivor",
+      "card": "stokvels-calibration",
+      "arms": {
+        "A": {
+          "summary": {
+            "impulse_mean": 0.18,
+            "impulse_stdev": 0.045,
+            "vocab_hits_total": 0,
+            "objection_grounded_count": 0,
+            "near_duplicate_objection_pairs": 0,
+            "leaks": 0,
+            "parse_errors": 0
+          },
+          "runs": [
+            {
+              "impulse": 0.2,
+              "primary_objection": "The monthly fee is an immediate loss of essential survival funds, and there is a lack of trust in digital platforms versus tangible community savings groups.",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about keeping money safe from daily temptations, but R15 a month is a lot when I am already counting every cent for bread and electricity. If the power goes out or water is cut, that R15 could buy paraffin or a bucket of water, which I need right now to survive. I do not trust apps with my little bit of cash; if my phone breaks or data runs out, I cannot access my money, and I have no one to complain to. My stokvel works because I see the people and we hold each other accountable, not because of a bonus promise from a company that doesn't know my struggle. Until I can be sure this app won't eat my fees or disappear, I will keep hiding my cash under the mattress where I can touch it.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15/month subscription fee plus potential data costs to manage the app",
+                "willingness_band": "Very Low - only if proven safer and cheaper than current methods",
+                "primary_objection": "The monthly fee is an immediate loss of essential survival funds, and there is a lack of trust in digital platforms versus tangible community savings groups.",
+                "reconsider_condition": "If the service was free to use, worked offline via USSD to save data, and had a physical support presence in KwaMashu.",
+                "needed_fact": "Are there any hidden transaction fees when depositing or withdrawing, and does the app require constant expensive mobile data to function?"
+              }
+            },
+            {
+              "impulse": 0.1,
+              "primary_objection": "The monthly fee of R15 is an unaffordable luxury that reduces my immediate purchasing power for essentials.",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about money disappearing before month-end, because that is my life every single day in KwaMashu. But asking me to pay R15 a month is like asking for blood from a stone when I am already stretching every cent of my child support grant just to put pap on the table. I cannot afford to lose fifteen rand to a fee when that same amount could buy a loaf of bread or some maize meal for my children. I trust my stokvel sisters more than an app because if there is a crisis, we can talk and agree to help each other, but a phone cannot negotiate with me when the lights go off. This feels like another way for people to take small amounts from those who have nothing left to give.",
+              "economic": {
+                "impulse": 0.1,
+                "perceived_cost": "R15 monthly subscription fee plus the risk of locking away cash I might need for emergencies like medicine or transport.",
+                "willingness_band": "None. I cannot justify any new fixed monthly cost given my current grant-dependent income.",
+                "primary_objection": "The monthly fee of R15 is an unaffordable luxury that reduces my immediate purchasing power for essentials.",
+                "reconsider_condition": "If the service was completely free with no monthly fees and allowed me to withdraw instantly in case of a family emergency.",
+                "needed_fact": "Is there any penalty or loss of the bonus if I have to withdraw the money early due to an emergency?"
+              }
+            },
+            {
+              "impulse": 0.2,
+              "primary_objection": "The R15 monthly fee reduces my available cash immediately, whereas my current methods (cash at home/stokvel) have no direct monthly service charge",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about money disappearing before month-end, because that is my life every single day in KwaMashu. But asking me to pay R15 a month is a heavy request when I am already stretching every cent from my child support grant just to put food on the table. I do not trust keeping money in a phone app when load shedding kills my data and I cannot check my balance, plus I worry about hidden bank fees for these transfers. My stokvel works because I see the people and we hold each other accountable without charging a monthly fee just to save my own money. A ten percent bonus sounds nice, but I cannot afford to lock away cash I might need for an emergency like water or medicine.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15 monthly subscription fee plus potential bank transaction costs for moving money",
+                "willingness_band": "Very Low - The recurring cost is a barrier given tight budget headroom",
+                "primary_objection": "The R15 monthly fee reduces my available cash immediately, whereas my current methods (cash at home/stokvel) have no direct monthly service charge",
+                "reconsider_condition": "If the service was completely free with no monthly fee, and worked reliably via USSD without needing data during load shedding",
+                "needed_fact": "Whether there are any bank charges for the automatic transfers that would eat into the small amounts I can save"
+              }
+            },
+            {
+              "impulse": 0.2,
+              "primary_objection": "The monthly fee reduces my available survival budget and the digital nature feels inaccessible during infrastructure failures",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about money disappearing before month-end, because that is my life every single day. But asking me to pay R15 a month is like asking for bread when I have no flour; that fee eats into the very little grant money I have for food and transport. I already save by hiding cash under my mattress or putting small amounts into my stokvel, where at least I trust the women I know. An app feels risky because if the network is down or load shedding hits, I cannot access my money when emergencies strike. I need to know if this 'locked pocket' is truly safe from bank fees and if I can get my cash out immediately if a child gets sick.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15 monthly subscription fee plus potential data costs",
+                "willingness_band": "Very Low - fixed costs are strictly avoided",
+                "primary_objection": "The monthly fee reduces my available survival budget and the digital nature feels inaccessible during infrastructure failures",
+                "reconsider_condition": "If the service was completely free with no hidden fees and allowed instant emergency withdrawals without penalty",
+                "needed_fact": "Are there any bank transaction fees charged when moving money into or out of the locked pocket?"
+              }
+            },
+            {
+              "impulse": 0.2,
+              "primary_objection": "The monthly fee reduces my already tight budget headroom and the locked funds create liquidity risk during infrastructure failures",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about money disappearing before month-end, because that is my life every single day in KwaMashu. But paying R15 a month is a huge ask when I am already stretching every cent from my child support grant just to put food on the table. I cannot afford to pay a fee to save money that I might need for emergencies like water or electricity outages. My stokvel works because we trust each other and there are no monthly fees eating into our small contributions. This app feels like it is designed for people with extra cash, not for those of us who are surviving hand-to-mouth.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15/month subscription fee plus the risk of locking away essential cash",
+                "willingness_band": "Very Low - The fixed cost is a barrier regardless of the potential bonus",
+                "primary_objection": "The monthly fee reduces my already tight budget headroom and the locked funds create liquidity risk during infrastructure failures",
+                "reconsider_condition": "If the service was completely free with no monthly subscription and allowed immediate access in case of verified emergencies",
+                "needed_fact": "Are there any hidden transaction fees for moving money in or out, and what is the minimum amount required to start saving?"
+              }
+            }
+          ]
+        },
+        "B": {
+          "summary": {
+            "impulse_mean": 0.22,
+            "impulse_stdev": 0.045,
+            "vocab_hits_total": 3,
+            "objection_grounded_count": 1,
+            "near_duplicate_objection_pairs": 0,
+            "leaks": 0,
+            "parse_errors": 0
+          },
+          "runs": [
+            {
+              "impulse": 0.2,
+              "primary_objection": "The fixed monthly fee of R15 is too high relative to my tight budget headroom and the perceived risk of digital exclusion during infrastructure failures",
+              "vocab_hits": [
+                "uniforms"
+              ],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about keeping money safe from daily temptations, and I know how easy it is for cash at home to disappear when the children need school fees or food runs out. But paying R15 every month is a heavy burden when my grant must stretch to cover everything, including buying data to even access this app. I trust my stokvel sisters because we see each other and wear our uniforms; an app on a phone feels distant and risky if the network goes down or the system fails. If I lock my money away, I need to be sure I can get it out immediately for emergencies like a funeral or illness, not wait for a bonus. Until I know exactly how much data this app eats up and if there are hidden bank charges, I cannot justify taking that risk with my limited funds.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15 monthly subscription plus potential mobile data costs and possible bank transaction fees",
+                "willingness_band": "Very Low - only if proven safer and cheaper than current informal methods",
+                "primary_objection": "The fixed monthly fee of R15 is too high relative to my tight budget headroom and the perceived risk of digital exclusion during infrastructure failures",
+                "reconsider_condition": "If the service was free to use, required zero data, and had a trusted community endorsement similar to a local stokvel",
+                "needed_fact": "Exact mobile data consumption per transaction and whether any bank withdrawal fees apply when accessing the locked pocket"
+              }
+            },
+            {
+              "impulse": 0.2,
+              "primary_objection": "The fixed monthly fee of R15 is unaffordable given my tight budget and lack of formal income",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about keeping money safe from daily temptations, because in KwaMashu, cash in the house disappears fast for bread or paraffin. But paying R15 every month is a heavy burden when I am already stretching my child support grant to the limit. My stokvel works because we trust each other and there are no monthly fees eating into our small contributions. I cannot justify paying a bank or an app just to hold my own money when I can hide it in a tin or give it to my sister. If this app takes my data or costs me airtime to check, it becomes even less attractive than my current ways.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15 monthly subscription fee plus potential mobile data costs",
+                "willingness_band": "Very Low",
+                "primary_objection": "The fixed monthly fee of R15 is unaffordable given my tight budget and lack of formal income",
+                "reconsider_condition": "If the service was completely free with no monthly charges and worked on USSD without using data",
+                "needed_fact": "Does the app require a smartphone and constant data connection, or can it work via basic USSD?"
+              }
+            },
+            {
+              "impulse": 0.2,
+              "primary_objection": "The monthly fee reduces the actual amount saved and is unaffordable on a tight grant budget",
+              "vocab_hits": [],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about keeping money safe from daily temptations, and I know how easy it is for cash at home to disappear when the children need school shoes or food prices jump. But paying R15 every month is a lot of money when I am already stretching my grant to the limit; that is two loaves of bread or a portion of my prepaid electricity. My stokvel works because we trust each other and there are no monthly fees eating into our small contributions. I cannot afford to pay for the privilege of saving my own money when I have so little to begin with. If this app was free, I might look at it, but right now it feels like another bill I do not need.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15/month subscription fee",
+                "willingness_band": "Only if free",
+                "primary_objection": "The monthly fee reduces the actual amount saved and is unaffordable on a tight grant budget",
+                "reconsider_condition": "If the monthly fee is removed entirely or waived indefinitely",
+                "needed_fact": "Are there any hidden data costs for using the app that will eat into my airtime?"
+              }
+            },
+            {
+              "impulse": 0.2,
+              "primary_objection": "The fixed monthly fee is a barrier when income is irregular and tight, and there is a lack of trust in digital systems compared to face-to-face stokvels",
+              "vocab_hits": [
+                "big pots"
+              ],
+              "objection_grounded": false,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear you, but R15 a month is money I cannot just throw away when I am choosing between bread and electricity. My stokvel works because we trust each other with our lives, not because of an algorithm on a phone that might eat my data. If the power goes out or my network fails, I cannot access my own money, and that scares me more than keeping cash under the mattress. I need to know this app won't charge me hidden fees when I finally need to withdraw for an emergency. Until I see my neighbors using it successfully without losing their savings, I will stick to the big pots we know.",
+              "economic": {
+                "impulse": 0.2,
+                "perceived_cost": "R15 monthly subscription plus potential mobile data costs to manage the app",
+                "willingness_band": "Very Low",
+                "primary_objection": "The fixed monthly fee is a barrier when income is irregular and tight, and there is a lack of trust in digital systems compared to face-to-face stokvels",
+                "reconsider_condition": "If the service was free to use, worked offline via USSD, and had visible endorsement from trusted community leaders",
+                "needed_fact": "Does the app consume significant mobile data to check balances or move money, and are there any hidden withdrawal penalties?"
+              }
+            },
+            {
+              "impulse": 0.3,
+              "primary_objection": "The monthly fee of R15 is a direct reduction in my food budget, which is too high a risk for a tool I am not sure I can trust over my physical stokvel.",
+              "vocab_hits": [
+                "uniforms"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about keeping money safe from daily temptations, and I know how hard it is to keep cash at home when the children are hungry. But paying R15 every month is a lot of bread and maize meal that I cannot just throw away, especially when my grant is already stretched thin before the month ends. I trust my stokvel sisters because we see each other and wear our uniforms, but an app on a phone feels distant and risky if the network goes down or the electricity cuts out. If I put money in there, I need to know it is truly locked and safe, not just disappearing into fees. The bonus sounds nice, but I cannot afford to lose access to my cash for three months if an emergency happens at home.",
+              "economic": {
+                "impulse": 0.3,
+                "perceived_cost": "R15 monthly subscription fee plus potential data costs to use the app",
+                "willingness_band": "Very Low - only if the fee is waived permanently",
+                "primary_objection": "The monthly fee of R15 is a direct reduction in my food budget, which is too high a risk for a tool I am not sure I can trust over my physical stokvel.",
+                "reconsider_condition": "If the service was completely free with no monthly charges and worked offline or via USSD so I don't waste airtime.",
+                "needed_fact": "Does the app charge any hidden fees for withdrawing the money after the three months, and does it work without expensive mobile data?"
+              }
+            }
+          ]
+        },
+        "C": {
+          "summary": {
+            "impulse_mean": 0.1,
+            "impulse_stdev": 0.0,
+            "vocab_hits_total": 5,
+            "objection_grounded_count": 5,
+            "near_duplicate_objection_pairs": 0,
+            "leaks": 1,
+            "parse_errors": 0
+          },
+          "runs": [
+            {
+              "impulse": 0.1,
+              "primary_objection": "Can I trust these people with my contributions?",
+              "vocab_hits": [],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I keep my cash hidden in a tin under the bed because if it is in a bank account, I see it and spend it on bread or paraffin before the month ends. This app sounds like it tries to do what my stokvel does, but my stokvel members are my neighbors who know where I live and will shame me if I don't pay. I do not trust a phone screen to hold my money when I have no job and every rand counts for survival. Paying R15 a month is money I cannot lose, especially if the network goes down and I cannot access my own funds during an emergency. I need to know if I can withdraw everything immediately if a child gets sick, because bonuses mean nothing if I starve next week.",
+              "economic": {
+                "impulse": 0.1,
+                "perceived_cost": "R15 monthly fee plus the risk of locked funds",
+                "willingness_band": "Very Low",
+                "primary_objection": "Can I trust these people with my contributions?",
+                "reconsider_condition": "If there was no monthly fee and I could withdraw instantly without penalty for emergencies",
+                "needed_fact": "What happens to my money if my phone is stolen or I lose my SIM card?"
+              }
+            },
+            {
+              "impulse": 0.1,
+              "primary_objection": "Will the groceries I get match the money I put in?",
+              "vocab_hits": [
+                "groceries"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I keep my cash hidden in a tin because if it is in the bank, the fees eat it or I get tempted to buy bread when the children are hungry. This app asks for R15 every month, which is the price of a loaf and some milk, so that is money gone from my stomach immediately. I do not trust a phone screen to hold my money like I trust the women in my burial society who see me struggle and wait for me when I am late. The ten percent bonus sounds nice, but I cannot lock away money for three months when load shedding means I must buy ice or food goes bad unexpectedly. If the app freezes or the network is down, I have no one to shout at in KwaMashu to fix it.",
+              "economic": {
+                "impulse": 0.1,
+                "perceived_cost": "R15 monthly subscription fee plus the risk of locked funds during emergencies",
+                "willingness_band": "Very Low",
+                "primary_objection": "Will the groceries I get match the money I put in?",
+                "reconsider_condition": "If the service was free, worked offline via USSD, and allowed emergency access without penalty",
+                "needed_fact": "Is there a penalty or fee if I must withdraw the money before the three months are up due to a family emergency?"
+              }
+            },
+            {
+              "impulse": 0.1,
+              "primary_objection": "Will the groceries I get match the money I put in? (The R15 fee reduces immediate purchasing power for essentials)",
+              "vocab_hits": [
+                "groceries"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I hear you saying this app locks money away so I don't spend it on groceries, which is exactly what my stokvel does for me every month without charging a cent. You want fifteen rands from me just to keep my own money safe, but that fifteen rands is already bread or electricity in my house right now. I don't trust a phone screen to hold my savings when I can see the people in my burial society standing right next to me if there is trouble. If the network goes down or load shedding hits, how do I know my money is still there? I need to know that if I have an emergency, I can get help from real people, not just a bonus percentage that might never come.",
+              "economic": {
+                "impulse": 0.1,
+                "perceived_cost": "R15/month subscription fee plus the risk of losing access to cash during emergencies",
+                "willingness_band": "Very Low - The recurring fee is a direct threat to daily survival budget",
+                "primary_objection": "Will the groceries I get match the money I put in? (The R15 fee reduces immediate purchasing power for essentials)",
+                "reconsider_condition": "If the service was completely free and allowed me to withdraw instantly for emergencies like a funeral or illness",
+                "needed_fact": "What happens to my money and the bonus if I need to withdraw before the three months are up due to a crisis?"
+              }
+            },
+            {
+              "impulse": 0.1,
+              "primary_objection": "Will the groceries I get match the money I put in? (The R15 fee reduces my immediate survival budget)",
+              "vocab_hits": [
+                "groceries",
+                "uniforms"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [],
+              "parse_error": null,
+              "reaction": "I keep my cash hidden in a tin because if it is in the bank, the system takes fees or I get tempted to buy bread when the children are hungry. This app asks for R15 every month, which is the price of a loaf of bread and some milk, so that is money lost before I even save. I trust my stokvel sisters because we wear uniforms and meet face-to-face, not because of a screen that might crash when load shedding hits. If the phone network is down or my data runs out, I cannot access my own money, and I cannot eat airtime. The ten percent bonus sounds nice, but I need to know if the bank charges me more than that just to keep the account open.",
+              "economic": {
+                "impulse": 0.1,
+                "perceived_cost": "R15 monthly subscription fee plus potential hidden bank transaction fees and data costs",
+                "willingness_band": "Very Low",
+                "primary_objection": "Will the groceries I get match the money I put in? (The R15 fee reduces my immediate survival budget)",
+                "reconsider_condition": "If the service was completely free with no monthly fee and worked via USSD without needing data",
+                "needed_fact": "Does the bank charge additional monthly account maintenance fees that would eat into the savings?"
+              }
+            },
+            {
+              "impulse": 0.1,
+              "primary_objection": "Will the groceries I get match the money I put in? (The fee erodes the value)",
+              "vocab_hits": [
+                "groceries"
+              ],
+              "objection_grounded": true,
+              "leaked_rand_amounts": [
+                "R100"
+              ],
+              "parse_error": null,
+              "reaction": "I hear what you are saying about money disappearing, because when the grant hits, the queue at the shop is long and the prices are high, so cash burns fast. But I already have a stokvel where we put in R100 every month, and that discipline works because my sisters will shame me if I don't pay, not because of an app notification. I cannot trust a phone to keep my money safe when load shedding means my data often runs out or the network is down. Paying R15 a month is too much; that is a loaf of bread and some maize meal that my children need to eat. I need to know the people holding my money, and I do not know who is behind this screen.",
+              "economic": {
+                "impulse": 0.1,
+                "perceived_cost": "R15 monthly fee plus potential hidden data costs",
+                "willingness_band": "Very Low",
+                "primary_objection": "Will the groceries I get match the money I put in? (The fee erodes the value)",
+                "reconsider_condition": "If the service was completely free, worked offline via USSD, and was endorsed by my local church or trusted community leaders.",
+                "needed_fact": "Does the app require expensive smartphone data to function, or can it work on basic feature phones via USSD?"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

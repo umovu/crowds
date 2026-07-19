@@ -5,6 +5,9 @@ import service from './index'
 export const listSegments = () =>
   service.get('/api/panel/segments')
 
+export const suggestSegments = (pitch) =>
+  service.get('/api/panel/segments/suggest', { params: { pitch } })
+
 export const createSession = (payload) =>
   service.post('/api/panel/sessions', payload)
 

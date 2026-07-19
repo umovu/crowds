@@ -35,6 +35,19 @@ def _run_async(coro):
         loop.close()
 
 
+@panel_bp.route('/segments/suggest', methods=['GET'])
+def suggest_segments():
+    """Suggest segments for a pitch (?pitch=...). Deterministic keyword match,
+    no LLM. Returns {"suggested": ["farmers"]} — empty list when no match."""
+    try:
+        pitch = request.args.get('pitch', '')
+        return jsonify({"success": True,
+                        "data": {"suggested": panel_service.suggest_segments(pitch)}})
+    except Exception as e:
+        logger.error(f"Segment suggestion failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @panel_bp.route('/segments', methods=['GET'])
 def list_segments():
     """Named library slices ("Unemployed", "Grant recipients", …) with live
@@ -61,7 +74,11 @@ def create_session():
                                         // evenly, deduped); default "everyone"
             "segment": "unemployed",    // Optional: single-group shorthand
             "province": "Gauteng",      // Optional: province focus
-            "seed": 7                   // Optional: deterministic cast selection
+            "seed": 7,                  // Optional: deterministic cast selection
+            "budget_tiers": ["moderate", "loose"]
+                                        // Optional affordability lens: only
+                                        // personas whose deterministic budget
+                                        // tier (real income data) is in the set
         }
 
     Session creation is LLM-free: cast selection, grant detection and budget
@@ -94,6 +111,7 @@ def create_session():
             seed=data.get('seed'),
             segment=data.get('segment'),
             segments=data.get('segments'),
+            budget_tiers=data.get('budget_tiers'),
             user_id=billing.current_user_id(),
         )
         # Count this panel against the user's quota (no-op on paid / billing off).

@@ -1,0 +1,93 @@
+{
+  "id": "parent-digital-learning-perceptions",
+  "citation": [
+    "Examining the challenges posed to parents by the contemporary screen environments of children: a qualitative investigation (PMC)",
+    "'Everything kind of revolves around technology': a qualitative exploration of families' screen use experiences (PMC)"
+  ],
+  "segment_tags": [
+    "guardian_parent"
+  ],
+  "mechanisms": [
+    "Screen time is a necessary tool for future readiness, not just leisure, because children must not be disadvantaged in a technological world where screen viewing is the norm.",
+    "Screen time is a risk to be managed through strict parental control, because excessive use causes observable harm like addiction, headaches, and reduced social skills.",
+    "Not all screen time is equal, because TV is social and homework is purposeful, while tablets and games are isolating and addictive.",
+    "Screen time guidelines must accommodate parental need for respite, because screens are a necessary coping tool when parents face practical constraints and need to maintain sanity.",
+    "Screen time interventions should foster self-regulation rather than impose external limits, because children must learn their own boundaries to develop autonomy."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P17"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P3",
+        "P22",
+        "P31",
+        "P33",
+        "P37"
+      ]
+    },
+    {
+      "mechanism_index": 4,
+      "chain_id": "C5",
+      "passages": [
+        "P25",
+        "P34"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "the norm",
+    "ill-equipped",
+    "hypnotic",
+    "white screen",
+    "babysitter",
+    "self-regulate"
+  ],
+  "objection_patterns": [
+    "Will this make my child fall behind in a technological world?",
+    "Is this going to cause addiction or health problems?",
+    "Is this screen social and educational, or isolating and addictive?",
+    "Does this give me a break when I need to get things done?",
+    "Will this help my child learn to manage their own time?"
+  ],
+  "claim_type": "qualitative",
+  "region": "not specified",
+  "year_range": "not specified",
+  "confidence": "qualitative interviews, two studies, UK and Australia, fieldwork periods not fully specified — mechanisms durable, magnitudes unknown",
+  "comb_gaps": [
+    "opportunity",
+    "capability"
+  ]
+}

@@ -107,6 +107,13 @@ service.interceptors.response.use(
           }
         } catch (_) { /* fall through to sign-out */ }
       }
+      // Mock-session dev mode: never bounce to the auth page. A 401 here means
+      // the BACKEND's AUTH_DISABLED flag is off — surface the error instead of
+      // silently redirecting (which would look like a broken login).
+      if (import.meta.env.VITE_AUTH_DISABLED === 'true') {
+        console.error('[dev] Backend returned 401 — is AUTH_DISABLED=true set and the backend restarted?')
+        return Promise.reject(error)
+      }
       supabase.auth.signOut().finally(() => {
         const next = encodeURIComponent(window.location.pathname + window.location.search)
         if (!window.location.pathname.startsWith('/auth.html')) {

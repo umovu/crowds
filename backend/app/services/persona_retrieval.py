@@ -53,6 +53,24 @@ _KEYWORD_ARCHETYPES = {
     "entrepreneur": ["small_business_owner"],
     "community": ["community_leader"],
     "service delivery": ["community_leader", "civic_moderate"],
+    # Education (GHS library roles)
+    "student": ["learner", "guardian_parent"],
+    "learner": ["learner", "guardian_parent"],
+    "school": ["learner", "guardian_parent"],
+    "matric": ["learner", "guardian_parent"],
+    "edtech": ["learner", "guardian_parent"],
+    "tutoring": ["learner", "guardian_parent"],
+    # Farming (QLFS farm-role build)
+    "farm": ["communal_farmer", "smallholder_emerging_farmer"],
+    "cattle": ["communal_farmer", "smallholder_emerging_farmer"],
+    "livestock": ["communal_farmer", "smallholder_emerging_farmer"],
+    "crop": ["communal_farmer", "smallholder_emerging_farmer"],
+    "agri": ["communal_farmer", "smallholder_emerging_farmer"],
+    # Salaried professionals (QLFS professional build)
+    "professional": ["urban_professional"],
+    "premium": ["urban_professional", "civic_moderate"],
+    "corporate": ["urban_professional"],
+    "salaried": ["urban_professional"],
 }
 
 _PROVINCES = [

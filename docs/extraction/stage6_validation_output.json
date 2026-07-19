@@ -1,0 +1,58 @@
+{
+  "model": "qwen3.7-max",
+  "repeats": 3,
+  "n_cards_run": 1,
+  "results": [
+    {
+      "card_id": "township-parent-motivation-sdl",
+      "cluster": "education",
+      "persona": "Mamello Phiri",
+      "archetype": "guardian_parent",
+      "scenario": "StudyCoins: an app that pays learners in mobile data for completing lessons, with a public class leaderboard showing top earners each week. Parents can pay R99/month to unlock detailed progress reports and a private (non-leaderboard) version for their child.",
+      "conditions": {
+        "baseline": [
+          {
+            "stance": "concerned",
+            "text": "I really like the idea of rewarding learners with data because we struggle to afford it on our R10,000 household income, but I absolutely cannot pay R99 monthly when that money is needed for groceries or transport. The public leaderboard worries me deeply as a mother because crime in Tembisa is already bad enough without broadcasting which children have valuable resources or active devices. My kids attend a no-fee school where resources are limited, so I fear this app might expose them to theft or bullying rather than just helping them learn. I would only support this if the basic version remained free and private to protect my children's safety while still providing the data incentive.\n\nSTANCE: concerned"
+          },
+          {
+            "stance": "concerned",
+            "text": "As a mother watching every rand in our R10,000 household budget, I appreciate any initiative that helps my children learn while saving us the cost of data for their lessons. However, the public leaderboard makes me deeply uncomfortable because crime in Tembisa is already bad enough without broadcasting which kids are active on devices or earning value online. I simply cannot afford the R99 monthly fee for privacy, yet exposing my children’s identities and routines to potential criminals feels too dangerous given the break-ins we've experienced at our complex. While I trust the government's intent to support education, this app’s design ignores the safety realities that shape every decision I make as a parent here.\n\nSTANCE: concerned"
+          },
+          {
+            "stance": "concerned",
+            "text": "I really like the idea of rewarding learners with data because we simply cannot afford extra airtime on our R10,000 household income, but I am deeply uncomfortable with a public leaderboard that exposes children to unnecessary pressure and visibility. My main concern is safety; displaying names publicly could make my kids targets for criminals in Tembisa who already know which families have resources or active devices. While I trust the government’s intent to improve education, I worry this app lacks the safeguarding protocols needed to protect vulnerable children from both crime and social harm. I would only consider using it if the private version were free and the leaderboard was completely removed to ensure my children's physical and emotional safety.\n\nSTANCE: concerned"
+          }
+        ],
+        "cards": [
+          {
+            "stance": "concerned",
+            "text": "I like that StudyCoins provides data because fibre Wi-Fi is too expensive for us in Tembisa, but paying R99 monthly is simply impossible when my household income barely covers rent and groceries. My main concern is the public leaderboard, as I already worry about crime and don't want my children targeted or bullied for appearing successful online. While I believe responsibility is my job and I currently sign their books myself, this app could help motivate them when I am too exhausted from work to push them. However, until it is free and safer, I cannot risk exposing my kids just for progress reports.\n\nSTANCE: concerned"
+          },
+          {
+            "stance": "concerned",
+            "text": "I like that it offers data because fibre Wi-Fi is too expensive for us, but R99 is simply money I don't have after paying rent and transport. My biggest worry is the public leaderboard making my children feel ashamed if they aren't top on that list, especially when they are already dealing with teenage phases and peer pressure. Responsibility is my job, not an app's, and I’m too exhausted from work to manage another platform just to see if they actually did their lessons. We need reliable connectivity to make learning friendly, not a competition that highlights who can afford the premium version.\n\nSTANCE: concerned"
+          },
+          {
+            "stance": "concerned",
+            "text": "I like that it rewards learners with data because fibre Wi-Fi is too expensive for us and connectivity is essential for a friendly learning environment. However, I cannot justify paying R99 monthly when my ten thousand rand income is already stretched thin covering rent and groceries in Tembisa. My main worry is the public leaderboard, as teenagers are already dealing with enough pressure and developmental rebellion without being shamed for not being top on that list. Responsibility is my job and I already sign their books, so I need support that respects our financial reality rather than adding another cost.\n\nSTANCE: concerned"
+          }
+        ],
+        "cards+stats": [
+          {
+            "stance": "concerned",
+            "text": "I like that StudyCoins rewards learners with data because R85 per gig is too steep for my budget, but paying R99 monthly for private reports is simply impossible when our combined income barely covers rent and transport. My children need fibre Wi-Fi to have a friendly learning environment, yet I am already exhausted from work and cannot always sign their books or monitor their motivation myself. The public leaderboard worries me deeply because teenagers are sensitive about being compared when they are already dealing with difficult phases and structural pressures. I support the free data incentive as essential infrastructure, but the paid tier excludes working parents like me who are trying their best despite failing local services.\n\nSTANCE: concerned"
+          },
+          {
+            "stance": "concerned",
+            "text": "I like that it rewards learners with data because R85 per gig is too expensive on our R10,000 household income, but I absolutely cannot afford the R99 monthly fee for private reports when taxi fare alone takes R720. My main concern is the public leaderboard exposing my children to unnecessary pressure or shame in a community where everyone already knows each other's business. I want them motivated to sign their books and learn, not chasing rankings while I’m too exhausted from work to properly monitor their progress. The government should be providing this connectivity as basic infrastructure rather than making tired parents pay extra just to keep their child’s performance private.\n\nSTANCE: concerned"
+          },
+          {
+            "stance": "concerned",
+            "text": "I like that StudyCoins rewards learners with data because R85 per gig is too steep for my budget, but I absolutely cannot afford the R99 monthly fee when my entire household income is only R10,000. My main concern is that putting children on a public leaderboard creates unnecessary pressure and shame for those whose parents can't pay for the private version. I already spend so much energy monitoring homework after work, and I worry this app shifts responsibility away from teaching and onto an expensive gadget. It feels unfair to gatekeep detailed progress reports behind a paywall when we are already struggling to keep the lights on.\n\nSTANCE: concerned"
+          }
+        ]
+      }
+    }
+  ]
+}

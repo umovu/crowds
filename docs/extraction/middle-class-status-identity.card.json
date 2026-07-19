@@ -1,0 +1,106 @@
+{
+  "id": "middle-class-status-identity",
+  "citation": [
+    "Consumption patterns of the established and emerging SA black middle class (Development Southern Africa)",
+    "Media framing of 'Black Tax' in South Africa (SciELO SA)",
+    "Marketing financial services in Africa: the heterogeneous middle-class consumer (Journal of Financial Services Marketing)"
+  ],
+  "segment_tags": [
+    "urban_professional",
+    "civic_moderate",
+    "institutional_loyalist",
+    "guardian_parent",
+    "small_business_owner",
+    "informal_trader"
+  ],
+  "mechanisms": [
+    "Visible consumption signals unobserved wealth relative to a reference group, so the urge to set oneself apart intensifies when intra-group inequality is high and mean income is low.",
+    "Asset accumulation anchors new middle-class entrants, reducing vulnerability and the need to signal — conversely, conspicuous consumption is heightened precisely while status remains new or tenuous, before assets have accumulated enough to stabilize it.",
+    "Black Tax is a social and moral obligation rooted in African communalism, so financial products are evaluated by their capacity to help manage extended-family duties without undermining personal financial health.",
+    "Affordability, convenience, and accessibility are paramount for the income-insecure, so mobile-phone-based services that are trusted via word-of-mouth are adopted while formal products requiring payslips or collateral are avoided."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P8",
+        "P39",
+        "P40",
+        "P41",
+        "P45"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P4",
+        "P6",
+        "P7",
+        "P10",
+        "P11",
+        "P32",
+        "P34",
+        "P38"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P19",
+        "P21",
+        "P22",
+        "P23",
+        "P24",
+        "P25",
+        "P26"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P28",
+        "P29",
+        "P30",
+        "P33",
+        "P35",
+        "P36",
+        "P38",
+        "P42",
+        "P43",
+        "P44"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "conspicuous consumption",
+    "signalling wealth",
+    "asset deficit",
+    "Black Tax",
+    "inherited poverty",
+    "mobile-payment services"
+  ],
+  "objection_patterns": [
+    "Does this product visibly signal my middle-class status to my reference group?",
+    "Will this product help me accumulate assets that anchor my position in the middle class?",
+    "Can I use this product to budget for my extended-family obligations without sacrificing my own financial health?",
+    "Is this product affordable, accessible via my mobile phone, and trusted by people in my social network?"
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa",
+  "year_range": "not specified",
+  "confidence": "multi-source synthesis combining quantitative survey analysis, qualitative media framing analysis, and ethnographic fieldwork; mechanisms are robust across contexts but magnitudes are unknown.",
+  "comb_gaps": [
+    "capability"
+  ]
+}

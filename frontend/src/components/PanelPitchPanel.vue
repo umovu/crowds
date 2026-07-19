@@ -69,12 +69,18 @@
         <span>02 / WHO'S IN THE ROOM — pick one group or mix several</span>
         <span>{{ selectedSegmentLabel }}</span>
       </div>
+      <div v-if="suggestionToShow.length && suggestionLabels" class="pp-suggestion">
+        <span>Based on your pitch, try: <strong>{{ suggestionLabels }}</strong></span>
+        <button class="pp-suggestion-apply" :disabled="busy" @click="applySuggestion">Apply</button>
+        <button class="pp-suggestion-dismiss" :disabled="busy" @click="suggestionDismissed = true">×</button>
+      </div>
       <div class="pp-segments">
         <button
           v-for="seg in segments"
           :key="seg.id"
           class="pp-segment"
           :class="{ selected: selectedSegments.includes(seg.id) }"
+          :title="seg.label + ' — ' + seg.description"
           :disabled="busy"
           @click="toggleSegment(seg.id)"
         >
@@ -269,10 +275,10 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { createAvatar } from '@dicebear/core'
 import { avataaars } from '@dicebear/collection'
-import { listSegments, createSession, getSession, pitchSession, askAgent, listSessions, listRounds } from '../api/panel'
+import { listSegments, suggestSegments, createSession, getSession, pitchSession, askAgent, listSessions, listRounds } from '../api/panel'
 
 // DiceBear avatar per persona — seeded by name so the same face is stable
 // across rounds and reopens.
@@ -318,6 +324,39 @@ const followupDrafts = reactive({})  // agent_id -> draft text
 const busy = computed(() => assembling.value || pitching.value)
 const currentRound = computed(() => rounds.value[activeRound.value] || null)
 const dashboard = computed(() => currentRound.value?.impact_dashboard || {})
+
+// Pitch-based segment suggestion: deterministic keyword match on the backend.
+// Shown as a dismissable hint — never silently applied (a wrong silent default
+// is worse than no default). Debounced so we don't call per keystroke.
+const suggested = ref([])
+const suggestionDismissed = ref(false)
+let suggestTimer = null
+watch(pitchText, (text) => {
+  suggestionDismissed.value = false
+  clearTimeout(suggestTimer)
+  if (!text || !text.trim()) { suggested.value = []; return }
+  suggestTimer = setTimeout(async () => {
+    try {
+      const res = await suggestSegments(text.trim())
+      suggested.value = res.data.suggested || []
+    } catch { suggested.value = [] }
+  }, 700)
+})
+
+const suggestionToShow = computed(() => {
+  if (suggestionDismissed.value || !suggested.value.length) return []
+  // Hide once the user has already selected everything we'd suggest.
+  return suggested.value.filter(id => !selectedSegments.value.includes(id))
+})
+
+const suggestionLabels = computed(() =>
+  segments.value.filter(s => suggestionToShow.value.includes(s.id)).map(s => s.label).join(' + '))
+
+const applySuggestion = () => {
+  let next = selectedSegments.value.filter(s => s !== 'everyone')
+  for (const id of suggestionToShow.value) if (!next.includes(id)) next.push(id)
+  selectedSegments.value = next.length ? next : ['everyone']
+}
 
 const toggleSegment = (id) => {
   if (id === 'everyone') {
@@ -718,12 +757,15 @@ onMounted(async () => {
 .pp-segments {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-auto-rows: 1fr;
   gap: 10px;
 }
 .pp-segment {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  height: 100%;
+  min-height: 118px;
   padding: 12px 14px;
   border: 1px solid #E5E5E5;
   border-radius: 12px;
@@ -736,7 +778,10 @@ onMounted(async () => {
 .pp-segment.selected { border-color: #1E9E5A; background: #F0FAF4; }
 .pp-segment:disabled { opacity: 0.6; cursor: not-allowed; }
 .pp-segment-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.pp-segment-label { font-weight: 600; font-size: 0.88rem; color: #000; }
+.pp-segment-label {
+  font-weight: 600; font-size: 0.88rem; color: #000;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .pp-segment-count {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
@@ -746,7 +791,11 @@ onMounted(async () => {
   padding: 1px 7px;
   border-radius: 8px;
 }
-.pp-segment-desc { font-size: 0.73rem; color: #777; line-height: 1.4; }
+.pp-segment-desc {
+  font-size: 0.73rem; color: #777; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* Controls row */
 .pp-controls {
@@ -777,6 +826,30 @@ onMounted(async () => {
   transition: all 0.15s;
 }
 .pp-size-btn:hover:not(:disabled) { border-color: #1E9E5A; color: #1E9E5A; }
+.pp-suggestion {
+  display: flex; align-items: center; gap: 10px;
+  margin: 8px 0 10px;
+  padding: 7px 12px;
+  border: 1px dashed #1E9E5A;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: #333;
+  background: rgba(30, 158, 90, 0.05);
+}
+.pp-suggestion-apply {
+  padding: 3px 12px;
+  border: 1px solid #1E9E5A;
+  background: #1E9E5A; color: #fff;
+  border-radius: 999px;
+  font-size: 0.72rem; font-weight: 600;
+  cursor: pointer;
+}
+.pp-suggestion-apply:disabled { opacity: 0.5; cursor: not-allowed; }
+.pp-suggestion-dismiss {
+  margin-left: auto;
+  border: none; background: none;
+  color: #999; font-size: 0.9rem; cursor: pointer;
+}
 .pp-size-btn.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
 .pp-size-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .pp-assemble-btn {

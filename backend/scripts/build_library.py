@@ -23,10 +23,15 @@ import json
 import os
 import random
 import sys
+from typing import Optional
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from persona_sampler import sample_skeletons, sample_teacher_skeletons
+from persona_sampler import (
+    sample_skeletons, sample_teacher_skeletons,
+    sample_communal_farmer_skeletons, sample_smallholder_owner_skeletons,
+    sample_professional_skeletons,
+)
 from archetype_mapper import map_skeletons
 from attitude_fuser import fuse_attitudes
 from ghs_adapter import sample_education_skeletons
@@ -50,10 +55,14 @@ _ID_FIELDS = ["age", "gender", "province", "education", "occupation",
 _EDU_ID_FIELDS = ["ghs_role", "current_grade", "monthly_household_income_rand",
                   "learners_in_household", "geotype", "home_language"]
 
+# Farmer-build distinguisher (absent on non-farmer personas, so civic/education
+# ids are unaffected — same "included only when present" discipline as _EDU_ID_FIELDS).
+_FARM_ID_FIELDS = ["farm_market_orientation", "farm_products"]
+
 
 def _stable_id(persona: dict, seed: int) -> str:
     payload = {k: persona.get(k) for k in _ID_FIELDS}
-    for k in _EDU_ID_FIELDS:
+    for k in _EDU_ID_FIELDS + _FARM_ID_FIELDS:
         if persona.get(k) is not None:
             payload[k] = persona.get(k)
     payload["_seed"] = seed
@@ -69,10 +78,18 @@ def build(
     learners: int = 0,
     guardians: int = 0,
     teachers: int = 0,
+    communal_farmers: int = 0,
+    smallholder_farmers: int = 0,
+    professionals: int = 0,
     append: bool = False,
+    llm_api_key: Optional[str] = None,
+    llm_base_url: Optional[str] = None,
+    llm_model: Optional[str] = None,
 ) -> int:
     print(f"Building persona library: n={n}, learners={learners}, guardians={guardians}, "
-          f"teachers={teachers}, seed={seed}, append={append}")
+          f"teachers={teachers}, communal_farmers={communal_farmers}, "
+          f"smallholder_farmers={smallholder_farmers}, professionals={professionals}, "
+          f"seed={seed}, append={append}")
 
     # Refuse to ship a library built on the synthetic attitude fixture unless explicitly
     # forced — fake moods grounded in nothing are worse than no attitudes. Pass
@@ -121,8 +138,37 @@ def build(
             source = f"afrobarometer_r9_sa:{suffix}" if suffix else None
             mapped.extend(fuse_attitudes(group, seed=seed, donors=pool, source=source))
 
+    # Farmer roles (QLFS Q210MARKET / Ste_icse93). Known from the data itself — same
+    # reasoning as the education roles above — so the demographic archetype mapper is
+    # bypassed and actor_archetype is set directly from the role. No farmer-specific
+    # Afrobarometer donor pool exists, so attitudes fuse against the general pool
+    # (same as guardians), same as the "_general" branch above.
+    farm_skeletons = []
+    if communal_farmers > 0:
+        farm_skeletons.extend(
+            sample_communal_farmer_skeletons(communal_farmers, seed=seed))
+    if smallholder_farmers > 0:
+        farm_skeletons.extend(
+            sample_smallholder_owner_skeletons(smallholder_farmers, seed=seed))
+    if farm_skeletons:
+        for sk in farm_skeletons:
+            sk["actor_archetype"] = (
+                "communal_farmer" if sk["farm_market_orientation"] == "subsistence"
+                else "smallholder_emerging_farmer"
+            )
+        mapped.extend(fuse_attitudes(farm_skeletons, seed=seed))
+
+    # Professional/managerial role (QLFS Occup + formal employment). Occupation is a
+    # surveyed fact, so the role is known from data — archetype set directly, same
+    # pattern as the other role samplers. General attitude donor pool.
+    if professionals > 0:
+        prof_skeletons = sample_professional_skeletons(professionals, seed=seed)
+        for sk in prof_skeletons:
+            sk["actor_archetype"] = "urban_professional"
+        mapped.extend(fuse_attitudes(prof_skeletons, seed=seed))
+
     print(f"Generating English-only texture for {len(mapped)} personas (LLM, offline)...")
-    client = tg.LLMClient()
+    client = tg.LLMClient(api_key=llm_api_key, base_url=llm_base_url, model=llm_model)
     # Shared name state: names come from a curated pool (not the LLM) and must be
     # unique across the whole library. Seed the used-set with any existing names
     # when appending, so new personas never collide with already-built ones.
@@ -187,11 +233,24 @@ def main() -> int:
                     help="GHS guardian personas (parent/gogo split follows the data)")
     ap.add_argument("--teachers", type=int, default=0,
                     help="QLFS educator-role personas (role assigned, marked in provenance)")
+    ap.add_argument("--communal-farmers", type=int, default=0,
+                    help="QLFS subsistence-farmer personas (Q210MARKET family-use)")
+    ap.add_argument("--smallholder-farmers", type=int, default=0,
+                    help="QLFS market-oriented farm-owner personas (agriculture "
+                         "industry, employer/own-account)")
+    ap.add_argument("--professionals", type=int, default=0,
+                    help="QLFS formally-employed professional/managerial personas "
+                         "(urban_professional archetype)")
     ap.add_argument("--append", action="store_true",
                     help="merge into the existing library instead of overwriting it")
     ap.add_argument("--allow-synthetic-attitudes", action="store_true",
                     help="Build even though attitudes come from the synthetic fixture "
                          "(dev/preview only — do not ship).")
+    ap.add_argument("--llm-api-key", default=None,
+                    help="override the texture-generation LLM key (falls back to "
+                         "Config.LLM_API_KEY / .env if not passed)")
+    ap.add_argument("--llm-base-url", default=None)
+    ap.add_argument("--llm-model", default=None)
     args = ap.parse_args()
 
     # Load root .env so LLM_* is available when run as a standalone script.
@@ -204,7 +263,14 @@ def main() -> int:
     rc = build(args.n, args.seed, args.out,
                allow_synthetic_attitudes=args.allow_synthetic_attitudes,
                learners=args.learners, guardians=args.guardians,
-               teachers=args.teachers, append=args.append)
+               teachers=args.teachers,
+               communal_farmers=args.communal_farmers,
+               smallholder_farmers=args.smallholder_farmers,
+               professionals=args.professionals,
+               append=args.append,
+               llm_api_key=args.llm_api_key,
+               llm_base_url=args.llm_base_url,
+               llm_model=args.llm_model)
     return 2 if rc == 2 else 0  # 2 = refused (synthetic attitudes); else success
 
 

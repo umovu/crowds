@@ -569,6 +569,12 @@ class OpinionCitizenAgent(PersonAgent):
                 lines.append(f"\nVOICE INSTRUCTIONS — follow exactly:\n{voice_guide}")
             if behavioral_tendencies:
                 lines.append(f"\nBEHAVIORAL PATTERN — this shapes how you act:\n{behavioral_tendencies}")
+            # Research grounding (Phase 5): mechanism-card block attached by
+            # simulation_manager at cast assembly. Pre-rendered, deterministic,
+            # absent when no card bound — so this is a pure pass-through.
+            research_context = profile.get("research_context", "")
+            if research_context:
+                lines.append(f"\n{research_context}")
             if is_institutional:
                 lines.append("\n[INSTITUTIONAL AGENT: Speak as 'we/our organization', not as an individual.]")
 

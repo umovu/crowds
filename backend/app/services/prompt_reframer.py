@@ -6,8 +6,23 @@ for the highest-relevance connection, then rewriting the question in the agent's
 vocabulary, relationships, and recent memory.
 """
 
+import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
+
+
+def _render_research_layer() -> bool:
+    """Feature flag: render the persona's research_context as an explicit
+    prompt layer (next to the budget block) instead of relying on its
+    presence inside the profile JSON the agent context carries. Default ON
+    since the prompt-shape pilot (worktree, 2026-07): rendered identity +
+    rendered research produced individually-voiced, mechanism-driven answers
+    (e.g. reward-crowding reasoning surfacing as the persona's own opinion)
+    where profile-JSON burial produced template arithmetic. Set to 0 to
+    restore the buried behaviour."""
+    return os.environ.get("RESEARCH_CONTEXT_RENDERED", "1").strip().lower() in (
+        "1", "true", "on", "yes",
+    )
 
 
 class ImpactReframer:
@@ -87,6 +102,14 @@ class ImpactReframer:
             if budget_layer:
                 layers.append(f"\n{budget_layer}")
 
+        # Layer 3c (flagged): research grounding rendered as an explicit layer.
+        # The block is pre-rendered at cast build (mechanism_card_service) —
+        # this only gives it prompt prominence instead of profile-JSON burial.
+        if _render_research_layer():
+            research = agent_profile.get("research_context")
+            if research:
+                layers.append(f"\n{research}")
+
         # Layer 4: Impact Question (reframed), plus any additive secondary lens.
         impact_question = self._build_impact_question(
             user_question, agent_profile, domain, mode=mode, secondary_lens=secondary_lens
@@ -99,21 +122,39 @@ class ImpactReframer:
         return "\n".join(layers)
 
     def _build_budget_reality(self, profile: Dict[str, Any]) -> Optional[str]:
-        """Render the persona's computed budget tier as a fixed constraint.
+        """Render the persona's computed budget tier as a fixed constraint,
+        anchored by their OWN surveyed figures.
 
         The tier comes from mode_specs.budget_tier (real persona data, deterministic);
         this only verbalises it so the agent grounds desire against a budget it
-        cannot wish away. Wanting and affording stay separate.
+        cannot wish away. The real-numbers block (same renderer as the sim path)
+        pins income/fees so the agent reasons against surveyed figures instead of
+        inventing them — the figures place the persona in an economic position;
+        the research context describes how people in that position decide.
+        Wanting and affording stay separate.
         """
         tier = profile.get("budget_tier")
         if not tier:
             return None
-        from .mode_specs import BUDGET_TIER_GLOSS
+        from .mode_specs import BUDGET_TIER_GLOSS, _build_real_numbers_block
         gloss = BUDGET_TIER_GLOSS.get(tier, BUDGET_TIER_GLOSS["moderate"])
-        return (
+        real_numbers = _build_real_numbers_block({
+            "real_household_income_rand": profile.get("monthly_household_income_rand"),
+            "real_fees_band": profile.get("fees_band"),
+            "real_learner_fee_bands": profile.get("learner_fee_bands"),
+        })
+        block = (
             f"YOUR BUDGET REALITY (fixed — set by your real circumstances): {tier.upper()}. {gloss}\n"
             "You may WANT something and still not be able to justify the spend."
         )
+        if real_numbers:
+            block += (
+                f"\n{real_numbers}"
+                "  These figures describe your economic position — where research context "
+                "about people in your situation is provided, reason the way it documents "
+                "people in your position actually deciding, not by arithmetic alone.\n"
+            )
+        return block
 
     def _detect_domain(self, question: str) -> str:
         """Detect policy domain from question text."""
@@ -243,16 +284,30 @@ class ImpactReframer:
         return None
 
     def _build_identity_lock(self, profile: Dict[str, Any]) -> str:
-        """Layer 1: Force in-character response."""
+        """Layer 1: render the FULL identity, not a one-sentence stub.
+
+        The model reasons from whatever dominates its context. When identity is
+        one sentence and instructions are 150 words, every persona converges on
+        the same instruction-shaped answer (the prompt-shape pilot measured
+        this: near-identical openers across a whole panel). Rendering the story,
+        voice guide and beliefs makes each persona's own material the dominant
+        content, so differentiation comes from data instead of sampling luck."""
         name = profile.get("name", "This person")
-        persona = profile.get("persona", "")
-        # First sentence of persona
-        first_sentence = persona.split(".")[0] if persona else f"You are {name}."
-        return (
-            f"You are {name}. {first_sentence.strip()}.\n"
+        parts = [f"You are {name}. {profile.get('persona', '').strip()}"]
+        story = (profile.get("background_story") or "").strip()
+        if story:
+            parts.append(f"YOUR STORY: {story}")
+        voice = (profile.get("voice_guide") or "").strip()
+        if voice:
+            parts.append(f"HOW YOU SPEAK: {voice}")
+        beliefs = profile.get("beliefs") or []
+        if beliefs:
+            parts.append("WHAT YOU BELIEVE:\n" + "\n".join(f"- {b}" for b in beliefs[:3]))
+        parts.append(
             "Respond in character. Do not speak as an analyst or observer. "
             "Use 'I', 'my', 'my family'. Never speak in generalities about 'the government should'."
         )
+        return "\n\n".join(parts)
 
     def _build_impact_question(
         self,
@@ -282,11 +337,15 @@ class ImpactReframer:
 
         lines.append("")
         if mode == "product":
+            # Open question, no response choreography: the old 3-beat wording
+            # ("what works / what puts you off / what would change") made every
+            # persona write the same three-slot essay. Structure for reports
+            # lives in the ECONOMIC fields, not in the prose.
             lines.append(
-                f"How do you react to this pitch, {name}? "
-                "Be specific: what works for you, what puts you off, and what would have to "
-                "change for you to reconsider. Be honest about whether you could justify the "
-                "spend — wanting it and affording it are different things."
+                f"React as you actually would, {name} — in your own voice, leading with "
+                "whatever hits you first. One concern is allowed to dominate; you do not "
+                "need to cover everything, and you should not structure your answer the "
+                "way anyone else would."
             )
         else:
             lines.append(
@@ -346,12 +405,16 @@ class ImpactReframer:
     def _build_constraints(self) -> str:
         """Layer 5: Force specific, first-person output."""
         return (
-            "\nRULES:\n"
+            "\nHARD RULES (facts, not style):\n"
             "1. Answer in first person ('I', 'my family', 'my street').\n"
-            "2. Reference specific details from your background.\n"
-            "3. Do not speak in generalities. Speak from YOUR experience.\n"
-            "4. Keep it to 2-4 sentences. Be specific, not vague.\n"
-            "5. Do NOT invent facts not in your background story.\n"
+            "2. Speak from YOUR experience, in YOUR voice — 2-5 sentences.\n"
+            "3. Never state a rand amount that is not in YOUR REAL NUMBERS or the "
+            "question itself.\n"
+            "4. Wanting something and affording it are different things — never merge them.\n"
+            "5. Speak only from what is in your own briefing above — do not bring in "
+            "outside conditions (electricity, water, crime) unless they appear there.\n"
+            "6. Never state your own household income or school fees as figures — "
+            "speak about them in your own words, not in rands.\n"
         )
 
     # ------------------------------------------------------------------

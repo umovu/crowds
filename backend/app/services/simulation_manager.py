@@ -25,6 +25,7 @@ from .agent_enricher import AgentContextEnricher
 from .persona_library import get_library
 from .persona_retrieval import select_for_query
 from .panel_service import _build_profile, assert_library_cast, MAX_CAST_SIZE
+from . import mechanism_card_service
 
 logger = get_logger('fub.simulation')
 
@@ -480,6 +481,12 @@ class SimulationManager:
                 # Convert library identities to sim-ready profiles (stamps library
                 # provenance + deterministic budget economics in product mode).
                 library_profiles = [_build_profile(p, i, mode) for i, p in enumerate(cast)]
+                # Research grounding (Phase 5): bind human-reviewed mechanism cards by
+                # archetype and attach reasoning context + citations. Deterministic,
+                # LLM-free; no-op per persona when no card matches (coverage honesty)
+                # or when RESEARCH_CONTEXT_ENABLED=0.
+                for p in library_profiles:
+                    mechanism_card_service.attach_research_context(p)
                 # Leak guard — runs on the LIBRARY portion only, before any custom merge.
                 assert_library_cast(library_profiles)
                 logger.info(f"Selected {len(library_profiles)} library personas as the cast")

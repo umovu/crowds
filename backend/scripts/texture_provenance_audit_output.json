@@ -1,0 +1,40 @@
+{
+  "personas": 299,
+  "unlicensed": {
+    "load-shedding": 200,
+    "water-outage": 82,
+    "grant": 63,
+    "taxi": 57,
+    "crime": 101,
+    "data/airtime": 2
+  },
+  "licensed": {
+    "crime": 122,
+    "taxi": 28,
+    "grant": 35,
+    "data/airtime": 5
+  },
+  "personas_with_unlicensed": 270,
+  "name_mismatches": [
+    [
+      "Lwazi Nene",
+      "Sipho"
+    ],
+    [
+      "Bokang Molefe",
+      "Thabo"
+    ],
+    [
+      "Rorisang Radebe",
+      "Kagiso"
+    ],
+    [
+      "Mamello Phiri",
+      "Palesa"
+    ],
+    [
+      "Slindile Gumede",
+      "Zanele"
+    ]
+  ]
+}

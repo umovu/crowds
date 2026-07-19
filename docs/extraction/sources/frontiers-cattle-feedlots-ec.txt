@@ -1,0 +1,2257 @@
+Frontiers | Smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience in the Eastern Cape, South Africa
+
+ORIGINAL RESEARCH article
+Front. Sustain. Food Syst.
+, 03 August 2023
+ Sec. Climate-Smart Food Systems
+Volume 7 - 2023 | 
+https://doi.org/10.3389/fsufs.2023.1239766
+Published in
+Frontiers in Sustainable Food Systems 
+Climate-Smart Food Systems
+4.1
+ impact factor
+6
+ citescore
+Part of a Research Topic
+Modelling Approaches for Climate Variability and Change Mitigation and Adaptation in Resource Constrained Farming Systems
+82k
+ views
+12
+ articles
+Editor & Reviewers
+Edited by
+F
+R
+Farirai Rusere
+University of the Witwatersrand, South Africa
+Reviewed by
+S
+G
+Showman Gwatibaya
+Chinhoyi University of Technology, Zimbabwe
+S
+Z
+Siphe Zantsi
+Agricultural Research Council of South Africa (ARC-SA), South Africa
+Outline 
+Figures and Tables 
+Figure 1
+View in article 
+Figure 2
+View in article 
+Table 1
+Socioeconomic characteristics and willingness of cattle farmers to engage in feedlots.
+View in article 
+Table 2
+Chi-square test results benefits influencing the willingness of cattle farmers to participate in communal feedlots.
+View in article 
+Table 3
+Chi-square test results for barriers influencing the willingness of cattle farmers to participate in communal feedlots.
+View in article 
+Table 4
+Chi-square test results for perceived strategies to enhance knowledge and awareness of cattle farmers.
+View in article 
+Table 5
+Chi-square results for potential socio-economic and environmental gains of using feedlots.
+View in article 
+Table 6
+Factors influencing the willingness and awareness of cattle farmers to adopt in communal feedlot as a climate change adaptation strategy.
+View in article 
+ORIGINAL RESEARCH article
+Front. Sustain. Food Syst.
+, 03 August 2023
+ Sec. Climate-Smart Food Systems
+Volume 7 - 2023 | 
+https://doi.org/10.3389/fsufs.2023.1239766
+Smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience in the Eastern Cape, South Africa
+M
+S
+Mhlangabezi Slayi 
+1
+*
+L
+Z
+Leocadia Zhou 
+1
+I
+F
+Ishmael Festus Jaja 
+2
+1.
+ Risk and Vulnerability Science Center, University of Fort Hare, Alice, South Africa
+2.
+ Department of Livestock and Pasture Science, University of Fort Hare, Alice, South Africa
+ Article metrics 
+View details
+Abstract
+Introduction: 
+This study aimed to assess the willingness and awareness of cattle farmers in the Eastern Cape, South Africa, to participate in communally established feedlots as a climate change adaptation strategy. The research sought to understand the factors that influenced farmers’ willingness to engage in feedlots and their level of awareness regarding the associated benefits and challenges.
+Methods: 
+Data was collected through surveys and interviews with 250 cattle farmers in rural communities, and the findings were analyzed.
+Results: 
+The results revealed that a significant proportion of cattle farmers expressed willingness to participate in communally owned feedlots as a climate change adaptation strategy. Several factors were identified as influencing farmers’ willingness, including age, education level, knowledge level, and awareness level. Younger farmers with higher education levels, greater knowledge about feedlot participation, and higher awareness levels regarding the benefits and challenges were more likely to demonstrate willingness to engage in feedlots.
+Discussion: 
+These findings emphasize the importance of targeted interventions, such as education and awareness programs, to enhance farmers’ willingness and participation in feedlot initiatives. The study also shed light on the key benefits and challenges associated with feedlot participation. The benefits included increased livestock productivity, improved climate resilience, efficient utilization of resources, enhanced market access and profitability, and improved management practices. However, challenges such as initial investment costs, technical knowledge requirements, and potential environmental impacts were also identified. Overall, this study provides valuable insights into the willingness and awareness of cattle farmers regarding communally owned feedlots as a climate change adaptation strategy.
+1. Introduction
+Climate change poses significant challenges to agricultural systems globally (
+Zhou et al., 2022
+), affecting both rural communities in the Eastern Cape of South Africa and beyond (
+Archer et al., 2021
+; 
+Slayi et al., 2023
+). In Southern Africa, the majority of livestock keepers, accounting for over 90% of the population, are classified as smallholder farmers and own approximately 75% of the total livestock in the region (
+Marandure et al., 2020
+; 
+Maltitz and Bahta, 2021
+). South Africa, with its favorable agricultural conditions, boasts 82% of land suitable for agriculture, with an estimated 13% of that being arable and 69% suitable for livestock and wildlife production (
+Taruvinga et al., 2013
+; 
+Nyhodo et al., 2014
+). Within South Africa, communal farming occupies a significant portion of the suitable land, approximately 17%, and contributes to 40% of the estimated 13.4 million cattle held in the country (
+Zhou et al., 2022
+). This highlights the substantial role played by the communal farming sector in the overall livestock industry in South Africa.
+Rising temperatures, shifting rainfall patterns, and increased frequency of extreme weather events necessitate adaptive measures and climate change mitigation strategies in the agricultural sector (
+Escarcha et al., 2018
+; 
+Lottering et al., 2020a
+). The Eastern Cape Province has witnessed a notable increase in cattle deaths between 2015 and 2019, largely attributed to drought and other climate change-related factors (
+Zwane et al., 2019
+; 
+Vetter et al., 2020
+). These losses have particularly affected rural communities heavily reliant on natural resources for livestock sustenance and survival (
+Oduniyi et al., 2020
+; 
+Popoola et al., 2020
+). In response to these challenges, communal feedlots were established in the Eastern Cape Province as part of the Eastern Cape Red Meat Project in 2005, under the ConMark Trust initially aimed at increasing formal market participation of communal and emerging farmers (
+Sotsha et al., 2018
+), the program later transitioned to the National Agricultural Marketing Council (NAMC) in 2009 and expanded to other provinces under the National Red Meat Development Programme (NRMDP). The establishment of communal feedlots has emerged as a potential solution to address the persistent challenges faced by smallholder cattle farmers (
+Terry et al., 2020
+; 
+Lottering et al., 2020b
+). NAMC has established 11 Custom Feeding Programmes (CFPs) in the Eastern Cape Province, designed to finish communal cattle using grain-based commercial feed for a subsidized, fixed fee (
+Nyhodo et al., 2014
+). These feedlots, also known as concentrated animal feeding operations (CAFOs), provide controlled environments where cattle can be housed and fed, reducing their vulnerability to climate-related stressors (
+Joyce et al., 2013
+; 
+Derner et al., 2018
+). Participating in communal feedlots allows farmers to enhance their livestock management practices (
+Escarcha et al., 2018
+), improve productivity (
+Galyean and Hales, 2023
+), and increase the resilience of their herds against drought and other climate-related impacts (
+Bocquier and González-García, 2010
+). Additionally, feedlots offer opportunities for efficient resource utilization (
+Anderson et al., 2016
+), improved market access (
+Bevans et al., 2005
+), and enhanced profitability for cattle farmers (
+Mader et al., 2002
+; 
+Novelli et al., 2022
+).
+Despite the existence of communal feedlots, few studies have explored their performance and impact, with a predominant focus on farmer participation, livestock off-take and feed dynamics (
+Nyhodo et al., 2014
+; 
+Marandure et al., 2020
+). Moreover, considering the recognized constraints to increased market participation by smallholder farmers in South Africa and the history of inadequate state-supported service delivery to farmers (
+Musemwa et al., 2012
+), questions persist regarding the social equity, participation, and operational sustainability of CFPs. The successful implementation of communal feedlots as a climate change adaptation strategy hinges upon the willingness and awareness of cattle farmers to embrace this approach (
+Loerch and Fluharty, 1999
+; 
+Ridoutt et al., 2022
+). It is crucial to understand the factors influencing farmers’ decision-making processes and their level of awareness regarding the benefits and challenges associated with feedlot participation (
+Barbero et al., 2017
+; 
+Ndiritu, 2020
+). This evaluation seeks to assess the willingness and awareness of cattle farmers in the Eastern Cape, South Africa, regarding the adoption of communal feedlots as a climate change adaptation strategy. By examining farmers’ willingness to participate in feedlots, we aim to identify the socioeconomic, cultural, and environmental factors that shape their acceptance and adoption of this adaptation strategy (
+Tesfuhuney and Mbeletshie, 2020
+). Additionally, assessing farmers’ awareness will provide insights into their knowledge and understanding of the potential benefits and challenges associated with feedlot participation (
+Beauchemin and McGinn, 2005
+). The findings of this evaluation will be invaluable for policymakers, agricultural extension services, and development organizations seeking to promote sustainable agricultural practices and climate change adaptation in rural communities (
+Rivera-Ferre et al., 2016
+).
+By identifying barriers and opportunities through this evaluation, we can inform the development of targeted interventions and strategies that enhance knowledge dissemination, provide training and support, and create an enabling environment for cattle farmers to actively engage in communal feedlots (
+Oduniyi et al., 2020
+; 
+Popoola et al., 2020
+). By addressing farmers’ specific needs and concerns, these interventions can facilitate the successful implementation of feedlots as a climate change adaptation strategy. Overall, this evaluation aims to contribute to the understanding of the willingness and awareness of cattle farmers in the Eastern Cape, South Africa, regarding the potential of communal feedlots as a climate change adaptation strategy. Through identifying and addressing challenges and harnessing opportunities associated with feedlot participation, we can promote sustainable agricultural practices, ensure food security, and enhance the resilience of rural communities in the face of climate change challenges.
+2. Materials and methods
+2.1. Site description
+The survey conducted for this study involved a total of ten villages in the Eastern Cape Province of South Africa. Five villages from Centane, namely Holela, KwaZingxala, Jojweni, Mapondweni, and kwaMaxhama, and five villages from the Tsomo area, namely Komkhulu, Gxwalibomvu, Qombolo, kuHange, and esiXhotyeni, were selected for participation (
+Figure 1
+). These villages are located within the Mnquma and Intsika-Yethu Local Municipalities, respectively, which are part of the larger Eastern Cape Province consisting of 37 district municipalities. Centane is situated at 32.18 degrees south latitude, 28.02 degrees east longitude, with an elevation of 501 meters above sea level. Tsomo, on the other hand, is positioned at 31.93 degrees south latitude, 27.64 degrees east longitude, and has an elevation of 1,083 meters above sea level. These small towns face significant socioeconomic challenges, including a high rate of youth unemployment and a reliance on government social grants for support. Subsistence livestock farming and crop production are the primary sources of income in these resource-constrained communities, playing a crucial role in sustaining the local population. Indigenous cattle breeds and sheep are highly valued and preferred by the residents in both areas, highlighting their significance in the local livestock industry. Notably, Gxwalibomvu and Holela are home to functioning feedlots, contributing to the agricultural landscape of these towns. The feedlots were primarily established as part of the Eastern Cape Red Meat Project aimed to provide additional opportunities for livestock management and marketing, potentially enhancing the economic prospects of the local farmers. The region where these towns are situated experiences climate variability, characterized by extremes of droughts and floods. The animals in the study area heavily depend on natural pastures for grazing and as a source of feed. The climate of these towns is marked by moderately hot summers, high humidity throughout the year, and erratic rainfall patterns. The average annual rainfall of 473.2 mm is typically received between November and April. The maximum daily temperature recorded in the area averages at 25.8°C, while the minimum temperature reaches around 11.2°C. The humidity remains consistently high, averaging at 72.1% throughout the year.
+Figure 1
+Geographic location of ten villages participated in the survey.
+The study area is in a hot and humid zone and experiences four seasons. The post-rainy season occurs from March to May, followed by the cold-dry season from June to August. September to November is the hot-dry season, while the hot-wet season prevails from December to February. These seasonal variations play a crucial role in the agricultural activities and farming practices undertaken by the communities in these towns. The area lies in a lowland characterized by steep, isolated mountains, and the veld type is predominantly Bhisho Thornveld (
+Mucina and Rutherford, 2011
+). Several trees characterise the vegetation in the region, including shrubs, and grass species with Acacia Karoo, 
+Themeda triandra
+, 
+Panicum maximum
+, 
+Digitaria eriantha
+, Eragrostis spp., 
+Cynodon dactylon
+ and 
+Pennisetum clandestinum
+ being the dominant plant species (
+Acocks, 1988
+). Soils are extremely heterogeneous but are predominantly sedimentary (sand and mudstones) with some variation when intrusions of igneous rock (doleritic dykes and sheets) result in red soils occurring in some areas (
+Nciizha and Wakindiki, 2012
+).
+2.2. Ethical considerations
+The research ethics committee of the University of Fort Hare granted ethical clearance (JAJ051SMPO01) to ensure the protection of participants’ rights and confidentiality in this study. Before their involvement, informed consent was obtained from all participating cattle farmers. To maintain anonymity, their identities were kept confidential during the data analysis and reporting processes.
+2.3. Study design
+The study utilized a mixed-methods research design to investigate the adoption and perception of communally established cattle feedlots among smallholder farmers for climate change resilience in the Eastern Cape, South Africa. This design allowed for a comprehensive understanding of the farmers’ experiences and perspectives. The quantitative component involved a cross-sectional survey, where data was collected using structured questionnaires administered to 250 smallholder farmers in the target region. The survey included questions related to farmers’ demographic characteristics, knowledge and awareness of cattle feedlots, factors influencing their adoption decisions, and their perceptions of the benefits and challenges associated with feedlot participation. The qualitative component involved in-depth interviews and focus group discussions with a subset of participants. These qualitative methods aimed to provide deeper insights into the farmers’ experiences, motivations, and barriers related to the adoption of feedlots. The interviews and discussions were conducted in a semi-structured manner, allowing for flexibility and exploration of emergent themes. The data collected through qualitative methods were analyzed thematically to identify common patterns, themes, and narratives. By employing a mixed-methods approach, this study was able to capture both the breadth and depth of smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience. The combination of quantitative and qualitative data provided a more holistic understanding of the factors influencing adoption decisions, the challenges faced, and the potential benefits perceived by the farmers. This approach strengthened the validity and reliability of the study findings and allowed for a comprehensive and nuanced exploration of the research topic.
+2.4. Sampling
+The study employed a stratified random sampling technique to select participants for the research on smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience in the Eastern Cape, South Africa. The selection of study sites was based on the presence of established cattle feedlots in the region. Two towns, Tsomo and Centane, were identified as suitable study sites due to their significant number of operational feedlots and their representation of rural communities in the Eastern Cape. To ensure diversity and representation, the study employed a stratified sampling approach. The geographical regions within Tsomo and Centane were considered as strata. Each stratum represented a specific area or village within the towns. The number of strata depended on the number of distinct geographical areas identified. Within each stratum, a random sample of smallholder farmers was selected to participate in the study. The sample size was determined based on statistical calculations to ensure an adequate representation of the target population. The selection process involved assigning a unique identifier to each smallholder farmer within the stratum and using a random number generator to select the required number of participants. The selected smallholder farmers were then approached and invited to participate in the study. Informed consent was obtained from each participant before data collection commenced. By employing a stratified random sampling technique, the study aimed to ensure that participants represented different geographical regions within the study sites. This approach increased the likelihood of capturing a diverse range of experiences, perceptions, and adoption behaviors among smallholder farmers regarding communally established cattle feedlots for climate change resilience in the Eastern Cape, South Africa.
+2.5. Data collection
+The data collection for the study on smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience in the Eastern Cape, South Africa involved a combination of qualitative and quantitative methods. The data collection process aimed to gather comprehensive and in-depth insights into farmers’ adoption behaviors, perceptions, and experiences related to cattle feedlots. The primary data collection methods included surveys and interviews. A structured questionnaire was developed to collect quantitative data from the participating smallholder farmers. The questionnaire consisted of closed-ended questions that captured information on various aspects such as farmers’ demographic characteristics, knowledge and awareness of feedlots, willingness to adopt feedlots, and perceived benefits and challenges. The surveys were conducted face-to-face with the smallholder farmers in their respective communities. Trained researchers or enumerators administered the questionnaires and recorded the responses. The surveys were designed to ensure confidentiality and privacy while encouraging participants to provide honest and accurate information. In addition to surveys, semi-structured interviews were conducted with a subset of participants to gather qualitative data. The interviews aimed to explore farmers’ perceptions in more depth, allowing for a richer understanding of their motivations, decision-making processes, and the contextual factors that influenced their adoption behaviors. The interviews were audio-recorded with the participants’ consent and later transcribed for analysis. The data collection process also involved obtaining secondary data from relevant sources such as government reports, academic publications, and project documents. This secondary data provided additional contextual information and complemented the primary data collected from the smallholder farmers. Overall, the data collection methods employed in this study ensured a comprehensive and multi-dimensional exploration of smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience. The combination of quantitative surveys and qualitative interviews allowed for a nuanced understanding of the factors influencing farmers’ decision-making processes, their awareness and knowledge gaps, as well as the perceived benefits and challenges associated with feedlot adoption in the Eastern Cape, South Africa.
+2.6. Data analysis
+The data collected from interviews with farmers in rural communities was analyzed using R version 3.4.2 (2017-09-28) (
+R Core Team, 2017
+). Descriptive statistics, including frequencies and percentages, were used to summarize the participating farmers’ demographic characteristics and responses to the questionnaire. This provided a clear understanding of the farmers’ backgrounds and their perspectives on feedlot engagement. Chi-square tests were conducted to explore potential associations between demographic factors and willingness to engage in feedlots. To conduct a chi-square test for the study, we firstly defined the variables and hypotheses we want to analyze as follows:
+Variables:
+Perception of cattle feedlots
+: This variable was measured as “positive perception” or “negative perception.”
+Adoption of cattle feedlots
+: This variable was measured as “adopted” or “not adopted.”
+Hypotheses:
+Null Hypothesis (H0)
+: There is no relationship between farmers’ perception of cattle feedlots and their adoption of this adaptation strategy.
+Alternative Hypothesis (H1)
+: There is a relationship between farmers’ perception of cattle feedlots and their adoption of this adaptation strategy.
+Secondly, we organized the collected data in a contingency table, with the categories of the two variables forming the rows and columns. The observed frequencies (a, b, c, d) were obtained from the data collected. The expected frequencies were calculated assuming the null hypothesis is true. The chi-square test statistic was then be calculated using the formula:
+where Oij is the observed frequency and Eij is the expected frequency for each cell in the contingency table. The degrees of freedom for the test were calculated as (r−1)(c−1), where r is the number of rows and c is the number of columns in the contingency table. Finally, the calculated chi-square value was compared to the critical chi-square value at a given significance level to determine if the relationship between farmers’ perception and adoption is statistically significant. This statistical analysis helped determine if there were any significant relationships between variables such as age, education level, income, and the farmers’ willingness to participate in feedlots. Additionally, regression analysis was employed to further investigate the relationships between awareness, demographic factors, and willingness to engage in feedlots. This statistical technique allowed us to examine the factors that influence the likelihood of farmers adopting the feedlots and their perception of this adaptation strategy. The dependent variable in the logistic regression model was farmers’ adoption of cattle feedlots, which was coded as a binary outcome: 1 for “adopted” and 0 for “not adopted.” The independent variables were factors that were believed to influence the adoption and perception of cattle feedlots. These independent variables include socio-economic factors, farm characteristics, knowledge levels, access to resources, and other relevant factors identified in the research objectives. The logistic regression model estimates the probability of adoption based on the independent variables. The model equation was represented as follows:
+where p is the probability of adoption, X₁, X₂, …, Xₙ are the independent variables, and β₀, β₁, β₂, …, βₙ are the coefficients estimated by the model.
+The logistic regression model provides coefficients (β) for each independent variable, which represent the log-odds ratio of adoption associated with a one-unit change in the independent variable, holding other variables constant. These coefficients were exponentiated to obtain odds ratios, which indicate the likelihood of adoption based on the independent variable. The significance of the coefficients were determined using value of 
+p
+, which assess whether the coefficient is significantly different from zero. Additionally, the model’s overall goodness-of-fit was be assessed using statistical tests such as the likelihood ratio test or the Hosmer-Lemeshow test. By analyzing the logistic regression model, we identified the significant factors that influence smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience. This information provide valuable insights for policymakers, extension services, and development organizations in designing effective strategies to promote the adoption of cattle feedlots and enhance climate change resilience in the Eastern Cape, South Africa.
+3. Results
+3.1. Demographic characteristics and willingness of participants to engage in communal feedlots
+Table 1
+ results reveals that there is no statistically significant association between age and willingness to participate in feedlots among cattle farmers. The chi-square value for age is 3.84, and the value of 
+p
+ is 0.277, indicating that the distribution of willingness to participate does not vary significantly across different age groups. Similarly, there is no significant association between income level and willingness to participate, as indicated by a chi-square value of 2.10 and a 
+p
+-value of 0.549. The distribution of willingness to participate is similar across different income levels. Although the chi-square value for education level is 6.56, suggesting a weak association with willingness to participate, the 
+p
+-value of 0.086 is slightly higher than the significance level of 0.05. This implies that the relationship between education level and willingness to participate is not statistically significant. However, a trend indicates that cattle farmers with a higher education level, specifically secondary school and college/university education, exhibit a slightly higher willingness to participate compared to those with a primary school education. Furthermore, The Chi-square value of 0.78 with a 
+p
+-value of 0.678 suggests that there is no statistically significant association between herd size and willingness to participate in feedlots. Therefore, the cattle herd size does not appear to be a significant factor influencing farmers’ willingness to engage in feedlots. In summary, the results suggest that age, education level, income level, and herd size are not significant factors influencing the willingness of cattle farmers to participate in feedlots as a climate change adaptation strategy for mitigating its effects and ensuring food security. However, a weak trend indicates that higher education levels may be associated with a slightly higher willingness to participate.
+Table 1
+Socioeconomic characteristics
+Willingness to participate
+Chi-Square value
+p
+-value
+Frequencies (
+n
+)
+Percentages (%)
+Age
+3.84
+0.277
+Below 30
+60
+24.0
+30–40
+80
+32.0
+40–50
+50
+20.0
+Above 50
+60
+24.0
+Education level
+6.56
+0.086
+Primary school
+70
+28.0
+Secondary school
+90
+36.0
+College/University
+90
+36.0
+Income level
+2.10
+0.549
+Unemployed
+80
+32.0
+Salary
+70
+28.0
+Multiple incomes
+100
+40.0
+Herd size
+0.78
+0.678
+<10
+80
+32.0
+10–20
+90
+36.0
+>20
+80
+32.0
+Socioeconomic characteristics and willingness of cattle farmers to engage in feedlots.
+The chi square test show the association between participants’ demographic characteristics and cattle herd ownership. A 
+p
+-value of less than 0.05 suggests a significant difference, while a 
+p
+-value of greater than 0.05 suggests no significant difference.
+3.2. Perceptions of cattle farmers on communal feedlots as a climate change adaptation strategy
+Figure 2
+ presents farmers’ perception regarding communally established feedlots as a climate change adaptation strategy. The percentages displayed indicate the distribution of responses among the surveyed farmers. According to the figure, 24% of the farmers agreed that communally established feedlots are a viable climate change adaptation strategy. This indicates that a notable proportion of farmers recognizes the potential benefits and value of implementing feedlots in their communities. Conversely, 36% of the farmers expressed uncertainty or were unsure about the effectiveness of communally established feedlots as a climate change adaptation strategy. This suggests the need for additional information and awareness-building activities to address any doubts or concerns held by the farmers. The remaining 40% of the farmers disagreed with the idea of communally established feedlots as a climate change adaptation strategy. Investigating the reasons behind this disagreement is important, as it could be attributed to various factors such as lack of knowledge, misconceptions, or specific challenges the farmers face in their local contexts. Overall, the results of this perception survey underscore the necessity for targeted interventions to enhance farmers’ knowledge and awareness regarding the benefits and challenges associated with communally established feedlots as a climate change adaptation strategy. Addressing concerns, providing accurate information, and showcasing successful case studies can increase farmers’ acceptance and willingness to participate in such initiatives.
+Figure 2
+Perception of cattle farmers of feedlots as a climate change adaption approach.
+3.3. Benefits influencing the willingness of cattle farmers to participate in communal feedlots
+Table 2
+ presents the results of the benefits that influence the willingness of cattle farmers to participate in communal feedlots as a climate change adaptation strategy. For the benefit of Increased Livestock Productivity, the observed frequency of 60 is significantly higher than the expected frequency of 45, indicating that many cattle farmers recognize the potential for increased livestock productivity. The chi-square value of 5.33 and the 
+p
+-value of 0.021 indicate that this benefit is statistically significant, suggesting that it significantly impacts farmers’ willingness to participate. Similarly, for the benefit of Climate Resilience, the observed frequency of 70 is higher than the expected frequency of 55, suggesting that many farmers perceive climate resilience as a potential advantage. The chi-square value of 5.45 and the 
+p
+-value of 0.019 indicate that this benefit is statistically significant, further emphasizing its impact on farmers’ willingness to participate. In the case of Efficient Resource Utilization, the observed frequency of 50 is slightly higher than the expected frequency of 40, indicating that some farmers recognize the importance of efficient resource utilization. However, the chi-square value of 2.50 and the 
+p
+-value of 0.114 suggest that this benefit is not statistically significant, implying that its impact on farmers’ willingness to participate may be relatively smaller.
+Table 2
+Benefits
+Observed frequency
+Expected frequency
+Residual
+Chi-square value
+p
+-value
+Increased livestock productivity
+60
+45.0
+15.0
+5.33
+0.021
+Climate resilience
+70
+55.0
+15.0
+5.45
+0.019
+Efficient resource utilization
+50
+40.0
+10.0
+2.50
+0.114
+Market access and profitability
+80
+65.0
+15.0
+5.77
+0.016
+Improved management practices
+40
+30.0
+10.0
+3.33
+0.068
+Chi-square test results benefits influencing the willingness of cattle farmers to participate in communal feedlots.
+A 
+p
+-value of less than 0.05 suggests a significant difference, while a 
+p
+-value of greater than 0.05 suggests no significant difference.
+For Market Access and Profitability, the observed frequency of 80 is higher than the expected frequency of 65, indicating that a significant number of farmers perceive market access and profitability as potential benefits. The chi-square value of 5.77 and the 
+p
+-value of 0.016 suggest that this benefit is statistically significant, underscoring its impact on farmers’ willingness to participate. Finally, the benefit of Improved Management Practices has an observed frequency of 40, which is higher than the expected frequency of 30, suggesting that some farmers recognize the value of improved management practices. The chi-square value of 3.33 and the 
+p
+-value of 0.068 indicate that this benefit is not statistically significant, implying that its impact on farmers’ willingness to participate may be relatively weaker compared to other benefits. Overall, the results highlight that increased livestock productivity, climate resilience, and market access and profitability are significant benefits influencing the willingness of cattle farmers to participate in communal feedlots as a climate change adaptation strategy. Efforts to enhance these aspects can potentially attract more farmers to participate. While some farmers recognize efficient resource utilization and improved management practices, their statistical significance suggests that their impact on willingness to participate may be relatively smaller.
+3.4. Barriers influencing the willingness of cattle farmers to participate in communal feedlots
+Table 3
+ presents the barriers that affect the willingness of cattle farmers to participate in communal feedlots as a strategy for climate change adaptation. The observed frequency of 55 is significantly higher than the expected frequency of 35, indicating that many cattle farmers consider a lack of financial resources as a major barrier to their participation. The chi-square value of 11.429 and the low 
+p
+-value of 0.003 demonstrate the statistical significance of this barrier, underscoring its substantial impact on farmers’ willingness to participate. Similarly, the observed frequency of 60 surpasses the expected frequency of 45, indicating that a significant number of farmers perceive limited technical knowledge as a hindrance. The chi-square value of 5.333 and the 
+p
+-value of 0.021 confirm the statistical significance of this barrier, albeit to a lesser extent than the lack of financial resources. On the other hand, the observed frequency of 48 slightly exceeds the expected frequency of 43, suggesting that some farmers view infrastructural limitations as a barrier. However, the small difference between observed and expected frequencies leads to a chi-square value of 1.667 and a 
+p
+-value of 0.196, indicating a lack of statistical significance and a limited impact on farmers’ willingness to participate. Similarly, the observed frequency of 54 is slightly higher than the expected frequency of 48, indicating that certain farmers perceive market and policy barriers as obstacles. Nevertheless, the chi-square value of 1.500 and the 
+p
+-value of 0.221 suggest that this barrier lacks statistical significance and may have a limited impact on willingness to participate. Furthermore, the observed frequency of 33 exceeds the expected frequency of 27, indicating that some farmers consider social and cultural factors as barriers to participation. However, with a chi-square value of 2.000 and a 
+p
+-value of 0.157, this barrier is not statistically significant, suggesting a relatively weaker impact compared to other barriers. In summary, the findings highlight that a lack of financial resources and limited technical knowledge are significant barriers that influence the willingness of cattle farmers to participate in communal feedlots as a climate change adaptation strategy. Addressing these barriers through initiatives such as financial support and knowledge-building programs can potentially enhance farmers’ willingness and participation. Conversely, infrastructural limitations, market and policy barriers, and social and cultural factors, while recognized as barriers by some farmers, lack statistical significance and may have a relatively smaller impact on willingness to participate.
+Table 3
+Barriers
+Observed frequency
+Expected frequency
+Residual
+Chi-square value
+p
+-value
+Lack of financial resources
+55
+35.0
+20.0
+11.429
+0.003
+Limited technical knowledge
+60
+45.0
+15.0
+5.333
+0.021
+Infrastructural limitations
+48
+43.0
+5.0
+1.667
+0.196
+Market and policy barriers
+54
+48.0
+6.0
+1.500
+0.221
+Social and cultural factors
+33
+27.0
+6.0
+2.000
+0.157
+Chi-square test results for barriers influencing the willingness of cattle farmers to participate in communal feedlots.
+A 
+p
+-value of less than 0.05 suggests a significant difference, while a 
+p
+-value of greater than 0.05 suggests no significant difference.
+3.5. Perceived strategies known to enhance knowledge and awareness of cattle farmers
+Table 4
+ presents the observed frequency, expected frequency, residual, chi-square value, and value of 
+p
+ for different strategies that promote engagement in feedlots as a climate change adaptation strategy. For the “Training programs and workshops strategy,” the observed frequency of 80 is significantly higher than the expected frequency of 32, indicating that a substantial number of cattle farmers reported using this strategy. The large chi-square value of 112.0 and the very low 
+p
+-value of <0.001 suggest a strong association between this strategy and the willingness to participate. Similarly, for “Informational campaigns and outreach,” the observed frequency of 70 is significantly higher than the expected frequency of 28, indicating a considerable number of cattle farmers using this strategy. The chi-square value of 98.0 and the very low 
+p
+-value of <0.001 provide strong evidence of an association between this strategy and the willingness to participate. For the “Demonstration farms and field visits strategy,” the observed frequency of 60 is significantly higher than the expected frequency of 24, suggesting that a substantial number of cattle farmers reported using this strategy. The chi-square value of 84.0 and the very low 
+p
+-value of <0.001 indicate a strong association between this strategy and the willingness to participate. Lastly, for “Access to financial support and incentives,” the observed frequency of 40 is significantly higher than the expected frequency of 16, indicating that some cattle farmers reported using this strategy. The chi-square value of 56.0 and the very low 
+p
+-value of <0.001 suggest a strong association between this strategy and the willingness to participate. Overall, the results highlight that all four strategies – training programs and workshops, informational campaigns and outreach, demonstration farms and field visits, and access to financial support and incentives – have a significant association with the willingness of cattle farmers to participate in communal feedlots. These findings suggest that implementing these strategies may increase the likelihood of farmers being willing to participate in communal feedlots as a climate change adaptation strategy.
+Table 4
+Strategies
+Observed frequency
+Expected frequency
+Residual
+Chi-square
+p
+-value
+Training programs and workshops
+80
+32.0
+48.0
+112.0
+<0.001
+Informational campaigns and outreach
+70
+28.0
+42.0
+98.0
+<0.001
+Demonstration farms and field visits
+60
+24.0
+36.0
+84.0
+<0.001
+Access to financial support and incentives
+40
+16.0
+24.0
+56.0
+<0.001
+Chi-square test results for perceived strategies to enhance knowledge and awareness of cattle farmers.
+A 
+p
+-value of less than 0.05 suggests a significant difference, while a 
+p
+-value of greater than 0.05 suggests no significant difference.
+3.6. Potential socio-economic and environmental gains of using feedlots
+Table 5
+ provides the observed frequency, expected frequency, residual, chi-square value, and value of 
+p
+ for potential socio-economic and environmental impacts associated with using feedlots as a climate change adaptation strategy. For the impact of “Increased income and financial stability,” the observed frequency of 90 is significantly higher than the expected frequency of 36, indicating that a substantial number of respondents reported experiencing increased income and financial stability as an impact. The large chi-square value of 180.0 and the very low 
+p
+-value of <0.001 suggest a strong association between this impact and the respondents’ experiences. Regarding “Improved livestock management,” the observed frequency of 80 is significantly higher than the expected frequency of 32, indicating that many respondents reported improved livestock management as an impact. The chi-square value of 128.0 and the very low 
+p
+-value of <0.001 provide strong evidence of an association between this impact and the respondents’ experiences. For “Enhanced market opportunities,” the observed frequency of 60 is significantly higher than the expected frequency of 24, suggesting that many respondents reported enhanced market opportunities as an impact. The chi-square value of 72.0 and the very low 
+p
+-value of <0.001 indicate a strong association between this impact and the respondents’ experiences. Regarding “Reduced greenhouse gas emissions,” the observed frequency of 30 is significantly higher than the expected frequency of 12, indicating that some respondents reported reduced greenhouse gas emissions as an impact. The chi-square value of 36.0 and the very low 
+p
+-value of <0.001 suggest a strong association between this impact and the respondents’ experiences. Overall, the results indicate that using feedlots has the potential to yield substantial socio-economic benefits, including increased income and financial stability, improved livestock management, enhanced market opportunities, and reduced greenhouse gas emissions. These findings highlight the advantages of incorporating feedlots into agricultural practices to achieve sustainable development, address climate change challenges, and promote socio-economic well-being in the farming sector.
+Table 5
+Impacts
+Observed frequency
+Expected frequency
+Residual
+Chi-square value
+p
+-value
+Increased income and financial stability
+90
+36.0
+54.0
+180.0
+<0.001
+Improved livestock management
+80
+32.0
+48.0
+128.0
+<0.001
+Enhanced market opportunities
+60
+24.0
+36.0
+72.0
+<0.001
+Reduced greenhouse gas emissions
+30
+12.0
+18.0
+36.0
+<0.001
+Chi-square results for potential socio-economic and environmental gains of using feedlots.
+A 
+p
+-value of less than 0.05 suggests a significant difference, while a 
+p
+-value of greater than 0.05 suggests no significant difference.
+3.7. Factors influencing the willingness and awareness of cattle farmers
+Table 6
+ presents the results of the regression analysis examining the factors influencing the willingness and awareness of cattle farmers to adopt communal feedlots as a climate change adaptation strategy. The coefficients, standard errors, 
+t
+-values, and 
+p
+-values provide insights into the significance and direction of the relationships between the predictor variables and the outcome. Age was found to have a positive and significant effect on willingness to adopt communal feedlots, with a coefficient of 0.245 (
+p
+ = 0.018). This suggests that older farmers are more inclined to consider adopting this adaptation strategy. Similarly, education level was positively associated with willingness, as indicated by a coefficient of 0.189 (
+p
+ = 0.012). This suggests that farmers with higher levels of education are more likely to be willing to adopt communal feedlots. Income level and herd size, on the other hand, did not show a significant influence on willingness (
+p
+ > 0.05). This implies that the financial resources and the size of the cattle herd do not play a significant role in determining farmers’ willingness to adopt communal feedlots. Knowledge level and awareness level emerged as strong predictors of willingness. Farmers with higher levels of knowledge had a significantly higher willingness to adopt communal feedlots, as indicated by a coefficient of 0.312 (
+p
+ = 0.002). Similarly, awareness level had a positive and significant effect, with a coefficient of 0.201 (
+p
+ = 0.015). This suggests that farmers who are more knowledgeable about the benefits and challenges of communal feedlots and have higher awareness levels regarding this adaptation strategy are more likely to be willing to adopt it. Farming experience and access to extension services did not demonstrate a significant association with willingness (
+p
+ > 0.05). This suggests that the number of years of farming experience and the availability of extension services may not have a direct impact on farmers’ willingness to adopt communal feedlots. Overall, the findings indicate that age, education level, knowledge level, and awareness level are important factors influencing the willingness of cattle farmers to adopt communal feedlots as a climate change adaptation strategy. These results highlight the significance of education and information dissemination programs that can enhance farmers’ knowledge and awareness levels, particularly among older farmers. Such initiatives can play a crucial role in promoting the adoption of communal feedlots and fostering climate resilience in the agricultural sector.
+Table 6
+Predictor variables
+Coefficient
+Standard error
+t
+-value
+p
+-value
+Age
+0.245
+0.102
+2.402
+0.018
+Education level
+0.189
+0.074
+2.554
+0.012
+Income level
+0.072
+0.055
+1.312
+0.191
+Herd size
+0.131
+0.088
+1.487
+0.138
+Knowledge level
+0.312
+0.094
+3.319
+0.002
+Awareness level
+0.201
+0.082
+2.457
+0.015
+Farming experience
+0.091
+0.065
+1.363
+0.154
+Access to extension services
+0.312
+0.105
+2.825
+0.009
+Constant
+0.648
+0.177
+3.663
+0.001
+Factors influencing the willingness and awareness of cattle farmers to adopt in communal feedlot as a climate change adaptation strategy.
+A 
+p
+-value of less than 0.05 suggests a significant difference, while a 
+p
+-value of greater than 0.05 suggests no significant difference.
+4. Discussion
+4.1. Socio-economic information of cattle farmers and their willingness to participate in feedlots
+The willingness of cattle farmers to participate in communal feedlots as a climate change adaptation strategy is influenced by various demographic characteristics. These characteristics provide valuable insights into the factors that shape farmers’ decision-making processes and can help guide interventions promoting participation. One important demographic factor is age, as younger farmers tend to be more open to new approaches and technologies, including feedlot participation. Their receptiveness to change and willingness to explore alternative strategies make them more likely to engage in communal feedlots than older farmers who may be more resistant to change (
+Maluleke et al., 2020
+; 
+Malusi et al., 2021
+). Another significant demographic factor is education level. Farmers with higher levels of education have access to better information and technical knowledge, which enhances their understanding of the potential benefits of feedlot participation (
+Lottering et al., 2021
+). They are more aware of the challenges posed by climate change and the need for adaptive strategies, making them more willing to participate in communal feedlots (
+Derner et al., 2018
+).
+Income level also influences farmers’ willingness to engage in communal feedlots. Those with higher incomes have greater financial resources to invest in feedlot infrastructure and management (
+Marco et al., 2018
+). They perceive the potential benefits, such as increased market access and profitability, as more attainable and worthwhile (
+Bocquier and González-García, 2010
+). Conversely, farmers with lower incomes may face financial constraints that limit their ability to participate in feedlots, making their willingness to engage in feedlot initiatives lower than their higher-income counterparts (
+Loerch and Fluharty, 1999
+). Herd size is another demographic characteristic impacting farmers’ willingness to participate in communal feedlots. Farmers with larger herds may be more motivated to seek alternative strategies like feedlots to manage their livestock and address climate change challenges (
+Mader et al., 2002
+). The benefits of feedlot participation, such as increased livestock productivity and efficient resource utilization, are perceived as more significant due to the larger herd sizes (
+McAllister et al., 2020
+). However, smaller-scale farmers with limited herd sizes may perceive feedlot participation as less feasible or may face challenges regarding required infrastructure and management capabilities (
+Novelli et al., 2022
+). In summary, the demographic characteristics of cattle farmers, including age, education level, income level, and herd size, influence their willingness to participate in communal feedlots as a climate change adaptation strategy. Understanding these factors is crucial in designing targeted interventions and support systems to promote farmers’ participation in communal feedlots and enhance climate change resilience in rural communities.
+4.2. Knowledge and awareness of cattle farmers of feedlots as a climate change adaptation
+The level of awareness among farmers regarding the benefits and challenges of participating in feedlots as an adaptation strategy for climate change mitigation is a crucial determinant of their willingness to engage in such initiatives. Farmers’ awareness reflects their understanding of feedlot participation’s potential advantages and drawbacks, which directly influences their decision-making process (
+Beauchemin and McGinn, 2005
+). Awareness of the benefits associated with feedlot participation significantly motivates farmers to consider this adaptation strategy (
+Bevans et al., 2005
+). Farmers who are aware of the potential benefits, such as increased livestock productivity, improved market access and profitability, and efficient resource utilization, are more likely to view feedlots as viable and attractive options. They understand how feedlots can help mitigate the impacts of climate change on their farming operations and enhance their overall resilience (
+Bocquier and González-García, 2010
+). Consequently, farmers with a high awareness of the benefits are more inclined to participate in feedlots as an adaptation strategy.
+Conversely, awareness of the challenges associated with feedlot participation is equally important (
+Marco et al., 2018
+). Farmers aware of the potential drawbacks, such as initial investment costs, infrastructure requirements, management complexities, and potential environmental concerns, are better equipped to make informed decisions regarding their participation (
+Terry et al., 2020
+; 
+Ridoutt et al., 2022
+). A higher level of awareness about these challenges allows farmers to assess the feasibility and compatibility of feedlots with their existing farming practices and resources. It also enables them to effectively develop strategies to mitigate or address these challenges (
+Joyce et al., 2013
+). Farmers with a realistic understanding of the challenges approach feedlot participation with caution and an informed perspective. To promote the participation of farmers in feedlots as a climate change adaptation strategy, it is crucial to enhance their awareness levels regarding both the benefits and challenges. Awareness-raising initiatives can include targeted information dissemination, training programs, workshops, and demonstrations that provide farmers with comprehensive knowledge and insights into feedlot operations (
+Muthelo et al., 2019
+; 
+Ndiritu, 2020
+). These initiatives aim to equip farmers with the necessary information to make informed decisions based on a thorough understanding of feedlot participation’s potential benefits, challenges, and best practices. By improving awareness, farmers can weigh feedlots’ potential advantages and drawbacks and make more informed choices regarding their participation (
+Rivera-Ferre et al., 2016
+). This, in turn, can lead to increased adoption and successful implementation of feedlot initiatives for climate change mitigation.
+4.3. Benefits influencing the willingness of cattle farmers to participate in feedlots
+The willingness of cattle farmers in rural communities of the Eastern Cape, South Africa, to participate in feedlots as an adaptation approach to climate change mitigation is influenced by various benefits. These benefits directly impact farmers’ operations and the broader environmental context (
+Bevans et al., 2005
+). One significant benefit is the potential for increased livestock productivity. Feedlot practices can lead to faster growth rates, improved weight gain, and overall better health of the animals (
+Muller and Shackleton, 2014
+). Feedlots optimize animal nutrition by implementing controlled feeding regimes and specialized diets, resulting in higher-quality and more marketable livestock products (
+Muthelo et al., 2019
+). Feedlots also offer opportunities to enhance climate resilience in cattle farming. They provide shelter and controlled environments, mitigating the adverse effects of extreme weather conditions such as droughts or heavy rainfall, which are increasingly common due to climate change (
+Archer et al., 2021
+). This resilience enables farmers to maintain stable production and minimize losses during challenging climate events. Efficient resource utilization is another advantage of feedlot participation. Feedlots optimize feed conversion efficiency by implementing controlled feeding practices, reducing wastage and improving resource utilization (
+Ntshangase et al., 2018
+). This efficiency translates into cost savings for farmers and promotes the sustainable use of feed resources, ensuring the long-term viability of cattle farming operations (
+Beauchemin and McGinn, 2005
+).
+Participating in feedlots can also enhance market access and profitability for cattle farmers. Feedlot practices often result in the production of higher-quality meat products that meet market demands for consistency and traceability (
+Bocquier and González-García, 2010
+). This enables farmers to access premium markets and obtain better product prices, improving their profitability and economic sustainability. Engaging in feedlot participation requires farmers to adopt more structured and sophisticated management practices (
+Harrington and Lu, 2002
+). This includes monitoring animal health (
+Chatrchyan et al., 2017
+), implementing biosecurity measures (
+Briske et al., 2015
+), and adhering to regulatory standards (
+Henry et al., 2018
+). Farmers can acquire and develop these management skills through feedlot participation, which can have broader positive impacts on their overall farming operations beyond the feedlot itself. It is important to highlight these benefits to cattle farmers in rural communities of the Eastern Cape, South Africa, to foster their willingness to participate in feedlots as an adaptation approach to climate change mitigation. By understanding the potential advantages and positive outcomes, farmers can make informed decisions and be more motivated to embrace feedlot practices. This leads to improved climate resilience, sustainable resource utilization, and enhanced profitability in their cattle farming endeavors.
+4.4. Challenges influencing the willingness of cattle farmers to participate in feedlots
+While various benefits can influence the willingness of cattle farmers in rural communities of the Eastern Cape, South Africa, to participate in feedlots as an adaptation approach to climate change mitigation, there are also certain challenges that can impact their decision-making process (
+Boomiraj et al., 2010
+). Understanding and addressing these challenges is crucial to encourage greater participation in feedlot practices. One of the main challenges cattle farmers face is the financial burden associated with setting up and maintaining feedlots. Establishing a feedlot requires significant infrastructure, equipment, and animal feed investment, which can be financially challenging for small-scale farmers with limited resources (
+Theusme et al., 2021
+). The uncertainty or long-term nature of the return on investment may further discourage farmers from participating in feedlots (
+Iglesias et al., 2012
+). Feedlot practices also require specialized knowledge and skills in animal nutrition, feed management, and disease control (
+Costa Junior et al., 2015
+). Some cattle farmers may lack access to training and technical support, making it difficult for them to adopt and implement feedlot practices effectively. The lack of knowledge and skills can be a barrier to participation, as farmers may feel uncertain about proper management techniques and potential risks.
+Limited access to infrastructure and resources in rural communities can also pose challenges to feedlot participation. Issues such as inadequate water supply, unreliable electricity, and limited availability of suitable land for feedlots may hinder farmers’ ability to establish and operate feedlots (
+Hristov et al., 2018
+). The lack of infrastructure and resources can make it difficult to provide optimal animal conditions and maintain feedlot operations. Cultural practices and traditions within rural communities can influence the willingness of cattle farmers to participate in feedlots. Some farmers may have strong attachments to traditional grazing practices and may be resistant to change or unfamiliar with the benefits of feedlots (
+Wairimu Ng’ang’a and Crane, 2020
+). Additionally, social norms and perceptions about feedlot farming among community members and farmers themselves can impact adopting these practices (
+Amamou et al., 2018
+). The existing regulatory and policy framework related to feedlot operations can also present challenges for farmers. Complex licensing processes, compliance requirements, and ambiguity in regulations may discourage farmers from engaging in feedlots due to concerns about legal issues and administrative burdens (
+Barbero et al., 2017
+; 
+Galyean and Hales, 2023
+). Simplifying regulations and providing clear guidelines can help alleviate these challenges and promote participation. Addressing these challenges requires a multi-faceted approach that includes providing financial assistance and incentives, offering training and extension services, improving access to infrastructure and resources, promoting awareness and education, and reviewing and revising regulatory frameworks (
+McAllister et al., 2020
+; 
+Novelli et al., 2022
+). By addressing these challenges, the willingness of cattle farmers in rural communities of the Eastern Cape, South Africa, to participate in feedlots as an adaptation approach to climate change mitigation can be enhanced. This, in turn, can lead to improved agricultural resilience and sustainable livestock production in the region.
+4.5. Strategies to enhance knowledge and awareness of cattle farmers to engage in feedlots
+To enhance the adoption of cattle feedlots as a climate change adaptation strategy in rural communities of the Eastern Cape, South Africa, it is crucial to focus on improving the knowledge and awareness of cattle farmers. This can be accomplished through various strategies, including the implementation of targeted training programs that address feedlot management practices (
+McAllister et al., 2020
+), climate change adaptation strategies (
+Zhou et al., 2022
+), and the benefits of feedlot participation (
+Mader et al., 2002
+). These programs should be delivered through workshops, seminars, and on-farm demonstrations, tailored to meet the specific needs and preferences of the farmers (
+Talanow et al., 2021
+). Additionally, it is important to establish platforms that facilitate knowledge-sharing and exchange among cattle farmers. Farmer field days, study tours, and farmer-led networks can effectively foster collaboration and interaction (
+Tibesigwa et al., 2017
+; 
+Theusme et al., 2021
+). These platforms provide opportunities for farmers to learn from each other’s experiences, share best practices, and discuss challenges and solutions related to feedlot participation. Furthermore, agricultural extension services should be strengthened to provide ongoing support and guidance to cattle farmers. Extension officers can work closely with farmers, regularly visiting their farms to offer technical advice, address concerns, and provide training on feedlot management practices. To reach a wider audience, relevant information can be disseminated through newsletters, bulletins, and digital platforms (
+Tesfuhuney and Mbeletshie, 2020
+). Demonstration farms or model feedlot operations can be established to create practical learning opportunities. These farms can serve as learning centers where farmers can observe and learn firsthand about the benefits and practices of feedlot participation. On-site training sessions and field visits can be organized to maximize the learning experience.
+Targeted information campaigns should also be launched to raise awareness about the benefits of feedlot participation and climate change adaptation strategies. Utilizing various communication channels such as radio, television, print media, and digital platforms can help reach a wider audience (
+Oduniyi et al., 2020
+). These campaigns should showcase success stories, case studies, and scientific evidence to demonstrate the positive impact of feedlots on livestock productivity, climate resilience, and economic outcomes. Efforts should also be made to facilitate access to financial support mechanisms such as grants, subsidies, and low-interest loans. Collaborating with financial institutions, government agencies, and development organizations can help create specific funding programs tailored to the needs of cattle farmers (
+Chatrchyan et al., 2017
+; 
+Archer et al., 2021
+). This financial support can help farmers overcome initial investment costs and incentivize their participation in feedlot practices. Advocacy for policies and regulations that promote and support feedlot participation as a climate change adaptation strategy is crucial. Collaborating with relevant stakeholders, including government agencies, agricultural associations, and research institutions, can help develop favorable policy frameworks, streamline regulatory processes, and ensure the availability of necessary resources for farmers (
+Harrington and Lu, 2002
+; 
+Lottering et al., 2021
+). By implementing these comprehensive strategies, including targeted training programs, knowledge-sharing platforms, strengthened extension services, practical learning opportunities, information campaigns, financial support mechanisms, and advocacy for supportive policies, the knowledge and awareness of cattle farmers in rural communities of the Eastern Cape, South Africa, can be enhanced. This will lead to increased participation in feedlots as an effective adaptation strategy for climate change mitigation, contributing to improved agricultural resilience, sustainable livestock production, and enhanced food security in the region.
+4.6. Potential socio-economic and environmental gains of using communal feedlots
+Participating in feedlots as a climate change adaptation strategy and for food security in rural communities of the Eastern Cape, South Africa, can generate a range of significant socioeconomic and environmental outcomes. Engaging in feedlot practices offers cattle farmers additional income streams, leading to improved livestock productivity, access to higher-value markets, and increased profitability (
+Harrington and Lu, 2002
+; 
+Iglesias et al., 2012
+). This, in turn, contributes to poverty reduction and enhances the overall socioeconomic well-being of farmers and their communities (
+Vetter et al., 2020
+; 
+Malusi et al., 2021
+). The establishment and operation of feedlots also create employment opportunities, both directly and indirectly, stimulating local economic development and addressing unemployment challenges in rural areas. Participation in feedlots enhances market access for cattle farmers, enabling them to meet the required quality and quantity standards of domestic and international markets (
+Muthelo et al., 2019
+; 
+Ruwanza et al., 2022
+). This improves their ability to sell their products at competitive prices, expand their customer base, and integrate into value chains, thereby fostering the growth of the agricultural sector. Moreover, feedlots increase the availability of high-quality livestock products, contributing to food security (
+Popoola et al., 2019
+). Improved livestock productivity and consistent supply help meet the increasing demand for protein-rich foods, reducing dependence on imports and strengthening food self-sufficiency (
+Muller and Shackleton, 2014
+).
+Feedlots promote efficient resource utilization by optimizing feed conversion rates and reducing the overall environmental impact of livestock production. This leads to more sustainable agricultural practices, minimizing land use, water consumption, and greenhouse gas emissions per unit of meat produced (
+Rivera-Ferre et al., 2016
+; 
+Ridoutt et al., 2022
+). The pressure on natural resources such as grasslands, forests, and water bodies is alleviated by intensifying livestock production in controlled environments. This, in turn, encourages improved land and water management practices and supports biodiversity conservation efforts (
+Terry et al., 2020
+). Feedlots also contribute to climate change mitigation by implementing strategies to reduce enteric methane emissions from livestock. These strategies include improved feed formulations, methane capture systems, and effective manure management techniques (
+Wairimu Ng’ang’a and Crane, 2020
+). By adopting such measures, feedlots contribute to minimizing environmental impact and greenhouse gas emissions. Additionally, feedlot participation encourages implementing environmental monitoring programs to ensure compliance with environmental regulations and standards. This facilitates monitoring and managing potential pollution sources, water quality protection (
+Hristov et al., 2018
+), and responsible waste management practices (
+Galyean and Hales, 2023
+). It is important to emphasize that implementing feedlots should adhere to sustainable and responsible practices. This includes proper waste management, efficient resource use (
+Joyce et al., 2013
+), animal welfare considerations (
+Chatrchyan et al., 2017
+), and compliance with environmental regulations (
+Costa Junior et al., 2015
+). By adhering to these principles, the potential negative impacts can be mitigated, and sustainable development in rural communities can be promoted.
+4.7. Factors influencing the willingness and awareness of cattle farmers
+The regression analysis conducted to evaluate the attitudes and behaviors of cattle farmers regarding feedlot participation as a climate change adaptation strategy in rural communities of the Eastern Cape, South Africa, offers valuable insights into the factors that influence their willingness and awareness. The regression analysis demonstrates a statistically significant positive association between age, willingness, and awareness. This indicates that older farmers are more likely to be willing to participate in feedlots and have higher levels of awareness regarding this adaptation strategy (
+Tesfuhuney and Mbeletshie, 2020
+). At the same time, this highlights the importance of targeting educational and awareness programs towards older farmers to enhance their engagement in feedlot participation (
+Derner et al., 2018
+). The results reveal that higher education levels are linked to increased willingness and awareness among cattle farmers. This suggests that farmers with a higher level of education are more likely to understand the benefits and challenges of feedlot participation as a climate change adaptation strategy (
+Harrington and Lu, 2002
+). It emphasizes the significance of providing educational opportunities and knowledge-sharing platforms to improve farmers’ understanding of feedlots and their potential advantages.
+Although not statistically significant, the regression analysis indicates a positive but relatively small association between income level and willingness and awareness. This implies that farmers with higher income levels may have a slightly higher inclination to participate in feedlots and possess a better understanding of their benefits (
+Theusme et al., 2021
+). While income may not be a strong predictor, it still shapes farmers’ attitudes and perceptions (
+Novelli et al., 2022
+). The analysis suggests that herd size does not significantly impact willingness and awareness among cattle farmers. This indicates that regardless of the size of their herds, farmers’ attitudes towards feedlot participation and their awareness levels remain relatively consistent (
+Ntshangase et al., 2018
+). Therefore, the willingness to engage in feedlots is not determined by the scale of their existing cattle operations. The regression analysis highlights a significant positive association between knowledge level, willingness, and awareness. Farmers with a higher level of knowledge regarding feedlots as a climate change adaptation strategy are more likely to be willing to participate and have a greater awareness of the benefits and challenges involved (
+Iglesias et al., 2012
+). This underscores the importance of knowledge dissemination programs and capacity-building initiatives to empower farmers with the necessary information.
+Similarly, the analysis reveals a significant positive association between awareness level and willingness and awareness. Farmers who are more aware of the benefits and challenges of feedlot participation demonstrate a higher willingness to engage in this adaptation strategy (
+Hristov et al., 2018
+). This emphasizes the need for awareness campaigns and communication efforts to increase farmers’ understanding and create a supportive environment for feedlot participation. Overall, the regression analysis provides valuable insights into the factors influencing the willingness and awareness of cattle farmers regarding feedlot participation as a climate change adaptation strategy. The findings underscore the importance of age, education level, knowledge level, and awareness in shaping farmers’ attitudes and behaviors. By targeting these factors through educational programs, knowledge-sharing initiatives, and awareness campaigns, it is possible to enhance farmers’ willingness and participation in feedlots as a practical climate change adaptation approach in the Eastern Cape, South Africa.
+4.8. Limitations of the study
+The study has several limitations that warrant consideration. Firstly, the cross-sectional design employed in this study restricts the ability to establish causal relationships between variables. It only captures a snapshot of data at a specific point in time, limiting the ability to determine the temporal sequence of events. Secondly, the reliance on self-reported data introduces the potential for response bias. Participants may provide answers that they believe align with societal expectations or may not accurately recall their attitudes and behaviors, leading to measurement errors. Thirdly, the study’s focus on a particular geographical area, the Eastern Cape in South Africa, raises concerns about the generalizability of the findings to other regions or countries. Different contexts, agricultural practices, and socio-cultural factors can significantly influence the willingness and awareness of cattle farmers in feedlot participation. Lastly, the study’s relatively small sample size may limit the statistical power and generalizability of the results. A larger and more diverse sample could provide a more robust and representative understanding of the attitudes and behaviors of cattle farmers in relation to feedlot participation. Despite these limitations, the methodology employed in this study provides valuable insights into the willingness and awareness of cattle farmers in the Eastern Cape, South Africa, concerning communally established feedlots as a climate change adaptation strategy. The findings contribute to the understanding of farmers’ perspectives and can inform the development of targeted interventions and policies aimed at promoting sustainable agricultural practices and climate change adaptation in rural communities.
+5. Conclusion
+In summary, the evaluation of cattle farmers’ willingness and awareness regarding communally established feedlots as a climate change adaptation strategy in the Eastern Cape, South Africa, has yielded valuable insights into the factors influencing their participation and understanding. The study findings indicate that age, education level, knowledge level, and awareness are key determinants of farmers’ attitudes and behaviors towards feedlot participation. Older farmers exhibit higher levels of willingness and awareness, underscoring the need to target this demographic group with educational and awareness programs. Similarly, higher education levels are associated with increased willingness and awareness, highlighting the importance of knowledge dissemination and capacity-building initiatives. Conversely, income level and herd size have relatively minor influences on farmers’ willingness and awareness, suggesting that they are not strong predictors of feedlot engagement.
+It is crucial to focus on enhancing knowledge and awareness to encourage cattle farmers’ participation in feedlots as a climate change adaptation strategy. This can be achieved through educational opportunities, disseminating information about feedlot benefits and challenges, and implementing awareness campaigns. These initiatives will enable farmers to make informed decisions and understand their participation’s socioeconomic and environmental impacts. Overall, the evaluation underscores the significance of addressing knowledge gaps, raising awareness, and creating supportive structures that enable cattle farmers in the Eastern Cape, South Africa, to engage in communally established feedlots actively. By implementing targeted interventions and fostering a supportive environment, it is possible to enhance cattle farmers’ willingness and engagement towards feedlot participation, thereby promoting sustainable agricultural practices for climate change mitigation and food security.
+Funding
+Financial support received from the National Research Foundation, grant number T50 is acknowledged.
+Publisher’s note
+All claims expressed in this article are solely those of the authors and do not necessarily represent those of their affiliated organizations, or those of the publisher, the editors and the reviewers. Any product that may be evaluated in this article, or claim that may be made by its manufacturer, is not guaranteed or endorsed by the publisher.
+Statements
+Data availability statement
+The raw data supporting the conclusions of this article will be made available by the authors, without undue reservation.
+Ethics statement
+The studies involving human participants were reviewed and approved by the research ethics committee of the University of Fort Hare granted ethical clearance (JAJ051SMPO01) to ensure the protection of participants’ rights and confidentiality in this study. Prior to their involvement, informed consent was obtained from all cattle farmers who participated. To maintain anonymity, their identities were kept confidential during the data analysis and reporting processes. Written informed consent for participation was not required for this study in accordance with the national legislation and the institutional requirements.
+Author contributions
+MS, LZ, and IJ: conceptualization, and writing-review and editing. MS and LZ: methodology. MS: data curation and writing-original draft preparation. All authors contributed to the article and approved the submitted version.
+Acknowledgments
+The authors are grateful to the Risk and Vulnerability Science Centre and Department of Livestock and Pasture Science for assisting in research logistics and cattle farmers in Tsomo and Centane who participated in the study. Deepest gratitude is given to enumerators for their help during data collection.
+Conflict of interest
+The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
+References
+1
+Acocks
+J. P. H.
+ (
+1988
+). “
+Veld types of South Africa
+” in 
+Memoirs of botanical survey of South Africa
+. 
+3rd
+ ed (
+Pretoria, South Africa
+: 
+Government Printer
+), 
+1
+–
+146
+.
+Google Scholar
+2
+Amamou
+H.
+Sassi
+M. B.
+Aouadi
+H.
+Khemiri
+H.
+Mahouachi
+M.
+Beckers
+Y.
+et al
+. (
+2018
+). 
+Climate change-related risks and adaptation strategies as perceived in dairy cattle farming systems in Tunisia
+. 
+Clim. Risk Manag.
+20
+, 
+38
+–
+49
+. doi: 
+10.1016/j.crm.2018.03.004
+CrossRef 
+Google Scholar
+3
+Anderson
+C. L.
+Schneider
+C. J.
+Erickson
+G. E.
+MacDonald
+J. C.
+Fernando
+S. C.
+ (
+2016
+). 
+Rumen bacterial communities can be acclimated faster to high concentrate diets than currently implemented feedlot programs
+. 
+J. Appl. Microbiol.
+120
+, 
+588
+–
+599
+. doi: 
+10.1111/jam.13039
+Pubmed Abstract
+CrossRef 
+Google Scholar
+4
+Archer
+E. R. M.
+Landman
+W. A.
+Malherbe
+J.
+Maluleke
+P.
+Weepener
+H.
+ (
+2021
+). 
+Managing climate risk in livestock production in South Africa: how might improved tailored forecasting contribute?
+Clim. Risk Manag.
+32
+, 
+100312
+–
+100317
+. doi: 
+10.1016/j.crm.2021.100312
+CrossRef 
+Google Scholar
+5
+Barbero
+R. P.
+Malheiros
+E. B.
+Nave
+R. L.
+Mulliniks
+J. T.
+Delevatti
+L. M.
+Koscheck
+J. F.
+et al
+. (
+2017
+). 
+Influence of post-weaning management system during the finishing phase on grasslands or feedlot on aiming to improvement of the beef cattle production
+. 
+Agric. Syst.
+153
+, 
+23
+–
+31
+. doi: 
+10.1016/j.agsy.2017.01.015
+CrossRef 
+Google Scholar
+6
+Beauchemin
+K. A.
+McGinn
+S. M.
+ (
+2005
+). 
+Methane emissions from feedlot cattle fed barley or corn diets
+. 
+J. Anim. Sci.
+83
+, 
+653
+–
+661
+. doi: 
+10.2527/2005.833653x
+Pubmed Abstract
+CrossRef 
+Google Scholar
+7
+Bevans
+D. W.
+Beauchemin
+K. A.
+Schwartzkopf-Genswein
+K. S.
+McKinnon
+J. J.
+McAllister
+T. A.
+ (
+2005
+). 
+Effect of rapid or gradual grain adaptation on subacute acidosis and feed intake by feedlot cattle
+. 
+J. Anim. Sci.
+83
+, 
+1116
+–
+1132
+. doi: 
+10.2527/2005.8351116x
+CrossRef 
+Google Scholar
+8
+Bocquier
+F.
+González-García
+E.
+ (
+2010
+). 
+Sustainability of ruminant agriculture in the new context: feeding strategies and features of animal adaptability into the necessary holistic approach
+. 
+Animal
+4
+, 
+1258
+–
+1273
+. doi: 
+10.1017/S1751731110001023
+Pubmed Abstract
+CrossRef 
+Google Scholar
+9
+Boomiraj
+K.
+Wani
+S. P.
+Aggarwal
+P. K.
+Palanisami
+K.
+ (
+2010
+). 
+Climate change adaptation strategies for agro-ecosystem–a review
+. 
+J. Agrometeorol.
+12
+, 
+145
+–
+160
+. doi: 
+10.54386/jam.v12i2.1297
+CrossRef 
+Google Scholar
+10
+Briske
+D. D.
+Joyce
+L. A.
+Polley
+H. W.
+Brown
+J. R.
+Wolter
+K.
+Morgan
+J. A.
+et al
+. (
+2015
+). 
+Climate-change adaptation on rangelands: linking regional exposure with diverse adaptive capacity
+. 
+Front. Ecol. Environ.
+13
+, 
+249
+–
+256
+. doi: 
+10.1890/140266
+CrossRef 
+Google Scholar
+11
+Chatrchyan
+A. M.
+Erlebacher
+R. C.
+Chaopricha
+N. T.
+Chan
+J.
+Tobin
+D.
+Allred
+S. B.
+ (
+2017
+). 
+United States agricultural stakeholder views and decisions on climate change
+. 
+Wiley Interdiscip. Rev. Clim. Chang.
+8
+:
+469
+. doi: 
+10.1002/wcc.469
+CrossRef 
+Google Scholar
+12
+Costa Junior
+C.
+Cerri
+C. E. P.
+Dorich
+C. D.
+Maia
+S. M. F.
+Bernoux
+M.
+Cerri
+C. C.
+ (
+2015
+). 
+Towards a representative assessment of methane and nitrous oxide emissions and mitigation options from manure management of beef cattle feedlots in Brazil
+. 
+Mitig. Adapt. Strateg. Glob. Chang.
+20
+, 
+425
+–
+438
+. doi: 
+10.1007/s11027-013-9499-2
+CrossRef 
+Google Scholar
+13
+Derner
+J.
+Briske
+D.
+Reeves
+M.
+Brown-Brandl
+T.
+Meehan
+M.
+Blumenthal
+D.
+et al
+. (
+2018
+). 
+Vulnerability of grazing and confined livestock in the northern Great Plains to projected mid- and late-twenty-first century climate
+. 
+Clim. Chang.
+146
+, 
+19
+–
+32
+. doi: 
+10.1007/s10584-017-2029-6
+CrossRef 
+Google Scholar
+14
+Escarcha
+J. F.
+Lassa
+J. A.
+Zander
+K. K.
+ (
+2018
+). 
+Livestock under climate change: a systematic review of impacts and adaptation
+. 
+Climate
+6
+:
+54
+. doi: 
+10.3390/cli6030054
+CrossRef 
+Google Scholar
+15
+Galyean
+M. L.
+Hales
+K. E.
+ (
+2023
+). 
+Feeding management strategies to mitigate methane and improve production efficiency in feedlot cattle
+. 
+Animals
+13
+:
+758
+. doi: 
+10.3390/ani13040758
+Pubmed Abstract
+CrossRef 
+Google Scholar
+16
+Harrington
+L. M.
+Lu
+M.
+ (
+2002
+). 
+Beef feedlots in southwestern Kansas: local change, perceptions, and the global change context
+. 
+Glob. Environ. Chang.
+12
+, 
+273
+–
+282
+. doi: 
+10.1016/S0959-3780(02)00041-9
+CrossRef 
+Google Scholar
+17
+Henry
+B. K.
+Eckard
+R. J.
+Beauchemin
+K. A.
+ (
+2018
+). 
+Adaptation of ruminant livestock production systems to climate changes
+. 
+Animal
+12
+, 
+s445
+–
+s456
+. doi: 
+10.1017/S1751731118001301
+CrossRef 
+Google Scholar
+18
+Hristov
+A. N.
+Degaetano
+A. T.
+Rotz
+C. A.
+Hoberg
+E.
+Skinner
+R. H.
+Felix
+T.
+et al
+. (
+2018
+). 
+Climate change effects on livestock in the northeast US and strategies for adaptation
+. 
+Clim. Chang.
+146
+, 
+33
+–
+45
+. doi: 
+10.1007/s10584-017-2023-z
+CrossRef 
+Google Scholar
+19
+Iglesias
+A.
+Quiroga
+S.
+Moneo
+M.
+Garrote
+L.
+ (
+2012
+). 
+From climate change impacts to the development of adaptation strategies: challenges for agriculture in Europe
+. 
+Clim. Chang.
+112
+, 
+143
+–
+168
+. doi: 
+10.1007/s10584-011-0344-x
+CrossRef 
+Google Scholar
+20
+Joyce
+L. A.
+Briske
+D. D.
+Brown
+J. R.
+Polley
+H. W.
+McCarl
+B. A.
+Bailey
+D. W.
+ (
+2013
+). 
+Climate change and north American rangelands: assessment of mitigation and adaptation strategies
+. 
+Rangel. Ecol. Manag.
+66
+, 
+512
+–
+528
+. doi: 
+10.2111/REM-D-12-00142.1
+CrossRef 
+Google Scholar
+21
+Loerch
+S. C.
+Fluharty
+F. L.
+ (
+1999
+). 
+Physiological changes and digestive capabilities of newly received feedlot cattle
+. 
+J. Anim. Sci.
+77
+, 
+1113
+–
+1119
+. doi: 
+10.2527/1999.7751113x
+Pubmed Abstract
+CrossRef 
+Google Scholar
+22
+Lottering
+S.
+Mafongoya
+P.
+Lottering
+P.
+ (
+2020a
+). 
+Drought and its impacts on small-scale farmers in sub-Saharan Africa: a review
+. 
+S. Afr. Geogr. J.
+103
+, 
+319
+–
+341
+. doi: 
+10.1080/03736245.2020.1795914
+CrossRef 
+Google Scholar
+23
+Lottering
+S.
+Mafongoya
+P.
+Lottering
+P.
+ (
+2020b
+). 
+Detecting and mapping drought severity using multi-temporal Landsat data in the uMsinga region of KwaZulu-Natal, South Africa
+. 
+Geocarto Int.
+37
+, 
+1574
+–
+1586
+. doi: 
+10.1080/10106049.2020.1783580
+CrossRef 
+Google Scholar
+24
+Lottering
+S.
+Mafongoya
+P.
+Lottering
+P.
+ (
+2021
+). 
+The impacts of drought and the adaptive strategies of small-scale famers in Umsinga, KwaZulu-Natal, South Africa
+. 
+J. Agric. Afr. Stud.
+56
+, 
+267
+–
+289
+. doi: 
+10.1177/0021909620916898
+CrossRef 
+Google Scholar
+25
+Mader
+T. L.
+Holt
+S. M.
+Hahn
+G. L.
+Davis
+M. S.
+Spiers
+D. E.
+ (
+2002
+). 
+Feeding strategies for managing heat load in feedlot cattle
+. 
+J. Anim. Sci.
+80
+, 
+2373
+–
+2382
+. doi: 
+10.1093/ansci/80.9.2373
+CrossRef 
+Google Scholar
+26
+Maltitz
+L. V.
+Bahta
+Y. T.
+ (
+2021
+). 
+Empowerment of smallholder female livestock farmers and its potential impacts to their resilience to agricultural drought
+. 
+Agric. Food
+6
+, 
+603
+–
+630
+. doi: 
+10.3934/agrfood.2021036
+CrossRef 
+Google Scholar
+27
+Maluleke
+W.
+Tshabalala
+N. P.
+Barkhuizen
+B.
+ (
+2020
+). 
+The Effects of Climate Change on Rural Livestock Farming: Evidence From Limpopo Province, South Africa
+. 
+Asian J. Agric. Rur. Dev.
+10
+, 
+645
+–
+658
+. doi: 
+10.18488/journal.ajard.2020.102.645.658
+CrossRef 
+Google Scholar
+28
+Malusi
+N.
+Falowo
+A. B.
+Idamokoro
+E. M.
+ (
+2021
+). 
+Herd dynamics, production and marketing constraints in the commercialization of cattle across Nguni cattle project beneficiaries in eastern cape, South Africa
+. 
+Res. Policy Pract.
+11
+, 
+1
+–
+12
+. doi: 
+10.1186/s13570-020-00186-x
+CrossRef 
+Google Scholar
+29
+Marandure
+T.
+Bennett
+J.
+Dzama
+K.
+Makombe
+G.
+Gwiriri
+L.
+Mapiye
+C.
+ (
+2020
+). 
+Advancing a holistic systems approach for sustainable cattle development programmes in South Africa: insights from sustainability assessments
+. 
+Agroecol. Sustain. Food Syst.
+44
+, 
+827
+–
+858
+.
+Google Scholar
+30
+Marco
+I.
+Padró
+R.
+Cattaneo
+C.
+Caravaca
+J.
+Tello
+E.
+ (
+2018
+). 
+From vineyards to feedlots: a fund-flow scanning of sociometabolic transition in the Vallès County (Catalonia) 1860–1956–1999
+. 
+Reg. Environ. Chang.
+18
+, 
+981
+–
+993
+. doi: 
+10.1007/s10113-017-1172-y
+CrossRef 
+Google Scholar
+31
+McAllister
+T. A.
+Stanford
+K.
+Chaves
+A. V.
+Evans
+P. R.
+de Souza Figueiredo
+E. E.
+Ribeiro
+G.
+ (
+2020
+). “
+Nutrition, feeding and management of beef cattle in intensive and extensive production systems
+” in 
+Animal agriculture
+. Eds. 
+Bazer
+F. W.
+Cliff
+G.
+Wu
+G.
+ (
+Academic Press
+), 
+75
+–
+98
+.
+Google Scholar
+32
+Mucina
+L.
+Rutherford
+M. C.
+, (
+2011
+). 
+The vegetation of South Africa, Lesotho and Swaziland
+ (pp. 
+513
+). 
+Pretoria, South Africa
+: 
+SANBI
+.
+Google Scholar
+33
+Muller
+C.
+Shackleton
+S.
+ (
+2014
+). 
+Perceptions of climate change and barriers to adaptation amongst commonage and commercial livestock farmers in the semi-arid eastern Cape Karoo
+. 
+Afr. J. Range Forage Sci.
+31
+, 
+1
+–
+12
+. doi: 
+10.2989/10220119.2013.845606
+CrossRef 
+Google Scholar
+34
+Musemwa
+L.
+Muchenje
+V.
+Mushunje
+A.
+Zhou
+L.
+ (
+2012
+). 
+The impact of climate change on livestock production amongst the resource-poor farmers of the third world countries: a review
+. 
+Asian J. Agric. Rural Dev.
+2
+, 
+621
+–
+631
+. doi: 
+10.22004/ag.econ.198008
+CrossRef 
+Google Scholar
+35
+Muthelo
+D.
+Owusu-Sekyere
+E.
+Ogundeji
+A. A.
+ (
+2019
+). 
+Small-holder farmers’ adaptation to drought: identifying effective adaptive strategies and measures
+. 
+Water
+11
+:
+2069
+. doi: 
+10.3390/w11102069
+CrossRef 
+Google Scholar
+36
+Nciizha
+A. D.
+Wakindiki
+I. I. C.
+ (
+2012
+). 
+Particulate organic matter, soil texture and mineralogy relations in some eastern cape ecotopes in South Africa
+. 
+S. Afr. J. Plant Soil
+29
+, 
+39
+–
+46
+. doi: 
+10.1080/02571862.2012.688882
+CrossRef 
+Google Scholar
+37
+Ndiritu
+S. W.
+ (
+2020
+). 
+Beef value chain analysis and climate change adaptation and investment options in the semi-arid lands of northern Kenya
+. 
+J. Arid Environ.
+181
+:
+104216
+. doi: 
+10.1016/j.jaridenv.2020.104216
+CrossRef 
+Google Scholar
+38
+Novelli
+T. I.
+Bium
+B. F.
+Biffi
+C. H. C.
+Picharillo
+M. E.
+de Souza
+N. S.
+de Medeiros
+S. R.
+et al
+. (
+2022
+). 
+Consumption, productivity and cost: three dimensions of water and their relationship with the supply of artificial shading for beef cattle in feedlots
+. 
+J. Clean. Prod.
+376
+:
+134088
+. doi: 
+10.1016/j.jclepro.2022.134088
+CrossRef 
+Google Scholar
+39
+Ntshangase
+N. L.
+Muroyiwa
+B.
+Sibanda
+M.
+ (
+2018
+). 
+Farmers’ perceptions and factors influencing the adoption of no-till conservation agriculture by small-scale farmers in Zashuke, KwaZulu-Natal Province
+. 
+Sustainability
+10
+:
+555
+. doi: 
+10.3390/su10020555
+CrossRef 
+Google Scholar
+40
+Nyhodo
+B.
+Mmbengwa
+V. M.
+Balarane
+A.
+Ngetu
+X.
+ (
+2014
+). 
+Formulating the least cost feeding strategy of a custom feeding programme: a linear programming approach
+. 
+Int. J. Sustain. Dev.
+7
+, 
+85
+–
+92
+.
+Google Scholar
+41
+Oduniyi
+O. S.
+Rubhara
+T. T.
+Antwi
+M. A.
+ (
+2020
+). 
+Sustainability of livestock farming in South Africa. Outlook on production constraints, climate-related events, and upshot on adaptive capacity
+. 
+Sustainability
+12
+, 
+1
+–
+16
+. doi: 
+10.3390/su12072582
+CrossRef 
+Google Scholar
+42
+Popoola
+O. O.
+Yusuf
+S. F. G.
+Monde
+N.
+ (
+2019
+). 
+Perception and adaptation responses to climate change: an assessment of small-holder livestock farmers in Amathole District municipality, Eastern Cape Province
+. 
+S. Afr. J. Agric. Ext.
+47
+, 
+46
+–
+57
+. doi: 
+10.17159/2413-3221/2019/v47n2a502
+CrossRef 
+Google Scholar
+43
+Popoola
+O. O.
+Yusuf
+S. F. G.
+Monde
+N.
+ (
+2020
+). 
+South African National Climate Change Response Policy Sensitization: an assessment of small-holder farmers in Amathole District municipality, Eastern Cape Province
+. 
+Sustainability
+12
+, 
+1
+–
+21
+. doi: 
+10.3390/su12072616
+CrossRef 
+Google Scholar
+44
+R Core Team
+. (
+2017
+). 
+R: a language and environment for statistical computing
+. 
+R Foundation for Statistical Computing
+, 
+Vienna, Austria
+. Available at: 
+https://www.R-project.org/
+.
+Google Scholar
+45
+Ridoutt
+B.
+Lehnert
+S. A.
+Denman
+S.
+Charmley
+E.
+Kinley
+R.
+Dominik
+S.
+ (
+2022
+). 
+Potential GHG emission benefits of 
+Asparagopsis taxiformis
+ feed supplement in Australian beef cattle feedlots
+. 
+J. Clean. Prod.
+337
+:
+130499
+. doi: 
+10.1016/j.jclepro.2022.130499
+CrossRef 
+Google Scholar
+46
+Rivera-Ferre
+M. G.
+López-i-Gelats
+F.
+Howden
+M.
+Smith
+P.
+Morton
+J. F.
+Herrero
+M.
+ (
+2016
+). 
+Re-framing the climate change debate in the livestock sector: mitigation and adaptation options
+. 
+Wiley Interdiscip. Rev. Clim. Chang.
+7
+, 
+869
+–
+892
+. doi: 
+10.1002/wcc.421
+CrossRef 
+Google Scholar
+47
+Ruwanza
+S.
+Thondhlana
+G.
+Falayi
+M.
+ (
+2022
+). 
+Research progress and conceptual insights on drought impacts and responses among small-holder farmers in South Africa: a review
+. 
+Land
+11
+, 
+159
+–
+167
+. doi: 
+10.3390/land11020159
+CrossRef 
+Google Scholar
+48
+Slayi
+M.
+Zhou
+L.
+Jaja
+I. F.
+ (
+2023
+). 
+Exploring farmers’ perceptions and willingness to tackle drought-related issues in small-holder cattle production systems: a case of rural communities in the eastern cape, South Africa
+. 
+Appl. Sci.
+13
+:
+7524
+. doi: 
+10.3390/app13137524
+CrossRef 
+Google Scholar
+49
+Sotsha
+K.
+Fakudze
+B.
+Khoza
+T.
+Mmbengwa
+V.
+Ngqangweni
+S.
+Lubinga
+M. H.
+et al
+. (
+2018
+). 
+Factors influencing communal livestock farmers’ participation into the National red Meat Development Programme (NRMDP) in South Africa: the case of the eastern Cape Province
+. 
+OIDA Int. J. Sustain. Dev.
+11
+, 
+73
+–
+80
+.
+Google Scholar
+50
+Talanow
+K.
+Topp
+E. N.
+Loos
+J.
+Martin-Lopez
+B.
+ (
+2021
+). 
+Farmers’ perceptions of climate change and adaptation strategies in South Africa’s Western cape
+. 
+J. Rural. Stud.
+81
+, 
+203
+–
+219
+. doi: 
+10.1016/j.jrurstud.2020.10.026
+CrossRef 
+Google Scholar
+51
+Taruvinga
+A.
+Muchenje
+V.
+Mushunje
+A.
+ (
+2013
+). 
+Climate change impacts and adaptations on small-scale livestock production
+. 
+Int. J. Dev. Sustain.
+2
+, 
+664
+–
+685
+.
+Google Scholar
+52
+Terry
+S. A.
+Basarab
+J. A.
+Guan
+L. L.
+McAllister
+T. A.
+ (
+2020
+). 
+Strategies to improve the efficiency of beef cattle production
+. 
+Can. J. Anim. Sci.
+101
+, 
+1
+–
+19
+. doi: 
+10.1139/cjas-2020-0022
+CrossRef 
+Google Scholar
+53
+Tesfuhuney
+W. A.
+Mbeletshie
+E. H.
+ (
+2020
+). 
+Place-based perceptions, resilience and adaptation to climate change by smallholder farmers in rural South Africa
+. 
+Int. J. Agric. Res. Innov. Technol.
+10
+, 
+116
+–
+127
+. doi: 
+10.3329/ijarit.v10i2.51585
+CrossRef 
+Google Scholar
+54
+Theusme
+C.
+Avendaño-Reyes
+L.
+Macías-Cruz
+U.
+Correa-Calderón
+A.
+García-Cueto
+R. O.
+Mellado
+M.
+et al
+. (
+2021
+). 
+Climate change vulnerability of confined livestock systems predicted using bioclimatic indexes in an arid region of México
+. 
+Sci. Total Environ.
+751
+:
+141779
+. doi: 
+10.1016/j.scitotenv.2020.141779
+CrossRef 
+Google Scholar
+55
+Tibesigwa
+B.
+Visser
+M.
+Turpie
+J.
+ (
+2017
+). 
+Climate change and South Africa’s commercial farms: an assessment of impacts on specialised horticulture, crop, live-stock and mixed farming systems
+. 
+Environ. Dev. Sustain.
+19
+, 
+607
+–
+636
+. doi: 
+10.1007/s10668-015-9755-6
+CrossRef 
+Google Scholar
+56
+Vetter
+S.
+Goodall
+V. L.
+Alcock
+R.
+ (
+2020
+). 
+Effect of drought on communal livestock farmers in KwaZulu-Natal, South Africa
+. 
+Afr. J. Range Forage Sci.
+37
+, 
+93
+–
+106
+. doi: 
+10.2989/10220119.2020.1738552
+CrossRef 
+Google Scholar
+57
+Wairimu Ng’ang’a
+T.
+Crane
+T. A.
+ (
+2020
+). 
+Social differentiation in climate change adaptation: one community, multiple pathways in transitioning Kenyan pastoralism
+. 
+Environ. Sci. Pol.
+114
+, 
+478
+–
+485
+. doi: 
+10.1016/j.envsci.2020.08.010
+CrossRef 
+Google Scholar
+58
+Zhou
+L.
+Slayi
+M.
+Ngarava
+S.
+Jaja
+I. F.
+Musemwa
+L.
+ (
+2022
+). 
+A systematic review of climate change risks to communal livestock production and response strategies in South Africa
+. 
+Front. Anim. Sci
+3
+:
+868468
+. doi: 
+10.3389/fanim.2022.868468
+CrossRef 
+Google Scholar
+59
+Zwane
+E. M.
+ (
+2019
+). 
+Impact of climate change on primary agriculture, water sources and food security in Western cape, South Africa
+. 
+J. Disaster Risk Stud.
+11
+, 
+1
+–
+7
+. doi: 
+10.4102/jamba.v11i1.562
+CrossRef 
+Google Scholar
+Summary
+Keywords
+cattle feedlots
+, 
+climate-smart practice
+, 
+2015/19 drought period
+, 
+rural communities
+, 
+South Africa
+Citation
+Slayi M, Zhou L and Jaja IF (2023) 
+Smallholder farmers’ adoption and perception of communally established cattle feedlots for climate change resilience in the Eastern Cape, South Africa
+. 
+Front. Sustain. Food Syst.
+ 7:1239766. doi: 
+10.3389/fsufs.2023.1239766
+Received
+13 June 2023
+Accepted
+19 July 2023
+Published
+03 August 2023
+Volume
+7 - 2023
+Edited by
+ Farirai Rusere, University of the Witwatersrand, South Africa
+Reviewed by
+ Showman Gwatibaya, Chinhoyi University of Technology, Zimbabwe; Siphe Zantsi, University of Johannesburg, South Africa
+Updates
+Check for updates
+ Copyright 
+© 2023 Slayi, Zhou and Jaja. 
+This is an open-access article distributed under the terms of the 
+Creative Commons Attribution License (CC BY)
+. The use, distribution or reproduction in other forums is permitted, provided the original author(s) and the copyright owner(s) are credited and that the original publication in this journal is cited, in accordance with accepted academic practice. No use, distribution or reproduction is permitted which does not comply with these terms.
+*Correspondence: Mhlangabezi Slayi, 
+mslayi@ufh.ac.za
+Disclaimer
+ All claims expressed in this article are solely those of the authors and do not necessarily represent those of their affiliated organizations, or those of the publisher, the editors and the reviewers. Any product that may be evaluated in this article or claim that may be made by its manufacturer is not guaranteed or endorsed by the publisher. 
+ Article metrics 
+View details
+ Download 
+PDF
+ Download other formats 
+ReadCube
+EPUB
+XML
+Cite article
+Share article
+our impact
+Your research is the real superpower
+Behind each article we publish stands a team of superheroes: authors, editors, and reviewers who chose to uphold quality standards and share knowledge openly. Read more about the impact your work achieves.
+Explore our impact metrics
+ Outline
+ Figures
+ Cite article
+Copy to clipboard
+Copy citation
+Export citation file
+BibTex
+EndNote
+Reference Manager
+Simple Text file
+ Share article
+Facebook
+X
+LinkedIn
+Email
+WeChat
+Share on WeChat
+Scan with WeChat to share this article
+ Article metrics

@@ -1,0 +1,24 @@
+{
+  "model": "qwen3.6-plus",
+  "persona": "Thandeka Nene",
+  "archetype": "grant_dependent_survivor",
+  "scenario": "A fintech company is launching a new savings app that lets you save small amounts automatically and unlock a bonus if you don't withdraw for 3 months.",
+  "response_without_card": "My first reaction is immediate skepticism because I simply don’t have spare rands to lock away when I’m already stretching my child support grant to cover bread, prepaid electricity, and transport to hand out CVs that never get read. The three-month bonus sounds nice on paper, but my main concern is what happens when KwaMashu’s taps run dry again or a sudden school levy drops—I cannot afford to freeze cash I might desperately need by tomorrow afternoon. I’ve seen too many financial apps vanish overnight or bury hidden fees that quietly eat into my balance, so I don’t trust a faceless company to hold onto what little I have. Until I know exactly how it handles real emergencies, I’ll keep my money on my SASSA card where at least I control every withdrawal.",
+  "response_with_card": "My first reaction is that locking my money away for three months is just not realistic when my child support grant has to stretch across everything from maize meal and electricity tokens to sudden school shoes, especially when the taps run dry and I’m forced to buy water on the spot. I’m deeply suspicious of an app holding my cash when mobile networks drop constantly in KwaMashu and I’ve seen how easily data costs or hidden fees can swallow a small balance. In my stokvel, we pull out immediately when a child gets sick or there’s a funeral because we trust each other’s struggles face-to-face, not some algorithm that penalises you for needing your own rand. My real worry is that this bonus is just bait to trap me, leaving me completely stranded when an emergency hits and I have no partner to share the burden.",
+  "coverage_check": {
+    "library_archetypes": [
+      "civic_moderate",
+      "community_leader",
+      "disillusioned_dropout",
+      "gogo_guardian",
+      "grant_dependent_survivor",
+      "guardian_parent",
+      "informal_trader",
+      "institutional_loyalist",
+      "learner",
+      "small_business_owner",
+      "unemployed_youth"
+    ],
+    "communal_farmer_archetype_exists": false
+  }
+}

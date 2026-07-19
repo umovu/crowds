@@ -1,0 +1,876 @@
+International Journal of Education and Development using Information and Communication Technology 
+(IJEDICT), 2015, Vol. 11, Issue 2, pp. 168-183 
+	  
+Evaluation of elearning usage in South African universities: A critical 
+review 
+ 
+Emily Bagarukayo 
+Makerere University, Uganda 
+ 
+Billy Kalema 
+Tshwane University of Technology, South Africa 
+ 
+ 
+ABSTRACT 
+ 
+Although eLearning is the use of technology for teaching, learning and assessment, there is no 
+common approach to it across South African Higher Education Institutions. There is therefore a 
+concern that the full potential of eLearning approach is not utilised. This paper examines the 
+nature and the extent of eLearning activities in South African (SA) universities. The research 
+method employed in this paper was informed by a literature review; sources from the last decade 
+include journals, conferences, books and websites. The findings show that the level of eLearning 
+usage and adoption varies in different universities due to several challenges such as those of 
+technology and institutions. We give an overview of studies conducted in eLearning in SA 
+universities, highlighting challenges and best practices. We recommend management 
+involvement of faculties in policy decisions and investment in technological innovations to 
+address these challenges issues.  
+ 
+Keywords: eLearning, eLearning Challenges, Learning Management Software, Social Software 
+ 
+ 
+INTRODUCTION 
+ 
+Learning is a process where learners’ interaction with materials, peers and instructors results in 
+change in behaviour and thinking. Learning 2.0 is the concept of delivering educational activities 
+using web tools which create a new kind of a participatory medium to encourage multiple learning 
+types, including social learning (Hamid et al., 2009). Learning 2.0 utilises web tools, social 
+networking, collaboration and self directed learning. Effective learning should improve on the 
+quality of learning experience, be learner centred, be active, lead to knowledge construction and 
+change learners’ knowledge, attitudes, perceptions and skills. Educators need to prepare learners 
+for future employment by putting theory into practice. Mlitwa (2006) notes that the quality of 
+teaching and learning depends on methods, content, learner and educator, and, therefore, 
+technology cannot correct these factors if they are poor.  
+ 
+ 
+eLearning Implementation in Higher Education Institutions  
+ 
+In the 1990s, e-learning, that is, learning facilitated online through network technologies emerged 
+across South African HEI (Ravjee, 2007). In SA context, e-learning practices appear with new 
+vocabulary, policies and structures, and budgets. eLearning is an ICT-enhanced practice in 
+universities ranging from e-mail provision, online journals, and networked libraries, to  
+development of creative software solutions for information management tasks in teaching, 
+research and administrative systems. Moll et al. (2007) defined e-Learning as ‘flexible learning 
+using ICT resources, tools and applications, focusing on accessing information, interaction 
+among teachers, learners, and the online environment collaborative learning, and  production of 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      169 
+	  
+materials, resources and learning experiences’. eLearning is the use of technological 
+interventions for teaching, learning and assessment (Mlitwa & Van Belle, 2011), enabling learners 
+to improve problem-solving skills and empowers educators to disseminate and impart knowledge 
+effectively. Millham et al. (2014) say eLearning is essential for the improvement of learners’ 
+performance, engagement, self- regulation, flexibility, interest and motivation. It promotes active 
+participation and self-regulated learning, which enables construction, learning-pace adjustment 
+and gives desired learning outcomes. 
+ 
+ 
+The Historical Background of eLearning Policies and Activities 
+ 
+After independency, South Africa explicitly formulated education policies for promoting access to 
+educational opportunities for previously disadvantaged groups (Dumbrajs et al., 2013). Since 
+1994, education reformation has been a priority to promote equality among all races. Progress 
+has been made in education legislation, policy development, curriculum reform and the 
+implementation of new modes of education delivery; however challenges like student outcomes 
+and labour market relevance exist. The new National Curriculum Statement (NCS) emphasizes a 
+learner-centred, outcomes-based education approach. In the GET band (grades 1-9), “subjects” 
+have been replaced with “learning areas” integrated across traditional disciplinary boundaries. 
+The curriculum was subsequently rewritten in plainer language, with more emphasis given to 
+basic skills, content knowledge and logical grade progression. The inception of Curriculum 2005 
+introduced changes in the SA school system and therefore retraining teachers is needed to 
+prepare them for the newly introduced technology subject. The aim of reformed policies was to 
+teach curricula based on learners’ own socio-economic environment and equip them with skills 
+that can be applied in real life situations (Dumbrajs et al., 2013). Other policies included the 
+Revised National Curricula Statements and Curricula Assessment and Policy Statements, which 
+indicate a period of rapid transformation and democratization. New education policies in SA 
+include indigenous knowledge in the curricula but are not prescriptive (Dumbrajs et al., 2013). 
+The national Department of Education, published its White Paper on E-Education in 2004 and 
+called together a ‘think-tank’ in 2006 based on an overview of research and delivery needs 
+related to the ‘roll-out’ of e-Learning in schools (Moll et al., 2007).Therefore teachers should 
+explicitly provide opportunities for learners to learn effectively and this can be done by the use of 
+Information and Communications Technologies (ICTs) like eLearning.  
+ 
+Using ICTs for education leads to social transformation and improves skills needs for a country 
+(Jaffer et al., 2007). Universities can remain competitive by using innovative technologies in 
+teaching and learning to improve the quality of activities and attract new learners (Mlitwa, 2006). 
+The SA National plan for Higher Education emphasizes that University activities develop an 
+information society, through technology use, for knowledge advancement to improve education 
+and support the new education system. Therefore, there was need for integration of ICTs in SA 
+Universities to compete globally, be innovative and address the learning styles and preferences 
+of digital natives longing to learn in an active, authentic learning environment.  
+ 
+In 2001 Prensky invented the term ‘digital natives’ to refer to the new generation of learners who 
+have grown up surrounded by technology and views them as ‘‘native speakers of technology, 
+fluent in the digital language of computers, video games, and the Internet” (Thinyane, 2010). 
+Digital natives are people between 18 and 24 years who were born into a digital world and find 
+their way easily with computers, internet, video games, smart phones, tablets and interact via 
+social media more than anyone else and rapidly adapt to new technologies (Hoijtink, 2015). The 
+author further predicts 48.4 million smart phone users, 35.3 million mobile internet subscriptions 
+and 5.1 million activated tablet devices, while 2.1 million households would have fixed internet 
+subscriptions in South Africa in 2018. South Africa had traditionally copied western trends, but the 
+influence of Asian countries is seen in the relationship between online shopping and social media 
+
+170   IJEDICT 
+ 
+(Hoijtink, 2015). It is impossible for digital natives to learn in the same way as digital immigrants 
+(not born into the digital world but have adapted to technology) did, because they speak different 
+languages and have different brains (Thinyane, 2010). Digital Natives ways of thinking and 
+learning include receiving information really fast, liking to parallel process, multi-task, prefer  
+games to ‘serious’  work’, graphics and random access, function best when networked and thrive 
+on instant gratification and frequent rewards. Digital Immigrants think ‘slowly, step-by-step, one 
+thing at a time, individually, and seriously’ and are encouraged to learn to use digital media, and 
+recommends that education systems be adapted to the way of thinking of Digital Natives. New 
+forms of learning are providing evidence of the dramatic social change through digitisation, like 
+eLearning, game-based learning, webinars and Massive Open Online Courses (MOOCs). 
+Therefore since eLearning approach transforms learning and teaching, it was therefore ideal for 
+learner needs, preferences and requirements. 
+ 
+eLearning promotes learner-centred learning and enhances activities that promote collaboration, 
+communication and interaction, and gives learners better experience and education effect (Du et 
+al., 2013) and enables learners to apply knowledge in novel situations through case studies, role 
+playing and simulations. Digital natives may be resistant to traditional teaching and learning 
+methods (Bosch, 2009) because they are engrossed with technology and, therefore, eLearning is 
+the way forward for today’s universities. Brown & Czerniewicz carried out a study on how and to 
+what extent ICTs were used in teaching and learning in HEIs in Western Cape Province of SA 
+and only 2.15% learners never or rarely used a computer to undertake any of the 18 computer-
+based learning activities; therefore learners in SA Africa may have similar studies experience at 
+university to other learners around the world (Thinyane, 2010).  
+ 
+Education leads to social transformation, hence the aim of the SA government being to achieve 
+equitable access to Higher Education for previously disadvantaged learners with diverse racial, 
+social and educational backgrounds (Jaffer et al., 2007). Macgregor (2008) says the use of 
+educational technologies, like eLearning in SA, started in 2002. ICTs are used for teaching and 
+learning, in one way or another, though universities differ in levels of institutional support, funding, 
+uptake and staffing. There is increased interest in eLearning services and platforms since the SA 
+curriculum restructuring was proposed in 2003. According to Jaffer et al. (2007), pedagogy, 
+curriculum, assessment and organization lead to improvement in the educational process. 
+Therefore, educators need to invest in these aspects for improved learning, better retention and 
+improved grades. 
+ 
+Venter et al. (2012) say learners in SA universities highly value contact with instructors and 
+colleagues via electronic media. They appreciate the use of Educational Technologies (ETs) to 
+increase learning interest and motivation. Mlitwa (2006) describes eLearning as a Social 
+Technical Network (STN), since it includes technologies for construction and collaboration by 
+users. Through learning management systems (LMS), eLearning qualifies as an STN that 
+incorporates computer, network, applications, learning materials, learners, educators and 
+mediators. 
+ 
+This study aims to evaluate the impact of usage of LMS and social software in SA universities. 
+We discuss challenges with eLearning implementation and look at the adoption and usage at 
+different institutions, and then we give recommendations for institutions to address the issues 
+identified. 
+ 
+ 
+Challenges of eLearning Implementation in South Africa 
+ 
+In general, SA learners have challenges which include diverse backgrounds, languages and race; 
+they are divided between wealth, and have infrastructure shortages, access issues, shortage of 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      171 
+	  
+skilled instructor, managers’ jobs loss misconceptions and instructor difficulty to create content. 
+Teaching strategies are hard to employ and it is hard to gain insights into learner difficulties, 
+especially in large classes. Therefore learners, especially those from poor backgrounds, may lag 
+behind. The educational challenges demand a mixed approach like blended learning that is 
+innovative to address problems of class and cultural diversity, learners’ prior learning experience, 
+increased education demand and changing learning needs. The SA post-apartheid policy 
+documents advocate for equal opportunities in education sector; however, practice varies from 
+policy (Rohleder et al., 2008). The eLearning approach provides equal opportunities, which is the 
+biggest challenge in SA. Brown et al. (2008) recommend collaboration, joint research projects 
+and sharing of good practice and approach to address the challenges. In the next section, we 
+discuss the implementation of LMSs and social software at different universities in SA. 
+ 
+ 
+Table 1: Challenges of eLearning adoption in SA 
+ 
+Author(s) 
+Challenges  
+Jaffer et al. (2007) 
+varying learner academic preparedness; large classes; multilingualism 
+in 1st language context; inadequate curriculum design; diversity in 
+(school) background; and academic ability 
+MacGregor (2008) 
+low bandwidth and unequal access 
+Brown et al. (2008) 
+range of organisational contexts; practices and cultures; infrastructural 
+constraints — proportion of internet users to PCs, bandwidth, slow and 
+internet costs; demographic divides, cell phone subscription LMS 
+instability; lack of use of interactive web potential; access inequality; 
+negative eLearning perceptions; no management support; lack of time 
+and resources; and oversubscribed internet systems that limit 
+applications use 
+Mlitwa & Van Belle 
+(2011) 
+inadequate technical support; limited infrastructure capacity; network 
+capacity; inadequate coordination and limited technological support; 
+technology instability; resistance to change; tedious administrator 
+processes; access issues; literacy limitations; institutions users with 
+troubled network systems; and poor user support 
+Venter et al. (2012) 
+scarce resources; educational inequalities; technology access 
+shortage; low throughput rates; technological cost; satisfaction & 
+infrastructure; lecturer efforts; graduate competencies; business 
+strategy shortages; learners’ frustration with e-Learning; underutilised 
+systems; bandwidth cost of high speed internet; and user penetration 
+Isabirye & Dlodlo 
+(2014) 
+no institutional support; non-integration of eLearning business strategy; 
+no eLearning culture; exclusion of academia from eLearning 
+development programmes; instructor attitudes; technological 
+challenges; lack of pedagogical strategies; cost and quality; lack of 
+university policy, training, motivation, incentive; under preparedness; no 
+facilitating conditions; logistical issues, lack of management; and ICT 
+support 
+OERAfrica (2014) 
+weak ICT skills; lack of resources; low computer and internet access  
+ 
+ 
+From the table we note several similar challenges mainly, infrastructural constraints, demographic 
+divides, staffing issues, organisational issues, learner issues, pedagogical issues. However some 
+institutions have unique challenges like lack of time and resources, inadequate curriculum design, 
+training, shortage of ICT skills. and user penetration.  
+	  
+
+172   IJEDICT 
+ 
+STATE OF ART AND PRACTICE 
+ 
+ 
+Learning Management Systems Usage at SA Universities  
+ 
+The University of Pretoria (UP) was among the first universities to take up eLearning in 1998 with 
+the WebCT LMS after running long-distance programmes from 1995 using video conferencing, 
+broadcasting, multimedia, web-based courses. According to OERAfrica (2014), UP has over 
+48,000 campus-based learners and over 24,000 off-campus part-time and distance learners. The 
+Department of Telematics Learning and Education Innovation assists academic instructor in 
+learning design activities. 
+ 
+At the University of South Africa (UNISA), the instructor use eLearning to distribute resources and 
+facilitate interaction and use mobile technology for learners’ communication. Over 200,000 active 
+learners are enrolled on ‘myunisa’ platform (OERAfrica, 2014), which uses the Open Source 
+Software (OSS) Sakai platform, customised for user needs for administrative functions, academic 
+collaboration and tuition related interaction (Venter et al., 2012). Of the 96% of learners that 
+accessed the system, 13% were active in discussions, 64% were frequent users, 23% were 
+occasional users and 10% were infrequent users. The platform was mainly used for 
+administrative purposes as passive observers, hence it is not fully utilised to its potential. There is 
+a need to increase active learners to improve learning. 
+ 
+The University of Cape Town (UCT) initially used WebCT and Moodle, developed by OSS Vula 
+and customised by Sakai in 2006, currently used by 25,000 learners and instructor of the 
+University of SA and North West University. This LMS supports teaching by notes and 
+announcement distribution, and is used as a transfer medium, though not for construction. 
+Courses are designed using eLearning and simulations. The LMS-adoption decision-making 
+process involved educators who have the freedom to use proprietary, home-grown systems or 
+none. Educators have no time to engage the system and pedagogy (Mlitwa, 2006). Designers 
+keep the interfaces simple, the helpdesk service is professional and efficient, tedious 
+administration tasks are eliminated, and lecturer assistants (Mlitwa & Van Belle, 2011) make use 
+and adoption easy. The Science instructor lags behind due to instructors being unwilling to use 
+the system, system usage is not promoted or supported, the computers are in poor working 
+condition, there are no relevant software programs and no helpful lab instructor. The high 
+turnover of the LMS was due to compatibility issues. 
+ 
+At the University of Stellenbosch (US) and Cape Peninsula University of Technology (CPUT), a 
+proprietary LMS WebCT is used as a learning transfer medium (Mlitwa, 2006). At US, the system 
+was adopted without consultation with academics and, therefore, there is minimal instructor 
+engagement. There is a widespread usage of the LMS at US because of their compulsory intake 
+clause at US. CPUT lacks a policy or forum for users to select the LMS.  
+ 
+At the University of Western Cape (UWC), a home-grown and developed OSS KEWL is used. It 
+lacks full interactive engagement between social and technical factors because academics do not 
+understand the potential benefits and are resistant to change (Mlitwa, 2006), which challenges 
+LMS adoption and usage.  
+ 
+At Nelson Mandela Metropolitan University (NMMU), the SharePoint 10 content and document 
+management system is used to avail courses for sharing and collaboration in blended learning 
+environments (Ssekakuubo et al., 2011).The platform is less flexible with limited interactivity 
+options and was replaced by Moodle. 
+ 
+The University of Johannesburg (UJ) has over 45,000 full-time, part-time, face-to-face learners 
+spread across seven campuses (OERAfrica, 2014). It uses a commercial LMS to supplement 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      173 
+	  
+course delivery, with extra support to learners in large classes with online materials. Instructors 
+are offered support in learning design, which makes the usage of the system easy.  
+ 
+Since 2010, the University of Kwazul Natal (UKZN) has been using the Moodle platform for 
+teaching and learning for instructor and learners (Sibanda & Donnelly, 2014). Instructors use the 
+platform to upload notes and deliver assignments, announcements, discussion forums and other 
+interactive exercises. There is no additional learner support which makes system usage and 
+adoption challenging.  
+ 
+At Tshwane University of Technology (TUT), ‘electronic campus’ was the initial LMS in 2011. It 
+was replaced by Blackboard (MyTutor), a content repository where instructors upload notes, 
+assignments and grades. TUT has systems for online video tutorials access, TUT4life for learners 
+for access to TUT mail and wireless internet, one for checking grades and an instructor portal for 
+instructor-related information.  
+ 
+ 
+Studies On LMS Adoption And Usage At Universities 
+ 
+At the Western Cape Universities, Mlitwa (2006) noted the eLearning potential to unfold as a true 
+socio-technical network was not fully realised and the technical aspect was not engaged at a 
+socio-technical agency basis. The technology and organisational transformations relationship is 
+minimal. The frequency of media use in Science, Engineering and Health disciplines was higher 
+(Brown et al., 2008).  
+ 
+Several UCT projects had positive results with the intervention of Educational Technologies 
+(ETs). A computer tutorial was more effective in the understanding of mathematical literacy skills, 
+concepts and better retention (Jaffer et al., 2007). Interactive spreadsheets were effective 
+teaching tools because they focused on the subject, not the procedural issues, and learners’ 
+article quality improved due to online feedback. Computer-assisted marking technologies 
+provided feedback, thereby solving large and diverse class problems and saving instructors their 
+time due to online marking and the ability to capture results electronically. Instructors had access 
+to learners’ performance and they found immediate feedback useful. ETs solved some issues that 
+were hard to solve with face-to-face (f2f) methods. Gaps identified in research included how ETs 
+can address education challenges in SA, where ETs are appropriate and how they are used in a 
+given situation.  
+ 
+According to Jaffer et al. (2007), it is difficult for learners to understand theory-driven courses due 
+to limited experience and practical knowledge. Simulations were used to provide UCT learners 
+with insights into practical processes, which provided an authentic learning environment. The 
+focus was on key learning aspects and linking theory to practice. An ET was used to impact 
+curricula design, providing learners with simulations and role playing experiences — things that 
+are difficult to provide in f2f environments. Real-world experiences helped bring theory into 
+practice to address some challenges. Future challenges remain in identifying and conceptualising 
+ways that ETs can contribute to learning experiences, curriculum and pedagogical designs. 
+ 
+SA is a divided society by race, wealth, background, and identity crisis; therefore, individuals 
+need to create their identity. Rohleder et al. (2008) studied learners at UWC and US, the learners 
+state that creation of virtual communities prepared them for diverse society.  
+ 
+The learners gave positive feedback and will repeat the collaboration because of the learning and 
+the personal growth opportunity. Discussion forums and chat rooms in the LMS promoted 
+flexibility, creativity, collaboration, communication and interaction, enhancing the learning 
+process. As benefits of using eLearning medium, learners had rewarding and enriching personal 
+
+174   IJEDICT 
+ 
+experience and attributed instant accessibility to information and their facilitators. Learners 
+enjoyed working collaboratively within diverse groups of race and social economic backgrounds. 
+Learners advocated for blended learning because they felt f2f sessions are important, too. The 
+question of how to create something more than a superficial community of practice in a real world 
+context remains.  
+ 
+Mlitwa & Van Belle (2011) say subjective personal perceptions influenced different LMS uptake 
+by the 21 instructors at UWC, UCT, US and CPUT in Western Cape Province interviewed over a 
+two-year period. They perceived eLearning as a content repository and administration tool for 
+assignment submission and management, and easing communication, not for learning or 
+teaching as a primary goal. 
+ 
+Instructors are worried about their roles being replaced and learners dodging class. The LMS 
+pedagogical role is hardly recognised because educators cannot differentiate between LMS and 
+eLearning; hence, the opportunity to address learning styles and teaching paradigms is 
+unutilised. The Activity Analysis and Development (ActAD) framework and concrete empirical 
+findings as comparative data for eLearning research and LMS adoption will be used in the future.  
+ 
+Mohamed & Peerbhay (2012) say dental learners were positive about the use of eLearning at 
+UWC. Based on perceptions, learners said more advanced learning was encouraged, it is a good 
+supplement to instructors, it broadens knowledge base and they found the information to be 
+relevant, informative and helpful. The experience and information gave them a guide for studying 
+and preparing for theory and practical exams. However, the LMS access challenges included 
+computer shortages, inappropriate software versions, computer failures, viruses, no internet 
+access, time shortages due to workload, and slow internet connections which led to download 
+and website problems. They recommend faster internet connectivity because a shortage of 
+resources causes negative attitudes and a negative impact on engagement with online resources. 
+They recommend eLearning to encourage active learning and the next implementation phase to 
+include an interactive component of self-assessment and discussion boards, as an incentive for 
+more active engagement. The learner-centred approach uses a management system for 
+administrative issues, offering learners personal tools for construction, presentation, reflection, 
+collaboration, etc., and facilitating networks between learners within the same course and others 
+in the field. 
+ 
+According to Millham et al. (2014), self-regulating eLearning as an intervention for poor results in 
+science subjects leads to improved learners’ grades. It provides multimedia and simulation 
+materials, is self-paced, self-regulated, learner-led and encourages knowledge construction, 
+which is more effective than the f2f approach. Self-regulated learning encourages construction, 
+which leads to better performance in science subjects. The eLearning intervention shows positive 
+results, especially for high-potential learners, amidst challenges of equipment issues and lack of 
+prior basic IT skills. Issues of incomplete marks made a full detailed analysis of grade 
+performance difficult and provided no correlation between assessment scores with relevant 
+statistical information.  
+ 
+Sibanda & Donnelly (2014) determined the impact of eLearning on performance, showing that 
+learners’ performances increased after the introduction of online learning as years progressed 
+and learners became academically-engaged as they became more familiar with the online 
+learning platform. Younger learners quickly adapted and became engaged, which improved 
+performance.  
+ 
+ 
+	  
+ 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      175 
+	  
+SOCIAL SOFTWARE AS A LEARNING TOOL IN SOUTH AFRICA 
+ 
+Learning is a social process and, therefore, Social Presence (SP) is essential as a predictor of 
+perceived learning and promotes a sense of community in online courses (Brady et al., 2010). SP 
+leads to a decrease in feelings of isolation and encourages learner interaction and participation. 
+The relationship between SP and online participation is that learners with more SP are more 
+involved and engaged in online conversions.  
+ 
+Social Software (SS), Web 2.0, Social Media (SM) or social web technologies are networked 
+tools or technologies that emphasize the social aspects of the internet as a channel for 
+communication, interaction, collaboration and creative expression (Dabbagha & Kitsantasb, 
+2012). Educational Social Software is SS designed for educational purposes. The elements of 
+Web 2.0 technologies — including blogs, wikis, podcasts, RSS feeds, social networking sites 
+(SNSs), social bookmarking sites, instant messaging, and virtual office applications — provide 
+users with easy-to-produce web content and interaction (Al-Zoube & El-Seoud, 2009). Web 2.0 
+tools with potential apps for teaching and learning include Facebook, Wikis, Delicious, Podcasts, 
+and YouTube. SNSs include Twitter, Facebook, Flickr, Myspace and Friendster, with core 
+features of interaction, collaboration and the social aspect. The uses of SNSs include developing 
+literacy skills, communication skills, e-portfolios, communities of practice and e-safety learning. 
+Searching and retrieving information may have led to a learning styles shift, to more interactive 
+environments and more hands-on inquiry-based approaches (Bosch, 2009). Web-based learning 
+leads to the availability of the learning content. 
+ 
+SS facilitates self-governed, problem-based and collaborative activities by supplying learners with 
+personal tools for independent construction and engagement in social networks (Dalsgaard, 
+2014). SS tools enable independent work, and actively facilitate relationships between 
+collaborating learners and instructor. SS tools support the flexibility of open-ended activities, 
+unlike an integrated LMS; they include personal tools owned and controlled by learners and used 
+for construction and reflection, and tools for navigating the web to develop understanding and 
+solve problems, which lead to lifelong learning using 'learning networks’ for life. SM is part of a 
+daily communication network; therefore, higher education needs to accommodate SM platforms 
+to ensure learners are prepared as skilled digital citizens (Freeman, 2014). SM enhances 
+learning, engagement, User Generated Content, sharing of information and content, ICT skills, 
+learner empowerment and activities that foster knowledge construction; hence, SM is effective for 
+learning. Learners should be facilitated to engage in different networks to support eLearning 
+activities, which lead to accessing more resources through friends, instructor and researchers. SS 
+encourages learners to develop individual networks for relationships based on specific interests 
+and needs. Learning and network are related and learners should be connected. A learning 
+network leads to a continuous lifelong process, which leads to continuous learning due to SNS-
+participation. 
+ 
+Facebook has stronger roots in the academic community, since it was developed as university 
+project. In 2007, the Facebook version of the Blackboard LMS was implemented with new course 
+feed application, providing users with course newsfeed (Bosch, 2009). In 2008, it was phased 
+out, with Facebook calling on developers to build other educational platforms. 
+ 
+According to Dalsgaard (2014), an LMS is for improving learning and administration purposes, 
+though the impact on pedagogy is limited. Unlike an LMS, SS tools support the active process of 
+construction and strengthen learners’ relations with others and the tools, which promotes 
+collaboration as a basis for discussion. The problems are the basis of learners’ activities in a 
+constructive learning environment, and different tools and resources support both individual and 
+collaborative problem-solving processes. Since the learning process focal point is self-governed 
+by learners through problem-solving activities, it is not possible to envisage learner activities. 
+
+176   IJEDICT 
+ 
+Open-ended learning environments for multiple possibilities for activities are encouraged. SS 
+tools that support construction, presentation, reflection, collaboration and promote finding people 
+and resources for problem solving are needed. In the future, development of educational SS 
+tools, like personal tools and social networks, are needed to support learning activities for 
+organizing eLearning beyond a single course and institution.  
+ 
+Dalsgaard (2014) recommends separate tools for individual learner needs and not integrated 
+tools like in an LMS. Unlike an LMS, learners use networking beyond a specific course period for 
+solving future problems. Personalisation (personal tools and social networking) enables learners 
+to look for resources and people to help in the problem-solving process. In this learner-centred 
+approach, an e-learning course is initiated by the formulation of problems for learners’ self-
+governed work. The learning process develops through self-governed learners’ work, manifested 
+in personal tools which are unique for each learner, since they get different materials depending 
+on their social network. Personal Learning Environments (PLEs) are effective for integrating 
+formal and informal learning in the Higher Education context and address learners’ control issues 
+and personalisation effectively (Dabbagh & Kitsantas, 2011). PLEs consist of SM tools which 
+promote individual learning where learners maintain the learning space to facilitate their own 
+learning activities and peer connections. A three-level pedagogical framework for using social 
+media to support self-regulated learning in PLEs — including personal information management, 
+social interaction and collaboration, and information aggregation and management — was 
+developed. It suggests that learners become motivated and empowered to create effective and 
+sustainable PLEs to achieve desired learning outcomes and enrich learning experiences as they 
+engage in self-oriented feedback system with instructor and peers. However, this framework has 
+not been tested empirically and should be verified in the future. 
+ 
+According to Al-Zoube & El-Seoud (2009), SS provides users with a platform to build social 
+applications and enhance interactive communication and collaboration with resource sharing. SS 
+has created an impact on education and has been adopted to meet emerging needs since it 
+promotes personalisation, flexibility, openness, problem solving, building connections and 
+collaboration. SNSs can act as pedagogical agents like Problem-Based Learning — whereby 
+learners identify people and resources relevant for problem solving — to add to the social 
+network because information spreads fast and has the potential for networked learning. SS can 
+be used to support a social constructivist approach to eLearning. Since SNSs are free, educators 
+should integrate them into their personal lives and their academics.  
+ 
+Al-Zoube and El-Seoud (2009) presented an eLearning system that uses SS and SNSs to 
+provide learners with an integrated, comprehensive and feature-rich environment for accessing 
+applications, sharing documents, results and other objects, and connecting with instructor and 
+learners. The learner feedback suggests that the SNS approach provides a much better user 
+experience than with an LMS. In the future, the authors plan to enable web server interaction with 
+Open Social applications to provide users with personalized materials and quizzes. 
+ 
+Since the SNS features promote interaction and collaboration, they should be integrated into 
+LMSs for academic purposes to make the learning exciting and improve on the learning interest 
+and motivation (Bosch, 2009). Training and support for SNS-use from institutions and instructor is 
+highly recommended. Integration and social networking technology use is a solution to the 
+distance learning problem of no interaction (Brady et al., 2010). A study to determine SNS users 
+and applications used to enhance these tools academically showed that learners use SNS the 
+most (96.7%), especially digital natives (90%) and digital immigrants (67%). Facebook was the 
+greatest host (81%), followed by Twitter (30%), LinkedIn (5%) and Myspace (4%) (Rinco & 
+Sandoval, 2014). Learners say social networks have led to a change in pedagogy and teaching 
+methods, since they encourage information-sharing which promotes research and academia, and 
+allows for quick knowledge enrichment.  
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      177 
+	  
+ 
+Unlike a LMS, SNSs provide immediate feedback through such features as comments. According 
+to Bosch (2009), universities should change their LMS’s focus from content delivery to interaction, 
+collaboration and communication between instructor and learners. The SNS features can be 
+integrated into existing LMSs without building new systems — for example, Elgg and Mahara 
+have inbuilt SNS features to support learning. UCT learners are more engaged with Facebook, as 
+compared to the Vula LMS (Bosch, 2009). A UCT lecturer said it was quicker to ‘talk’ to learners 
+on Facebook than finding them in class if she wanted to communicate. The Facebook functions 
+for UCT learners include social networking, seeking peer support, community building on 
+campus, learner activism, general communication, sharing information and maintaining group and 
+personal communication on public spaces. The learners accessed instructors in formal 
+environments with less pressure and felt more comfortable in the shared space. Learners asked 
+questions they feared to ask in class, felt instructors were more approachable after online 
+interactions and indicated the material to cover prior to the lecture, which led to class time spent 
+effectively. Facebook benefits learners with low self-esteem and low life satisfaction and cannot 
+be ignored as a potential educational tool because of its efficient ways to teach large classes, like 
+through groups discussions (Bosch, 2009).  
+ 
+As noted by Cloete et al. (2009), the benefits of SNSs like Facebook include a higher level of 
+engagement, digital literacy skills, integration in learners’ daily practices, the potential to make 
+identity information more relevant during class discussions, adding a ‘social’ peer to peer 
+component and managing alumni through the group. Facebook creates an online academic 
+community by linking learners and instructor, thereby breaking barriers and providing more 
+immediate responses. The instructors highlighted the promotion of critical thinking and improved 
+24/7 access to resources as SNS advantages. The learners sited companionship, information 
+access, emotional and material support, the opportunity to know their instructors better, 
+expanding social research, more confidence, opportunities to develop peer relationships and 
+instructors, and more self-disclosure as benefits. While 64.4% of instructors at UP thought 
+Facebook can be an academic learning tool, only 24.4% had applied SNSs to teach (Cloete et al., 
+2009).  
+ 
+Brady et al. (2010) surveyed graduate distance learners’ attitudes to the Education-based SNS 
+online tool Ning for teaching and learning to determine the educational benefits. The discussion 
+tool was used for sharing ideas and deliberating the topics covered. Key themes in the learner 
+responses were communication, collaboration, reflection and comprehension, convenience and 
+comfort, and benefits and draw backs of the tool. Based on the learner perceptions, Ning was 
+better than f2f in terms of collaboration, time efficiency and diverse viewpoints. The learners 
+highlighted the benefits of increased levels of communication and collaboration to deepen the 
+levels of reflections. The instructors reported positive effects on learner engagement and content 
+sharing. Learners created a forum based on their personal needs, which increased individual 
+collaboration, personalization and learning ownership. Learners were more familiar with 
+Facebook and preferred it for discussions; therefore, it is important to find learners in their space. 
+Drawbacks reported include time shortage and access issues. This study did not explore how 
+education-based SNSs can be most effectively used to support and enhance learning. 
+ 
+According to Du et al. (2013), LMSs are a traditional form of eLearning, designed for course 
+management and they have limited impact on pedagogy, lack personalised control for learners 
+and offer limited interaction and collaboration between learners, educators and courses. 
+Therefore, they are not competent for supporting eLearning in a new era which views learning as 
+a self-governed, problem-based and collaborative social process. Learners’ proficiency in cutting 
+edge technologies required by employers can be promoted by SM use. SS moves academic 
+activities to the public sphere and opens the academic environment to public space (Rodriguez, 
+2011). The incorporation of SM and User Generated Content (UGC) into the public space for 
+
+178   IJEDICT 
+ 
+teaching and learning in Higher Education is needed. Learners’ active participation, a form of 
+knowledge creation, is encouraged and changes the information flow from unidirectional to 
+bidirectional. 
+ 
+Instructors integrated SM with Blackboard LMS to understand the potential for teaching context, 
+expectations, experiences and pedagogical choices. Instructors reported flexibility and increased 
+learner involvement in finding resources, discussing content and sharing in knowledge 
+construction (Freeman, 2014). There was a close connection between instructor pedagogical 
+values and the perceived potential of SM technologies that drew instructor to the appropriate 
+technology from the personal/private to public or pedagogical technology users. The instructor’s 
+personal experiences on SM influenced their approaches to integrate tools into pedagogical 
+practices after discovering compatibility between SM collaborative strengths and pedagogical 
+values. In the future, there is a need to explore the domestication of SM in higher education 
+classrooms. 
+ 
+There is limited or no f2f interactions in distance learning, which makes building Communities of 
+Practice (CP) and fostering Social Presence a challenge. Technologies in SNS aid discussion 
+and create intimacy among online learners by building community in socially- and educationally-
+constructed network. SNSs actively extend learning beyond the class, which is important for 
+distance learners. Distance learning courses are more successful when they develop CPs which 
+enhances deep learning. Deep learning includes higher order thinking, reflective learning and 
+integrative learning, which leads to higher scores in education, and the practical components lead 
+to social development (Sibanda and Donnelly, 2014). LMSs are more focused and lack the 
+personal touch and networking capacity that SNSs offer. SNSs are user-centred, not class-
+centred, and have the potential to increase learner engagement and improve the learning 
+process.  
+ 
+The perceptions and learning experiences of learners from the University of Stellenbosch (in 
+South Africa) and the University of Alabama (in the United States), both using the Blackboard 
+LMS, were determined (Hough and Neuland, 2014). The learners identified acquiring problem-
+solving and decision-making skills as the biggest benefits of using the tool and added value to 
+their business process management and communication skills. These positive results were 
+attributed to the extensive involvement and experience with cases, which simulated real-world 
+business experiences. The learners claim ICTs added value to studies because they created 
+online profiles on web 2.0 sites. South African learners experienced a higher value and more 
+positive experience than their United States counterparts because of proximity, no direct on-
+campus interaction with instructors, and employment. They recommend optimal use of ICTs to 
+enhance learning because learners choose Higher Education Institutions based on delivery 
+expectations, so curricula and learning experiences must remain relevant and market-related. 
+UNISA learners use SNSs to connect with fellow learners and are strongly in support of 
+Facebook (Hough and Neuland, 2014). Educators need to tap into SNSs for an attitude change 
+and to improve motivation and learning interest by integrating SNS features into the LMSs for 
+better learning processes. 
+ 
+The learners felt eLearning tools held great potential to transform education through collaboration 
+and increased engagement, and they advised instructor to facilitate this environment. Twitter 
+learners had a significantly greater increase in engagement and Grade Point Average (Junco et 
+al., 2010). Hamid et al. (2009) highlights the main challenge as pedagogically appropriating and 
+repurposing social technology for the Online Social Networking (OSN) used by digital natives. 
+There is need to adjust pedagogical models to address digital learners with important OSN 
+activities that include content generating and sharing, interacting and collaboratively sharing.  
+ 
+ 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      179 
+	  
+DISCUSSION, RECOMMENDATIONS AND CONCLUSION  
+ 
+From the literature reviewed and the challenges discussed, we recommend the following for 
+successful eLearning implementation. 
+ 
+ 
+Training and Support in ICT, Content Creation Skills and Policy  
+ 
+We note instructor and learners’ difficulty in using the LMS due to inadequate ICT skills. There is 
+a need for ICT personnel support at institutions. The issue of diverse languages can be 
+addressed by creating and sharing local, customised content which improves learning because 
+the learners study better in their first language. Training users in content creation and ICT skills 
+enables the development of localised content for teaching and learning. There is a need to 
+develop educational software tools to support learning activities, like Weblogs to promote 
+collaboration and provide a basis for discussion. If a learner posts his/her view, it attracts 
+feedback and becomes collaborative. An SNS platform differs from an LMS discussion forum 
+because group views matter. Collaboration between content, pedagogy and technology is 
+important for successful eLearning.  
+ 
+There is a need for institutional leadership, policy, and awareness programs to encourage use to 
+improve institutional policy and delivery performance at HEIs. 
+ 
+ 
+Cost and Technology Aspects 
+ 
+Most debates concentrate on cost and proprietary vs OSS issues, and not technical aspects, 
+during the LMS-adoption decision making (Mlitwa, 2006). Technological aspects should be 
+discussed for successful implementation. The cost is curbed using free and customisable OSS to 
+institutional and academic needs. 
+ 
+ 
+Content Access to Diverse Population 
+ 
+The eLearning approach is recommended for learners from diverse cultures, races and 
+languages by availing content accessible anywhere. Over the years, SA has had increased 
+access to mobile phones compared to computers (Bosch, 2009; Brown et al., 2008). Brown et al. 
+(2008) says 2 out of 14 eLearning managers testified to using mobile technologies for education. 
+An opportunity for increased access to content and technology is exploiting mobile-learning 
+platforms, like mobile apps using SM. Learners can access resources and networks using mobile 
+phones at their convenience to keep engaged and improve learning. With SNSs, content is 
+accessed beyond institutional borders; for example, the MIT Open Course Ware in the United 
+States and the Open Educational Resources provide equal content access to diverse populations 
+for equal opportunities.  
+ 
+ 
+Large Class Sizes 
+ 
+Educational technologies can address large class numbers by providing accessible content 
+regardless of location; they can address diverse learners by promoting Personalised learning and 
+PLEs. SNSs like Facebook allow group creation for academic purposes, which enable easier 
+management of large classes.  
+ 
+ 
+
+180   IJEDICT 
+ 
+Curriculum Review  
+ 
+There is criticism of the f2f approach that it fails to develop the Higher Order Cognitive Skills  
+necessary for work environments (Bagarukayo et al., 2012). A change in curriculum to 
+incorporate practical pedagogy that promotes HOCS for problem solving, critical thinking and 
+decision making is recommended. eLearning and SNSs provide the best platforms for practical 
+skills and HOCS, and should be embraced. 
+ 
+ 
+Infrastructural and Technical Issues 
+ 
+Due to infrastructure issues, the use of web 2.0 technologies may be difficult in the developing 
+world. Therefore, universities need to improve their technology infrastructure by seeking funding 
+from Governments and others to procure adequate infrastructure. 
+ 
+ 
+Instructor Motivation and Job Security  
+ 
+There is a need for instructor motivation and incentives for content creation for easy LMS-use. 
+The instructor that develop and upload content can be a given bonus to motivate others; they 
+should be sensitized of the eLearning benefits for adoption and must be assured of job safety and 
+relevance as facilitators. 
+ 
+ 
+Engaged Learners and Instructor 
+ 
+Some universities had few active users; this needs to increase to improve grades and increase 
+retention. Instructor should motivate learners to increase their engagement in the online learning 
+environments. The learners are engaged in SNSs; hence, educators need to find them in their 
+space for effective, more active and engaged learning. Instructor should be involved in the LMS 
+development and acquisition in order to own the technology and use it optimally. The learners’ 
+interest and motivation is increased by integrating SNSs in LMSs. 
+ 
+ 
+CONCLUSION 
+ 
+We discussed eLearning usage and implementation, identified challenges and made 
+recommendations. There is a paucity of research on the use of Social Software for academic 
+purposes in Africa as compared to developed world. We recommend the SS approach to promote 
+learning activities that improve the learning process. According to the Technology Adoption Model 
+(Venter et al., 2012), system adoption is influenced by attitudes, perceived ease-of-use, 
+perceived usefulness and user behavioural intentions. Therefore, institutions should ensure that 
+these factors are positive for the successful adoption of eLearning. In the future, we will survey 
+instructor at TUT and other SA institutions to measure the improvement in technology usage. We 
+will experiment with social software as a tool for learning to determine how it influences learning 
+at SA institutions.  
+ 
+	  
+ 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      181 
+	  
+REFERENCES  
+	  
+Al-Zoube, M. & El-Seoud, S. (2009). Using Social Networking Sites as a Platform for E-Learning. 
+Conference ICL2009 Villach, Austria, 193-199. 
+ 
+Bagarukayo, E., Weide, T. P. V., Mbarika, V. W., & Kim, M. S. (2012). The Impact of Learning 
+Driven Constructs on the Perceived Higher Order Cognitive Skills Improvement: 
+Multimedia vs. Text" International Journal of Education and Development using ICT, 
+8:120-130. 
+ 
+Bosch, T. E. (2009). Using online social networking for teaching and learning: Facebook use at 
+the university of Cape Town. Communication: South African Journal for Communication 
+Theory and Research, 35:185–200.  
+ 
+Brady, K. P., Holcomb, L. B., & Smith, B. V. (2010). The Use of Alternative Social Networking 
+Sites in Higher Educational Settings: A Case Study of the E-Learning Benefits of Ning in 
+Education. Journal of Interactive Online Learning www.ncolr.org/jiol, accessed 20 
+November 2014 9:151-170.  
+ 
+Brown, C., Thomas, H., van der Merwe, A., & van Dyk, L. (2008). The Impact of South Africa's 
+ICT Infrastructure on Higher Education. Proceedings of the 3rd International Conference 
+on e-Learning. 
+ 
+Cloete, S., de Villiers, C., & Roodt, S. (2009). Facebook as an academic tool for ICT lecturers. 
+SACLA '09 Proceedings of the 2009 Annual Conference of the Southern African 
+Computer Lecturers' Association, 16-22 ACM, New York, US. 
+ 
+Dabbagha, N. & Kitsantasb, A. (2012). Personal Learning Environments, social media, and self-
+regulated learning: A natural formula for connecting formal and informal learning. The 
+Internet and Higher Education, 15:3–8.  
+ 
+Dalsgaard, C. (2006). Social software: E-learning beyond learning management systems. 
+European Journal of Open, Distance, and E-Learning. Available at 
+http://www.eurodl.org/materials/contrib/2006/Christian_Dalsgaard.htm. Accessed 10 
+November 2014. 
+ 
+Du, Z., Fu, X., Zhao, C., Liu, Q., & Liu, T. (2013). Interactive and collaborative e learning platform 
+with integrated social software and learning management systems. Proceedings of the 
+2012 International Conference on Information Technology and software Engineering & 
+Digital Media Technology. Lecture notes in Electrical Engineering 212, Springer, 11-19. 
+ 
+Dumbrajs, S., Jagerb, T. De., Bergström-Nybergc, S. (2013). 9th Grade students looking at their 
+chemistry studies. Comparison between Finland and South Africa. 2nd Cyprus 
+International Conference on Educational Research, (CY-ICER 2013) Science Direct.  
+Social and Behavioral Sciences 89: 40 – 48 1877-0428 © 2013 doi: 
+10.1016/j.sbspro.2013.08.806 
+ 
+Freeman, W. (2014). Taming social media in higher education classrooms. Proceedings of 9th 
+international conference on networked learning, 359-363. 
+ 
+Hamid, S., Chang, S., & Kurnia, S. (2009). Identifying the use of online social networking in 
+Higher Education. Proceedings Ascilite Auckland 2009: Poster. 419-422. 
+ 
+
+182   IJEDICT 
+ 
+Hoijtink, P. (2015). Digital natives key to retail future – survey: South Africa to see ‘more 
+purchasing via social media’ in future. 14:53. http://www.moneyweb.co.za/news/south-
+africa/digital-natives-key-to-retail-future-survey. Accessed 10 March 2015 
+ 
+Hough, J. & Neuland, E. (2014). Strategic management and the use of information and 
+communication technologies by selected South African and American students. SAJHE, 
+28:455–465. 
+ 
+Isabirye, A. K. & Dlodlo, N. (2014). Perceived Inhibitors of Innovative E-Learning Teaching 
+Practice at a South African University of Technology. Mediterranean Journal of Social 
+Sciences, 5:390-398. 
+ 
+Jaffer, S., N'gambi, D., & Czerniewicz, L. (2007). The role of ICTs in higher education in South 
+Africa: One strategy for addressing teaching and learning challenges. International 
+Journal of Education and ICT, 3:131-142. 
+ 
+Junco, R., Heiberger, G., & Loken, E. (2010). The effect of Twitter on college student 
+engagement and grades. Journal of Computer Assisted Learning, 27:119-132.  
+ 
+MacGregor, K. (2008). SOUTH AFRICA: Universities not far behind the curve. 
+http://www.universityworldnews.com/article.php?story=20080807153150438. 10th August 
+2008 Issue No: 40. Accessed 4th April 2015. 
+ 
+Millham, R., Thakur, S., & Malan, C. (2014). Does Self-Regulating E-Learning Assist in 
+Secondary School Preparation for Engineering Education? Proceedings of 2014 Zone 1 
+Conference of the American Society for Engineering Education.  
+ 
+Mlitwa, N. (2006). E-learning and Learning Management Systems (LMS) in a changing higher 
+education environment. “Transforming IS & CS Education and Research in a changing 
+Higher Education Environment” conference. Capetown. 
+ 
+Mlitwa, W. & Van Belle, J. W. G. D. (2011). Mediators for lecturer perspectives on learning 
+management systems at universities in the Western Cape, South Africa. In Proceedings 
+of the Pacific Asia Conference on Information Systems (PACIS 2011), 2011, Brisbane, 
+Australia. Brisbane: AIS Electronic Library. 
+ 
+Mohamed, N. & Peerbhay, F. (2012). Introducing dental students to e-learning at a South African 
+University. African Journal of Health Professions Education, 4:123-127. 
+ 
+Moll, I., Adam, F., Backhouse, J., & Mhlang, E. (2007). Status Report on ICTs and Higher 
+Education in South Africa. 
+http://www.judybackhouse.com/pdfs/saide_status_of_elearning_in_sa.pdf.  
+ 
+OERAfrica, (2014). Case studies: delivering eLearning in South Africa. 
+http://www.oerafrica.org/supporting-distance-learners/case-studies-delivering-elearning-
+south-africa. Accessed on 7th November 2014. 
+ 
+Ravjee, N. (2007). The politics of e-learning in South African higher education. International 
+Journal of Education and Development using Information and Communication 
+Technology (IJEDICT), 3 (4); 27-41. 
+ 
+
+eLearning	  usage	  in	  South	  African	  universities	  	  	  	      183 
+	  
+Rinco, J.G.C. & Sandoval, J.A.L. (2014). Use of social networks, a path to training in blended 
+learning community. Proceedings of the third international conference on informatics and 
+applications.  
+ 
+Rodriguez, J.E. (2011). Social media use in Higher Education: key areas to consider for 
+educators. MERLOT Journal of Online Learning and Teaching, 7:539-550. 
+ 
+Rohleder, P., Swartz, L., Bozalek, V., Carolissen, R., & Leibowitz, B. (2008). Community, self and 
+identity: Participation action research and the creation of a virtual community across two 
+South African universities. Teaching in Higher Education, 13:131-143. 
+ 
+Sibanda, M. & Donnelly, S. (2014). The Impact of E-Learning on Student Performance: A Case 
+Study of an Entry-Level Module at a South African University. Mediterranean Journal of 
+Social Sciences, 5: 478-485. 
+ 
+Ssekakubo, G., Suleman, H., & Marsden, G. (2011). Issues of Adoption: Have E-Learning 
+Management Systems Fulfilled their Potential in Developing Countries? SAICSIT11, 
+October 3–5, 2011, Cape Town, South Africa.  
+ 
+Thinyane, H. (2010). Are digital natives a world-wide phenomenon? An investigation into South 
+African first year students’ use and experience with technology. Computers & Education 
+55: 406–414. 
+ 
+ 
+ 
+Copyright for articles published in this journal is retained by the authors, with first publication rights granted 
+to the journal. By virtue of their appearance in this open access journal, articles are free to use, with proper 
+attribution, in educational and other non-commercial settings. 
+Original article at: http://ijedict.dec.uwi.edu/viewarticle.php?id=2024 
+ 
+ 

@@ -1,0 +1,103 @@
+{
+  "id": "communal-cattle-asset-logic",
+  "citation": [
+    "Communal farmers' cattle-production perceptions, Ga-Matlala, Limpopo (PMC)",
+    "Livestock ownership determinants, OR Tambo District (Pastoralism, Springer)",
+    "Drought coping strategies and livestock resilience in SA (PMC)"
+  ],
+  "segment_tags": [
+    "communal_farmer",
+    "smallholder_emerging_farmer",
+    "livestock_owner",
+    "rural"
+  ],
+  "economic_tags": [
+    "tight",
+    "moderate"
+  ],
+  "mechanisms": [
+    "Cattle are kept as a liquid asset for large expenses and inheritance, so any intervention that demands cash outlay is rejected unless it directly protects that income role.",
+    "Cattle theft is read as a symptom of youth unemployment and absent herders, so a solution is credible only if it absorbs idle youth labour or substitutes for the missing herder.",
+    "A household will own a livestock species only if its perceived utility—income, food, or cultural role—outweighs that of alternatives, so a new policy is judged by whether it lifts the utility of the species the household already prefers.",
+    "Resilience to drought depends on access to diverse resources, social networks, and finance, so a policy is seen as building resilience only if it widens those three channels; otherwise it is dismissed as inadequate."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9",
+        "P10",
+        "P11"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P5",
+        "P6"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P20",
+        "P21",
+        "P22",
+        "P23",
+        "P24"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P25",
+        "P26",
+        "P27",
+        "P28",
+        "P29",
+        "P30",
+        "P31",
+        "P32",
+        "P33",
+        "P34"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "income",
+    "inheritance",
+    "herders",
+    "theft",
+    "utility",
+    "social networks"
+  ],
+  "objection_patterns": [
+    "Does this require me to spend cash that I would otherwise keep in my cattle?",
+    "Does this give the unemployed youth a reason to stop stealing my cattle?",
+    "Does this make the species I already keep more useful to my household?",
+    "Does this give me access to finance or a network that I can lean on when drought hits?"
+  ],
+  "claim_type": "qualitative",
+  "region": "Not specified in provided passages",
+  "year_range": "Not specified in provided passages",
+  "confidence": "Mixed-methods and survey-based, three study areas across Limpopo and Eastern Cape — mechanisms are consistent across contexts, but magnitudes and precise regional boundaries are not quantified.",
+  "comb_gaps": [
+    "capability"
+  ]
+}

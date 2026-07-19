@@ -1,0 +1,1748 @@
+http://www.sajim.co.za
+Open Access
+South African Journal of Information Management 
+ISSN: (Online) 1560-683X, (Print) 2078-1865
+Page 1 of 13
+Original Research
+Read online:
+Scan this QR 
+code with your 
+smart phone or 
+mobile device 
+to read online.
+Author:
+Simphiwe K. Cele1 
+Affiliation:
+1Graduate School of Business 
+Leadership, University of 
+South Africa, Midrand, 
+South Africa
+Corresponding author:
+Simphiwe Cele,
+simphykc@yahoo.co.uk
+Dates:
+Received: 10 Nov. 2022
+Accepted: 17 Feb. 2023
+Published: 11 Dec. 2023
+How to cite this article:
+Cele, S.K., 2023, ‘Determining 
+customer acceptance of 
+digital-only banks in South 
+Africa: Unified Theory of 
+Acceptance and Use of 
+Technology extension’, South 
+African Journal of Information 
+Management 25(1), a1628. 
+https://doi.org/10.4102/
+sajim.v25i1.1628
+Copyright:
+© 2023. The Author. 
+Licensee: AOSIS. This work 
+is licensed under the 
+Creative Commons 
+Attribution License.
+Introduction
+Despite financial institutions investing heavily in financial technologies (fintechs), the rate of 
+adoption is still below the expected levels (Zhou, Lu & Wang 2010), especially in developing 
+countries (Sharma, Singh & Sharma 2020). There is, therefore, a significant need to explore the 
+factors that motivate individuals to adopt these technologies (Savić & Pešterac 2019). Research 
+in technology adoption has determined factors that affect individuals’ behavioural intention to 
+use various technologies (Al-Saedi et al. 2020). Several models have contributed to the 
+understanding of these factors (Yang 2009). The prominent is the Technology Acceptance 
+Model (TAM) (Davis 1989) and the Unified Theory of Acceptance and Use of Technology 
+(UTAUT) (Venkatesh et al. 2003).
+Many studies have been conducted investigating consumers’ adoption of mobile payment (Al-
+Saedi et al. 2020) and mobile banking (Asnakew 2020), but few studies have investigated the 
+adoption of other financial technologies like cryptocurrency, digital (-only) banking (Sharma et al. 
+2020). To investigate factors influencing fintech adoption in South Africa, this study used the 
+Technology Acceptance Model (TAM) and the UTAUT as underpinning theories.
+Therefore, the research aimed to investigate factors influencing consumers to adopt fintechs in 
+South Africa. This was done by answering two research objectives, that is, to investigate the factors 
+Background: The rise of fintechs has improved many aspects of financial services and has 
+enhanced financial products, improved access, reduced prices of financial services and brought 
+convenience for consumers. South Africa is also experiencing an increase in these technologies. 
+Despite this increase and benefits, their adoption is disappointingly low. Therefore, it is essential 
+to understand the views of consumers and the extent to which they are adopting fintech.
+Objectives: This study aimed to investigate factors influencing consumers to use fintechs in 
+South Africa. The first objective was to investigate the factors influencing consumers to use 
+digital-only banks in South Africa. The second objective was to determine if perceived 
+convenience, ubiquity, perceived costs, perceived risk, perceived trust, facilitating conditions 
+and self-efficacy affect fintechs adoption.
+Method: An online survey was conducted among 120 bank customers. SPSS 28 and Amos 
+27 were used for data analysis.
+Results: Facilitating conditions, perceived trust, convenience and ubiquity, self-efficacy, 
+perceived costs and perceived risk were the key determinants for the adoption of fintechs.
+Conclusion: Facilitating conditions, perceived trust, convenience and ubiquity and self-
+efficacy have a positive relationship with adopting fintechs, while perceived costs and 
+perceived risk negatively affect the adoption of fintechs.
+Contribution: The study’s findings will help financial institutions in South Africa develop 
+behaviour change strategies that will assist consumers in adopting fintechs. This research 
+contributed to developing a digital-only bank adoption framework for South Africa. This 
+framework will help financial institutions create an environment encouraging and enabling 
+more customers to adopt fintechs.
+Keywords: UTAUT; fintechs; financial technologies; adoption; acceptance; user intention; 
+technology; digital-only bank; TAM.
+Determining customer acceptance of digital-only banks 
+in South Africa: Unified Theory of Acceptance and 
+Use of Technology extension
+Read online:
+Scan this QR 
+code with your 
+smart phone or 
+mobile device 
+to read online.
+
+Page 2 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+influencing consumers to use digital-only banks in South 
+Africa and to determine if ubiquity, perceived costs, perceived 
+risk, perceived trust, facilitating conditions, self-efficacy, 
+hedonic motivation, social influence, effort expectancy, 
+performance expectancy, perceived usefulness, perceived 
+ease of use affect fintechs adoption in South Africa. 
+Problem statement
+The rise of fintechs has created several opportunities for the 
+financial services industry, including the ability to provide 
+services and financial products to people who were 
+previously excluded or underserved, improve the efficiency 
+and delivery of services and products, and save money on 
+operating costs. Fintechs also benefit consumers in a variety 
+of ways, including lower transaction fees, the provision of a 
+variety of products tailored to consumers’ needs, and the 
+convenience of accessing financial services at any time and 
+from any location. As good as it is, none of these benefits will 
+be realised unless consumers adopt these fintechs.
+Studies have shown that, despite all of these positive effects 
+and fintechs gaining widespread acceptance in developed 
+countries, adoption in emerging economies such as South 
+Africa remains a significant challenge (Sharma et al. 2020). 
+This lack of adoption poses serious risks to financial institutions 
+that have invested heavily in fintechs. As a result, financial 
+institutions must learn about the factors influencing 
+consumers’ adoption of fintechs. As a result, financial 
+institutions are looking for ways to encourage consumers to 
+use fintechs. Knowing the factors influencing consumers to 
+adopt fintechs will provide financial institutions with 
+comprehensive information about behaviour change strategies 
+that will increase adoption (Savić & Pešterac 2019).
+Literature review
+Financial technologies in South Africa
+Fintechs have fundamentally changed business models and 
+value propositions in financial services. They have made this 
+industry more accessible and inclusive by extending services 
+to the underserved and previously neglected. The key drivers 
+of these changes have been the increase in the use of mobile 
+phones and the Internet. At the end of the 20th century and 
+the beginning of the 21st century, South Africa experienced a 
+substantial increase in the use of mobile phones and the 
+Internet (Singh 2004). This sparked new changes in the 
+industry as the financial services institutions saw new 
+opportunities in using mobile phones and the Internet to 
+deliver their services (Brown et al. 2003).
+It began in 1996 when Amalgamated Bank of South Africa 
+(ABSA) introduced internet banking with what they called 
+‘freenet’. Customers favoured the ease, security, and low 
+prices of this platform which offered online banking, 
+notwithstanding 
+the 
+initial 
+slow 
+growth. 
+Nedbank 
+immediately followed ABSA. The trend was quickly followed 
+by Standard Bank, First National Bank and Mercantile Bank, 
+respectively (Singh 2004). ABSA, however, stopped supporting 
+its ‘freenet’ in June 2002 and unveiled a new mega-portal 
+platform that included e-procurement services, Customer 
+relationship management (CRM), which acted as a ‘platform’ 
+for small, medium and micro-enterprises. Standard Bank 
+expanded its internet offerings to include international 
+banking, share trading and foreign exchange services. 
+Additionally, they unveiled a secure email statement service 
+that clients could only access with online investing accounts. 
+This allowed the customers to open, amend and manage 
+investment accounts online. In response, First National Bank 
+(FNB) 
+partnered 
+with 
+Commerce 
+One 
+to 
+provide 
+e-procurement services and promote local and international 
+trading (Singh 2004).
+These changes showed that traditional banks in South Africa 
+have always wanted to respond to emerging financial 
+technologies and ensure that their infrastructure is agile 
+enough to adapt (Camarate & Brinckmann 2019). As the 
+changes continued, in 2004, Discovery launched its credit 
+card. Ten years later, in 2014, ABSA developed a digital 
+strategy in response to the changes. In 2015, several industry 
+changes were witnessed. Old Mutual partnered with Bidvest 
+Bank to launch the Old Mutual money account; FNB 
+launched its first mobile banking platform, which catered 
+for the unbanked, mainly rural communities; South African 
+Reserve Bank (SARB) granted Postbank and Tymebank 
+provisional 
+licences. 
+In 
+partnership 
+with 
+WIZZIT 
+International, U Bank also launched a digital payment 
+platform and PEP stores launched PEPplus debit cards. In 
+2016, Standard Bank acquired SnapScan and formed Human 
+Settlement Development Bank. In 2017, Capitec launched its 
+credit card. In 2018, Bank Zero was registered with SARB 
+(Camarate & Brinckmann 2019). In 2019, Tymebank started 
+trading, and in July 2019, Discovery Bank opened its service 
+to the public. In August 2021, Bank Zero officially launched 
+for public access. In all these industry changes, it has always 
+been imperative that the consumers find these new 
+technologies useful and adopt them.
+Technology acceptance models
+Technology acceptance model
+Davis (1989) developed Technology Acceptance Model. 
+This model postulates that an individual’s behavioural 
+intention to use technology is determined by two beliefs: 
+perceived usefulness, defined as the extent to which a 
+person believes that using the technology will improve the 
+performance of his or her job, and perceived ease of use, 
+defined as the extent to which a person believes that using 
+the technology will be effortless (Davis 1989; Venkatesh & 
+Davis 2000). The technology adoption model claims that the 
+impact of external variables (e.g. technology features, 
+development process, training) on intention to use is 
+mediated by perceived usefulness and perceived ease of 
+use. According to TAM, perceived usefulness is also affected 
+by perceived ease of use because, other things being equal, 
+the simpler it is to use, the more useful it can be (Davis 
+
+Page 3 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+1989). In 2000, Venkatesh and Davis expanded the TAM 
+model by adding more constructs. The resultant model was 
+named TAM2. Technology adoption model 2 extends TAM 
+by demonstrating that the subjective norm has a significant 
+direct effect on the purpose of use over and above the 
+perceived usefulness and ease of use of mandatory (but not 
+voluntary) technologies. Subjective norms significantly 
+affect perceived usefulness by both internalisations, in 
+which people integrate social influences into their own 
+perceptions of usefulness and identification, in which 
+people use the mechanism to gain prestige and power 
+within the working community and thereby enhance 
+efficiency (Venkatesh & Davis 2000).
+Unified theory of acceptance and use of technology
+Some scholars criticise the TAM model, arguing it is not 
+comprehensive because it has several disadvantages, including, 
+(1) inability to provide enough insights into individuals’ 
+perspectives of novel technologies, (2) neglecting its indicators 
+and direct investigating the external variables of perceived ease 
+of use, and perceived usefulness (Lou & Li 2017), (3) ignoring 
+the relationship between usage attitude and usage intention 
+(Chao 2019), and (4) whether it can be applied to all the cases of 
+new technology adoption (Lou & Li 2017). Therefore, a coherent 
+paradigm that incorporates different viewpoints on consumer 
+acceptance and innovation, the UTAUT, was developed to 
+harmonise the literature associated with the adoption of 
+emerging technologies (Williams et al. 2015).
+Unified Theory of Acceptance and Use of Technology integrated 
+core elements from eight models and prominent theories 
+(including the theory of reasoned action [TRA], innovation 
+diffusion theory [IDT], the theory of planned behaviour [TPB], 
+the TAM, the combined TAM-TPB, the motivational model 
+[MM], the model of PC [personal computer] utilisation [MPCU] 
+and social cognitive theory [SCT]). The UTAUT theory argues 
+that four main constructs affect technology adoption: (1) 
+performance expectations, (2) effort expectations, (3) social 
+influence and (4) facilitating conditions. The first three are 
+direct determinants of usage intention and behaviour, and the 
+fourth is a direct determinant of user actions. Other variables, 
+gender, age, experience and voluntariness, moderate the 
+influence of the four main constructs on the intent and 
+behaviour of usage (Venkatesh et al. 2003).
+Scholars in technology adoption, such as Brown et al. (2003) 
+and Savić and Pešterac (2019), have used various models to 
+study consumers’ adoption of technologies. Research has 
+shown that the UTAUT model is the most influential and 
+provides a better understanding of the variance in the 
+behavioural intention to use a technology (Savić & Pešterac 
+2019; Venkatesh et al. 2003). Consequently, several models 
+that are extensions of UTAUT have been developed to 
+investigate if more constructs significantly influence fintech 
+adoption by consumers.
+Sharma et al. (2020) extended the UTAUT model with the 
+addition of perceived risk, customer satisfaction and two 
+of  Hofstede’s cultural dimensions – individualism vs 
+collectivism (IVD) and uncertainty avoidance (AU). They 
+posited that uncertainty avoidance dampens the influence of 
+performance expectancy and facilitating conditions on 
+internet banking adoption intention. Sharma et al. (2020) 
+emphasised the importance of individual’s cultural values in 
+promoting the adoption of internet banking.
+Venkatesh et al. (2013) modified the generalisability of the 
+UTAUT model from the organisational context to the 
+consumer context by including hedonic motivation, price 
+value and habit and developed UTAUT2.
+This study adopted UTAUT because of its comprehensiveness 
+and influence on technology acceptance.
+Determinants of adopting financial technologies
+The financial services industry in South Africa was shaped 
+by the country’s history that has changed significantly 
+through the years, starting from the apartheid regime 
+through to the democratic government administration, and 
+the poor adoption of financial technologies is embedded in 
+the history and the infrastructure of this country.
+This study adapted constructs from UTAUT (performance 
+expectancy, effort expectancy, social influence and 
+facilitating conditions), UTAUT2 (hedonic motivation) and 
+TAM (perceived usefulness and perceived ease of use). 
+Other constructs that have been added in the extension of 
+UTAUT, that is, perceived cost (Yu 2012), perceived trust 
+(Koufaris & Hampton-Sosa 2004; Shin 2009; Luarn & Lin 
+2004), perceived risk (Brown et al. 2003), ubiquity (Kim 
+et al. 2015) and self-efficacy (Shin 2009) were also added 
+because of their importance in the context of South Africa:
+•	 Perceived costs: Because South Africa is a developing 
+country with a high employment rate, the cost is essential 
+in adopting fintechs.
+•	 Perceived risk: Because fintechs are linked to cybercrime, 
+there is a risk that a consumer’s banking information will 
+be compromised when transacting digitally.
+•	 Perceived trust: The consumer’s trust in the financial 
+institution is critical to their relationship. South African 
+consumers recently lost large sums of money in a scandal 
+that involved the now-defunct VBS bank. As a result, 
+they are very sceptical of a new entrant into the banking 
+industry.
+•	 Ubiquity: Because South Africa is considered a dual 
+economy (one part comparable to a developed country 
+and the other to a developing country), people on the 
+more affluent side value convenience that comes from 
+ubiquity very highly, while people on the poor side 
+prioritise costs.
+•	 Self-efficacy: Digital-only banks are a new concept in 
+South Africa. As a result, many consumers will first assess 
+whether they have the capabilities to use these banks 
+before they can start using them.
+
+Page 4 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+The following section discusses the determinants of fintechs 
+adoption used in this study.
+Facilitating conditions
+Facilitating conditions are the environmental factors that 
+enhance an individual’s likelihood to use technology or the 
+degree to which an individual believes that (technical) 
+infrastructure exists to enable them to use a technology 
+(Venkatesh et al. 2003). If the infrastructure that enables one 
+to use the technology is not available, then one will not adopt 
+it. Asnakew (2020) argues that facilitating conditions are 
+some of the most significant barriers to mobile banking 
+adoption. This agrees with the argument of Halili and 
+Sulaiman (2019) that the lack of facilitating conditions is one 
+of the key impediments to technology adoption. As a result, 
+fintechs should expand or improve their infrastructure so 
+that more customers can use fintechs.
+Perceived cost
+Perceived cost is the level to which an individual thinks there 
+will be a cost incurred for using fintech (Huei et al. 2018). The 
+cost may include the price of purchasing the compatible 
+device and the cost of data or airtime to download and use 
+the related applications (Al-Saedi et al. 2020). Customers 
+demand financial services at lower costs; therefore, the 
+perceived cost has a negative effect on consumers’ intention 
+to adopt fintech (Al-Saedi et al. 2020). If the consumers 
+believe using fintech will cost them too much money, they 
+will likely not use it.
+Ubiquity and convenience
+Ubiquity means that an individual can use fintechs at any time 
+and place (Cao & Niu 2019). In the past, people had to go to the 
+bank for any bank-related activity, but now, because of fintechs, 
+financial services are delivered through one’s handset and 
+people do not need to go to a branch for every banking need. In 
+rural and other areas where there are no bank branches, 
+because of fintechs, people can now receive or send money at 
+their nearest supermarkets, for example, Boxer stores. In these 
+areas, people adopt fintech because of the convenience it brings 
+to them. Hence, Sarkar, Chauhan and Khare (2020) argue that 
+ubiquity is a critical factor that influences consumers to adopt 
+fintech. Also, in urban areas, consumers have become used 
+to  the convenience and ubiquity of financial services. 
+Consequently, they have constantly demanded them from 
+their financial services providers (Yanagawa 2018).
+Self-efficacy
+Self-efficacy is an individual’s assessment of their skills to 
+succeed when using a fintech (Chao 2019). If a person believes 
+they do not have the skills to use fintech, they will not attempt 
+to adopt it. It is, therefore, important that the fintechs educate 
+the consumers about fintech and how to use them. This would 
+increase consumer awareness and understanding of the 
+benefits of fintechs (Laforet & Li 2005). In developing countries 
+like South Africa, many people are still not aware of the 
+benefits of using fintech due to the lack of awareness.
+Perceived risk
+Perceived risk is an individual’s belief in the likelihood of an 
+adverse outcome and consequence when using a fintech 
+(Khedmatgozar & Shahnazi 2018). Tang, Ooi and Chong 
+(2020) and Ali et al. (2021) argue that financial risk, security 
+and operational risk are some crucial factors hindering the 
+intention to use fintechs. Some consumers believe there is a 
+risk associated with using fintechs, so they are reluctant to 
+adopt them. Many consumers still feel that their credentials 
+are not safe when transacting online; as a result, they prefer 
+to transact the conventional way.
+Perceived trust
+Perceived trust is the extent to which an individual believes 
+fintech is reliable and safe to use (Al-Saedi et al. 2020). Laforet 
+and Li (2005) add that the lack of credibility trust, and security 
+are among the key barriers to adoption. Liébana-Cabanillas 
+et al. (2020) argue that perceived trust significantly influences 
+the intention to use fintechs. As a result, many consumers 
+fear using fintechs because of a lack of trust, especially if the 
+technology is from an unknown institution.
+Hedonic motivation
+Venkatesh et al. (2012) define hedonic motivation as the 
+pleasure or enjoyment derived from the use of technology. 
+To that end, if people enjoy using a technology, they are 
+more likely to adopt it, whereas if they do not find it 
+satisfying, they will stop using it. Alalwan et al. 
+(2018)  argue that a high hedonic motivation of using a 
+technology will enhance the benefits perceived from using 
+this technology.
+Social influence
+Social influence is the degree to which an individual believes 
+that people they hold in high regard believe they should use 
+a new technology (Venkatesh et al. 2003). Nikou and 
+Economides (2017) contend that social influence influences 
+individuals’ perceptions of the usefulness of technology.
+Effort expectancy
+Venkatesh et al. (2003) define effort expectancy as the ease 
+with which a technology can be used. Individuals will be 
+easily influenced and motivated to use technology if it is 
+simple to use.
+Performance expectancy
+This is the degree to which the user anticipates that using a 
+technology will make a task easier task (Venkatesh et al. 
+2003). When people believe that using a technology will help 
+them complete their tasks with ease, they are more likely to 
+adopt that technology.
+Perceived usefulness
+According to Davis (1989), this is the extent to which a person 
+believes that using a technology will improve work 
+performance. People are constantly looking for ways to 
+
+Page 5 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+improve their work performance; as a result, if a person 
+believes that using a specific technology will improve their 
+performance, they will adopt that technology.
+Perceived ease of use
+Perceived ease of use is the degree to which an individual 
+believes that using a technology requires no effort (Davis 
+1989). Individuals are constantly looking for ways to simplify 
+the way they complete their tasks. As a result, they prefer 
+technologies that require little effort from them.
+Hypotheses formulation
+The rise of fintechs has both positive and negative effects on 
+consumers in financial services. One of the negative effects of 
+digital transactions is the risk of cybercrime because 
+consumers’ credentials can be stolen by cybercriminals when 
+they use fintechs. To that end, Coetzee (2018) argues that 
+regulators place cybersecurity and client data protection at 
+the top of their regulatory agenda. Because of their fear of 
+cybercrime and online fraud, most consumers are hesitant to 
+transact digitally. According to Ali et al. (2021), perceived 
+risk has a negative impact on the adoption of fintechs. As a 
+result, the following hypothesis was developed:
+H1: Perceived risk has a negative effect on the adoption of 
+fintech.
+Fintechs have provided numerous benefits to the financial 
+services industry, including lower costs for financial services 
+and products. This cost reduction has made financial services 
+available to people who were previously excluded. However, 
+the cost of using fintechs, such as the airtime or data required 
+to transact digitally, discourages many consumers from 
+using them (Humbani & Wiese 2019). Consequently, financial 
+services institutions must reduce the transaction costs to 
+encourage more consumers to use fintechs. The formulated 
+hypothesis is:
+H2: Perceived cost has a negative effect on the adoption of 
+fintech.
+The use of any technology necessitates certain abilities on the 
+part of the users. As a result, if users have doubts about their 
+ability to use a particular technology, they may be hesitant to 
+use it. In the case of fintechs, such as a digital-only bank, 
+there is an increased need for consumers to be confident in 
+their ability to use them, especially because there is usually 
+no contact with a financial institution personnel who can 
+assist when transacting (Chan, Ng & Ng 2020). The following 
+hypothesis was formulated:
+H3: Self-efficacy has a positive effect on the adoption of fintech.
+Several years ago, financial services could only be obtained 
+through physical branches, which imposed numerous 
+restrictions on consumers. Consumers had to wait for the 
+branches to open in order to conduct transactions such as 
+sending money to others. However, fintechs changed that 
+narrative by providing more convenient financial services 
+and products (CFA Institute Asia-Pacific Research Exchange 
+2017). With the arrival of fintechs, financial services can now 
+be accessed outside of branches and regular banking hours. 
+Consumers are benefiting greatly from the convenience that 
+has come with the ubiquity of financial services. To that end, 
+Yanagawa (2018) contends that consumers are becoming 
+accustomed to this convenience and have begun to demand 
+more convenience and ubiquitous financial services. 
+Therefore, the following hypothesis was formulated:
+H4: Ubiquity has a positive effect on the adoption of fintech.
+Even though fintechs provide numerous benefits to 
+consumers, their use is still contingent on the availability of 
+the technical infrastructure that allows consumers to use 
+them. This infrastructure includes, among other things, 
+mobile devices, airtime, data and (quality of) mobile 
+networks. This infrastructure is referred to as the facilitating 
+conditions, as explained in previous sections. Therefore, 
+consumers cannot adopt or use fintechs unless this enabling 
+infrastructure is available. Venkatesh et al. (2003) contend 
+that facilitating conditions play a very important role in user 
+behaviour and predicting future use. The following 
+hypothesis was proposed to that end:
+H5: Facilitating conditions have a positive effect on the adoption 
+of fintech.
+According to Singh, Sahni and Kovid (2020), when using a 
+fintech, security is more important than when using 
+traditional financial institutions. This is because consumers’ 
+credentials are more vulnerable to cyber fraud when 
+transacting digitally rather than in physical branches. As a 
+result, Singh et al. (2020) contend that consumers are 
+discouraged from adopting fintechs due to a lack of trust in 
+digital transactions. This lack of trust may be due to a variety 
+of factors, including the reputation of fintechs, as most 
+consumers are unfamiliar with them, unlike traditional 
+financial institutions such as banks. To this end, the financial 
+service institution’s reputation is critical in determining 
+whether a consumer can use a fintech. Based on the above, 
+the following hypothesis was developed:
+H6: Perceived trust has a positive effect on the adoption of 
+fintech.
+Research methodology
+This research adopted the positivist philosophy and used an 
+inductive approach whereby the research began with the 
+collection of data that was relevant to the topic and making 
+sense of the data collected. Once a substantial amount of data 
+had been collected, the researcher started data analysis.
+To carry out this study, the researcher used a quantitative 
+research design with the use of a questionnaire survey. The 
+researcher went to the malls and other public places and 
+randomly selected individuals to participate in the study. 
+Questionnaires were sent electronically via emails and 
+WhatsApp to 400 banking individuals who agreed to 
+participate. This sample size was found to be adequate for 
+this research, as suggested by Saunders, Lewis and Thornhill 
+
+Page 6 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+(2019) for populations greater than 1 million. The survey was 
+conducted between December 2021 and May 2022.
+Categorical 
+data 
+was 
+used 
+to 
+gather 
+demographic 
+information, while quantifiable data was used to study the 
+factors influencing customers to adopt financial technologies 
+and answer the research questions. Data analysis was done 
+using SPSS 28 and Amos 27 software. Inferential statistics 
+were used to infer from the sample group generalisations. 
+These statistics assisted with describing the data and enabling 
+conclusions to be drawn about the populations from which 
+the samples were taken, as explained by Marshall and Jonker 
+(2010). The researcher used descriptive statistics to explain 
+the characteristics of the groups of observations. Descriptive 
+statistics allowed the researcher to describe what the data 
+shows. Therefore, they provided brief descriptive coefficients 
+that summarise the data set, representing the entire sample of 
+the population according to the assertion by Ambrosius 
+(2007).
+A questionnaire was designed specifically for this research 
+to  measure the usage (adoption) of fintechs. In designing 
+the 
+questionnaire, 
+validated 
+scales 
+adopted 
+from 
+other  technology adoption studies, including self-efficacy, 
+perceived cost, social influence, performance expectancy, 
+perceived usefulness, perceived ease of use, effort expectancy, 
+facilitating 
+conditions, 
+ubiquity, 
+hedonic 
+motivation, 
+perceived risk and perceived trust were used (Appendix 1). 
+The questionnaire was made up of 12 constructs, each with a 
+minimum of three questions, and it was designed specifically 
+for this study using validated scales. The respondents were 
+required to rank their answers on a five-point Likert scale 
+according to whether they strongly disagree, disagree, 
+neutral, agree or strongly agree with each statement.
+Before the researcher commenced data collection for this study, 
+he applied for ethical clearance from the scientific review 
+committee and ethics committee of the University of South 
+Africa (UNISA) (ethics clearance reference number: 2021_SBL_
+DBL_016_FA). Ethical consideration ensured that informed 
+consent was obtained before data collection commenced.
+The researcher took the following preventive measures to 
+keep his subjects’ identity confidential and ensuring that 
+they remained anonymous:
+•	 The data were kept in a password-protected computer 
+and accessed by the researcher only.
+•	 The questionnaire was completed anonymously, and it 
+excluded personal identifying information.
+Findings
+Although structural equation modelling (SEM) typically 
+requires a large sample size, research has shown that SEM 
+models can be meaningfully tested even with a small sample 
+size. Tinsley and Tinsley (1987) argue that a minimum sample 
+size between 100 and 150 is considered adequate for 
+conducting SEM. This is also supported by Wolf et al. (2013). 
+For this study, 120 out of 400 customers completed the 
+questionnaire. This gave a response rate of 31%.
+Descriptive statistics
+Out of 120 responses, 1 was incomplete, so 119 were used for 
+data analysis. Out of 119 respondents, 67 (56.3%) respondents 
+were male, 49 were female (41.2%), 2 (1.7%) preferred not to 
+provide their gender, and 1 (0.8%) did not choose any option; 
+91 (76.5%) respondents have used or use a financial 
+technology, 27 (22.7%) do not use fintech, and 1 (0.8%) did 
+not respond; 53.8% of respondents use more than one 
+financial technology, 48.7% use mobile payments which is 
+incidentally the most used financial technology worldwide 
+(De Luna et al. 2019), 23.8% use digital-only banks, 20.2% use 
+banking apps, 10.9% use cryptocurrency, 1.7% use landing 
+platforms and 0.84% use crowdlending.
+Reliability
+Reliability analysis was done to determine the internal 
+consistency of the factors. The Cronbach’s alpha of all the 
+constructs (self-efficacy: 0.819, perceived cost: 0.724, social 
+influence: 0.486, performance expectancy: 0.854, perceived 
+usefulness: 0.877, perceived ease of use: 0.815, effort 
+expectancy: 0.893, facilitating conditions: 0.738, ubiquity: 
+0.791, hedonic motivation: 0.900, perceived risk: 0.697 and 
+perceived trust: 0.764) ranged from 0.486 to 0.900. Cronbach’s 
+alpha of social influence (0.486) fell below the acceptable 
+range of 0.7 and was deleted, as argued by Hair et al. (2010). 
+Cronbach’s alpha of all other items fell within the acceptable 
+range of 0.70 to 0.95, as proposed by Tavakol and Dennick 
+(2011). These values were close to one (1). Therefore, the 
+instrument was highly reliable and had high internal 
+consistency. This is shown in Table 1.
+Exploratory factor analysis
+Exploratory factor analysis (EFA) and confirmatory factor 
+analysis (CFA) are the two methods for determining factor 
+unidimensionality. Exploratory factor analysis was used to 
+investigate the underlying theories behind the phenomena 
+studied. It summarised the findings into smaller chunks 
+by  allocating them into distinct factors (Hair et al. 2010). 
+Confirmatory factor analysis is used to evaluate the 
+explanatory power of a factor model, to decide which model 
+TABLE 1: Reliability and means of the variables.
+Items statistics
+Cronbach’s alpha 
+Means
+Self-efficacy
+0.819
+2.266
+Perceived cost
+0.724
+2.217
+Performance expectancy
+0.854
+2.195
+Perceived usefulness
+0.877
+2.289
+Perceived ease of use
+0.815
+2.266
+Effort expectancy
+0.893
+2.124
+Facilitating conditions
+0.738
+2.171
+Ubiquity
+0.791
+2.274
+Hedonic motivation
+0.900
+2.249
+Perceived risk
+0.697
+2.261
+Perceived trust
+0.764
+2.153
+
+Page 7 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+or models best represent the data and to measure 
+instruments that have never been tested before and hence 
+does not include previously examined literature (Bryant, 
+Yarnold & Michelson 1999).
+The value of Kaiser-Meyer-Olkin (KMO) was 0.692 (Table 2). 
+This indicated a good factor analysis and sampling adequacy. 
+Tabachnick and Fidel (2019) argue that the value of KMO 
+must be at least 0.60. Bartlett’s test of sphericity was found to 
+be statistically significant with p < 0.001, which is less than 
+0.005. Therefore, data and variables are correlated with each 
+other and are suitable for factor analysis.
+The communalities ranged from 0.457 to 0.868 and averaged 
+0.707 (Table 3). This was within the acceptable range. Costello 
+and Osborne (2005) argue that if an item has a communality 
+of less than 0.4, it may not be related to the other items and 
+should be deleted. Therefore, items with communalities less 
+than 0.4 were deleted.
+Following extraction, the researcher had to determine how 
+many factors to keep for rotation. Therefore, factors with 
+eigenvalues greater than 1.0 were retained for rotation, as 
+advocated by Costello and Osborne (2005). These factors 
+were:
+•	 I do not think I would have difficulties using a mobile 
+device to bank digitally.
+•	 I would adopt digital banking if it had a built-in guide for 
+assistance.
+•	 I would adopt digital banking if someone showed me 
+how to use it.
+•	 I would use digital banking to do my banking transactions.
+•	 I will have financial barriers (e.g. purchase of a compatible 
+phone, airtime and data expenses) in order to use digital 
+banking.
+•	 I would like to use digital banking if the banking fees are 
+reasonable.
+Table 4 gives the total variance explained. The table shows 
+that variables 1–6 have eigenvalues of more than one. The 
+total variance table indicates that the first variable with an 
+eigenvalue of 8.707 is responsible for 33.490% of the total 
+variance. The second variable (eigenvalue of 3.211) explains 
+12.352%, the third variable (2.345) explains 9.020%, the fourth 
+variable (1.431) explains 5.502%, the fifth variable (1.389) 
+explains 5.344% and the sixth variable (1.287) explains 4.950% 
+TABLE 2: Kaiser-Meyer-Olkin and Bartlett’s test.
+Test
+Value
+Kaiser-Meyer-Olkin measure of sampling adequacy
+0.692
+Bartlett’s test of sphericity
+Approx. chi-square
+1020.409
+Df
+325
+Sig. 
+< 0.001
+KMO, Kaiser-Meyer-Olkin.
+TABLE 3: Exploratory factor analysis communalities.
+Construct
+Statement
+Initial
+Extraction
+Self-efficacy
+Q1.  I do not think I would have difficulties using a mobile device to bank digitally.
+1
+0.725
+Q2.  I would adopt digital banking if it had a built-in guide for assistance.
+1
+0.703
+Q3.  I would adopt digital banking if someone showed me how to use it.
+1
+0.640
+Q4.  I would use digital banking to do my banking transactions.
+1
+0.749
+Perceived cost
+Q5.  I will have financial barriers (e.g. purchase of a compatible phone, airtime and data expenses) in order to use digital 
+banking.
+1
+0.655
+Q6.  I would like to use digital banking if the banking fees are reasonable.
+1
+0.672
+Q7.  I believe I would have to put a lot of effort to obtain the information that would make me feel comfortable in 
+adopting digital banking.
+1
+0.681
+Performance expectancy
+Q16. Using a digital bank can make my banking convenient.
+1
+0.834
+Q17. Using a digital bank can make my banking efficient.
+1
+0.868
+Q18. Digital banking is (would be) useful in my daily banking.
+1
+0.827
+Q19. Digital banking would help me do banking more quickly and save time so I can do other activities.
+1
+0.726
+Facilitating conditions
+Q33. I have the resources necessary to use digital banking.
+1
+0.709
+Q34. I have the knowledge necessary to use digital banking.
+1
+0.734
+Q35. My mobile devices are compatible with digital banking.
+1
+0.729
+Q36. I would like the digital banking platforms to suggest a customised path.
+1
+0.630
+Ubiquity
+Q40. Banking transactions done digitally would eliminate time constraints that I otherwise would have when I visit a 
+branch (i.e. I can bank anytime).
+1
+0.734
+Q41. Banking transactions done digitally would eliminate space constraints that I otherwise would have when I visit a 
+branch (i.e. I can bank anywhere).
+1
+0.750
+Perceived risk
+Q45. Using digital banking is a potential risk.
+1
+0.457
+Q46. I do not feel protected when providing personal information through a digital banking platform.
+1
+0.709
+Q47. There is a high chance that something wrong would occur when using digital banking.
+1
+0.613
+Q48. Conducting banking transactions on mobile devices is risky because one can easily lose or misplace the mobile 
+device.
+1
+0.586
+Q49. I fear that while I am making a transaction through digital banking, I might make mistakes since the correctness 
+of the inputted information is difficult to check from the mobile phone screen.
+1
+0.684
+Perceived trust
+Q52. I believe that I would get an immediate confirmation message when the transaction is completed.
+1
+0.803
+Q53. I expect digital banking to be reliable.
+1
+0.579
+Q55. I have serious doubts that the banking transactions performed digitally will work satisfactorily.
+1
+0.801
+Q56. The transactions done via digital banking are accurate.
+1
+0.774
+Extraction method: Principal component analysis.
+
+Page 8 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+of the total variance. Cumulatively, these variables explain 
+70.658% of the total variance.
+To meet the criteria for convergent validity, all items should 
+load at more than 0.5, and the average variance extracted 
+(AVE) of the constructs should exceed 0.5. In this study, all 
+items’ loading was above 0.5, and AVE exceeded 0.5, hence 
+confirming convergent validity.
+The discriminant validity was assessed using Fornel and 
+Larcker criterion, which compares the square root of each 
+AVE in the diagonal with the correlation (off-diagonal) of 
+each construct (Table 5). This table also shows that the 
+composite reliabilities (CR) for all constructs are above 0.70 
+and the AVE values are between 0.5 (component 6 = 0.472 
+rounded-off to 0.5) and 0.7. These results support the 
+discriminant validity.
+Structural equation modelling
+The SEM method was used to test hypotheses and investigate 
+relationships 
+between 
+variables. 
+Structural 
+equation 
+modelling enabled the researcher to test and draw 
+relationships on the paths of the model. Amos 27 was used to 
+perform a path analysis and test model hypotheses. A key 
+step in structural equation modelling is determining the 
+goodness of fit of the proposed model to the data (Shi, Lee & 
+Mayday-Olivares 2019). The most used model fit measures 
+for SEM (χ2/df) = 1.54 (the ratio of chi-square to degrees of 
+freedom), p = 0.00, CFI = 0.885 (0.900) (comparative fit index), 
+TLI = 0.900 (Tucker–Lewis Index) and RMSEA = 0.068 (root 
+mean square error of approximation) were used to test the 
+goodness of fit of the model. A CFI ranging from 0.611 to 
+0.972 (Shi et al. 2019), and an RMSEA less or equal to 0.06, is 
+considered acceptable (Hu & Bentler 1999).
+Figure 1 is the digital-only bank adoption model for South 
+Africa. This model indicates the following:
+•	 When perceived risk goes up by 1 standard deviation, 
+adoption goes down by 0.150 standard deviations.
+•	 When perceived cost goes up by 1 standard deviation, 
+adoption goes down by 1.000 standard deviations.
+•	 When self-efficacy goes up by 1 standard deviation, 
+adoption goes up by 0.550 standard deviations.
+•	 When ubiquity increases by 1 standard deviation, 
+adoption goes up by 0.080 standard deviations.
+•	 When the facilitating conditions go up by 1 standard 
+deviation, adoption goes up by 1.190 standard deviations.
+•	 When perceived trust increases by 1 standard deviation, 
+adoption goes up by 0.290 standard deviations.
+Table 6 shows the path loadings for the SEM model fit. The 
+table shows that there is a positive relationship between 
+adoption and facilitating conditions, perceived trust, ubiquity 
+and self-efficacy. When these variables increase, adoption also 
+increases. It also shows that there is a negative relationship 
+between adoption and the perceived cost and perceived risk. 
+When these variables decrease, adoption increases.
+Discussion of findings
+Previous research on fintechs in South Africa has yet to 
+investigate the factors influencing consumers to use digital-
+TABLE 4: Total variance explained.
+Component
+Initial eigenvalues
+Extraction sums of 
+squared loadings
+Rotation 
+sums of 
+squared 
+loadings/
+Total
+Total
+% of 
+Variance
+Cumulative 
+%
+Total
+% of 
+Variance
+Cumulative 
+%
+1
+8.707
+33.49
+33.49
+8.707
+33.490
+33.490
+6.368
+2
+3.211
+12.352
+45.842
+3.211
+12.352
+45.842
+2.984
+3
+2.345
+9.02
+54.862
+2.345
+9.020
+54.862
+5.549
+4
+1.431
+5.502
+60.364
+1.431
+5.502
+60.364
+1.623
+5
+1.389
+5.344
+65.708
+1.389
+5.344
+65.708
+3.32
+6
+1.287
+4.95
+70.658
+1.287
+4.950
+70.658
+4.576
+7
+0.958
+3.684
+74.341
+-
+-
+-
+-
+8
+0.815
+3.133
+77.475
+-
+-
+-
+-
+9
+0.765
+2.941
+80.416
+-
+-
+-
+-
+10
+0.692
+2.662
+83.077
+-
+-
+-
+-
+11
+0.59
+2.27
+85.347
+-
+-
+-
+-
+12
+0.562
+2.162
+87.509
+-
+-
+-
+-
+13
+0.471
+1.811
+89.32
+-
+-
+-
+-
+14
+0.459
+1.766
+91.087
+-
+-
+-
+-
+15
+0.393
+1.51
+92.597
+-
+-
+-
+-
+16
+0.337
+1.296
+93.893
+-
+-
+-
+-
+17
+0.318
+1.224
+95.117
+-
+-
+-
+-
+18
+0.266
+1.025
+96.142
+-
+-
+-
+-
+19
+0.253
+0.972
+97.114
+-
+-
+-
+-
+20
+0.225
+0.866
+97.98
+-
+-
+-
+-
+21
+0.136
+0.522
+98.502
+-
+-
+-
+-
+22
+0.124
+0.479
+98.981
+-
+-
+-
+-
+23
+0.105
+0.402
+99.383
+-
+-
+-
+-
+24
+0.075
+0.288
+99.671
+-
+-
+-
+-
+25
+0.052
+0.201
+99.872
+-
+-
+-
+-
+26
+0.033
+0.128
+100
+-
+-
+-
+-
+Extraction method: Principal component analysis.
+Note: A When components are correlated, sums of squared loadings cannot be added to 
+obtain a total variance.
+TABLE 5: Composite reliability, the square root of the average variance extracted (in bold) and correlations between constructs (off-diagonal).
+Latent constructs
+CR
+AVE
+Latent constructs
+Component 1
+Component 2
+Component 3
+Component 4
+Component 5
+Component 6
+Component 1
+0.910
+0.718
+0.847
+-
+-
+-
+-
+-
+Component 2
+0.694
+0.531
+0.285
+0.729
+-
+-
+-
+-
+Component 3
+0.802
+0.575
+0.023
+–0.055
+0.758
+-
+-
+-
+Component 4
+0.694
+0.531
+0.376
+0.351
+0.301
+0.729
+-
+-
+Component 5
+0.762
+0.518
+0.231
+0.206
+0.169
+0.156
+0.720
+-
+Component 6
+0.641
+0.472
+0.269
+0.340
+0.081
+0.323
+0.315
+0.687
+CR, Composite reliability; AVE, average variance extracted.
+
+Page 9 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+only banks (fintechs). This research used a model that 
+combined UTAUT and TAM to close this gap. The use of 
+digital-only banks was used to explain digital-only bank 
+adoption. According to the findings, fintech adoption in 
+South Africa could be higher due to several challenges 
+associated with adoption.
+This study shows that perceived risk has a negative effect on 
+the adoption of fintechs (H1). Because of their fear of 
+cybercrime and online fraud, most South Africans are hesitant 
+to use fintechs. The risks associated with using fintechs 
+include exposing your banking security information (banking 
+details such as PINs) to cybercrimes. This is consistent with 
+the findings of Al-Saedi et al. (2020). Similarly, the findings 
+reveal that perceived cost has a negative effect on the 
+adoption of fintechs (H2), consistent with previous studies 
+(Al-Saedi et al. 2020). This implies that the costs associated 
+with using fintechs play a significant role in the use of 
+fintechs. These costs include the cost of purchasing a 
+compatible device (e.g. a mobile phone) and the cost of 
+airtime and data. This implies that lower prices may result in 
+more usage of fintechs. This makes sense in a country such as 
+South Africa, where the unemployment rate is enormous.
+The study results also show that self-efficacy has a positive 
+effect on the adoption of fintechs (H3). This agrees with the 
+findings by Rahi, Abd. Ghani and Ngah (2019) and Al-Saedi 
+et al. (2020). Consumer self-efficacy can be improved by helping 
+the consumers through the adoption journey, especially in the 
+introduction phase, with more awareness, education, and 
+assistance, similar to what Tymebank did when they launched 
+in South Africa. This digital-only bank had consultants at their 
+kiosk at Pick ‘n Pay and Boxers supermarkets to assist the 
+consumers with things such as opening a bank account. 
+Similarly, the study reveals that ubiquity has a positive effect on 
+the adoption of fintechs (H4). This is consistent with the 
+findings from previous studies by Nikou and Economides 
+(2017), Cao and Niu (2019) and Sarkar et al. (2020), which 
+demonstrated that ubiquity affects the adoption of fintech 
+positively. Convenience is critical for adopting fintechs in a 
+country like South Africa, which has a dual economy and 
+infrastructure. Consumers in affluent areas appreciate the 
+convenience that comes with the ubiquity of fintechs. This 
+allows them to conduct banking transactions without leaving 
+their homes or offices. Similarly, the prevalence of fintechs has 
+provided much-needed convenience for people living in 
+remote areas, such as rural areas with few or no physical 
+branches. Fintechs have enabled these people to transact 
+without leaving their homes, which was previously a mission 
+because they had to take multiple taxis to get to a bank branch.
+The results indicate that facilitating conditions have a positive 
+effect on the adoption of fintechs (H5). This is consistent with 
+the findings that facilitating conditions are key factors that 
+influence consumers to adopt technologies (Halili & Sulaiman 
+2019; Venkatesh et al. 2003). In a developing country like 
+South Africa, characterised by glaring disparities in which 
+there is a well-developed traditionally suburban areas, with 
+modern and sophisticated infrastructure and less developed 
+townships and rural areas, the availability of the infrastructure 
+that enables the use of fintechs is essential for the adoption. 
+Poor Internet connectivity and a lack of compatible devices 
+are some of the several hindrances that prevent consumers 
+from using fintechs.
+Furthermore, the findings show that perceived trust has 
+a  positive effect on the adoption of fintech (H6). 
+This corroborates the findings of Al-Saedi et al. (2020) that 
+perceived trust positively influences the adoption of fintechs. 
+Singh et al. (2020) argue that when using a fintech, security is 
+more critical than traditional financial institutions because 
+the consumers are not familiar with them. This suggests that 
+consumers want to be convinced that fintechs are secure 
+enough or that digital platforms could allow them to conduct 
+transactions without hassles like the traditional financial 
+institutions that have built consumer trust in years of their 
+existence before they can comfortably adopt them.
+Limitations and suggestions for 
+future research
+While every precaution was taken in conducting the study, 
+there were some limitations. These include sample size, data 
+collection bias, and the use of random sampling. Despite the 
+large and diverse sample, the majority of those who 
+completed the questionnaire live in cities. As a result, the 
+results may have an urban bias. Furthermore, the information 
+gathered may only reveal the position of the financial 
+institutions 
+represented 
+by 
+the 
+survey 
+respondents. 
+TABLE 6: Hypotheses test for the structural equation modelling model.
+Hypotheses
+Relationship
+Path coefficient
+Remark
+H1
+Perceived risk has a negative 
+effect on the adoption of fintech
+-0.150
+Accept
+H2
+Perceived cost has a negative 
+effect on the adoption of fintech
+-1.000
+Accept
+H3
+Self-efficacy has a positive effect 
+on the adoption of fintech
+0.550
+Accept
+H4
+Ubiquity has a positive effect on 
+the adoption of fintech
+0.080
+Accept
+H5
+Facilitating conditions have a 
+positive effect on the adoption of 
+fintech
+1.190
+Accept
+H6
+Perceived trust has a positive 
+effect on the adoption of fintech
+0.290
+Accept
+Note: Adoption was measured according to the usage of the digital-only bank by consumers.
+FIGURE 1: The digital-only bank adoption model for South Africa. 
+Facilitang condions
+–1.00
+–0.15
+0.08
+0.29
+0.55
+1.19
+Perceived trust
+Perceived risk
+Perceived cost
+Adopon
+Ubiquity
+Self-eﬃcacy
+
+Page 10 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+Furthermore, the use of random sampling may have resulted 
+in the omission of critical perspectives from those who were 
+not chosen. Finally, the small sample size may affect the 
+generalisation of the results. However, despite the small 
+sample size, some researchers argue that larger sample sizes 
+have less variability and are more expensive (Adwok 2015). 
+Greener (2008) warns that, while a large sample size is 
+preferable, the sample must reflect the characteristics of the 
+population.
+Despite these limitations, this study can serve as a foundation 
+for future research into fintech adoption in other emerging 
+economies worldwide. Due to the study’s urban bias, future 
+research could be conducted with a focus on rural areas to 
+see how adoption compares to urban areas. This could be 
+significant because the availability of facilitating conditions 
+is the biggest challenge in rural areas, as most still lack basic 
+resources such as electricity and stable telecommunication 
+networks, which may be linked to low adoption.
+Conclusion
+The results illustrate that when perceived cost and perceived 
+risk rise, the adoption of fintechs decreases. Therefore, to 
+increase adoption, financial institutions should try to keep 
+the costs of using fintechs low and ensure that fintech 
+transactions are safe and secure. In contrast, when factors 
+such as perceived trust, facilitating conditions, ubiquity and 
+self-efficacy increase, so does the adoption of fintechs. This 
+implies that financial institutions must improve consumer 
+perceptions about their brands so that consumers can trust 
+them. Once consumer trust has improved, adoption will also 
+improve.
+Furthermore, financial services organisations should strive to 
+provide consumers with enabling infrastructure, such as 
+data, to increase adoption. It is also critical that financial 
+services organisations increase their efforts to educate 
+consumers about using fintechs. This will increase consumers’ 
+confidence in their ability to use fintechs and encourage them 
+to adopt fintechs. Financial institutions should also raise 
+awareness about the convenience and other benefits that 
+fintechs provide, such as the ability for consumers to transact 
+anywhere and at any time. Once these have been achieved, 
+the adoption will increase.
+This study has added to the body of knowledge on fintech 
+adoption by identifying factors influencing consumers to 
+adopt fintechs in emerging economies such as South Africa. 
+These factors are critical in hastening fintech adoption. The 
+findings of the study will also assist financial institutions in 
+developing behaviour change strategies to increase fintech 
+adoption. These strategies can include financial institutions 
+zero-rating their apps, and providing customers with basic 
+airtime or data so they can transact digitally. Financial 
+institutions must ensure that consumers are safe from 
+internet  fraud and cybercrimes by providing adequate 
+cybersecurity and other fraud prevention measures. Financial 
+institutions  should not completely eliminate human-to-
+human interactions. This can be accomplished by establishing 
+call centres or by utilising technologies such as WhatsApp or 
+other messaging platforms to communicate with customers.
+Lastly, this research has also aided by creating a digital-only 
+bank adoption model for South Africa.
+Acknowledgements
+The author acknowledges his research supervisor Prof. Vusi 
+Gumede for his guidance throughout the research process 
+and the author’s family for supporting him during the time 
+of compiling and putting this research article together.
+Competing interests
+The author(s) declare that they have no financial or personal 
+relationship(s) that may have inappropriately influenced 
+them in writing this article.
+Author’s contributions
+I declare that I am the sole author of this research article.
+Ethical considerations
+Ethical clearance to conduct this study was obtained from 
+the University of South Africa’s School of Business 
+Leadership Research Ethics Review Committee (no. 2021_
+SBL_DBL_016_FA). 
+Funding information
+This research received no specific grant from any funding 
+agency in the public, commercial or not-for-profit sectors.
+Data availability
+The data that support the findings of this study are available 
+on request from the corresponding author, S.C. The data are 
+not publicly available due to their containing information 
+that could compromise the privacy of research participants 
+and their institutions.
+Disclaimer
+The views and opinions expressed in this article are those of 
+the author and do not necessarily reflect the official policy or 
+position of any affiliated agency of the author.
+References
+Adwok, J., 2015, ‘Probability sampling – A guideline for quantitative health care 
+research’, Annals of African Surgery 12(2), 95–99.
+Alalwan, A.A., Dwivedi, Y.K., Rana, N.P. & Algharabat, R., 2018, ‘Examining factors 
+influencing Jordanian customers’ intentions and adoption of internet banking: 
+Extending UTAUT2 with risk’, Journal of Retailing and Consumer Services 49(1), 
+124–138. https://doi.org/10.1016/j.jretconser.2017.08.026
+Ali, M., Raza, S.A., Khamis, B., Puah, C.H. & Amin, H., 2021, ‘How perceived risk, 
+benefit and trust determine user fintech adoption: A new dimension for Islamic 
+finance’, Foresight 23(4), 403–420. https://doi.org/10.1108/FS-09-2020-0095
+Al-Saedi, K., Al-Emran, M., Ramayah, T. & Abusham, E., 2020, ‘Developing a general 
+extended UTAUT model for M-payment adoption’, Technology in Society 62(1), 
+101293. https://doi.org/10.1016/j.techsoc.2020.101293
+
+Page 11 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+Ambrosius, W.T., 2007, Topics in biostatistics, Humana Press, NJ. 
+Asnakew, Z.S., 2020, ‘Customers’ continuance intention to use mobile banking: 
+Development and testing of an integrated model’, The Review of Socionetwork 
+Strategies 14(1), 123–146. https://doi.org/10.1007/s12626-020-00060-7
+Basri, S., 2018, ‘Determinants of adoption of mobile banking: Evidence from rural 
+Karnataka in India’, International Journal of Trade and Global Markets 11(1–2), 
+77–86. https://doi.org/10.1504/IJTGM.2018.092490
+Brown, I., Cajee, Z., Davies, D. & Stroebel, S., 2003, ‘Cell phone banking: Predictors of 
+adoption in South Africa – An exploratory study’, International Journal 
+of  Information Management 23(5), 381–394. https://doi.org/10.1016/S0268-
+4012(03)00065-3
+Brown, I., Stander, A., Hoppe, R., Mugera, P. & Newman, P., 2004, ‘The impact of 
+national environment on the adoption of internet banking: Comparing Singapore 
+and South Africa’, Journal of Global Information Management 12(2), 1–27. 
+https://doi.org/10.4018/9781591404682.ch014
+Bryant, F.B., Yarnold, P.R. & Michelson, E.A., 1999, ‘Statistical methodology’, Academic 
+Emergency Medicine 6(1), 54–66. https://doi.org/10.1111/j.1553-2712.1999.
+tb00096.x
+Camarate, J. & Brinckmann, S., 2019, The future of banking: A South African perspective, 
+pp.  1–19, PwC South Africa: A Marketplace without Boundaries, viewed 
+22  October 2023, from https://www.pwc.co.za/en/assets/pdf/strategyand-
+future-of-banking.pdf. 
+Cao, Q. & Niu, X., 2019, ‘Integrating context-awareness and UTAUT to explain Alipay 
+user adoption’, International Journal of Industrial Ergonomics 69, 9–13. https://
+doi.org/10.1016/j.ergon.2018.09.004
+CFA Institute Asia-Pacific Research Exchange, 2017, ‘Disruptive Innovation in Financial 
+Services’, in C. Society (ed.), Inaugural New Zealand Future of Finance Conference, 
+Auckland, New Zealand, May 18, 2017, pp. 1–18, viewed n.d., from http://www.
+weforum.org/global-challenges/projects/disruptive-innovation-in-financial-
+services/
+Chan, K.H., Ng, T.H. & Ng, H.Y., 2020, ‘Are Malaysians ready for the cashless society? 
+Evidence from Malaysia’s undergraduates’, Global Business and Management 
+Research: An International Journal 12(1), 78–89.
+Chao, C.M., 2019, ‘Factors determining the behavioral intention to use mobile 
+learning: An application and extension of the UTAUT model’, Frontiers in 
+Psychology 10, 1652. https://doi.org/10.3389/fpsyg.2019.01652
+Coetzee, J., 2018, ‘Strategic implications of fintech on South African retail banks’, 
+South African Journal of Economic Management Sciences 21(1), a2455.
+Costello, A.B. & Osborne, J.W., 2005, ‘Best practices in exploratory factor analysis: 
+Four recommendations for getting the most from your analysis’, Practical 
+Assessment, Research and Evaluation 10(7), 1–9. https://doi.org/10.4102/sajems.
+v21i1.2455
+Davis, F.D., 1989, ‘Perceived usefulness, perceived ease of use, and user acceptance 
+of  information technology’, MIS Quarterly: Management Information Systems 
+13(3), 319–339. https://doi.org/10.2307/249008
+De Luna, I.R., Liébana-Cabanillas, F., Sánchez-Fernández, J. & Muñoz-Leiva, F., 2019, 
+‘Mobile payment is not all the same: The adoption of mobile payment systems 
+depending on the technology applied’, Technological Forecasting and Social 
+Change 146, 931–944. https://doi.org/10.1016/j.techfore.2018.09.018
+Dečman, M., 2015, ‘Modeling the acceptance of e-learning in mandatory 
+environments of higher education: The influence of previous education and 
+gender’, Computers in Human Behavior 49, 272–281. https://doi.org/10.1016/j.
+chb.2015.03.022
+Greener, S., 2008, Business research methods, Dr Sue Greener & Ventus Publishing ApS.
+Gunawan, H., Sinaga, B.L. & Sigit Purnomo, W.P., 2019, ‘Assessment of the readiness 
+of micro, small and medium enterprises in using E-money using the unified theory 
+of acceptance and use of technology (UTAUT) method’, Procedia Computer 
+Science 161(6), 316–323. https://doi.org/10.1016/j.procs.2019.11.129
+Hair, J., Black, W.C., Babin, B.J. & Anderson, R.E., 2010, Multivariate data analysis, 
+7th edn., Pearson Prentice Hall.
+Halili, S.H. & Sulaiman, H., 2019, ‘Factors influencing the rural students’ acceptance 
+of  using ICT for educational purposes’, Kasetsart Journal of Social Sciences 
+40(3), 574–579. https://doi.org/10.1016/j.kjss.2017.12.022
+Handarkho, Y.D. & Harjoseputro, Y., 2019, ‘Intention to adopt mobile payment in 
+physical stores: Individual switching behavior perspective based on Push–Pull–
+Mooring (PPM) theory’, Journal of Enterprise Information Management 33(2), 
+285–308. https://doi.org/10.1108/JEIM-06-2019-0179
+Huei, C.T., Cheng, L.S., Seong, L.C., Khin, A.A. & Leh Bin, R.L., 2018, ‘Preliminary study 
+on consumer attitude towards fintech products and services in Malaysia’, 
+International Journal of Engineering and Technology (UAE) 7(2), 166–169. https://
+doi.org/10.14419/ijet.v7i2.29.13310
+Hu, L.T. & Bentler, P.M., 1999,  ‘Cutoff criteria for fit indexes in covariance structure 
+analysis: Conventional criteria versus new alternatives’, Structural Equation 
+Modeling 6(1), 1–55. https://doi.org/10.1080/10705519909540118.
+Humbani, M. & Wiese, M., 2019, ‘An integrated framework for the adoption and 
+continuance intention to use mobile payment apps’, International Journal of 
+Bank Marketing 37(2), 646–664. https://doi.org/10.1108/IJBM-03-2018-0072
+Hwang, J. & Christensen, C.M., 2008, ‘Disruptive innovation in health care delivery: 
+A  framework for business-model innovation’, Health Affairs 27(5), 1329–1335. 
+https://doi.org/10.1377/hlthaff.27.5.1329
+Jang, A.S., 2009, ‘Exploring Adoption Difficuities in mobile Banking Services’, 
+Canadian Journal Of Administrative Sciences Revue Canadienne Des Sciences 
+De L’Administration 13, 136–149.
+Khedmatgozar, H.R. & Shahnazi, A., 2018, ‘The role of dimensions of perceived risk in 
+adoption of corporate internet banking by customers in Iran’, Electronic Commerce 
+Research 18(2), 389–412. https://doi.org/10.1007/s10660-017-9253-z
+Kim, Y., Park, Y.-J., Choi, J. & Yeon, J., 2015, ‘An empirical study on the adoption of 
+“fintech” service: Focused on mobile payment services’, Advanced Science and 
+Technology Letters 114, 136–140. https://doi.org/10.14257/astl.2015.114.26
+Koufaris, M. & Hampton-Sosa, W., 2004, ‘The development of initial trust in an online 
+company by new customers’, Information and Management 41(3), 377–397. 
+https://doi.org/10.1016/j.im.2003.08.004
+Laforet, S. & Li, X., 2005, ‘Consumers’ attitudes towards online and mobile banking in 
+China’, International Journal of Bank Marketing 23(5), 362–380. https://doi.
+org/10.1108/02652320510629250
+Liébana-Cabanillas, F., Japutra, A., Molinillo, S., Singh, N. & Sinha, N., 2020, 
+‘Assessment of mobile technology use in the emerging market: Analyzing 
+intention to use m-payment services in India’, Telecommunications Policy 44(9), 
+102009. https://doi.org/10.1016/j.telpol.2020.102009
+Lou, A.T.F. & Li, E.Y., 2017, ‘Integrating innovation diffusion theory and the technology 
+acceptance model: The adoption of blockchain technology from business 
+managers’ perspective’, Proceedings of the International Conference on Electronic 
+Business (ICEB), Dubai, UAE 44, 2017, pp. 299–302.
+Luarn, P. & Lin, H.H., 2004, ‘Toward an understanding of the behavioral intention to 
+use mobile banking’, Computers in Human Behavior 21(6), 873–891. https://doi.
+org/10.1016/j.chb.2004.03.003
+Marshall, G. & Jonker, L., 2010, ‘An introduction to descriptive statistics: A review and 
+practical guide’, Radiography 16(4), e1–e7. https://doi.org/10.1016/j.radi.2010.01.001
+Mazambani, L. & Mutambara, E., 2019, ‘Predicting fintech innovation adoption in 
+South Africa: The case of cryptocurrency’, African Journal of Economic and 
+Management Studies 11(1), 30–50. https://doi.org/10.1108/AJEMS-04-2019-0152
+Nikou, S.A. & Economides, A.A., 2017, ‘Mobile-based assessment: Investigating the 
+factors that influence behavioral intention to use’, Computers and Education 109, 
+56–73. https://doi.org/10.1016/j.compedu.2017.02.005
+Rahi, S., Abd. Ghani, M. & Ngah, A.H., 2019, ‘Integration of unified theory of 
+acceptance and use of technology in internet banking adoption setting: Evidence 
+from Pakistan’, Technology in Society 58, 101120. https://doi.org/10.1016/j.
+techsoc.2019.03.003
+Sarkar, S., Chauhan, S. & Khare, A., 2020, ‘A meta-analysis of antecedents and 
+consequences of trust in mobile commerce’, International Journal of Information 
+Management 50, 286–301. https://doi.org/10.1016/j.ijinfomgt.2019.08.008
+Saunders, M., Lewis, P. & Thornhill, A., 2019, Research methods for business students, 
+8th edn., Pearson Education.
+Savić, J. & Pešterac, A., 2019, ‘Antecedents of mobile banking: UTAUT model’, The 
+European Journal of Applied Economics 16(1), 20–29. https://doi.org/10.5937/
+ejae15-19381
+Sharma, R., Singh, G. & Sharma, S., 2020, ‘Modelling internet banking adoption in Fiji: 
+A developing country perspective’, International Journal of Information 
+Management 53, 102116. https://doi.org/10.1016/j.ijinfomgt.2020.102116
+Sharma, S.K., 2019, ‘Integrating cognitive antecedents into TAM to explain mobile 
+banking behavioral intention: A SEM-neural network modeling’, Information 
+Systems Frontiers 21(4), 815–827. https://doi.org/10.1007/s10796-017-9775-x
+Shi, D., Lee, T. & Maydeu-Olivares, A., 2019, ‘Understanding the model size effect on 
+SEM fit indices’, Educational and Psychological Measurement 79(2), 310–334. 
+https://doi.org/10.1177/0013164418783530
+Shin, D.H., 2009, ‘Towards an understanding of the consumer acceptance of mobile 
+wallet’, Computers in Human Behavior 25(6), 1343–1354. https://doi.
+org/10.1016/j.chb.2009.06.001
+Singh, A.M., 2004, ‘Trends in South African internet banking’, Aslib Proceedings 56(3), 
+187–196. https://doi.org/10.1108/00012530410539368
+Singh, S., Sahni, M.M. & Kovid, R.K., 2020, ‘What drives fintech adoption? A multi-
+method evaluation using an adapted technology acceptance model’, Management 
+Decision 58(8), 1675–1697. https://doi.org/10.1108/MD-09-2019-1318
+Tabachnick, B.G. & Fidel, L.S., 2019, Using multivariate statistics, 7th edn., Pearson.
+Tang, K.L., Ooi, C.K. & Chong, J.B., 2020, ‘Perceived risk factors affect intention to use 
+fintech’, Journal of Accounting and Finance in Emerging Economies 6(2), 453–463. 
+https://doi.org/10.26710/jafee.v6i2.1101
+Tavakol, M. & Dennick, R., 2011, ‘Making sense of Cronbach’s alpha’, International 
+Journal of Medical Education 2, 53–55. https://doi.org/10.5116/ijme.4dfb.8dfd
+Tinsley, H.E.A. & Tinsley, D.J., 1987, ‘Uses of factor analysis in counseling psychology 
+research’, Journal of Counseling Psychology 34(4), 414–424. https://doi.
+org/10.1037/0022-0167.34.4.414
+Venkatesh, V. & Davis, F.D., 2000, ‘Theoretical extension of the technology acceptance 
+model: Four longitudinal field studies’, Management Science 46(2), 186–204. 
+https://doi.org/10.1287/mnsc.46.2.186.11926
+Venkatesh, V., Morris, M.G., Davis, G.B. & Davis, F.D., 2003, ‘User acceptance of 
+information technology: Toward a unified view’, MIS Quarterly 27(3), 425–478. 
+https://doi.org/10.1201/9780849375477.ch230
+Venkatesh, V., Thong, J.Y.L. & Xin, X., 2012, ‘Consumer acceptance and use of 
+information technology: Extending the unified theory of technology acceptance 
+and use of technology’, MIS Quarterly 36(1), 157–178. https://doi.org/10.1042/
+bst0120672
+Venkatesh, V., Thong, J.Y.L. & Xu, X., 2013, ‘Unified theory of acceptance and use of 
+technology: A synthesis and the road ahead’, Journal of the Association for 
+Information Systems 17(5), 328–376. https://doi.org/10.17705/1jais.00428
+
+Page 12 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+Williams, M.D., Rana, N.P. & Dwivedi, Y.K., 2015, ‘The unified theory of acceptance 
+and use of technology (UTAUT): A literature review’, Journal of Enterprise 
+Information Management 28(3), 443–488. https://doi.org/10.1108/JEIM-09-
+2014-0088
+Wolf, E.J., Harrington, K.M., Clark, S.L. & Miller, M.W., 2013, ‘Sample size requirements 
+for structural equation models: An evaluation of power, bias, and solution 
+propriety’, Educational and Psychological Measurement 73(6), 913–934. https://
+doi.org/10.1177/0013164413495237
+Yanagawa, E., 2018, ‘Digital transformation in Japan’s banking industry’, Journal of 
+Payments Strategy & Systems 12(4), 351–364.
+Yu, C.S., 2012, ‘Factors affecting individuals to adopt mobile banking: Empirical evidence 
+from the utaut model’, Journal of Electronic Commerce Research 13(2), 105–121.
+Zhou, T., Lu, Y. & Wang, B., 2010, ‘Integrating TTF and UTAUT to explain mobile 
+banking user adoption’, Computers in Human Behavior 26(4), 760–767. https://
+doi.org/10.1016/j.chb.2010.01.013
+Appendix starts on the next page→
+
+Page 13 of 13
+Original Research
+http://www.sajim.co.za
+Open Access
+Appendix 1
+TABLE 1-A1: Questionnaire constructs.
+Constructs
+Meaning
+Source
+Self-efficacy
+An individual’s personal assessment and 
+belief that he or she possesses the ability 
+and skills to succeed when using a 
+technology.
+Chao (2019), 
+Shin (2009)
+Perceived cost 
+or perceived 
+value
+The level to which an individual thinks 
+there will be a cost incurred for using a 
+technology.
+Huei et al. 
+(2018)
+Social influence
+The degree of the influence of others 
+within the social environment (e.g. 
+family, colleagues and friends) and their 
+beliefs on the use of a technology.
+Dečman (2015)
+Performance 
+expectancy
+The functions and benefits that can be 
+attained from the use of a technology in 
+terms of convenience, customisation, 
+accessibility, efficiency, time and effort 
+saving.
+Venkatesh et al. 
+(2003)
+Perceived 
+usefulness
+The degree to which an individual 
+believes that using a technology would 
+enhance his or her performance.
+Davis (1989)
+Perceived ease 
+of use
+The degree to which a person believes 
+that using a technology would be free of 
+effort.
+Davis (1989)
+Effort 
+expectancy
+The degree of ease associated with the 
+use of a technology.
+Venkatesh et al. 
+(2003)
+Facilitating 
+conditions
+The degree to which an individual 
+believes that (technical) infrastructure 
+exists to enable him or her to use a 
+technology.
+Venkatesh et al. 
+(2004)
+Ubiquity
+This means that an individual can use a 
+technology at any time and any place. 
+Cao and Niu 
+(2019)
+Hedonic 
+motivation
+The level of fun or pleasure an individual 
+derives from using a technology.
+Venkatesh et al. 
+(2012)
+Perceived risk
+The individual’s thought and belief in the 
+likelihood of having an adverse outcome 
+and consequence in using a technology.
+Khedmatgozar 
+and Shahnazi 
+(2018)
+Perceived trust
+The extent to which an individual 
+believes that a technology is reliable and 
+safe to adopt. 
+Al-Saedi et al. 
+(2020)

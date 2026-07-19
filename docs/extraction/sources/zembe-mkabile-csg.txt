@@ -1,0 +1,1607 @@
+The dynamic relationship between cash transfers and child health: can the child support grant in South Africa make a difference to child nutrition? - PMC
+ 
+
+ Skip to main content
+ 
+
+Official websites use .gov
+
+ A
+ 
+.gov
+ website belongs to an official
+ government organization in the United States.
+ 
+
+Secure .gov websites use HTTPS
+
+ A 
+lock
+ (
+ 
+
+Lock
+
+ Locked padlock icon
+ 
+
+) or 
+https://
+ means you've safely
+ connected to the .gov website. Share sensitive
+ information only on official, secure websites.
+ 
+
+Search PMC Full-Text Archive
+
+Search in PMC
+
+ Journal List
+ 
+
+ User Guide
+ 
+
+PERMALINK
+
+Copy
+
+ As a library, NLM provides access to scientific literature. Inclusion in an NLM database does not imply endorsement of, or agreement with,
+ the contents by NLM or the National Institutes of Health.
+
+ Learn more:
+ 
+PMC Disclaimer
+
+ |
+ 
+
+ PMC Copyright Notice
+ 
+
+Public Health Nutr
+. 2015 Jun 8;19(2):356–362. doi: 
+10.1017/S1368980015001147
+
+The dynamic relationship between cash transfers and child health: can the child support grant in South Africa make a difference to child nutrition?
+
+Wanga Zembe-Mkabile
+
+Wanga Zembe-Mkabile
+
+1
+
+Health Systems Research Unit, South African Medical Research Council, Francie van Zyl Drive, Parow Valley, Cape Town 7500, South Africa
+
+Find articles by 
+Wanga Zembe-Mkabile
+
+1,
+*
+, 
+Vundli Ramokolo
+
+Vundli Ramokolo
+
+1
+
+Health Systems Research Unit, South African Medical Research Council, Francie van Zyl Drive, Parow Valley, Cape Town 7500, South Africa
+
+Find articles by 
+Vundli Ramokolo
+
+1
+, 
+David Sanders
+
+David Sanders
+
+2
+
+School of Public Health, University of the Western Cape, Cape Town, South Africa
+
+Find articles by 
+David Sanders
+
+2
+, 
+Debra Jackson
+
+Debra Jackson
+
+2
+
+School of Public Health, University of the Western Cape, Cape Town, South Africa
+
+3
+
+Knowledge Management & Implementation Research Unit, UNICEF, New York
+
+Find articles by 
+Debra Jackson
+
+2,
+3
+, 
+Tanya Doherty
+
+Tanya Doherty
+
+1
+
+Health Systems Research Unit, South African Medical Research Council, Francie van Zyl Drive, Parow Valley, Cape Town 7500, South Africa
+
+2
+
+School of Public Health, University of the Western Cape, Cape Town, South Africa
+
+Find articles by 
+Tanya Doherty
+
+1,
+2
+
+Author information
+
+Article notes
+
+Copyright and License information
+
+1
+
+Health Systems Research Unit, South African Medical Research Council, Francie van Zyl Drive, Parow Valley, Cape Town 7500, South Africa
+
+2
+
+School of Public Health, University of the Western Cape, Cape Town, South Africa
+
+3
+
+Knowledge Management & Implementation Research Unit, UNICEF, New York
+
+*
+
+Corresponding author:
+ Email: 
+wanga.zembe@mrc.ac.za
+; 
+wanga.zembe@gtc.ox.ac.uk
+
+Received 2014 Feb 20; Revised 2015 Feb 23; Accepted 2015 Feb 25; Issue date 2016 Feb.
+
+© The Authors 2015
+
+PMC Copyright notice
+
+PMCID: PMC4727456  PMID: 
+26050975
+
+Abstract
+
+Objective
+
+Cash transfer programmes targeting children are considered an effective strategy for addressing child poverty and for improving child health outcomes in developing countries. In South Africa, the Child Support Grant (CSG) is the largest cash transfer programme targeting children from poor households. The present paper investigates the association of the duration of CSG receipt with child growth at 2 years in three diverse areas of South Africa.
+Design
+
+The study analysed data on CSG receipt and anthropometric measurements from children. Predictors of stunting were assessed using a backward regression model.
+Setting
+
+Paarl (peri-urban), Rietvlei (rural) and Umlazi (urban township), South Africa, 2008.
+Subjects
+
+Children (
+n
+ 746), median age 22 months.
+Results
+
+High rates of stunting were observed in Umlazi (28 %), Rietvlei (20 %) and Paarl (17 %). Duration of CSG receipt had no effect on stunting. HIV exposure (adjusted OR=2·30; 95 % CI 1·31, 4·03) and low birth weight (adjusted=OR 2·01, 95 % CI 1·02, 3·96) were associated with stunting, and maternal education had a protective effect on stunting.
+Conclusions
+
+Our findings suggest that, despite the presence of the CSG, high rates of stunting among poor children continue unabated in South Africa. We argue that the effect of the CSG on nutritional status may have been eroded by food price inflation and limited progress in the provision of other important interventions and social services.
+Keywords:
+ Cash transfers, Child growth, Nutrition, Child health, Child poverty
+
+Hunger and undernutrition are the underlying cause of 60 % of all child deaths in developing countries
+(
+
+1
+
+,
+
+2
+
+)
+ and of the 26 % of children under 5 years of age (under-5s) who experience stunting at any given point in time (165 million), greater than 90 % of them live in Africa and Asia
+(
+
+3
+
+)
+. Without early intervention, poverty and associated undernutrition have an impact beyond childhood. Poor child health outcomes, such as undernutrition in the early years, have negative ripple effects on timing of entry into school, educational attainment and economic productivity, ultimately resulting in intergenerational poverty effects
+(
+
+4
+
+–
+
+11
+
+)
+.
+
+In South Africa under-5 mortality was estimated to be 45 per 1000 live births in 2012
+(
+
+12
+
+)
+, with a Human Development Index ranking of 129 out of 182 countries in 2009
+(
+
+13
+
+)
+. Further, South Africa is no different from the rest of the developing world in terms of poverty indicators that are disproportionately skewed towards children. In South Africa a greater proportion of children than adults live in poverty and they are exposed to higher levels of poverty than adults
+(
+
+14
+
+)
+. While there has been a significant drop in reported child hunger (from 30 % of all children in 2002 to 16 % in 2006), the fact that 3 million children were still living in households where hunger was reported in 2010 remains a cause for concern
+(
+
+14
+
+)
+. Furthermore, even though child hunger was drastically reduced between 2002 and 2006, from 2006 until 2010 the rate has remained fairly constant (16 % in 2006, 18 % in 2008 and 17 % in 2010
+(
+
+14
+
+)
+).
+
+Stunting, defined as height-for-age 
+Z
+-score (HAZ) below −2
+(
+
+15
+
+)
+, is considered an indicator of chronic dietary inadequacy. Stunting is often linked to poverty-related factors, such as poor sanitation, socio-economic status, hygiene, food preparation methods and maternal education. Stunting is also associated with developmental delay and impaired cognitive functioning, and is the strongest predictor of child mortality in children under 2 years of age
+(
+
+11
+
+,
+
+12
+
+)
+. In 2009, 27 % of under-5s were stunted in South Africa
+(
+
+13
+
+)
+, a decrease from 33 % in 2003
+(
+
+2
+
+)
+, and this placed the country at 67th highest out of 136 countries in the global ranking of stunting prevalence
+(
+
+13
+
+)
+.
+
+Existing policy responses to childhood poverty and vulnerability in developing countries include the provision of basic services such as education, health care, clean water, in-kind transfers, such as school feeding schemes and nutritional supplements, and more recently cash transfers
+(
+
+16
+
+,
+
+17
+
+)
+.
+
+Evidence on the effectiveness of conditional and unconditional cash transfers in reducing undernutrition is mixed
+(
+
+18
+
+,
+
+19
+
+)
+. While there are studies in middle-income countries such as in Latin America and South Africa where cash transfers have been linked to improved child health outcomes and improved child nutritional status specifically
+(
+
+20
+
+–
+
+23
+
+)
+, there is increasing evidence which suggests an overall lack of effect of cash transfers on child growth
+(
+
+18
+
+)
+. In 2012, Manley 
+et al
+.
+(
+
+18
+
+)
+ conducted a rapid assessment of evidence on the impact of conditional and unconditional cash transfers, implemented in low- and middle-income settings, on child HAZ. They found, on the whole, that the cash transfer programmes which were assessed had no impact on child HAZ and the lack of effect was indistinguishable by type of cash transfer (conditional or unconditional).
+
+Some of the factors that have been identified as key mediators of the effectiveness of cash transfer programmes include the size of the transfer, the age of recipients, the length of exposure to the transfer programme and nutritional supplements
+(
+
+19
+
+)
+.
+
+In South Africa, a key policy instrument for reducing childhood poverty is the Child Support Grant (CSG). The CSG is the largest cash transfer in the country and the continent, reaching more than 11 million children from poor households in 2013. The CSG is unconditional, means-tested and non-contributory. Through the CSG, the South African government transfers a small amount (R320/$US 32 per month) to children of poor families
+(
+
+24
+
+)
+. However, even with the targeting of social grants to the poorest households in South Africa, children living in such households still report high rates of hunger (26 %) compared with children in the wealthiest households (less than 1 %)
+(
+
+14
+
+)
+.
+
+Given the mixed evidence about the impact of cash transfers on stunting, the present paper explores predictors of stunting, including exposure to the CSG, at a median age of 22 months (henceforth referred to as 2 years old) among children from three diverse areas of South Africa.
+
+Methods
+
+Study design and sample frame
+
+The present study was cross-sectional, assessing the uptake and duration of receipt of the CSG and nutritional outcomes in children aged 2 years during 2008. The sampling frame for the study was participants from the South African sites of a multi-country cluster-randomised intervention trial (PROMISE-EBF; ClinicalTrials.gov: 
+NCT00397150
+) that was undertaken from 2005 to 2008 to assess the effectiveness of community-based workers in promoting and improving exclusive breast-feeding. In the trial, follow-up of children ended at 24 weeks of age where final outcome data were collected. Details of the multi-country study have been published elsewhere
+(
+
+25
+
+)
+. The trial found no effect of peer support visits on uptake of the CSG at 24 weeks of age. Results of CSG receipt by arm were 54 % in the infant feeding arm and 46 % in CSG arm, but these results were not significant (relative risk=1·0; 95 % CI 0·9, 1·2).
+
+After the trial ended (2007), a new cross-sectional study (the present one) was conducted to measure uptake and duration of receipt of the CSG and nutritional outcomes. For the present cross-sectional study, participants from the trial were traced when the children were aged between 9 months and 3 years (median age 22 months). A total of 871 out of 1148 participants were traced. Due to some mothers having either moved or not being available during the day (because of work), or having incomplete data, there were 746 participants ultimately included.
+Study sites
+
+The study was conducted in three diverse areas in South Africa: (i) peri-urban Paarl; (ii) rural Rietvlei; and (iii) Umlazi, an urban township in Durban. Paarl is a town of about 130 000 inhabitants in the Drakenstein Local Municipality in the Western Cape Province
+(
+
+26
+
+)
+. Unemployment and poverty affect a large number of people within the municipal area, with an estimated 23 % of working-age residents being unemployed
+(
+
+26
+
+)
+. In terms of key child health outcomes, Paarl fares better than the other two sites with an infant mortality rate of 30/1000 live births, compared with Umlazi (68/1000 live births) and Rietvlei (99/1000 live births); and an antenatal HIV prevalence of 7 %, compared with Umlazi’s 47 % and Rietlvei’s 28 %
+(
+
+27
+
+)
+.
+
+Umlazi is the largest township in KwaZulu-Natal Province and the second largest in South Africa after Soweto. The population is estimated at 550 000 inhabitants
+(
+
+28
+
+)
+. This area experiences typical township problems, which include severe housing shortages, overcrowding, high rates of unemployment and crime, a large number of informal settlements and little economic development
+(
+
+29
+
+)
+.
+
+Rietvlei falls under the Umzimkhulu Municipality in KwaZulu-Natal. The predominantly rural municipal area falls within the former Transkei homeland area. The population of Umzimkhulu is estimated at 179 654 people
+(
+
+30
+
+)
+. Due in large part to the high levels of poverty that exist in the municipality, 52 % of individuals within Umzimkhulu Municipality have no income
+(
+
+30
+
+)
+. Furthermore, Umzimkhulu still faces severe backlogs with respect to water, sanitation and electricity provision; and road infrastructure remains poor and provides only limited access to the area. The percentage of people in Umzimkhulu living below the household subsistence level is 90 %, which is much higher than the national average of 65 %
+(
+
+30
+
+)
+.
+Data collection
+
+Data collectors received comprehensive training including three days of training on collecting anthropometric measurements. Reproducibility and validity exercises were conducted for length and height measurements. Evaluation and supervision were done monthly. Children under 2 years old were measured in the supine position, while those over 2 years were measured standing up. Depending on the study site, length measurements were taken to the nearest 0·1 cm using either the TALC roller mat infantometer (Oxford, UK) or the Shorr Height-Length Measuring Board (Olney, MD, USA). Height for children >2 years old was measured using a custom-made stadiometer validated and used by the MRC Nutrition Unit, Cape Town. Standard WHO guidelines
+(
+
+31
+
+)
+ were followed to conduct measurement procedures. The acceptable technical error of measurement for a data collector was a value less than two times that of the data collector supervisor.
+Data management
+
+Anthropometric data were cleaned in accordance with WHO guidelines
+(
+
+31
+
+)
+. Length-for-age Z-score (LAZ) and HAZ were calculated and categorised in accordance with the 2006 WHO reference standards
+(
+
+31
+
+)
+.
+
+For the current analysis we used data from 746 young children with information on CSG receipt and anthropometric data at 2 years of age. In addition to data collected during the cross-sectional study, we also extracted baseline sociodemographic characteristics and 12-week infant feeding data from the PROMISE-EBF trial data set for the 746 children traced for the present study. These data were linked to the cross-sectional data using unique participant identifiers.
+Statistical analysis
+
+Variables
+
+The main outcome of interest was stunting, which was defined as HAZ <−2 (height-for-age <–2 
+sd
+ below the median height-for-age of the reference population). Grant receipt was defined as the mother being in receipt of the CSG on behalf of the index child at any point during the study (12 weeks, 24 weeks and 2 years). Duration of CSG receipt, the primary exposure, was defined as the age of child (in months) at the 2-year visit minus the child’s age (in months) at first reported receipt of the grant. This was further dichotomised as exposure to the CSG for 18 months or longer and less than 18 months. We chose the 18 month cut-off point because it has been validated by a previous longitudinal study which reported strong associations between 18 months’ duration of CSG receipt and HAZ for children under 3 years of age
+(
+
+20
+
+)
+. Exclusive breast-feeding was defined as the infant receiving no other food or liquid except for medicines in the 24 h prior to the 12-week data collection interview in the PROMISE-EBF trial
+(
+
+32
+
+)
+.
+Analysis
+
+Student’s 
+t
+ test was used to assess mean differences in 
+Z
+-scores while Pearson’s 
+χ
+
+2
+ test was used to examine associations in the cross-tabulations. Predictors of stunting were determined using backward logistic regression analysis. To assess confounding, factors were included in the model based on biological plausibility and known epidemiological risk factors, such as sociodemographic characteristics (socio-economic status, mother’s educational level, geographical area, maternal age, marital status) and exclusive breast-feeding status at 12 weeks. The model was adjusted for clustering using the sandwich estimator of variance
+(
+
+33
+
+)
+, which estimates standard errors under a generalised estimation equations (GEE approach), to account for the community-randomised trial design of the PROMISE-EBF trial. The statistical software package STATA version 11 (2007) was used for analyses. Statistical testing was performed at the 5 % significance level.
+Results
+
+Table 1
+ shows the sociodemographic characteristics of the participants in the study by site. The mean age of mothers was similar in Umlazi and Rietvlei (23·9 and 24·0 years, respectively), and slightly older in Paarl (24·9 years). Educational levels of mothers were lower in Rietvlei, with a median of 9 years of schooling compared with 10 years in Paarl and 11 years in Umlazi. Household income also differed across the three sites, with a median of R1010 ($US 100) per month in Paarl, R1000 ($US 100) in Umlazi and only R780 ($US 78) per month in Rietvlei. Most of the mothers in Umlazi were single (85 %), as was the case in Paarl (68 %), with Rietvlei having the highest proportion of married mothers (68 %). Across the three sites socio-economic status varied widely. Rietvlei had the highest proportion (70 %) of participants who were in the poorest quintile (quintile 1) compared with Umlazi, where there were no participants who fell within that quintile, and Paarl (3 %). Paarl had the highest proportion of participants who were in the least poor quintile (34 %), Umlazi had 31 % and Rietvlei had none.
+
+Table 1.
+
+Baseline characteristics of the mothers by site, South Africa, 2008
+*
+
+Paarl (
+n
+ 258)
+
+Rietvlei (
+n
+ 203)
+
+Umlazi (
+n
+ 285)
+
+Characteristic
+
+Mean, median or 
+n
+
+sd
+, IQR or %
+
+Mean, median or 
+n
+
+sd
+, IQR or %
+
+Mean, median or 
+n
+
+sd
+, IQR or %
+
+Mother’s age (years)
+
+ Mean and 
+sd
+
+24·9
+
+6·3
+
+23·9
+
+6·1
+
+24
+
+5·6
+
+Mother’s education level (years)
+
+ Median and IQR
+
+10
+
+9–12
+
+9
+
+8–11
+
+11
+
+10–12
+
+Marital status
+†
+, 
+n
+ and %
+
+ Single
+
+144
+
+67·9
+
+46
+
+29·8
+
+155
+
+85·1
+
+ Married
+
+14
+
+6·6
+
+105
+
+68·1
+
+14
+
+7·6
+
+ Cohabiting
+
+54
+
+25·4
+
+2
+
+1·3
+
+13
+
+7·1
+
+SES quintile
+†
+, 
+n
+ and %
+
+ 1 (poorest)
+
+6
+
+3·5
+
+105
+
+69·5
+
+0
+
+0·0
+
+ 2
+
+28
+
+16·1
+
+38
+
+25·1
+
+15
+
+8·7
+
+ 3
+
+32
+
+18·4
+
+7
+
+4·6
+
+31
+
+18·0
+
+ 4
+
+48
+
+27·6
+
+1
+
+0·6
+
+72
+
+41·9
+
+ 5 (least poor)
+
+60
+
+34·5
+
+0
+
+0·0
+
+54
+
+31·4
+
+Mother’s HIV-positive status
+
+n
+ and %
+
+21
+
+5·9
+
+25
+
+8·1
+
+138
+
+28·2
+
+Monthly family income (R)
+
+ Median and IQR
+
+1010
+
+600–1700
+
+780
+
+500–1000
+
+1000
+
+700–1500
+
+Household size (number of members)
+
+ Mean and 
+sd
+
+5·7
+
+2·5
+
+6·3
+
+2·7
+
+7·3
+
+3·8
+
+Open in a new tab
+
+IQR, interquartile range; SES, socio-economic status.
+
+Data are presented as mean and standard deviation, median and IQR, or number and percentage,
+
+*
+Data in this table are extracted from PROMISE-EBF trial data set for the 746 children traced for the cross-sectional study.
+
+†
+Denominators differ from site sample size because of missing data.
+
+At 2 years of child age, Rietvlei had the lowest rates of CSG receipt (28 %), compared with Paarl (38 %) and Umlazi (34 %; 
+Table 2
+). The mean HAZ for Umlazi (−2·25 (
+sd
+ 4·29)) was lower than that of Rietvlei (−1·39 (
+sd
+ 2·37)) and Paarl (−0·91 (
+sd
+ 1·33)). Results showed high rates of stunting in all three sites, with Umlazi being the most affected (27·7 %; 95 % CI 22·6, 33·3%) compared with Rietvlei (19·7 %; 95 % CI 14·4, 25·8%) and Paarl (16·6 %; 95 % CI 12·3, 21·7%; 
+Table 2
+).
+
+Table 2.
+
+Age of child at the 2-year interview, CSG receipt and stunting prevalence by site, South Africa, 2008
+
+Paarl
+
+Rietvlei
+
+Umlazi
+
+Median, 
+n
+ or %
+
+IQR, % or 95 % CI
+
+Median, 
+n
+ or %
+
+IQR, % or 95 % CI
+
+Median, 
+n
+ or %
+
+IQR, % or 95 % CI
+
+Age at follow-up (months)
+
+ Median and IQR
+
+23·5
+
+20–27
+
+20·0
+
+15–24
+
+21·5
+
+17–27
+
+CSG receipt
+
+n
+ and %
+
+214
+
+38·4
+
+156
+
+28·0
+
+187
+
+33·5
+
+Stunting prevalence
+
+ % and 95 % CI
+
+16·6
+
+12·3, 21·7
+
+19·7
+
+14·4, 25·8
+
+27·7
+
+22·6, 33·3
+
+Open in a new tab
+
+CSG, Child Support Grant; IQR, interquartile range.
+
+Data are presented as median and IQR, number and percentage, or percentage and 95 % confidence interval.
+
+Longer duration of CSG receipt was associated with stunting at 2 years in the crude model; however, after adjusting for confounders, the strength of this association was no longer significant (
+Table 3
+). HIV-positive status of the mother was associated with more than double the odds of the child being stunted (adjusted OR=2·30; 95 % CI 1·31, 4·03). Completing high school or having a tertiary education was associated with a 58 % and 84 % reduction in child stunting (adjusted OR=0·42; 95 % CI 0·18, 0·96 and adjusted OR=0·16; 95 % CI 0·03, 0·83, respectively). Having low birth weight was associated with double the odds of stunting (adjusted OR=2·01; 95 % CI 1·02, 3·96). A 1-month increase in the age of a child at final follow-up was associated with increased risk of stunting at 2 years (adjusted OR=1·12; 95 % CI 1·05, 1·18), and being from Umlazi was associated with nearly fourfold increased odds of stunting (adjusted OR=3·89; 95 % CI 2·30, 6·59). No other factors in the model were associated with stunting.
+
+Table 3.
+
+Logistic regression model of factors associated with stunting at 2 years among children in receipt of the CSG, South Africa, 2008 (
+n
+ 462)
+
+Factor
+
+Crude OR
+
+95 % CI
+
+Adjusted OR
+
+95 % CI
+
+CSG duration of receipt (>18 months)
+
+ No
+
+Ref.
+
+Ref.
+
+ Yes
+
+2·06
+
+1·42, 3·00
+
+1·23
+
+0·62, 2·45
+
+Mother’s HIV-positive status
+
+1·47
+
+0·88, 2·23
+
+2·30
+
+1·31, 4·03
+
+Child age at final follow-up
+
+1·22
+
+0·74, 2·00
+
+1·12
+
+1·05, 1·18
+
+Site
+
+ Paarl
+
+Ref.
+
+Ref.
+
+ Umlazi
+
+3·01
+
+1·93, 4·70
+
+3·89
+
+2·30, 6·59
+
+ Rietvlei
+
+1·37
+
+0·57, 2·79
+
+1·26
+
+0·57, 2·79
+
+Mother’s age (years)
+
+ 0–24
+
+Ref.
+
+Ref.
+
+ 25–29
+
+1·15
+
+0·72, 1·84
+
+1·07
+
+0·65, 1·77
+
+ 30–34
+
+1·31
+
+0·73, 2·35
+
+1·12
+
+0·61, 2·04
+
+ ≥35
+
+0·83
+
+0·38, 1·80
+
+0·54
+
+0·24, 1·22
+
+Mother’s education level
+
+ Some primary
+
+Ref.
+
+Ref.
+
+ Some high school
+
+0·64
+
+0·36, 1·14
+
+0·71
+
+0·45, 1·11
+
+ Completed high school
+
+0·29
+
+0·15, 0·58
+
+0·42
+
+0·18, 0·96
+
+ Tertiary
+
+0·15
+
+0·03, 0·73
+
+0·16
+
+0·03, 0·83
+
+Low birth weight
+
+2·15
+
+1·31, 3·54
+
+2·01
+
+1·02, 3·96
+
+Exclusive breast-feeding at 12 weeks
+
+1·40
+
+0·74, 2·65
+
+1·11
+
+0·55, 2·23
+
+Open in a new tab
+
+CSG, Child Support Grant; Ref. reference category.
+Discussion
+
+Our results showed that CSG receipt for 18 months or longer in this study population was not associated with stunting after controlling for important risk factors such as HIV exposure status and low birth weight, and indicated higher levels of education as having a protective effect on stunting.
+
+The results showing an association between mothers’ HIV-positive status and stunting support previous research findings which link HIV exposure in children to poor growth outcomes as a result of a compromised immune system
+(
+
+34
+
+)
+. The association of better educational attainment with reduced stunting is expected, as education has long been known to be a key factor in improved child health outcomes
+(
+
+35
+
+)
+. Mothers with higher levels of education are more likely to have better knowledge of appropriate feeding practices than less educated mothers and also are more likely to be able to access improved diets. Similarly, the finding on low birth weight and stunting is not surprising as low birth weight has long been known to be a predictor of stunting in early childhood
+(
+
+36
+
+,
+
+37
+
+)
+. The strong correlation between stunting and Umlazi is likely explained by the high prevalence of HIV in this site.
+
+Several reasons may be responsible for the apparent lack of association between CSG receipt and stunting in households. First, the CSG is often introduced in the context of high unemployment rates where it becomes the only source of income in many households. Second, the value of the grant has not been keeping up with inflation rates; thus, at $US 32 per month, it is a small amount in the context of rising food prices and unemployment. Elsewhere in the literature on cash transfers implemented in low- and middle-income countries it has been argued that, over time, rapid inflation reduces the impact of cash transfers because it diminishes the purchasing power of the transfer
+(
+
+38
+
+)
+.
+
+Consequently, it has been suggested that to maximise the potential positive impact of cash transfers their cash value should be linked to food price movements and the cost of essential non-food items, and their value adjusted for household size
+(
+
+39
+
+)
+. Thus, while the present results seem to contradict those of two previously published studies on the impact of the CSG on child growth
+(
+
+20
+
+,
+
+23
+
+)
+ that reported strong correlations between the CSG and child growth, we contend that inflation has eroded the value of this cash transfer and this may explain the difference between our work and earlier research on this topic. Findings from qualitative studies with CSG recipients reveal that recipients of the grant view it as a crucial source of income but as inadequate to reach even its stated goal of meeting the nutritional needs of recipients
+(
+
+40
+
+,
+
+41
+
+)
+. Further, this apparently paradoxical finding may plausibly be explained by the fact that the uptake of the CSG in the urban (Umlazi) and peri-urban site (Paarl) is highest and is likely to cover nearly all of the poor families who are virtually totally reliant on the CSG and other welfare grants, including for their basic food needs, the cost of which now exceeds the value of such cash transfers.
+
+Limitations and strengths
+
+Our study had several potential limitations. The sites where this research was undertaken were purposely selected and the infrastructural conditions differed greatly between them. They do, however, reflect the range of typical settings in South Africa (urban, peri-urban or rural). Although all efforts were made to trace all participants enrolled in the trial, the length of the study meant that a number of participants were lost to follow-up by the time of the follow-up cross-sectional study.
+
+Data related to exclusive breast-feeding and timing of receipt of the CSG were self-reported and could have been subject to recall bias. Exclusive breast-feeding was collected using recall of food and fluid items given in the previous 24 h and CSG receipt was asked at each follow-up point, with the longest period between data collection points being 12 weeks (12–24 weeks). There are possible confounders that we did not collect information on and therefore could not take into account in our analysis such as birth length.
+
+A strength of the present study is that, to our knowledge, it is one of very few studies to assess the growth of children in receipt and non-receipt of the CSG in South Africa. The only other study to undertake similar analyses, where CSG receipt was correlated with improved HAZ for children under 3 years of age, was published more than 7 years ago
+(
+
+20
+
+)
+.
+Conclusion
+
+While we acknowledge that several factors may explain the lack of association of the CSG with improved growth outcomes, we agree with previous assertions that cash transfers need to work in tandem with other poverty alleviation measures such as education, housing and access to quality health care in order to maximise their impact on child health outcomes such as child growth
+(
+
+38
+
+)
+. In Latin America where child cash transfers have shown a positive correlation with improved child growth (HAZ for under-5s), such programmes are strengthened and operate within the context of other interventions aimed at improving the nutritional status of children through nutrition education programmes and supplements. Our findings suggest that in South Africa the effect of the cash transfer on nutritional status may have been eroded by food price inflation and limited progress in the provision of other important social and environmental services. Such findings add weight to the call by children’s advocacy groups for changes in the CSG allocation to be pegged to the inflation rate and to be based on the cost of raising a child
+(
+
+42
+
+)
+.
+Acknowledgements
+
+Acknowledgements:
+ The authors thank the mothers and their families for their contribution to this study. 
+Financial support:
+ This study was part of the European Union-funded project PROMISE-EBF (contract number INCO-CT 2004–003660; 
+http://www.promiseresearch.org
+). It was also financially supported through the Swedish International Development Cooperation Agency, the South African National Research Foundation (NRF), the South African National Department of Health, and Rockefeller Brothers Foundation. The funders had no role in the design, analysis or writing of this paper. 
+Conflict of interest:
+ None. 
+Authorship:
+ W.Z.-M., T.D., D.S. and D.J. conceptualised and designed the study. V.R. and W.Z.-M. conducted the analysis. W.Z.-M. wrote the main manuscript, and all co-authors contributed to the final draft. 
+Ethics of human subject participation:
+ Ethics approval for the cluster-randomised controlled trial was received from the Ethics Committee of the Medical Research Council South Africa. Signed or thumb-printed informed consent was obtained from each mother prior to study participation. Additional ethics approval was granted in a subsequent application to the Medical Research Council Ethics Committee for the follow-up study. An information sheet explaining the purpose of the additional interview was read to each participant and each participant who agreed to participate signed a consent form.
+References
+
+1.
+
+UNICEF (2010) The State of the World’s Children: Special Edition. New York: UNICEF; available at 
+http://www.unicef.org/rightsite/sowc/pdfs/SOWC_Spec%20Ed_CRC_Main%20Report_EN_090409.pdf
+
+ [
+Google Scholar
+]
+
+2.
+
+UNICEF (2013) Improving Child Nutrition: The Achievable Imperative for Global Progress. New York: UNICEF; available at 
+http://www.unicef.org/gambia/Improving_Child_Nutrition_-_the_achievable_imperative_for_global_progress.pdf
+
+ [
+Google Scholar
+]
+
+3.
+
+Khara T & Dolan C (2014) Technical Briefing Paper. The Relationships between Wasting and Stunting, Policy, Programming and Research Implications. Emergency Nutrition Network (ENN). 
+http://files.ennonline.net/attachments/1862/WAST_140714.pdf
+ (accessed December 2014).
+
+4.
+
+Black R, Allen L, Bhutta Z
+et al. (2008) Maternal and child undernutrition: global and regional exposures and health consequences. Lancet
+371, 243–260.
+ [
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+
+5.
+
+Esping-Andersen G (2002) A child-centred social investment strategy. In Why We Need a New Welfare State, pp. 26–67 [G Esping-Andersen, D Gallie, A Hemerijck et al., editors]. Oxford: Oxford University Press.
+ [
+Google Scholar
+]
+
+6.
+
+Gordon D, Nandy S, Pantazis C
+et al. (2003) Child Poverty in the Developing World. Bristol: Policy Press.
+ [
+Google Scholar
+]
+
+7.
+
+Case A & Paxson C (2010) 
+Causes and Consequences of Early Life Health. NBER Working Paper Series
+ no. 15637. Cambridge, MA: National Bureau of Economic Research.
+
+8.
+
+Shah A (2010) Poverty Facts and Stats. Global Issues. 
+http://www.globalissues.org/article/26/poverty-facts-and-stats
+ (accessed May 2012).
+
+9.
+
+Harper C, Marcus R & Moore K (2003) Enduring poverty and the conditions of childhood: life-course and intergenerational poverty transmissions. World Dev
+31, 535–554.
+ [
+Google Scholar
+]
+
+10.
+
+Save the Children UK (2010) Lasting benefits: the role of cash transfers in tackling child mortality. 
+http://www.savethechildren.org.uk/en/docs/Lasting_Benefits.pdf
+ (accessed May 2011).
+
+11.
+
+Walker S, Wachs T, Meeks Gardner J
+et al. (2007) Child development: risk factors for adverse outcomes in developing countries. Lancet
+369, 145–157.
+ [
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+
+12.
+
+UNICEF (2013) Committing to Child Survival: A Promise Renewed
+
+Progress Report 2013
+. New York: UNICEF; available at 
+http://www.unicef.org/lac/Committing_to_Child_Survival_APR_9_Sept_2013.pdf
+
+ [
+Google Scholar
+]
+
+13.
+
+World Bank (2011) Nutrition at a Glance: South Africa. 
+http://documents.worldbank.org/curated/en/2011/04/17695159/south-africa-nutrition-glance
+ (accessed June 2014).
+
+14.
+
+Hall K, Lake L & Berry L (2012) Child health. In 
+
+South African Child Gauge
+™ 
+2012
+
+. [K Hall, I Woolard, L Lake et al., editors]. Cape Town: Children’s Institute, University of Cape Town; available at 
+http://www.ci.org.za/depts/ci/pubs/pdf/general/gauge2012/sa_child_gauge2012.pdf
+
+ [
+Google Scholar
+]
+
+15.
+
+WHO Multicentre Growth Reference Study Group (2006) Assessment of differences in linear growth among populations in the WHO multicentre growth reference study. Acta Paediatr Suppl
+450, 56–65.
+ [
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+
+16.
+
+Barrientos A & Dejong J (2006) Reducing child poverty with cash transfers: a sure thing?
+Dev Policy Rev
+24, 537–552.
+ [
+Google Scholar
+]
+
+17.
+
+Samson M, van Niekerk I & Mac Quene K (2006) Designing and Implementing Social Transfer Programmes. Cape Town: EPRI Press; available at 
+http://www.unicef.org/socialpolicy/files/designing_and_implementing_social_transfer_programmes.pdf
+
+ [
+Google Scholar
+]
+
+18.
+
+Manley J, Gitter S & Slavchøvska V (2012) How Effective Are Cash Transfer Programmes at Improving Nutritional Status: A Rapid Assessment of Programmes’ Effects on Anthropometric Outcomes. London: EPPI-Centre, Social Science Research Unit, Institute of Education, University of London.
+ [
+Google Scholar
+]
+
+19.
+
+Holmes R & Bhuvanendra D (2013) Social Protection and Resilient Food Systems: The Role of Cash Transfers. London: Overseas Development Institute; available at 
+http://www.odi.org/sites/odi.org.uk/files/odi-assets/publications-opinion-files/8601.pdf
+
+ [
+Google Scholar
+]
+
+20.
+
+Aguero JM, Carter MR & Woolard I (2006) The Impact of Unconditional Cash Transfers on Nutrition: the South African Child Support Grant. Washington, DC: Centre for Global Development; available at 
+http://www.cgdev.org/doc/events/11.07.06/unconditional%20cash%20transfers.pdf
+
+ [
+Google Scholar
+]
+
+21.
+
+International Food Policy Research Institute (2002) PROGRESA: Breaking the Cycle of Poverty. Washington, DC: IFPRI.
+ [
+Google Scholar
+]
+
+22.
+
+Fernald LC, Gertler PJ & Neufeld LM (2008) Role of cash in conditional cash programmes for child health, growth and development: an analysis of Mexico’s Oportunidades. Lancet
+371, 828–837.
+ [
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+
+23.
+
+Department for Social Development, South African Social Security Agency & UNICEF (2011) The South African Child Support Grant Impact Assessment: Evidence from a Survey of Children, Adolescents and their Households. Pretoria: UNICEF South Africa; available at 
+http://www.unicef.org/southafrica/SAF_resources_csg2012s.pdf
+
+ [
+Google Scholar
+]
+
+24.
+
+South African Social Security Agency (n.d.) The Child Support Grant. 
+http://www.sassa.gov.za/index.php/social-grants/child-support-grant
+ (accessed December 2014).
+
+25.
+
+Tylleskar T, Jackson D, Meda N
+et al. (2011) Exclusive breastfeeding promotion by peer counsellors in sub-Saharan Africa (PROMISE-EBF): a cluster-randomised trial. Lancet
+378, 420–427.
+ [
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+
+26.
+
+Statistics South Africa (2001) Census 2001. 
+http://www.statssa.gov.za/census
+ (accessed May 2013).
+
+27.
+
+Doherty T, Chopra M, Nkonki L
+et al. (2006) Effect of the HIV epidemic on infant feeding in South Africa: ‘When they see me coming with the tins they laugh at me’. Bull World Health Organ
+84, 90–96.
+ [
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+
+28.
+
+Maharaj A (2008) Umlazi Local Economic Development Plan 2008. Durban: KA Economic Development Consulting CC; available at 
+http://www.durban.gov.za/Documents/Invest_Durban/Economic%20Development/5.pdf
+
+ [
+Google Scholar
+]
+
+29.
+
+DEMACON (2010) In-depth case study analysis: Umlazi mega city. In 
+Impact of Township Shopping Centres
+, pp. 187–220. Durban: DEMACON Market Studies; available at 
+http://www.urbanlandmark.org.za/downloads/retail_in_townships_2011.pdf
+
+30.
+
+Umzimkhulu Municipality Annual Report (2011) Umzimkhulu Municipality, Sisonke District, KwaZulu-Natal. 
+http://www.umzimkhululm.gov.za/index.php/e-documents-library2-2/annual-reports
+ (accessed April 2013).
+
+31.
+
+World Health Organization (2011) Child growth standards. WHO Anthro (version 3.2.2, January 2011) and macros. 
+http://www.who.int/childgrowth/software/en/
+ (accessed November 2014).
+
+32.
+
+World Health Organization (2008) 
+Indicators for Assessing Infant and Young Child Feeding Practices. Part 1: Definitions. Conclusions of a Consensus Meeting held 6–8 November 2007 in Washington, DC, USA
+. Geneva: WHO; available at 
+http://www.who.int/nutrition/publications/infantfeeding/9789241596664/en/
+
+33.
+
+Rogers WH (1993) Regression standard errors in clustered samples. Stata Tech Bull
+13, 19–23. (Reprinted in 
+Stata Tech Bull Reprints
+
+3
+, 88–94.)
+ [
+Google Scholar
+]
+
+34.
+
+Makasa M, Kasouka L, Chisenga M
+et al. (2007) Early growth of infants of HIV-infected and uninfected Zambian women. Trop Med Int Health
+12, 594–602.
+ [
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+
+35.
+
+Makoka D (2013) 
+The Impact of Maternal Education on Child Nutrition. Evidence from Malawi, Tanzania and Zimbabwe. DHS Working Papers
+ no. 84. Calverton, MD: ICF International; available at 
+http://www.measuredhs.com/pubs/pdf/WP84/WP84.pdf
+
+36.
+
+Mamiro PS, Kolsteen P, Roberfroid D
+et al. (2005) Feeding practices and factors contributing to wasting, stunting, and iron-deficiency anaemia among 3–23-month old children in Kilosa district, rural Tanzania. J Health Popul Nutr
+23, 222–230.
+ [
+PubMed
+] [
+Google Scholar
+]
+
+37.
+
+Adair LS & Guilkey DK (1997) Age-specific determinants of stunting in Filipino children. J Nutr
+127, 314–320.
+ [
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+
+38.
+
+Magen B, Donovan C & Kelly V (2009) 
+Can Cash Transfers Promote Food Security in the Context of Volatile Commodity Prices? A Review of Empirical Evidence. MSU International Development Working Paper
+ no. 96. East Lancing, MI: Michigan State University; available at 
+http://fsg.afre.msu.edu/papers/idwp96.pdf
+
+39.
+
+Devereux S, Marshall J, Macaskill J
+et al. (2005) Making Cash Count. Lessons from Cash Transfer Schemes in East and Southern Africa for Supporting the Most Vulnerable Children and Households. London: Save the Children UK, Help Age International and Institute of Development Studies; available at 
+https://www.ids.ac.uk/files/MakingCashCountfinal.pdf
+
+ [
+Google Scholar
+]
+
+40.
+
+Hunter N & Adato M (2007) The Child Support Grant in Kwazulu-Natal: Perceptions and Experiences Inside the Household. 
+Research Report
+ no. 73. Durban: School of Development Studies, University of KwaZulu-Natal; available at 
+http://sds.ukzn.ac.za/files/RR73%20-%20HunterAdato.pdf
+
+ [
+Google Scholar
+]
+
+41.
+
+Ntshongwana P, Wright G & Noble M (2010) Supporting Lone Mothers in South Africa: Towards Comprehensive Social Security. Oxford: Centre for the Analysis of South African Social Policy, University of Oxford.
+ [
+Google Scholar
+]
+
+42.
+
+Hall K & Wright G (2011) In brief: A profile of children living in South Africa, using the National Income Dynamics Study. 
+http://www.ci.org.za/index.php?option=com_customproperties&view=show&task=tag&tagId=62&Itemid=332#sthash.PDvZJoQY.dpuf
+ (accessed April 2013).
+
+ACTIONS
+
+View on publisher site
+
+PDF (149.3 KB)
+
+Cite
+
+Collections
+
+Permalink
+
+PERMALINK
+
+Copy
+
+RESOURCES
+
+ Similar articles
+ 
+
+ Cited by other articles
+ 
+
+ Links to NCBI Databases
+ 
+
+Cite
+
+Copy
+
+Download .nbib
+
+.nbib
+
+Format:
+
+ AMA
+ 
+
+ APA
+ 
+
+ MLA
+ 
+
+ NLM
+ 
+
+Add to Collections
+
+Create a new collection
+
+Add to an existing collection
+
+ Name your collection
+ 
+*
+
+ Choose a collection
+ 
+
+ Unable to load your collection due to an error
+
+Please try again
+
+ Add
+ 
+
+ Cancel
+ 
+
+Back to Top

@@ -186,6 +186,130 @@ def sample_teacher_skeletons(
     return out
 
 
+# ── Farmer role sampling ─────────────────────────────────────────────────────
+# QLFS carries a subsistence/market-production module (Q210MARKET: destination of
+# production; Ste_icse93: status in employment; Q212SUBINDUSTRY: products) that the
+# base skeleton doesn't read (no existing archetype needed it). Farmer roles are
+# KNOWN from these fields directly — same precedent as sample_teacher_skeletons and
+# the GHS education roles — so they bypass archetype_mapper's demographic inference
+# entirely; the caller (build_library.py) sets actor_archetype straight from the role.
+_FARM_LABELLED_COLS = _LABELLED_COLS + ["Ste_icse93", "Q210MARKET", "Q212SUBINDUSTRY"]
+
+
+def _load_farm(dta_path: str) -> pd.DataFrame:
+    """Same loading discipline as _load(), plus the three farm-module columns.
+
+    A separate cached frame (not a join onto _load()'s df) because Q210MARKET/
+    Ste_icse93 need their own convert_categoricals=True pass, and reusing _load()'s
+    already-filtered/decoded frame would require an index-alignment join for no
+    real benefit — the row-level filter (age 15+, valid weight) is identical either
+    way, so an independent read is simpler and just as correct.
+    """
+    cache = getattr(_load_farm, "_cache", {})
+    if dta_path in cache:
+        return cache[dta_path]
+    if not os.path.exists(dta_path):
+        raise FileNotFoundError(
+            f"QLFS microdata not found at {dta_path}. Download the .dta from "
+            f"DataFirst into backend/data/microdata/ (it is gitignored)."
+        )
+    num = pd.read_stata(dta_path, columns=_NUMERIC_COLS, convert_categoricals=False)
+    lab = pd.read_stata(dta_path, columns=_FARM_LABELLED_COLS, convert_categoricals=True)
+    df = pd.concat([num.reset_index(drop=True), lab.reset_index(drop=True)], axis=1)
+    df = df[(df["Q14AGE"] >= MIN_AGE) & df["Weight"].notna() & (df["Weight"] > 0)]
+    df = df.reset_index(drop=True)
+    cache[dta_path] = df
+    _load_farm._cache = cache
+    return df
+
+
+def sample_communal_farmer_skeletons(
+    n: int, seed: int = 0, dta_path: str = _DEFAULT_DTA,
+) -> List[Dict[str, object]]:
+    """Subsistence/communal farmer skeletons: household production mainly or only
+    for family consumption (QLFS Q210MARKET), independent of formal employment
+    status — subsistence farming is usually a household activity alongside
+    whatever the person's main labour-force status is, so we do not filter on
+    Status/Indus the way the market-oriented pool below does.
+    """
+    df = _load_farm(dta_path)
+    pool = df[df["Q210MARKET"].astype(str).isin(
+        ["Mainly for family use/ consumption", "Only for family use/ consumption"]
+    )]
+    if pool.empty:
+        raise ValueError("communal farmer pool is empty — QLFS labels changed?")
+    drawn = pool.sample(n=n, replace=True, weights=pool["Weight"], random_state=seed)
+    out = []
+    for _, row in drawn.iterrows():
+        sk = _row_to_skeleton(row)
+        sk["farm_market_orientation"] = "subsistence"
+        products = row.get("Q212SUBINDUSTRY")
+        sk["farm_products"] = str(products) if pd.notna(products) else None
+        sk["source_survey"] = "qlfs_2026_q1"
+        out.append(sk)
+    return out
+
+
+def sample_smallholder_owner_skeletons(
+    n: int, seed: int = 0, dta_path: str = _DEFAULT_DTA,
+) -> List[Dict[str, object]]:
+    """Market-oriented smallholder/emerging farm-owner skeletons: agriculture
+    industry, and the person OWNS the operation (Employer or Own-account worker
+    per QLFS Ste_icse93) — distinct from a farm employee, whose reasoning about a
+    farm-facing product/policy is an employee's, not an owner's.
+    """
+    df = _load_farm(dta_path)
+    pool = df[
+        (df["Indus"].astype(str) == "Agriculture; hunting; forestry and fishing")
+        & df["Ste_icse93"].astype(str).isin(["Employers", "Own-account workers"])
+    ]
+    if pool.empty:
+        raise ValueError("smallholder farm-owner pool is empty — QLFS labels changed?")
+    drawn = pool.sample(n=n, replace=True, weights=pool["Weight"], random_state=seed)
+    out = []
+    for _, row in drawn.iterrows():
+        sk = _row_to_skeleton(row)
+        sk["farm_market_orientation"] = "market"
+        products = row.get("Q212SUBINDUSTRY")
+        sk["farm_products"] = str(products) if pd.notna(products) else None
+        sk["source_survey"] = "qlfs_2026_q1"
+        out.append(sk)
+    return out
+
+
+def sample_professional_skeletons(
+    n: int, seed: int = 0, dta_path: str = _DEFAULT_DTA,
+) -> List[Dict[str, object]]:
+    """Formally-employed professional/managerial skeletons — the salaried
+    middle/upper segment the base library under-represents (its civic_moderate
+    lumps all formal workers together, so pricing scenarios collapse to
+    'can't afford it'; see the persona remediation plan / tester feedback).
+
+    Pool: QLFS Occup in {Professionals, Legislators/senior officials/managers,
+    Technical and associate professionals}, employed, FORMAL employment. Role is
+    known from the data (occupation is a surveyed fact, unlike the teacher
+    proxy) so no occupation_provenance marker is needed; archetype is set by
+    the caller, bypassing the demographic mapper like the other role samplers.
+    """
+    df = _load(dta_path)
+    pool = df[
+        df["Occup"].astype(str).isin([
+            "Professionals", "Legislators; senior officials and managers",
+            "Technical and associate professionals"])
+        & (df["Status"].astype(str) == "Employed")
+        & (df["Infempl"].astype(str) == "Formal employment")
+    ]
+    if pool.empty:
+        raise ValueError("professional pool is empty — QLFS labels changed?")
+    drawn = pool.sample(n=n, replace=True, weights=pool["Weight"], random_state=seed)
+    out = []
+    for _, row in drawn.iterrows():
+        sk = _row_to_skeleton(row)
+        sk["source_survey"] = "qlfs_2026_q1"
+        out.append(sk)
+    return out
+
+
 def population_marginals(dta_path: str = _DEFAULT_DTA) -> Dict[str, Dict[str, float]]:
     """Weighted ground-truth marginals (percent) for the adult universe.
 

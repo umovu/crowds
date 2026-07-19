@@ -256,7 +256,13 @@ def _build_real_numbers_block(econ_state: Dict[str, Any]) -> str:
     paid = [b for b in dict.fromkeys(bands) if b and b != "No fees"]
     has_no_fee = bool(bands) and not paid
     if paid:
-        lines.append(f"- You pay school fees in the {', '.join(paid)} band (real, surveyed).")
+        # GHS fee bands are ANNUAL; older library builds stored them without a
+        # unit, so append it here when missing (idempotent with ghs_adapter).
+        shown = [b if "year" in b.lower() else f"{b} per year" for b in paid]
+        lines.append(
+            f"- You pay school fees in the {', '.join(shown)} band "
+            "(real, surveyed — that is PER YEAR, not per month)."
+        )
     elif has_no_fee:
         lines.append("- Your learners are at a no-fee school (you pay no school fees).")
 

@@ -1,0 +1,2153 @@
+Frontiers | The influence of reinforcement on classroom management and learners’ performance at secondary schools in South Africa
+
+ORIGINAL RESEARCH article
+Front. Educ.
+, 03 July 2026
+ Sec. Leadership in Education
+Volume 11 - 2026 | 
+https://doi.org/10.3389/feduc.2026.1829190
+Published in
+Frontiers in Education 
+Leadership in Education
+2.6
+ impact factor
+4.3
+ citescore
+Editor & Reviewers
+Edited by
+J
+M
+Jesus Marolla-Gajardo
+Reviewed by
+A
+F
+Anna Fitri Hindriana
+M
+P
+Maura Pilotti
+Outline 
+ORIGINAL RESEARCH article
+Front. Educ.
+, 03 July 2026
+ Sec. Leadership in Education
+Volume 11 - 2026 | 
+https://doi.org/10.3389/feduc.2026.1829190
+The influence of reinforcement on classroom management and learners’ performance at secondary schools in South Africa
+N
+A
+Nadeem Ahmed 
+*
+ Educational Leadership and Management, University of Johannesburg, Johannesburg, South Africa
+ Article metrics 
+View details
+Abstract
+The influence of reinforcement on classroom management and learner attainment in secondary schools is one of the key components of a conducive teaching–learning environment. Thus, a conducive learning environment is only possible if a teacher is skilled and able to apply different techniques to ensure the required classroom environment. Consequently, this research aimed to identify the influence of reinforcement on effective classroom management and learners’ attainment. The research employed a generic qualitative method, and a total of 12 purposely sampled teachers and school heads from six secondary schools were interviewed face-to-face. The study found that positive reinforcement does play a role in classroom management and learners’ performance, but that this does not apply in all situations, particularly for learners who come from socioeconomically underprivileged and broken families. However, most teachers did not use positive reinforcement; rather, they used negative reinforcement or punishment to obtain results, contradicting the South African Constitution and the Schools’ Act of 1996 that preserve the rights of a child and prohibit corporal punishment. The study therefore recommends that teachers be given mandatory training in necessary classroom management skills and their school’s code of conduct to maintain discipline in the classroom for the attainment of educational goals.
+Introduction
+Reinforcement and improvement in the classroom can increase learners’ chances of focusing and engagement in learning (
+Khanum et al., 2025
+; 
+Munna and Kalam, 2021
+; 
+Onyekwelu, 2025
+). 
+Khanum et al. (2025)
+ and 
+Rumfola, 2017
+ noted that teachers facilitate positive reinforcement by emphasising learners’ talents, aptitudes, interests, capabilities and personality traits. This helps teachers connect and build close relationships with learners, which facilitates effective communication and development. An effective teacher provides learners with a classroom environment that offers a sense of respect and freedom, care and an appreciation of learners so that the teaching–learning process can happen effectively and its purpose can be achieved (
+Salendab and Akmad, 2023
+; 
+Salendab and Laguda, 2023
+).
+Classroom management and learners’ attainment are challenges that teachers face during the teaching–learning process. Effective classroom management and teaching–learning methods vary and require different techniques to be effective. A teacher can exercise reinforcement (positive or negative) as one of the techniques for effective classroom management and learners’ academic attainment. It helps teachers advance learners’ performance and hold their attention through educational activities and discussions (
+Khanum et al., 2025
+; 
+Onyekwelu, 2025
+; 
+Gunaretnam, 2021
+; 
+Onyekwelu, 2025
+; 
+Munna and Kalam, 2021
+).
+Michael, 1975
+ introduced reinforcement terminologies and provided four main types of reinforcement: i) “positive reinforcement, ii) negative reinforcement, iii) tangible reinforcement, iv) social reinforcement.” Positive reinforcement is the presentation of a pleasurable or desirable consequence for behaviour, such as praising a student for satisfactory work. Negative reinforcement is removing an unpleasant consequence to increase behaviour, such as restoring recess privilege for assignment completion (
+Martin and Sass, 2010
+). Tangible reinforcement is a reinforcement that the student can actually touch, such as an award sticker or edibles like gum or candy. Social reinforcement is the feedback we get from other people in response to what we do. It might take the form of smiles, acceptance, praise, applause, and attention. 
+Onyekwelu (2025)
+, 
+Munna and Kalam (2021)
+ and 
+Owusu et al. (2021)
+ found that the effect of reinforcement in the classroom is significant and linked with learners’ attainment. Positive reinforcement has an important role in learners’ behaviours and academic learning and motivates them to do what is right. 
+Fatima et al. (2023)
+, 
+Khanum et al. (2025)
+, 
+Lynnette et al. (2021)
+, and 
+Mondol et al. (2026)
+ affirmed that teachers who consistently used positive reinforcement strategies such as praise, rewards, encouragement, recognition, and positive feedback experienced improved learner discipline, classroom participation and better academic outcomes. Learners become more cooperative, respectful, attentive, and motivated during lessons. Studies on positive behavioural support indicate that supportive and proactive approaches contribute to improved learner conduct.
+Conversely, 
+Mondol et al. (2026)
+ and 
+Munna and Kalam (2021)
+ stated that punishment and negative reinforcement are not solutions to the problem. 
+Skinner (1963)
+ differentiates between punishment and negative reinforcement. He believes that punishment and negative reinforcement increase hostility, anger, and aggression in learners (
+Marinda and Suhardi, 2021
+; 
+Papageorgi, 2021
+). Learners demonstrate this aggression as a technique in dealing with classroom activities. It leads them to exhibit negative and unwanted behaviours and creates fear in them from the teacher as well as from the school and classroom. Furthermore, punishment and negative reinforcement cannot create the required behaviours in learners. Negative reinforcement motivates behaviours that are not repeated for a certain time, while punishment only stops them from doing what is wrong and creates negative behaviours (
+Marinda and Suhardi, 2021
+; 
+Zahid and Cheema, 2023
+). 
+Skinner (1963)
+ moreover states that negative behaviours are challenging and cannot be forgotten. These behaviours are suppressed by punishment for a time but resume after a while.
+Classroom management is crucial for effective teaching and learners’ academic attainment. Although classroom management and learners’ performance are distinct outcome variables, existing literature reveals a strong relationship between the two. Classroom management refers to the strategies, practices, and behaviours teachers use to create and maintain an orderly, disciplined, and supportive learning environment. Learners’ academic performance, on the other hand, relates to the achievement of educational outcomes such as test scores, class participation, task completion, and overall academic success. The connection between these variables lies in the fact that effective classroom management creates conditions that are conducive to teaching and learning. When classrooms are well managed, disruptions are minimised, learner engagement increases, instructional time is protected, and positive teacher–learner relationships are promoted. These factors collectively enhance learners’ concentration, motivation, and participation, which ultimately contribute to improved academic attainment.
+Many researchers (
+Aikomo, 2025
+; 
+Ajani, 2024
+) have consistently found that poorly managed classrooms are associated with learner misconduct, absenteeism, low motivation, and reduced academic achievement, whereas positive and structured classroom environments are linked to higher learner performance and improved educational outcomes. In the South African context, the abolition of corporal punishment has further intensified the need for effective alternative classroom management strategies, as many teachers experience challenges in maintaining discipline and learner engagement. Consequently, reinforcement strategies such as praise, rewards, encouragement, and positive behavioural support have become important tools for promoting both classroom order and academic success. Therefore, the present study considers classroom management and learners’ performance as interconnected variables, since the effectiveness of reinforcement strategies in managing learner behaviour may directly influence the quality of teaching and learning and ultimately learners’ academic attainment.
+The available literature on teachers’ use of reinforcement for effective classroom management and learners’ performance in South African secondary schools shows the research gaps that need to be addressed. In the context of South Africa, classroom management research has mainly focused on challenges such as behavioural issues, violence, learners’ misconduct, disciplinary policies and the abolishment of corporal punishment, with limited emphasis on reinforcement strategies as a preventative measure for effective classroom management and learners’ academic attainment. Positive reinforcement, such as praise, rewards and incentives, is discussed thoroughly, showing that it has a positive impact on learners’ performance and behaviour modification; however, not much literature explores the application of positive reinforcement strategies in schools. Furthermore, there is a conceptual and contextual gap in understanding how negative reinforcements and punishment relate to the challenges South African schools face. The socioeconomic backgrounds of the learners, poverty, drug abuse, teenage pregnancies, bullying, and disruptive behaviours are some of the concerns of the teachers in classrooms (
+Ahmed, 2025
+; 
+Ahmed, 2024
+; 
+Ajani, 2024
+; 
+Du Plessis and Mestry, 2019
+; 
+Hollins, 2015
+; 
+Ng et al., 2018
+; 
+Smith et al., 2022
+). 
+Ladson-Billings (2014
+, p.76) used the terms “culturally relevant pedagogy”, “culturally deprived”, and “culturally disadvantaged” for the learners who belong to this background. Thus, this qualitative research sought to examine the application and the influence of reinforcement on classroom management and learners’ performance. Thus, the research aimed to contribute to the literature by providing empirical evidence on how reinforcement application and practice influence classroom management and learners’ performance in South African secondary school settings.
+Aims and objectives
+The research aimed to examine the influence of reinforcement on classroom management and learners’ performance at secondary schools by answering the following research questions:
+
+Is reinforcement viewed as having an impact on learners’ attainment?
+Is reinforcement viewed as playing a role in classroom management for the effective teaching-learning process?
+Theoretical framework
+The research employed 
+Deci et al., 1989
+ Self-Determination Theory (SDT) as its theoretical framework. The SDT focuses on the influence of the social environment on an individual’s attitude, emotions, values, and behaviour. The theory examines human behaviours and believes that “behaviours evolved to be inherently active, intrinsically motivated, and oriented toward developing naturally through integrative processes” (
+Deci et al., 1989
+, p, 629). In this study, SDT was used to study the effects of “extrinsic rewards on intrinsic motivation.” According to 
+Deci (1971)
+, rewards do not always motivate the intrinsic motivation of an individual. He considered intrinsic motivation an “inherent characteristic” and saw it as an example of self-determination of an individual. He further elaborated that rewards could damage or enhance behaviours depending on the need and social environment in which the event happened. If the rewards or “threats of punishment” (
+Deci and Cascio, 1972
+), “positive feedback” (
+Deci, 1971
+), “competition” (
+Deci et al., 1981
+), or “choice” (
+Zuckerman et al., 1978
+) were anticipated to spoil these needs, it means that the behaviour is controlled by external forces, and demoralises the internal motivation. However, if the event was anticipated to support this, it is envisaged that behaviours are controlled by internal forces that enhance intrinsic motivation. 
+Deci et al. (1981)
+ and 
+Deci et al. (1989)
+ further affirmed that financial rewards, competition, threats, and fines spoil individual behaviours and weaken intrinsic motivation. In contrast, affirmative responses, positive feedback, and freedom of choice are motivating factors that enhance confidence, internal motivation, and self-determination (
+Deci et al., 1989
+; 
+Zuckerman et al., 1978
+).
+Literature review
+The law of “effect reinforcement” is a term introduced by 
+Skinner (1963)
+ and 
+Dingliang (2025)
+ that states that reinforced behaviours tend to repeat (i.e., strengthen); however, a behaviour that is not reinforced has a propensity to die out (i.e., weaken). 
+Skinner (1963)
+, 
+Estes (1972)
+, 
+Hineline and Rosales-Ruiz (2013)
+ and 
+Malott (2021)
+ believe that three reactions can change the tendency of behaviours: i) Neutral response, ii) reinforcers, and iii) punishers. Neutral responses: A response of an environment that does not affect positively or negatively the prospects of any behaviour. Reinforcers: Reinforcers are the environmental responses that can be positive or negative in nature andincrease or decrease the chances of behaviour repetition. Rewards, prizes, praise, and merits are the positive reinforcers that increase the probability of behaviour repetition (
+Skinner, 1963
+; 
+Estes, 1972
+; 
+Hineline and Rosales-Ruiz, 2013
+; 
+Malott, 2021
+). However, 
+ Deci et al. (198 9)
+ believe that rewards, prizes and merits spoil learners, and they only repeat behaviours for rewards, not for intrinsic motivation and change. Punishers: punishment is an environmental response that lessens the chances of a behaviour being repeated. According to him, it is the “opposite of reinforcement” that deteriorates or minimises positive behaviour. A child can be punished in many ways, for example, direct punishment by reducing break-time or calling the learner into school early in the morning and leaving from school late in the afternoon in order to address unwanted behaviour (
+Skinner, 1963
+; 
+Estes, 1972
+; 
+Hineline and Rosales-Ruiz, 2013
+). However, corporal punishment was abolished in the South African Constitution in 1996. Corporal punishment is therefore banned in schools.
+Positive reinforcement in classroom management and learner performance
+The term “positive reinforcement” was first pioneered by 
+Skinner (1963)
+ in his “operant conditioning” theory. 
+Skinner (1963)
+ stated that if a child or learner was rewarded for their positive and good behaviour, it creates positivity in the child or learner. 
+Skinner (1963)
+ considered that the reward that was given to a child is a motivation for them to act positively, and this behaviour's repetition is expected from a child after a reward. These rewards and reinforcements encourage learners to behave positively and repeat positive behaviour time and again (
+Eremie and Doueyi-Fiderikumo, 2019
+; 
+Hineline and Rosales-Ruiz, 2013
+; 
+Marinda and Suhardi, 2021
+).
+The presentation of a stimulus for the performance of desirable behaviour is referred to as positive reinforcement. The use of desirable stimuli for performance helps reinforce positive behaviour and it is expected to happen repeatedly in the future (
+Boakes, 2021
+). According to 
+Staddon and Cerutti (2003)
+, the behaviour theory by 
+Skinner (1963)
+ is based on consequences. 
+Skinner (1963)
+ theory states that if a person's behaviour is rewarded with reinforcement or positive consequences, there is a greater chance of this behaviour repeating. On the other hand, he further stated that if a person's behaviour was punished (negative consequences), there are fewer chances of this behaviour occurring again. 
+Skinner (1963)
+ and 
+Staddon and Cerutti (2003)
+ emphasise that external factors and motivations are more important than internal factors and motivation for a desired behaviour. 
+Skinner (1963)
+, 
+Staddo and Cerutti (2003)
+ further stated that both reinforcements, positive and negative, serve the same purpose, and the purpose is to encourage an individual toward positive behaviour. Positive reinforcement enhances and develops required stimulations in an individual; however, negative reinforcement or punishment eliminates unnecessary behaviour or behaviour that is not required. When a teacher gives a merit to a learner on the completion of homework and withholds break time from a learner who did not complete homework, this is both positive and negative reinforcement, desired to increase required behaviours. Different types of reinforcements can be used to develop learners’ emotional intelligence and required characteristics in behaviour (
+Hidayat, 2018
+; 
+Khilmiyah and Wiyono, 2021
+; 
+Pittman et al., 2022
+).
+“Natural reinforcers, social reinforcers, tangible reinforcers, and token reinforcers” are the four main categories of reinforcements that can be used to bring positive change in behaviours (
+Hidayat, 2018
+; 
+Khilmiyah and Wiyono, 2021
+). The reinforcers that happen directly are known as natural reinforcers. For example, the learners who work hard in class and pay attention to their studies usually get good marks in their examinations; these good marks are the natural reinforcers for them. The social reinforcers are the reinforcers a teacher uses for a learner in class, in the form of saying excellent work done or by written remarks. Tangible reinforcers refer to a tangible reward, such as a candy, a sticker, or any other tangible thing as a reward. Token reinforcers are the points, rewards or merits that can be replaced or exchanged in the form of valuable things or certificates, etc (
+Bhuvaneswari and Baskaran, 2020
+.; 
+Khilmiyah and Wiyono, 2021
+; 
+Putri et al., 2024
+).
+Reinforcement and learners’ performance
+In an educational environment, there are several studies on reinforcement and its influence on learners’ performance and behaviour change. 
+Bonghawan and Macalisang, (2024)
+ stated that positive reinforcement has a significant impact on learners’ performance. 
+Bashir et al. (2020)
+ and 
+Sugai and Horner (2002)
+ researched diverse socioeconomic and cultural backgrounds of learners and found that reinforcement affects their behaviour and performance. They further stated that some learners do not change behaviour without reinforcement. Positive reinforcement is one of the best strategies to promote positive changes in behaviour and boost learners’ academic performance. Another study on the effectiveness of positive reinforcement conducted by 
+Mirza and Rashid (2024)
+, 
+Mallillin (2025)
+ and 
+Orji et al. (2024)
+ stated that rewards and punishments are effective tools that can be used for effective classroom management and desired learners’ behaviour and educational outcomes. Learners’ engagement with academics and positive behaviour are the grassroots predictors and the primary goals of the classroom and teaching–learning process. To achieve the objectives of an effective classroom and teaching–learning process, a teacher needs to use reinforcers (positive or negative) when required.
+Reinforcement and classroom management
+Classroom management is vital for effective teaching and learning, positive behaviour, learners’ academic performance, and the accomplishment of classroom goals and objectives. Effective classroom management is an issue not only in South African schools but a concern of many countries of the world. Some African and Asian countries such as Kenya, Nigeria, Ghana, Botswana, China, Japan, India and Pakistan, are facing classroom management challenges and attainment of required educational goals (
+Egwuasi et al., 2018
+; 
+Muchena and Moalisi, 2018
+). The application of reinforcement is a useful technique that can be practised to attain desired goals. 
+Zahid and Cheema (2023)
+ and 
+Khanum et al. (2025)
+ stated that, instead of employing punishment or negative reinforcement for desired educational outcomes, it is always recommended to use positive reinforcement. Positive reinforcement gives motivation and encouragement to learners to repeat the behaviour that is required. 
+Khanum et al. (2025)
+ also believe that positive reinforcement is useful techniques that can bring positive change in behaviours and promote positivity in learners. This technique is also useful for behaviour modification and behaviour management.
+Legal and rights-based acknowledgement
+Corporal punishment was banned in South African schools by following the international legal frameworks’ footsteps (
+Hunter and Morrell, 2021
+). Section 10 of the South African school Act of 1996, and international frameworks such as the United Nations Convention on the Rights of the Child (UNCRC) clearly states that corporal punishment is considered as criminal activity if it is administered by a teacher (
+Doughty-Wagner, 2025
+; 
+Hunter, and Morrell, 2021
+). The section 28 of the Constitution of 1996 of the Republic of South Africa guarantees every child's rights and protects them from maltreatment, abuse, degradation, and neglect. Moreover, South Africa is also a signatory to the UNCRC, which demands from the states to protect children rights and guard them from all forms of physical, emotional, psychological and mental abuse. Likewise, the African Charter on the Rights and Welfare of the Child also emphasise on child's dignity and well-being.
+Research (
+Maphosa and Shumba, 2010
+) indicates that a teacher can maintain discipline and manage behaviour in classrooms by operating within the framework of the constitution of the country and the school act. Harmful corporal punishment for learner misconduct, such as hitting, slapping, canning, pushing and forcing, is not a solution to the problem (
+Obadire and Sinthumule, 2021
+). 
+Ladan and Yabo (2023)
+ stated that this can help in stopping undesirable behaviour for the time being on one hand, but at the same time, on the other hand, it also creates fear, pain and aggression, reduces self-esteem, damages teacher–learner relationships and fails to promote self-confidence and discipline. However, constructive disciplinary consequences such as restorative practices, logical consequences, detention, and withdrawal of privileges are considered useful techniques that help learners to bring positivity to their behaviours (
+Bachtiar, 2025
+; 
+Hulvershorn and Mulholland, 2018
+). This can also promote self-confidence and self-respect in learners, build teacher-learner relationship, and encourage learners to maintain safe and supportive learning classroom environment. It is important for a teacher to exercise constructive disciplinary measure in line with school policies and code of conduct. Punishment in any form is banned and considered as criminal act if exercised by a teacher.
+Research methods
+The researcher employed the generic qualitative research approach to investigate the phenomenon of teacher efficacy and classroom management (
+Creswell and Poth, 2018
+; 
+Neuman, 2014
+). Generic qualitative research seeks to “to discover and understand a phenomenon, a process, or the perspectives and worldviews of the people involved” (
+Merriam, 2002
+). In this research, the researcher sought to comprehend the perspectives and worldviews of the teachers regarding the influence of teacher efficacy on effective classroom management in selected secondary schools in Johannesburg. The data was collected by conducting individual face-to-face interviews with each of the selected secondary school teachers (
+Merriam, 2002
+; 
+Tracy, 2019
+). The researcher used the purposive sampling technique to select the schools, school heads and teachers as research participants. A total of 18 teachers and school heads from six secondary schools were interviewed, of whom 14 were female and four were male. Eleven of the participants were aged below 40 and seven were between 40 and 60 years. All the participants held permanent positions at their respective schools. Semi-structured open-ended questions were posed to explore the views, thoughts and experiences of the teachers. All interviews were recorded on a cell phone voice recorder to capture the original voices and words of the participants. Member checks were carried out in order to verify the contributions of each participant. The validity of the research was promoted by cross-checking the findings with the raw data (
+Guba and Lincoln, 1989
+; 
+Lincoln and Guba, 1985
+; 
+Merriam, 2002
+). The Tesch's qualitative data analysis method technique (cited in 
+Creswell, 2009
+; 
+Creswell and Poth, 2016
+) was carried out through a systematic process to undertake the research. This method involves topic identification and coding, concept development and categorisation, themes and sub-themes formation and finally the write-up (
+Creswell, 2009
+). Subsequent to research interviews, the researcher transcribed word to word all audio-recorded interviews and thereafter read through several times to gain a general understanding of the participants’ voices, responses and experiences. Afterwards, similar voices, statements, responses and experiences were grouped and assigned codes to all of them. Consequently, interconnected codes were clustered together so that categories and concepts could be formed. The categories and concepts represented are the persistent responses of the research participants. Themes were then developed when several categories reflected a common meaning related to the research questions and objectives. The codes such as “discipline challenge, behaviour management, misconduct, abolishment of corporal punishment” were grouped together to form a theme “Abolishment of corporal punishment and classroom management”. Other themes were also formed with a similar process. The data was analysed by one rater/analyst, so theme formation did not contradict with disagreement. Informed consent from all participants was obtained before interviews (
+Braun and Clarke, 2006
+; 
+Creswell, 2011
+; 
+Creswell and Poth, 2016
+). The participants’ and schools’ anonymity and confidentiality were ensured through the use of pseudonyms.
+Results
+The following three themes emerged from the analysis and were interpreted by integrating the theoretical framework and the literature.
+Theme 1: abolishment of corporal punishment and classroom management
+Corporal punishment was an accepted norm in South African schools before the Bill of Rights of 1996. Since the abolishment of corporal punishment in schools, it has become essential for teachers to learn classroom and behaviour management skills in order to maintain discipline and provide a conducive learning environment for learners. The Bill of Rights protects the educational and social rights of a child and states that teachers are not allowed to discipline learners and manage the class by applying any kind of corporal punishment; i.e., physical, emotional or psychological. The behaviours can only be dealt with reinforcement, rules and rewards. During research, it was found that many teachers struggle to control misbehaviours and are not trained enough to use reinforcements, rewards and merits, etc., as discipline and classroom management strategies. One of the research respondents articulated that “
+we did not receive any kind of training to deal with misbehaved and problematic learners during B.Ed. degree.”
+ Another respondent added that “
+behaviour management training in South African context is missing in B.Ed. degree programme.”
+ There is a need to include behaviour management theories and training programmes that align with the South African school context in trainee teachers’ courses so that they can equip themselves to address different learner behaviours.
+Corporal punishment is banned, so teachers cannot use it as a strategy to discipline learners, which 
+Mahlangu et al. (2021)
+ think that it was the right decision, as it has protected the rights of the child, but at the same time, it has also raised issues for teachers to discipline misbehaved and disruptive learners in the classroom. Before corporal punishment was banned, teachers used to exercise physical punishment in schools to manage behaviour. This technique was considered an appropriate solution to the problem. However, 
+Aravantinos et al. (2024)
+ argued that this was a temporary, not a permanent, solution. Behaviours cannot be modified with punishment, force or authority. They demand attention and relationship, and more importantly, the root causes of misbehaviours to be addressed. The research respondents were of the view that punishment should be allowed in schools at some level to discipline various behaviours. Different behaviours demand different modification techniques. Additionally, another respondent expressed her views that “
+I think punishment is to minimise misbehaviours; it does not mean physical punishment. It can be a question asking, or ask the learner to stand-up in classroom, or stop their breaks, etc.”
+ After the abolishment of corporal punishment, classroom management is a challenge for both in-training and in-service teachers. Some disruptive learners disrupt the classroom environment by knowing their constitutional rights. It is therefore essential for the teachers to train them in a way so that they can be better able to deal with disruption and misbehaviour.
+Theme 2: school code of conduct and classroom management
+South African Schools Act (84 of 1996) has set the code of conduct to be exercised for classroom and discipline management in schools. The school governing body is accountable for the adoption of the code of conduct; however, teachers and school management are responsible for its implementation. 
+Zondo and Mncube (2024)
+ stated that the implementation of the code of conduct has minimised disciplinary issues and enhanced the learning environment. In response to the role of the code of conduct in classroom management, it was identified that it is about the implementation and execution of it for behaviour management and an effective teaching-learning process. Some respondents think that the implementation of class rules and code of conduct is a useful strategy to apply for classroom and behaviour management. Others believe that it is a useful technique, but it does not work in all situations, and on all behaviour. In order to attain educational goals, it is essential to deal with misbehaviours seriously, take disciplinary measures, let learners know about the rules, regulations and code of conduct of the school, and implement them if and where necessary. Moreover, findings also confirmed that codes of conduct are to deal with minor issues and behaviours, but teachers do not know or are not trained to deal with serious behaviours and challenges in the classroom. An argument came up in response to deal with rough behaviours. The respondent said, “
+The challenge that I faced in my class was the challenge of drug abuse. Some learners were using XINEX (it's one of the kinds of drugs). After they take XINEX, they become violent, they fight, do not follow rules, and interrupt other learners. I don’t know which code of conduct can be implemented in this situation.”
+ The respondent verdict supported the argument of 
+Zondo and Mncube (2022)
+, who stated that in South Africa, especially in rural schools, teachers are facing multiple challenges in implementing the code of conduct to manage learners’ behaviour. They further stated that some behaviours are unjustifiable and cannot be dealt with or fall under the code of conduct category. Teachers are not fully exposed to the code of conduct, as well as not expert in classroom management skills.
+Theme 3: use of reinforcement and classroom management
+Positive reinforcement is considered one of the useful strategies for classroom and behaviour management, especially for beginning-grade learners. 
+Skinner (1963)
+ stated that reinforcement can be exercised either positively or negatively for classroom and behaviour management. Positive reinforcements such as rewards and prizes can motivate one to repeat the same behaviour for reward. Similar to positive reinforcement, negative reinforcement, such as a fine or unpleasant activity assigned by a teacher to a learner as punishment, can enhance the chances of that action not being repeated. The research respondent stated that “
+acknowledgement as a positive reinforcement can play a positive role in effective classroom management.”
+ The findings conclude that reinforcement is a technique that teachers employ to achieve educational goals and classroom management. It was also found that rewards and reinforcers do impact ill-behaviours, but only for a specific time. After an interval, the same behaviour repetition occurred. This hinders effective classroom management and teaching-learning activities. Although punishment is not allowed, some teachers still believe that this can be a solution. On the other hand, 
+Glasser (1999)
+ affirmed that any type of negative reinforcement cannot bring positivity in learners’ behaviour. Behaviour cannot be modified with punishment or hard and strict rules, but managed with positivity. One respondent said, 
+“In my view, we cannot manage classroom with punishment or fines. Reinforcement as a punishment is not a solution, rather we can use it positively by praising or giving them rewards on any minor achievements.”
+ This argument is also supported by Plato as cited by 
+Chandra, 2015
+: “Do not train learners to learning by force and harshness but direct them to it by what amuses their mind, so that you may be better able to discover with accuracy the peculiar bent of the genius of each”. 
+Glasser (1999)
+ also affirmed that punishment cannot motivate one to bring positive change in behaviour. It is a challenging situation for teachers in schools, they cannot punish learners to keep them on track, and they are also not trained enough to implement reinforcement (positive and negative) and use the code of conduct for behaviour management. One more respondent argued that “
+we need to create a balance. Learners in all schools are not same and we cannot deal with all of them in a same way.”
+ A balance theory in B.Ed. coursework and practical training is crucial to deal with the challenge.
+Discussion
+Teachers’ use of reinforcement in the classroom is a great concern for many researchers and teachers. The term reinforcement was first introduced by 
+Skinner (1963)
+. He believes that reinforced behaviours have the tendency to be repeated, while a behaviour that is not reinforced has the chance to remain constant. Multiple studies (
+Aravantinos et al. 2024
+) confirm that reinforcements cannot bring positive change in behaviour. 
+Skinner (1963)
+; 
+Estes (1972)
+; 
+Hineline and Rosales-Ruiz (2013)
+ and 
+Malott (2021)
+ argued that rewards, prizes, praise, and merits are the positive reinforcers that increase the probability of behaviour repetition, while 
+Deci et al. (1989)
+ viewed rewards, prizes and merits as spoiling learners. Reinforced behaviours are repeated for rewards only, not for intrinsic motivation and change
+.
+In an endeavour to investigate teachers’ practices on the use of reinforcement in classrooms to attain learners’ performance and classroom management for effective teaching and learning, it was found that positive reinforcement, such as rewards, recognition, praise and merits, can be a good strategy to use in the classroom to manage behaviour. The research also found that positive reinforcement contributes to learners’ academic attainment. Learners who received encouragement and recognition were more likely to participate in lessons, complete academic activities successfully and achieve better educational outcomes. However, this might bring a transitory change in behaviour. The positive behaviours tend to be repeated only when there is appreciation, encouragement, rewards, acknowledgement, and praise. Moreover, neither negative reinforcement such as extra work and extra lessons after school, nor punishment, such as detention, removing break time, stopping access to cell phones and physical punishment, is workable in every situation and for all behaviours. Negative reinforcement increases positive behaviour by eliminating undesirable events and works as a positive approach to on-track behaviour. In contrast, punishment brings negativity and can be demoralising; it cannot be a source of encouragement, motivation and positivity. Thus, the effects of punishment on learners are typically undesirable and can leave learners with unpleasant memories.
+The research findings align with 
+Hineline and Rosales-Ruiz, 2013
+ and 
+Malott (2021)
+ view that negative reinforcement and punishment are not permanent solutions to the problem. Moreover, the findings indicate that it is difficult to motivate learners from economically underprivileged and broken families with incentives and rewards. They usually face difficult times and challenges, and it is expected that they are more likely to misbehave socially and emotionally in the classroom. For example, some participants noted that learners from poor economic backgrounds and broken families have more social issues, and it is hard to deal with these behaviours with reinforcement or punishment. Behaviour modification and change require a healthy, positive and comfortable environment (
+Antoniuk et al. 2023
+; 
+Gardner, 2021
+), and it is difficult for these learners to access such environments. However, while this might be true, it cannot be generalised, as some learners from underprivileged and single-headed families are well-behaved and perform excellently in class.
+Maintaining discipline in South African classrooms, like many countries such as Kenya, Nigeria, Ghana, Botswana, China, Japan, India and Pakistan, is a challenge that most teachers face today (
+Obadire and Sinthumule, 2021
+; 
+Segalo and Rambuda, 2018
+). Teachers use different techniques to manage behaviour and maintain discipline in classrooms. Corporal punishment is against educational law. However, reinforcements in this study's context were not seen as a solution to the problem. Permanent solutions were needed, but the participants did not know what these could be, as even applying the school code of conduct, rules and restorative measures have proven not to be permanent solutions in all situations and contexts. The research findings also revealed the challenges associated with the implementation of reinforcement strategies. Some respondents reported difficulties in maintaining discipline without corporal punishment, especially in overcrowded classrooms and under-resourced schools. Others indicated that teachers are not skilled in implementing reinforcement techniques. Moreover, they also lacked classroom management training. After the abolishment of corporal punishment, teachers further struggle to balance learner rights with effective discipline practices and the application of reinforcement strategies. By knowing that physical punishment is banned, some teachers in rural and non-fee schools still use it; however, research has shown that negative reinforcement and punishment do not bring positivity and behaviour change, and positive reinforcement can mean learners only repeat the behaviour for incentives. The literature shows that rewards do not always motivate intrinsic motivation. Intrinsic motivation is an “inherent characteristic” that is the self-determination of an individual (
+Tamir and Hughes, 2018
+; 
+Schultner et al., 2025
+). 
+Tamir and Hughes (2018)
+ and 
+Schultner et al. (2025)
+ further believe that rewards could damage or enhance behaviours depending on the needs and social environment of the classroom. This is a frustrating dichotomy as reinforcement does not always work, and punishment is not allowed.
+Even so, in order to provide a conducive classroom, the participants felt that, in some situations, teachers should use negative reinforcement (restorative practices, demerits, etc.) when needed. The learners should not be given more rights than teachers because of their different socioeconomic, cultural and family backgrounds, and the school environment and strategies and rules should be context-specific. All behaviours and backgrounds cannot be managed in the same way. 
+Tesfay and Elias (2025)
+ affirmed that teacher interventions in line with the law are significant if class rules are broken and learners are misbehaving. Furthermore, 
+Glasser (1999)
+ affirmed the same in his “choice theory”, that behaviour modification and learners’ performance can be achieved through positive reinforcement, but not through punishment, harshness, power and authority. Similarly, 
+Kohn, 2006
+, 
+Kubanek et al. (2015)
+ and 
+Skinner (1963)
+ argued that punishment and negative reinforcement are not the solution to behaviour modification and problems. Conversely, most participants felt that reinforcement rewards and punishments cannot be set aside in all cases, which is not justifiable according to South African law.
+The research findings signify that for effective classroom management and educational outcomes, schools and teachers must implement positive reinforcement and a school code of conduct to maintain discipline in the classroom. Furthermore, corporal punishment is abolished, and much research, such as this study, has found that any type of reinforcement (positive, negative and punishment) is not a permanent solution. Therefore, it is vital that teachers develop the necessary classroom management skills.
+While reinforcement and punishment are not solutions to the problem, teachers need to be skilled so that they can cultivate positive and close relationships with learners that can build confidence and trust between them. Teachers can use this bond to deal with negative behaviours. Moreover, modern technological interventions in classrooms and diverse and challenging learners’ backgrounds demand context-specific professional training programmes to train teachers according to the needs and demands of the learners.
+Conclusion
+In conclusion, the research demonstrates that classroom management and learners’ academic attainment are problems in some secondary schools in Johannesburg. The findings suggest that although positive reinforcement, such as praise, constructive feedback and rewards, contributes to effective teaching and learning, an improvement in learner behaviour, an increase in motivation and enhancement in learners’ academic attainment and effective classroom management, this is not a solution to the problem. This creates habits that are problematic for learners, as they respond and act positively only when behaviour is dealt with through positive reinforcement. Furthermore, the research highlights that some schools, such as quintile 1 and quintile 2 (no-fee) schools, which are mostly in remote areas, have more classroom and learner academic attainment problems than quintile 3 and Model C schools (fee-paying). Underprivileged socioeconomic and broken family backgrounds are the main reasons for this. Learners with these backgrounds are often difficult to handle with rewards, praise and positive feedback. Corporal punishment and the use of power and authority are prohibited according to the law, so they cannot be used to control behaviour. Negative reinforcement has its own challenges, as these are less effective for long-term change. In addition, teachers lack the skills to manage classrooms effectively by implementing other strategies. Therefore, the research underscores the need for a shift from the use of reinforcement and punishment to teachers’ professional development so that they can learn, improve and implement different strategies for effective classroom environments without infringing the rights of the child.
+The study had some limitations as it was conducted in six secondary schools of Johannesburg, which is limited in size. However, it is expected that many other South African secondary schools find themselves in the same scenario. The research only focused on the influence of reinforcements on classroom management and learners’ academic attainment, and did not discuss other factors that influence classroom management and learner performance. The findings of this qualitative study are context-specific. The research topic, participants’ views, thoughts and experiences, societal challenges and learners’ background are some of the important topics that need to be discussed further and in detail with a larger, diverse sample.
+Statements
+Data availability statement
+The raw data supporting the conclusions of this article will be made available by the authors, without undue reservation.
+Ethics statement
+The studies involving humans were approved by University of Johannesburg South Africa. The studies were conducted in accordance with the local legislation and institutional requirements. The participants provided their written informed consent to participate in this study.
+Author contributions
+NA: Writing – original draft.
+Funding
+The author(s) declared that financial support was not received for this work and/or its publication.
+Conflict of interest
+The author(s) declared that this work was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
+Generative AI statement
+The author(s) declared that generative AI was not used in the creation of this manuscript.
+Any alternative text (alt text) provided alongside figures in this article has been generated by Frontiers with the support of artificial intelligence and reasonable efforts have been made to ensure accuracy, including review by the authors wherever possible. If you identify any issues, please contact us.
+Publisher’s note
+All claims expressed in this article are solely those of the authors and do not necessarily represent those of their affiliated organizations, or those of the publisher, the editors and the reviewers. Any product that may be evaluated in this article, or claim that may be made by its manufacturer, is not guaranteed or endorsed by the publisher.
+References
+1
+Ahmed
+N.
+ (
+2024
+). 
+An enquiry into the role of classroom management in enhancing learners’ social skills
+. 
+J. Manag. Bus. Educ
+7
+, 
+174
+–
+193
+. 
+10.35564/jmbe.2024.0010
+CrossRef 
+Google Scholar
+View reference in article
+2
+Ahmed
+N.
+ (
+2025
+). 
+An enquiry into learners’ disengagement from schooling—South African secondary schools: teachers’ perspective
+. 
+Stud. Learn. Teach
+6
+, 
+197
+–
+212
+. 
+10.46627/silet.v6i1.524
+CrossRef 
+Google Scholar
+View reference in article
+3
+Aikomo
+D. O.
+ (
+2025
+). 
+Breaking the cycle classroom management strategies to curb indiscipline and foster academic achievement
+. 
+Lagos Educ. Rev.
+20
+ (
+2
+), 
+253
+–
+261
+. 
+10.52968/15062333
+CrossRef 
+Google Scholar
+View reference in article
+4
+Ajani
+O. A.
+ (
+2024
+). 
+Enhancing pre-service teacher education: crafting a technology-responsive curriculum for modern classrooms and adaptive learners
+. 
+Res. Educ. Policy Manag
+6
+, 
+209
+–
+229
+. 
+10.46303/repam.2024.32
+CrossRef 
+Google Scholar
+View reference in article
+5
+Antoniuk
+O.
+Vertel
+A.
+Kolodyazhna
+A.
+Kyrychenko
+R.
+Mnozhynska
+R.
+ (
+2023
+). 
+Creating a comfortable learning environment: the role of teachers and education seekers
+. 
+Cad. Educ. Tecnol. Soc
+16
+, 
+153
+–
+162
+. 
+10.14571/brajets.v16.n1.153-162
+CrossRef 
+Google Scholar
+View reference in article
+6
+Aravantinos
+S.
+Lavidas
+K.
+Voulgari
+I.
+Papadakis
+S.
+Karalis
+T.
+Komis
+V.
+ (
+2024
+). 
+Educational approaches with AI in primary school settings: a systematic review of the literature available in scopus
+. 
+Educ. Sci
+14
+, 
+744
+. 
+10.3390/educsci14070744
+CrossRef 
+Google Scholar
+View reference in article
+7
+Bachtiar
+F. R.
+ (
+2025
+). 
+The importance of speaking kind, polite, and positive words as a form of noble conduct in giving praise for performance, work, and achievement
+. 
+Algebra J. Pendidik. Sos. Sains
+5
+, 
+536
+–
+544
+. 
+10.58432/algebra.v5i3.1567
+CrossRef 
+Google Scholar
+View reference in article
+8
+Bashir
+M.
+Ajmal
+M.
+Rubab
+I.
+Bhatti
+A.
+ (
+2020
+). 
+Increasing teachers’ use of positive reinforcement: effects of performance feedback to improve a learner’s behavior
+. 
+J. Crit. Rev
+7
+, 
+2091
+–
+2104
+. 
+10.31838/jcr.07.19.331
+CrossRef 
+Google Scholar
+View reference in article
+9
+Bhuvaneswari
+G.
+Baskaran
+D.
+ (
+2020
+). 
+A study on emotional intelligence of higher secondary school teachers in chengalpattu district
+. 
+Shanlax Int. J. Educ
+9
+, 
+146
+–
+151
+. 
+10.34293/education.v9i1.3388
+CrossRef 
+Google Scholar
+View reference in article
+10
+Boakes
+R. A.
+ (
+2021
+). “
+Performance on learning to associate a stimulus with positive reinforcement
+,” in 
+Operant-Pavlovian Interactions
+, 
+eds. H. Davis, and H. M. B. Hurwitz (New York, NY: Routledge)
+, 
+67
+–
+101
+.
+Google Scholar
+View reference in article
+11
+Bonghawan
+R. G. G.
+Macalisang
+D.
+ (
+2024
+). 
+Teachers’ learning reinforcement: effects on students’ motivation, self-efficacy and academic performance
+. 
+Int. J. Sci. Res. Manag
+12
+, 
+3218
+–
+3228
+. 
+10.18535/ijsrm/v12i02.el08
+CrossRef 
+Google Scholar
+View reference in article
+12
+Braun
+V.
+Clarke
+V.
+ (
+2006
+). 
+Using thematic analysis in psychology
+. 
+Qual. Res. Psychol
+3
+, 
+77
+–
+101
+. 
+10.1191/1478088706qp063oa
+CrossRef 
+Google Scholar
+View reference in article
+13
+Chandra
+R.
+ (
+2015
+). 
+Classroom management for effective teaching
+. 
+Int. J. Educ. Psychol. Res.
+4
+ (
+4
+), 
+13
+–
+15
+.
+Google Scholar
+View reference in article
+14
+Creswell
+J. W.
+ (
+2009
+). 
+Research Design: Qualitative, Quantitative and Mixed Methods Approach
+. 
+SAGE
+.
+Google Scholar
+View reference in article
+15
+Creswell
+J. W.
+ (
+2011
+). 
+Controversies in mixed methods research
+. 
+Sage Handb. Qual. Res.
+4
+ (
+1
+), 
+269
+–
+284
+.
+Google Scholar
+View reference in article
+16
+Creswell
+J. W.
+Poth
+C. N.
+ (
+2016
+). 
+Qualitative Inquiry and Research Design: Choosing among Five Approaches
+. 
+SAGE
+.
+Google Scholar
+View reference in article
+17
+Creswell
+J. W.
+Poth
+C. N.
+ (
+2018
+). 
+Qualitative Inquiry and Research Design: Choosing among Five Approaches
+. 
+4th ed
+. 
+SAGE
+.
+Google Scholar
+View reference in article
+18
+Deci
+E. L.
+ (
+1971
+). 
+Effects of externally mediated rewards on intrinsic motivation
+. 
+J. Pers. Soc. Psychol
+18
+, 
+105
+. 
+10.1037/h0030644
+CrossRef 
+Google Scholar
+View reference in article
+19
+Deci
+E. L.
+Betley
+G.
+Kahle
+J.
+Abrams
+L.
+Porac
+J.
+ (
+1981
+). 
+When trying to win: competition and intrinsic motivation
+. 
+Pers. Soc. Psychol. Bull
+7
+, 
+79
+–
+83
+. 
+10.1177/014616728171012
+CrossRef 
+Google Scholar
+View reference in article
+20
+Deci
+E. L.
+Cascio
+W. F.
+ (
+1972
+). 
+Changes in Intrinsic Motivation as a Function of Negative Feedback and Threats
+. 
+New York: University of Rochester. Available online at:
+https://www.researchgate.net/publication/234620112
+(Accessed April 19, 1972)
+.
+Google Scholar
+View reference in article
+21
+Deci
+E. L.
+Connell
+J. P.
+Ryan
+R. M.
+ (
+1989
+). 
+Self-determination in a work organization
+. 
+J. Appl. Psychol
+74
+, 
+580
+–
+590
+. 
+10.1037/0021-9010.74.4.580
+CrossRef 
+Google Scholar
+View reference in article
+22
+Dingliang
+T.
+ (
+2025
+). “
+Reinforcement theory of learning
+,” in 
+The ECPH Encyclopedia of Psychology
+, 
+ed. Z. H. Kan (Singapore: Springer Nature Singapore)
+, 
+1277
+.
+Google Scholar
+View reference in article
+23
+Doughty-Wagner
+F.
+ (
+2025
+). 
+International Law and the Child 100 Years Later: A Dichotomous History of Children’s Rights Protections and Freedoms
+. 
+Oregon Review of International Law 26 73. University of Oregon School of Law, Eugene, OR, United States
+.
+Google Scholar
+View reference in article
+24
+Du Plessis
+P.
+Mestry
+R.
+ (
+2019
+). 
+Teachers for rural schools—a challenge for South Africa
+. 
+S. Afr. J. Educ
+39
+, 
+S1
+–
+S9
+. 
+10.15700/saje.v39ns1a1774
+CrossRef 
+Google Scholar
+View reference in article
+25
+Egwuasi
+P. I.
+Laguador
+J. M.
+Oleforo
+N. A.
+Nwosu
+S.
+Khalil
+R. R.
+Sultania
+S. K.
+ (
+2018
+). 
+School Environment in Africa and Asia Pacific
+. 
+New York, NY: AuthorHouse
+.
+Google Scholar
+View reference in article
+26
+Eremie
+M. D.
+Doueyi-Fiderikumo
+J.
+ (
+2019
+). 
+Positive reinforcement on academic achievement of senior secondary school students in river state
+. 
+Int. J. Innov. Dev. Policy Stud
+7
+, 
+24
+–
+32
+.
+Google Scholar
+View reference in article
+27
+Estes
+W. K.
+ (
+1972
+). 
+Reinforcement in human behavior: reward and punishment influence human actions via informational and cybernetic processes
+. 
+Am. Sci
+60
+, 
+723
+–
+729
+. 
+https://www.jstor.org/stable/27843464
+Pubmed Abstract
+Google Scholar
+View reference in article
+28
+Fatima
+S.
+Kirmani
+N. S.
+Tanweer
+L.
+ (
+2023
+). 
+Impact of reinforcement strategies on students’ learning behaviors in classroom at primary level
+. 
+J. Dev. Soc. Sci.
+4
+ (
+4
+), 
+276
+–
+283
+. 
+https://doi.org/10.47205/jdss.2023(4-IV)25
+Google Scholar
+View reference in article
+29
+Gardner
+H.
+ (
+2021
+). 
+Disciplined Mind: What all Students Should Understand
+. 
+New York, NY: Simon and Schuster
+.
+Google Scholar
+View reference in article
+30
+Glasser
+W.
+ (
+1999
+). 
+Choice Theory: A new Psychology of Personal Freedom
+. 
+New York, NY: Harper Perennial
+.
+Google Scholar
+View reference in article
+31
+Guba
+E. G.
+Lincoln
+Y. S.
+ (
+1989
+). 
+Fourth Generation Evaluation
+. 
+Newbury Park, California
+: 
+Sage
+.
+Google Scholar
+View reference in article
+32
+Gunaretnam
+V.
+ (
+2021
+). 
+A study on increasing positive behaviors using positive reinforcement techniques
+. 
+Int. J. Res. Innov. Soc. Sci
+5
+, 
+198
+–
+219
+. 
+10.47772/IJRISS.2021.5706
+CrossRef 
+Google Scholar
+View reference in article
+33
+Hidayat
+K. N.
+ (
+2018
+). 
+Emotional intelligence affect social adjustment ability among primary school students
+. 
+Int. J. Eval. Res. Educ
+7
+, 
+270
+–
+278
+. 
+10.11591/ijere.v7i4.14272
+CrossRef 
+Google Scholar
+View reference in article
+34
+Hineline
+P. N.
+Rosales-Ruiz
+J.
+ (
+2013
+). “
+Behaviour in relation to aversive events: punishment and negative reinforcement
+,” in 
+APA handbook of Behaviour Analysis, Vol. 1. Methods and Principles
+, eds. 
+Madden
+GJ
+Dube
+WV
+Hackenberg
+TD
+Hanley
+GP
+Lattal
+KA
+ (
+Washington, DC: American Psychological Association
+), 
+483
+–
+512
+. 
+10.1037/13937-021
+CrossRef 
+Google Scholar
+View reference in article
+35
+Hollins
+E. R.
+ (
+2015
+). 
+Culture in School Learning: Revealing the Deep Meaning
+. 
+New York, NY: Routledge
+.
+Google Scholar
+View reference in article
+36
+Hulvershorn
+K.
+Mulholland
+S.
+ (
+2018
+). 
+Restorative practices and the integration of social emotional learning as a path to positive school climates
+. 
+J. Res. Innov. Teach. Learn.
+11
+ (
+1
+), 
+110
+–
+123
+. 
+https://doi.org/10.1108/JRIT-08-2017-0015
+Google Scholar
+View reference in article
+37
+Hunter
+M.
+Morrell
+R.
+ (
+2021
+). 
+Corporal punishment and gender equality regimes of care and rights in South African schools
+. 
+J. Gend. Stud.
+30
+ (
+3
+), 
+344
+–
+357
+. 
+10.1080/09589236.2020.1867832
+CrossRef 
+Google Scholar
+View reference in article
+38
+Khanum
+B.
+Sardar
+R.
+Bajwa
+T. H.
+ (
+2025
+). 
+Role of positive reinforcement strategies in students learning performance at elementary level
+. 
+ASSAJ
+4
+, 
+2218
+–
+2235
+. 
+https://www.assajournal.com/index.php/36/article/view/710
+Google Scholar
+View reference in article
+39
+Khilmiyah
+A.
+Wiyono
+G.
+ (
+2021
+). 
+Emotional and social intelligence assessment model for student character reinforcement
+. 
+Int. J. Educ. Manag
+35
+, 
+789
+–
+802
+. 
+10.1108/IJEM-02-2020-0046
+CrossRef 
+Google Scholar
+View reference in article
+40
+Kohn
+A.
+ (
+2006
+). 
+Beyond Discipline: From Compliance to Community
+. 
+Alexandria, VA: ASCD
+.
+Google Scholar
+View reference in article
+41
+Kubanek
+J.
+Snyder
+L. H.
+Abrams
+R. A.
+ (
+2015
+). 
+Reward and punishment act as distinct factors in guiding behavior
+. 
+Cognition
+139
+, 
+154
+–
+167
+. 
+10.1016/j.cognition.2015.03.005
+Pubmed Abstract
+CrossRef 
+Google Scholar
+View reference in article
+42
+Ladan
+S. A.
+Yabo
+N. M.
+ (
+2023
+). 
+Exploring low level violence as neglected aspects of school culture impact on academic self-concept of learners
+. 
+Rima
+2
+ (
+1
+), 
+34
+–
+45
+. 
+https://rijessu.com/volume-2-issue-1-2023
+Google Scholar
+View reference in article
+43
+Ladson-Billings
+G.
+ (
+2014
+). 
+Culturally relevant pedagogy 2.0: aka the remix
+. 
+Harv. Educ. Rev.
+84
+ (
+1
+), 
+74
+–
+84
+. 
+10.17763/haer.84.1.p2rj131485484751
+CrossRef 
+Google Scholar
+View reference in article
+44
+Lincoln
+Y. S.
+Guba
+E. G.
+ (
+1985
+). 
+Naturalistic Inquiry
+. 
+Beverly Hills, CA: Sage
+.
+Google Scholar
+View reference in article
+45
+Lynnette
+R. A.
+Otara
+A.
+Otengah
+P. W.
+ (
+2021
+). 
+Effectiveness of school principals’ positive reinforcement approach on management of students’ discipline in public secondary schools in migori county
+. 
+Am. Int. J. Bus. Manag
+. 
+4
+, 
+17
+–
+43
+.
+Google Scholar
+View reference in article
+46
+Mahlangu
+P.
+Chirwa
+E.
+Machisa
+M.
+Sikweyiya
+Y.
+Shai
+N.
+Jewkes
+R.
+ (
+2021
+). 
+Prevalence and factors associated with experience of corporal punishment in public schools in South Africa
+. 
+PLoS One
+16
+ (
+8
+), 
+e0254503
+. 
+10.1371/journal.pone.0254503
+Pubmed Abstract
+CrossRef 
+Google Scholar
+View reference in article
+47
+Mallillin
+L. L.
+ (
+2025
+). 
+Teaching strategy theory for effective classroom setting
+. 
+J. Digit. Learn. Distance Educ
+4
+, 
+1765
+–
+1785
+. 
+10.56778/jdlde.v4i7.608
+CrossRef 
+Google Scholar
+View reference in article
+48
+Malott
+R. W.
+ (
+2021
+). 
+Principles of Behavior
+. 
+London: Routledge
+. 
+10.4324/9781003157014
+CrossRef 
+Google Scholar
+View reference in article
+49
+Maphosa
+C.
+Shumba
+A.
+ (
+2010
+). 
+Educators’ disciplinary capabilities after the banning of corporal punishment in South African schools
+. 
+S. Afr. J. Educ.
+30
+ (
+3
+), 
+386
+–
+400
+. 
+10.15700/saje.v30n3a361
+CrossRef 
+Google Scholar
+View reference in article
+50
+Marinda
+V.
+Suhardi
+A. R.
+ (
+2021
+). 
+Effects of positive, negative, and punishment reinforcement on motivation at college students in Indonesia
+. 
+Int. J. Psychosoc. Rehabil
+24
+, 
+7211
+–
+7219
+. 
+https://rijessu.com/volume-2-issue-1-2023
+Google Scholar
+View reference in article
+51
+Martin
+N. K.
+Sass
+D.
+ (
+2010
+). 
+Construct validation of the behavior and instructional management scale
+. 
+Teach. Teach. Educ
+26
+ (
+5
+), 
+1124
+–
+1135
+. 
+10.1016/j.tate.2009.12.001
+CrossRef 
+Google Scholar
+View reference in article
+52
+Merriam
+S. B.
+ (
+2002
+). 
+Introduction to qualitative research
+. 
+Qual. Res. Pract. Examples Discuss. Anal.
+1
+ (
+1
+), 
+1
+–
+17
+.
+Google Scholar
+View reference in article
+53
+Michael
+J.
+ (
+1975
+). 
+Positive and negative reinforcement: a distinction that is no longer necessary
+. 
+Behaviorism.
+3
+, 
+33
+–
+44
+. 
+https://www.jstor.org/stable/27758829
+Google Scholar
+View reference in article
+54
+Mirza
+M. S.
+Rashid
+S.
+ (
+2024
+). 
+Effect of online cooperative learning on students’ academic achievement at higher education level
+. 
+Inverge J. Soc. Sci
+3
+, 
+1
+–
+10
+. 
+10.63544/ijss.v3i2.77
+CrossRef 
+Google Scholar
+View reference in article
+55
+Mondol
+M.
+Rahul
+M. M.
+Hasan
+M. J.
+ (
+2026
+). 
+Perceived role of positive reinforcement on primary students’ academic engagement and motivation
+. 
+Asian J. Educ. Soc. Stud.
+52
+ (
+3
+), 
+117
+–
+132
+. 
+https://doi.org/10.9734/ajess/2026/v52i32896
+Google Scholar
+View reference in article
+56
+Muchena
+K. C.
+Moalisi
+W. T. S.
+ (
+2018
+). 
+Teacher efficacy and classroom management in Africa a meta-analysis the independent journal of teaching and learning
+. 
+J. Indep. Teach. Learn
+. 
+13
+ (
+2
+), 
+26
+–
+35
+. 
+https://hdl.handle.net/10520/EJC-12222406b7
+Google Scholar
+View reference in article
+57
+Munna
+A. S.
+Kalam
+M. A.
+ (
+2021
+). 
+Teaching and learning process to enhance teaching effectiveness: a literature review
+. 
+Int. J. Humanit. Innov.
+4
+, 
+1
+–
+4
+. 
+10.33750/ijhi.v4i1.102
+CrossRef 
+Google Scholar
+View reference in article
+58
+Neuman
+D.
+ (
+2014
+). 
+Qualitative research in educational communications and technology: a brief introduction to principles and procedures
+. 
+J. Comput. High. Educ.
+26
+ (
+1
+), 
+69
+–
+86
+. 
+10.1007/s12528-014-9078-x
+CrossRef 
+Google Scholar
+View reference in article
+59
+Ng
+C.
+Bartlett
+B.
+Elliott
+S. N.
+ (
+2018
+). “
+Engaging in learning: the challenges and consequences for students from challenging backgrounds
+,” in 
+Empowering Engagement: Creating Learning Opportunities for Students from Challenging Backgrounds
+, 
+(Singapore: Springer International Publishing)
+, 
+1
+–
+16
+.
+Google Scholar
+View reference in article
+60
+Obadire
+O. T.
+Sinthumule
+D. A.
+ (
+2021
+). 
+Learner discipline in the post-corporal punishment era: what an experience!
+. 
+S. Afr. J. Educ.
+41
+ (
+2
+), 
+1
+–
+8
+. 
+10.15700/saje.v41n2a1862
+CrossRef 
+Google Scholar
+View reference in article
+61
+Onyekwelu
+R. A.
+ (
+2025
+). 
+Teachers’ reinforcement strategies for effective classroom management in secondary schools in anambra state
+. 
+Unizik J. Educ. Res. Sci. Vocat. Stud
+2
+, 
+79
+–
+92
+. 
+https://unilaws.org/ujervs/article/view/119
+Google Scholar
+View reference in article
+62
+Orji
+R.
+Alslaity
+A.
+Chan
+G.
+ (
+2024
+). 
+Towards understanding the mechanism through which reward and punishment motivate or demotivate behaviours
+. 
+Behav. Inf. Technol.
+43
+, 
+1042
+–
+1066
+. 
+10.1080/0144929X.2023.2196582
+CrossRef 
+Google Scholar
+View reference in article
+63
+Owusu
+M. K.
+Dramanu
+B. Y.
+Amponsah
+M. O.
+ (
+2021
+). 
+Classroom management strategies and academic performance of junior high school students
+. 
+Int. J. Educ. Manag. Eng
+11
+, 
+29
+. 
+10.5815/ijeme.2021.06.04
+CrossRef 
+Google Scholar
+View reference in article
+64
+Papageorgi
+I.
+ (
+2021
+). “
+Positive and negative reinforcement and punishment
+,” in 
+Encyclopedia of Evolutionary Psychological Science
+, 
+eds. T. K. Shackelford, and V. A. Weekes-Shackelford (Cham: Springer International Publishing)
+, 
+6079
+–
+6081
+.
+Google Scholar
+View reference in article
+65
+Pittman
+A. A.
+Smith
+D. E.
+Smith
+D. S.
+Kelly
+D.
+ (
+2022
+). 
+Culturally Relevant Pedagogy
+. 
+Leiden: Black College Leadership in PK–12 Education
+, 
+78
+–
+97
+.
+Google Scholar
+View reference in article
+66
+Putri
+G. M.
+Kawuryan
+S. P.
+Saptono
+B.
+Fianto
+Z. A.
+ (
+2024
+). 
+The role of emotional intelligence in improving student self-efficacy
+. 
+J. Ilm. Sekolah Dasar
+8
+, 
+370
+–
+378
+. 
+10.23887/jisd.v8i2.68257
+CrossRef 
+Google Scholar
+View reference in article
+67
+Rumfola
+L.
+ (
+2017
+). 
+Positive reinforcement positively helps students in the classroom
+. 
+Educ. Hum. Dev
+5
+, 
+786
+.
+Google Scholar
+View reference in article
+68
+Salendab
+F. A.
+Akmad
+S. P.
+ (
+2023
+). 
+A personal narrative experience of teachers teaching purposive communication during the new normal education
+. 
+Int. J. Multidiscip. Appl. Bus. Educ. Res
+4
+, 
+1590
+–
+1601
+. 
+10.11594/ijmaber.04.05.20
+CrossRef 
+Google Scholar
+View reference in article
+69
+Salendab
+F. A.
+Laguda
+J. L.
+ (
+2023
+). 
+Learning purposive communication: a personal narrative experience of non-teacher education students
+. 
+Int. J. Multidiscip. Appl. Bus. Educ. Res
+4
+, 
+1682
+–
+1696
+. 
+10.11594/ijmaber.04.05.29
+CrossRef 
+Google Scholar
+View reference in article
+70
+Schultner
+D.
+Molleman
+L.
+Lindstrom
+B.
+ (
+2025
+). 
+Feature-based reward learning shapes human social learning strategies
+. 
+Nat. Hum. Behav.
+9
+ (
+10
+), 
+2183
+–
+2198
+. 
+https://doi.org/10.1038/s41562-025-02269-4
+Pubmed Abstract
+Google Scholar
+View reference in article
+71
+Segalo
+L.
+Rambuda
+A. M.
+ (
+2018
+). 
+South African Public school teachers’ views on right to discipline learners
+. 
+S. Afr. J. Educ.
+38
+ (
+2
+), 
+1
+–
+7
+. 
+https://hdl.handle.net/10520/EJC-f12ee81d6
+Google Scholar
+View reference in article
+72
+Skinner
+B. F.
+ (
+1963
+). 
+Operant behavior
+. 
+Am. Psychol
+18
+, 
+503
+. 
+10.1037/h0045185
+CrossRef 
+Google Scholar
+View reference in article
+73
+Smith, A., Spain, R. D., Rowe, J., Goldberg, B., and Lester, J. (2022). “Formalizing adaptive team feedback in synthetic training environments with reinforcement learning,” in 
+Generalized Intelligent Framework for Tutoring (GIFT) Users Symposium (GIFTSym10)
+, ed. A M. Sinatra, (Orlando, Florida: US Army Research Laboratory), 117.
+74
+Staddon
+J. E.
+Cerutti
+D. T.
+ (
+2003
+). 
+Operant conditioning
+. 
+Annu. Rev. Psychol
+54
+, 
+115
+–
+144
+. 
+10.1146/annurev.psych.54.101601.145124
+Pubmed Abstract
+CrossRef 
+Google Scholar
+View reference in article
+75
+Sugai
+G.
+Horner
+R.
+ (
+2002
+). 
+The evolution of discipline practices: school-wide positive behavior supports
+. 
+Child. Fam. Behav. Ther.
+24
+, 
+23
+–
+50
+. 
+10.1300/J019v24n01_03
+CrossRef 
+Google Scholar
+View reference in article
+76
+Tamir D
+I.
+Hughes B
+L.
+ (
+2018
+). 
+Social rewards: from basic social building blocks to complex social behavior
+. 
+Perspect. Psychol. Sci.
+13
+ (
+6
+), 
+700
+–
+717
+. 
+10.1177/1745691618776263
+Pubmed Abstract
+CrossRef 
+Google Scholar
+View reference in article
+77
+Tesfay
+E. M.
+Elias
+S. K.
+ (
+2025
+). 
+Causes and remedies of student misbehavior: a study on classroom management in secondary schools in Asmara
+. 
+GAS J. Educ. Lit. (GASJEL)
+2
+ (
+4
+), 
+22
+–
+32
+. 
+10.5281/zenodo.17422433
+CrossRef 
+Google Scholar
+View reference in article
+78
+Tracy
+S.
+ (
+2019
+). 
+Qualitative Research Methods: Collecting Evidence, Crafting Analysis, Communicating Impact
+. 
+Hoboken, NJ: John Wiley & Sons
+.
+Google Scholar
+View reference in article
+79
+Zahid
+L.
+Cheema
+A. U.
+ (
+2023
+). 
+An investigation of the impact of positive and negative reinforcement in motivating student’s learning
+. 
+Pak. Lang. Humanit. Rev
+7
+, 
+913
+–
+923
+. 
+10.47205/plhr.2023(7-II)81
+CrossRef 
+Google Scholar
+View reference in article
+80
+Zondo
+S. S.
+Mncube
+V. S.
+ (
+2022
+). 
+Implementing a learners' code of conduct for positive discipline in schools
+. 
+Int. J. High. Educ
+. 
+11
+(
+6
+), 
+1
+–
+39
+. 
+10.5430/ijhe.v11n6p39
+CrossRef 
+Google Scholar
+View reference in article
+81
+Zondo
+S. S.
+Mncube
+V. S.
+ (
+2024
+). 
+Teachers’ challenges in implementing a learner’s code of conduct for positive discipline in schools
+. 
+S. Afr. J. Educ.
+44
+ (
+2
+), 
+1
+–
+10
+. 
+10.15700/saje.v44n2a2410
+CrossRef 
+Google Scholar
+View reference in article
+82
+Zuckerman
+M.
+Porac
+J.
+Lathin
+D.
+Deci
+E. L.
+ (
+1978
+). 
+On the importance of self-determination for intrinsically motivated behavior
+. 
+Pers. Soc. Psychol. Bull
+4
+, 
+443
+–
+446
+. 
+10.1177/014616727800400317
+CrossRef 
+Google Scholar
+View reference in article
+Summary
+Keywords
+classroom management
+, 
+discipline
+, 
+family background
+, 
+learners' performance
+, 
+misbehaviour
+, 
+reinforcement
+Citation
+Ahmed N (2026) 
+The influence of reinforcement on classroom management and learners’ performance at secondary schools in South Africa
+. 
+Front. Educ.
+ 11:1829190. doi: 
+10.3389/feduc.2026.1829190
+Received
+12 March 2026
+Revised
+12 June 2026
+Accepted
+15 June 2026
+Published
+03 July 2026
+Volume
+11 - 2026
+Edited by
+Jesus Marolla-Gajardo
+, Universidad Bernardo O'Higgins, Chile
+Reviewed by
+Maura Pilotti
+, Prince Mohammad bin Fahd University, Saudi Arabia
+Anna Fitri Hindriana
+, University of Kuningan, Indonesia
+Updates
+Check for updates
+ Copyright 
+© 2026 Ahmed. 
+This is an open-access article distributed under the terms of the 
+Creative Commons Attribution License (CC BY)
+. The use, distribution or reproduction in other forums is permitted, provided the original author(s) and the copyright owner(s) are credited and that the original publication in this journal is cited, in accordance with accepted academic practice. No use, distribution or reproduction is permitted which does not comply with these terms.
+*
+Correspondence:
+ Nadeem Ahmed 
+rumman513@gmail.com
+Disclaimer
+ All claims expressed in this article are solely those of the authors and do not necessarily represent those of their affiliated organizations, or those of the publisher, the editors and the reviewers. Any product that may be evaluated in this article or claim that may be made by its manufacturer is not guaranteed or endorsed by the publisher. 
+ Article metrics 
+View details
+ Download 
+PDF
+ Download other formats 
+ReadCube
+epub
+XML
+Cite article
+Share article
+our impact
+Your research is the real superpower
+Behind each article we publish stands a team of superheroes: authors, editors, and reviewers who chose to uphold quality standards and share knowledge openly. Read more about the impact your work achieves.
+Explore our impact metrics
+ Outline
+ Cite article
+Copy to clipboard
+Copy citation
+Export citation file
+BibTex
+EndNote
+Reference Manager
+Simple Text file
+ Share article
+Facebook
+X
+LinkedIn
+Email
+WeChat
+Share on WeChat
+Scan with WeChat to share this article
+ Article metrics

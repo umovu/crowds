@@ -1,0 +1,98 @@
+{
+  "id": "education-payment-conversion",
+  "citation": [
+    "The performance of low-fee independent schools in South Africa (RESEP, Stellenbosch)",
+    "Parental demographics and school choice decision-making, Western Gauteng (SciELO SA)",
+    "Factors affecting parents' choice of schools for Grade 1 learners (ERIC)"
+  ],
+  "segment_tags": [
+    "guardian_parent",
+    "grant_dependent_survivor"
+  ],
+  "mechanisms": [
+    "Perceived quality gaps in public schooling trigger migration to a limited functional sub-system, because parents evaluate schools by academic outcomes rather than proximity or default assignment.",
+    "Financial and informational scarcity converts zoning policy into a forced constraint, because affordability and local access override all other school attributes.",
+    "Higher parental education transforms school choice into an active marketplace search, because informed criteria like learner-teacher ratios and teacher passion become the filters for decision-making.",
+    "Perceived threats to safety and discipline turn schools into risk environments, because parental vigilance and willingness to exit become the primary safeguards for the child.",
+    "When traditional norms lose relevance, choice becomes preference-driven, because parents formulate new ideal-school aspirations and make trade-offs in pursuit of perceived quality."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P2",
+        "P4",
+        "P6",
+        "P14",
+        "P15"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P8",
+        "P11",
+        "P16",
+        "P17",
+        "P20"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P9",
+        "P12",
+        "P13",
+        "P22",
+        "P25",
+        "P26",
+        "P28",
+        "P29",
+        "P33"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P30",
+        "P31"
+      ]
+    },
+    {
+      "mechanism_index": 4,
+      "chain_id": "C5",
+      "passages": [
+        "P1",
+        "P5",
+        "P14"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "migration of learners",
+    "limited functional sub-system",
+    "zoning story",
+    "quality education",
+    "learner-teacher ratios",
+    "disciplinary issue"
+  ],
+  "objection_patterns": [
+    "Is this school in my zone, or will I be forced to accept it?",
+    "Can I afford the transport and fees, or is proximity my only real filter?",
+    "What do other parents say about discipline and safety here?",
+    "How do I find out about teacher quality and the curriculum before I enrol?"
+  ],
+  "claim_type": "qualitative",
+  "region": "Western Gauteng and Centurion area",
+  "year_range": "not specified",
+  "confidence": "Multi-source qualitative synthesis drawing on author-interpretation and participant voice; single-province fieldwork with small samples — mechanisms are robust within the studied contexts, but magnitudes and national prevalence are unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ]
+}
