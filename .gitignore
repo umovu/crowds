@@ -89,3 +89,10 @@ TODO.md
 
 # Local planning docs (never committed)
 PERSONA_REMEDIATION_PLAN.md
+
+# Pilot/test artifacts — kept local, not shipped in the public repo
+docs/extraction/
+PILOT_README.md
+docs/CONTEXT_GROUNDING_PILOT_REPORT.md
+docs/PANEL_ANALYSIS_*.md
+docs/INVISIBLE_NUMBERS_*.md
