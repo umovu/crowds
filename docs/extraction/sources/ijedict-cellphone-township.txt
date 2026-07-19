@@ -1,1297 +1,0 @@
-International Journal of Education and Development using Information and Communication Technology 
-(IJEDICT), 2009, Vol. 5, Issue 5, pp.43-57. 
- 
-Assessing cell phone usage in a South African township school 
- 
-Tino Kreutzer  
-University of Cape Town, South Africa 
- 
-     
- 
-ABSTRACT 
- 
-This paper reports on a pilot study, which surveyed two grade 11 classes (N = 66) at a secondary 
-school located in a very low-income area in Cape Town, South Africa. Detailed activity-based 
-questions indicate that virtually all respondents (97%) were found to have used a cell phone on 
-the previous day for at least one of the measured activities. This study suggests the possibility 
-that the majority of urban South Africans in this age group can and do access the Internet via 
-their phones since 83% of the respondents were found to so on a typical day. This finding has 
-significant implications for mobile media and Internet applications, as well as for future research 
-on technology usage in similar settings. Despite the limitations of the sample size for this pilot 
-study, the results nonetheless provide an illuminating snapshot of school-going youth at a bleak 
-urban township school bordering an informal settlement.  
- 
-Keywords: mobile, cell phone, media, Internet, Web, South Africa, youth, media studies, 
-communication, development, technology 
- 
- 
- 
-INTRODUCTION 
- 
-When they were first introduced to the market in the late 1980s, cell phones were touted as luxury 
-technology items of the rich, and as indispensable gadgets of the metropolitan and trendy who 
-needed instant communication on the move. However since network operators and phone 
-manufacturers started targeting the large demand for affordable communication by the world’s 
-phoneless majority, cell phones have become a social phenomenon the world over. Especially in 
-Africa, home to the majority of so-called Least Developed Countries, the widespread access to 
-this communication device has sparked keen debate about the impact and possibilities for social 
-and economic development.  
- 
-Across Africa, there is currently one active phone per every three inhabitants (GSMA, 2008). In 
-South Africa, a country often regarded in many ways as a pioneer for the rest of the continent, 
-there are as many active subscriptions as inhabitants (Wireless Intelligence, 2008)1. While this 
-industry data includes multiple phones used by the same person (cf. Sutherland, 2008), the 
-actual level of access to cell phones is quite uncertain: reports for South Africa range in between 
-56% and 72% in 2007, depending on the source2.  
- 
-Whether cell phones can be regarded as panacea for Sub-Saharan Africa’s development needs 
-(cf. Waverman et al., 2005) remains debatable. Early attempts to draw on existing mobile 
-technology to improve education results in South African schools have been documented by 
-Butgereit (2007) and Oelofse et al. (2006), showing how widespread use of cell phones was 
-capitalized by these projects. Unfortunately detailed and reliable information on South African cell 
-phone usage remains absent. The purpose of this paper is thus to make a first step towards the 
-goal of obtaining such data.  
- 
- 
-
-44  IJEDICT 
- 
-This paper reports on the findings from a pilot study conducted in May 2008 among grade 11 
-students from an urban township school in Cape Town. An improved follow-up study was 
-conducted in the following months (N = 441) to obtain a greater sample for different demographs 
-among youth (Kreutzer, 2009) and to provide a more reliable level of detail of specific types of 
-uses. The present study sets out to answer the following questions:  
-1) What are the current cell phone usage and ownership patterns among youth at a 
-South African township school?  
-2) How prevalent is mobile Internet usage vis-à-vis traditional computer usage?  
-3) Can we find significant differences along gender and socioeconomic divisions?  
- 
- 
-UNDERSTANDING PAST APPROACHES TO ASSESS CELL PHONE USAGE 
- 
-Industry data is often analyzed and used to show large scale trends, such as the number of 
-subscribers, SMS sent, or similar information. Prominent applications can be found in Castells et 
-al. (2006) on a global networked society, enabled by cell phones, or Mendes et al. (2007) who 
-analyzed numerous reports to explain the boom of mobile communication in the Philippines and 
-its implications for Africa. In the U.S., itself a highly diverse country, academics were able to 
-extract representative survey data on Internet and cell phone usage, collected by Pew Internet 
-Project between 2006 and 2008. With regard to handheld devices, the surveys were able to 
-demonstrate the growing importance of non-voice applications and establish that Americans now 
-view cell phones as the hardest device to give up (Horrigan, 2008a, 2008b). In addition, while 
-findings also resonate with Jenkins’s predictions (Jenkins, 2006a & 2006b) of unequal usage of 
-technology and thus varying skill levels, Horrigan (2008a) could also show that certain minorities 
-were more likely to go online using their cell phone than white Americans – thus hinting to the 
-development of an actual skill advantage over time in this arena. (Jenkins and Buckingham 
-focused predominantly on computer usage, so these findings are not necessarily contradictory.) 
- 
-Aside from the landmark example posed by the Pew Internet Project in this field over recent years, 
-similar representative studies have been rare in other nations, and practically absent in the 
-African case. A large-scale study conducted by Zainudeen et al. (2006) on telecommunication 
-usage in India and Sri Lanka serves as one of the most thorough examples on large survey 
-studies in developing countries. But in lieu of such research projects in Africa, smaller exploratory 
-surveys have been conducted instead.  
- 
- 
-In a study with a focus on poverty reduction, Ivatury and Pickens (2006) conducted 515 survey 
-interviews of low-income South Africans around the cell phone banking service WIZZIT to access 
-the usage or potential for cell phone banking in the country. By using sophisticated methodology 
-and acknowledging its limitations, the study shows the potential of good survey design to find 
-answers to complex questions, even for a very diverse and inaccessible population. Dourando et 
-al. (2007) have used survey interviews to assess the possible use of mobile technologies at the 
-Cape Peninsula University of Technology in Cape Town. However, their methodology fails to 
-acknowledge the existing socio-economic diversity as it did not seek to identify possible 
-differences in technology usage among students from different ethnic and societal groups. A 
-similar flaw can be found in Francke and Weidemann (2007) who analyzed the use of mobile 
-instant messaging by using questionnaire data gathered at a South African high school.  
- 
-Skuse and Cousins (2005) have employed content analysis of 165 phone conversation and 
-various other supporting methods to understand the potential impact information and 
-communication technologies may have on poverty in the Eastern Cape Province in South Africa. 
-This method was also utilized by Butgereit (2007) to analyze instant messages sent over cell 
-phones during a pilot tutoring project in a South African school. In a more in-depth approach, 
-
-“Him and Her” - Gender differentials in ICT uptake   45 
- 
-Bosch (2008, forthcoming) used personal interviews with South African teenage girls to explore 
-the self-perceived impact of mobile instant messaging and general cell phone usage within this 
-specific group. 
- 
- 
-METHODOLOGY 
- 
-The intention of this current study was to pilot a test questionnaire and provide detailed analysis 
-of the findings. After refining the survey design based on the results, a broader study with a more 
-diverse sample will be conducted, with the goal of providing data that could be generalized for 
-certain parts of the South African youth. 
- 
-Material and procedure 
- 
-A paper-and-pencil self-assessment questionnaire was distributed on April 30, 2008 to all 
-students in two grade 11 classes (N = 66) at a high school located in Samora Machel, a black 
-urban township east of Cape Town. The questionnaire consisted of 31 question sets on nine 
-pages in English, and includes predominantly closed-ended or rating scale questions (Likert 
-scales), as well as multiple-choice items. Some open-ended questions offer the respondents the 
-chance to provide answers in more detail. The decoded survey data consists of 203 variables, 
-many of which were recoded into additional aggregate indexes.  
- 
-The questionnaire booklet was handed out by the researcher in the presence of the teacher to all 
-students of each class, thereby eliminating problems of sampling bias. The students were briefed 
-that their answers are treated anonymously; the questionnaires were personally collected by the 
-researcher. This procedure was chosen as it enhances the response and retention rate and 
-thereby minimizes self-selection sampling-bias.  
- 
-Self-assessment paper-and-pencil surveys were chosen both for economical and ethical reasons. 
-Personal face to face interviews have the obvious advantage of being able to use conditional 
-questions (or skip logic) while the potential for such a questionnaire design is rather limited for a 
-paper-based survey (cf. Deacon et al, 2007). However due to limited resources and a limited time 
-frame for this research, interviews were ruled out as unfeasible.  
- 
-Hence, it was decided to distribute the questionnaires during regular lessons as a classroom 
-activity, thereby receiving consent from the responsible teacher, as well as by the Western Cape 
-Education Department. Teachers were offered a moderated debriefing for their students about 
-the risks and potentials of cell phone usage after the approximately 30 minutes needed for 
-completion of the survey. The debriefing may have also encouraged educators to consent to this 
-research. 
- 
- 
-Participants 
- 
-Classrooms were taken as clustered convenience - or availability-samples, without implying any 
-representativeness. However, the sample was chosen as an extreme-group sample, allowing for 
-the questionnaire to be vetted by respondents with slightly lower levels in English literacy. Instead 
-of questions determining the exact economic status of respondents, questions of relative 
-deprivation were asked. Relative deprivation is a powerful tool to show how respondents view 
-themselves relative to their peers, and whether they believe they and their family are deprived of 
-some standards they believe they deserve. A practical application of this measure is shown in the 
-later section on correlating these relative deprivation scores with cell phone ownership. 
- 
-
-46  IJEDICT 
- 
-Another subtle measure was to ask respondents about how they traveled to school. 95% of 
-respondents walked to school, while the remainder used public transport, or were given a lift their 
-parents. However only one person in each class enjoyed the luxury of a lift. 
- 
-Aside from these relative measures on socio-economic standing, distinctions of race or home 
-language have long been used in South Africa. But 14 years after the end of Apartheid, the 
-measures need to be revisited as formerly institutionalized discrimination softens boundaries 
-between racial groups. In preparation for the upcoming larger study, these factors were included. 
-90.6% of respondents identified themselves as ‘black’, while the remaining survey participants 
-took issue with the pre-categorized question. Given the emotional issue of such questions for 
-some participants, languages spoken in the household might become an alternative, possibly 
-even more powerful distinction tool, as it allows for differentiation among the country’s 80% black 
-population. In this pilot study however, questions of language and race were of little importance 
-given the very homogenous background of the school and its surrounding neighborhood. Xhosa 
-was mentioned as one of the languages spoken at home by 98% of respondents, followed by 
-English (mostly mentioned second) by 47% of respondents.  
- 
-56% of respondents were females, an exact match of the school’s overall gender ratio. The mean 
-age was 17.9 years, while extreme cases reached from 15 to 22 years. 12% of respondents were 
-aged 20 to 22. The advanced age of some respondents and the high average age confirm the 
-findings by Lam et al. (2008) who could show educational divides along racial lines, particularly 
-greater grade repetition rates and higher school entrance ages among black students. 
- 
-Measures 
- 
-Questions asking subjects about their use of certain technologies (or specific applications therein) 
-were deliberately modeled after the Pew Internet Project surveys (Pew, 2006; Horrigan, 2008a). 
-To avoid what is sometimes referred to as the “recall problem” (Deacon et al, 2007, p. 72), the 
-authors of the Pew studies decided to obtain frequency replies through a two-stranded approach: 
-subjects are asked whether they have ever used a technology or application, and whether they 
-have done so yesterday. The findings thus show a reliable figure for absolute usage by which we 
-can single out people who have never used a certain feature before. The second number 
-however will give us an idea for a typical day by asking about the most recent usage on the 
-previous day. The recall problem is thus diminished greatly: Since respondents do not estimate 
-their average usage or approximate use frequency, we were able to get numbers allowing us to 
-state what share of respondents is using which technology or application on an normal day. 
-Given the limited sample of this pilot study, computer usage might have been influenced by a 
-certain research project or a certain event. A larger study would thus have to ensure that samples 
-are taken over a certain period, with equality of selection for all dates and weekdays in this period.  
- 
-In the absence of commonly accepted terminology, alternative question design has been chosen. 
-“Online”, “the Web”, “Internet” and similar terms have varying equivalents in respective cultures, 
-or even on a personal level (Horst and Miller, 2006). Questions using these terms have thus been 
-excluded from the survey as their validity would be extremely limited.  
-Instead, aggregates from the above variables have been calculated for ‘personal communication’ 
-(four variables), ‘entertainment’ (5), instant messenger use (4) Internet usage (15) and Web 
-usage (9).  
- 
-Although English is language of instruction in most subjects, most students do not use English as 
-their first or home language, thereby potentially having a lower literacy level in English than 
-students whose mother tongue is English. The questionnaire has thus been written in simple and 
-plain English, hence using limited vocabulary and straightforward grammar, respectively (e.g. 
-Ogden, 1937). Preliminary testing of the questionnaire among 18-year-old volunteers from 
-
-“Him and Her” - Gender differentials in ICT uptake   47 
- 
-Nazeema Isaacs library in Khayelitsha (conducted April 19, 2008) have helped to identify 
-problems of understanding of certain questions.  
- 
- 
-RESEARCH RESULTS AND DISCUSSION 
- 
-Assessing Ownership and Usage Levels 
- 
-It is difficult to assess ownership of cell phones among low income youth since there are varying 
-concepts of what ‘to own a cell phone’ means to different individuals. To increase the reliability of 
-this measure, two separate sets of questions were included. One offered a list of technological 
-gadgets in which respondents could tick those they owned, while another asked explicitly whether 
-respondents used, or actually owned a cell phone. The first measure was set at 85%, while the 
-second, more differentiated, found that 75% of respondents said they personally own a handset 
-with SIM card, while the remainder said they used a phone, but didn’t own one. Both variables’ 
-correlation was found to be significant on the 0.01 level, as measured through a Pearson 
-Correlation and an independent samples T-Test. We can thus assume that for the greater 
-number of detail available, the second measure can be trusted, setting the ownership/co-user 
-ratio at 3-to-1. But while not all respondents could call a phone their own, there were no 
-statistically significant differences between the features generally available to phone owners and 
-those using someone else’s phone (cf. Table 1).  
- 
-Respondents appeared to be very confident for most answers regarding their phone’s capabilities. 
-The reliability of responses can be measured by correlating individual features requiring memory 
-for storage (pictures, playing/recording video, music) with the stated availability of memory: all 
-four variables showed a significant correlation on the 0.05 level with the availability of phone 
-memory. We can hence conclude that respondents’ statements about these features are reliable.  
- 
-Table 1:  Phone capabilities 
- 
-With	  your	  cell	  phone,	  is	  it	  
-possible	  to...	  
-All	  respondents	  
-Cell	  owners	  (A)	  
-Non-­‐owners	  (B)	  
-Difference 
-	  	  
-N	  
-%	  yes	  
-N	  
-%	  yes	  
-N	  
-%	  yes	  
-B-­‐A	  
-send	  and	  receive	  text	  
-messages	  
-57	  
-89.10%	  
-44	  
-89.80%	  
-11	  
-84.60%	  
--­‐5.20%	  
-play	  games	  
-52	  
-86.70%	  
-40	  
-85.10%	  
-11	  
-100.00
-%	  
-14.90%	  
-take	  pictures	  
-41	  
-67.20%	  
-33	  
-68.80%	  
-6	  
-54.50%	  
--­‐14.30%	  
-play	  music	  or	  MP3	  files	  
-41	  
-66.10%	  
-32	  
-65.30%	  
-8	  
-72.70%	  
-7.40%	  
-play	  videos	  
-36	  
-60.00%	  
-28	  
-59.60%	  
-7	  
-63.60%	  
-4.00%	  
-record	  videos	  
-37	  
-59.70%	  
-29	  
-59.20%	  
-7	  
-63.60%	  
-4.40%	  
-access	  the	  internet	  or	  
-websites	  
-31	  
-50.80%	  
-25	  
-52.10%	  
-6	  
-54.50%	  
-2.40%	  
-send	  and	  receive	  email	  
-28	  
-45.90%	  
-20	  
-41.70%	  
-7	  
-63.60%	  
-21.90%	  
-send	  instant	  messages	  
-25	  
-41.70%	  
-19	  
-39.60%	  
-6	  
-60.00%	  
-20.40%	  
-receive	  Radio	  programmes	  
-20	  
-32.80%	  
-15	  
-31.30%	  
-5	  
-45.50%	  
-14.20%	  
-receive	  TV	  programmes	  
-15	  
-24.60%	  
-12	  
-25.00%	  
-3	  
-27.30%	  
-2.30%	  
- 
- 
-Almost one-in-four current cell phone owners (24%) have had their current handset for less than 
-nine months, while one-in-six owners (15%) have had their phone for more than three years. So 
-as the cell phone life cycle in South Africa leads us to predict, many more capable phones will 
-
-48  IJEDICT 
- 
-soon enter the second-hand market, thus continuously raising the technical capabilities of phones 
-used or owned by youth.  
- 
- 
-It is important to note that access to many cell phone applications was found to be more 
-ubiquitous than the availability of given features on the personal phone. This reminds us that 
-even cell phone owners are most likely using more than one phone.  
-While the above information gives us valuable information about respondents’ primary phone, the 
-follow study should take this multi-phone usage factor into account.  
- 
-96% of respondents used a prepaid or pay-as-you-go model while 4% said they were on a 
-monthly billed contract. Here, no differences were found between cell phone owners and co-users. 
-These numbers are very similar compared to the previously used subgroup of 16-19-year-old 
-black South Africans, which found a ratio of 99/1 (AMPS, 2007). Respondents said to spend a 
-mean average of 29.74 South African Rand, or roughly USD 3.00. Only 3% said they didn’t spend 
-any money on credit while 8% said they didn’t know the amount.  
- 
-When combining all 27 variables that assess detailed cell phone applications into two sets of 
-aggregates, all of the respondents said that they had used at least one of the features on a cell 
-phone in the past, while 97% said to have used at least one feature on the previous day. It is 
-important to compare these findings with responses given to an outright question at the beginning 
-of the questionnaire: Have you ever used a cell phone? Did you do so yesterday? There, only 
-74% of respondents said they had used a cell phone on the previous day. However, when 
-comparing the mean aggregate numbers between those who reported to have used a cell phone 
-on the previous day, and those who said they did not, the ambivalence of the outright question 
-becomes clear: The latter group reported to have used significantly fewer activities on a cell 
-phone ‘yesterday’, but yet reported to have used just 19% fewer activities than the former group. 
-Hence, dismissing self-declared non-users early on would have significantly compromised the 
-overall potential of the survey. The number of students who responded that they had not used a 
-cell phone on a previous day, despite reporting to have done several activities, can be explained 
-by the subjectivity of the phrase ‘using a cell phone’ – some activities may not be considered 
-‘proper’ use of the device, e.g. listening to music rather than making a phone call. The usage of 
-outright questions to identify or eliminate non-users should thus be discredited.  
- 
-Social deprivation 
- 
-Three scales were included in the questionnaire, asking respondents to rate their personal 
-economic position, the standing of their classmates, and what they thought they deserved. This 
-measure of relative deprivation provides a far more reliable measure than outright questions 
-regarding their family’s socio-economic standing. Cell phone ownership was found to be a 
-statistically significant determinant for feelings of relative deprivation. By testing variables with an 
-independent sample T-test, the following results were found: 
-- 
-Owning a cell phone leads to an average perception of the self in comparison to the rest of 
-the class, while non-owners saw themselves significantly lower. (Sig. 0.062 on a 95% 
-confidence interval)  
-- 
-Not owning a cell phone leads to higher levels of perceived deprivation (Sig. 0.022) – note 
-that both groups feel quite deprived) 
-- 
-Cell phone ownership leads to higher ratings in ‘how are you and your family doing (Sig. 
-0.06) 
- 
-While cell phone ownership is significantly tied to one’s perceived social status in this sample, it 
-also has an impact on more subtle issues. Respondents were asked to rate eight difference 
-issues with regard to whether using a cell phone has helped in these cases, or not. After ranking 
-
-“Him and Her” - Gender differentials in ICT uptake   49 
- 
-them on a Likert scale from 2 (a lot) to -2 (not at all), some turned out quite positive while others 
-remained rather neutral.  
- 
- 
-Comparison to computers and other devices 
- 
-Compared to a traditional desktop or laptop computer, cell phones enjoy much more familiarity 
-and popularity among respondents. For 14 variables, survey participants were asked to share not 
-only if they used these activities on a cell phone, but also whether they had done so on a 
-traditional computer. The results show that computer access is generally very limited among 
-respondents, especially when comparing the same activities between cell phone and computer 
-usage.  Twenty-nine per cent of all respondents have performed at least one of these activities on 
-a computer on the previous day (compared to 82% of respondents via cell phones).  
- 
- 
-Table 2: Comparison of usage 
- 
-ever	  
-yesterday	  
-Cell	  
-PC	  
-Cell	  
-PC	  
- Have you done these activities on you cell or PC? 
-	  
-%	  
-%	  
-%	  
-%	  
-play games	  
-92.4%	  
-25.8%	  
-53.0%	  
-15.2%	  
-download songs, videos or ringtones	  
-87.9%	  
-18.2%	  
-40.9%	  
-4.5%	  
-play music	  
-81.8%	  
-25.8%	  
-43.9%	  
-6.1%	  
-get news or weather online	  
-80.3%	  
-25.8%	  
-40.9%	  
-9.1%	  
-send and receive email	  
-62.1%	  
-28.8%	  
-25.8%	  
-10.6%	  
-play video	  
-62.1%	  
-30.3%	  
-27.3%	  
-13.6%	  
-go online for no particular reason	  
-62.1%	  
-27.3%	  
-30.3%	  
-12.1%	  
-use an instant messaging client	  
-60.6%	  
-16.7%	  
-19.7%	  
-4.5%	  
-look for information for school	  
-59.1%	  
-34.8%	  
-12.1%	  
-12.1%	  
-information about a hobby or interest	  
-59.1%	  
-33.3%	  
-24.2%	  
-12.1%	  
-hunt for a particular fact	  
-57.6%	  
-22.7%	  
-21.2%	  
-10.6%	  
-look for health or medical information	  
-54.5%	  
-27.3%	  
-16.7%	  
-9.1%	  
-information on further education	  
-53.0%	  
-34.8%	  
-13.6%	  
-13.6%	  
-information about movies, books or other leisure 
-activities	  
-50.0%	  
-27.3%	  
-16.7%	  
-7.6%	  
-N = 66	  
- 	  
- 	  
- 	  
- 	  
- 
- 
- 
-None of the proposed usage examples have been performed by more than a third of the 
-respondents using a PC. By contrast, all of these activities have been performed by at least half 
-of the sample population using a cell phone. In fact, the share of respondents having ever done 
-an activity using a cell phone outperforms the shares by PC users with leads ranging from 18% to 
-70%. On a typical day, these differences persist, albeit in lesser extremes with cell phones 
-outperforming PCs by no more than 38%. Some categories even share the same user group size 
-on a typical day: Seeking information on further education and looking for information for school 
-are both done by 14% and 12%, respectively – by cell phone and PC users alike.  
- 
-Playing games was found to be the most popular usage on traditional computers (15% on the 
-previous day). This mirrors the importance of games as the popular use of cell phones (53% on 
-the previous day). Accessing the Internet, by comparison, is largely a cell phone activity: just 18% 
-
-50  IJEDICT 
- 
-have ever downloaded media content from the Web on a computer – while 88% of respondents 
-said they had done so using a cell phone. 
- 
- 
-Personal communication 
- 
-100% of respondents have used a cell phone in the past to actively initiate at least one intra-
-personal communication application, which includes making a phone call, sending an SMS, giving 
-a missed call, and sending a free ‘please call me’ message. Nine-in-ten respondents (91%) do at 
-least one of these activities on a typical day. The practice of giving deliberate ‘missed calls’ to 
-other cell phone users has for long been a cost reducing measure, well documented by Donner 
-(2007), and is sometimes also referred to as beeping, flashing, or buzzing.  
- 
-The most frequently used applications are making phone calls and sending text messages, with 
-six out of ten students doing so on a typical day (65% and 62%, respectively). Practically all 
-respondents have performed either of those two activities (99% calls and 97% SMS). As shown in  
-, boys were found to be more active in making phone calls and sending messages than girls: 
-While 75% of male respondents sent SMS on the previous day, only 56% of girls did so. There is 
-also a pronounced difference between both genders, whereby 68% of boys and 58% of girls 
-made a call on the previous day. 
- 
- 
-Table3: Personal communication 
- 
- 
- 
- 
-Internet and Web usage 
- 
-Access to the Web was measured using nine variables: downloading songs, videos or ringtones; 
-getting news or weather online; accessing information about a hobby or interest; looking for 
-information for school; hunting for a particular fact; looking for health or medical information; 
-accessing information on further education; accessing information about movies, books or other 
-leisure activities. When combining all nine variables into an aggregate of Web usage, 91% of all 
-respondents have ever accessed a website using a cell phone – and 71% do so on a typical day. 
-This definition excludes non-Web applications which are part of the Internet, but should not be 
-confused with access to the World Wide Web. By aggregating the usage of instant messaging, 
-email, and accessed websites (as featured in Error! Reference source not found.), we can 
-Personal	  
-Communication	  
-Variables	  
-ever	  
-Yesterday 
-	  	  
-Coun
-t	  
-all	  %	  
-female	  
-%	  
-male	  	  
-%	  
-Count	  
-all	  %	  
-female	  
-%	  
-male	  %	  
-difference	  
-m-­‐f	  
-send	  a	  text	  message	  
-65	  
-98.5%	  
-97.2%	  
-100.0%	  
-43	  
-65.2%	  
-55.6%	  
-75.0%	  
-19.4%	  
-make	  a	  phone	  call	  
-64	  
-97.0%	  
-94.4%	  
-100.0%	  
-41	  
-62.1%	  
-58.3%	  
-67.9%	  
-9.6%	  
-please	  call	  me	  
-58	  
-90.6%	  
-94.1%	  
-85.7%	  
-35	  
-53.0%	  
-58.3%	  
-46.4%	  
--­‐11.9%	  
-give	  a	  missed	  call	  to	  
-other	  people	  
-53	  
-86.9%	  
-90.9%	  
-81.5%	  
-21	  
-31.8%	  
-33.3%	  
-32.1%	  
--­‐1.2%	  
-(aggregate)	  any	  
-personal	  
-communication	  
-66	  
-100.0%	  
-100.0%	  
-100.0%	  
-60	  
-90.9%	  
-86.0%	  
-96.4%	  
-10.4%	  
-N	  =	  66,	  male	  n	  =	  28,	  
-female	  n	  =	  36	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
- 
-	  	  
-
-“Him and Her” - Gender differentials in ICT uptake   51 
- 
-conclude that 97% of all respondents have used the Internet through a cell phone. 83% within this 
-study’s sample do this on a typical day; with boys leading this category by nine percentage points.  
- 
-While some categories leave some uncertainty over respondents’ understanding of the question, 
-others are unambiguous. Nine-in-ten respondents (88%) have downloaded songs, videos, or 
-ringtones – while 41% did so on the previous day. This high number is closely followed by access 
-to online news or weather: 80% have done this while 41% did so on the previous day. By 
-comparison, just 9% said they had accessed the news on a typical day using a computer. All 
-other categories have been done at least once by at least 50% of respondents. As for activities 
-done on the previous day, the lowest-used application was ‘look for information for school’ with 
-only 12% reporting to have done so.  
- 
-Email had been accessed by 63% of cell phone users in the past, and 26% did so on the previous 
-day – thus making email the least frequent Internet-based application on a cell phone, compared 
-with 47% using instant messaging and 71% accessing websites on a typical day.  
- 
-The significance of these numbers becomes clear when comparing the findings to national data 
-published by AMPS. The AMPS findings indicate that 7% of South African youth aged 16 to 19 
-have accessed the Internet over the past year, while racial differences range from 38% (whites) 
-to 3% (blacks). Yet again, AMPS refers to the entire country, making higher numbers at even a 
-township school in the generally more affluent city of Cape Town not a shocking surprise. But the 
-extreme differences between the present study and the supposed national average call the 
-accuracy of the AMPS’ statistics into question. 
- 
- 
-Table 4: Internet and Web usage 
-	  
-Internet	  usage	  
-variables	  
-ever	  
-yesterday 
-	  
-	  	  
-Count	  
-all	  %	  
-female	  
-%	  
-male	  %	  
-m-­‐f	  
-Count	  
-all	  %	  
-female	  
-%	  
-male	  
-%	  
-m-­‐f	  
-1	  
-download	  songs,	  
-videos	  or	  ringtones	  
-58	  
-87.9%	  
-77.8%	  
-89.3%	  
-11.5%	  
-27	  
-40.9%	  
-41.7%	  
-50.0%	  
-8.3%	  
-2	  
-get	  news	  or	  
-weather	  online	  
-53	  
-80.3%	  
-63.9%	  
-60.7%	  
--­‐3.2%	  
-27	  
-40.9%	  
-19.4%	  
-21.4%	  
-2.0%	  
-IM	  
-(agg.)	  any	  IM	  used	  	  
-53	  
-80.3%	  
-72.2%	  
-92.8%	  
-20.6%	  
-31	  
-47.0%	  
-27.7%	  
-71.4%	  
-43.7%	  
-3	  
-go	  online	  for	  no	  
-particular	  reason	  
-41	  
-62.1%	  
-66.7%	  
-60.7%	  
--­‐6.0%	  
-20	  
-30.3%	  
-25.0%	  
-32.1%	  
-7.1%	  
-4	  
-send	  and	  receive	  
-email	  
-41	  
-62.1%	  
-58.3%	  
-60.7%	  
-2.4%	  
-17	  
-25.8%	  
-11.1%	  
-14.3%	  
-3.2%	  
-5	  
-use	  an	  instant	  
-messaging	  client	  
-40	  
-60.6%	  
-77.8%	  
-85.7%	  
-7.9%	  
-13	  
-19.7%	  
-36.1%	  
-50.0%	  
-13.9%	  
-6	  
-information	  about	  
-a	  hobby	  or	  interest	  
-39	  
-59.1%	  
-86.1%	  
-92.9%	  
-6.8%	  
-16	  
-24.2%	  
-38.9%	  
-46.4%	  
-7.5%	  
-7	  
-look	  for	  
-information	  for	  
-school	  
-39	  
-59.1%	  
-52.8%	  
-50.0%	  
--­‐2.8%	  
-8	  
-12.1%	  
-16.7%	  
-17.9%	  
-1.2%	  
-8	  
-hunt	  for	  a	  
-particular	  fact	  
-38	  
-57.6%	  
-61.1%	  
-57.1%	  
--­‐4.0%	  
-14	  
-21.2%	  
-22.2%	  
-21.4%	  
--­‐0.8%	  
-9	  
-look	  for	  health	  or	  
-medical	  
-information	  
-36	  
-54.5%	  
-55.6%	  
-64.3%	  
-8.7%	  
-11	  
-16.7%	  
-16.7%	  
-32.1%	  
-15.4%	  
-10	  
-information	  on	  
-further	  education	  
-35	  
-53.0%	  
-63.9%	  
-64.3%	  
-0.4%	  
-9	  
-13.6%	  
-33.3%	  
-28.6%	  
--­‐4.7%	  
-11	  
-information	  about	  
-movies,	  books	  or	  
-other	  leisure	  
-33	  
-50.0%	  
-69.4%	  
-57.1%	  
--­‐12.3%	  
-11	  
-16.7%	  
-27.8%	  
-25.0%	  
--­‐2.8%	  
-
-52  IJEDICT 
- 
- 
- 
-N	  =	  66,	  male	  n	  =	  28,	  female	  n	  =	  36	  
-For	  two	  of	  the	  aggregates,	  IM	  refers	  to	  the	  aggregate	  calculated	  earlier,	  compounding	  all	  IM	  clients	  used	  by	  respondents.  
- 
- 
- 
-Entertainment Digital Media Applications 
- 
-Over the past years, the entertainment features of cell phones have become increasingly 
-important. Almost all new phones produced today provide the ability to play music, take pictures 
-or record videos, and play games. Concurrently, several cell phone manufacturers have 
-developed special handsets in recent years that decidedly omitted these features in order to 
-provide more affordable handsets to the poorer masses in developing countries. 12% of 
-respondents own one of the two most prominent representatives of these no-frills kinds of phones 
-(Nokia’s 1100 and 1600).  
- 
-However, a sizable majority of respondents have used each of the five “entertainment” features in 
-the past. 92% have played a game on a cell phone while 53% do so on a typical day. 83% within 
-this sample have taken a picture on a cell phone while on a typical day this is done by 56% of 
-respondents. Playing music and recording videos have been done on the previous day by 44% 
-and 47%, respectively.  
- 
- 
-Table 5: Entertainment applications 
- 
-Entertain-­‐
-ment	  
-variables	  
-Ever	  
-	  
-Yesterday	  
-	  
-	  	  
-Coun
-t	  
-all	  %	  
-female	  
-%	  
-male	  %	  
-difference	  
-m-­‐f	  
-Count	  
-all	  %	  
-female	  
-%	  
-male	  
-%	  
-difference	  
-m-­‐f	  
-play	  games	  
-61	  
-92.4%	  
-100.0%	  
-85.7%	  
--­‐14.3%	  
-35	  
-53.0%	  
-61.1%	  
-46.4
-%	  
--­‐14.7%	  
-take	  a	  
-picture	  
-55	  
-83.3%	  
-77.8%	  
-92.9%	  
-15.1%	  
-37	  
-56.1%	  
-47.2%	  
-67.9
-%	  
-20.7%	  
-play	  music	  
-54	  
-81.8%	  
-55.6%	  
-50.0%	  
--­‐5.6%	  
-29	  
-43.9%	  
-8.3%	  
-21.4
-%	  
-13.1%	  
-record	  a	  
-video	  
-50	  
-75.8%	  
-72.2%	  
-82.1%	  
-9.9%	  
-31	  
-47.0%	  
-38.9%	  
-57.1
-%	  
-18.2%	  
-play	  video	  
-41	  
-62.1%	  
-55.6%	  
-53.6%	  
--­‐2.0%	  
-18	  
-27.3%	  
-13.9%	  
-21.4
-%	  
-7.5%	  
-	  
-N	  =	  66,	  male	  n	  =	  28,	  female	  n	  =	  36 
- 
- 
-Mobile Instant Messaging 
- 
-For some time, instant messaging (IM) has been a rising phenomenon in South Africa. MXit, the 
-client with the largest media attention, has also been the subject of some scholarly work (Bosch, 
-2008; Butgereit, 2007). However, recently other instant messenger clients have emerged, some 
-11	  
-information	  about	  
-movies,	  books	  or	  
-other	  leisure	  
-activities	  
-33	  
-50.0%	  
-69.4%	  
-57.1%	  
--­‐12.3%	  
-11	  
-16.7%	  
-27.8%	  
-25.0%	  
--­‐2.8%	  
-	  
-(agg.)	  any	  Internet	    ­‐                        
-
-“Him and Her” - Gender differentials in ICT uptake   53 
- 
-originating from the respective network operators. Although different clients require different 
-technologies, all require cell phones that are able to access the Internet, thereby eliminating 
-many low-range and older phones.  
- 
-However, all IM clients combined, eight-in-ten respondents (80%) have used at least one in the 
-past, while half of all respondents (47%) do so on a typical day. Instant messaging was found to 
-be a predominantly male activity. 93% of boys have ever used an IM client, while 72% of girls did 
-so. The difference is even more pronounced in a 43 point lead in IM clients used on the previous 
-day: 71% of boys did so, compared with only 28% of girls. Male respondents were also leading in 
-every single IM client, with the largest margins pronounced in typical-day-usage for the largest 
-clients, noknok and MXit.  
- 
-noknok, an IM client only available to MTN customers (but which also allows some interaction to 
-other networks), is the most used client with 53%, followed by the network-neutral MXit client, 
-with 49%. However, MXit is being used more frequently, with 29% of respondents doing so on a 
-typical day, compared to only 17% for noknok. méèp (Vodacom’s own equivalent) and the other 
-network-neutral client 2go are only used by smaller shares on a typical day (9% and 5%, 
-respectively).  
- 
-MXit is used by 43% of boys on a typical day, compared to 29% of boys using noknok. For girls 
-MXit triumphed over noknok as well with 19% compared to 6%. Although overall more people 
-have ever tried noknok (which is probably tied to the enormous prevalence of MTN among 
-respondents), MXit still prevails as the most popular IM client.  
-But as MXit’s first mover advantage dissipates, noknok’s community may soon be larger and thus 
-more attractive. The technical difference between both clients might also have some influence in 
-a decision to use one or the other: While MXit is based on Java, a programming script allowing 
-for greater interactivity and better design, noknok is based on XHTML over WAP, a standard 
-gateway to access websites on cell phones. It is not clear yet whether Java or WAP were 
-available in greater shares on respondents’ phones, but a possibly greater availability of WAP 
-could have lead to this equation.  
- 
- 
-
-54  IJEDICT 
- 
-Table 6: Instant messaging 
- 
-Instant	  Messaging	  clients	  
-ever	  
-yesterday 
-	  	  
-Count	  
-all	  %	  
-female	  
-%	  
-male	  
-%	  
-difference	  
-m-­‐f	  
-Count	  
-all	  %	  
-female	  
-%	  
-male	  
-%	  
-difference	  
-m-­‐f	  
-noknok	  
-35	  
-53.0%	  
-47.2%	  
-60.7%	  
-13.5%	  
-11	  
-16.7%	  
-5.6%	  
-28.6%	  
-23.0%	  
-MXit	  
-32	  
-48.5%	  
-44.4%	  
-53.6%	  
-9.2%	  
-19	  
-28.8%	  
-19.4%	  
-42.9%	  
-23.5%	  
-méèp	  
-13	  
-19.7%	  
-16.7%	  
-25.0%	  
-8.3%	  
-6	  
-9.1%	  
-8.3%	  
-10.7%	  
-2.4%	  
-2go	  
-8	  
-12.1%	  
-8.3%	  
-17.9%	  
-9.6%	  
-3	  
-4.5%	  
-2.8%	  
-7.1%	  
-4.3%	  
-	  	  	  	  (aggregate)	  any	  IM	  used	  	  
-53	  
-80.3%	  
-72.2%	  
-92.8%	  
-20.6%	  
-31	  
-47.0%	  
-27.7%	  
-71.4%	  
-43.7%	  
- 
-N	  =	  66,	  female	  n	  =	  36,	  male	  n	  =	  28 
- 
- 
- 
-CONCLUSION  
- 
-This study was set out to pilot a quantitative methodology that would allow us to obtain a better 
-understanding of cell phone usage among South African youth. By choosing grade 11 students at 
-an urban township school, the study was put to an extreme test as many respondents were only 
-recent users of this technology, and many have lower literacy levels in English. Based on the 
-findings, some questions will require better wording or structure, although most seem to have 
-been sufficiently understood by students in this sample.  
- 
-The study, without intentions of representativeness, found that cell phones are used by practically 
-all respondents. On a typical day, the most important uses were personal communication (91%), 
-entertainment use (82%, including music, photos, videos), websites (71%), and instant 
-messaging (47%). Respondents without a personally owned handset were found to be equally 
-active cell phone users.  
- 
-With the ubiquity of cell phones, and the broad availability of advanced features such as the Java 
-platform or Web browsers, there is a sufficiently large basis for media-rich Web applications, 
-despite the low socioeconomic status of the target group. Likewise, the available phones already 
-feature a wide gamut of technologies that allow for handset-independent Java applications, 
-games, or mobile websites to provide mobile learning or social development content to low-
-income South African youth. Given the surprisingly large cell phone expenditure by respondents 
-and their overwhelming aspirations for tertiary education, one should also not discount a certain 
-willingness to pay for accessing useful services.  
- 
-This study was one of the major piloting phases for the subsequent main research involving a 
-greater number of schools in the South African Western Cape province with a sample size of 
-441respondents (Kreutzer, 2009). While these findings are more conclusive and allow for a more 
-detailed analysis of low-income urban South African youth, the present study has laid the ground 
-work for more reliable quantitative usage-based research.  
- 
- 
-ENDNOTES 
- 
-1  
-In April 2008 there were 43,317,511 active mobile phone lines reported (Wireless Intelligence, 2008) for 
-South Africa’s 47,850,700 inhabitants (STATSA, 2007). 
- 
-2 
-The large-scale household survey AMPS found 56% of South Africans use a cell phone (AMPS, 2007). 
-The World Development Indicators reported 72% cell phone access in South Africa (World Bank, 2007). 
-
-“Him and Her” - Gender differentials in ICT uptake   55 
- 
-REFERENCES 
- 
-AMPS (2007), 'All Media Products Survey - Publiciti AMPS 2007RA', Retrieved on May 9, 2008, 
-from stand-alone database in the Commerce Library, University of Cape Town. 
-Bosch, T. (2008, forthcoming), 'Wots ur ASLR? Adolescent girls’ use of cell phones in Cape 
-Town'. 
-Buckingham, D. (2007), Beyond Technology: Children's Learning in the Age of Digital Culture, 
-Malden: Blackwell Publishing. 
-Butgereit, L. (2007), 'Math on MXit: Using MXit as a Medium for Mathematics Education', Meraka 
-INNOVATE Conference for Educators, CSIR, Pretoria, 18-20 April 2007, pp 13, Retrieved 
-on March 28, 2008 from 
-http://researchspace.csir.co.za/dspace/bitstream/10204/1614/1/Butgereit_2007.pdf. 
-Castells, M.; Fernandez-Ardevol, M.; Qiu, J. L. & Sey, A. (2006), Mobile Communication and 
-Society: A Global Perspective, Boston: MIT Press. 
-Deacon, D.; Pickering, M.; Golding, P. & Murdock, G. (2007), Researching Communications: A 
-Practical Guide to Methods in Media and Cultural Analysis, New York: Oxford University 
-Press. 
-Donner, J. (2007), 'The Rules of Beeping: Exchanging Messages Via Intentional "Missed Calls" 
-on Mobile Phones', Journal of Computer-Mediated Communication 13(1). 
-Dourando, D.; Parker, M. & de la Harpe, R. (2007), 'Investigation into the usage of mobile instant 
-messaging in tertiary education', Proceedings of the 9th Annual Conference on World 
-Wide Web Applications 5-7 September 2007, Johannesburg, South Africa, Retrieved on 
-March 29, 2008 from 
-http://staging.uj.ac.za/www2007/documents/proceedings/Dourando_Parker__DelaHarpe
-_Investigation_usage_of_mobile_messaging.pdf. 
-Francke, E. & Weideman, M. (2007), 'South African youth and mobile technology impact: The 
-MXit phenomenon', Proceedings of the 9th Annual Conference on World Wide Web 
-Applications 5-7 September 2007, Johannesburg, South Africa, Retrieved on March 29, 
-2008 from 
-http://staging.uj.ac.za/www2007/documents/proceedings/Francke__Weideman_SA_yout
-h_and_mobile_technology_impacy.pdf. 
-GSMA (2008), 'Seventy Million More Africans Now Connected To GSM Networks', Retrieved on 
-May 15, 2008, from http://www.gsmworld.com/news/press_2008/press08_34.shtml. 
-Horrigan, J. (2008), 'Mobile Access to Data and Information', Pew Internet American Life Project, 
-Retrieved on April 4, 2008 from http://pewinternet.org/pdfs/PIP_Mobile.Data.Access.pdf. 
-Horrigan, J. (2008), 'Seeding The Cloud: What Mobile Access Means for Usage Patterns and 
-Online Content', Pew Internet & American Life Project, Retrieved on April 4, 2008 from 
-http://pewinternet.org/pdfs/PIP_Users.and.Cloud.pdf. 
-Horst, H. & Miller, D. (2006), The Cell Phone: An Anthropology of Communication, Oxford: Berg 
-Publishers. 
-Ito, M.; Okabe, D. & Matsuda, M., ed. (2005), Personal, Portable, Pedestrian: Mobile Phones in 
-Japanese Life, Cambridge, MA: MIT Press. 
-
-56  IJEDICT 
- 
-Ivatury, G. & Pickens, M. (2006), 'Mobile Phone Banking and Low-Income Customers: Evidence 
-from South Africa', Washington, D.C.: CGAP/The World Bank and United Nations 
-Foundation. 
-Jenkins, H. (2006), 'Confronting the Challenges of Participatory Culture Media Education for the 
-21st Century', Retrieved on March 27, 2008 from 
-http://digitallearning.macfound.org/atf/cf/%7B7E45C7E0-A3E0-4B89-AC9C-
-E807E1B0AE4E%7D/JENKINS_WHITE_PAPER.PDF. 
-Jenkins, H. (2006), Convergence Culture: Where Old and New Media Collide, New York: New 
-York University Press. 
-Kreutzer, T. (2009), 'Generation Mobile: Online and Digital Media Usage on Mobile Phones 
-among Low-Income Urban Youth in South Africa'. Retrieved on March 30, 2009, from 
-http://tinokreutzer.org/mobile/MobileOnlineMedia-SurveyResults-2008.pdf. 
-Lam, D.; Ardington, C. & Leibbrandt, M. (2008), 'Schooling as a Lottery: Racial Differences in 
-School Advancement in Urban South Africa', University of Michigan: Population Studies 
-Center Research Report 08-632. Retrieved on May 10, 2008, from 
-http://www.psc.isr.umich.edu/pubs/pdf/rr08-632.pdf. 
-Mendes, S.; Alampay, E.; Soriano, E. & Soriano, C. (2007), 'The innovative use of mobile 
-applications in the Philippines – lessons for Africa', Stockholm: Swedish International 
-Development Cooperation (SIDA). Retrieved on March 17, 2008 from 
-http://siteresources.worldbank.org/EXTEDEVELOPMENT/Resources/20071129-
-Mobiles_PH_Lessons_for_Africa.pdf. 
-Oelofse, C.; de Jager, A. & Ford, M. (2006), 'The Digital Profile of a Teenage Cell Phone Learner', 
-Retrieved on May 16, 2008, from 
-http://www2.uiah.fi/~tleinone/mobiled/%20christa_mlearn2006_slides.pdf. 
-Ogden, C. K. (1937), Basic English and Grammatical Reform, Cambridge: The Orthological 
-Institute. Retreived on April 22, 2008, from http://crockford.com/wrrrld/begr.html. 
-Naismith, L.; Lonsdale, P.; Vavoula, G. & Sharples, M. (2004), 'Literature Review in Mobile 
-Technologies and Learning', Retrieved on March 31, 2008 from 
-http://www.futurelab.org.uk/resources/documents/lit_reviews/Mobile_Review.pdf. 
-Pew Internet & American Life Project. (2006), 'Annual Gadgets Survey: Final Topline. Data for 
-February 15 – April 6, 2006', Princeton Survey Research Associates International for the 
-Pew Internet & American Life Project. Retrieved on April 2, 2008, from 
-http://www.pewinternet.org/pdfs/PIP.Typology.Topline.pdf. 
-Skuse, A. & Cousins, T. (2005), 'Managing Distance: the Social Dynamics of Rural 
-Telecommunications Access and Use in the Eastern Cape, South Africa', Information 
-Society Research Group. Retrieved on April 18, 2008, from 
-http://web.archive.org/web/20060725052535/www.isrg.info/ISRGWorkingPaper1.pdf. 
-STATSSA (2007), 'Statistics South Africa: Mid-year population estimates 2007', Retrieved on May 
-16, 2008, from 
-http://www.statssa.gov.za/PublicationsHTML/P03022007/html/P03022007.html. 
-Waverman, L.; Meschi, M. & Fuss, M. (2005), 'Africa: The Impact of Mobile Phones', The 
-Vodafone Policy Paper Series, Number 3. Retrieved on May 12, 2008, from 
-
-“Him and Her” - Gender differentials in ICT uptake   57 
- 
-http://www.vodafone.com/etc/medialib/attachments/cr_downloads.Par.78351.File.dat/GP
-P_SIM_paper_3.pdf. 
-World Bank. (2007), World Development Indicators 2007, Washington, D.C.: World Bank 
-Publications. 
-Zainudeen, A.; Samarajiva, R. & Abeysuriya, A. (2006), 'Telecom use on a shoestring: Strategic 
-use of telecom services by the financially constrained in South Asia', Colombo Sri Lanka: 
-LIRNEasia. Retrieved April 27, 2008 from http://www.lirneasia.net/2006/02/strategic-use-
-of-telecom-services-on-a-shoestring/. 
- 
- 
- 
- 
-Copyright for articles published in this journal is retained by the authors, with first publication rights granted 
-to the journal. By virtue of their appearance in this open access journal, articles are free to use, with proper 
-attribution, in educational and other non-commercial settings. 
- 
- 
-Original article at: http://ijedict.dec.uwi.edu//viewarticle.php?id=862 
- 
- 
- 
- 
