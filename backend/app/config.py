@@ -20,9 +20,24 @@ else:
 class Config:
     """Flask configuration class"""
 
-    # Flask configuration
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'fub-secret-key')
-    DEBUG = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
+    # Flask configuration.
+    #
+    # Both of these fail SAFE: a missing env var must never hand production the
+    # Werkzeug debug console or a publicly-known signing key. Opt IN to debug
+    # locally (FLASK_DEBUG=true in your .env), never opt out in prod.
+    DEBUG = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+
+    _secret = os.environ.get('SECRET_KEY')
+    if not _secret:
+        if DEBUG:
+            _secret = 'dev-only-insecure-secret'
+        else:
+            raise RuntimeError(
+                "SECRET_KEY is not set. Set it in the environment before starting "
+                "in non-debug mode (generate one with: python -c "
+                "\"import secrets; print(secrets.token_hex(32))\")."
+            )
+    SECRET_KEY = _secret
 
     # JSON configuration - disable ASCII escaping to display Chinese directly (not as \uXXXX)
     JSON_AS_ASCII = False

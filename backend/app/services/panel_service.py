@@ -303,7 +303,19 @@ def _base_dir() -> str:
     return d
 
 
+_SESSION_ID_RE = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
 def session_dir(session_id: str) -> str:
+    """Resolve a session's directory, refusing anything that isn't a bare id.
+
+    session_id arrives straight from the URL. Without this check a crafted id
+    (`..`, absolute path, or a separator) would escape PANEL_SESSION_DATA_DIR and
+    point file reads — and rmtree in delete_session — at arbitrary directories.
+    Validate rather than sanitise: ids we mint are always [A-Za-z0-9_-].
+    """
+    if not isinstance(session_id, str) or not _SESSION_ID_RE.match(session_id):
+        raise ValueError(f"Invalid session id: {session_id!r}")
     return os.path.join(_base_dir(), session_id)
 
 

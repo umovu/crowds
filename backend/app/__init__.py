@@ -187,8 +187,29 @@ def create_app(config_class=Config):
         _log_storage_persistence(logger)
         _log_auth_config(logger)
 
-    # Enable CORS
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # Enable CORS.
+    #
+    # Auth is Bearer-token (not cookies), so a wildcard was not directly
+    # exploitable — but wildcard + any future cookie/session auth is an instant
+    # account-takeover path, so pin it to the known frontends. Set
+    # CORS_ORIGINS to a comma-separated list (e.g. your Vercel domain).
+    # Falls back to localhost dev origins; "*" is honoured only if set
+    # explicitly, so you can never get a wildcard by forgetting the var.
+    _origins_env = os.environ.get("CORS_ORIGINS", "").strip()
+    if _origins_env:
+        cors_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
+    else:
+        cors_origins = ["http://localhost:3000", "http://localhost:5173",
+                        "http://127.0.0.1:3000", "http://127.0.0.1:5173"]
+        if should_log_startup:
+            logger.warning(
+                "CORS: CORS_ORIGINS not set -> allowing localhost dev origins only. "
+                "Set it to your deployed frontend origin (e.g. https://<app>.vercel.app) "
+                "or the hosted UI will be blocked by the browser."
+            )
+    if should_log_startup:
+        logger.info("CORS: allowed origins = %s", cors_origins)
+    CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 
     # --- Initialize Graph Storage singleton (DI via app.extensions) ---
     # Single-process server (reloader disabled in run.py), so we always init here.

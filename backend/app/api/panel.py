@@ -8,7 +8,6 @@ No simulation build pipeline involved.
 """
 
 import asyncio
-import traceback
 
 from flask import jsonify, request
 
@@ -44,7 +43,7 @@ def suggest_segments():
         return jsonify({"success": True,
                         "data": {"suggested": panel_service.suggest_segments(pitch)}})
     except Exception as e:
-        logger.error(f"Segment suggestion failed: {e}")
+        logger.exception(f"Segment suggestion failed: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -56,7 +55,7 @@ def list_segments():
     try:
         return jsonify({"success": True, "data": {"segments": panel_service.list_segments()}})
     except Exception as e:
-        logger.error(f"Failed to list segments: {e}")
+        logger.exception(f"Failed to list segments: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -120,8 +119,8 @@ def create_session():
     except (ValueError, RuntimeError) as e:
         return jsonify({"success": False, "error": str(e)}), 400
     except Exception as e:
-        logger.error(f"Panel session creation failed: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        logger.exception(f"Panel session creation failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @panel_bp.route('/sessions', methods=['GET'])
@@ -129,7 +128,7 @@ def list_sessions():
     try:
         return jsonify({"success": True, "data": {"sessions": panel_service.list_sessions(billing.current_user_id())}})
     except Exception as e:
-        logger.error(f"Failed to list panel sessions: {e}")
+        logger.exception(f"Failed to list panel sessions: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -143,7 +142,7 @@ def get_session(session_id: str):
         agents = _interview_service(session_id).list_agents()
         return jsonify({"success": True, "data": {**meta, "agents": agents}})
     except Exception as e:
-        logger.error(f"Failed to get panel session {session_id}: {e}")
+        logger.exception(f"Failed to get panel session {session_id}: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -154,7 +153,7 @@ def delete_session(session_id: str):
             return jsonify({"success": False, "error": f"Session {session_id} not found"}), 404
         return jsonify({"success": True})
     except Exception as e:
-        logger.error(f"Failed to delete panel session {session_id}: {e}")
+        logger.exception(f"Failed to delete panel session {session_id}: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -228,8 +227,8 @@ def pitch(session_id: str):
     except FileNotFoundError as e:
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
-        logger.error(f"Panel pitch failed for {session_id}: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        logger.exception(f"Panel pitch failed for {session_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @panel_bp.route('/sessions/<session_id>/rounds', methods=['GET'])
@@ -242,7 +241,7 @@ def list_rounds(session_id: str):
         rounds = panel_service.list_rounds(session_id, include_results=full)
         return jsonify({"success": True, "data": {"session_id": session_id, "rounds": rounds}})
     except Exception as e:
-        logger.error(f"Failed to list rounds for {session_id}: {e}")
+        logger.exception(f"Failed to list rounds for {session_id}: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -274,5 +273,5 @@ def ask_agent(session_id: str, agent_id: int):
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
-        logger.error(f"Panel follow-up failed for {session_id}/{agent_id}: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        logger.exception(f"Panel follow-up failed for {session_id}/{agent_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
