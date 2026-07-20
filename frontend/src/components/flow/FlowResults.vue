@@ -99,8 +99,10 @@
             </div>
             <p v-if="!reportBusy && reportMsg" class="report-dl-msg">{{ reportMsg }}</p>
             <div class="spectrum-summary-body">
-              <p>{{ summaryText }}</p>
-              <p v-if="llmSummary" class="summary-read">{{ llmSummary }}</p>
+              <!-- One summary only: the counts read is a live placeholder while
+                   the run is in flight; once the LLM synthesis lands it replaces it. -->
+              <p v-if="!llmSummary">{{ summaryText }}</p>
+              <p v-else class="summary-read">{{ llmSummary }}</p>
             </div>
           </div>
 
