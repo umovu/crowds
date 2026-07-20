@@ -4,7 +4,6 @@ Step2: Entity reading and filtering, OASIS simulation preparation and execution 
 """
 
 import os
-import traceback
 import asyncio
 from typing import Dict, Any, List, Optional
 from flask import request, jsonify, send_file, current_app
@@ -104,11 +103,10 @@ def get_graph_entities(graph_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get knowledge graph entities: {str(e)}")
+        logger.exception(f"Failed to get knowledge graph entities: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -134,11 +132,10 @@ def get_entity_detail(graph_id: str, entity_uuid: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get entity details: {str(e)}")
+        logger.exception(f"Failed to get entity details: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -168,11 +165,10 @@ def get_entities_by_type(graph_id: str, entity_type: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get entities: {str(e)}")
+        logger.exception(f"Failed to get entities: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -233,11 +229,10 @@ def parse_custom_agent_document():
         })
 
     except Exception as e:
-        logger.error(f"Failed to parse custom agent document: {str(e)}")
+        logger.exception(f"Failed to parse custom agent document: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -315,11 +310,10 @@ def create_simulation():
         })
         
     except Exception as e:
-        logger.error(f"Failed to create simulation: {str(e)}")
+        logger.exception(f"Failed to create simulation: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -791,11 +785,10 @@ def prepare_simulation():
         }), 404
         
     except Exception as e:
-        logger.error(f"Failed to start preparation task: {str(e)}")
+        logger.exception(f"Failed to start preparation task: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -905,7 +898,7 @@ def get_prepare_status():
         })
         
     except Exception as e:
-        logger.error(f"Failed to query task status: {str(e)}")
+        logger.exception(f"Failed to query task status: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
@@ -937,11 +930,10 @@ def get_simulation(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get simulation status: {str(e)}")
+        logger.exception(f"Failed to get simulation status: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -966,11 +958,10 @@ def list_simulations():
         })
         
     except Exception as e:
-        logger.error(f"Failed to list simulations: {str(e)}")
+        logger.exception(f"Failed to list simulations: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1139,11 +1130,10 @@ def get_simulation_history():
         })
         
     except Exception as e:
-        logger.error(f"Failed to get historical simulations: {str(e)}")
+        logger.exception(f"Failed to get historical simulations: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1176,11 +1166,10 @@ def delete_simulation(simulation_id: str):
         return jsonify({"success": True, "data": {"simulation_id": simulation_id}})
 
     except Exception as e:
-        logger.error(f"Failed to delete simulation {simulation_id}: {str(e)}")
+        logger.exception(f"Failed to delete simulation {simulation_id}: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1214,11 +1203,10 @@ def get_simulation_profiles(simulation_id: str):
         }), 404
         
     except Exception as e:
-        logger.error(f"GetProfileFailed: {str(e)}")
+        logger.exception(f"GetProfileFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1320,8 +1308,8 @@ def rerun_simulation_research(simulation_id: str):
             }
         })
     except Exception as e:
-        logger.error(f"Re-run research failed for {simulation_id}: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        logger.exception(f"Re-run research failed for {simulation_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @simulation_bp.route('/<simulation_id>/cost', methods=['GET'])
@@ -1473,11 +1461,10 @@ def get_simulation_profiles_realtime(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Real-time getProfileFailed: {str(e)}")
+        logger.exception(f"Real-time getProfileFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1600,11 +1587,10 @@ def get_simulation_config_realtime(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Real-time getConfigFailed: {str(e)}")
+        logger.exception(f"Real-time getConfigFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1636,11 +1622,10 @@ def get_simulation_config(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get configuration: {str(e)}")
+        logger.exception(f"Failed to get configuration: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1665,11 +1650,10 @@ def download_simulation_config(simulation_id: str):
         )
         
     except Exception as e:
-        logger.error(f"Failed to download configuration: {str(e)}")
+        logger.exception(f"Failed to download configuration: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1711,11 +1695,10 @@ def download_simulation_script(script_name: str):
         )
         
     except Exception as e:
-        logger.error(f"Failed to download script: {str(e)}")
+        logger.exception(f"Failed to download script: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -1978,11 +1961,10 @@ def start_simulation():
         }), 400
         
     except Exception as e:
-        logger.error(f"Failed to start simulation: {str(e)}")
+        logger.exception(f"Failed to start simulation: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2037,11 +2019,10 @@ def stop_simulation():
         }), 400
         
     except Exception as e:
-        logger.error(f"Failed to stop simulation: {str(e)}")
+        logger.exception(f"Failed to stop simulation: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2104,11 +2085,10 @@ def get_run_status(simulation_id: str):
         })
 
     except Exception as e:
-        logger.error(f"Failed to get running status: {str(e)}")
+        logger.exception(f"Failed to get running status: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2186,11 +2166,10 @@ def get_run_status_detail(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get detailed status: {str(e)}")
+        logger.exception(f"Failed to get detailed status: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2240,11 +2219,10 @@ def get_simulation_actions(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get action history: {str(e)}")
+        logger.exception(f"Failed to get action history: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2280,11 +2258,10 @@ def get_simulation_timeline(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get timeline: {str(e)}")
+        logger.exception(f"Failed to get timeline: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2307,11 +2284,10 @@ def get_agent_stats(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get agent statistics: {str(e)}")
+        logger.exception(f"Failed to get agent statistics: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2387,11 +2363,10 @@ def get_simulation_posts(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get posts: {str(e)}")
+        logger.exception(f"Failed to get posts: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2462,11 +2437,10 @@ def get_simulation_comments(simulation_id: str):
         })
         
     except Exception as e:
-        logger.error(f"Failed to get comments: {str(e)}")
+        logger.exception(f"Failed to get comments: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2615,11 +2589,10 @@ def interview_agent():
         }), 504
         
     except Exception as e:
-        logger.error(f"InterviewFailed: {str(e)}")
+        logger.exception(f"InterviewFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2771,11 +2744,10 @@ def interview_agents_batch():
         }), 504
 
     except Exception as e:
-        logger.error(f"BatchInterviewFailed: {str(e)}")
+        logger.exception(f"BatchInterviewFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -2933,11 +2905,10 @@ def interview_agents_post_simulation():
         }), 504
 
     except Exception as e:
-        logger.error(f"Post-simulation interview failed: {str(e)}")
+        logger.exception(f"Post-simulation interview failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3102,11 +3073,10 @@ def interview_all_agents():
         }), 504
 
     except Exception as e:
-        logger.error(f"GlobalInterviewFailed: {str(e)}")
+        logger.exception(f"GlobalInterviewFailed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3174,11 +3144,10 @@ def get_interview_history():
         })
 
     except Exception as e:
-        logger.error(f"Failed to get interview history: {str(e)}")
+        logger.exception(f"Failed to get interview history: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3239,11 +3208,10 @@ def get_env_status():
         })
 
     except Exception as e:
-        logger.error(f"Failed to get environment status: {str(e)}")
+        logger.exception(f"Failed to get environment status: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3309,11 +3277,10 @@ def close_simulation_env():
         }), 400
         
     except Exception as e:
-        logger.error(f"Failed to close environment: {str(e)}")
+        logger.exception(f"Failed to close environment: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3366,11 +3333,10 @@ def list_simulation_agents(simulation_id: str):
             "error": str(e)
         }), 404
     except Exception as e:
-        logger.error(f"Failed to list agents: {str(e)}")
+        logger.exception(f"Failed to list agents: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3445,11 +3411,10 @@ def interview_single_agent(simulation_id: str, agent_id: int):
             "error": str(e)
         }), 404
     except Exception as e:
-        logger.error(f"Interview failed: {str(e)}")
+        logger.exception(f"Interview failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3511,11 +3476,10 @@ def batch_interview_agents(simulation_id: str):
         })
 
     except Exception as e:
-        logger.error(f"Batch interview failed: {str(e)}")
+        logger.exception(f"Batch interview failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3579,11 +3543,10 @@ def intervene_with_agent(simulation_id: str, agent_id: int):
             "error": str(e)
         }), 404
     except Exception as e:
-        logger.error(f"Intervention failed: {str(e)}")
+        logger.exception(f"Intervention failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3650,11 +3613,10 @@ def fork_simulation(simulation_id: str):
             "error": str(e)
         }), 400
     except Exception as e:
-        logger.error(f"Fork failed: {str(e)}")
+        logger.exception(f"Fork failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3692,11 +3654,10 @@ def pause_simulation(simulation_id: str):
             "error": str(e)
         }), 400
     except Exception as e:
-        logger.error(f"Pause failed: {str(e)}")
+        logger.exception(f"Pause failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3726,11 +3687,10 @@ def resume_simulation(simulation_id: str):
             "error": str(e)
         }), 400
     except Exception as e:
-        logger.error(f"Resume failed: {str(e)}")
+        logger.exception(f"Resume failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3792,11 +3752,10 @@ def intervene_live(simulation_id: str, agent_id: int):
             "error": str(e)
         }), 400
     except Exception as e:
-        logger.error(f"Live intervention failed: {str(e)}")
+        logger.exception(f"Live intervention failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3845,11 +3804,10 @@ def broadcast_intervention(simulation_id: str):
             "error": str(e)
         }), 400
     except Exception as e:
-        logger.error(f"Broadcast intervention failed: {str(e)}")
+        logger.exception(f"Broadcast intervention failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3938,11 +3896,10 @@ def impact_interview():
         })
 
     except Exception as e:
-        logger.error(f"Impact interview failed: {str(e)}")
+        logger.exception(f"Impact interview failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -3993,11 +3950,10 @@ def export_agent_states(simulation_id: str):
         })
 
     except Exception as e:
-        logger.error(f"Export agent states failed: {str(e)}")
+        logger.exception(f"Export agent states failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
 
 
@@ -4042,9 +3998,8 @@ def export_impact_summary(simulation_id: str):
         })
 
     except Exception as e:
-        logger.error(f"Export impact summary failed: {str(e)}")
+        logger.exception(f"Export impact summary failed: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e),
-            "traceback": traceback.format_exc()
         }), 500
