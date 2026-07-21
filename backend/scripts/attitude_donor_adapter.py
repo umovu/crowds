@@ -90,6 +90,68 @@ def education_to_band(education: str | None) -> str:
     return "secondary"  # ambiguous mid-level attainment → secondary, the modal band
 
 
+# Canonical race + settlement vocabularies. QLFS and Afrobarometer label these
+# differently ('African/Black' vs 'Black / African', 'Indian/Asian' vs 'South Asian
+# (Indian, Pakistani, etc.)'), so both sides are normalised here — the same reason
+# age/education are banded here. A silent vocabulary mismatch would make every match
+# fall to backoff while still looking like it worked, so the validator asserts both
+# sides produce the same set.
+#
+# These are MATCHING KEYS and persona data fields. They must never be handed to a
+# model as a reason to hold a view: the donor's *measured* attitude carries the
+# effect, the LLM only styles the wording.
+RACE_VOCAB = ["African/Black", "Coloured", "Indian/Asian", "White"]
+GEOTYPES = ["Urban", "Rural"]
+
+# QLFS Q15POPULATION → canonical. QLFS already uses the canonical labels verbatim
+# (same convention as Province), so this is an identity map kept explicit so the
+# adapter, not the caller, owns the vocabulary.
+_QLFS_RACE = {
+    "African/Black": "African/Black",
+    "Coloured": "Coloured",
+    "Indian/Asian": "Indian/Asian",
+    "White": "White",
+}
+
+# Afrobarometer Q101 → canonical. 'Other' / 'Arab' / "Don't know" (4 respondents in
+# R9 SA) deliberately map to None: they never match on race and fall through the
+# ladder rather than being coerced into a group they didn't claim.
+_AB_RACE = {
+    "Black / African": "African/Black",
+    "Coloured / Mixed race": "Coloured",
+    "South Asian (Indian, Pakistani, etc.)": "Indian/Asian",
+    "White / European": "White",
+}
+
+# QLFS Geo_Type_Code → canonical. QLFS distinguishes 'Traditional' (tribal areas)
+# from 'Farms'; Afrobarometer URBRUR is binary, so both collapse to Rural for the
+# JOIN. The finer QLFS distinction is not carried here — if a persona field needs
+# it later, add it separately rather than widening the join surface.
+_QLFS_GEOTYPE = {"Urban": "Urban", "Traditional": "Rural", "Farms": "Rural"}
+_AB_GEOTYPE = {"Urban": "Urban", "Rural": "Rural"}
+
+
+def race_to_canonical(value: str | None, source: str = "qlfs") -> Optional[str]:
+    """Normalise a race label from either dataset onto RACE_VOCAB.
+
+    Unknown / refused / 'Other' → None, which simply never matches on this key.
+    """
+    v = (value or "").strip()
+    if not v:
+        return None
+    table = _QLFS_RACE if source == "qlfs" else _AB_RACE
+    return table.get(v)
+
+
+def geotype_to_canonical(value: str | None, source: str = "qlfs") -> Optional[str]:
+    """Normalise a settlement label from either dataset onto GEOTYPES."""
+    v = (value or "").strip()
+    if not v:
+        return None
+    table = _QLFS_GEOTYPE if source == "qlfs" else _AB_GEOTYPE
+    return table.get(v)
+
+
 def _validate_donor(d: Dict, idx: int) -> None:
     """Fail loud if a donor record is malformed — a bad donor silently skews every
     persona that matches it, so we reject rather than coerce."""
@@ -109,6 +171,13 @@ def _validate_donor(d: Dict, idx: int) -> None:
     w = d.get("weight")
     if not isinstance(w, (int, float)) or w <= 0:
         raise ValueError(f"donor[{idx}] non-positive weight {w!r}")
+    # race/geotype are not yet join keys, so None is legal (the synthetic fixture has
+    # neither). A *present* value must be canonical — an un-normalised label would
+    # silently never match once these are promoted to join keys.
+    if d.get("race") is not None and d["race"] not in RACE_VOCAB:
+        raise ValueError(f"donor[{idx}] non-canonical race '{d['race']}' (expected {RACE_VOCAB})")
+    if d.get("geotype") is not None and d["geotype"] not in GEOTYPES:
+        raise ValueError(f"donor[{idx}] non-canonical geotype '{d['geotype']}' (expected {GEOTYPES})")
 
 
 def load_synthetic(path: str = _SYNTHETIC_PATH) -> List[Dict]:
@@ -268,6 +337,10 @@ def load_afrobarometer(sav_path: str) -> List[Dict]:
     import pyreadstat  # local import: only needed when real data is loaded
 
     df, _meta = pyreadstat.read_sav(sav_path)
+    # Q101 (race) and URBRUR (settlement) come through as numeric codes; decode via the
+    # .sav value labels, then normalise onto the canonical vocabulary both datasets share.
+    _race_labels = _meta.variable_value_labels.get("Q101", {})
+    _geo_labels = _meta.variable_value_labels.get("URBRUR", {})
     donors: List[Dict] = []
     skipped = 0
     for _, row in df.iterrows():
@@ -299,6 +372,11 @@ def load_afrobarometer(sav_path: str) -> List[Dict]:
             "age_band": age_to_band(int(age)),
             "weight": float(weight),
             "attitudes": attitudes,
+            # Carried but NOT yet join keys — promoting them to the backoff ladder is a
+            # separate change with a measurable match-quality trade-off. None where the
+            # respondent answered 'Other'/'Don't know' (4 people in R9 SA).
+            "race": race_to_canonical(_race_labels.get(row.get("Q101")), "ab"),
+            "geotype": geotype_to_canonical(_geo_labels.get(row.get("URBRUR")), "ab"),
             # Not a join key — drives role-aware pooling (donor_pool_for_role).
             "occupation_class": _AB_Q93B_CLASS.get(row.get("Q93B"), "general"),
         })

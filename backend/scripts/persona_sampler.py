@@ -29,6 +29,10 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 
+# The adapter owns the shared vocabulary (bands, race, settlement) so skeletons and
+# donors are always normalised the same way.
+import attitude_donor_adapter as ada
+
 # ── Paths ──────────────────────────────────────────────────────────────────
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _DEFAULT_DTA = os.path.join(
@@ -50,6 +54,8 @@ _LABELLED_COLS = [
     "Indus",              # grouped industry
     "Q16MARITALSTATUS",   # Never married / Married / ...
     "Neet",               # Yes/No — not in employment, education or training
+    "Q15POPULATION",      # population group — canonical race vocabulary
+    "Geo_Type_Code",      # Urban / Traditional / Farms → canonical Urban|Rural
 ]
 
 MIN_AGE = 15  # QLFS labour-status universe; also the sim's persona universe
@@ -129,6 +135,10 @@ def _row_to_skeleton(row: pd.Series) -> Dict[str, object]:
             str(row.get("Neet")).strip().lower() == "yes"
             if pd.notna(row.get("Neet")) else None
         ),
+        # Normalised through the adapter so skeletons and donors share one vocabulary —
+        # the same reason age/education are banded there.
+        "race": ada.race_to_canonical(s(row.get("Q15POPULATION")), "qlfs"),
+        "geotype": ada.geotype_to_canonical(s(row.get("Geo_Type_Code")), "qlfs"),
     }
 
 
