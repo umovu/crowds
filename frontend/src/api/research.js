@@ -162,36 +162,6 @@ export function generateSeedFromWeb(data) {
 }
 
 /**
- * Search for a real-world group of people and generate matching agent personas.
- * Lets users model how a specific group ("Cape Town taxi drivers") would react.
- * @param {Object} data - { group: string, count?: number, ground_with_web?: boolean, context?: string }
- * @returns {Promise<{ success, agents, grounded, sources, count }>}
- */
-export function searchPeople(data) {
-  return service({
-    url: '/api/research/people',
-    method: 'post',
-    data,
-    timeout: 180000 // web grounding + LLM generation can be slow
-  })
-}
-
-/**
- * Enrich a partial agent dict — fill in missing/thin fields with the LLM.
- * Preserves any non-empty fields the user already provided.
- * @param {Object} data - { agent: <partial dict>, ground_with_web?: boolean }
- * @returns {Promise<{ success, agent, grounded, sources }>}
- */
-export function enrichAgent(data) {
-  return service({
-    url: '/api/research/agents/enrich',
-    method: 'post',
-    data,
-    timeout: 120000
-  })
-}
-
-/**
  * List every cached/generated persona — metadata only, for the side panel.
  * @returns {Promise<{success, count, personas}>}
  */
