@@ -98,7 +98,13 @@ CIRCUMSTANCE_VOCAB: Dict[str, List[str]] = {
 
 # The demographic fields a donor must carry to be matchable. These are exactly the
 # fields QLFS already fills on a skeleton (after banding), so they are the join surface.
-JOIN_KEYS = ["gender", "province", "education_band", "employment_status", "age_band"]
+#
+# `race` was added after held-out evaluation (eval_attitude_match.py) showed it halves
+# subgroup distribution error for Indian/Asian (14.0 -> 7.0) and White (12.7 -> 7.8)
+# personas without hurting the African/Black majority. It is added as a SIXTH key rather
+# than swapping out an existing one: swapping age for race scored worst of five candidate
+# ladders. See _BACKOFF_LADDER in attitude_fuser for where it sits.
+JOIN_KEYS = ["gender", "province", "education_band", "employment_status", "age_band", "race"]
 
 # Canonical bands the fuser keys on. Kept here (next to the adapter) because the
 # adapter is responsible for producing skeletons-and-donors in the SAME band vocab.
@@ -203,6 +209,12 @@ def _validate_donor(d: Dict, idx: int) -> None:
     """Fail loud if a donor record is malformed — a bad donor silently skews every
     persona that matches it, so we reject rather than coerce."""
     for k in JOIN_KEYS:
+        # race is the one join key that may legitimately be None: 4 R9 SA respondents
+        # answered 'Other'/'Arab'/'Don't know' and are deliberately not coerced into a
+        # group they didn't claim. They simply never match a race rung and fall through
+        # to the population rung. Every other key is mandatory.
+        if k == "race":
+            continue
         if not d.get(k):
             raise ValueError(f"donor[{idx}] missing join key '{k}': {d}")
     if d["age_band"] not in AGE_BANDS:

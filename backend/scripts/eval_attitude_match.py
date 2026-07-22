@@ -156,30 +156,66 @@ def _folds(donors: List[Dict], k: int, seed: int) -> List[Tuple[List[Dict], List
     return out
 
 
+# Subgroups the assigned distribution must be right WITHIN. An overall-population match
+# is easy and uninformative — the modal baseline gets that badly wrong only because it
+# has no spread at all. What distinguishes ladders is whether *White rural* or
+# *unemployed youth* hold opinions in the right proportions.
+GROUPINGS = ["race", "age_band", "province", "education_band", "employment_status"]
+
+
 class Score:
-    """Accumulates hits / ordinal error, overall and by subgroup."""
+    """Accumulates the real objective (subgroup distribution fidelity) plus
+    per-person accuracy, which is kept only as a diagnostic — see module docstring.
+
+    Objective = total variation distance between the ASSIGNED stance distribution and
+    the TRUE stance distribution, computed within each subgroup and averaged weighted by
+    subgroup size. TVD is half the sum of absolute differences across stances: 0 means
+    the distributions match exactly, 1 means no overlap. Reported in points (x100).
+    """
 
     def __init__(self) -> None:
         self.hits = 0.0
         self.n = 0
         self.abserr = 0.0
-        self.by_race: Dict[str, List[float]] = defaultdict(lambda: [0.0, 0.0])
-        self.by_age: Dict[str, List[float]] = defaultdict(lambda: [0.0, 0.0])
         self.by_dim: Dict[str, List[float]] = defaultdict(lambda: [0.0, 0.0])
         self.rungs: Counter = Counter()
+        # (grouping, group value, dimension) -> {stance: count} for assigned and true
+        self.pred_dist: Dict[Tuple[str, str, str], Counter] = defaultdict(Counter)
+        self.true_dist: Dict[Tuple[str, str, str], Counter] = defaultdict(Counter)
 
-    def add(self, truth: str, pred: Optional[str], dim: str,
-            race: Optional[str], age: Optional[str]) -> None:
+    def add(self, truth: str, pred: Optional[str], dim: str, donor: Dict) -> None:
         hit = 1.0 if pred == truth else 0.0
         self.hits += hit
         self.n += 1
         if truth in _ORDINAL and pred in _ORDINAL:
             self.abserr += abs(_ORDINAL[truth] - _ORDINAL[pred])
-        for bucket, key in ((self.by_race, race or "?"),
-                            (self.by_age, age or "?"),
-                            (self.by_dim, dim)):
-            bucket[key][0] += hit
-            bucket[key][1] += 1
+        self.by_dim[dim][0] += hit
+        self.by_dim[dim][1] += 1
+        for grouping in GROUPINGS:
+            key = (grouping, str(donor.get(grouping)), dim)
+            self.true_dist[key][truth] += 1
+            if pred is not None:
+                self.pred_dist[key][pred] += 1
+
+    def tvd(self, grouping: Optional[str] = None, min_n: int = 20) -> float:
+        """Size-weighted mean TVD, in points. `grouping=None` averages over all
+        groupings. Cells smaller than `min_n` are skipped — their empirical 'true'
+        distribution is itself too noisy to be a target."""
+        total_w = 0.0
+        acc = 0.0
+        for key, truth in self.true_dist.items():
+            if grouping is not None and key[0] != grouping:
+                continue
+            n = sum(truth.values())
+            if n < min_n:
+                continue
+            pred = self.pred_dist.get(key, Counter())
+            m = sum(pred.values()) or 1
+            stances = set(truth) | set(pred)
+            d = 0.5 * sum(abs(truth[s] / n - pred[s] / m) for s in stances)
+            acc += d * n
+            total_w += n
+        return acc / total_w * 100 if total_w else float("nan")
 
     @property
     def acc(self) -> float:
@@ -210,7 +246,7 @@ def evaluate(donors: List[Dict], ladder: List[List[str]], k: int, seed: int) -> 
                 if truth is None:
                     continue  # respondent refused; nothing to score against
                 pred = donor["attitudes"].get(dim, modal.get(dim))
-                s.add(truth, pred, dim, t.get("race"), t.get("age_band"))
+                s.add(truth, pred, dim, t)
     return s
 
 
@@ -230,7 +266,7 @@ def evaluate_baseline(donors: List[Dict], kind: str, k: int, seed: int) -> Score
                 else:
                     opts, wts = marg[dim]
                     pred = rng.choices(opts, weights=wts, k=1)[0]
-                s.add(truth, pred, dim, t.get("race"), t.get("age_band"))
+                s.add(truth, pred, dim, t)
     return s
 
 
@@ -255,37 +291,48 @@ def main() -> None:
     for name, ladder in LADDERS.items():
         results[name] = evaluate(donors, ladder, args.folds, args.seed)
 
-    base = results["BASE_modal"].acc
-    print(f"{'ladder':22} {'accuracy':>9} {'vs modal':>9} {'MAE':>6}   top-rung share")
-    print("-" * 72)
-    for name, s in results.items():
-        lift = f"{s.acc - base:+.1f}" if not name.startswith("BASE") else ""
-        top = ""
-        if s.rungs:
-            top = f"{s.rungs[0] / sum(s.rungs.values()) * 100:.0f}%"
-        print(f"{name:22} {s.acc:8.1f}% {lift:>9} {s.mae:6.3f}   {top}")
+    print("OBJECTIVE — subgroup distribution fidelity (TVD, points; LOWER IS BETTER)")
+    print(f"{'ladder':22} {'TVD':>7}   " + " ".join(f"{g[:11]:>12}" for g in GROUPINGS))
+    print("-" * 88)
+    ranked = sorted(results.items(), key=lambda kv: kv[1].tvd())
+    for name, s in ranked:
+        cells = " ".join(f"{s.tvd(g):12.1f}" for g in GROUPINGS)
+        print(f"{name:22} {s.tvd():7.1f}   {cells}")
 
-    print("\nper-dimension accuracy")
-    dims = list(DIMS)
-    print(f"{'ladder':22} " + " ".join(f"{d[:14]:>15}" for d in dims))
-    for name, s in results.items():
-        cells = []
-        for d in dims:
-            h, n = s.by_dim.get(d, [0, 0])
-            cells.append(f"{h / n * 100:14.1f}%" if n else f"{'-':>15}")
-        print(f"{name:22} " + " ".join(cells))
+    best = ranked[0][0]
+    print(f"\nbest on the objective: {best}")
+
+    print("\nDIAGNOSTIC ONLY — per-person accuracy. NOT the objective: assigning every")
+    print("persona the modal stance maximises this while giving the whole library one")
+    print("identical opinion. Reported to show that trade-off, not to rank ladders.")
+    print(f"{'ladder':22} {'accuracy':>9} {'MAE':>7}   top-rung share")
+    for name, s in ranked:
+        top = f"{s.rungs[0] / sum(s.rungs.values()) * 100:.0f}%" if s.rungs else "-"
+        print(f"{name:22} {s.acc:8.1f}% {s.mae:7.3f}   {top}")
 
     if args.by_group:
-        for label, attr in (("race", "by_race"), ("age band", "by_age")):
-            keys = sorted({k for s in results.values() for k in getattr(s, attr)})
-            print(f"\naccuracy by {label}  (n in parentheses)")
-            print(f"{'ladder':22} " + " ".join(f"{k[:16]:>18}" for k in keys))
-            for name, s in results.items():
-                cells = []
-                for kk in keys:
-                    h, n = getattr(s, attr).get(kk, [0, 0])
-                    cells.append(f"{h / n * 100:11.1f}% ({int(n):4})" if n else f"{'-':>18}")
-                print(f"{name:22} " + " ".join(cells))
+        print("\nTVD by race  (the 24% non-African/Black is what race-matching is for)")
+        keys = sorted({k[1] for s in results.values() for k in s.true_dist
+                       if k[0] == "race"})
+        print(f"{'ladder':22} " + " ".join(f"{k[:14]:>16}" for k in keys))
+        for name, s in ranked:
+            cells = []
+            for kk in keys:
+                tot = 0.0
+                w = 0.0
+                for key, truth in s.true_dist.items():
+                    if key[0] != "race" or key[1] != kk:
+                        continue
+                    n = sum(truth.values())
+                    if n < 20:
+                        continue
+                    pred = s.pred_dist.get(key, Counter())
+                    m = sum(pred.values()) or 1
+                    stances = set(truth) | set(pred)
+                    tot += 0.5 * sum(abs(truth[x] / n - pred[x] / m) for x in stances) * n
+                    w += n
+                cells.append(f"{tot / w * 100:16.1f}" if w else f"{'-':>16}")
+            print(f"{name:22} " + " ".join(cells))
 
     print("\nCAVEAT: test donors are Afrobarometer respondents, not QLFS skeletons — "
           "their demographic mix differs from the library's. This ranks LADDERS, "

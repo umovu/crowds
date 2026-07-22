@@ -37,23 +37,39 @@ from typing import Dict, List, Optional, Tuple
 
 import attitude_donor_adapter as ada
 
-# Backoff ladder: full 5-key match first, then drop keys left-to-right. age_band and
+# Backoff ladder: full 6-key match first, then drop keys left-to-right. age_band and
 # education_band are dropped before province because province is a stronger attitude
 # predictor in SA (service delivery, provincial government performance vary by province).
 # employment_status and gender are kept longest — both correlate hard with economic mood.
+#
+# `race` is dropped LAST, just above whole-population. Chosen by held-out evaluation over
+# five candidate ladders (eval_attitude_match.py, 5-fold, subgroup distribution fidelity):
+# this shape scored best overall (TVD 2.5 vs 2.8 for the previous ladder) and roughly
+# halved distribution error for the minority groups it exists to serve —
+# Indian/Asian 14.0 -> 7.0, White 12.7 -> 7.8, Coloured 6.7 -> 3.9 — while leaving the
+# African/Black majority marginally better. Swapping race in for age instead of adding it
+# scored WORST of the five, so it is a sixth key, not a replacement.
+#
+# Cost, measured and accepted: top-rung ("exact") share falls from ~85% to ~76%, because
+# six keys over 1,384 donors leaves more cells empty. A same-race donor one rung down is a
+# better match than a different-race donor at the top rung, so the label is what changes,
+# not the quality.
 _BACKOFF_LADDER: List[List[str]] = [
-    ["gender", "province", "education_band", "employment_status", "age_band"],  # exact
-    ["gender", "province", "education_band", "employment_status"],              # drop age
-    ["gender", "province", "employment_status"],                                # drop education
-    ["gender", "employment_status"],                                            # drop province
-    ["employment_status"],                                                      # status only
-    [],                                                                         # whole-population
+    ["gender", "province", "education_band", "employment_status", "age_band", "race"],  # exact
+    ["gender", "province", "education_band", "employment_status", "race"],              # drop age
+    ["gender", "province", "employment_status", "race"],                                # drop education
+    ["gender", "employment_status", "race"],                                            # drop province
+    ["employment_status", "race"],                                                      # drop gender
+    ["race"],                                                                           # race only
+    [],                                                                                 # whole-population
 ]
 
-# Human-readable label per ladder rung, for match_quality provenance.
+# Human-readable label per ladder rung, for match_quality provenance. Named for what is
+# PRESERVED, not merely how far down the ladder we went: every rung above "population"
+# keeps race, which is the point of the ordering.
 _QUALITY_LABELS = [
     "exact", "age_backoff", "education_backoff",
-    "province_backoff", "status_only", "population",
+    "province_backoff", "status_race", "race_only", "population",
 ]
 
 # Deterministic belief phrasing per (dimension, stance). Kept LLM-free on purpose: the
@@ -90,6 +106,8 @@ def _skeleton_join_view(skeleton: Dict) -> Dict[str, Optional[str]]:
         "education_band": ada.education_to_band(skeleton.get("education")),
         "employment_status": skeleton.get("employment_status"),
         "age_band": ada.age_to_band(int(age)) if age is not None else None,
+        # Already canonicalised by persona_sampler via the adapter, so no banding needed.
+        "race": skeleton.get("race"),
     }
 
 
