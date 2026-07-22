@@ -138,7 +138,13 @@ def _row_to_skeleton(row: pd.Series) -> Dict[str, object]:
         # Normalised through the adapter so skeletons and donors share one vocabulary —
         # the same reason age/education are banded there.
         "race": ada.race_to_canonical(s(row.get("Q15POPULATION")), "qlfs"),
-        "geotype": ada.geotype_to_canonical(s(row.get("Geo_Type_Code")), "qlfs"),
+        # Raw Stats SA 3-way (Urban / Traditional / Farms) — the SAME vocabulary the GHS
+        # adapter already emits, so one field name means one thing across every skeleton
+        # source. Traditional-authority areas and commercial farms are genuinely different
+        # places to live and that distinction is worth keeping on the persona.
+        # `ada.geotype_to_canonical` collapses it to Urban|Rural for JOINING against
+        # Afrobarometer's binary URBRUR — used only if geotype ever becomes a join key.
+        "geotype": s(row.get("Geo_Type_Code")),
     }
 
 
