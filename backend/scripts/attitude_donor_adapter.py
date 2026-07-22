@@ -47,6 +47,24 @@ ATTITUDE_VOCAB: Dict[str, List[str]] = {
     "service_satisfaction": ["dissatisfied", "mixed", "satisfied"],
     "crime_fear": ["low", "mid", "high"],
     "education_satisfaction": ["dissatisfied", "mixed", "satisfied"],
+    # ── policy-mode ────────────────────────────────────────────────────────────
+    # Political efficacy: does engaging with the state achieve anything. Predicts
+    # whether a persona petitions, protests, or disengages — the mechanism policy
+    # simulations most often get wrong.
+    "councillor_responsiveness": ["low", "mid", "high"],
+    "official_responsiveness": ["low", "mid", "high"],
+    "crime_handling": ["dissatisfied", "mixed", "satisfied"],
+    # Strongly held and politically live: any policy touching jobs, services or
+    # migration collides with it.
+    "immigration_priority": ["low", "mid", "high"],
+    # ── product-mode ───────────────────────────────────────────────────────────
+    # Willingness to pay more for better service. A measured ATTITUDE, deliberately
+    # not a purchase probability — it never becomes a "% who would buy".
+    "pays_for_quality": ["no", "mixed", "yes"],
+    # Baseline scepticism toward companies; governs how much proof a pitch needs.
+    "business_trust": ["low", "mid", "high"],
+    # Governs whether word-of-mouth / referral adoption is plausible for a segment.
+    "social_trust": ["low", "mid", "high"],
 }
 
 # Material circumstances the donor also reports. Deliberately NOT part of ATTITUDE_VOCAB:
@@ -66,6 +84,16 @@ CIRCUMSTANCE_VOCAB: Dict[str, List[str]] = {
     "owns_television": ["none", "household", "own"],
     "internet_use": ["never", "rarely", "monthly", "weekly", "daily"],
     "electricity_reliability": ["never", "occasional", "half", "most", "always"],
+    # Household spending authority — whether this person can decide a purchase at all,
+    # or has to consult. The closest thing to a purchase-capability variable that exists
+    # in real SA data, and absent from the model until now.
+    "money_decision": ["self", "joint", "other", "none"],
+    # Which channels actually reach this person. Answers "how would they even hear
+    # about it", which panels currently guess at.
+    "news_radio": ["never", "rarely", "monthly", "weekly", "daily"],
+    "news_tv": ["never", "rarely", "monthly", "weekly", "daily"],
+    "news_internet": ["never", "rarely", "monthly", "weekly", "daily"],
+    "news_social": ["never", "rarely", "monthly", "weekly", "daily"],
 }
 
 # The demographic fields a donor must carry to be matchable. These are exactly the
@@ -346,6 +374,39 @@ _AB_ASSET = {0.0: "none", 1.0: "household", 2.0: "own"}
 _AB_INTERNET = {0.0: "never", 1.0: "rarely", 2.0: "monthly", 3.0: "weekly", 4.0: "daily"}
 # Q92b mains electricity availability: 1 never … 5 all of the time.
 _AB_ELECTRICITY = {1.0: "never", 2.0: "occasional", 3.0: "half", 4.0: "most", 5.0: "always"}
+# Q74 news-channel frequency: same 0..4 shape as Q90i.
+_AB_NEWS = dict(_AB_INTERNET)
+# Q93c spending authority. 6 ("none of the above") and 7 ("not applicable, no earnings")
+# are absent from the table on purpose — they fall through to None rather than being
+# coerced into a decision role the respondent didn't claim.
+_AB_MONEY_DECISION = {
+    1.0: "self",   # decides alone
+    2.0: "other",  # spouse decides
+    3.0: "joint",  # jointly with spouse
+    4.0: "joint",  # jointly with other family
+    5.0: "other",  # other family decides without them
+}
+
+# ── New attitude scales, decoded by explicit code table rather than a banded mean.
+# Several carry out-of-scale codes a mean would silently absorb: Q34b has 94 ("not asked
+# in this country"), Q93c has 6/7. An explicit table simply omits them.
+#
+# Q34b councillors listen / Q36a likelihood of response: 0..3 low→high. Banded by thirds
+# of the scale, matching _ab_band_3 so every dimension in the vocab bands the same way.
+_AB_EFFICACY = {0.0: "low", 1.0: "mid", 2.0: "high", 3.0: "high"}
+# Q86a trust other citizens: 0 not at all … 3 a lot. Same thirds convention.
+_AB_SOCIAL_TRUST = {0.0: "low", 1.0: "mid", 2.0: "high", 3.0: "high"}
+# Q38j corruption among business executives — INVERTED: more perceived corruption is
+# LESS trust. 0 none → high trust; 3 all of them → low trust.
+_AB_BUSINESS_TRUST = {0.0: "high", 1.0: "mid", 2.0: "low", 3.0: "low"}
+# Q46f government handling of crime: 1 very badly … 4 very well. Same thirds banding the
+# other Q46 items get via _ab_band_3(1.0, 4.0), so crime_handling is directly comparable
+# to service_satisfaction and education_satisfaction.
+_AB_HANDLING = {1.0: "dissatisfied", 2.0: "mixed", 3.0: "satisfied", 4.0: "satisfied"}
+# 5-point agreement scales (Q80c better services worth higher cost, Q82c prioritise
+# South Africans). 3 = "neither" is the genuine middle.
+_AB_AGREE_PAY = {1.0: "no", 2.0: "no", 3.0: "mixed", 4.0: "yes", 5.0: "yes"}
+_AB_AGREE_3 = {1.0: "low", 2.0: "low", 3.0: "mid", 4.0: "high", 5.0: "high"}
 
 
 def _decode_ab_circumstances(row) -> Dict[str, str]:
@@ -384,6 +445,16 @@ def _decode_ab_circumstances(row) -> Dict[str, str]:
     if elec:
         out["electricity_reliability"] = elec
 
+    money = _ab_code(row, "Q93C", _AB_MONEY_DECISION)
+    if money:
+        out["money_decision"] = money
+
+    for field, col in (("news_radio", "Q74A"), ("news_tv", "Q74B"),
+                       ("news_internet", "Q74D"), ("news_social", "Q74E")):
+        val = _ab_code(row, col, _AB_NEWS)
+        if val:
+            out[field] = val
+
     return out
 
 
@@ -413,6 +484,21 @@ def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
     if svc:   out["service_satisfaction"] = svc
     if crime: out["crime_fear"] = crime
     if edu:   out["education_satisfaction"] = edu
+
+    # Policy-mode and product-mode dimensions. Decoded by explicit code table (see the
+    # tables above) because several carry out-of-scale codes a banded mean would absorb.
+    for dim, col, table in (
+        ("councillor_responsiveness", "Q34B", _AB_EFFICACY),
+        ("official_responsiveness", "Q36A", _AB_EFFICACY),
+        ("crime_handling", "Q46F", _AB_HANDLING),
+        ("immigration_priority", "Q82C_SAF", _AB_AGREE_3),
+        ("pays_for_quality", "Q80C_SAF", _AB_AGREE_PAY),
+        ("business_trust", "Q38J", _AB_BUSINESS_TRUST),
+        ("social_trust", "Q86A", _AB_SOCIAL_TRUST),
+    ):
+        value = _ab_code(row, col, table)
+        if value:
+            out[dim] = value
     return out or None
 
 

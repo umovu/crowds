@@ -180,6 +180,50 @@ def _population_modal_stances(donors: List[Dict]) -> Dict[str, str]:
     return modal
 
 
+def _population_distributions(donors: List[Dict], key: str, vocab: Dict) -> Dict[str, Tuple[List[str], List[float]]]:
+    """Survey-weighted stance distribution per dimension, for the population fallback.
+
+    Used INSTEAD of the modal value when a matched donor didn't answer a dimension.
+    Filling every gap with the mode biases the library toward that mode in proportion to
+    how often the dimension is missing — invisible at 99% coverage, but business_trust is
+    only 89% answered and modal-filling drifted its marginals 6pp (caught by
+    validate_attitude_fuser). A weighted draw preserves the population marginals by
+    construction, and is just as honest: "someone plausible from this population" rather
+    than "the most typical person".
+    """
+    from collections import defaultdict
+    weighted = {dim: defaultdict(float) for dim in vocab}
+    for d in donors:
+        w = float(d.get("weight", 1.0))
+        for dim, value in (d.get(key) or {}).items():
+            if dim in weighted:
+                weighted[dim][value] += w
+    return {
+        dim: (list(vals.keys()), list(vals.values()))
+        for dim, vals in weighted.items() if vals
+    }
+
+
+def _population_draw(
+    dists: Dict[str, Tuple[List[str], List[float]]], dim: str, skeleton: Dict, seed: int
+) -> Optional[str]:
+    """Deterministic weighted draw from the population distribution for one dimension.
+
+    Seeded on (skeleton, dim) so the same persona always fills the same gap the same way,
+    and two personas don't both collapse onto the same value.
+    """
+    dist = dists.get(dim)
+    if not dist:
+        return None
+    options, weights = dist
+    key = json.dumps({k: skeleton.get(k) for k in
+                      ("age", "gender", "province", "education", "employment_status",
+                       "occupation", "industry", "marriage_status", "is_neet")},
+                     sort_keys=True, ensure_ascii=False) + f"|{dim}"
+    h = int(hashlib.sha256(key.encode("utf-8")).hexdigest()[:8], 16)
+    return random.Random(seed ^ h).choices(options, weights=weights, k=1)[0]
+
+
 def _population_modal_circumstances(donors: List[Dict]) -> Dict[str, Optional[str]]:
     """Survey-weighted most-common value per circumstance field.
 
@@ -223,6 +267,8 @@ def fuse_attitudes(
 
     modal = _population_modal_stances(pool)
     modal_circ = _population_modal_circumstances(pool)
+    dist_att = _population_distributions(pool, "attitudes", ada.ATTITUDE_VOCAB)
+    dist_circ = _population_distributions(pool, "circumstances", ada.CIRCUMSTANCE_VOCAB)
 
     out: List[Dict] = []
     for sk in skeletons:
@@ -232,8 +278,9 @@ def fuse_attitudes(
         per_dim_quality = {dim: quality for dim in full}
         for dim in ada.ATTITUDE_VOCAB:
             if dim not in full:
-                full[dim] = modal[dim]
-                per_dim_quality[dim] = "population_modal"
+                # Weighted draw, not the mode — see _population_distributions.
+                full[dim] = _population_draw(dist_att, dim, sk, seed) or modal[dim]
+                per_dim_quality[dim] = "population_draw"
 
         attitudes, beliefs = _attitudes_to_fields(full, source, per_dim_quality)
         merged = dict(sk)
@@ -249,8 +296,8 @@ def fuse_attitudes(
             value = donor_circ.get(field)
             field_quality = quality
             if value is None:
-                value = modal_circ.get(field)
-                field_quality = "population_modal"
+                value = _population_draw(dist_circ, field, sk, seed) or modal_circ.get(field)
+                field_quality = "population_draw"
             if value is None:
                 continue  # nothing measured anywhere (synthetic fixture) — emit nothing
             circ_rows.append({
