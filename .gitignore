@@ -86,3 +86,7 @@ save_prompt.py
 read_all.py
 TODO.md
 .gstack/
+
+# Scraped HTML source pages — redundant with the .txt extracts the
+# worksheets actually cite. Kept locally, not in history (34MB).
+docs/extraction/sources/raw/

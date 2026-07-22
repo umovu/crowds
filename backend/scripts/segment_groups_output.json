@@ -1,0 +1,90 @@
+{
+  "low_fee_ceiling_rand_per_year": 4000,
+  "groups": {
+    "learner_low_fee": [
+      "Lwando Mpondo",
+      "Zoliswa Mpondo",
+      "Tsholofelo Tau",
+      "Luthando Ndamase",
+      "Lindiwe Shabangu",
+      "Lukhanyo Mthini",
+      "Siphosethu Mhlontlo",
+      "Kyle Mitchell",
+      "Sibusiso Nkosi",
+      "Palesa Molefe"
+    ],
+    "learner_no_fee": [
+      "Lwando Ndabeni",
+      "Rorisang Radebe",
+      "Sipho Mthembu",
+      "Katleho Molefe",
+      "Sipho Mkhize",
+      "Dineo Mokone",
+      "Nolwazi Ngqawana",
+      "Kelebogile Morule",
+      "Sanele Mahlangu",
+      "Dineo Molefe",
+      "Anri Botha",
+      "Nolwazi Ndaba",
+      "Nomsa Ndamane",
+      "Hlomani Mabunda",
+      "Mariska Swarts",
+      "Lindiwe Dyantyi",
+      "Khensani Baloyi",
+      "Lesego Molefe",
+      "Zanele Mkhize",
+      "Luthando Nkabinde"
+    ],
+    "learner_high_fee": [
+      "Nomfundo Mthembu",
+      "Anri Steyn",
+      "Cameron Mitchell",
+      "Kelebogile Tlhape",
+      "Kieran Mabena"
+    ],
+    "guardian_no_fee": [
+      "Mamello Phiri",
+      "Dikeledi Molefe",
+      "Tshegofatso Sekhukhune",
+      "Samuel Nkuna",
+      "Nkhensani Maluleke",
+      "Elsabe Coetzee",
+      "Kagiso Mokone",
+      "Mpho Motaung",
+      "Johan van Wyk",
+      "Realeboga Pheko",
+      "Nkosinathi Mpondo",
+      "Sibusiso Mthethwa",
+      "Bongani Mahlangu",
+      "Nomusa Mkhize",
+      "Nkhensani Makhubela"
+    ],
+    "guardian_low_fee": [
+      "Nthabiseng Molefe",
+      "Nolwandle Makhaphela",
+      "Wayne Petersen",
+      "Nomusa Khumalo",
+      "Thulani Mkhize",
+      "Slindile Cele",
+      "Mzwakhe Ndaba",
+      "Thandiwe Mkhize",
+      "Themba Mpondo",
+      "Thabo Moloto"
+    ],
+    "guardian_high_fee": [
+      "Graham Mitchell",
+      "Karen van der Merwe",
+      "Zanele Sithole",
+      "Jaco Botes",
+      "Anita Botha"
+    ]
+  },
+  "sizes": {
+    "learner_low_fee": 10,
+    "learner_no_fee": 20,
+    "learner_high_fee": 5,
+    "guardian_no_fee": 15,
+    "guardian_low_fee": 10,
+    "guardian_high_fee": 5
+  }
+}

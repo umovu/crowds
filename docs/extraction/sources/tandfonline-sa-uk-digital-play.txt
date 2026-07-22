@@ -1,0 +1,1348 @@
+Full article: An ecological perspective on children’s play with digital technologies in South Africa and the United Kingdom
+
+Skip to Main Content
+
+Search in:
+
+ This Journal
+ 
+
+ 
+ 
+ 
+ Anywhere
+ 
+ 
+ 
+
+Advanced search
+
+ International Journal of Play
+ 
+
+ 
+ 
+ 
+ 
+ 
+ Volume 12, 2023 - 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+ Issue 3
+ 
+
+Journal homepage
+
+Open access
+
+ 3,899
+ 
+
+ Views
+ 
+
+ 15
+ 
+
+ CrossRef citations to date
+ 
+
+0
+
+ Altmetric
+ 
+
+Listen
+
+Articles
+An ecological perspective on children’s play with digital technologies in South Africa and the United Kingdom
+Fiona Scott
+a School of Education, The University of Sheffield, Sheffield, UK
+Correspondence
+f.scott@sheffield.ac.uk
+https://orcid.org/0000-0002-8689-2905
+, 
+J. Marsh
+a School of Education, The University of Sheffield, Sheffield, UK
+https://orcid.org/0000-0001-6192-6198
+, 
+K. Murris
+b School of Education, University of Cape Town, Cape Town, South Africa;c Faculty of Education, University of Oulu, Oulu, Finland
+https://orcid.org/0000-0001-9613-7738
+, 
+D. Ng’ambi
+b School of Education, University of Cape Town, Cape Town, South Africa
+https://orcid.org/0000-0001-7281-2292
+, 
+B. S. Thomsen
+d The LEGO Foundation, Billund, Denmark
+, 
+C. Bannister
+a School of Education, The University of Sheffield, Sheffield, UK
+, 
+J. Bishop
+a School of Education, The University of Sheffield, Sheffield, UK
+, 
+K. Dixon
+e School of Education, University of Nottingham, Nottingham, UK;f University of the Witwatersrand, Johannesburg, South Africa
+https://orcid.org/0000-0003-4748-6338
+, 
+T. Giorza
+f University of the Witwatersrand, Johannesburg, South Africa
+https://orcid.org/0000-0003-1512-6741
+, 
+A. Hetherington
+a School of Education, The University of Sheffield, Sheffield, UK
+, 
+C. Lawrence
+b School of Education, University of Cape Town, Cape Town, South Africa
+, 
+B. Nutbrown
+a School of Education, The University of Sheffield, Sheffield, UK
+, 
+B. Parry
+a School of Education, The University of Sheffield, Sheffield, UK
+https://orcid.org/0000-0003-0106-6346
+, 
+J. Peers
+c Faculty of Education, University of Oulu, Oulu, Finland
+https://orcid.org/0000-0002-1784-0191
+ & 
+E. Scholey
+a School of Education, The University of Sheffield, Sheffield, UK
+ show all
+
+ Pages 349-374
+
+ |
+ 
+Received 27 Jun 2022
+, 
+Accepted 06 Feb 2023
+, 
+Published online: 23 Aug 2023
+
+Cite this article
+ 
+
+https://doi.org/10.1080/21594937.2023.2235466
+
+CrossMark
+
+In this article
+Article contents
+Related research
+ABSTRACT
+Introduction
+Materials and methods
+Results
+Discussion
+Conclusion
+Acknowledgements
+Disclosure statement
+Footnotes
+References
+
+ Full Article
+
+Figures & data
+
+References
+
+ Citations
+
+Metrics
+
+Licensing
+
+Reprints & Permissions
+
+View PDF
+ (open in a new window)
+
+PDF
+ (open in a new window)
+
+View EPUB
+ (open in a new window)
+
+EPUB
+ (open in a new window)
+
+ABSTRACT
+This paper reports a mixed-methods study of the play of children (3–11) with digital technologies in South Africa (SA) and the United Kingdom (UK), discussing the interrelatedness of access to devices and the Internet, contextual realities, and adult-child relations. An adapted ecological model [Bronfenbrenner (1979) 
+The ecology of human development: Experiments by nature and design
+. Harvard University Press] guided analysis. Parents and carers in the UK were more likely than their SA counterparts to report children's engagement in object, construction and transgressive digital play, correlating with access differences, especially to tablet devices. However, play incorporating technologies was extensive, even in contexts in SA with limited access to a wide range of devices or readily available internet. Despite relying primarily on smartphones, children in SA were more likely to create digital content unassisted than those in the UK. The qualitative data complicate understandings of particular play types, including transgressive digital play.
+KEYWORDS: 
+Play
+digital technologies
+children
+learning
+Bronfenbrenner
+ecological
+
+Introduction
+Technology has transformed the play practices of children in many societies, with children turning to digital, virtual and augmented reality games on tablets, consoles and smartphones, playing with digital and internet-connected toys and engaging in online play with friends (Marsh et al., 
+Citation
+2015
+; Palaiologou et al., 
+Citation
+2021
+; Scott, 
+Citation
+2022a
+). Many demonstrate digital dexterity (Nansen, 
+Citation
+2020
+), navigating a shifting landscape with fluidity and flexibility. Given this, it is important to consider the nature of such play, and the complex factors which influence it. Such work is central to understanding and mitigating possible harms and to identifying ways in which its potential benefits can be equitably supported and extended.
+This paper reports on a study examining children’s (aged 3–11) play with digital technologies. The research, which took place across late 2019 and early 2020, offers a snapshot of children’s digital play immediately before the COVID-19 pandemic. Since many studies have focused on the digital play of children in societies which have ready access to a wide range of technologies (e.g. Dezuanni, 
+Citation
+2020
+; Marsh et al., 
+Citation
+2015
+; Rideout et al., 
+Citation
+2022
+), there is a need for further studies in more diverse contexts. This article reports on parallel strands of research undertaken simultaneously in Johannesburg and Cape Town in South Africa (SA) and Sheffield in the United Kingdom (UK). These regions were selected due to their quite different characteristics, both broadly and in terms of what is already known about internet and digital technology access. SA and the UK represent very different cultural, socio-economic, linguistic, spatial, ethnic, and racial contexts. Present day digital inequalities in SA are deeply interconnected with centuries of colonisation, marginalisation, a government controlled media and two-tier educational system. In 2022, overall internet penetration in SA was reported at 57.5% and in the UK at 95.0% (Internet World Stats, 
+Citation
+2022
+). In 2010,
+Footnote
+1
+ UK children aged 9–16 used an average of 3.5 devices to access the Internet (Livingstone et al., 
+Citation
+2010
+). In 2016, this figure varied considerably amongst SA children, with older children (aged 15–17) using on average 2.2 devices to access the Internet and younger children (aged 9–11) only 0.7 (Global Kids Online, 
+Citation
+2019
+).
+Much has been written about the inequities associated with differential access to digital technologies, including those specific to SA (Dixon, 
+Citation
+2020
+; Ng'ambi & Bozalek, 
+Citation
+2016
+). They have often been framed in terms of a so-called ‘digital divide’, a concept which has been widely discussed and also complicated (Dolan, 
+Citation
+2016
+; Warschauer, 
+Citation
+2004
+). Rather than presenting a comparison between the two countries,
+Footnote
+2
+ we present and discuss some of the study’s key empirical findings through the lens of an updated ecological model, to explore the contextual factors that matter in relation to children’s play with digital technologies. We address the question: ‘What factors influence children’s play with digital technologies in the UK and in SA?’ Since this is an expansive question, with many possible factors of relevance, we begin by briefly reviewing a fuller range of research on children’s play with digital technologies that we consider pertinent to this question.
+Children’s play with digital technologies
+Multi-faceted and complex, the concept of play is difficult to define (Zosh et al., 
+Citation
+2017
+), because of its ambiguity (see especially Sutton-Smith, 
+Citation
+1997
+). An expansive 
+working definition
+ of play was employed in the study, beginning from the characteristics of play identified in Eberle’s (
+Citation
+2014
+) work. Play can be imperfectly but pragmatically understood as freely-chosen, autotelic, pleasurable (or, at least, ultimately satisfying) and subject to (internal) rules. The term ‘play with digital technologies’ is used to refer to occasions in which participants engaged in such practices in relation to one or more digital devices. The nature of such engagement varies. Children sometimes play with a tablet using its specific digital affordances (e.g. playing a digital game in an app). They may also use a device such as a tablet to pretend to play a digital game, or use a tablet to represent a different object (such as a smartphone or non-digital book) in imaginative play. Play types were theorised in the study following Marsh et al.’s (
+Citation
+2016
+) new classification of digital play, which draws on Hughes (
+Citation
+2002
+) playworker’s taxonomy.
+A review of relevant literature indicates seven main strands. Firstly, a number of studies focus on identifying the extent to which children use digital devices, including in playful ways. Large-scale studies (Marsh et al., 
+Citation
+2015
+; Ofcom, 
+Citation
+2019
+; Rideout et al., 
+Citation
+2022
+; Global Kids Online, 
+Citation
+2019
+) have highlighted the centrality of digital technologies in children’s lives. They demonstrate that the majority of children in the countries studied use a range of digital technologies including smartphones, smart televisions, tablets, games consoles, laptops and smart toys, and that play is a common element in the way they engage with these devices.
+Secondly, scholars have examined the nature of play with digital technologies, and how it may or may not be similar to non-digital play. Marsh et al. (
+Citation
+2016
+) identified that the majority of play forms identified in traditional play practices can also be found in play with digital technologies. The challenges involved in separating notions of traditional, non-digital and digital play have led a number of scholars to contest the distinction (Fleer, 
+Citation
+2019
+; Giddings, 
+Citation
+2014
+; Stephen & Plowman, 
+Citation
+2014
+). Jayemanne et al. (
+Citation
+2016
+) use the concept of ‘postdigital play’ to characterise the nature of play in contemporary society. The deployment of this term is not intended to signal that the digital era has finished, rather that the ubiquity and embeddedness of the digital in everyday life complicates distinctions. Nonetheless, we would contend that play with digital devices might be different from non-digital play in terms of the way in which the interface of the screen impacts on the nature of the play and the positionality and experience of the player. Though valuable, much of this work to date has been undertaken in the Global North. More work is still needed to understand how the nature of technologies readily available in different contexts, as well as the contextual uses and meanings of those technologies, impact on the nature of play.
+A third strand focuses on analysing the play of children and young people as they use specific devices, games, services or sites. This strand involves studies on play with tablets and apps (Marsh et al., 
+Citation
+2018
+), Virtual and Augmented Reality apps and games (Marsh & Yamada-Rice, 
+Citation
+2016
+), smart toys (Mascheroni & Holloway, 
+Citation
+2019
+), video games (Giddings, 
+Citation
+2014
+) and virtual worlds (Marsh, 
+Citation
+2010
+), including ‘Minecraft’ (Bailey, 
+Citation
+2022
+; Dezuanni, 
+Citation
+2020
+; Mavoa et al., 
+Citation
+2018
+). An older body of work regards children’s television-related play (e.g. Singer & Singer, 
+Citation
+2005
+), with more recent studies exploring television and transmedia play (Scott, 
+Citation
+2018
+). These studies offer in-depth insights into the affordances of these tools and sites for play, illuminating how children navigate them and exemplifying the impacts of such play on their everyday lifeworlds. However, there is still a need for more detailed work that investigates the situated affordances of a range of technologies across a broad range of contexts.
+The fourth strand has considered the skills, knowledge and dispositions that children develop through their play with digital technologies. This work evidences the development of a variety of digital and non-digital skills in relation to young (0–5) children’s play with tablet apps (Marsh et al., 
+Citation
+2015
+) and with tangible coding technologies (Berson et al., 
+Citation
+2019
+). Hirsh-Pasek et al. (
+Citation
+2015
+) suggested that effective apps for learning foster active, engaged, meaningful, and socially interactive learning. Extensive research concerns the educational value of gameplay for primary- and secondary-aged children (e.g. Clark et al., 
+Citation
+2016
+; Nebel et al., 
+Citation
+2016
+). Studies have emphasised the significance of play with technologies for literacy development, particularly in relation to apps (Wohlwend, 
+Citation
+2015
+) and gameplay (e.g. Apperley & Beavis, 
+Citation
+2011
+; Bailey, 
+Citation
+2022
+). Play with digital technologies can also enable children to develop problem-solving skills, social skills and provide opportunities for agentic learning (Danby et al., 
+Citation
+2018
+).
+A fifth strand has thrown light on a range of social, cultural, political and economic issues, illustrating the way in which play is always situated within contexts that shape its nature and impact. Some have explored race or ethnicity in relation to digital play. Lewis Ellison and Solomon’s (
+Citation
+2017
+) work on the play with digital technologies of African American boys has emphasised how such play is often interpreted from a deficit perspective as being of lesser value and even dangerous, stemming from implicit racial biases. Studies have considered the nature of gender and play, particularly in relation to digital gameplay (Golding & Van Deventer, 
+Citation
+2016
+; Kafai, 
+Citation
+2008
+), identifying the way in which girls and boys sometimes choose different technology to play with, and engage in different patterns of use. The commercialisation of children’s play with digital technologies has been subject to long-standing critical review (Grimes, 
+Citation
+2015
+; Kline et al., 
+Citation
+2003
+), including the commercial ramifications of children’s viewing of YouTube videos (Ramos-Serrano & Herrero-Diz, 
+Citation
+2016
+) and issues related to the gambling elements, such as loot boxes (Macey & Hamari, 
+Citation
+2019
+). Research has also addressed issues of materiality, arguing that, from a posthumanist framework, the materiality of digital devices themselves need to be taken account of when analysing a playful event (e.g. Nansen, 
+Citation
+2020
+). Pallitt et al. (
+Citation
+2019
+) demonstrated how material and digital realities in the Global South impact on modes of engagement and necessitate the disruption of expected (Global Northern) conventions of engagement with technology.
+Strand six concerns the attitudes and practices of parents and carers with regard to children’s play with technologies. Caregiver attitudes are important, not least because they have some bearing on the nature of children’s digital play, including time spent (Lauricella et al., 
+Citation
+2015
+). Children’s parents and carers have, however, been shown to demonstrate conflicted, and sometimes internally contradictory, attitudes towards children’s play with digital technologies, increasingly acknowledging possible benefits of digital play whilst fearing risks (Livingstone & Blum-Ross, 
+Citation
+2020
+). Attitudes play a role in the diverse styles of digital mediation apparent in contemporary families which, in turn, support a range of outcomes (Scott, 
+Citation
+2022b
+).
+A seventh strand focuses on teachers’ beliefs and approaches to the fostering of play with technologies in early years settings, schools and non-formal learning spaces. It has been shown that educators hesitate to integrate digital technology into their practice, even when extrinsic barriers are removed (e.g. Aldhafeeri et al., 
+Citation
+2016
+). Mertala’s (
+Citation
+2019
+) synthesis highlighted the complexity of early childhood teachers’ beliefs about integrating technology into early years settings. Beliefs about education, socialisation and care were influential, as were a range of macro- and micro-contextual factors, including national policies and personal experiences.
+The overall research project reported in this paper built on this work, taking a holistic approach to examining children’s play with technologies across all seven strands. Indeed, each of the strands is pertinent to the article’s central research question: ‘What factors influence children’s play with digital technologies in the UK and in SA?’. Rather than present comprehensive findings of the overall study, which was large in scale and has been reported elsewhere (Marsh et al., 
+Citation
+2020
+), this paper maps and analyses the various factors which shape children’s contemporary play with digital technologies, drawing on the work of Bronfenbrenner (
+Citation
+1979
+) to consider multiple levels of influence. We therefore offer a holistic approach, which considers how various aspects of the seven strands outlined above intersect in shaping children’s play with digital technologies.
+The ecological systems of children’s play with digital technologies
+Iterations of Bronfenbrenner’s (
+Citation
+1979
+) ecological model have been used in previous analyses of childhood experiences in SA (Shuba et al., 
+Citation
+2019
+), and in children’s use of technology (Marsh, 
+Citation
+2015
+). We applied the framework because it encourages a holistic view of the contextual factors that influence children’s play with digital technologies, rather than focusing on issues of access alone. Bronfenbrenner’s original positioning of contextual factors in concentric circles has been critiqued, particularly where the digital is concerned (Plowman, 
+Citation
+2016
+). Some have argued for increased attention to non-human mediators in the home context (Morgade et al., 
+Citation
+2016
+) and others for an attention shift from where, to how and with whom, individuals interact (Neal & Neal, 
+Citation
+2013
+). Visual reworkings of Bronfenbrenner’s model depict disparate influences on children’s lives as networked, rather than nested (Flewitt & Clark, 
+Citation
+2020
+; Morgade et al., 
+Citation
+2016
+; Neal & Neal, 
+Citation
+2013
+). An adapted ecological model, drawing on Neal and Neal’s (
+Citation
+2013
+) reworking, is used in the present article. It is visualised in 
+Figure 1
+ and summarised in 
+Table 1
+.
+
+Figure 1. 
+ A visualisation of the ecological systems of children’s play with digital technologies, adapted from Neal and Neal (
+Citation
+2013
+).
+Display full size
+
+Table 1. 
+ A summary of the ecological systems of children’s play with digital technologies, adapted from Neal and Neal (
+Citation
+2013
+).
+Download CSV
+Display Table
+Materials and methods
+A complete summary of all of the study’s methods and participants can be found in 
+Table 2
+.
+
+Table 2. 
+ Study participants.
+Download CSV
+Display Table
+Family survey
+A family survey was designed to generate data about topics, for example children’s access to, and use of, digital technologies, associated play practices and parent and care-giver digital confidence and attitudes. Participants were asked to answer a range of questions based on Marsh et al.’s (
+Citation
+2016
+) typology of 17 play types, spanning traditional and digital play. Parents were presented with a simplified typology, concerning children’s (1) exploratory, (2) object or construction, (3) imaginative, (4) game, (5) physical, (6) role, (7) social and (8) transgressive play.
+In the UK, the survey was conducted online with 2429 families of children aged 3–11
+Footnote
+3
+ across the UK. A structured sample was constructed to ensure distribution across age, gender, ethnicity, socio-economic class
+Footnote
+4
+ and geography. In SA, the survey was predominantly completed face-to-face with local parents by field researchers (see footnote 2). The survey questions, interview schedules, research tools and sequencing of the interventions were adapted to suit the social, economic and cultural context (Murris et al., 
+Citation
+2022
+). Here, 1286 families of 3–11 year olds were drawn from schools who participated in the study, or had taken children to parks to play, or waited for children as they played in shopping malls and beaches in identified communities.
+Footnote
+5
+ Information about the survey sample can be found in 
+Table 3
+.
+
+Table 3. 
+ Survey respondents.
+Download CSV
+Display Table
+Qualitative data collection
+Case studies of families with focus children aged 3–11 were conducted in each country. In both contexts, the team sought to recruit a diverse sample, sensitive to local population characteristics and classification approaches. The case study families were all recruited through schools known to the research team (7 in SA and 5 in the UK), which constituted convenience sampling. In SA, schools were selected across official poverty quintiles
+Footnote
+6
+ to ensure socioeconomic diversity within the sample. The SA families were broadly representative of the communities where the research was conducted and the children were selected by their teachers. The UK families were diverse in terms of race, ethnicity and income and the focus children in terms of age and gender. The UK schools served demographically diverse communities, including both primarily White, working-class communities and ethnically diverse communities. One school in the UK was recruited through a contact of a member of the research team, to ensure that the family case study sample included a child with additional needs (Autism Spectrum Disorder).
+Footnote
+7
+ Over the course of the research, various parents and carers additionally disclosed both diagnosed and undiagnosed additional needs associated with their children, including ADHD and sensory awareness challenges. More information about the case study families can be found in 
+Table 4
+.
+
+Table 4. 
+ Case study families.
+Download CSV
+Display Table
+Families were visited four to six times over a two- (SA) or five- (UK) month period. Parents and children were interviewed, audio recorded, and videoed. Parents also filmed their children using mobile phones, and they and their children were asked questions about the videos. Parents shared images and videos with researchers using WhatsApp. Children were given physical diaries, and most
+Footnote
+8
+ children used wearable cameras, to record their play with technologies. The children were observed in schools using technology, and their teachers interviewed. All of the UK children and some of the SA children were observed in a regular after-school activity or community venues they visited, with community members running the clubs being interviewed. In many SA suburbs, safety issues, infrastructure and parents’ financial resources prevented children from taking part in out-of-school activities and constrained this aspect of data collection, so the decision was made to use after-school activities only when available.
+The methodology spanned beyond the home and researchers accompanied the focus children on research visits to their schools and third spaces (Potter & McDougall, 
+Citation
+2017
+). The case study children participated in four sessions of focus groups with peers from their classes, addressing themes related to play, learning and technology. The focus group samples were diverse in terms of age and gender. In SA, the focus group sample was diverse in terms of race and in the UK, focus groups took place in schools serving racially diverse communities.
+Telephone interviews were conducted with 60 parents of 60 children aged 3–11 across SA and the UK. These were recruited by asking for volunteers from those families who had completed the survey. In SA, the sample of families who were able to take part in the telephone interviews was limited to those who had enough internet data left in their periodic allowance (i.e. monthly or weekly data package) to take part and half of them were conducted in isiXhosa.
+Data analysis and reporting
+The survey data were processed and analysed in the UK using SPSS 22. Responses from each question in the survey were cross-tabulated against a range of variables.
+A deductive coding framework was developed for the qualitative data analysis, drawing on relevant tools on play and learning (Jensen et al., 
+Citation
+2019
+; Zosh et al., 
+Citation
+2017
+) and similar characteristics referencing educational apps (Hirsh-Pasek et al., 
+Citation
+2015
+), in addition to previous research on play and technology and parental mediation (Chaudron et al., 
+Citation
+2017
+; Scott, 
+Citation
+2018
+). Marsh et al.’s (
+Citation
+2016
+) 17 play types were included in the deductive framework for the qualitative data analysis. Researchers coded simultaneously across the qualitative datasets detailed in 
+Table 5
+. Researchers also developed inductive codes that informed their analyses, in alignment with normal procedures for thematic analysis (Braun & Clark, 
+Citation
+2006
+).
+
+Table 5. 
+ Data sources.
+Download CSV
+Display Table
+The quantitative and qualitative data were subsequently mapped onto the adapted ecological framework. Researchers reviewed the dataset to identify relevant microsystemic, mesosystemic, exosystemic, macrosystemic factors and influences. In total, 13 researchers were involved in the qualitative data analysis across countries. Further detail on the process is available in the project’s full report (Marsh et al., 
+Citation
+2020
+).
+Ethical issues and data sharing
+Ethical issues were addressed in line with the BERA Ethical Guidelines for Educational Research (
+Citation
+2018
+) and the research ethics regulations of the School of Education at the University of Cape Town. Parents of children in the case studies and focus group interviews signed consent forms, and all adult participants signed consent forms. The notion of informed consent underpinned the approach to the research, with an understanding that for young children, ongoing assent assessments are required (Dockett & Perry, 
+Citation
+2011
+). In SA, also the children signed consent forms. All research tools and statistical data are hosted on the Open Data Repositories.
+Footnote
+9
+Results
+Insights from the survey data
+The study’s survey data provided insights into some of the microsystemic and macrosystemic factors that influence children’s play with digital technologies, also highlighting the interplay between the micro and macro. Given macrosystemic differences between the two countries (societal, cultural, political and economic), it is unsurprising that there were differences in relation to children’s access to, and use of, technology at the micro level. Whilst access to a standard television was similar, access
+Footnote
+10
+ to other devices were not (
+Figure 2
+). Stark disparities in access to tablets and games consoles were clear. There was a similar disparity in relation to children’s ownership of devices (
+Figure 3
+). In SA, access to technologies was linked to household income and race, with more affluent and White households more likely to have access to some digital technologies than other households. Differences in the UK were less pronounced.
+
+Figure 2. 
+ Access to digital devices anywhere (parent survey data).
+Display full size
+
+Figure 3. 
+ Ownership of digital devices (parent survey data).
+Display full size
+Perhaps inevitably, given these differences, the use of games and apps also differed across the countries. Levels of play with musical, nurture and mimic apps were higher in SA, but children in the UK were much more likely to play titles such as Minecraft, Roblox and Fortnite (
+Figure 4
+). The ubiquity of these titles in the UK likely corresponds with greater access to devices that support their play, such as tablets, games consoles and laptops, as well as abundant home wifi.
+
+Figure 4. 
+ Children’s play with digital games (parent survey data).
+Display full size
+Parents reported children engaging in all 8 play types in both SA and the UK. However, some clear differences in the prevalence of particular digital play types can be seen between countries (
+Figures 5
+ and 
+6
+). Parents of the case-study children in the UK were more likely than their SA counterparts to report that children engaged in object or construction play in a digital context. Tablets served as the primary context for this play type in the UK, with 36.5% of UK respondents reporting that their child used a tablet for this purpose. The most popular device for object or construction play in SA was the television. Only 5.1% of respondents reported that they had observed their child engaged in this form of play in relation to TV use. Children engaged in game play in both contexts, but the primary digital context for this play differed. In SA, the most common digital context for game play was a smartphone or mobile phone (33.0%), as opposed to a tablet in the UK (44.9%). Though limited across contexts, transgressive play was more common in the UK, where 15.2% of parents reported that children engaged in transgressive play with tablets. The most popular device for transgressive play in SA was a smartphone or mobile at just 2.1%. Exploratory play was also more common in the UK, where 28.4% of parents reported that children engaged in exploratory play on tablets. The most popular digital context for exploratory play in SA was television at 18.1%. Children engaged in social play in both contexts, but the primary digital context for this play in SA was television (26.3%), as opposed to a games console in the UK (29.2%).
+
+Figure 5. 
+ Children’s play types by device in the United Kingdom (parent survey data).
+Display full size
+
+Figure 6. 
+ Children’s play types by device in South Africa (parent survey data).
+Display full size
+Smartphones, mobile phones and television were thus particularly important digital contexts for a range of play types in SA, whilst tablets and games consoles supported higher levels of certain play types in the UK, particularly object and construction, exploratory, transgressive and social play. These findings correspond closely with the access and use findings articulated above. Some of the qualitative findings, reported below, complicate interpretation of the findings about transgressive, object and construction play.
+Parents reported that children developed a range of digital skills through play with technologies (
+Figure 7
+). Some of the differences between SA and the UK appear to emphasise the influence of material (digital) objects at the micro level and correspond with the play types observed. Parents of UK children, for example, were far more likely to say that their child could create virtual worlds unassisted (45% UK, vs. 21% SA), a digital skill whose development is likely supported by the sort of object and construction play that many UK children engaged in using tablets. Children in the UK were more likely to play games like Minecraft and Roblox, both of which strongly support object and construction play and the creation of virtual worlds. Meanwhile, respondents in SA were more likely than those in the UK to report that their children could create digital content unassisted (58% SA, vs. 49% UK) and share data, information and digital content (40% SA, vs. 29% UK). Both of these digital skills are extremely valuable, and, it appears, the development of neither is dependent on widespread access to larger digital devices (such as tablets). It is interesting to note that, in the UK, children from Black, Asian and Minority Ethnic (BAME) communities were more likely than their counterparts to play with creative production apps. Given that many existing apps and games are restricted in terms of diversity (Marsh et al., 
+Citation
+2015
+), it is possible that some children are drawn to digital production due to the greater opportunities for representation.
+
+Figure 7. 
+ Children’s unassisted digital skills (parent survey data).
+Display full size
+Other survey findings illuminate the interplay of human and material microsystemic influences. Parents reported that their children were more likely to play by themselves when using tablets and mobile phones, and were more likely to play with others, including parents and siblings, when watching television or playing on a games console. Very few respondents in either country said that their child played online with friends they hadn’t met in person, regardless of device. This finding appears to challenge the notion that digital devices radically shift children’s social spheres by connecting them with a great many individuals beyond their in-person social connections, an idea sometimes associated with critiques of Bronfenbrenner’s ecological model. However, the study didn’t include children older than 11 and it is also possible that parents assume solitary play is taking place when their child is using a tablet or smartphone when they may, in fact, be playing with ‘distant others’ (Flewitt & Clark, 
+Citation
+2020
+, p. 447). Either way, it appears that in-person social interaction around digital devices alters parent perceptions of digital play. In the UK, parents were less likely to consider that their child spent ‘too long’ using devices if they played in a shared room as opposed to playing in their bedroom. Forty percent of parents whose children played mainly with a tablet in their own room stated that their child spent too much time using technology, compared with 28% who reported children playing with a tablet in a shared room.
+Parent attitudinal data provides more insight into the interplay between microsystemic and macrosystemic factors. Parents in the UK were more likely to state that they felt their children spent about the right amount of time playing with technology, whereas many SA parents felt that their child did not use technology enough, which may well relate to the reduced access many children had to a range of devices. Many of the parents interviewed in SA conveyed a belief that the use of technology is good for children’s education and education is understood as a crucial route out of poverty. Nonetheless, despite the differences in levels of access, SA parents’ levels of confidence were actually slightly higher than those of UK parents in relation to playing with technologies themselves (23% v 18%) and helping their child to play with technologies (25% v 21%). Given the relative scarcity of digital devices beyond the TV and smartphone, one interpretation is that the SA parents involved in the project experience greater congruence between their own digital practices and those favoured by their children, which places them in a strong position to support, and share in, their children’s digital play.
+The differences between the SA and UK survey data reflect a digital divide (Dixon, 
+Citation
+2020
+) between the two countries. In historically marginalised communities in the Western Cape, children have less access than other children to a wide range of technological devices (Ng'ambi & Bozalek, 
+Citation
+2016
+). Even if families have a mobile phone, they may not have internet access, or consistent internet access.
+Footnote
+11
+ Macrosystemic factors, in particular economic, undeniably have a bearing on the nature of children’s digital play. However, the survey data also emphasise how some human and material microsystemic influences interact in similar ways across contexts; families playing together around the television being one such example. Further, despite some very real differences around access, children engage in diverse play types, supportive of important digital skills in both contexts.
+The qualitative data, discussed next, complicate interpretation of the quantitative findings, demonstrating that children in both countries were agentic in creating opportunities to engage in diverse and creative play with technologies.
+Insights from the qualitative data collection
+Recent theorisations of the contexts of children’s development have argued for increased attention to the other-than-human (e.g. Morgade et al., 
+Citation
+2016
+). Analyses of the qualitative data reinforced the findings of the survey in indicating that digital technologies are an integral feature of children’s everyday lifeworlds. They also highlighted that, in their everyday play, children moved seamlessly across digital and non-digital playthings (artefacts/objects). 
+Table 6
+ outlines the playthings children engaged with in the UK and SA.
+
+Table 6. 
+ Playthings in SA and UK children’s lives.
+Download CSV
+Display Table
+At the micro level, children’s play practices were influenced by a range of digital devices. As indicated in the survey, UK case study children were involved in play using a range of devices, including tablets, smartphones, console devices and handheld devices, whilst SA children most often used one device, the smartphone, for a wide range of functions such as games, WhatsApp or watching YouTube. These devices most often belonged to a caregiver. Children’s play practices were also influenced by non-digital objects designed for indoor and outdoor play, as well as naturally occurring materials and objects not designed for play (domestic items, street furniture etc.). Digital objects and technologies both designed for children’s play and not designed for children’s play were implicated in children’s play practices. In contrast to the quantitative findings, the study’s qualitative data sources highlight the prevalence of transgressive digital play. Marsh et al. (
+Citation
+2016
+) defined this as the play that occurs when children use features of digital platforms and devices in ways that subvert or transgress the designers’ intentions. In both countries, children adopted adult-orientated technologies for their play, including CCTV, GPS and smart home assistant technology. Smart home assistants were frequently used to engage in language play, with much use of riddles, jokes, songs and rhymes. An 11-year-old focus group participant in the UK said that, in their family, they asked Alexa to count to ten so that they could play hide-and-seek.
+Marsh et al. (
+Citation
+2016
+) highlighted transgressive play as a specific category of play missing from Hughes (
+Citation
+2002
+) taxonomy. In the context of the present study, transgression can also be understood as a feature of children’s other play types. Although, in line with the survey data, social play occurred particularly when children used console games, such as Super Mario and FIFA, children played digital games in their own ways, sometimes extending their social play potential. One 10-year-old focus group participant in SA relayed how he and his cousins altered the intended social play practice designed into XBox games by taking turns on a single controller, rather than using multiple controllers to play against each other directly:
+
+When my cousins come over, then we have a challenge, then we see who can stay the longest on. Like if we have a free-for-all match then there’s like a lot of players and then you must shoot and then we learn our girl cousin, she’s now going to college so we teach her how to play
+.
+Children also enhanced the social experience of game console play by simultaneously engaging in co-play through video-conferencing, as noted by a parent of an 8-year-old girl in the UK (Telephone Interviews):
+
+She’ll play with her dolls and sometimes like over Facetime. Her and her cousin, who’s like a year younger, they will play for like hours and hours … they don’t need to go round to each other’s houses to play, … it’s contact using technology
+.
+Human and other-than-human networks appear to catalyse the mesosystemic inter-relations amongst influential social clusters in children’s lives. Meanwhile, children’s creativity, ingenuity and frequent subversion of the intended uses of digital technologies complicate interpretation of the study’s quantitative data and challenge the meaning of social play with digital technologies.
+By attending closely to children’s play across digital and non-digital resources, the qualitative data analyses also complicate definitions of digital object and construction play. One of the SA family case studies focused on a 7-year-old girl whose digital access at home included a standard television, poorly functioning computer and the occasional use of her mother’s cell phone, which had no games installed. The data evidenced numerous examples of object and construction play, especially building puzzles, many bought second-hand at flea markets. Though her teacher had little access to digital devices in the classroom, this teacher played a key role in facilitating the expansion of the girl’s digital ecologies, encouraging the girl’s home-school practice of pursuing ‘projects’. The girl used Google and YouTube research to inform her non-digital constructions, including an insect made from clay, pipe cleaners and sequins (in school), a science experiment with glasses, water and pigment (at home) and a large-scale school building model made from scrap materials (at home). Such examples, wherein object and construction play crosses iteratively across digital and non-digital boundaries, challenge what might be meant by digital object and construction play.
+The qualitative analyses of both the observation and interview data demonstrated that play with technologies supported the acquisition of skills and knowledge beyond the specific digital skills featured in the survey. Children, parents and carers reported, and researchers observed, that children had developed subject knowledge in literacy, language, mathematics, science and arts and humanities, as well as holistic skills including cognitive, creative, physical, social and emotional skills. The qualitative data emphasise how material factors at the micro level influence children’s play and skills development, including the presence of particular devices. Subject knowledge acquisition was notable in relation to the use of television, tablets, smart speakers and smartphones. Console game play often strengthened holistic skills, such as physical and social skills. Competitive gameplay using consoles quite frequently led to researchers noting dispositions such as persistence, which is important for creative learning (Lucas, 
+Citation
+2016
+). Play with technologies fostered children’s emotional skills and some children in the study turned to digital play as a means of regulating their emotions. This appeared to be the case with some children with additional needs. For example, one UK parent (Telephone Interviews) highlighted how their 8-year-old daughter turned to digital play to relax and switch off:
+
+She’s actually got ADHD, so she tries to play on our iPad and her Nintendo Switch, and she’d do it at the same time. For her it’s kind of … I don’t know. I think she just enjoys it. It helps her zone out a bit
+.
+Whilst not generalisable, this finding highlights the need for further work on digital play that recognises neurodiversity in children.
+The qualitative data highlighted the importance of differing adult attitudes and mediation practices within families. At the micro level, many parents engaged in play with their children using technologies. The qualitative data suggested that parents were generally more likely to engage in digital co-play when the activity was perceived as educational. Conversely, parents discussed engaging in a wide range of co-play with non-digital toys and artefacts primarily for entertainment purposes. There were some gendered patterns across families, for example, fathers were generally more likely to play videogames with their children than mothers.
+Meso level analyses emphasise important influences on children’s digital play, especially grandparents. Some of the more relaxed, non-explicitly-educational digital co-play that took place in the study was between grandparents and children. In SA, an 11-year-old girl’s grandmother was very skilled and knowledgeable in relation to digital technologies and supported the girl’s mother in understanding these better (Family Case Study Data). In the UK, children often had access to technologies in early years settings, schools and in some after-school clubs. They frequently brought home knowledge of games and apps that they had encountered in early years and school settings and, for some children, these were some of the better quality apps they accessed. This access was important in terms of introducing children to digital technologies, games and sites. However, the use of devices outside of the home was not always playful, and appeared in many cases to promote consumption of digital games rather than their production (e.g. through coding or apps and games such as Scratch Jnr). In the SA data, there was little evidence that the case study children played digital games frequently in school, although one 10-year-old boy in the family case studies attended coding lessons after school.
+At the exo level, there were ways in which aspects of the external environment, beyond childrens’ experiences, impacted on children’s play with technologies. Parents’ exchanges with other adults outside of the home sometimes limited children’s home experiences. In UK Family 8 (Family Case Study Data), an 11-year-old boy’s mother had exchanged negative views about game play with adults outside of the immediate home, and subsequently limited her children’s engagement with technology in their play.
+At the macro level, there were fewer differences in relation to race and ethnicity in the UK, although, as in SA, children from BAME communities were less likely than White children to encounter resources and games that reflected their own identities. YouTube offered access to some resources in heritage languages, but this was rarely the case in relation to games and apps. Whilst UK children in lower socio-economic groups sometimes owned more devices than peers in richer families, the qualitative data illustrated that they were often of lower quality and did not have the same capacity/memory or length of battery life than more expensive models, which changes the nature of the play.
+The qualitative data highlight micro-, meso-, exo- and macro-systemic influences on children’s play with digital technologies, including similarities and specific differences between the two countries. These findings complicate interpretation of the quantitative data, challenging understandings of digital play types.
+Discussion
+The quantitative and qualitative datasets both indicate that play incorporating digital technologies is a significant element of children’s everyday lives, even in those contexts in SA in which children have limited access to particular digital technologies and the Internet. The study offers insights into how factors associated with seven strands of past research work together to shape children’s experiences with digital technologies at a micro, meso, exo and macro level.
+At the micro level, both human and other-than-human factors influenced children’s play with digital technologies. Influences on children’s play included the technologies children had access to, their interests and passions and the extent to which parents fostered such play. Though digital/non-digital distinctions increasingly represent something of a false dichotomy about children’s play, technology’s materiality very much matters as an intricate part of analysing a play event. The study emphasises that children and technology are mutually impactful, co-producing new life- and play-worlds. Differences in the reported affordability and availability of particular devices at home (especially tablets, but also games consoles and laptops) and differences in access to the Internet corresponded with differences in children’s game choices, play types and skills, especially children’s play with some of the more open-ended titles that afford digital object and construction play, such as Minecraft and Roblox. These titles support children to manipulate virtual materials, either by swiping with fingers across a screen, or using a controller (games console) or mouse (laptop). Though both games are available for smartphones, a smaller interface will severely limit children’s manipulation of objects in virtual space.
+Children’s access to, and ownership of, every type of digital device was greater in the UK than SA. It is, however, important to highlight the finding that children in SA played with certain app types, and demonstrated certain creative digital skills, to a greater extent than children in the UK. Given the prevalence of smartphones in SA, it is perhaps unsurprising that children played more of certain digital games, particularly those that work well on smartphones with smaller screens. Scholars have stressed the benefits of supporting children to develop digital skills that are productive as well as consumptive (Bers, 
+Citation
+2018
+; Wohlwend, 
+Citation
+2015
+). As such, it is heartening that the development of productive digital skills was commonly associated with digital play in both contexts, in particular the creation of virtual worlds in the UK and the creation of other digital content in SA.
+The findings of the quantitative survey have been interpreted with due regard to the study’s qualitative findings, generated through much more sustained and in-depth data generation. This body of data highlighted many examples of children in both countries engaging in object and construction play across both digital and non-digital contexts. Transgressive play was also prevalent in the qualitative dataset in a way that was not fully captured in the survey data. Though parents and carers filling in self-report surveys are often well informed about their children’s digital play, it is also unrealistic to expect parents and carers to identify, recall or articulate particular types of play according to an academic classification system. These play types might, conversely, be readily apparent to specialist play researchers studying video and audio data. This is likely especially true when it comes to identifying and reporting children’s transgressive uses of newer digital technologies such as smart speakers as ‘transgressive play’.
+Past research has highlighted the influences of adult attitudes and practices on children’s play with digital technologies. Ecological mapping in the present study also emphasised the influences associated with the connections between interrelated micro-clusterings (meso level) and beyond children’s direct connections (exo level). Children in the study experienced, and were implicated in, both overlapping and contrasting digital play practices as members of different, but interrelated micro-clusterings. Their experiences of play practices encountered within one cluster (e.g. in early years settings or school) often impacted their play in another (e.g. within home spaces and in relation to primary care-givers). Meanwhile, aspects of the external environment sometimes impacted on children’s play with technologies, e.g. when inter-adult discussions served to limit children’s home experiences.
+At the macro level, the study demonstrated that socio-cultural and economic contexts, including infrastructural issues, shaped play with technologies. In addition to gender and class (Van Deursen & Helsper, 
+Citation
+2015
+), race, ethnicity, income and age affected access to, and utilisation of, technology (Bornman, 
+Citation
+2016
+).
+In summary, the inter-relations between complex, contextual factors shape the play practices of individual children across both analogue/physical and digital/virtual domains.
+Conclusion
+The study is the first large-scale, international study of play with technologies to look broadly across the seven aspects of play identified in the literature review. Analysis across these strands has enhanced understanding of how they work together to shape children’s experiences at the micro, meso, exo and macro level.
+There are geographical limitations to the study, which focused on some urban areas of SA and the UK. The structure of the home visits also meant that parents were often interviewed by one researcher whilst children were observed playing by another, which limited the extent to which co-play could be observed. This was, where possible, mitigated using wearable cameras and parents recording snapshots of play activities using mobile phones and sharing with researchers on Whatsapp. The limited duration of the study meant that children’s play practices could not be studied longitudinally, which could have provided valuable insights into changes over time.
+The study has a number of implications, most pressingly, for future research. Firstly, the study suggests that the availability of different digital devices, games and apps would appear to afford different types of play, but that these technologies are also taken up and used in diverse and unpredictable ways in different contexts. There is clearly an ongoing need to refine and renew understandings of the nature of digital play. The study’s tentative findings about the development of specific digital skills in relation to particular digital resources and play types are suggestive of the need for further empirical research, since there are implications for the education and broader well-being of children. Secondly, given that broad and complex contextual factors have been shown to matter in relation to children’s play with digital technologies, there is a need to undertake similar studies in other contexts, including even more diverse communities in SA and the UK, and a wider range of countries. Thirdly, there is a need for further research on the fluidity across the digital and nondigital binary as this opens up a space for evaluating children's play differently in resource constrained environments. Finally, there is a need for more work paying attention to children's transgressive play in relation to technology.
+The findings illuminate some mesosystemic differences in play practices which suggest implications for educators and policymakers. The fact that, for some children, digital games and apps encountered in early years settings and schools represented some of the better quality digital content they accessed points to the importance of formal educational institutions providing guidance and recommendations to families. Conversely, formal educational settings could improve their provision by attending more closely to children’s digital play practices at home (Scott, 
+Citation
+2018
+) and with care-givers beyond the immediate home (e.g. grandparents), given that some of the more playful, productive and pleasurable play witnessed in the UK data occurred in these contexts. Given this, there is a need for further detailed work investigating the relationality between school, home and extended family contexts in both countries. There is also a need for policymakers to recognise the extent to which primary caregivers, and families more broadly, play crucial roles in supporting children's play with technologies, and to do more to provide resources, guidance and support to families.
+Finally, the study highlights the important role of the children's media industry in supporting good quality play for all children. Most pressingly, and as argued elsewhere (Murris et al., 
+Citation
+2022
+), the findings show that there is an urgent need to develop digital games, toys and resources that reflect all children, whether that is in relation to race, ethnicity, gender, class, sexuality, physical, cognitive or neurological diversity, doing justice to geopolitical differences.
+Acknowledgements
+We thank The LEGO Foundation for funding the study on which this paper is based. We would also like to thank the schools, children and families who participated in the research.
+Disclosure statement
+No potential conflict of interest was reported by the author(s).
+Data availability statement
+All research tools and statistical data are hosted on the Open Data Repositories. In the United Kingdom, research tools, statistical data and a range of qualitative data (including interview transcripts) are available via The University of Sheffield’s Online Research Data repository (ORDA) [
+https://orda.sheffield.ac.uk/
+]. In South Africa, research tools and statistical data are available via the University of Cape Town’s Open Data hub (ZivaHub) [
+https://zivahub.uct.ac.za/
+].
+Notes
+1 These figures, though now relatively old, represent the most recent comparative data on this topic.
+2 The University of Sheffield developed the research design and invited The University of Cape Town to use the same design. However, since the study’s methodological approach was adapted to accommodate specific circumstances in each context, we do not consider the study to be comparative as such. Different school calendars meant that the selection of the case-study children and the order of the qualitative data collection were different in SA and the UK. The quantitative survey in SA was not administered online and only involved local parents. In contrast, the UK survey was online and involved parents across the UK. For more detail, see ‘Materials and methods’ below.
+3 Specific findings regarding age-based differences in children’s play in the present study can be found in the project’s full report online (Marsh et al., 
+Citation
+2020
+).
+4 Socio-economic status was defined using the National Readership Survey (NRS) grades. A summary of these can be found here: 
+http://www.nrs.co.uk/nrs-print/lifestyle-and-classification-data/social-grade/
+.
+5 See Footnote 2.
+6 In SA, national policies were shaped to accommodate provincial poverty quintiles, based on the socio-economic status of the surrounding community in which these schools were based (see Kabi, 
+Citation
+2016
+).
+7 In the UK, we wanted to include a child or children with additional needs in the case study sample for the purpose of representation. We do not make claims to generalisability in relation to findings about children in the study with self-acknowledged additional needs.
+8 In SA, wearable cameras were not left with the families and were, instead, only used during the field visits because of the safety risks these devices pose when introduced into some communities. See Murris et al. (
+Citation
+2022
+) for more discussion on this point.
+9 URLs of data repositories not specified for anonymity purposes.
+10 It is beyond the scope of this paper to do justice to the complex issue of so-called ‘access’ to technology which goes beyond the availability of a device and includes infrastructural and service issues like energy supply and connectivity. Access in 
+Figure 2
+ relates to a child having access to a particular digital device anywhere, e.g. at home, at a relative’s house or in an early childhood, school or out-of-school setting such as a club. For more discussion on ‘access’, see Murris et al. (
+Citation
+2022
+).
+11 This may be due to the capability of the device, their locality in relation to cellphone masts or data points, access to electricity, and lastly due to the prohibitively high costs of data in South Africa. Many people have internet only now and again, so they might be able to download a game, but then prefer to play off-line. See also footnote 6.
+
+ Related Research Data
+ 
+
+eSports, skins and loot boxes: Participants, practices and problematic behaviour associated with emergent forms of gambling
+Source:
+ Unknown Repository
+
+ Linking provided by 
+ 
+
+References
+ Aldhafeeri, F., Palaiologou, I., & Folorunsho, A. (2016). Integration of digital technologies into play-based pedagogy in Kuwaiti early childhood education: Teachers’ views, attitudes and aptitudes. 
+International Journal of Early Years Education
+, 
+24
+(3), 342–360. https://doi.org/10.1080/09669760.2016.1172477 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Apperley, T., & Beavis, C. (2011). Literacy into action: Digital games as action and text in the English and literacy classroom. 
+Pedagogies
+, 
+6
+(2), 130–143. https://doi.org/10.1080/1554480X.2011.554620 
+(Open in a new window)
+Google Scholar
+ Bailey, C. (2022). Visualising lived experience: Mapping the soundscape of an after-school minecraft club. 
+Visual Communication
+, 
+21
+(2), 350–367. https://doi.org/10.1177/1470357220904384 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Bers, M. U. (2018). Coding and computational thinking in early childhood: The impact of ScratchJr in Europe. 
+European Journal of STEM Education
+, 
+3
+(3), 08. https://doi.org/10.20897/ejsteme/3868 
+(Open in a new window)
+Google Scholar
+ Berson, I. R., Murcia, K., Berson, M. J., Damjanovic, V., & McSporran, V. (2019). Tangible digital play in Australian and U.S. Preschools. 
+Kappa Delta Pi Record
+, 
+55
+(2), 78–84. https://doi.org/10.1080/00228958.2019.1580986 
+(Open in a new window)
+Google Scholar
+ Bornman, E. (2016). Information society and digital divide in South Africa: Results of longitudinal surveys. 
+Information, Communication & Society
+, 
+19
+(2), 264–278. https://doi.org/10.1080/1369118X.2015.1065285 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Braun, V., & Clark, V. (2006). Using thematic analysis in psychology. 
+Qualitative Research in Psychology
+, 
+3
+(2), 77–101. https://doi.org/10.1191/1478088706qp063oa 
+(Open in a new window)
+Google Scholar
+ British Educational Research Association. (2018). 
+Ethical guidelines for educational research
+ (4th ed.). BERA. 
+(Open in a new window)
+Google Scholar
+ Bronfenbrenner, U. (1979). 
+The ecology of human development: Experiments by nature and design
+. Harvard University Press. 
+(Open in a new window)
+Google Scholar
+ Chaudron, S., Marsh, J., Navarette, V. D., Mascheroni, G., Smahel, D., Cernikova, M., & Soldatova, G. (2017). Rules of engagement: Family rules on young children’s access to and use of technologies. In S. Danby, M. Fleer, C. Davidson, & M. Hatzigianni (Eds.), 
+Digital childhoods: Technologies and children’s everyday lives
+ (pp. 131–145). Springer. 
+(Open in a new window)
+Google Scholar
+ Clark, D. B., Tanner-Smith, E. E., & Killingsworth, S. S. (2016). Digital games, design, and learning: A systematic review and meta-analysis. 
+Review of Educational Research
+, 
+86
+(1), 79–122. https://doi.org/10.3102/0034654315582065 
+(Open in a new window)
+PubMed
+ 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Danby, S., Evaldsson, A.-C., Melander, H., & Aarsand, P. (2018). Situated collaboration and problem solving in young children’s digital gameplay. 
+British Journal of Educational Technology
+, 
+49
+(5), 959–972. https://doi.org/10.1111/bjet.12636 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Dezuanni, M. (2020). 
+Peer pedagogies on digital platforms - Learning with minecraft 'Let's plays' on YouTube
+. MIT Press. 
+(Open in a new window)
+Google Scholar
+ Dixon, K. (2020). Searching for mermaids: Access, capital, and the digital divide in a rural South African primary school. In E. Morrell, & J. Rowsell (Eds.), 
+Stories from inequity to justice in literacy education: Confronting digital divides
+ (pp. 15–33). Routledge. 
+(Open in a new window)
+Google Scholar
+ Dockett, S., & Perry, B. (2011). Researching with young children: Seeking assent. 
+Child Indicators Research
+, 
+4
+(2), 231–247. https://doi.org/10.1007/s12187-010-9084-0 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Dolan, J. E. (2016). Splicing the divide: A review of research on the evolving digital divide among K–12 students. 
+Journal of Research on Technology in Education
+, 
+48
+(1), 16–37. https://doi.org/10.1080/15391523.2015.1103147 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Eberle, S. G. (2014). The elements of play: Towards a philosophy and definition of play. 
+American Journal of Play
+, 
+6
+(2), 214–233. 
+(Open in a new window)
+Google Scholar
+ Fleer, M. (2019). Digitally amplified practices: Beyond binaries and towards a profile of multiple digital coadjuvants. 
+Mind, Culture, and Activity
+, 
+26
+(3), 207–220. https://doi.org/10.1080/10749039.2019.1646289 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Flewitt, R., & Clark, A. (2020). Porous boundaries: Reconceptualising the home literacy environment as a digitally networked space for 0-3 year olds. 
+Journal of Early Childhood Literacy
+, 
+20
+(3), 447-471. 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Giddings, S. (2014). 
+Gameworlds: Virtual media and children’s everyday play
+. Bloomsbury. 
+(Open in a new window)
+Google Scholar
+ Global Kids Online. (2019). Global Kids Online: Comparative Report, UNICEF Office of Research – Innocenti. 
+(Open in a new window)
+Google Scholar
+ Golding, D., & Van Deventer, L. (2016). 
+Game changers: From minecraft to misogyny, the fight for the future of videogames
+. Affirm Press. 
+(Open in a new window)
+Google Scholar
+ Grimes, S. (2015). Playing by the market rules: Promotional priorities and commercialization in children’s virtual worlds. 
+Journal of Consumer Culture
+, 
+15
+(1), 110–134. https://doi.org/10.1177/1469540513493209 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Hirsh-Pasek, K., Zosh, J. M., Golinkoff, R. M., Gray, J. H., Robb, M. B., & Kaufman, J. (2015). Putting education in “educational” apps: Lessons from the science of learning. 
+Psychological Science in the Public Interest
+, 
+16
+(1), 3–34. https://doi.org/10.1177/1529100615569721 
+(Open in a new window)
+PubMed
+ 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Hughes, B. (2002). 
+A playworker’s taxonomy of play types
+ (2nd ed.). PlayLink. 
+(Open in a new window)
+Google Scholar
+ Internet World Stats. (2022). Internet Usage Statistics: The Internet Big Picture – World Internet Users and 2022 Population Stats. Accessed November 23, 2022, from 
+https://www.internetworldstats.com/stats.htm
+(open in a new window)
+ 
+(Open in a new window)
+Google Scholar
+ Jayemanne, D., Apperley, T. H., & Nansen, B. (2016). Postdigital interfaces and the aesthetics of recruitment. 
+Transactions of the Digital Games Research Association
+, 
+2
+(3), 145–172. https://doi.org/10.26503/todigra.v2i3.56. 
+http://todigra.org/index.php/todigra/article/view/56/104
+(open in a new window)
+ 
+(Open in a new window)
+Google Scholar
+ Jensen, H., Pyle, A., Zosh, J. M., Ebrahim, H. B., Zaragoza Scherman, A., Reunamo, J., & Hamre, B. K. (2019). 
+Play facilitation: the science behind the art of engaging young children
+ (White Paper). The LEGO Foundation, DK. 
+(Open in a new window)
+Google Scholar
+ Kabi, J. S. (2016). The evolution of resources provision in basic education in South Africa: A projectile with diminishing returns. 
+Southern African Review of Education
+, 
+22
+(1), 81–97. 
+(Open in a new window)
+Google Scholar
+ Kafai, Y. B. (2008). 
+Beyond Barbie and Mortal Kombat: New perspectives on gender and gaming
+. The MIT Press. 
+(Open in a new window)
+Google Scholar
+ Kline, S., Dyer-Witheford, S., & de Peuter, G. (2003). 
+Digital play: The interaction of technology, culture, and marketing
+. McGill-Queen’s University Press. 
+(Open in a new window)
+Google Scholar
+ Lauricella, A. R., Wartella, E., & Rideout, V. J. (2015). Young children's screen time: The complex role of parent and child factors. 
+Journal of Applied Developmental Psychology
+, 
+36
+, 11–17. https://doi.org/10.1016/j.appdev.2014.12.001 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Lewis Ellison, T., & Solomon, M. (2017). Digital play as purposeful productive literacies in African American boys. 
+The Reading Teacher
+, 
+71
+(4), 495–500. https://doi.org/10.1002/trtr.1657 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Livingstone, S., & Blum-Ross, A. (2020). 
+Parenting for a digital future: How hopes and fears about technology shape children's lives
+. Oxford University Press. 
+(Open in a new window)
+Google Scholar
+ Livingstone, S., Haddon, L., Görzig, A., & Ólafsson, K. (2010). 
+Risks and safety for children on the internet: The UK report: Full findings from the EU kids online survey of UK 9-16 year olds and their parents
+. London School of Economics and Political Science. 
+(Open in a new window)
+Google Scholar
+ Lucas, B. (2016). A five-dimensional model of creativity and its assessment in schools. 
+Applied Measurement in Education
+, 
+29
+(4), 278–290. https://doi.org/10.1080/08957347.2016.1209206 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Macey, J., & Hamari, J. (2019). Esports, skins and loot boxes: Participants, practices and problematic behaviour associated with emergent forms of gambling. 
+New Media & Society
+, 
+21
+(1), 20–41. https://doi.org/10.1177/1461444818786216 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Marsh, J. (2010). Young children’s play in online virtual worlds. 
+Journal of Early Childhood Research
+, 
+8
+(1), 23–39. https://doi.org/10.1177/1476718X09345406 
+(Open in a new window)
+Google Scholar
+ Marsh, J. (2015). Research technologies in children’s worlds and futures. In A. Farrell, S. L. Kage, & K. Tidsall (Eds.), 
+Sage handbook of early childhood research
+ (pp. 485–501). Sage. 
+(Open in a new window)
+Google Scholar
+ Marsh, J., Murris, K., Ng’ambi, D., Parry, R., Scott, F., Thomsen, B. S., Bishop, J., Bannister, C., Dixon, K., Giorza, T., Peers, J., Titus, S., Da Silva, H., Doyle, G., Driscoll, A., Hall, L., Hetherington, A., Krönke, M., Margary, T., … Woodgate, A. (2020). 
+Children, technology and play
+. The LEGO Foundation. 
+(Open in a new window)
+Google Scholar
+ Marsh, J., Plowman, L., Yamada-Rice, D., Bishop, J. C., Lahmar, J., Scott, F., Davenport, A., Davis, S., French, K., Piras, M., Thornhill, S., Robinson, P., & Winter, P. (2015). 
+Exploring play and creativity in pre-schoolers’ use of apps: Final project report
+. 
+www.techandplay.org
+(open in a new window)
+ 
+(Open in a new window)
+Google Scholar
+ Marsh, J., Plowman, L., Yamada-Rice, D., Bishop, J. C., & Scott, F. (2016). Digital play: A new classification. 
+Early Years: An International Research Journal
+, 
+306
+(3), 242–253. https://doi.org/10.1080/09575146.2016.1167675 
+(Open in a new window)
+Google Scholar
+ Marsh, J., Plowman, L., Yamada-Rice, D., Bishop, J., Lahmar, J., & Scott, F. (2018). Play and creativity in young children’s use of tablet apps. 
+British Journal of Educational Technology
+, 
+49
+(5), 870–882. https://doi.org/10.1111/bjet.12622 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Marsh, J., & Yamada-Rice, D. (2016). Bringing pudsey to life: Young children’s use of augmented reality apps. In N. Kuckircova, & G. Falloon (Eds.), 
+Apps, technology and young learners
+ (pp. 227–238). Routledge. 
+(Open in a new window)
+Google Scholar
+ Mascheroni, G., & Holloway, D. (Eds.). (2019). 
+The internet of toys. Practices, affordances and the political economy of children’s smart play
+. Palgrave Macmillan. 
+(Open in a new window)
+Google Scholar
+ Mavoa, J., Carter, M., & Gibbs, M. (2018). Children and minecraft: A survey of children’s digital play. 
+New Media & Society
+, 
+20
+(9), 3283–3303. https://doi.org/10.1177/1461444817745320 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Mertala, P. (2019). Teachers’ beliefs about technology integration in early childhood education: A meta-ethnographical synthesis of qualitative research. 
+Computers in Human Behavior
+, 
+101
+, 334–349. https://doi.org/10.1016/j.chb.2019.08.003 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Morgade, M., Aliagas, C., & Poveda, D. (2019). Reconceptualizing the home of digital childhood. In 
+The routledge handbook of digital literacies in early childhood
+ (pp. 109–122). Routledge. 
+(Open in a new window)
+Google Scholar
+ Murris, K., Scott, F., Stjerne Thomsen, B., Dixon, K., Giorza, T., Peers, J., & Lawrence, C. (2022). Researching digital inequalities in children’s play with technology in South Africa. 
+Learning, Media and Technology
+, 1–14. https://doi.org/10.1080/17439884.2022.2095570 
+(Open in a new window)
+Google Scholar
+ Nansen, B. (2020). 
+Young children and mobile media: Producing digital dexterity
+. Palgrave. 
+(Open in a new window)
+Google Scholar
+ Neal, J. W., & Neal, Z. P. (2013). Nested or networked? Future directions for ecological systems theory. 
+Social Development
+, 
+22
+(4), 722–737. https://doi.org/10.1111/sode.12018 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Nebel, S., Schneider, S., & Rey, G. D. (2016). Mining learning and crafting scientific experiments: A literature review on the use of minecraft in education and research. 
+Journal of Educational Technology & Society
+, 
+19
+(2), 355–366. 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Ng'ambi, D., & Bozalek, V. (2016). Learning with technologies in resource-constrained environments. In N. Rushby, & D. W. Surry (Eds.), 
+The Wiley handbook of learning technology
+ (pp. 200–220). Wiley Blackwell. 
+(Open in a new window)
+Google Scholar
+ Ofcom. (2019). 
+Children and Parents: Media Use and Attitudes.
+ 
+https://www.ofcom.org.uk/__data/assets/pdf_file/0023/190616/children-media-use-attitudes-2019-report.pdf
+(open in a new window)
+ 
+(Open in a new window)
+Google Scholar
+ Palaiologou, I., Kewalramani, S., & Dardanou, M. (2021). Make-believe play with the internet of toys: A case for multimodal playscapes. 
+British Journal of Educational Technology
+, 
+52
+(6), 2100–2117. https://doi.org/10.1111/bjet.13110 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Pallitt, P., Venter, A., & Koloko, M. (2019). Whose “game culture” is it, anyway? In P. Penix-Tadsen (Ed.), 
+I. Video games and the Global South
+ (pp. 269–284). Carnegie Mellon University, ETC Press. 
+(Open in a new window)
+Google Scholar
+ Plowman, L. (2016). Rethinking context: Digital technologies and children's everyday lives. 
+Children's Geographies
+, 
+14
+(2), 190–202. 
+(Open in a new window)
+Google Scholar
+ Potter, J., & McDougall, J. (2017). 
+Digital media, culture and education: Theorising third space literacies
+ (pp. 1–205). Palgrave Macmillan. 
+(Open in a new window)
+Google Scholar
+ Ramos-Serrano, M., & Herrero-Diz, P. (2016). Unboxing and brands: YouTubers phenomenon through the case study of EvanTubeHD. 
+Prisma Social
+, 
+1
+(May), 90–120. 
+(Open in a new window)
+Google Scholar
+ Rideout, V., Peebles, A., Mann, S., & Robb, M. B. (2022). 
+Common sense census: Media use by tweens and teens, 2021
+. Common Sense. 
+(Open in a new window)
+Google Scholar
+ Scott, F. (2018). 
+Young children’s engagement with television and related media in the digital age
+ [Unpublished PhD Thesis]. University of Sheffield. 
+http://etheses.whiterose.ac.uk/22928/
+(open in a new window)
+ 
+(Open in a new window)
+Google Scholar
+ Scott, F. (2022a). Young children’s playful engagement and learning with a fairy-tale themed augmented reality coding App. In K. J. Murcia, C. Campbell, M. M. Joubert, & S. Wilson (Eds.), 
+Children’s creative inquiry in STEM
+ (pp. 327–345). Springer. 
+(Open in a new window)
+Google Scholar
+ Scott, F. L. (2022b). Family mediation of preschool children’s digital media practices at home. 
+Learning, Media and Technology
+, 
+47
+(2), 1–16. https://doi.org/10.1080/17439884.2021.1960859 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Shuba, J., Maphosa, C., Trivedi, S., & Chinhara, H. (2019). The global, African, and South African landscape: Provisioning of early childhood care and education. In A. Moodley, N. Sotuku, K. Schmidt, & N. Phatudi (Eds.), 
+Early childhood care education (0-4)
+ (pp. 84–106). Oxford University Press. 
+(Open in a new window)
+Google Scholar
+ Singer, D. G., & Singer, J. L. (2005). 
+Imagination and play in the electronic age
+. Harvard University Press. 
+(Open in a new window)
+Google Scholar
+ Stephen, C., & Plowman, L. (2014). Digital play. In L. Brooker, M. Blaise, & S. Edwards (Eds.), 
+The SAGE handbook of play and learning in early childhood
+ (pp. 330–341). Sage. 
+(Open in a new window)
+Google Scholar
+ Sutton-Smith, B. (1997). 
+The ambiguity of play
+. Harvard University Press. 
+(Open in a new window)
+Google Scholar
+ Van Deursen, A., & Helsper, E. (2015). The third-level digital divide: Who benefits most from being online? In L. Robinson, S. Cotten, J. Schulz, T. Hale, & A. Williams (Eds.), 
+Communication and information technologies annual: Digital distinctions and inequalities. Studies in media and communications
+ (Vol. 10, pp. 29–53). Bingley. 
+(Open in a new window)
+Google Scholar
+ Warschauer, M. (2004). 
+Technology and social inclusion: Rethinking the digital divide
+. MIT press. 
+(Open in a new window)
+Google Scholar
+ Wohlwend, K. E. (2015). One screen, many fingers: Young children's collaborative literacy play With digital puppetry apps and touchscreen technologies. 
+Theory Into Practice
+, 
+54
+(2), 154–162. https://doi.org/10.1080/00405841.2015.1010837 
+(Open in a new window)
+Web of Science ®
+(Open in a new window)
+Google Scholar
+ Zosh, J. M., Hopkins, E. J., Jensen, H., Liu, C., Neale, D., Hirsh-Pasek, K., Solis, S. L., & Whitebread, D. (2017). 
+Learning through play: a review of the evidence
+ (White Paper). The LEGO Foundation, DK. 
+https://www.legofoundation.com/media/1063/learning-through-play_web.pdf
+(open in a new window)
+ 
+(Open in a new window)
+Google Scholar
+
+Download PDF
+
+Share
+
+Back to Top
+
+Related research 
+
+People also read
+ lists articles that other readers of this article have read.
+
+Recommended articles
+ lists articles that we recommend and is powered by our AI driven recommendation engine.
+
+Cited by
+ lists all citing articles based on Crossref citations.
+Articles with the Crossref icon will open in a new tab.
+
+People also read
+
+Recommended articles
+
+Cited by
+
+To cite this article:
+
+Reference style:
+
+APA
+
+Chicago
+
+Harvard
+
+ Citation copied to clipboard
+ 
+
+ Copy citation to clipboard
+ 
+
+Reference styles above use APA (6th edition), Chicago (16th edition) & Harvard (10th edition)
+
+Download citation
+
+Download a citation file in RIS format that can be imported by citation management software including
+ EndNote, ProCite, RefWorks and Reference Manager.
+ 
+
+Choose format:
+
+RIS
+
+BibTex
+
+RefWorks Direct Export
+
+Choose options:
+
+Citation
+
+Citation & abstract
+
+Citation & references
+
+ Download citations
+ 
+
+Your download is now in progress and you may close this window
+
+Did you know that with a free Taylor & Francis Online account you can gain access to the following benefits?
+
+Choose new content alerts
+ to be informed about new research of interest to you
+
+Easy remote access
+ to your institution's subscriptions on any device, from any location
+
+Save your searches
+ and schedule alerts to send you new results
+
+Export your search results
+ into a .csv file to support your research
+
+Have an account?
+
+Login now
+
+Don't have an account?
+
+Register for free
+
+Save your searches
+
+and schedule alerts to send you new results.
+
+Register for free
+
+Login now
+
+View all benefits of registration
+
+Choose new content alerts 
+to be informed about new research of interest to you
+
+Export your search results 
+into a .csv file to support your research
+
+Save your searches 
+and schedule alerts to send you new results

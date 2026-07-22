@@ -1,0 +1,902 @@
+Usage of a mobile social learning platform with virtual badges in a primary school | Request PDF
+
+Article
+Usage of a mobile social learning platform with virtual badges in a primary school
+March 2015
+Computers & Education
+ 86
+DOI:
+10.1016/j.compedu.2015.02.015
+Authors:
+ 
+Ivica Boticki
+University of Zagreb
+ 
+Jelena Baksa
+Jelena Baksa
+This person is not on ResearchGate, or hasn't claimed this research yet.
+ 
+Peter Sen Kee Seow
+National Institute of Education
+ 
+Chee-Kit Looi
+Nanyang Technological University
+ 
+Request full-text PDF
+To read the full-text of this research, you can request a copy directly from the authors.
+Request full-text
+Download citation
+ Copy link
+ Link copied
+ Request full-text
+ Download citation
+ Copy link
+ Link copied
+To read the full-text of this research, you can request a copy directly from the authors.
+Abstract
+This study presents and examines SamEx, a mobile learning system used by 305 students in formal and informal learning in a primary school in Singapore. Students use SamEx in situ to capture media such as pictures, video clips and audio recordings, comment on them, and share them with their peers. In this paper we report on the experiences of students in using the application throughout a one-year period with a focus on self-directedness, quality of contributions, and answers to contextual question prompts. We examine how the usage of tools such as SamEx predicts students’ science examination results, discuss the role of badges as an extrinsic motivational tool, and explore how individual and collaborative learning emerge. Our research shows that the quantity and quality of contributions provided by the students in SamEx predict the end-year assessment score. With respect to specific system features, contextual answers given by the students and the overall likes received by students are also correlated with the end-year assessment score.
+ 
+Discover the world's research
+25+ million members
+160+ million publication pages
+2.3+ billion citations
+Join for free
+No full-text available
+ 
+To read the full-text of this research,
+ you can request a copy directly from the authors.
+Request full-text PDF
+... The theoretical underpinnings of social constructivism suggest that knowledge emerges from collaborative processes. This paradigm posits that educational outcomes are intertwined with the quality and nature of interactions, encompassing not just communicative acts but also complex collaborative behaviors like team coordination and conflict resolution 
+(Boticki et al. 2015)
+. Moreover, interactions extend beyond these dynamics to involve critical thinking, reflection, and synthesis activities which are vital in shaping the learning process and constructing knowledge (Gilbert & Moore, 1998;Liaw & Huang 2000) and also underscore the features of the action-oriented principles (Capaul 2001). ...
+... For example, Wei et al. (2015) analyzed the relationship between students' self-reported perceptions, their online activities, and performance in an online learning environment, concluding that frequent access and interaction enhanced learning. Similarly, 
+Boticki et al. (2015)
+ developed a mobile learning platform that promoted collaboration through questions and tracked students' contributions, finding that badges or recognitions as extrinsic motivational tools were linked to improved interaction quality and exam performance, given an appropriate educational context. ...
+... Participants who engage more frequently are typically more immersed in the simulation, leading to higher motivation and a stronger commitment to the learning process. This active involvement can result in improved performance and a greater ability to apply learned concepts in real-world situations 
+(Boticki et al. 2015)
+. Factors related to simulation dynamics, particularly debriefing and duration, have been found to significantly impact perceived learning, but do not address social interaction in particular (Lacruz 2017). ...
+Measuring the Effects of Face-to-Face Interactions on Performance in Business Simulation Games
+Conference Paper
+Full-text available
+Sep 2024
+Christoph Szedlak
+Bert Leyendecker
+Exploring the dynamics of team interactions and performance metrics within organizational simulations, this study delves into the intricacies of collaborative endeavors. Through the utilization of wearable sensors and Open Badges, a multi-round simulation was orchestrated, with the initial phase simulating a flawed sales process. Key performance indicators such as Throughput, Lead Time, and Query Rate were scrutinized alongside a detailed tracking of participant communications. The study seeks to measure the influence of communication patterns on performance metrics and team cohesion throughout the business simulation, with a particular emphasis on the optimization stage following the initial phase. Equipped with wearable sensors, participants navigated through the business simulation game while their interactions were meticulously recorded. Sociometric Badges were used to record data on the face-to-face interaction, tonal conversational variation and physical proximity of the teams following the briefing phase of the business simulation game. Through data collection and analysis, communication frequencies, durations, and their impact on objective performance metrics were examined. The study highlights that communication patterns, particularly active participation and cross-team engagement, significantly impact performance in simulation-based learning environments, while demographic factors showed no significant effects. Noteworthy, teams engaging with neighboring counterparts during optimization generated approximately 30% more solution proposals. Additionally, equitable participation in discussions proved pivotal in fostering successful solution development. This study enriches our comprehension of the intricate interplay between communication dynamics, performance metrics, and team synergy within simulated organizational contexts. The implications underscore the role of communication strategies and inclusive participation in achieving optimal performance within business simulation games.
+View
+Show abstract
+... In another study, Cheng and Tsai (2020) observed that the teacher's guidance was able to imbue students with a high level of self-regulation in attaining scientific knowledge and, in turn, supported their science learning. However, other studies have emphasized that the scaffolding provided by teachers in the gameplay stage results in a negative influence on students' knowledge acquisition 
+(Boticki et al., 2015;
+Bragg, 2012). In Bragg's (2012) study, students who played the games along with a discussion group exhibited relatively less improvement than those who played without a discussion group. ...
+... In Bragg's (2012) study, students who played the games along with a discussion group exhibited relatively less improvement than those who played without a discussion group. This finding is consistent with that of 
+Boticki et al. (2015)
+, who noted that participants in the self-directed group achieved better scores in their final assessment than those in the teacher-directed group. ...
+... However, our findings also indicate that in some studies, the scaffolding provided by the teachers in the gameplay stage had negative influences. Some researchers (e.g., 
+Boticki et al., 2015;
+Bragg, 2012) have noticed that teacher-led discussion might have passive effects on students' knowledge acquisition because the students might end up spending more time engaging in the discussion than learning through the game. Furthermore, some studies have revealed that the teacher's explicit instructions had a negative effect on student engagement and skills development because students had limited time to explore the game independently or collaboratively (Chuang et al., 2021;Wong et al., 2017). ...
+A systematic literature review of teacher scaffolding in game-based learning in primary education
+Article
+Full-text available
+Jun 2023
+Educ Res Rev
+Liping Sun
+Marjaana Kangas
+Heli Ruokamo
+Signe Siklander
+View
+... By harnessing the portability and versatility of mobile devices, mobile learning enables a pedagogical shift from didactic teacher-centreed to participatory student-centreed learning 
+(Boticki et al., 2015)
+, enabling students to access course content and discuss it with their peers regardless of time or location (Gikas & Grant, 2013). Compared with traditional computer-based collaborative learning, powerful mobile devices with mobile application functionality are more conducive to participation, sharing, and communication, facilitating online collaboration (Hsu & Ching, 2013) and enabling a collaborative, constructivist approach to learning (Cochrane & Bateman, 2010). ...
+... A number of studies have investigated the use of mobile devices for digital collaboration within small teams and large classes and providing knowledge-sharing features (Alioon & Delialio glu, 2019;
+Boticki et al., 2015;
+Jaldemark et al., 2018;Manabe et al., 2021;Shadiev et al., 2018;Song, 2014;Xu & Peng, 2022;Zydney & Warner, 2016). ...
+... For example, 
+Boticki et al. (2015)
+ used a mobile game-like application, SamEx, for informal learning out of class. Badges were awarded within the application as an extrinsic mechanism for motivating collaborative learning, and students could answer location-aware questions or respond to other students' questions to earn one. ...
+Mobile collaborative learning with social network awareness
+Article
+Full-text available
+May 2023
+J COMPUT ASSIST LEAR
+Jian-Wei Lin
+Hsieh-Hong Huang
+Chia-Wen Tsai
+Background
+Social network awareness (SNA) enables students to know the online learning context of peers in computer‐supported collaborative learning (CSCL) and it has been used to improve peer interaction and participation in collaborative learning tasks. Mobile learning enables students to access learning content and discuss content with peers regardless of location or time. Because almost every college student has their own mobile device and social networks are ubiquitous in their daily lives, a mobile learning application with social networking is promising for promoting effective learning if students are willing to continually use the application. However, few studies have investigated this.
+
+Objectives
+In this study, SNA was integrated into a mobile‐based assessment (MBA–SNA). The study investigated whether students were willing to persist in the use of MBA–SNA and the factors influencing this intention.
+
+Methods
+A 1‐month experiment was conducted to investigate the research question on the basis of the unified theory of acceptance and use of technology (UTAUT).
+
+Results
+The results demonstrated that (1) students were willing to continue using the MBA–SNA, (2) the incentives influencing behavioural intention (BI) in initial use and continual use differed, and (3) social influence (SI) and perceived playfulness (PP) were the two key determinants of continual use.
+
+Implications
+The SNA increases the positive impact of SI and PP on MBA continual use so that continual use can be assured. Future research should integrate SNA into other mobile learning apps (e.g., mobile collaborative writing or discussion apps) to enhance continued system use and learning effectiveness.
+View
+Show abstract
+... Además de los escenarios físicos, el diseño de un enfoque de Ulearning considera la naturaleza del escenario de aprendizaje, que se refiere al entorno logístico, la interacción social y la realidad a recrear. En este sentido, se utilizan tres tipos de escenarios: el entorno instanciado como mundos reales y digitales 
+(Looi et al., 2015)
+, la interacción social entre compañeros (Wong et al., 2015), y el contexto de la realidad ejemplificado como realidad virtual o ...
+... Los estudiantes son libres de comunicarse y participar durante el curso con el fin de compartir ideas, hacer preguntas, proporcionar asistencia entre compañeros y publicar contenidos. Por ejemplo, los estudiantes utilizan la plataforma de m learning de una escuela primaria para capturar, publicar, difundir y acceder a artefactos multimedia dentro y fuera del campus, donde de acuerdo con el tiempo y la ubicación de los usuarios el enfoque desencadena indicaciones relacionadas con sus tareas para andamiar las tareas de aprendizaje 
+(Boticki et al., 2015)
+. ...
+... Aprendizaje. El objetivo del U-learning es facilitar y mejorar el aprendizaje de los estudiantes, como hace la herramienta multifuncional "M5ESC" con los estudiantes de primaria que realizan actividades pedagógicas, construyen artefactos de aprendizaje y se autorreflexión 
+(Looi et al., 2015)
+. Además de la adquisición de DK, el aprendizaje también se refiere al desarrollo de la cognición, como la estimulación de la capacidad espacial y la integración visomotora como resultado del diseño de la simulación que una aplicación móvil proporciona a los estudiantes de secundaria (Wang et al., 2017b). ...
+LA MEDIACIÓN PEDAGÓGICA A TRAVÉS DE LAS TIC: HACIA UN ENTORNO COLABORATIVO Y UBICUO COMO APOYO A LOS PROCESOS DE ENSEÑANZA-APRENDIZAJE
+Book
+Full-text available
+Dec 2021
+Dante Macazana Fernández
+Guillermo Vargas Quispe
+Salomón Marcos Berrocal Villegas
+El contexto educativo actual que busca la innovación, con numerosas vías de aprendizaje individual y colaborativo, necesita integrar de forma simultánea y en profundidad el aprendizaje presencial y el online (a distancia). Requiere cambios de paradigma, que le permitan incorporar todas las posibilidades que aportan las tecnologías digitales: flexibilidad, desarrollo de proyectos grupales e individuales, trazabilidad, posibilidad de crear itinerarios más personalizados.
+View
+Show abstract
+... Mobile technology supplies novel approaches to learning 
+(Boticki, Baksa, Seow, & Looi, 2015;
+Zhang, Wang, de Pablos, Tang, & Yan, 2015). It fosters more collaborative and flexible learning environments in terms of when and where learning can occur (Boticki et al., 2015;Crompton, Burke, Gregory, & Grabe, 2016;Peña-Ayala & C ardenas, 2016;Shuib, Shamshirband, & Ismail, 2015;Wu et al., 2012;Zydney & Warner, 2016). ...
+... Mobile technology supplies novel approaches to learning (Boticki, Baksa, Seow, & Looi, 2015;Zhang, Wang, de Pablos, Tang, & Yan, 2015). It fosters more collaborative and flexible learning environments in terms of when and where learning can occur 
+(Boticki et al., 2015;
+Crompton, Burke, Gregory, & Grabe, 2016;Peña-Ayala & C ardenas, 2016;Shuib, Shamshirband, & Ismail, 2015;Wu et al., 2012;Zydney & Warner, 2016). Connected technologies, such as online learning, video conferencing, and text messages allow learners to connect to each other and to experts (Hew & Brush, 2007) and have been used effectively in the fields of education and prevention to provide training and technical assistance and to promote beneficial practices (Downer, Kraft-Sayre, & Pianta, 2009;Vernon-Feagans, Kainz, Hedrick, Ginsberg, & Amendum, 2013;Warren, et al., 2006). ...
+The Institute for Applied Research in Youth Development*
+Chapter
+Feb 2024
+Mary H. Buckingham
+Paul A Chase
+Dian Yu
+Roya Abbasi-Asl
+View
+... New learning methods have been recognized as one of mobile technology's educational consequences. Apart from its obvious outcome, i.e., the increased students' enthusiasm for completing educational assignments and involvement in classrooms using mobile technologies (Nikolopoulou & Kousloglou, 2019), mobile technology has provided kids the opportunity to look at what they are learning from a variety of different aspects (Furió et al., 2015;Karagozlu, 2021) while encouraging authentic learning settings in the classroom 
+(Boticki et al., 2015;
+Fletcher et al., 2022). Students are empowered to take responsibility for their training by setting their own educational goals and conducting final assessments of their learning (Boticki et al., 2015). ...
+... Apart from its obvious outcome, i.e., the increased students' enthusiasm for completing educational assignments and involvement in classrooms using mobile technologies (Nikolopoulou & Kousloglou, 2019), mobile technology has provided kids the opportunity to look at what they are learning from a variety of different aspects (Furió et al., 2015;Karagozlu, 2021) while encouraging authentic learning settings in the classroom (Boticki et al., 2015;Fletcher et al., 2022). Students are empowered to take responsibility for their training by setting their own educational goals and conducting final assessments of their learning 
+(Boticki et al., 2015)
+. Moreover, regardless of skill level, every student has an equal opportunity to gain knowledge in the same setting, thanks to an inclusive learning environment. ...
+Teachers’ perceptions of educational apps use: Psychometric properties of a new instrument (PEAU-t), validation, and measurement invariance
+Article
+Aug 2023
+Julie Vaiopoulou
+Areti Ntziachristou
+Eleni Antonopoulou
+Michail Kalogiannakis
+Modern digital technologies have radically changed communication and learning, especially for young children who, from a very young age, get familiar with a variety of educational apps. These technologies pose a challenge among parents and teachers in regards of deciding about the values and suitability of these applications because of the multiple criteria involved, both positive and negative aspects. The rise of educational apps as formal or informal learning aids decisively depends on teachers’ perceptions and beliefs about their appropriateness and their function, while research in the field needs and presupposes valid means for assessing those perceptions. The present endeavor contributes by developing and validating a new instrument, PEAU-t (Perceptions about Educational Apps Use-teachers). Data were collected from preschool and primary education teachers (N = 756) via an online survey and analyzed with exploratory and confirmatory procedures to study the psychometric properties of PEAU-t. Principal Axis Factoring extracted four factors that explained 51.1% of the total variance, namely Worthiness, Skill Acquisition, Worries, and Enjoyment, with eigenvalues of 5.46, 4.15, 4.10, and 2.80, respectively, while the corresponding portions of variance explained were 16.6%, 12.6%, 12.4%, 8.5%, respectively. Reliability analysis showed satisfactory values of internal consistency measured by McDonald's omega και Cronbach's alpha (ω = 0.835 to 0.893, α = 0.837 to 0.884). Exploratory and confirmatory Factor Analysis suggested that PEAU-t is a valid instrument that can be used to assess teachers’ perceptions about educational apps use, while the measurement invariance assumption holds for the variables tested.
+View
+Show abstract
+... 11) Measured outcomes: In many experiences, the authors have evaluated whether the apps developed are easy to use for students. In all the apps evaluated 
+(38)
+ as for this issue, students considered that they are easy to use, that is, 100%. In the rest of the apps (33), an evaluation of the app as for whether it was easy to use or not was Students have also been queried about whether they consider that the app helped them to improve their learning. ...
+... They argue that instead of using LMS for everything we should have simpler tools. On the other hand, 
+[38]
+ point out that mobile technologies should be integrated in LMS in an unobstrusive way that stimulates students and engaged them on repeated use. In our study, we have seen that in very few cases this integration has been produced and apps are used independently. ...
+A systematic literature review on the development and use of mobile learning (web) apps by early adopters
+Preprint
+Full-text available
+Dec 2022
+Antonio Ruiz-Martínez
+Linda Castañeda
+Jesualdo Tomas Fernandez-Breis
+Surveys in mobile learning developed so far have analysed in a global way the effects on the usage of mobile devices by means of general apps or apps already developed. However, more and more teachers are developing their own apps to address issues not covered by existing m-learning apps. In this article, by means of a systematic literature review that covers 62 publications placed in the hype of teacher-created m-learning apps (between 2012 and 2017, the early adopters) and the usage of 71 apps, we have analysed the use of specific m-learning apps. Our results show that apps have been used both out of the classroom to develop autonomous learning or field trips, and in the classroom, mainly, for collaborative activities. The experiences analysed only develop low level outcomes and the results obtained are positive improving learning, learning performance, and attitude. As a conclusion of this study is that the results obtained with specific developed apps are quite similar to previous general surveys and that the development of long-term experiences are required to determine the real effect of instructional designs based on mobile devices. These designs should also be oriented to evaluate high level skills and take advantage of mobile features of mobile devices to develop learning activities that be made anytime at anyplace and taking into account context and realistic situations. Furthermore, it is considered relevant the study of the role of educational mobile development frameworks in facilitating teachers the development of m-learning apps.
+View
+Show abstract
+... Adult learners also tend to achieve more with the support of their colleagues than when they work on their own (Briggs, 2013). However, it must be noted that, the level of selfdirectedness of the learner determines, whether the individual will seek or avail themselves to such collaborative learning arrangements, especially if the task is of common interest 
+(Boticki et al., 2015)
+. ...
+... In line with Kuh's (2009) study, students played an active role in group studies. However, a study by 
+Boticki et al. (2015)
+ found that when students lacked self-directedness, they tend to depend on each other for support. On the contrary, Guglielmino (2013) argued that self-directed adult learners form collaborations for better performance. ...
+Influence of adult learners’ self-direction on group learning
+Article
+Full-text available
+Apr 2022
+John Kwame Boateng
+Esther Attiogbe
+Victoria Mwinsumah Kunbour
+The purpose of the study is to present the group learning behaviours of adult students at a public university in Ghana. The study setting is the University of Ghana, specifically the Department of Adult Education and Human Resource Studies. Adults engage in continuous learning for purposes of personal and professional development. The study draws from the concept of self-directed learning and constructivist theories, examining the relationship between self-direction and group learning in an adult learning context. Through the qualitative approach, the researchers conducted a thematic analysis of the transcribed interviews to gain insights into what influenced adult learners’ self-direction and peer engagement. The research found that collaborative contexts lead to better student engagement. Also, support from a more capable colleague contributed significantly to successful learning. The main contribution of the study is that the self-direction of the adult learner is critical to moving from the zone of the current development to the zone of potential development. For practice, adult educators need to design curriculum programmes that can encourage adult learners to create student-driven support groups for learning. Concerning workplace learning, adult learners should develop professional relationships and build networks especially voluntary support groups with their peers.
+View
+Show abstract
+... Facilitating access to information and promoting collaborative learning. Increase communication between pupils and teachers in the classroom 
+(Boticki, Baksa, Seow, & Looi, 2015)
+. Several studies have shown the majority of students believe that application software plays an important role in their academic performance (Boticki et al., 2015;Mallernee, 2018) ...
+... Increase communication between pupils and teachers in the classroom (Boticki, Baksa, Seow, & Looi, 2015). Several studies have shown the majority of students believe that application software plays an important role in their academic performance 
+(Boticki et al., 2015;
+Mallernee, 2018) ...
+Factors Influencing ICT Applications Usage among Undergraduate Students in Somalia and Their Level of Skills
+Article
+Full-text available
+Jun 2022
+Abdulkadir Jeilani
+ICT applications have become more popular in the field of education with a large broad range of users, including students from all levels of education. The study investigates the interrelationship among perceived usefulness, ease of use, cost-effectiveness, pressure, student’s perception and ICT applications use. The Technology Acceptance Model, Transaction Cost Economics and Theory of Reasoned Action were used to develop a research model. This study used a cross-sectional and cluster sampling technique, with sample size 382 undergraduate students from three universities in Mogadishu Somalia using electronic data collection such as Kobo collect. Data analyzed using structural equation modeling [SEM]. The results could help students to take benefit from different ICT applications and suggests the Minister of Education should include ICT subject in the curriculum at the levels of the secondary and the primary education.
+View
+Show abstract
+... Unjustified grading process 
+(Boticki et al., 2015)
+. MTA measurements use a scale of 0-4. ...
+The Influence of Student Stress Levels and Student’s Mobile Technology Acceptance Levels on Student’s Academic Performance
+Article
+Full-text available
+Oct 2024
+Asto Buditjahjanto
+Naim Rochmawati
+Parama Diptya Widayaka
+Mohammad Wildan Habibi
+One way to measure education quality is to evaluate students' learning outcomes. Therefore, this study aims to determine the effect of student stress levels and mobile technology acceptance levels on their learning outcomes. This research method used two methods, namely the Chi-Square method and the correlation method. The Chi-Square method tests the following hypotheses: (a) is there a significant effect between student stress levels and their learning outcomes? (b) is there a significant effect between students' mobile technology acceptance level and learning outcomes? Meanwhile, the correlation method used to test the hypothesis is as follows: (c) is there a significant correlation between the stress level of students and their learning outcomes? Moreover, (d) Is there a significant correlation between students' mobile technology acceptance level and learning outcomes? The Chi-Square results for testing hypothesis (a) show that there is a significant influence between the stress level of students and student academic performance. The Chi-Square results for testing hypothesis (b) show no significant effect between the level of mobile technology acceptance and student academic performance. The correlation result for testing hypothesis (c) shows a significant negative correlation between student stress levels and academic performance. The correlation result for testing hypothesis (d) shows a significant positive correlation between the mobile technology acceptance level and students' academic performance
+View
+Show abstract
+... Whereas innovation introduces new elements in a specific context, the integration of Information and Communication Technologies (ICT) represents a dynamic process generating a series of transformations (Sotiropoulos et al., 2025). Technological innovation has indeed been a major focus of research both internationally 
+(Boticki et al., 2015)
+ and nationally (Benfares et al., 2015;Nafidi et al., 2018). ...
+Challenges and Perspectives of Pedagogical Innovation among Life and Earth Sciences Teachers in Moroccan High Schools
+Article
+Full-text available
+Feb 2026
+Khadija Ait el Mokhtar
+Maskour Lhoussaine
+Rajae Zerhane
+Rachid Janati-Idrissi
+This study explores life and earth sciences teachers' perceptions of Pedagogical Innovation (PI) in Morocco and identifies the main factors that hinder its implementation, with the aim of proposing actionable strategies to overcome these barriers and promote innovative teaching practices. A mixed-methods design was employed, combining a questionnaire administered to 319 life and earth sciences teachers from all regional education and training academies, and semi-structured interviews with a purposive sample of innovative teachers. Findings indicate that teachers generally hold positive perceptions of PI, characterized by openness to change, creativity, and professional commitment. Their experiences reveal a strong willingness to improve teaching, enhance student engagement, and adopt active and technology supported approaches, underscoring the potential for innovation when institutional and professional conditions are supportive. To address implementation barriers, the study recommends a coherent, system wide strategy that includes curriculum reform aligned with societal and student needs, and the integration of well-funded, innovative pedagogical projects. Strengthening teachers' capacities through continuous professional development, recognizing and rewarding innovative practices, and establishing collaborative communities of practice (both face to face and online) are essential for sustaining innovation over time. Fostering an institutional culture of innovation also requires recognizing teachers as co-constructors of pedagogical change. Creating platforms, workshops, and competitions to share innovative experiences can enhance motivation, peer learning, and collective reflection. Future research should adopt multi methodological and longitudinal designs, including classroom observations, to better understand how pedagogical innovations evolve and their long-term impact on science education.
+View
+Show abstract
+... This section serves as an inaugural step in comprehending the profound implications of this technological metamorphosis by emphasizing the paramount significance of understanding educator's perspectives on online teaching. In delving into the intricate nuances of online pedagogy, it becomes imperative to unearth the insights, challenges, and innovative strategies employed by educators navigating this dynamic terrain 
+(Boticki et al., 2015;
+Domingo & Garganté, 2016;Koh et al., 2017). This study embarks on a journey to unravel the multifaceted layers that comprise the realm of online teaching, seeking to illuminate not only the challenges encountered but also the opportunities and best practices that educators have forged amidst the evolving educational landscape. ...
+UNVEILING EDUCATORS INSIGHTS: A COMPREHENSIVE EXAMINATION OF ONLINE PEDAGOGY AT THE SECONDARY LEVEL
+Article
+Full-text available
+Jun 2024
+Ritu Kandpal
+Rashmi Mehrotra
+The integration of technology in education has led to a paradigm shift, particularly evident in the ascendancy of online pedagogy at the secondary level. This research paper unveils educator’s insights, offering a comprehensive examination of the challenges, opportunities, and best practices associated with the implementation of online teaching methods. Educators navigate technological barriers and pedagogical adaptations, providing nuanced perspectives on the intricacies of virtual education. Opportunities abound as online pedagogy transcends geographical constraints, enhances learning through multimedia resources, and enables personalized learning experiences. Best practices, encompassing effective communication, clear instructions, and dynamic content creation, emerge as crucial elements for success. The establishment of virtual communities within online classrooms fosters engagement and motivation. This study contributes valuable insights to the discourse on educational transformation, guiding educators, policymakers, and stakeholders in understanding the multifaceted landscape of online teaching methods in secondary education.
+View
+Show abstract
+... Mobile learning has proven to be useful in helping students to share knowledge and create social interactions [17]. The use of mobile learning has proven to be beneficial in improving the knowledge structure of students as well as their learning achievements [18].Mobile technology encourages students to control of their own learning, allowing students establish from their own learning goals until the final assessment of their own learning 
+[19]
+. Furthermore, it has been proven that mobile technology helps students to manage their self directed learning [20] The Based on the evaluation results the application of mobile learing media shows most students respond positively with a score of 50% [8]. ...
+Development of Hybrid Mobile Phone Learning Media to Support the Implementation of Lesson Study on Mechanical and Machine Elements
+Conference Paper
+Jan 2020
+Setuju Setuju
+Widodo Widodo
+View
+... It implies that when teachers believe VR technology can effectively improve classroom teaching efficiency and promote students' academic success, they are more inclined to continue using it in their classroom teaching. Existing studies 
+(Boticki et al., 2015;
+Bressler & Bodzin, 2013;Kavanagh et al., 2017) have shown that VR technology offers students a first-person perspective and a high degree-offreedom exploration space through 3D images, which can effectively improve students' sense of immersion and autonomy. Therefore, using VR technology in classroom teaching significantly improves learners' satisfaction and attitudes and strengthens their cognitive feelings (Cooper et al., 2019). ...
+Teachers’ Continued VR Technology Usage Intention: An Application of the UTAUT2 Model
+Article
+Full-text available
+Jan 2024
+Wenbin Du
+Ruoyu Liang
+Plain Language Summary
+Continued Intention of Elementary and Secondary School Teachers to Use VR Technology
+Purpose: This study aimed to examine cultural and psychological factors that can significantly hinder or enable elementary and secondary school teachers’ intention to accept VR technology in their classes and use it long-term by the extended unified theory of acceptance and use of technology (UTAUT2) model. Methods: A questionnaire survey with 351 elementary and secondary school teachers in four provinces of China has been conducted, and the Partial Least Squares Structural Equation Modelling (PLS-SEM) has been used to analyze data. Conclusions: Performance expectancy, effort expectancy, social influence, facilitating conditions, and hedonic motivation significantly impacted elementary and secondary school teachers’ continued usage intention. However, habits did not promote continued usage intention. Implications: Research on VR classroom application guidance and teachers’ professional development with VR technology applications should be strengthened. Meanwhile, increasing the publicity of integrating VR technology into classroom teaching, creating a favorable climate for VR technology adoption, and enhancing the fun of VR technology can also contribute to teachers’ continued VR technology usage intention in classroom teaching. Limitations: First, although our proposed research model is based on rich previous literature, some factors related to the individual personality characteristics of teachers might be missing. Second, all data were collected from participants’ self-reports. Because participation was anonymous, we could not cross-validate the duration and extent of participants’ VR technology applications nor compare their reported post-adoption usage intention with their actual application.
+View
+Show abstract
+... In the context of parents and teachers, the adoption of digital learning platforms involves cognitive, affective, and behavioral dimensions. Perceived educational benefits shape perceptions (Wang & Wang, 2009;
+Boticki et al., 2015)
+, while negative potential influences opinions about distractions and health implications (Soykan, 2015;Harjule et al., 2021). Prior experience impacts the role and engagement of the users in digital learning (Schumacher & Morahan-Martin, 2001;Wu & Song, 2021). ...
+Digital Learning Engagement of Primary Level Students: Perspectives and Roles of Parents and Teachers
+Article
+Full-text available
+Oct 2023
+Md Al-Amin
+Md. Alamgir Hossain
+Rubaiya Sharmin
+During the COVID-19 pandemic, primary education shifted to a digital platform in Bangladesh due to the school closures from March 2020 to February 2022, resulting in a lack of technological resources and preparation from the viewpoint of parents and teachers. Therefore, this study explores the perceptions and roles of parents and teachers regarding digital learning engagement for primary-level students during the pandemic. To gain insights into the perceptions and roles of parents and teachers, qualitative data were collected from 32 parents (through four focus group discussions) and 10 teachers (via interviews) immediately after school reopening. The participants were selected based on their involvement with digital learning during the pandemic using a deviant purposive sampling technique with geographical proportions. Didactic thematic analysis was then employed for data analysis. The study found that while some parents and teachers lacked preparation and facilities for digital learning, they still showed motivation and a positive mindset towards it, particularly in urban areas. However, in contrast, those in rural areas faced challenges and had no choice but to embrace the trend of digital learning. Besides, urban teachers found digital learning helpful and suggested continuing it after the pandemic, while parents believed it was only suitable for tertiary-level students and had negative consequences for younger children. Furthermore, urban parents provided reinforcements to engage students, whereas rural parents struggled and depended solely on schools. Additionally, teachers engaged students through storytelling, gamification, redesigning content, using pictures, interactive questions, orienting students on digital platforms, and reaching out to absent students. Finally, the findings of this research will guide the government and policymakers in updating the education system and implementing digital learning at the primary level.
+View
+Show abstract
+... Additionally, teachers' ongoing comments on students' consistent efforts can accelerate their online learning (Bonk & Khoo, 2014). Teachers' tactics for educating students online, in particular, can foster the appropriate learning environment and students' motivation in searching for digital learning materials 
+(Boticki et al., 2015)
+. ...
+Teachers’ Capability, Students’ Motivation and Parents’ Support in Online Learning
+Article
+Full-text available
+May 2023
+Usha Kaphle
+Karna Rana
+This study examines how primary teachers developed online education and how parents helped their kids learn from home during the COVID-19 pandemic. To investigate the experiences and subjective perceptions of online classrooms, we used semi-structured online interviews with teachers, parents, and students. The data gathered through the observation of online classes crystalized the interview data. The results of this study showed that teachers struggled to handle online learning due to their insufficient information and communication technology (ICT) knowledge and skills, unstable internet, and a lack of administrative support. Students' engagement in interactivities rose as a result of teachers' ongoing efforts to improve their online pedagogies. Because of the teachers' efforts to administer online classes during the pandemic, students were able to continue their learning at home. To ensure that everyone receives an equal education, online learning is a viable alternative to traditional classroom settings.
+View
+Show abstract
+... The remaining three researchers have focused their research on teachers and students in primary school and elementary school [24][25]
+[26]
+. ...
+A Bibliometric Analysis of Trending Mobile Teaching and Learning Research from the Social Sciences
+Article
+Full-text available
+Apr 2023
+Chun Wai Fan
+Jiayi Lin
+Barry Lee Reynolds
+With the development of computer and information technology, mobile teaching has enjoyed pride of place among teaching mediums in the past two decades. To visually explore the mobile learning hotspots and trends present in international journals, this study adopted two science mapping tools (CiteSpace and VOSviewer) to first detect and then visualise emerging trends (i.e., hotspots) in the mobile learning literature. A total of 528 mobile learning articles published between 2003 and 2021 that appeared in 21 international educational technology journals indexed in the SSCI database were retrieved for bibliometric analysis. The results show (1) there was a remarkable increase in academic output in this field starting in 2008 that topped out in 2021; (2) co-authorship with academics from diverse countries/regions and institutions was evident; (3) three trending foci in the literature include defining mobile learning, designing learning systems, and exploring mobile learning effectiveness; and (4) the high-frequency co-cited publications focus on the effectiveness of mobile devices via different research methods. This study provides scholars with an accessible summary of the current trends in mobile learning, identifies the active researchers in this field, and reports on which outlets are most relevant for research produced on this topic. In addition, the findings have direct implications for the education and private sectors. Mobile devices are not widely adopted in classroom settings and are often considered a learning tool more suited for out-of-class assignments or practice. Therefore, it is necessary for information technology educators to invest in actively initiating the integration of mobile technology into the classroom. Those in the technology industry should aim to develop mobile devices and relevant educational applications/software that can be utilised not only within the confines of the classroom but also to bridge in-class and out-of-class learning.
+View
+Show abstract
+... Jahnke dan Kumar (2014) menyoroti peran penting e-learning dalam memfasilitasi komunikasi antara siswa dan guru, mempromosikan pembelajaran kooperatif, dan mendorong umpan balik instan di kelas. E-learning juga mendukung self-regulated learning siswa, mendorong mereka untuk mengontrol pembelajaran mereka sendiri atau menetapkan tujuan pembelajaran mereka sendiri hingga penilaian akhir dari pembelajaran mereka sendiri 
+(Boticki et al., 2015)
+. ...
+PENERAPAN PEMBELAJARAN E-LEARNING DAN PENGARUHNYA TERHADAP SELF REGULATED LEARNING MATEMATIS SISWA SEKOLAH DASAR
+Article
+Full-text available
+Dec 2022
+Fatkhul Arifin
+Arita Marini
+Self regulated learning merupakan salah satu aspek afektif yang diharapkan dimiliki oleh setiap siswa. Tujuan dari penelitian ini adalah untuk menganalisis dan mengetahui self regulated learning atau kemandirian belajar matematika siswa ketika diberikan pembelajaran e-learning. Seiring dengan perkembangan zaman dan e-learning sudah semakin dikenal masyarakat luas, bahkan penggunaannya pun tidak hanya pada sekolah menengah, namun sekolah dasar. Penggunaan e-learning perlu kesadaran yang tinggi oleh siswa untuk melaksanakan pembelajaran. Maka pada artikel ini peneliti membuat website yang dirancang untuk anak pelajari dan mengaksesnya. Sehingga peneliti akan tahu anak yang mengakses pembelajaran dan tidak. Metode yang digunakan dalam penelitian ini adalah mix method (Kuntitatif dan kualitatif), dengan desain yang digunakan adalah pre test-post test control group design. Populasi dalam penelitian ini adalah siswa sekolah dasar yang berada di wilayah Jakarta, sedangkan yang menjadi sampel dalam penelitian ini adalah dua kelas dari keseluruhan populasi yang dipilih. Instrumen yang digunakan dalam penelitian ini berupa observasi, kuesioner, dan dokumentasi. Hasil penelitian menunjukkan bahwa â€œSelf regulated learning siswa yang menggunakan e-learning lebih baik dari pada siswa yang pembelajarannya menggunakan media power pointâ€. Hal tersebut ditunjukkan dengan nilai sig (2-tiled) sebesar 0,000, lebih kecil dari 0,05. Artinya jika nilai sig < 0,05 maka hipotesis H0 ditolak dan H1 diterima. Berdasarkan hasil penelitian tersebut dapat disimpulkan bahwa pembelajaran e-learning berpengaruh terhadap Self regulated learning matematika siswa sekolah dasar.Â
+View
+Show abstract
+... Commonly used indexes of implementation fidelity include adherence to intervention, exposure or dose, quality of delivery, participant responsiveness, and program differentiation (Carroll et al., 2007). Previous studies have found that better fidelity correlated with better educational program outcomes (e.g., 
+Boticki, 2015;
+Hill & Erickson, 2019). ...
+IXL Implementation Fidelity and Usage Recommendations
+Technical Report
+Full-text available
+Sep 2022
+Xiaozhu An
+Christina Schonberg
+Bozhidar M Bashkov
+IXL’s implementation guideline for optimal usage is for students to reach proficiency in
+at least two skills per subject per week. This recommendation is based on both learning theory and empirical evidence. According to Locke and Latham’s goal-setting theory (Locke & Latham, 1990; 2013), aiming for a specific, challenging but attainable goal like this one is related to achieving better learning outcomes. Moreover, the present empirical study found that students who reached proficiency in at least two IXL skills per week made significantly larger gains on NWEA MAP in both math and language arts compared to students with typical IXL usage. Thus, both theory and research suggest two skills proficient per week would be the optimal amount of IXL usage in each subject. This document provides an overview of the theoretical background for setting this specific usage goal and summarizes the empirical evidence for the added value of reaching proficiency in at least two skills per week over typical IXL usage.
+View
+Show abstract
+... More importantly, the presence of electronic resources in classroom settings leads to a number of changes in educational contents such as instruction, assessment, classroom management, as well as classroom interactions. Digital tools and devices contribute to enabling students' expanded, diverse and enriched learning experiences 
+(Boticki et al., 2015;
+Domingo & Garganté, 2016;Koh et al., 2017) both inside and outside classroom boundaries, although the impact level varies among different regions, countries, schools, and teachers. Furthermore, this development provides learners with more learning opportunities and flexibility in their studies regardless of their locations compared to traditional face-to-face mode, thereby meeting the needs of diverse students. ...
+Examining teachers' behavioural intention for online teaching after COVID-19 pandemic: A large-scale survey
+Article
+Full-text available
+Nov 2022
+Educ Inform Tech
+Hang Khong
+Ismail Celik
+Tinh Le
+Hong Bui
+Recently, the coronavirus disease 2019 (COVID-19) pandemic has led to rapid digitalisation in education, requiring educators to adopt several technologies simultaneously for online learning and teaching. Using a large-scale survey (N = 1740), this study aims to construct a model that predicts teachers' extensive technology acceptance by extending the Technology Acceptance Model (TAM) with their technological pedagogical content knowledge (TPACK) and innovativeness. TAM has been a valuable tool to measure the adoption of new technology in various contexts, including education. However, TAM has been designed and principally applied to assess user acceptance of a specific technology implementation. This study has extended TAM to measure teachers' technology-enabled practice (online teaching) with the adoption of various technologies. The proposed model explains teachers' behav-ioural intention to teach online with a good fit. Our findings revealed the collective effects of TPACK, perceived usefulness (PU) of technology, and innovativeness on teachers' behavioural intention to teach online post-pandemic.
+Moreover, the study identified training and support from school as a significant predictor for both teachers' TPACK and PU. The novelty of this study lies in its model conceptualisation that incorporates both information-technology-based constructs and personal-competence-based features, including TPACK and innovativeness. Furthermore, our study contributes to the growing body of literature that addresses online teaching adoption by schoolteachers in the post-pandemic era.
+View
+Show abstract
+... More importantly, the presence of electronic resources in classroom settings leads to a number of changes in educational contents such as instruction, assessment, classroom management, as well as classroom interactions. Digital tools and devices contribute to enabling students' expanded, diverse and enriched learning experiences 
+(Boticki et al., 2015;
+Domingo & Garganté, 2016;Koh et al., 2017) both inside and outside classroom boundaries, although the impact level varies among different regions, countries, schools, and teachers. Furthermore, this development provides learners with more learning opportunities and flexibility in their studies regardless of their locations compared to traditional face-to-face mode, thereby meeting the needs of diverse students. ...
+Examining teachers' behavioural intention for online teaching after COVID-19 pandemic: A large-scale survey
+Article
+Full-text available
+Nov 2022
+Educ Inform Tech
+Hang Khong
+Ismail Celik
+Tinh Le
+Hong Bui
+Recently, the coronavirus disease 2019 (COVID-19) pandemic has led to rapid digi-talisation in education, requiring educators to adopt several technologies simultaneously for online learning and teaching. Using a large-scale survey (N = 1740), this study aims to construct a model that predicts teachers' extensive technology acceptance by extending the Technology Acceptance Model (TAM) with their technological pedagogical content knowledge (TPACK) and innovativeness. TAM has been a valuable tool to measure the adoption of new technology in various contexts, including education. However, TAM has been designed and principally applied to assess user acceptance of a specific technology implementation. This study has extended TAM to measure teachers' technology-enabled practice (online teaching) with the adoption of various technologies. The proposed model explains teachers' behav-ioural intention to teach online with a good fit. Our findings revealed the collective effects of TPACK, perceived usefulness (PU) of technology, and innovativeness on teachers' behavioural intention to teach online post-pandemic. Moreover, the study identified training and support from school as a significant predictor for both teach-ers' TPACK and PU. The novelty of this study lies in its model conceptualisation that incorporates both information-technology-based constructs and personal-competence based features, including TPACK and innovativeness. Furthermore, our study contributes to the growing body of literature that addresses the online teaching adoption by schoolteachers in the post-pandemic era.
+View
+Show abstract
+... A study by 
+Boticki et al. (2015)
+ pointed out that e-learning using e-sources helps students to manage self-regulated learning and to establish their own learning goals until the final assessment of their own learning. Lam et al. (2020, p. 2) reported that e-learning encourages participation in learning activities and motivation and allows students to set learning goals independently and progress in their learning pathways at their own pace; the learning content can be accessed repeatedly such that students can revisit difficult concepts for clarification and the learning contents can be customised by teachers to attend to individualised learning needs. ...
+Choosing from a range of e-resources when planning lessons : a challenge for teachers
+Article
+Full-text available
+Sep 2022
+Jana Stará
+Alžběta Vodrážková
+In this article we report on a qualitative survey in a primary school based on observation in the classrooms and interviews with teachers. The aim was to find out what e-sources teachers were using during the mandated distance learning in the context of the Covid-19 pandemic and immediately after students returned to school, and how and why they were using them. The results show that teachers are not very familiar with the range of complex e-textbooks and their additional digital support offered by publishing houses. They believe they can find fun and interactive exercises on the internet on their own and in practice they do so, often unsystematically. The teachers’ main criteria for selecting sources are attractiveness, fun and interactivity. The research shows that in the flood of different e-resources that teachers can use, it is more crucial that the textbook plays a coordinating role. Within it, it is important to offer teachers high quality and goal-oriented resources that they can adapt, combine, and compile according to their own discretion and the needs of their classroom. At the same time, there is a need to focus teacher training on developing competences to work with diverse and fragmented resources.
+View
+Show abstract
+... A recent study of nearly 3,000 students showed that most students spent less than 30 minutes per week on an online learning program, far less than the recommended usage of 60 to 90 minutes per week (Center for Education Policy, 2016). As the amount of usage often correlates with student achievement (Longnecker, 2013;
+Boticki, 2015)
+, it is important to take usage into consideration when evaluating the efficacy of online learning programs. IXL, a well-known online learning program, is currently being used by over 11% of students in the U.S. (IXL Learning, n.d.). ...
+The Efficacy of IXL on Schools' Academic Performance in Texas
+Conference Paper
+Jan 2019
+Liyang Mao
+View
+... A recent study of nearly 3,000 students showed that most students spent less than 30 minutes per week on an online learning program, far less than the recommended usage of 60 to 90 minutes per week (Center for Education Policy, 2016). As the amount of usage often correlates with student achievement (Longnecker, 2013;
+Boticki, 2015)
+, it is important to take usage into account when evaluating the effectiveness of online learning programs. IXL, a well-known online learning program, is currently being used by over 11% of students in the U.S. (IXL Learning, n.d.). ...
+Evaluate the Usage and Impact of IXL in 10 Smarter Balanced States
+Conference Paper
+Jan 2019
+Liyang Mao
+View
+Tablet Computer Literacy Levels of the Physical Education and Sports Department Students
+Article
+Full-text available
+Jan 2016
+Every day, new developments are occurring in today’s technology. Education systems are also being affected in parallel by newly emerging hardware. Especially the use of tablets is becoming widespread in the teaching-learning processes within the recent years. Therefore, using the tablets effectively and correctly, managing them and having a high level of tablet literacy plays an important role within the education system. The purpose of this study is to determine the tablet literacy levels of the students in the Physical Education and Sports Teaching department and examine this data with regards to various variables. 276 students participated in the study. As a result of the study, the tablet literacy levels of the Physical Education and Sports Teaching Department students are observed to be at high levels. Another conclusion of the study is that while no significant difference could be found in the tablet literacy levels of the students in terms of gender, the students in the 2nd grade are noted to be at higher levels in terms of tablet literacy compared to the students in 3rd and 4th grades and tablet owners are more tablet literate when compared to non-tablet owners. On the other hand, a significant correlation at a low level was found between the tablet usage time and tablet literacy.
+View
+Show abstract
+A systematic literature review on technology integration in elementary mathematics learning: Trends, challenges, and future directions
+Conference Paper
+Jan 2026
+Fatkhul Arifin
+Yurniwati Yurniwati
+Alberth Supriyanto Manurung
+Tri Suryaningsih
+View
+Game-Based Learning: Neuroscientific Approach to Enhancing Education
+Chapter
+Apr 2026
+Azilawati Jamaludin
+Aik Lim Tan
+Nadhrah Syazwana
+Game-based learning (GBL) offers a promising approach to enhancing education by leveraging the engaging nature of digital games. This chapter explores GBL through a neuroscientific lens, examining how digital gameplay impacts cognitive and educational development. Digital game use among learners, particularly in Asian countries like Singapore, China, South Korea, and Japan, has risen significantly, demonstrating high levels of engagement. While concerns about screen time persist, this chapter argues that digital games can be powerful tools for learning and cognitive enhancement. The authors investigate the neurocognitive mechanisms underlying gameplay, including neural activation, cognitive flexibility, and brain plasticity. Understanding these processes is crucial for optimizing GBL design and implementation to maximize learning outcomes for diverse learners. This chapter provides insights into the neuroscientific foundations of GBL, its cognitive benefits, educational applications, ethical considerations, and future directions, aiming to inform educators, policymakers, and game designers in developing effective and engaging learning experiences.
+View
+Show abstract
+The Reality of Using the Learning Bridges Program from the Point of View of Primary School Teachers in Al-Qweismeh District
+Article
+Full-text available
+Dec 2020
+Hanaa Anwar Nouri Abuisha
+This study aimed to investigate the reality of using the Learning Bridges Program from the perspective of basic stage teachers in Al-Qweismeh District. A descriptive survey methodology was employed, and the study population consisted of basic stage teachers in public schools, from which a random sample of 300 teachers was selected. A validated and reliable questionnaire was used to collect the data. The results indicated a moderate level of program usage. Statistically significant differences were found in teachers’ responses attributable to gender and academic qualification, favoring females and teachers holding bachelor’s and postgraduate degrees. However, no significant differences were found with respect to teaching experience or training courses, except in the domain of attitudes and tendencies, in favor of those who attended three or more training courses. Based on these findings, the study recommended increasing training courses and providing supportive services to enhance program implementation.
+View
+Show abstract
+The Role of Educational Supervisors in Using Educational Platforms for Developing Professional Learning Communities
+Article
+Dec 2023
+Mohammed Ali Assiri
+Hind Kailany
+The study aimed to identify the role of educational supervisors in using educational platforms for developing professional learning communities. To achieve this goal, the study addressed the reality, dimensions, and challenges. This study employed a descriptive survey method, utilizing a questionnaire to collect data from a sample of 603 teachers and educational supervisors in the Assir School District during the 2013 school year. The study found that the use of educational platforms by educational supervisors for developing professional learning communities has a high score, with a mean of (2.42). The dimensions of developing professional learning communities using educational platforms also scored high, with a mean of (2.55). The study showed that the challenges facing the development of professional learning communities by using educational platforms scored high, with a mean of (2.44). Additionally, the study revealed statistically significant differences between groups based on different gender, current job, and years of experience regarding the role of educational supervisors in using educational platforms for developing professional learning communities. Finally, the study recommended that immediate solutions must be provided to address the challenges facing the development of professional learning communities using educational platforms. It also suggested establishing professional standards and Key Performance Indicators (KPIs) for using educational platforms for developing professional learning communities.
+View
+Show abstract
+The Impact of Interactivity of Touchscreen Technology on 4- and 5-Year-Old Children’s Causal Learning and Transfer
+Article
+Full-text available
+Nov 2025
+Jingyi Zhang
+Heyi Zhang
+Xiaojuan Niu
+Chunying Gao
+The present study aimed to explore whether interactive touchscreen could facilitate children’s causal learning and transfer compared with demonstration and video. In Experiment 1 (n = 121, 54 girls) and Experiment 2 (n = 133, 61 girls), 4- and 5-year-olds either passively observed screen-based demonstration, and video, or actively interacted with blocks on the touchscreen to make accurate inferences about the causal relationship between the color of the blocks and their corresponding effect. We presented children with 100% and 75% possibilities of causality and tested their ability of discriminating between these two competing causal hypotheses with different possibilities on the touchscreen. The results suggested that interaction with touchscreens was superior to screen-based demonstration and video learning for helping 4-year-olds identify 100% and 75% color feature hypotheses and distinguish the most likely color hypothesis in both simple and generalized conflict tasks. For 5-year-olds, it specifically aided in resolving generalized conflict tasks. In Experiment 3 (n = 139, 69 girls), we not only replicated our previous findings but also found that interaction learning helped children to transfer the causality abstracted from touchscreen to reality. Specifically, interacting with blocks on the touchscreen supported 4-year-old children to successfully perform cross-medium near transfer and 5-year-old children to perform cross-medium near and far transfer, but these abilities were not available for demonstration and video learning. In conclusion, findings demonstrated that touchscreen interactivity has the potential to facilitate 4- and 5-year-olds’ causal learning and transfer compared to demonstration and video learning.
+View
+Show abstract
+Leveraging Gamification for Developing Sustainable Behaviors: Frequently Asked Questions
+Article
+Full-text available
+May 2025
+JSD
+Bishoy Youhana
+Allison Duane
+Khanjan Mehta
+Gamification is an emerging approach that leverages game design elements to influence user behavior across diverse domains, including health, education, and environmental sustainability. This article addresses fundamental yet thought-provoking questions about the effectiveness of gamification in shaping long-term habits. Through a critical synthesis of existing literature, the article explores how gamification fosters behavioral change—such as increased physical activity, reduced stress, and enhanced self-efficacy—and examines the psychological mechanisms behind these effects. It also considers gamification’s adaptability across platforms, its relevance for populations with specific needs (e.g., individuals with ADHD), and its potential for promoting critical thinking rather than superficial engagement. While long-term empirical data remain limited, current applications suggest that gamification holds substantial promise as a tool for cultivating sustainable behaviors. This article offers researchers, educators, and designers a concise, evidence-informed overview of gamification’s potential and limitations in advancing sustainable development goals.
+View
+Show abstract
+Globalisation, Education and Policy Research: The Futures of Education in Globalization: Multiple Drivers
+Chapter
+Dec 2024
+Yin Cheong Cheng
+This chapter maps out a cluster of key drivers which influence the development of education globally and locally. It also highlights the implications from the key drivers for designing the futures of education. Based on the author’s long term research project on education reforms, some global trends in education are identified as key drivers for discussion and analysis, including multiple disruptions of the pandemic, global expansion of higher education, multiple developments in globalisation, paradigms shift in education, application of technological advances, and multiple functions of education at different levels. From these drivers and their related characteristics, some important implications, directions, and insights are drawn to direct, change and reconceptualize education for the future development of students and the society in a context of globalization after the pandemic COVID-19. It is hoped that the analysis of these drivers can provide a macro-societal picture of global trends and views for policy makers, educators, researchers, and change agents globally to plan the futures of education at different levels of their education system.
+View
+Show abstract
+Leveraging AI-Powered Mobile Learning: A Pedagogically Informed Framework
+Article
+Aug 2024
+Sofia Moya
+Mar Camacho
+View
+Can touchscreens replace teachers? Chinese children’s character learning from a touchscreen-based app, video, or face-to-face instruction
+Article
+May 2024
+J EXP CHILD PSYCHOL
+Chunying Gao
+Fuxing Wang
+Judith Danovitch
+Given the increasing prevalence of touchscreen devices that are intended for educational purposes, this study explored children’s transfer of learning from touchscreen media compared with video and offline face-to-face learning. Seventy-six 5- to 6-year-old Chinese kindergarten children (M=68.21months, SD=3.57, Range=62-76 months, 30 boys, 46 girls) were randomly assigned to learn eight Chinese characters using a touchscreen-based app, a video, or through face-to-face interaction. Learning was measured via the recall task scores, recognition task scores, recall efficiency, and recognition efficiency. The results revealed that children’s recall and recognition task scores improved when learning took place using the touchscreen or face-to-face. Children’s recall efficiency and recognition efficiency were strongest in the face-to-face condition, followed by the touchscreen condition and the video condition. The effects of instructional format on children’s recall and recognition scores and recall efficiency were moderated by age: younger children’s recall and recognition scores in the face-to-face condition and the touchscreen condition were significantly higher than in the video condition, yet older children’s recall and recognition scores did not differ between conditions. However, for recall efficiency, younger children’s recall efficiency in the face-to-face condition and the touchscreen condition was significantly higher than in the video condition; older children’s recall efficiency in the face-to-face condition was higher than in both the touchscreen and video conditions. In conclusion, face-to-face interactions and a touchscreen-based app were both helpful ways for children to learn Chinese characters compared to video, but face-to-face learning showed advantages over touchscreen learning in recall efficiency for older children.
+View
+Show abstract
+Requirements and Challenges Brought Due to Pandemic in Academia
+Chapter
+Apr 2024
+Anamica Sinha
+This section deals with the challenges which arose due to the upheaval that introducing emergency remote learning lend to at different levels in the society. In addition, the requirement for technology engagement, digital affordance, cultural competence as well as resources were necessitated. Recreating an accommodating environment for learning led to question the readiness and adaptability of students, teachers, schools as well as parents. Whether digital media is just an accessory for the phase or if it enhances the pedagogy and will retain its glimmer in the future is a bone of contention and we are still to see it. The need to balance the social, emotional, and psychological learning affordance is challenging and this has been presented in this chapter.
+View
+Show abstract
+Ten Years of Gamification-Based Learning: A Bibliometric Analysis and Systematic Review
+Article
+Full-text available
+Apr 2024
+Fahad Saleem Al-Hafdi
+Waleed Salim Alhalafawy
+Gamification-based learning is a recent trend that has received increasing attention in the last few years due to digital development. Gamification has emerged as a vital aspect of the educational setting, with gamified elements playing a crucial role in e-learning environments. The current study is motivated by the need to address a gap in the existing research on the utilization of gamification in education. This gap exists due to a lack of studies that monitor the developments and effects of gamification in the educational environment. It is important to conduct such studies to provide guidance for future research in the field of gamification. A bibliometric analysis and systematic literature review were conducted to understand and describe gamification and its potential for learning. The results of the bibliometric analysis revealed that the most frequently used keywords in the studies were gamification, game-based learning (GBL), motivation, and engagement. The majority of research published in this field was conducted in the United States, followed by Spain and Britain. The Journal of Computers in Human Behavior and the Journal of Computers and Education were the two journals that focused primarily on the field of GBL. The most famous authors in this field are Hamari, Juho, Patel, Mitesh S., Landers, and Richard N. The field is experiencing significant growth, with the number of studies increasing from 7 in 2012 to 917 in 2021. The systematic review has found that undergraduates are the most frequent participants in gambling activities. The game elements that are most utilized are points, leaderboards, and badges, while the learning outcomes most addressed are achievement, engagement, and motivation. The primary objective of this paper is to provide a comprehensive guide to scholars and research institutes, outlining the key areas of emphasis related to the subject of gamification. The systematic research also identified the key components of gamification that instructors and e-learning designers may rely on most frequently.
+View
+Show abstract
+Effects of Gamification on Motivations of Elementary School Students: An Action Research Field Experiment
+Article
+Full-text available
+Mar 2024
+Simulat Gaming
+Mohammed Mohammed
+Amal Fatemah
+Lobna Hassan
+Background: Gamification research and practice have gained popularity, but there is a lack of experimental and field evidence regarding the effectiveness of specific design elements and their use contexts especially in developing countries.
+
+Aim: This research aimed to measure the effect of gamifying digital learning environments and compare the effects of badges and leaderboards on the development of cognitive and achievement motivation of elementary school students.
+
+Method: A gamified environment focused on the circulatory system and employing interactive storytelling was developed. It was tested through an in-field experiment at an elementary school in Egypt. The research sample was of 30 students in the 5th grade, divided into two equal experimental groups (badges - leaderboard).
+
+Results: The results indicated an increase in cognitive and achievement motivation among students in both experimental groups. However, there were no significant differences in the effects of badges and leaderboards on the cognitive and achievement motivations of the participants in the two experimental groups.
+
+Conclusions: these findings suggest that the effects of gamification are more likely due to the holistic design and novelty, rather than the specific use of a specific game element.
+View
+Show abstract
+The Futures of Education in Globalization: Multiple Drivers
+Chapter
+Sep 2021
+Yin Cheong Cheng
+View
+Mobile Learning, Challenges in
+Chapter
+Jun 2020
+Kwok-Wing Lai
+View
+Mobile Learning, Challenges in
+Chapter
+Nov 2019
+Kwok-Wing Lai
+View
+Bridging Formal and Informal Learning through Technology in the Twenty-First Century: Issues and Challenges
+Chapter
+Mar 2018
+Cathy Lewin
+Amina Charania
+View
+Bridging Formal and Informal Learning Through Technology in the Twenty-First Century: Issues and Challenges
+Chapter
+Aug 2018
+Cathy Lewin
+Amina Charania
+View
+Enhancing Students’ Job Seeking Process Through A Digital Badging System
+Conference Paper
+May 2023
+Hamdan Alabsi
+Majed Almotairi
+Yahya Alqahtani
+Mohammed Abdulkareem Alyami
+View
+Anforderungen und Herausforderungen durch die Pandemie im akademischen Bereich
+Chapter
+Mar 2023
+Anamica Sinha
+View
+Students’ Perception of the Digital Learning System for Junior High Schools in Padang, Indonesia
+Article
+Full-text available
+Feb 2023
+Rafki Nasuha Ismail
+Yerizon
+Ahmad Fauzan
+The learning differences before, during, and after the COVID-19 pandemic are very significant regarding the perceptions of offline education, where activeness in class activities is found to be excellent. These needs emphasize the positive effects of the learning method on the challenges of Indonesian education during the digital era. This study aims to evaluate the students' perception of the digital learning system from various phenomenal aspects, using the LMS Santiang. The method used in this research is descriptive qualitative and quantitative research. The informants or subjects of this study were 100 students were randomly selected as samples from class VIII Junior High Schools 7, 8, 12, and 25 Padang. The quantitative and qualitative data obtained from online Google-form questionnaires and WhatsApp interviews were also descriptively analyzed, respectively. According to the analysis of the questionnaire data, source and method triangulation techniques were analytically used. The findings showed that the students' perceptions of the digital learning system were quite good, regarding the use of the LMS Santiang with a percentage ≥ 70%. This analysis also exhibited the following results: (1) 75% of the students understood the LMS Santiang approach (75%); (2) 82% of them needed other learning resources or teaching materials; (3) 70% also demanded to use e-learning platforms; (4) 88% of the students needed e-learning in the digital era; (5) 73% of them were satisfied using LMS. This article is a novelty in developing a digital learning system using LMS Santiang post COVID-19.
+View
+Show abstract
+Platform governance in the era of AI and the digital economy
+Article
+Feb 2023
+Zheng Xiaolong
+Gang Zhou
+Daniel Dajun Zeng
+View
+A Study on Mobile Learning and its Impact on Academic Achievement among Higher Secondary Commerce Students
+Article
+Jun 2018
+Ms. A. Masilamani
+Mr. S. Mahendren
+View
+The Effect of Tablet App with Different Learning Content on Preschoolers’ Implicit Memory Development: Numbers and Literacy
+Article
+Jan 2023
+Wen Liu
+Nalanying Pulie
+Liting Tan
+Xue Zhang
+With the development of new technology, products such as tablets have begun playing an increasingly important role in early childhood education. This study investigated the effect of an educational tablet app based teaching method and a conventional teaching method on young children’s implicit memory. Participants (N = 123) aged between aged three to five from a preschool were divided into four groups, the number cognition and reading comprehension experimental and control groups. The experimental groups underwent using the educational tablet apps for 2 months, while the control group followed regular teaching activities. Participants’ implicit memory were analyzed before and after the training. Among the four groups, the implicit memory of children in the number cognition tablet instruction group improved significantly, followed by the reading comprehension conventional group. The result reinforces previous findings that learning contents presented by different teaching methods could promote young children’s implicit memory development.
+View
+Show abstract
+Gamification and Its Application in the Social Environment: A Tool for Shaping Behaviour
+Chapter
+Oct 2022
+Staling Cordero-Brito
+Juanjo Mena
+This study sets out to conduct a systematic review of the emergence and evolution of gamification in the social environment, its main components, and its application as a learning tool through the motivation and engagement it generates in people. The results were obtained by consulting two major scientific databases, namely, Scopus and the Web of Science, which provided 136 articles published on the social environment from 2011 through to mid-2016 using the term gamification. The results of this study reveal how over time gamification has been gaining importance in the social environment through the use of its components. The highest number of scientific publications come from the United States and Spain. In addition, the use of gaming components increases motivation and engagement. It shows how gamification uses (individual or group) rewards according to the context to achieve the proposed objectives, being successfully implemented in education, health, services, and social learning.
+View
+Show abstract
+The Influence of Social Media Networks on Learning Performance and Students’ Perceptions of Their Use in Education: A Literature Review
+Article
+Jun 2022
+Abdullah S. Alshalawi
+View
+Show more
+Tablets for informal language learning: Student usage and attitudes
+Article
+Full-text available
+Feb 2013
+LANG LEARN TECHNOL
+Xiao-Bin Chen
+Mobile-assisted language learning (MALL), a relatively new area of CALL inquiry, is gaining more and more attention from language educators with the development of new mobile devices. Tablet computers-featuring high mobility, convenient network connectivity, and smart application extendibility-are part of a wave of the latest mobile inventions; how these new mobile devices enhance MALL and how students perceive them as a language learning tool have yet to be broadly explored. This action research project sought to investigate how students used tablet computers to learn English in informal settings outside of class and how to foster more effective usage of the tablet for independent language learning. The study shows that tablet computers are ideal tools for creating an interactive, collaborative, and ubiquitous environment for language learning, provided that the technological affordances of the device have been fully explored with the students. This investigation also reveals that students have a generally favorable attitude towards the usability, effectiveness, and satisfaction of tablet computers for MALL.
+View
+Show abstract
+A Framework for Teachable Collaborative Problem Solving Skills
+Chapter
+Full-text available
+Jan 2015
+Friedrich Wilhelm Hesse
+Esther Care
+Jürgen Buder
+Patrick Griffin
+In his book “Cognition in the Wild”, Hutchins (1995) invites his readers to scan their immediate environment for objects that were not produced through collaborative efforts of several people, and remarks that the only object in his personal environment that passed this test was a small pebble on his desk. In fact, it is remarkable how our daily lives are shaped by collaboration. Whether it is in schools, at the workplace, or in our free time, we are constantly embedded in environments that require us to make use of social skills in order to coordinate with other people. Given the pervasiveness of collaboration in everyday life, it is somewhat surprising that the development of social and collaborative skills is largely regarded as something that will occur naturally and does not require any further facilitation. In fact, groups often fail to make use of their potential (Schulz-Hardt, Brodbeck, Group performance and leadership. In: Hewstone M, Stroebe W, Jonas K (eds) Introduction to social psychology: a European perspective, 4th edn, pp 264–289. Blackwell, Oxford, 2008) and people differ in the extent to which they are capable of collaborating efficiently with others. Therefore, there is a growing awareness that collaborative skills require dedicated teaching efforts (Schoenfeld, Looking toward the 21st century: challenges of educational theory and practice. Edu Res 28:4–14, 1999). Collaborative problem solving has been identified as a particularly promising task that draws upon various social and cognitive skills, and that can be analysed in classroom environments where skills are both measurable and teachable.
+
+This chapter provides a conceptual framework of collaborative problem solving that is informed by findings from fields of research as diverse as cognitive science, education, social psychology and psycholinguistics.
+View
+Show abstract
+Sending Learning Pills to Mobile Devices in Class to Enhance Student Performance and Motivation in Network Services Configuration Courses
+Article
+Full-text available
+Feb 2012
+IEEE T EDUC
+Mario Muñoz Organero
+Pedro J. Muñoz Merino
+Carlos Delgado-Kloos
+Teaching electrical and computer software engineers how to configure network services normally requires the detailed presentation of many configuration commands and their numerous parameters. Students tend to find it difficult to maintain acceptable levels of motivation. In many cases, this results in their not attending classes and not dedicating enough time to acquire the required competencies. This paper describes a successful experiment that was able to improve student class attendance, performance, and motivational patterns by using mobile devices in class to provide students with contextualized learning pills. A learning pill is a simple exercise that summarizes some of the key concepts explained in class and promotes reflection and self-study. Each student attending a particular lecture or laboratory session automatically receives a learning pill on his or her mobile phone just after the related concept has been presented. This paper details the scenario used in the experiment and analyzes the performance and motivational patterns of 170 students at the Higher Polytechnic School, Carlos III University of Madrid, Leganes, Spain.
+View
+Show abstract
+Informal learning organizations as part of an educational ecology: Lessons from collaboration across the formal-informal divide
+Article
+Full-text available
+Aug 2012
+Jennifer Lin Russell
+Karen Knutson
+Kevin Crowley
+How do informal learning organizations work with schools as part of a broader educational ecology? We examined this question through a comparative case study of two collaborative efforts whereby informal arts education organizations, a children’s museum and a community-based organization, worked with an urban school district to redefine the provision of educational services for children and youth. Grounded conceptually in organizational theory, our study identified factors that enable and constrain collaboration across the formal-informal divide. We argue that examining the dynamics of cross-sector collaboration as occurring within a regional ecology of diverse learning organizations and broader institutional context provides insights into the outcomes of joint work. Our findings have implications for designing collaborations between schools and informal organizations that contribute to their respective strength, as well as the broader regional educational ecology in which they reside.
+View
+Show abstract
+Group Collaboration in Assessment: Multiple Objectives, Processes, and Outcomes
+Article
+Full-text available
+Jun 1995
+Noreen Webb
+Large-scale assessment programs are increasingly requiring students to work in collaborative small groups instead of, or in addition to, requiring them to work individually. This article considers theoretical and practical issues that need to be taken into account in the design, use, and interpretation of the results of such assessments. Theoretical issues include the compatibility of group work with different purposes of assessment and the way emerging group processes may work toward or against different purposes of assessment. Practical issues include designing and administering assessments to produce scores that are consistent with the goals of the assessment, composing groups so that the results are fair, and preparing students for collaborative group assessments.
+View
+Show abstract
+Leveraging mobile technology for sustainable seamless learning: A research agenda
+Article
+Full-text available
+Mar 2010
+BRIT J EDUC TECHNOL
+Chee-Kit Looi
+Peter Sen Kee Seow
+Baohui Zhang
+Lung-Hsiang Wong
+Over the next 10 years, we anticipate that personal, portable, wirelessly networked technologies will become ubiquitous in the lives of learners—indeed, in many countries, this is already a reality. We see that ready-to-hand access creates the potential for a new phase in the evolution of technology-enhanced learning, characterised by ‘seamless learning spaces’ and marked by continuity of the learning experience across different scenarios or contexts, and emerging from the availability of one device or more per student. The challenge is to enable learners to learn whenever they are curious and seamlessly switch between different contexts, such as between formal and informal contexts and between individual and social learning, and by extending the social spaces in which learners interact with each other. In this paper, we review the potential of mobile learning research for designing seamless learning environments that can bridge both formal and informal learning, present a research agenda and discuss important methodological issues that concern research into formal and informal learning.
+View
+Show abstract
+Self-Directed Learning in Problem-Based Learning and its Relationships with Self-Regulated Learning
+Article
+Full-text available
+Dec 2008
+Sofie M. M. Loyens
+Joshua Magda
+Remy Rikers
+This study investigated the role of self-directed learning (SDL) in problem-based learning (PBL) and examined how SDL relates
+to self-regulated learning (SRL). First, it is explained how SDL is implemented in PBL environments. Similarities between
+SDL and SRL are highlighted. However, both concepts differ on important aspects. SDL includes an additional premise of giving
+students a broader role in the selection and evaluation of learning materials. SDL can encompass SRL, but the opposite does
+not hold. Further, a review of empirical studies on SDL and SRL in PBL was conducted. Results suggested that SDL and SRL are
+developmental processes, that the “self” aspect is crucial, and that PBL can foster SDL. It is concluded that conceptual clarity
+of what SDL entails and guidance for both teachers and students can help PBL to bring forth self-directed learners.
+View
+Show abstract
+Social Interdependence: Interrelationships Among Theory, Research, and Practice
+Article
+Full-text available
+Dec 2003
+David W Johnson
+Social interdependence theory is a classic example of the interaction among theory, research, and practice. The premise of the theory is that the way in which goals are structured determines how individuals interact, which in turn creates outcomes. Over 750 research studies have been conducted in the past 11 decades on the relative merits of cooperative, competitive, and individualistic efforts and the conditions under which each is appropriate. These studies have validated, modified, refined, and extended the theory. Social interdependence theory has been widely applied, especially in education. The applications have resulted in revisions of the theory and the generation of considerable new research.
+View
+Show abstract
+What do you mean by collaborative learning
+Article
+Jan 1999
+Pierre Dillenbourg
+View
+Badges in social media
+Article
+Jenny Antin
+E. Churchill
+View
+Assessing the quality of design research proposals
+Article
+Jan 2006
+D. Phillips
+View
+Independent Learning, MOOCs, and the Open Badges Infrastructure
+Article
+Apr 2013
+Michael Grahame Moore
+View
+Assessing the effects of gamification in the classroom: A longitudinal study on intrinsic motivation, social comparison, satisfaction, effort, and academic performance
+Article
+Jan 2015
+COMPUT EDUC
+Michael D. Hanus
+Jesse Fox
+Gamification, the application of game elements to non-game settings, continues to grow in popularity as a method to increase student engagement in the classroom. We tested students across two courses, measuring their motivation, social comparison, effort, satisfaction, learner empowerment, and academic performance at four points during a 16-week semester. One course received a gamified curriculum, featuring a leaderboard and badges, whereas the other course received the same curriculum without the gamified elements. Our results found that students in the gamified course showed less motivation, satisfaction, and empowerment over time than those in the non-gamified class. The effect of course type on students’ final exam scores was mediated by students’ levels of intrinsic motivation, with students in the gamified course showing less motivation and lower final exam scores than the non-gamified class. This suggests that some care should be taken when applying certain gamification mechanics to educational settings.
+View
+Show abstract
+Exploring Formal and Non-formal Education for Integrated and Diverse Learning Environment in Uganda
+Article
+Jan 2012
+Willy Ngaka
+George Ladaah Openjuru
+Robert Mazur
+This paper explores opportunities for integrating formal and non-formal education in Uganda in ways that help learners acquire, build and maintain productive skills for sustainable livelihoods. Using an interpretive paradigm, the authors draw on the capability approach and social practices theory of literacy to guide their qualitative analysis. The authors describe good practices in nonformal education in Uganda and Africa which diversify learning options for learners. Integration of formal and non-formal education is shown as capable of promoting practice-oriented skills learning which can significantly improve Uganda's education system which is currently too theoretical for addressing people's real needs. Such integration can maximize rural people's participation levels in government's poverty reduction interventions and enhance their chances for creating wealth and attaining sustainable livelihoods. Challenges to be faced in bridging the gap between the two forms of education in Uganda are highlighted and the way forward suggested. © Common Ground, Willy Ngaka, George Openjuru, Robert E. Mazur.
+View
+Show abstract
+Empirical Study on the Effect of Achievement Badges in TRAKLA2 Online Learning Environment
+Conference Paper
+Mar 2013
+Lasse Hakulinen
+Tapio Auvinen
+Ari Korhonen
+Achievement badges are a form of gamification that can be used to motivate users and to encourage desired actions. In this study, we describe and evaluate the use of achievement badges in the TRAKLA2 online learning environment where students complete interactive, automatically assessed exercises about data structures and algorithms. The students' activity in TRAKLA2 was logged in order to find out whether the achievement badges had an effect on their behavior. We used a between-subject experimental design where the students (N=281) were randomly divided into a treatment and a control group, with and without achievement badges. Students in the treatment group were awarded achievement badges, for example, for solving exercises with only one attempt, returning exercises early, or completing an exercise round with full points. Course grading was similar for both groups, i.e. collecting badges did not affect the final grade. Our results show that achievement badges can be used to affect the behavior of students even when the badges have no impact on the grading. Statistically significant differences in students' behavior were observed with some badge types, while some badges did not seem to have such an effect. We also found that students in the two studied courses responded differently to the badges. Based on our findings, achievement badges seem like a promising method to motivate students and to encourage desired study practices.
+View
+Show abstract
+An empirical study comparing gamification and social networking on e-learning
+Article
+Jun 2014
+COMPUT EDUC
+Luis de-Marcos
+Adrián Domínguez
+Joseba Saenz-de-Navarrete
+Carmen Pagés
+While social networking has already demonstrated its efficiency in e-learning, gamification, which is the use of game-thinking and playful design in non-game contexts, has only shown its potential as a motivational tool. This paper presents the results of testing both social networking and gamification in an undergraduate course, comparing them in terms their effect on students' academic achievement, participation and attitude. The effects of a gamification plugin deployed in a learning management system were compared to those of a social networking site in the same educational setting. We found that both approaches presented better performance than a traditional e-learning approach in terms of academic achievement for practical assignments, but that, when it came to assessing knowledge, the traditional e-learning approach was better. Also challenging current assumptions, participation rates and scores remained low with the new tools, although students' attitudes were positive.
+View
+Show abstract
+A multilevel analysis of the effects of external rewards on elementary students' motivation, engagement and learning in an educational game
+Article
+Feb 2014
+COMPUT EDUC
+Michael Filsecker
+View
+Are badges useful in education?: It depends upon the type of badge and expertise of learner
+Article
+Apr 2013
+Samuel J Abramovich
+Christian D Schunn
+Ross Higashi
+Educational Badges are touted as an alternative assessment that can increase learner motivation. We considered two distinct models for educational badges; merit badges and videogame achievements. To begin unpacking the relationship between badges and motivation, we conducted a study using badges within an intelligent-tutor system for teaching applied mathematics to middle-school students. Our findings indicate that badge earning could be driven by learner motivations and that systems with badges could have a positive effect on critical learner motivations. However, badge acquisition patterns were different across learners with different levels of prior knowledge. Different badge types also affected different learners motivation. Additionally, we believe that our findings are compatible with the research finding that extrinsic motivators have a negative influence on learning. The implication for educational badge designers is that they must consider the ability and motivations of learners when choosing what badges to include in their curricula. We believe our findings exist as one piece of the large research base needed to understand educational badges.
+View
+Show abstract
+A Federal Higher Education iPad Mobile Learning Initiative: Triangulation of Data to Determine Early Effectiveness
+Article
+Feb 2014
+Jace Hargis
+Cathy Cavanaugh
+Tayeb Kamali
+Melissa Soto
+This article presents faculty perceptions of the first month of iPad deployment in a national college system and a case study describing the integration of mobile learning devices in one college, interpreted within the framework of a SWOT analysis. We include a brief history of the implementation; description of the three-tier structure of infrastructure, pedagogy, and content; faculty perceptions; and pedagogy interview findings. We collected data using 1) case study interviews, 2) a faculty dispositional survey, and 3) iPad lead faculty. Overall, the large-scale deployment of iPad mobile learning devices was associated with high faculty engagement in formal and informal professional development activities and adoption of an active student-centered pedagogy. In addition, the program stimulated innovative approaches to technical challenges; and it spurred development and evaluation of new digital content.
+View
+Show abstract
+Mobile learning: Two case studies of supporting inquiry learning in informal and semiformal settings
+Article
+Feb 2013
+COMPUT EDUC
+Ann Carolyn Jones
+Eileen Scanlon
+Gill Clough
+View
+Group Collaboration in Assessment: Competing Objectives, Processes, and Outcomes
+Article
+Jan 1995
+Noreen Webb
+View
+Recognizing and measuring self-regulated learning in a mobile learning environment
+Article
+Mar 2012
+COMPUT HUM BEHAV
+Li Sha
+Chee-Kit Looi
+Wenli Chen
+Lung-Hsiang Wong
+With the realization that more research is needed to explore external factors (e.g., pedagogy, parental involvement in the context of K-12 learning) and internal factors (e.g., prior knowledge, motivation) underlying student-centered mobile learning, the present study conceptually and empirically explores how the theories and methodologies of self-regulated learning (SRL) can help us analyze and understand the processes of mobile learning. The empirical data collected from two elementary science classes in Singapore indicates that the analytical SRL model of mobile learning proposed in this study can illuminate the relationships between three aspects of mobile learning: students’ self-reports of psychological processes, patterns of online learning behavior in the mobile learning environment (MLE), and learning achievement. Statistical analyses produce three main findings. First, student motivation in this case can account for whether and to what degree the students can actively engage in mobile learning activities metacognitively, motivationally, and behaviorally. Second, the effect of students’ self-reported motivation on their learning achievement is mediated by their behavioral engagement in a pre-designed activity in the MLE. Third, students’ perception of parental autonomy support is not only associated with their motivation in school learning, but also associated with their actual behaviors in self-regulating their learning.
+View
+Show abstract
+The educational affordances of blogs for self-directed learning
+Article
+Sep 2011
+COMPUT EDUC
+Judy Robertson
+To be successful university learners, students need to develop skills in self-directed learning. This encompasses a range of cognitive and meta-cognitive skills including generating one’s own learning goals, planning how to tackle a problem, evaluating whether learning goals have been met, and re-planning based on this evaluation. The educational affordances of blogs offer opportunities for students to become self-directed learners in a supportive social environment. Based on qualitative analysis of design diaries written by 113 computer science students about a creative project, this paper presents a framework of the ways in which blogging activities can assist groups of students and their teachers in the development of a range of cognitive, social and self-directed learning skills. Although the students in this study used the commenting feature of blogs effectively for the purpose of praising and encouraging their peers, and giving hints and tips for solving problems, they did not coach each other on higher order skills. The paper discusses how this could be achieved in order to extend the educational value of blogging within a university learning community.
+View
+Show abstract
+Developing Web-based assessment strategies for facilitating junior high school students to perform self-regulated learning in an e-Learning environment
+Article
+Sep 2011
+COMPUT EDUC
+Tzu-Hua Wang
+This research refers to the self-regulated learning strategies proposed by Pintrich (1999) in developing a multiple-choice Web-based assessment system, the Peer-Driven Assessment Module of the Web-based Assessment and Test Analysis system (PDA-WATA). The major purpose of PDA-WATA is to facilitate learner use of self-regulatory learning behaviors to perform self-regulated learning and in turn improve e-Learning effectiveness. PDA-WATA includes five main strategies: ‘Adding Answer Notes,’ ‘Stating Confidence,’ ‘Reading Peer Answer Notes,’ ‘Recommending Peer Answer Notes’ and ‘Querying Peers’ Recommendation on Personal Answer Notes’. Using these strategies, examinees are allowed to add answer notes to explain why they chose a certain option as the correct answer and state their confidence in their own answer and answer notes, for peers’ reference. In addition to reading peer answer notes, examinees can also recommend peer answer notes as valuable references. The recommendation information can also be queried by all examinees. Quasi-experimental design was adopted to understand the effectiveness of PDA-WATA in facilitating learner use of self-regulatory learning behaviors to perform self-regulated learning and in improving learner e-Learning effectiveness. Participants were 123 seventh-grade junior high school students from four classes. These four classes were randomly divided into the PDA-WATA group (n=63) and the N-WBT group (n=60). Before e-Learning instruction, all students took the pre-test of the Learning Process Inventory (LPI), used to understand how often learners use self-regulatory learning behaviors in the learning process, and the pre-test of the summative assessment. After a two-week e-Learning instruction, the students all took the post-test of the LPI and the summative assessment. Results indicate that students in the PDA-WATA group appear to be more willing to take the Web-based formative assessment than students in the N-WBT group. In addition, PDA-WATA appears to be significantly more effective than N-WBT in facilitating learner use of self-regulatory learning behaviors to perform self-regulated learning and in improving their e-Learning effectiveness. Moreover, this research also finds that in the PDA-WATA group, there is no significant difference between the learning effectiveness of students with a low level of self-regulated learning and students with a high level of self-regulated learning, but similar result cannot be found in the N-WBT group.
+View
+Show abstract
+Pharmacotherapy for traumatic brain injury: Focus on sympathomimetics
+Article
+Aug 2011
+James A Young
+Traumatic brain injury (TBI) is a devastating neurological injury with broad manifestations. Unfortunately, its diagnosis and efficacious treatments remain elusive. Different post injury symptoms are exhibited at different time frames, indicative of a time-related progression of the pathology. Therefore, particular treatments must be tailored to the post injury time frame. This overview is focused on the secondary chronic phase following TBI and the value of sympathomimetic therapy during this phase. The various direct- and indirect-acting drugs are reviewed, and the treatment protocol employed by the author is described.
+View
+Show abstract
+Self-regulated learning and self-directed study in a pre-college sample
+Article
+Feb 2010
+LEARN INDIVID DIFFER
+Beau Abar
+Eric Loken
+Self-regulated learning (SRL) is a multi-dimensional construct that has been difficult to operationalize using traditional, variable-centered methodologies. The current paper takes a person-centered approach to the study of SRL in a sample of 205 high-school students. Using latent profile analysis on self-reports of seven aspects of SRL, three groups were identified: high SRL, low SRL, and average SRL. Student self-reports of goal orientation were used as validation for the profile solution, with the high academic self- regulation group reporting the highest levels of mastery orientation while the low self-regulation group reported highest levels of avoidant orientation. Profiles were also compared on independently collected, behavioral measures of study behaviors, with the highly self-regulated group tending to study more material and for a longer time than less self-regulated individuals.
+View
+Show abstract
+Badges in social media: A social psychological perspective Retrieved from http://uxscientist.com/public/docs/uxsci_2 Tablets for informal language learning: Student usage and attitudes An empirical study comparing gamification and social networking on e-learning
+Jan 2011
+1-4
+J Antin
+E Churchill
+X B Chen
+Antin, J., & Churchill, E. (2011). Badges in social media: A social psychological perspective. In CHI 2011 (pp. 1– 4). Retrieved from http://uxscientist.com/public/docs/uxsci_2.pdf\nhttp://uxscientist.com/?sort=post_date&page=7 Chen, X. B. (2013). Tablets for informal language learning: Student usage and attitudes. Language Learning and Technology, 17(1), 20–36. Retrieved from http://www.scopus.com/inward/record.url?eid=2-s2.0-84872872590&partnerID=40&md5=371de875da4782fe373df1548b565c48 De-Marcos, L., Domínguez, A., Saenz-De-Navarrete, J., & Pagés, C. (2014). An empirical study comparing gamification and social networking on e-learning. Computers and Education, 75, 82–91.
+The evolution of research on collaborative learning
+Jan 1995
+189-211
+Dillenbourg Baker
+M J Blaye
+A Malley
+doi:10.1016/j.compedu.2014.01.012 Dillenbourg Baker, M. J., Blaye, A., & O'Malley, C., P. (1995). The evolution of research on collaborative learning. In Learning in Humans and Machine: Towards an interdisciplinary learning science (pp. 189–211).
+Mobile learning: Two case studies of supporting inquiry learning in informal and semiformal settings. Computers and Education Leveraging mobile technology for sustainable seamless learning: a research agenda
+Jan 2010
+21-32
+A C Jones
+E Scanlon
+G Clough
+Jones, A. C., Scanlon, E., & Clough, G. (2013). Mobile learning: Two case studies of supporting inquiry learning in informal and semiformal settings. Computers and Education, 61(1), 21–32. Retrieved from http://www.scopus.com/inward/record.url?eid=2-s2.0-84867285862&partnerID=40&md5=e91f4ae9529819f411da57078df329f0 Looi, C.-K., Seow, P., Zhang, B., So, H.-J., Chen, W., & Wong, L.-H. (2010). Leveraging mobile technology for sustainable seamless learning: a research agenda. British Journal of Educational Technology, 41(2), 154–169.
+Open Badges Retrieved from http://openbadges.org/about Sending Learning Pills to Mobile Devices in Class to Enhance Student Performance and Motivation in Network Services Configuration Courses doi:10.1109/te.2011.2131652 integrated and diverse learning environments in Uganda Keynote speech
+Jan 2004
+75-76
+M G Moore
+M Munoz-Organero
+P J Munoz-Merino
+C D Kloos
+Moore, M. G. (2013). Independent Learning, MOOCs, and the Open Badges Infrastructure. American Journal of Distance Education, pp. 75–76. doi:10.1080/08923647.2013.786935 Mozilla. (2013). Open Badges. Retrieved from http://openbadges.org/about/ Munoz-Organero, M., Munoz-Merino, P. J., & Kloos, C. D. (2012). Sending Learning Pills to Mobile Devices in Class to Enhance Student Performance and Motivation in Network Services Configuration Courses. Ieee Transactions on Education, 55(1), 83–87. doi:10.1109/te.2011.2131652 integrated and diverse learning environments in Uganda. International Journal of Diversity in Organisations, Communities and Nations, 11(6), 109–122. Retrieved from http://www.scopus.com/inward/record.url?eid=2-s2.0-84871529457&partnerID=40&md5=ab52574db9160f85d2bef31e5d3e5aca Norris, C., & Soloway, E. (2004). Keynote speech. International Conference on Intelligent Tutoring Systems 2004.
+Framework for Assessing Collaborative Problem Solving Assessing the quality of design research proposals. Educational Design Research
+Jan 2006
+93-99
+Maceio
+Brazil
+Oecd
+Maceio, Brazil.. OECD. (2013). Framework for Assessing Collaborative Problem Solving. Retrieved from http://www.oecd.org/pisa/pisaproducts/ Phillips, D. (2006). Assessing the quality of design research proposals. Educational Design Research, 93–99.
+Badges Earned Online Pose Challenge to Traditional College Diplomas. The Chronicle of Higher Education
+Jan 2012
+1-7
+J R Young
+Young, J. R. (2012). " Badges " Earned Online Pose Challenge to Traditional College Diplomas. The Chronicle of Higher Education, pp. 1–7. Retrieved from http://www.eric.ed.gov/ERICWebPortal/recordDetail?accno=EJ1002829
+Recommended publications
+Discover more
+Article
+Exploring self-directed learning and the role of virtual badges in a mobile social learning platform
+January 2015
+ · 
+International Journal of Mobile Learning and Organisation
+ 
+Ivica Boticki
+Jelena Baksa
+ 
+Peter Sen Kee Seow
+ 
+Chee-Kit Looi
+This paper presents experiences from a seamless mobile learning project in Singapore. It describes SamEx mobile learning application design by focusing on the possibilities for self-directed learning and the role of virtual badges gathered by the students during their one year SamEx usage. All the activities were structured by the teachers and scaffolded by the SamEx system tools such as 
+... [Show full abstract]
+ contextually triggered questions and prompts. The paper describes experiences from the one-year SamEx usage period, gives an elaborate example of students learning experience during the period, and concludes by examining the effects of such an approach when it comes to summative exam results. The paper concludes that platforms such as SamEx have the potential of nurturing self-directed and collaborative learning and that badges can only motivate students to learn meaningfully when the teachers provide the suitable learning contexts.
+Read more
+Looking for the full-text?
+You can request the full-text of this article directly from the authors on ResearchGate.
+Request full-text
+Already a member? 
+Log in
+ 
+ResearchGate iOS App
+Get it from the App Store now.
+Install
+Keep up with your stats and more
+Access scientific knowledge from anywhere

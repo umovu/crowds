@@ -1,0 +1,2456 @@
+{
+  "model": "qwen3.6-plus",
+  "pitch": "I'm building Thuto.io , Thuto.io is an innovative South African EdTech platform designed to boost high school student motivation by transforming study efforts into actual financial rewards . how would you feel about paying a 50rand per month subscription for Thuto ?",
+  "n_repeats": 3,
+  "panel_source": "D:\\Fub-agentsociety\\backend\\uploads\\panel_sessions\\panel_07eb044c9c55",
+  "runs": [
+    {
+      "repeat": 0,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "I desperately want to believe studying could finally pay off, but after commuting over thirty minutes past crumbling roads in Pietermaritzburg just to sit in classrooms where our teachers have stopped trying, I refuse to hand over another subscription when my grandmother’s R10 000 monthly income already gets swallowed by our R4 001–R8 000 school fees. R50 a month sounds manageable until it forces me to choose between buying data for past papers or putting extra groceries on our table, so I simply cannot justify a recurring cost when financial rewards feel like just another empty promise. If Thuto actually paid out verified cash after my first set of exams and let me freeze payments when our household budget runs tight, I would reconsider, but until then I’m keeping every rand where it’s guaranteed to survive.\nSTANCE: oppose\nECONOMIC: {\"impulse\": 0.3, \"perceived_cost\": \"R50 monthly recurring subscription\", \"primary_objection\": \"Recurring cost competes with essential data and groceries while straining my grandmother's fixed R10 000 income\", \"reconsider_condition\": \"Verified cash payouts within the first month and flexible payment pausing\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "R50 a month. That is money that leaves the house. You talk about turning study into cash, but I am paying upfront to see if the system pays me back later. The grant and my gogo’s pension sit at ten thousand rand. School fees take their cut. After that, we count what is left. I am not saying the idea does not sound sharp. But sharp does not buy data. It does not switch the power back on when stage four hits, and it does not bring water back to the street taps. You want fifty rand every month. That is a bill. Bills do not wait. If the taxi fare jumps, or the load-shedding drags on, that fifty rand goes straight to the kitchen. I can want a thing and still know the numbers do not bend. You are asking for a recurring cost in a house that already stretches. If it was free, or if it replaced the extra maths notes I am already buying, I would sit and look at it. But paying to study? The economy is shrinking. We are just trying to hold the line.\n\nSTANCE: oppose\nECONOMIC: {\"impulse\": 0.2, \"perceived_cost\": \"R50 monthly subscription that competes with essential household expenses and data costs\", \"primary_objection\": \"Upfront recurring cost in a grant-dependent household where financial viability is the binding constraint\", \"reconsider_condition\": \"If the platform removes the monthly fee or directly replaces a more expensive existing study resource\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "R50 a month. We pull ten thousand rand into the house between my gogo’s pension and the child support grant. School fees already take between R4 001 and R8 000 of that every year. The rest covers the forty-five minute taxi I catch each way, food, and whatever’s left when the taps run dry or the power cuts stretch past the schedule. You’re asking me to hand over another monthly charge for an app that promises to turn study hours into cash. I’ve heard that exact pitch before. It never lands. I might want a platform that actually pays out, but wanting it doesn’t stretch a rand. Fifty rand a month is a recurring hit I can’t absorb. Show me it works without charging upfront, or don’t touch the budget at all.\n\nSTANCE: oppose\nECONOMIC: {\"impulse\": 0.2, \"perceived_cost\": \"R50 per month\", \"primary_objection\": \"Recurring fee competes with transport and school fees\", \"reconsider_condition\": \"Make it free until it proves it actually pays out or tie the cost to earned rewards\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "You want me to pay fifty rand every month just to use an app that says it’ll pay me back for studying. Fifty rand doesn’t sound like much to the person asking, but in my house it’s a taxi fare. It’s data. It’s what Gogo needs to stretch when the grant and pension come in. We’re already pulling ten thousand rand a month through school fees that take four to eight thousand a year, and what’s left barely covers the forty-five-minute commute each way, let alone the airtime I need just to keep my phone connected. You’re asking for a recurring charge on a grant-dependent budget for a promise of financial rewards later. Promises don’t buy data bundles, and they don’t create a quiet room for me to focus when I finally get home.\n\nI don’t study for a payout. I study because the alternative is nothing. Putting a price tag on motivation doesn’t make it real, and taking fifty rand out of a household that’s already counting every rand to keep me in this classroom isn’t something I can justify. If this platform was cheaper than the extra classes I’m already missing, or if it didn’t ask for a subscription before proving it actually works without eating my data, I might consider it. But right now, it’s just another thing asking me to spend what we don’t have on a system that already leaves us behind.\n\nSTANCE: oppose\nECONOMIC: {\"impulse\": 0.1, \"perceived_cost\": \"Fifty rand monthly subscription competing with taxi fares, data bundles, and household essentials\", \"primary_objection\": \"Recurring financial burden on a grant-dependent budget for a promised reward model that does not address immediate study needs or data costs\", \"reconsider_condition\": \"Free access or a cost demonstrably lower than traditional tutoring, with zero data requirements and proven offline functionality\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "I really like the idea of getting rewarded for studying, especially when walking past those same crime-heavy streets in Mthatha makes me wish I had a safer, more focused reason to stay indoors, but R50 a month is R600 a year that my ma and I need for groceries and transport. I can’t justify pulling that from our household budget, even though I want the extra motivation, because that recurring cost directly competes with our real essentials. I would only reconsider if you let me earn the subscription fee through a free trial first, so I’m not risking my family’s money on an app I haven’t seen work.\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.35, \"perceived_cost\": \"R50 monthly subscription\", \"primary_objection\": \"Recurring fee competes with household essentials like groceries and transport\", \"reconsider_condition\": \"A free trial period where I can earn enough to cover the monthly fee before paying\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "Fifty rand a month is not a lot on paper, but it is another bill that comes around every thirty days. My household brings in fifteen thousand rand a month between my mother’s municipal clerk salary and the child support grant, but that money has to cover food, transport, and the school fees. When you look at it that way, fifty rand a month competes with real essentials. I walk twenty minutes to school each morning, keeping my head down because break-ins and trouble are just part of the streets now, and I only use my phone for internet when I can manage the data. I see the municipality trying to fix the broken streetlights and sort out the water cuts, and I trust the system will eventually sort things out, but I also know that complaints usually go nowhere and services are not keeping up. Between load-shedding and everything else, keeping up is hard enough without adding another charge. The idea of getting financial rewards for studying sounds useful when the job market is shrinking every year, but I already study because I need to pass, not for a payout. A system that pays you to learn might just make me work for the reward instead of learning for myself. I want to see how it works, but I cannot just add a monthly charge without knowing if my household can actually carry it. Wanting something and affording it are not the same thing.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.3, \"perceived_cost\": \"R50 per month subscription\", \"primary_objection\": \"The recurring cost competes with essential household spending and financial incentives may undermine my own drive to learn\", \"reconsider_condition\": \"If the platform proves cheaper than current study methods and works reliably on limited phone data without needing a quiet space at home\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "Fifty rand a month is a number we have to look at carefully. My mother brings home fifteen thousand rand a month for our house, and the child support grant helps us keep the pantry stocked. School fees already take between one thousand and two thousand rand a year, which is a fixed cost we have to plan around before the term even starts. The idea of turning study time into actual rewards sounds useful, and I trust that a proper platform can deliver on what it promises. But a monthly subscription means it keeps coming back, and when you walk through Mthatha each day past broken streetlights and keep a careful eye on the streets, you learn to watch exactly where the money goes. Load-shedding and water cuts remind us that services are not keeping up, even though the municipality is trying to sort things out. I would want something that boosts motivation, but I cannot justify taking fifty rand from the household every month when it competes with food, transport, and the school fees we already pay. There is some room in our budget, but it gets eaten up by the things that cannot wait. The economy is getting tighter, and I know jobs are shrinking after matric, so every rand has to be placed where it is truly needed. If the school could absorb the cost like they handle our lower band fees, or if I could use it without touching our monthly cash first, then I would give it proper consideration.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.3, \"perceived_cost\": \"R50 per month subscription\", \"primary_objection\": \"Recurring fee competes with household essentials and fixed school fees\", \"reconsider_condition\": \"School covers the fee or free access is provided to test the platform\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "I hear what you are saying. Turning study effort into money sounds like it could help, but I have to look at what it means for my house. My mother brings in fifteen thousand rand a month with her municipal clerk job and the child support grant, and that covers food, transport, and the school fees that sit in the R1 001 to R2 000 band for the whole year. There is not much room after that. Fifty rand a month is a new cost that has to come from somewhere that already needs to pay for things we cannot skip. I might want to try it because the idea of getting something back for studying makes sense to me, but wanting it and being able to pay for it are two different things. We only have internet on our phones, not a computer, so using it would also mean spending data on top of the subscription. I walk past break-ins and trouble every day on my way to class, and I know jobs are shrinking, so we have to be careful with what leaves our account. I still trust the school and the education department to handle things properly, so if the platform really works, maybe they could cover the fee for learners who need it instead of putting it on families. I am not saying the idea is bad. I am just saying the monthly payment does not fit what we can afford right now.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.2, \"perceived_cost\": \"R50 per month plus mobile data\", \"primary_objection\": \"Recurring fee competes with essential household expenses\", \"reconsider_condition\": \"If the school or local education department covers the subscription cost\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "I’d love the idea of turning my teenagers’ study hours into actual rewards, especially since we’re already scraping together every rand in Clermont to cover school fees and uniforms for our four kids. But with my municipal administration salary fixed at R10,000 a month, that extra R50 directly competes with prepaid electricity and scholar transport, so I can’t honestly justify it without proof it lifts their marks or reduces our existing education expenses. I’d reconsider if you offered a free trial that shows measurable grade improvement or a family bundle that doesn’t force me to choose between your subscription and next month’s grocery budget.\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.35, \"perceived_cost\": \"R50/month directly competes with prepaid electricity, scholar transport, and groceries on our R10,000 income\", \"primary_objection\": \"No proven track record that it improves academic performance or reduces existing school costs\", \"reconsider_condition\": \"A free trial demonstrating measurable grade improvement or a capped family rate that doesn't strain our monthly essentials\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "Fifty rand a month sounds small on paper, but on a ten thousand rand household income it still competes directly with groceries, transport, and school fees that already sit between five hundred and a thousand rand per child. I track every deadline, every load-shedding schedule, and every rand outflow closely, so I don’t just slot another recurring charge into our budget without knowing exactly what it delivers. What gives me pause isn’t just the amount, but the core idea of turning study effort into financial rewards. I want my children to open their books because they know education is the practical route forward, not because they’re waiting for a payout. When you attach money to homework or quizzes, you shift the focus from building discipline to chasing a transaction. External rewards might get them to click through a lesson today, but they don’t teach the kind of self-reliance they’ll need when there’s no one handing out incentives. I’ve seen enough in my own work processing permits and compliance files to know that sustainable progress comes from consistent habits, not short-term payoffs. I’m not dismissing the need for tools that make learning more accessible, and I firmly believe things are improving and there’s a real chance for our children to get ahead if they put in the hours. But I need to know whether this platform actually strengthens their study routines and works reliably on our shared device, or if it’s mostly a system that measures engagement and hands out cash. If it proves it builds real academic discipline without creating dependency on a payout, I’d look at it again when the school term settles and we can see where the household budget has breathing room. Wanting something that supports their progress and finding the space for it in our monthly outgoings are two different calculations, and I won’t rush either one.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.2, \"perceived_cost\": \"R50 monthly subscription competing with fixed essentials on a R10"
+    },
+    {
+      "repeat": 0,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "Fifty rand a month sounds small on paper, but when a household is working with ten thousand rand a month, any recurring charge sits directly beside the groceries and transport. I process compliance documents at the municipality every day, so I know how to track what goes out and what stays in. The concept of turning study effort into financial rewards makes sense to me. It fits with how I see things: things are improving, and if the children put in the work, they should see a return. That is the kind of forward push we try to keep in our home. But wanting a tool that motivates them is entirely separate from making room for it in the budget. I watch the school fee deadlines and the load-shedding schedules closely because they dictate our month. A fifty rand subscription is not a one-off purchase. It is a monthly commitment that has to compete with real essentials. I would like to see it work, but I cannot simply slot it into our accounts until I know exactly what value it delivers against the fixed costs we already carry. If I can see a clear return in their results within the first term, or if there is a way to trial it without locking us into the monthly cycle, then we can sit down and look at whether the numbers actually balance.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.2, \"perceived_cost\": \"R50 per month\", \"primary_objection\": \"Recurring subscription competes directly with fixed household essentials on a ten thousand rand income\", \"reconsider_condition\": \"Clear proof of academic return within the first term or a trial option without immediate monthly commitment\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "Fifty rand a month sounds modest on paper, but when you’re stretching ten thousand rand across groceries, transport, and school fees for four children, every recurring line item has to prove it belongs. I’ve always treated education as the most reliable ladder out of tight circumstances, so I’m willing to listen if something genuinely sharpens focus and lifts results. But the moment I hear that study effort gets converted into cash payouts, my guard goes up. After long shifts at the municipality and the evening homework sessions that leave my eyes heavy, what I’m trying to build in my children isn’t a transactional habit—it’s the quiet discipline to sit down, work through the material, and keep going because they understand the long game. If this platform conditions them to expect money every time they open a textbook, I fear we’re trading intrinsic drive for a short-term trick. That hesitation sits right alongside the practical reality of one shared smartphone, the data bundles I already have to ration, and the simple fact that I can’t afford to add another monthly drain unless it clearly builds independent study skills, runs reliably without constant connectivity, and shows it improves marks without relying on external carrots. I appreciate the intention behind it, but until I can see it teaching self-motivation rather than just dangling rewards, I can’t justify moving it into our budget.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.2, \"perceived_cost\": \"R50 monthly subscription competing with essential household and education expenses\", \"primary_objection\": \"External financial rewards risk replacing intrinsic discipline and long-term academic motivation\", \"reconsider_condition\": \"Clear demonstration that it builds independent study habits, functions offline on shared devices, and improves academic outcomes without increasing data costs or household strain\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "The idea of earning cash for studying sounds tempting, but with my aunt and me surviving on R5,000 a month, that recurring R50 would rather go toward food and safe transport when the broken streetlights make the darkness dangerous after sunset. I genuinely want better resources for my Grade 10 subjects, but I can’t justify a monthly fee that competes with the essentials that keep us secure. I would only reconsider if Thuto.io offered a free tier or let me pay once per term instead of monthly so we can manage our tight budget without compromising my safety.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.35, \"perceived_cost\": \"R50 per month\", \"primary_objection\": \"Monthly recurring cost competes with essential household and safety needs on our R5,000 income\", \"reconsider_condition\": \"Offer a free tier or switch to a once-off termly payment instead of a monthly subscription\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "The idea of getting actual money for studying sounds like a fair exchange. It is right to want young people to see a return for their effort, especially when the household depends on the child support grant and piece jobs that do not always come through on time. We have some headroom in the monthly five thousand rand, but a recurring cost competes directly with real essentials. That fifty rand comes out of the same pool we use for food and the shared mobile connection. When the gravel road washes out after heavy rain, or when the load-shedding schedule cuts the power, we are already managing with less. I want to use it if it helps me get ahead, but I cannot ignore the monthly drain on a budget that is already stretched. The teachers at our school do their best with what they have, and I believe the municipality means to deliver services even when the taps run dry, but a subscription fee is a fixed cost that does not wait for our situation to improve. I also wonder if I will have the quiet space and the airtime to use it properly when the phone is shared with my aunt and her work contacts. If the platform charged only when we had clear headroom, or if the cost sat below what we already spend on data, it would be easier to justify. Right now, I am watching the numbers, and fifty rand every month feels like a step we are not ready to take.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.3, \"perceived_cost\": \"R50 per month recurring subscription competing with household essentials\", \"primary_objection\": \"The fixed monthly fee strains a grant-dependent budget that must prioritise food and shared mobile data over unproven study rewards\", \"reconsider_condition\": \"If the cost drops below our current data spend or shifts to a pay-as-you-go model that only charges when the household has verified headroom\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "The idea of getting something back for putting hours into your books sounds right to me. If you work, it makes sense to see a return. But I have to look at the numbers before I say I can join. Our household brings in R5000 a month, and that has to stretch across the child support grant, my aunt’s piece jobs, food, and the daily basics. R50 every month is a standing charge that does not go away. It sits higher than the school fees band of R301 to R500 for the entire year. We already plan our spending carefully, and a monthly subscription pulls from money that needs to stay available for airtime and data on our shared mobile connection. I want to use a platform that rewards study, and I do not doubt the effort put into building it. I just cannot justify a recurring payment when we have to plan our reading around the load-shedding schedule and the gravel road to town cuts off after rain. I know the local council means well, but the taps run dry and complaints go nowhere, and the economy is getting worse for families in our position. I still believe my teachers and the government are trying their best, but for now I have to keep my spending where the household needs it most. If there was a once-off payment or a way to access the study tools without a standing monthly charge, I would reconsider. Until then, it is just not right to commit.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.3, \"perceived_cost\": \"R50 per month\", \"primary_objection\": \"recurring monthly subscription competes with essential household spending on a tight budget\", \"reconsider_condition\": \"a once-off fee or free access tier that removes the standing monthly charge\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "Fifty rand a month just to access a platform that says it will pay you for studying? That does not sound right to me. At home we count what we have very carefully, and my aunt’s piece work plus the child support grant only stretch so far. We manage to cover the basics and even keep a little headroom, but a recurring fifty rand pull still competes directly with airtime and the essentials we need to keep moving. I know things are getting harder for families like mine, and I can see how services around us are struggling, but that just means we have to be sharper about where our money goes. I want to do well because I know it is the only way to get to university and build a proper future, not because I am waiting for a cash payout to make me open my books. If the tool was free, or if it actually cost less than the data bundles I already buy to look up notes, I would sit with it properly. But right now, paying a subscription to earn money is a circle that does not close when there is no real slack in the household budget.\n\nSTANCE: concerned\nECONOMIC: {\"impulse\": 0.3, \"perceived_cost\": \"R50 per month subscription\", \"primary_objection\": \"Recurring fee competes with household essentials despite moderate budget headroom\", \"reconsider_condition\": \"If the platform is free or costs less than my existing data and study expenses\"}"
+    },
+    {
+      "repeat": 0,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e85a66a5-9f95-92f0-bc0d-47c1eaacc37b', 'request_id': 'e85a66a5-9f95-92f0-bc0d-47c1eaacc37b'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-5e5a5104-7a32-9716-a4e3-d6320daf363d', 'request_id': '5e5a5104-7a32-9716-a4e3-d6320daf363d'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f0d1d39a-569a-9e80-be9f-3207f1c2834d', 'request_id': 'f0d1d39a-569a-9e80-be9f-3207f1c2834d'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-edad38c6-c44a-9f10-aba6-70e4b4907c6b', 'request_id': 'edad38c6-c44a-9f10-aba6-70e4b4907c6b'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-a9c3aac6-2658-91d1-a584-feed7c1b6036', 'request_id': 'a9c3aac6-2658-91d1-a584-feed7c1b6036'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-cdee06f3-9aa3-9ce2-9d76-97de353f4c2e', 'request_id': 'cdee06f3-9aa3-9ce2-9d76-97de353f4c2e'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9da9fe29-c217-9f72-899a-8d1bd7a35ec0', 'request_id': '9da9fe29-c217-9f72-899a-8d1bd7a35ec0'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-605b1448-73cc-97ef-a39f-35eb2df170d7', 'request_id': '605b1448-73cc-97ef-a39f-35eb2df170d7'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-07f08c85-9f5e-9d5c-9c83-0628337d35c4', 'request_id': '07f08c85-9f5e-9d5c-9c83-0628337d35c4'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e9578b35-51b8-9b18-b021-cf9064528591', 'request_id': 'e9578b35-51b8-9b18-b021-cf9064528591'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-741f6e2c-6acb-9cd9-b762-3697db0edcdd', 'request_id': '741f6e2c-6acb-9cd9-b762-3697db0edcdd'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f34c2d56-5273-97f1-afb4-dfec72fbd448', 'request_id': 'f34c2d56-5273-97f1-afb4-dfec72fbd448'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f7358964-679e-9008-ae08-74f272da60fe', 'request_id': 'f7358964-679e-9008-ae08-74f272da60fe'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-b6427b61-e61a-95ea-a50f-3e4cbb872e90', 'request_id': 'b6427b61-e61a-95ea-a50f-3e4cbb872e90'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-1549e082-0672-9aef-93dc-570cc011ba5d', 'request_id': '1549e082-0672-9aef-93dc-570cc011ba5d'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-a4a39857-8b2f-9db9-bf4d-951308dfa842', 'request_id': 'a4a39857-8b2f-9db9-bf4d-951308dfa842'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-717716e9-682b-9c6d-a73b-0823fe003ace', 'request_id': '717716e9-682b-9c6d-a73b-0823fe003ace'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-3a67aa0d-d807-92c3-a97a-7e5617252429', 'request_id': '3a67aa0d-d807-92c3-a97a-7e5617252429'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-b6928328-c341-92fd-8cd8-ec2c938c6777', 'request_id': 'b6928328-c341-92fd-8cd8-ec2c938c6777'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9db6a998-f1b8-9709-99e1-b5033380be1a', 'request_id': '9db6a998-f1b8-9709-99e1-b5033380be1a'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-09177111-11f2-9c7a-970a-df1a4c8950fe', 'request_id': '09177111-11f2-9c7a-970a-df1a4c8950fe'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9ae84c8c-765c-9737-8fa3-7e03c243029a', 'request_id': '9ae84c8c-765c-9737-8fa3-7e03c243029a'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-7073d2b9-3d15-9f14-8ca0-d12869b316b8', 'request_id': '7073d2b9-3d15-9f14-8ca0-d12869b316b8'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-c0f804e7-f088-9c15-b945-7a64b0012f4e', 'request_id': 'c0f804e7-f088-9c15-b945-7a64b0012f4e'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e46ba34f-eb07-9f40-b633-d96875977173', 'request_id': 'e46ba34f-eb07-9f40-b633-d96875977173'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-0b8c86ff-01ad-9f9f-af92-443cbcb80147', 'request_id': '0b8c86ff-01ad-9f9f-af92-443cbcb80147'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-94297862-4ba2-910a-a602-b7fe721cbccd', 'request_id': '94297862-4ba2-910a-a602-b7fe721cbccd'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9e959160-6925-9ed7-90bf-9cdafd752d15', 'request_id': '9e959160-6925-9ed7-90bf-9cdafd752d15'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-afb3140b-e0a7-965e-a646-e16e1e8eade4', 'request_id': 'afb3140b-e0a7-965e-a646-e16e1e8eade4'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-90ba0493-04ca-989f-bd21-79f8fb67a7d5', 'request_id': '90ba0493-04ca-989f-bd21-79f8fb67a7d5'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f7bd90ba-e71e-91ed-89e9-1911d2d98a31', 'request_id': 'f7bd90ba-e71e-91ed-89e9-1911d2d98a31'}"
+    },
+    {
+      "repeat": 0,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-0376a336-b62d-9b5e-9fd5-c98fc3ab0a9c', 'request_id': '0376a336-b62d-9b5e-9fd5-c98fc3ab0a9c'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e7156300-8fdd-9445-b505-e3e78b61e15b', 'request_id': 'e7156300-8fdd-9445-b505-e3e78b61e15b'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-01480c9f-3447-996b-8554-98ff3ef0cc22', 'request_id': '01480c9f-3447-996b-8554-98ff3ef0cc22'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-09dba28e-b3b9-9b51-a0c3-19d4cb7b88d8', 'request_id': '09dba28e-b3b9-9b51-a0c3-19d4cb7b88d8'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-59eda730-be1a-988e-93a2-503cd009d889', 'request_id': '59eda730-be1a-988e-93a2-503cd009d889'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-1705d078-81f0-995f-8224-ca48858b5d82', 'request_id': '1705d078-81f0-995f-8224-ca48858b5d82'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-395766b6-0683-9870-8dc1-77c8d10cc5a0', 'request_id': '395766b6-0683-9870-8dc1-77c8d10cc5a0'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4fe080a0-b9d9-950b-83b0-e71f98bfcbe4', 'request_id': '4fe080a0-b9d9-950b-83b0-e71f98bfcbe4'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-05adfc3f-9dc2-9338-99fb-5f850ac49344', 'request_id': '05adfc3f-9dc2-9338-99fb-5f850ac49344'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-24dd7efe-6358-9a30-a902-c75317af2991', 'request_id': '24dd7efe-6358-9a30-a902-c75317af2991'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-3511d2cf-c09b-9dff-8406-da07831b005f', 'request_id': '3511d2cf-c09b-9dff-8406-da07831b005f'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-b65fecc3-1634-92f5-bcdd-20febaff262f', 'request_id': 'b65fecc3-1634-92f5-bcdd-20febaff262f'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f2c7bfe6-6415-95c3-9654-5e0e0261785e', 'request_id': 'f2c7bfe6-6415-95c3-9654-5e0e0261785e'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f8264314-c951-9002-9f0b-98e2eb0093b8', 'request_id': 'f8264314-c951-9002-9f0b-98e2eb0093b8'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f1483ca2-0902-9db0-94f6-61571b2610ce', 'request_id': 'f1483ca2-0902-9db0-94f6-61571b2610ce'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-2808fe61-3b1a-9e0d-a04e-e7387429fd7a', 'request_id': '2808fe61-3b1a-9e0d-a04e-e7387429fd7a'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-fee7f1d9-5b28-9746-a881-4a4e58bf3a95', 'request_id': 'fee7f1d9-5b28-9746-a881-4a4e58bf3a95'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-736d44ac-bba3-98c2-9298-9f9188573652', 'request_id': '736d44ac-bba3-98c2-9298-9f9188573652'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4074b8c2-86ac-943c-9eea-94307707825e', 'request_id': '4074b8c2-86ac-943c-9eea-94307707825e'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-07b5e494-54d9-9c79-8c63-28f8c61a94e7', 'request_id': '07b5e494-54d9-9c79-8c63-28f8c61a94e7'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9d8220f8-23ba-9532-ae5d-76a1dd743be3', 'request_id': '9d8220f8-23ba-9532-ae5d-76a1dd743be3'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-2230869c-338d-9bbc-a3fa-afcfcf1c365e', 'request_id': '2230869c-338d-9bbc-a3fa-afcfcf1c365e'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-57a61a71-3a24-952c-96d4-f73c7ca6d605', 'request_id': '57a61a71-3a24-952c-96d4-f73c7ca6d605'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-3eeb0032-e909-9fdd-bcc3-8364eb929f2c', 'request_id': '3eeb0032-e909-9fdd-bcc3-8364eb929f2c'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-6f22055c-c343-953d-93f2-71a6c702ef6b', 'request_id': '6f22055c-c343-953d-93f2-71a6c702ef6b'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-25df892e-78fb-97af-9a09-5b0d86151d48', 'request_id': '25df892e-78fb-97af-9a09-5b0d86151d48'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-49e4d8a3-8e8f-9bcb-8610-a99df00abedd', 'request_id': '49e4d8a3-8e8f-9bcb-8610-a99df00abedd'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-eaae4242-c0a6-9a52-9297-281eb4194d47', 'request_id': 'eaae4242-c0a6-9a52-9297-281eb4194d47'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-5263f197-1623-9461-940c-eb0adb87703f', 'request_id': '5263f197-1623-9461-940c-eb0adb87703f'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-041333db-2840-95ad-b424-ee6bbdcc92e7', 'request_id': '041333db-2840-95ad-b424-ee6bbdcc92e7'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-56abbb69-10f0-9c85-86af-a3ba5a7d7946', 'request_id': '56abbb69-10f0-9c85-86af-a3ba5a7d7946'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-bc33a39d-ce53-915e-b65f-b26f9e620306', 'request_id': 'bc33a39d-ce53-915e-b65f-b26f9e620306'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-aa27c0fa-d36b-9e31-a3b4-96b78f67ad1d', 'request_id': 'aa27c0fa-d36b-9e31-a3b4-96b78f67ad1d'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-7e2de09c-1db5-9636-b595-60f3732351a3', 'request_id': '7e2de09c-1db5-9636-b595-60f3732351a3'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-d3ddae71-1d78-9428-96d5-41d3d6aacd95', 'request_id': 'd3ddae71-1d78-9428-96d5-41d3d6aacd95'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-083b0b26-b13c-95fc-af70-20a51f27a681', 'request_id': '083b0b26-b13c-95fc-af70-20a51f27a681'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-782c47ee-bf93-96a5-9efe-978a31ce184a', 'request_id': '782c47ee-bf93-96a5-9efe-978a31ce184a'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-d1a7be15-dbbd-9d7d-98bf-f53b33814287', 'request_id': 'd1a7be15-dbbd-9d7d-98bf-f53b33814287'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-370e2280-2cd8-9ac2-a23a-688136480e5d', 'request_id': '370e2280-2cd8-9ac2-a23a-688136480e5d'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-8888a681-cd04-9051-bae5-9a9f674a8f5a', 'request_id': '8888a681-cd04-9051-bae5-9a9f674a8f5a'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4d05db20-3d89-919a-aea4-1dc46e008ecd', 'request_id': '4d05db20-3d89-919a-aea4-1dc46e008ecd'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-5eba74ba-4033-9ef6-bff0-251319b351a5', 'request_id': '5eba74ba-4033-9ef6-bff0-251319b351a5'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f2033c86-44b4-95d9-8174-a7f55f493336', 'request_id': 'f2033c86-44b4-95d9-8174-a7f55f493336'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-8873b260-2c3c-9087-a7af-4657915838d5', 'request_id': '8873b260-2c3c-9087-a7af-4657915838d5'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-01338e97-8736-958e-8293-ea932219b0ca', 'request_id': '01338e97-8736-958e-8293-ea932219b0ca'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-bf09dc60-37e7-9dc8-8440-b7b9eb5d6e89', 'request_id': 'bf09dc60-37e7-9dc8-8440-b7b9eb5d6e89'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-86f0383f-c549-9fc8-9ec3-a1e7f567a445', 'request_id': '86f0383f-c549-9fc8-9ec3-a1e7f567a445'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9a35cceb-1b04-9069-a48d-35343f248261', 'request_id': '9a35cceb-1b04-9069-a48d-35343f248261'}"
+    },
+    {
+      "repeat": 1,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-ebbefb63-6c22-993d-890c-6389044c9a71', 'request_id': 'ebbefb63-6c22-993d-890c-6389044c9a71'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e07a347c-7ecb-9cc6-aa94-03543b735659', 'request_id': 'e07a347c-7ecb-9cc6-aa94-03543b735659'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9bd4b20a-1334-91b0-a0fa-06a78f7ae6bc', 'request_id': '9bd4b20a-1334-91b0-a0fa-06a78f7ae6bc'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-cf93a14f-93b6-941f-8de4-e9c26b02f817', 'request_id': 'cf93a14f-93b6-941f-8de4-e9c26b02f817'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nomfundo Mthembu",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-6695ba3c-8f8a-98a1-a679-553827ed979b', 'request_id': '6695ba3c-8f8a-98a1-a679-553827ed979b'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-c98f17b1-1b06-9238-80de-93a2a9153c80', 'request_id': 'c98f17b1-1b06-9238-80de-93a2a9153c80'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-c1206022-705e-9aab-af54-90302bdea9b1', 'request_id': 'c1206022-705e-9aab-af54-90302bdea9b1'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e1e67457-d9d0-9e1f-b7d3-dd308c2aa5b3', 'request_id': 'e1e67457-d9d0-9e1f-b7d3-dd308c2aa5b3'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Siphosethu Mhlontlo",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-56f987f4-9879-9894-9d8a-1ba4f56d8362', 'request_id': '56f987f4-9879-9894-9d8a-1ba4f56d8362'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-2baa4be6-91e7-9f8a-865f-2cd48247ef1e', 'request_id': '2baa4be6-91e7-9f8a-865f-2cd48247ef1e'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-a157c4a2-903a-9c4a-b170-8d20f2e93967', 'request_id': 'a157c4a2-903a-9c4a-b170-8d20f2e93967'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-62d5bf5d-724c-9630-a0f3-2d9c99815d7a', 'request_id': '62d5bf5d-724c-9630-a0f3-2d9c99815d7a'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thulani Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-357e4890-a842-9f1e-9969-028c6dfa8fc7', 'request_id': '357e4890-a842-9f1e-9969-028c6dfa8fc7'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-600f4fc1-6e32-9ffb-9cca-f5eedc4f6eae', 'request_id': '600f4fc1-6e32-9ffb-9cca-f5eedc4f6eae'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4177793b-e052-976d-89b6-aafef06c6f78', 'request_id': '4177793b-e052-976d-89b6-aafef06c6f78'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-c9bd601b-b215-9048-a522-5962c3e7e41b', 'request_id': 'c9bd601b-b215-9048-a522-5962c3e7e41b'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Lukhanyo Mthini",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-bb11d63e-7b3d-9513-a0bb-a3d1a8e651b1', 'request_id': 'bb11d63e-7b3d-9513-a0bb-a3d1a8e651b1'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-509787cf-305b-94fc-a58f-58c93b0c8fbf', 'request_id': '509787cf-305b-94fc-a58f-58c93b0c8fbf'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-9c5ab185-b017-9dc8-bf36-24eb5be6012e', 'request_id': '9c5ab185-b017-9dc8-bf36-24eb5be6012e'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-25da2209-5c37-960b-9be5-89f656e383a9', 'request_id': '25da2209-5c37-960b-9be5-89f656e383a9'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Jaco Botes",
+      "archetype": "guardian_parent",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-d8721299-4cca-9014-a625-88ce25a50748', 'request_id': 'd8721299-4cca-9014-a625-88ce25a50748'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-2f871e22-5d62-9d51-bb2b-6d21fbf85005', 'request_id': '2f871e22-5d62-9d51-bb2b-6d21fbf85005'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-554d9a73-47ec-91cf-98ab-c5a1be4471e7', 'request_id': '554d9a73-47ec-91cf-98ab-c5a1be4471e7'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-400ed624-28dd-99fe-8598-0c68fac17c57', 'request_id': '400ed624-28dd-99fe-8598-0c68fac17c57'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Slindile Cele",
+      "archetype": "guardian_parent",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-d325039b-bbb9-9bee-8cfb-41232b29f41b', 'request_id': 'd325039b-bbb9-9bee-8cfb-41232b29f41b'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-735d67ec-3f1c-984a-9141-ca9ffeb012c3', 'request_id': '735d67ec-3f1c-984a-9141-ca9ffeb012c3'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-67920365-0b2e-91ff-873d-c5c49ad598a0', 'request_id': '67920365-0b2e-91ff-873d-c5c49ad598a0'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-23b9c9fa-fe2b-9b58-8262-18c93639ad46', 'request_id': '23b9c9fa-fe2b-9b58-8262-18c93639ad46'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Kelebogile Tlhape",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-488ccad3-2f01-93ad-bd03-4aec85f7c6ec', 'request_id': '488ccad3-2f01-93ad-bd03-4aec85f7c6ec'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-a5453f8e-8042-91fd-9d6c-8265cdab4f9a', 'request_id': 'a5453f8e-8042-91fd-9d6c-8265cdab4f9a'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-8001ec97-05e2-977c-9842-83e20051217d', 'request_id': '8001ec97-05e2-977c-9842-83e20051217d'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-ab9fb14d-93c6-969d-ada4-5cdfdef683d4', 'request_id': 'ab9fb14d-93c6-969d-ada4-5cdfdef683d4'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Nolwandle Makhaphela",
+      "archetype": "gogo_guardian",
+      "budget_tier": "loose",
+      "cards_bound": [
+        "farmer-stock-theft-exposure",
+        "fintech-adoption-trust",
+        "parent-digital-learning-perceptions-sa"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-f6c4ebf4-20ff-902c-b693-0da26aedbb81', 'request_id': 'f6c4ebf4-20ff-902c-b693-0da26aedbb81'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4157d531-e8aa-91b9-99d1-4c3b57450a7d', 'request_id': '4157d531-e8aa-91b9-99d1-4c3b57450a7d'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-cc6a7e07-125d-9693-9184-a39df4aeef2d', 'request_id': 'cc6a7e07-125d-9693-9184-a39df4aeef2d'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-3ec61e76-4a9f-95ad-b01d-92bc18bbcdef', 'request_id': '3ec61e76-4a9f-95ad-b01d-92bc18bbcdef'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Themba Mpondo",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-378f463e-6bc4-9a7a-9813-fb28ba14999b', 'request_id': '378f463e-6bc4-9a7a-9813-fb28ba14999b'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-ac934eae-f3e5-9753-8bfb-a2a3c3ab6ca4', 'request_id': 'ac934eae-f3e5-9753-8bfb-a2a3c3ab6ca4'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-5a8f27a4-6b7d-9fe4-aafc-074b2d2cb1d9', 'request_id': '5a8f27a4-6b7d-9fe4-aafc-074b2d2cb1d9'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-1d1db641-9992-9a58-b348-6cf2cae20216', 'request_id': '1d1db641-9992-9a58-b348-6cf2cae20216'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Sibusiso Nkosi",
+      "archetype": "learner",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4595cbc8-cdeb-98e2-95f8-a5a475c36c97', 'request_id': '4595cbc8-cdeb-98e2-95f8-a5a475c36c97'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-ca062437-d883-948a-a79e-74efc41837a7', 'request_id': 'ca062437-d883-948a-a79e-74efc41837a7'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-299db063-d17c-9318-998c-511ab8f51ec2', 'request_id': '299db063-d17c-9318-998c-511ab8f51ec2'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-cca882a5-6d21-9c04-b05c-9291243ab30a', 'request_id': 'cca882a5-6d21-9c04-b05c-9291243ab30a'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Thandiwe Mkhize",
+      "archetype": "guardian_parent",
+      "budget_tier": "moderate",
+      "cards_bound": [
+        "education-payment-conversion",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "middle-class-status-identity",
+        "parent-digital-learning-perceptions-sa",
+        "reward-design-motivation-crowding-sa-v2",
+        "stokvels-calibration",
+        "township-parent-motivation-sdl",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-4516abef-b2e9-9ce3-a70f-bbb1befccd73', 'request_id': '4516abef-b2e9-9ce3-a70f-bbb1befccd73'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "A_production",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-87accd1a-6406-902b-9fd6-270e471515b2', 'request_id': '87accd1a-6406-902b-9fd6-270e471515b2'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "B_free_grounded",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-e45799e5-5dc5-9dc2-90f5-85d85598b065', 'request_id': 'e45799e5-5dc5-9dc2-90f5-85d85598b065'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "C_free_nocards",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-46e8b85d-2293-9deb-ad46-8878502bffde', 'request_id': '46e8b85d-2293-9deb-ad46-8878502bffde'}"
+    },
+    {
+      "repeat": 2,
+      "name": "Palesa Molefe",
+      "archetype": "learner",
+      "budget_tier": "tight",
+      "cards_bound": [
+        "edtech-adoption-barriers",
+        "fintech-adoption-trust",
+        "incentivized-learning-engagement",
+        "reward-design-motivation-crowding-sa-v2",
+        "youth-mobile-airtime-economy",
+        "youth-phone-safety-cost-economics"
+      ],
+      "condition": "D_free_scrubbed",
+      "response": "__ERROR__ Error code: 403 - {'error': {'message': 'The free quota has been exhausted. To continue accessing the model on a paid basis, please complete your payment information （or disable the \"use free tier only\" mode in the management console if already completed).', 'type': 'AllocationQuota.FreeTierOnly', 'param': None, 'code': 'AllocationQuota.FreeTierOnly'}, 'id': 'chatcmpl-76fd4728-279a-9589-897e-2b88cb07733a', 'request_id': '76fd4728-279a-9589-897e-2b88cb07733a'}"
+    }
+  ]
+}

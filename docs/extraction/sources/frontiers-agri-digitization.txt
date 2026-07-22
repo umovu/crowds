@@ -1,0 +1,2048 @@
+Frontiers | Challenges and opportunities in smallholder agriculture digitization in South Africa
+
+REVIEW article
+Front. Sustain. Food Syst.
+, 17 July 2025
+ Sec. Climate-Smart Food Systems
+Volume 9 - 2025 | 
+https://doi.org/10.3389/fsufs.2025.1583224
+Published in
+Frontiers in Sustainable Food Systems 
+Climate-Smart Food Systems
+4.1
+ impact factor
+6
+ citescore
+Part of a Research Topic
+Transforming African Food Systems
+126k
+ views
+23
+ articles
+Editor & Reviewers
+Edited by
+J
+D
+Julian Douglas May
+Reviewed by
+U
+A
+Umar Adam
+K
+S
+Konstantin Stoyanov
+Outline 
+Figures and Tables 
+Figure 1
+View in article 
+Figure 2
+View in article 
+Figure 3
+View in article 
+Figure 4
+View in article 
+Figure 5
+View in article 
+Table 1
+Keyword occurrences and link strength in agricultural research.
+View in article 
+Table 2
+SWOT analysis of the findings.
+View in article 
+Table 3
+PESTEL analysis summary of literature.
+View in article 
+REVIEW article
+Front. Sustain. Food Syst.
+, 17 July 2025
+ Sec. Climate-Smart Food Systems
+Volume 9 - 2025 | 
+https://doi.org/10.3389/fsufs.2025.1583224
+Challenges and opportunities in smallholder agriculture digitization in South Africa
+G
+S
+Gift Siphiwe Nxumalo 
+1,2
+*
+H
+C
+Helga Chauke 
+3,4
+1.
+ Faculty of Agricultural and Food Sciences and Environmental Management, Institute of Water and Environmental Management, University of Debrecen, Debrecen, Hungary
+2.
+ National Laboratory for Water Science and Water Safety, Institute of Water and Environmental Management, Faculty of Agricultural and Food Sciences and Environmental Management, University of Debrecen, Debrecen, Hungary
+3.
+ Institute of Natural Resources NPC, Pietermaritzburg, South Africa
+4.
+ Department of Meteorology, Eotvos Lorand University, Budapest, Hungary
+See more
+ Article metrics 
+View details
+Abstract
+The use of digital technologies in agriculture has resulted in an increase in productivity and market access worldwide. Large-scale farmers have successfully adopted digital technologies. However, smallholder farmers, especially in rural areas, face challenges that hinder the integration of digital technology. This review analysed available literature with the intention to assess the current state of agricultural digitization among smallholder farmers in South Africa and identify key barriers faced by farmers. The study highlights the potential benefits of digital adoption such as enhanced precision farming, improved resource management, and better access to markets. The analysis highlights the importance of multi-stakeholder collaboration and policy interventions to reduce the digital divide among farmers. The results confirms that the slow adoption of digital technology among smallholder farmer in South Africa is attributed to barriers such as poor infrastructure, limited access financial resources and low levels of digital illiteracy.
+1 Introduction
+Advanced technology has provided resources for the digitization of agricultural processes, which refers to the use of digital tools such as sensors, mobile application and data platforms to enhance agricultural practices, has increased optimization by increasing productivity, market access and environmental sustainability (
+Bontsa et al., 2023
+). This innovation has primarily benefited large-scale farmers, especially in developed regions. However, many smallholder farmers in developing regions are still unable to adopt digital tools due to structural barriers (
+Abdulai et al., 2023
+). Thus, it results in a digital divide among farmers. Agriculture supports the livelihoods of approximately 8.5 million people in South Africa and contributes to food security (
+Born et al., 2021
+).
+South African large-scale commercial farms and smallholder farmers highlights pronounced inequality in resource allocation and support from stakeholders and government (
+Thamaga-Chitja and Morojele, 2014
+). This inequality has excluded smallholder farmers from accessing advanced technology, resulting in reliance on traditional farming methods, which have limited their contribution to the national food security. Smallholder farmers represent approximately 5% of South Africa’s workforce. In this review, small holder farmers are defined as individuals who conduct agricultural practices in <10 hectares, primarily produce for local markets using family labor and having limited access to technology (
+Fanadzo and Ncube, 2018
+). These farmers are primarily based in rural areas such as in Limpopo, KwaZulu-Natal, and Eastern Cape. Agricultural policies have always favored established and commercial farmers, resulting in unequal resource allocation. For example, government subsidies and extension programmes have historically favored commercial farms through programmes such as the Comprehensive Agricultural Support Programme which have mainly benefited and large-scale producers (
+Thamaga-Chitja and Morojele, 2014
+; 
+Srinatha et al., 2024
+). The use digital technology in agriculture presents an opportunity to empower marginalized farmers by reducing traditional barriers to productivity and market access through tools and platforms including e-commerce apps and sensors that have been reported to enhance productivity and strengthen the role of smallholder farmers in the national food system (
+Cebiso, 2022
+).
+Digitalization in South African agriculture involves converting farming information and operations into digital formats and employing advanced technologies—such as IoT sensors, artificial intelligence, mobile platforms, and big data analytics—to enhance efficiency, productivity, market access, and sustainability (
+FAO, 2021
+). The pace of digital technology adoption varies widely across South African agriculture. Large-scale operations have integrated tools such as sensors, data analytics, and drones, it is typically not feasible and rational for smallholder farmers, who have limited income and often rely on social grant to invest in expensive tools due to high ownership and running costs which in turn make the investment in such tools unrealistic (
+Myeko and Rambe, 2024
+; 
+Habiyaremye et al., 2024
+; 
+Smidt and Jokonya, 2022
+; 
+Thamaga-Chitja and Morojele, 2014
+). Although digital solutions for crop management, market analysis, and weather monitoring exist, their uptake among smallholders is hindered by poor connectivity, lack of awareness, and mistrust in technology (
+Mbatha, 2024
+; 
+Bontsa et al., 2023
+). Government initiatives to expand rural broadband have the potential to bridge the digital gap in rural areas. For example, the SA Connect Phase project, launched in the Eastern Cape has substantially improved connectivity and reduced data costs.
+Digital agriculture has enabled the optimization of agricultural process globally. For example, countries such as China and Germany have integrated unmanned aerial vehicle (UAVs) based weed detection and robotics in livestock management, respectively. 
+Choruma et al. (2024)
+ has highlighted an improvement in market access and advisory support for smallholders as a result of using mobile platforms and SMS-based services in sub-Saharan African countries such as Tanzania and Ghana. In contrast, smallholder farmers in South Africa face challenges in using digital tools (
+Mhlanga and Ndhlovu, 2023
+). Previous studies that analyzed the digitization of smallholder farming (e.g., 
+Thamaga-Chitja and Morojele, 2014
+; 
+Smidt and Jokonya, 2022
+; 
+Choruma et al., 2024
+) have reported that insufficient infrastructure, gender inequality and affordability hinder access to digital technology. For example, 
+Bontsa et al. (2023)
+ reported that low monthly income was the main driver of non-adoption among smallholder farmers. There are gaps in the analysis and understanding of the role of socio-economic and cultural factors in the adoption of digital technology.
+Smidt and Jokonya (2022)
+ has recommended the use of high impact literature for an integrated review to address these gaps. This review analyses the current state of the digital tool adoption among smallholder farmers using the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) method to ensure a rigorous, transparent, and comprehensive analysis of the most relevant literature from the past decade. Therefore, the main aim of this review is to systematically review digitalization in South African smallholder agriculture, identify region-specific barriers and opportunities, and inform research and policy in line with national strategies with the following objectives:
+Provide an overview of the state of digital tool adoption in South Africa.
+Identify the main barriers and opportunities in smallholder farming by using SWOT and PESTEL analysis, then highlight opportunities for smallholder farmers in the digital age.
+Draw lessons from international experiences.
+Highlight implementation gaps
+This integrative approach aims to advance the understanding of the digital divide and enhance climate smart agriculture in South Africa. This review offers novelty by focusing on South African smallholder agriculture to identify region specific challenges that are often over looked by broad studies, which generalize challenges faced by African farmers. The systemic review integrates SWOT and PESTEL analyses while aligning findings with South Africa’s Agriculture and Agro-processing Master Plan.
+2 Materials and methods
+This review article uses a systematic and integrative approach analyse the challenges and opportunities that comes with the digitization of smallholder agriculture in South Africa (
+Figure 1
+). The methodology follows a systematic and integrative approach to ensure comprehensive coverage of relevant topics and perspectives.
+Figure 1
+Geographical location of South Africa.
+This study used an integrative review methodology to synthesis and assess available empirical and theoretical literature on the adoption of digital technology among South African smallholder farmers. This approach includes the combination of different research designs to provide a holistic understanding of the current digitalization landscape in South Africa using results from case studies, grey literature and policy frameworks. The review process included: (1) defining the scope of the review, literature search, analysis and summarizing the findings, thus allowing us to provide insights relevant to the South African context. The integrative review approach was guided by established research synthesis methods (
+Cooper, 2010
+).
+2.1 PRISMA-guided systematic review approach
+This review followed the PRISMA framework to ensure a systematic screening, eligibility assessment and inclusion of relevant literature (
+Moher et al., 2009
+).
+2.2 Literature search strategy
+A comprehensive literature search of publications from 2014 to 2024 was conducted on the Web of Science and Scopus using combinations of predefined keywords such as “smallholder agriculture,” “digitization,” “digital agriculture,” “South Africa,” “precision agriculture,” “agricultural technology,” “challenges” and “opportunities.” Boolean operators (AND, OR) were used to refine results. All keyword combinations and search strings used are listed in 
+Supplementary Table A2
+ for reproducibility (
+Bramer et al., 2017
+).
+2.3 Inclusion and exclusion criteria
+Inclusion:
+Peer-reviewed articles and reputable grey literature were published between 2014 and 2024.
+Studies focused on the adoption of digital technologies in South African smallholder agriculture, including land reform beneficiaries.
+Studies addressing socio-economic, technical, or policy aspects of digitization in smallholder agriculture.
+English-language publications.
+Exclusion:
+Studies focused exclusively on large-scale commercial farming.
+Studies with no direct relevance to South Africa or smallholder farming contexts.
+Publications before 2014 unless they had a significant relevance and were widely cited among South African smallholder farmers.
+2.4 Inter-rater reliability assessment
+The Cohen’s kappa statistic method was used to assess inter-rater reliability and objectivity in study selection. This helps measure the level of agreement between reviewers beyond chance (
+McHugh, 2012
+; 
+Hanegraaf et al., 2024
+; 
+Vieira et al., 2010
+).
+2.5 Data extraction and narrative synthesis
+Data from included studies were systematically extracted using a standardized form, capturing key information such as: (1) types and availability of digital tools in south African smallholder agriculture, (2) empirical evidence on tool usage, effectiveness, and adoption patterns, (3) identified barriers and opportunities, including infrastructural, socio-economic, cultural, and policy factors, (4) target populations (e.g., region, gender, farm size). These were summarized using a narrative synthesis approach, which included grouping the results according to main topics what highlight gaps, variation and agreement across the selected literature.
+2.6 Case studies of successful digital implementation
+A narrative synthesis was conducted to identify recurring patterns, gaps, and emerging trends, which structured the synthesis of results (
+Bontsa et al., 2023
+).
+2.7 Quality assessment
+The authors screened the selected literature. The selected studies were critically appraised for relevance using the Critical Appraisal Skills Programme (CASP) checklists [
+Critical Appraisal Skills Programme (CASP), 2018
+]. Limitations and biases are addressed in the discussion section. Three independent reviewers (authors) did screen all titles, abstracts, and full texts for inclusion. Any disagreements was resolved through discussion or by involving a fourth reviewer where necessary (2014–2024).
+The available literature on South African agriculture highlights important themes for addressing the country’s challenges in the use of digital tools by smallholder farmers (
+Table 1
+). Utilizing a PRISMA approach (
+Moher et al., 2009
+), this review systematically maps the evolving research landscape, highlighting key areas of scholarly focus and their interconnections.
+Table 1
+Keyword
+Occurrences
+Total link strength
+south africa
+10
+26
+sustainable intensification
+6
+25
+food security
+8
+23
+agriculture
+9
+20
+smallholder farmers
+4
+19
+sub-saharan africa
+4
+19
+adaptation
+5
+18
+conservation agriculture
+5
+18
+climate-change
+3
+15
+farming systems
+3
+15
+adoption
+4
+14
+productivity
+4
+13
+soil fertility
+4
+12
+yield
+3
+11
+systems
+3
+8
+management
+3
+7
+agroforestry
+3
+6
+livelihoods
+3
+6
+poverty
+3
+6
+irrigation
+3
+5
+digitalization
+3
+4
+maize
+3
+4
+Keyword occurrences and link strength in agricultural research.
+Figure 2
+ presents a network graph illustrating the relationships among major research themes in agriculture, irrigation, food security, and sustainability within South Africa. The color gradient (2014–2024) visually represents shifts in research priorities over time, with studies from 2019 to 2024 depicted in yellow and those prior to 2019 in blue. Network analysis reveals that keywords such as “South Africa,” “sustainable intensification,” and “food security” occupy central positions in recent literature, underscoring their significance in shaping both academic discourse and policy development. The prominence of these terms (as shown in 
+Figure 2
+) reflects their critical role in informing sustainable agricultural practices and strategies across the region.
+Figure 2
+Keyword density map of agricultural research in South Africa.
+The thematic clusters identified in the network analysis (
+Figure 2
+) delineate the principal areas of focus in South African agricultural research:
+Sustainability and productivity
+: this cluster includes keywords such as “sustainable intensification,” “soil fertility,” and “conservation agriculture.” These terms highlight ongoing efforts to enhance agricultural productivity while safeguarding environmental integrity.
+Livelihoods and adaptation
+: although less frequently explored, this theme—represented by keywords like “livelihoods,” “adaptation,” and “smallholder farmers”—addresses the socio-economic dimensions of agriculture. It emphasizes the necessity of supporting smallholder farmers, who are often the backbone of South African food production, in overcoming persistent challenges.
+Climate and technology
+: emerging research themes reflect increasing interest in the intersection of digitalization, technological innovation, and climate resilience. These studies signal a growing recognition of the potential for advanced technologies to bolster adaptive capacity in the face of climate change.
+Table 1
+ provides a summary of selected keywords related to sustainable intensification, food security, smallholder farmers, and climate change, along with their frequency of occurrence and total link strength. High-frequency and strongly linked terms point to the most influential topics in the ongoing discourse on agricultural sustainability and digitalization.
+Figure 3
+ further illustrates the frequency and significance of research topics across agriculture, irrigation, food security, and climate change in South Africa. Yellow circles denote areas of heightened research activity and focus. The relationships between keywords are depicted as nodes (circles) and edges (lines), with thicker lines indicating stronger associations. Thematic clusters are color-coded: red for climate change adaptation, green for agricultural sustainability, and blue for digital agriculture. Central keywords such as “South Africa,” “food security,” and “sustainable intensification” remain at the heart of contemporary research, policy, and sustainability discussions.
+Figure 3
+Network visualization of agricultural research themes in South Africa.
+In summary, the network and frequency analyses demonstrate that while sustainability and productivity remain dominant themes, there is a growing emphasis on the socio-economic and technological dimensions of South African agriculture. This evolving research landscape highlights the need for integrative approaches that address both environmental and human factors to ensure resilient, climate-smart food systems.
+3 Results
+3.1 Study selection process
+Three independent reviewers (authors) screened all titles, abstracts, and full texts for inclusion. Disagreements was resolved through discussion or by involving a fourth reviewer where necessary. A total of 1,230 documents were retrieved relating to the keywords. From which literature that was most relevant to South African smallholder farming were selected. From an initial pool of 1,230 articles identified across multiple databases, 631 duplicate records were removed, resulting in 599 unique articles for eligibility screening. Following the screening process, 542 records were excluded based on predefined inclusion criteria, leaving 57 studies for full-text assessment. A PRISMA flow diagram (
+Figure 4
+) is included to visually represent the study selection process, including the number of records identified, screened, excluded (with reasons), and included in the final synthesis. All sources included in this review were obtained from open-access databases, and full-text PDFs were readily available at the time of screening. As such, no additional retrieval process was required. All 57 eligible studies (see 
+Supplementary Table A3
+ for a full list) were imported into the Zotero reference manager for organization and citation management. No studies were excluded during the full-text evaluation; consequently, all 57 papers were included in the subsequent thematic and network analyses. Analysis was conducted using NVivo software (QSR International), which facilitated the systematic coding and identification of key themes across the selected studies.
+Figure 4
+A PRISMA flow diagram summarizing the selection process, including the number of literatures at each stage (
+Tricco et al., 2018
+) and reasons for exclusion in the systematic review process.
+Additionally, 37 studies from Web of Science and 20 more from Scopus were included in the review to ensure a robust review of diverse perspectives on the South African smallholder agriculture. For this review, articles relevant to South African smallholder agriculture were screened by the authors. The calculated Cohen’s kappa value was 0.78, indicating substantial agreement (
+Sun, 2011
+; 
+Cole, 2024
+). This value demonstrates a high level of consistency in the screening process and enhances the reliability of the review findings.
+3.2 Reviewed studies results
+This heatmap (
+Figure 5
+) gives us a clear picture of where research on smallholder agriculture in South Africa has been most active over the past decade. Most of the 57 reviewed studies are clustered in the provinces of Limpopo, KwaZulu-Natal, North West and Eastern Cape as shown by the deep purple areas on the map. These regions stand out as research hotspots, while provinces like the Western Cape, Northern Cape, and Free State have seen much less attention, indicated by the lighter yellow shades. The colored dots also tell us when the studies were done: yellow for 2014–2018, green for 2019–2021, and purple for 2022–2024. It is easy to see that recent research continues to focus on the same high-density areas. Overall, the map highlights not just where agricultural challenges are likely most pressing, but also where researchers and resources have been concentrated in recent years.
+Figure 5
+Geographical distribution of the reviewed studies from 2014 to 2024.
+The results of this review underscore that digitalization in South African smallholder agriculture presents both significant opportunities and persistent challenges, particularly in rural areas. 
+Bontsa et al. (2023)
+ and 
+Malele (2024)
+ demonstrated that the integration of Information and Communication Technologies (ICTs), mobile applications, and digital platforms holds great promise for enhancing agricultural productivity, expanding market access, and promoting sustainable farming practices. However, the adoption of these technologies among smallholder farmers continues to be constrained by infrastructural, technological, and socio-economic barriers (
+FAO, 2021
+).
+3.3 Overview of digital tools in south African smallholder agriculture
+This review has identified digital tools that have been successfully implemented in smallholder agriculture in South Africa (see 
+Supplementary Table A2
+ for more details). Notable examples include the electronic Rural Farmer System (eRFarSys), the Digital Agricultural Knowledge and Information System (DAKIS), and mobile-based weather and precision farming sensors. The use of these digital tools has contributed to optimal crop monitoring, water usage and evidence-based decision making. Basic technology such as SMS-based information services remains vital for disseminating agricultural advice for farmers with limited access to advanced digital tools (
+Von Maltitz et al., 2024
+).
+3.3.1 Opportunities in smallholder agriculture digitalization
+1. Improved market access and reduced post-harvest losses
+Farmer-centric approaches are important for including smallholder farmers in the adoption of digital tools. For example, the eRFarSys tool was used to facilitate real-time data collection, monitoring, and market linkages for farmers in Bushbuckridge, South Africa (
+Malele, 2024
+).
+2. Precision agriculture and sustainable practices
+The use of digital tools enhances precision agriculture. Therefore, promoting affordable mobile applications with low data usage can improve digital adoption among smallholder farmers (
+Alfonsi et al., 2024
+). These technologies help optimize processes and improve resource management and environmental sustainability.
+3. Capacity building and digital innovation hubs
+The development of Provincial Agriculture Digital Innovation Hubs and Extended District Agro-food Knowledge Centers were recommended to help improve the adoption of digital tools among farmers (
+Smidt and Jokonya, 2022
+). These hubs can provide farmers with necessary digital training, extension support and access to real-time data and recommendations.
+4. Food security and climate resilience
+Systems such as the DAkis enhance climate smart agriculture by providing evidence-based decision support for soil moisture monitoring, pest control and crop disease management. Thus, enhancing food security and rural development.
+3.3.2 Challenges in smallholder agriculture digitalization
+1. High costs and infrastructure deficits
+Inadequate network infrastructure hinders real-time data access and the use of digital tools. 
+Mazwane et al. (2022)
+ charges that many smallholder farmers in rural areas lack reliable internet connectivity.
+2. Low digital literacy and adoption barriers
+The lack of digital illiteracy is a significant barrier to adoption, especially among older farmers and rural communities in South Africa. There is limited access to ICTs and training programmes (
+Morepje et al., 2024
+; 
+Mabuza and Ndoro, 2023
+; 
+Kapari et al., 2024
+).
+3. Limited financial inclusion and policy gaps
+Smallholder farmers often lack the financial capacity to invest in expensive digital tools. Financial institutions often restrict access to affordable business loans for digital investments and smart farming technologies. Policy gaps and the absence of an inclusive framework affect the rate of digital transformation (
+Makamane et al., 2023
+).
+4. Digital divide and gender inequality
+Women and marginalized farmers face additional obstacles in accessing digital tools due to socio-economic inequalities (
+von Maltitz and Bahta, 2023
+). This digital divide limits the equitable distribution of the benefits of smart farming across South Africa (
+Tibesigwa and Visser, 2016
+).
+3.3.3 Summary of findings
+The reviewed studies highlight the dual nature of digitalization in South African smallholder agriculture. While digital tools offer substantial opportunities for increased productivity, sustainability, and market access, persistent challenges—particularly regarding digital literacy, infrastructure, and affordability—continue to marginalize many farmers. Addressing these barriers will require comprehensive government support, including policy reforms, investments in rural connectivity, and targeted farmer training programs. Future research should focus on scalable digital solutions and foster collaboration between government and private stakeholders to ensure inclusive access to agricultural technologies, particularly in underserved rural areas (see 
+Figure 4
+).
+As seen in 
+Table 2
+, the South African government has implemented programs such as the Provincial Agriculture Digital Innovation Hubs and the Extended District Agro-food Sustainable Knowledge Hubs to improve the access to technology in smallholder farming (
+Department of Agriculture and Rural Development, 2025
+). These programs aim to provide digital literacy and improve market participation among rural farmers, thus addressing the digital divide that often reduces agricultural productivity (
+Nemisa, 2022
+).
+Table 2
+SWOT analysis: digital solutions for smallholder farmers
+● Strengths
+✅ 
+Improved market access
+—digital platforms and e-commerce solutions help smallholder farmers connect with broader markets, increasing profitability and reducing post-harvest losses (
+Morepje et al., 2024
+; 
+Pengelly et al., 2021
+).
+✅ 
+Enhanced productivity
+—ICT-based tools such as mobile apps and digital irrigation systems (eRFarSyS) improve precision farming and efficiency (
+Malele, 2024
+).
+✅ 
+Climate resilience and sustainable farming
+—digital solutions like the Digital Agricultural Knowledge and Information System (DAKIS) support farmers in adapting to climate change by optimizing water and soil management (
+Mouratiadou et al., 2023
+).
+✅ 
+Knowledge sharing and decision support
+—digital platforms enable smallholders to access real-time agronomic insights, financial services, and advisory support, empowering them with better decision-making tools (
+Mdoda and Mdiya, 2022
+).
+🔴 Weaknesses
+❌ 
+Limited digital literacy and adoption barriers
+Many farmers, especially in rural areas, lack the skills to use ICT tools effectively, leading to low adoption rates (
+Alfonsi et al., 2024
+; 
+Department of Agriculture, Forestry and Fisheries, 2015
+).
+❌ 
+High cost of technology and internet access
+The affordability of mobile devices, software, and data remains a barrier for smallholder farmers, making digital solutions inaccessible for many (
+Mazwane et al., 2022
+).
+❌ 
+Poor digital infrastructure
+Weak internet connectivity and lack of stable electricity in remote areas hinder the effective use of digital farming tools (
+Morepje et al., 2024
+).
+❌ 
+Fragmented policy frameworks
+The absence of comprehensive policies to support smallholder digitalization results in slow technology diffusion and inconsistent adoption strategies (
+Bontsa et al., 2023
+).
+● Opportunities
+🔷 
+Expansion of digital financial services
+Digital banking, microloans, and mobile payment systems can improve financial inclusion for smallholders (
+Mdoda and Mdiya, 2022
+).
+🔷 
+Development of localized and affordable digital tools
+Creating user-friendly, low-data, and affordable mobile applications can increase adoption among rural farmers (
+Alfonsi et al., 2024
+).
+🔷 
+Public-private partnerships
+Collaboration between governments, NGOs, and agritech companies can improve digital literacy programs and subsidize technology for smallholders (
+Mazwane et al., 2022
+).
+🔷 
+Precision agriculture and AI integration
+The use of artificial intelligence, IoT, and machine learning in agriculture can help optimize resource allocation, enhance pest control, and improve yield forecasting (
+Morepje et al., 2024
+)
+🔷 
+Sustainable knowledge hubs
+Government programs like the Provincial Agriculture Digital Innovation Hubs and Extended District Agro-food Sustainable Knowledge Hubs help improve technology access (
+Oyelami et al., 2022
+; 
+Smidt and Jokonya, 2022
+).
+⚠Threats
+⚡ 
+Widening digital divide
+Socioeconomic inequalities, particularly affecting women and marginalized farmers, may limit their ability to benefit from digital agricultural solutions (
+Mouratiadou et al., 2023
+).
+⚡
+Cybersecurity and data privacy risks
+Farmers may face data breaches, financial fraud, and misuse of agricultural data by corporations (
+Habiyaremye et al., 2024
+)
+⚡
+Climate change and environmental uncertainty
+Extreme weather and unpredictable patterns could disrupt data-reliant digital farming models (
+Malele, 2024
+).
+⚡ 
+Resistance to change and cultural barriers
+Some smallholder farmers remain skeptical of digital tools, preferring traditional methods due to lack of trust (
+Malele, 2024
+).
+SWOT analysis of the findings.
+3.4 Challenges and opportunities in integrating digital technologies into land reform and smallholder agriculture
+The lack of structured policies and frameworks designed for digital agriculture poses a challenge to the integration of digital technologies into South Africa’s land reform programme (
+Habiyaremye et al., 2024
+). The land reform initiatives face a risk of being unable to maximize the benefits of smart agriculture (
+Mazwane et al., 2022
+) due to current policy frameworks.
+3.4.1 Economic and infrastructure barriers
+Economic factors significantly influence the adoption of digital tools among smallholder farmers. Limited funding opportunities and restricted access to financial resources discourage investment in advanced technologies (
+Smidt and Jokonya, 2022
+). While e-commerce platforms hold promise for improving market access and reducing post-harvest losses, widespread adoption is hampered by gaps in digital literacy and inadequate infrastructure (
+Manganyi et al., 2024
+). Persistent underinvestment in digital infrastructure particularly affects marginalized communities, where limited resources further constrain agricultural productivity (
+Manganyi et al., 2024
+).
+3.4.2 Social and educational factors
+Social factors, notably low digital literacy rates, also limit the effective use of mobile-based solutions among smallholder farmers (
+Table 3
+). As highlighted by 
+Alant and Bakare (2021)
+, mobile applications can play a pivotal role in adapting ICT solutions to local contexts, boosting market participation through knowledge-sharing and price tracking tools. However, perceptions of digitalization vary while some farmers recognize benefits such as improved market access and information sharing, others express concerns about job displacement and increased dependence on external services (
+Bontsa et al., 2024
+). Mobile-based agricultural extension services, like the Agricloud app, have demonstrated potential in bridging knowledge gaps by offering science-based, locally tailored advice (
+Walker et al., 2018
+).
+Table 3
+Factor
+Analysis
+Political
+The AAMP prioritizes inclusive, market-oriented, and sustainable growth, with a focus on integrating smallholder and emerging farmers into value chains and ensuring equitable access to resources. (
+Mazwane et al., 2022
+; 
+IFPRI, 2024
+).
+- Key policies such as land reform (PLAS) and district-based development aim to address historical inequalities, but slow and inconsistent policy implementation, especially at municipal levels, continues to hinder digital adoption and rural investment (
+Department of Agriculture, Land Reform and Rural Development [DALRRD], 2022
+).
+Economic
+High costs of digitalization, limited access to finance, and underdeveloped rural infrastructure restrict smallholder adoption of new technologies (
+Smidt and Jokonya, 2022
+).
+- The AAMP calls for enhanced development finance, public-private partnerships, and targeted incentives to support digital transformation, competitiveness, and entrepreneurship among smallholders (
+Bontsa et al., 2023
+).
+Social
+Socioeconomic disparities, low digital literacy (particularly among women, youth, and rural populations), and insufficient extension services limit technology uptake (
+Alfonsi, 2024
+).
+- The Master Plan emphasizes skills development, digital literacy programs, and improved working conditions to ensure inclusive participation and uplift marginalized groups (
+Bontsa et al., 2023
+)
+Technological
+- The AAMP recognizes the need for technological innovation, including IoT, AI, and digital platforms, to enhance productivity and sustainability (
+Soeker et al., 2021
+).
+- Persistent gaps in rural broadband, electricity, and digital infrastructure remain major barriers; the Plan calls for investment in infrastructure and support for scalable, context-appropriate digital solutions (
+Department of Agriculture, Land Reform and Rural Development [DALRRD], 2022
+).
+Environmental
+Climate change, droughts, and resource constraints create urgency for precision agriculture and climate-smart technologies (
+Born et al., 2021
+; 
+Nxumalo et al., 2022
+).
+- The AAMP promotes sustainable intensification, resource efficiency, and resilience through digital tools and improved environmental management practices (
+CCARDESA, 2022
+).
+Legal
+Outdated or fragmented legal frameworks regarding data protection, digital trade, and technology licensing create uncertainty for smallholder digitalization (
+Smidt and Jokonya, 2022
+).
+- The AAMP highlights the need for streamlined, inclusive regulatory frameworks to support digital agriculture, data privacy, and cross-sectoral collaboration (
+CCARDESA, 2022
+).
+PESTEL analysis summary of literature.
+3.4.3 Technological adaptation and environmental considerations
+Advanced technologies—including artificial intelligence, precision farming, and the Internet of Things (IoT)—offer opportunities for smallholder farmers to optimize value chains. However, adoption remains slow due to affordability concerns, poor rural connectivity, and compatibility issues with traditional farming methods. For example, the electronic Rural Farmer System (eRFarSys) has improved data management and irrigation efficiency for smallholders in areas such as Bushbuckridge (
+Malele, 2024
+). Digital tools have also been shown to increase agricultural resilience to climate change by improving water management, soil quality, and pest control, as seen in international contexts like China (
+Wang, 2024
+). Nevertheless, the increased use of digital technologies may introduce new challenges, such as higher energy consumption and e-waste management, potentially undermining sustainability goals.
+3.4.4 Legal and regulatory challenges
+The legal fraternity play an important role in South Africa’s smart agriculture. Data privacy and technology imports legislations pose challenges for smallholder farmers (
+Loffstadt et al., 2023
+). There are increasing concerns about data security and farmer independence due to limited knowledge regarding data use and protection (
+Mdoda and Mdiya, 2022
+). The absence of region-specific legal frameworks for digital agriculture further contributes to uncertainty and slows the adoption of advanced technologies (
+Mdoda and Mdiya, 2022
+).
+In essence, the results show that while digital technologies offer transformative potential for land reform and smallholder agriculture in South Africa, their integration is hindered by economic, social, technological, and legal barriers. Addressing these challenges will require robust policy development, targeted investment in infrastructure and training, and the creation of supportive legal frameworks to ensure inclusive, sustainable, and climate-resilient agricultural systems.
+4 Discussion
+The digitization of agricultural processes represents an opportunity to transform smallholder agriculture, especially in developing countries such as South Africa. Digital technology can enhance climate-resilient agriculture and improving food security in South Africa by improving resource management and productivity (
+Matt et al., 2015
+). However, farmers experience persistent challenges that hinder the adoption of these innovations (
+Malele, 2024
+). This section discusses the benefits and challenges within the digitization of smallholder agriculture in South Africa.
+South African smallholder farmers experience barriers in adopting digital tools despite global advancements. The results indicate that challenges such as the excessive cost of internet data and unreliable connectivity in rural areas hinder the use of digital platforms (
+Mdoda and Mdiya, 2022
+). 
+Mazwane et al., 2022
+ reported that the lack of digital literacy and training has hindered the adoption of digital tools. While studies from other countries such as China and Ghana have emphasized the importance of digital education programmes and government support (
+Wang, 2024
+; 
+Abdulai et al., 2023
+). South Africa can learn from these countries and adapt their successful strategies to suit local farmers. Digital literacy programmes that specifically focus on the practical use of mobile applications, precision farming tools and e-commerce platforms are important are important for equipping smallholder farmers with the necessary skills to effectively integrate digital solutions into everyday smallholder agricultural practices (
+Morepje et al., 2024
+; 
+Mapiye et al., 2022
+). Integrating smart and climate resilient agriculture can help prepare learners for digital agriculture and share their knowledge with their families. Economic barriers can be mitigated by providing microloans and subsidies for digital tools, ensuring that all farmers benefit from technological advancements.
+Structural barriers, including land tenure issues and economic inequalities, further limit smallholder farmers’ ability to invest in technology (
+Hawkins et al., 2022
+). Without secure land ownership or sufficient financial resources, smallholder farmers often do not have formal means (e.g., tittle deeds to their land) to use as collateral against loans, which makes them “high risk lenders” and ineligible for financial resources such as loans. Therefore, they are less likely to adopt long-term digital solutions due to high costs of digital tools and low income, exacerbating the digital divide within agriculture (
+Jumare et al., 2017
+). Addressing these challenges requires community engagement, which actively involves local organizations and smallholder farmers in the evaluation and implementation of digital agriculture initiatives. This is important for ensuring relevance, empowering smallholder farmers through digital literacy and bridge the rural–urban gap (
+Ncube, 2018
+; 
+Slater, 2024
+).
+Policy interventions and multi-stakeholder collaborations are essential for promoting digitalization in smallholder farming. Governments must partner with private sector actors to expand rural infrastructure and ensure affordable, reliable internet connectivity, potentially through subsidized data frameworks (
+Mazwane et al., 2022
+). Establishing Provincial Agriculture Digital Innovation Hubs can provide vital resources, training, and technical support for smallholder farmers (
+Smidt and Jokonya, 2022
+). These hubs can also drive innovation by developing digital tools tailored to the needs of smallholder farmers (
+Slater, 2024
+).
+Targeted digital literacy programs are crucial for equipping farmers with the skills needed to leverage digital tools effectively (
+Mapiye et al., 2022
+). Training initiatives focusing on practical use of mobile applications, e-commerce, and precision farming technologies can help integrate digital solutions into everyday agricultural practices (
+Morepje et al., 2024
+). Incorporating technology and agriculture into basic education curricula will further enhance digital literacy, enabling young learners to support their families and preparing the next generation of digital farmers. Innovations in South African digital agriculture predominantly target planning, production, and market access, while comparatively fewer solutions address storage, transport, and post-harvest stages of the value chain (
+CCARDESA, 2022
+). Economic barriers can be theoretically mitigated by providing grants and subsidies for digital tools, ensuring that all farmers, regardless of economic status, can benefit from technological advancements.
+Digital tool adoption among smallholder farmers is most studied and prevalent in the Eastern Cape, KwaZulu-Natal, and North West provinces (see 
+Figure 5
+). These regions have been the primary focus of empirical research and pilot programs, reflecting both the concentration of smallholder activity and targeted government and NGO interventions (
+Bontsa et al., 2024
+). However, regional disparities persist; rural areas with poor infrastructure and high data costs face greater barriers to adoption, while farmers in peri-urban or better-connected districts are more likely to utilize digital solutions. Region-specific challenges in South African agriculture—such as variable climate conditions, fragmented land tenure, and disparities in infrastructure—require tailored solutions that align with the country’s Agriculture and Agro-processing Master Plan (AAMP). The AAMP emphasizes inclusive growth, sustainable resource use, and support for smallholder farmers. The reviewed literature emphasizes the need for region-specific adaptation strategies to address low productivity and climate vulnerability in the agricultural sector. Studies highlight the importance of sustainable practices, climate adaptation, and technological integration for building resilience among smallholder farmers. High-impact research underscores the role of integrated pest management, land tenure reform, remote sensing, and adaptive strategies in promoting sustainability. For example, remote sensing technologies are vital for monitoring land use changes, supporting sustainable development. Although remote sensing technologies (earth observation) offer valuable insights for agricultural monitoring, their effectiveness on smallholder farmlands in South Africa is often constrained by the limited spatial resolution of available imagery and the frequent cloud cover prevalent in many regions, which can obscure satellite observations (
+Atzberger, 2013
+). Other studies (
+Kom et al., 2022
+; 
+Myeni et al., 2019
+) identify socio-economic and environmental barriers, recommending that future research focus on affordable, accessible solutions for smallholder farmers to enhance climate adaptation and food security.
+This review offers practical insights for South African smallholder farmers by identifying key factors influencing agriculture and food safety, such as climate variability, access to resources, and government policy (
+Kapari et al., 2023
+). Notably, 
+Sheahan and Barrett (2017)
+ highlight that this kind of research plays a pivotal role in guiding advancements in farming practices and mechanization—developments that are essential for enhancing productivity, fostering economic growth, and reducing poverty among rural communities. Additionally, 
+Jaffee et al. (2018)
+ highlights the vulnerability of fresh produce supply chains, underscoring the need for robust regulatory frameworks to strengthen food safety systems in developing countries.
+However, the assessment of tool effectiveness in the review is primarily based on a review of existing literature, which presents inherent limitations. Review-based assessments often synthesize findings from diverse contexts, making it difficult to generalize results to the unique socio-economic and environmental conditions faced by South African smallholders. Many studies cited are pilot projects or small-scale interventions, with limited longitudinal data on scalability or sustained impact. Furthermore, reviews may underreport localized barriers—such as digital literacy gaps, infrastructure deficits, and gender disparities—while overemphasizing success stories. As a result, while the review highlights promising outcomes, it cannot fully account for the variability in adoption, contextual challenges, or unintended consequences that only rigorous, context-specific empirical evaluations can reveal. In hindsight, while empirical evidence supports the effectiveness of digital tools in African agriculture, review-based assessments—such as those in this review article—are constrained by their reliance on secondary data, lack of context-specificity, and limited insight into long-term, scalable impacts.
+Recent studies demonstrate that, although South Africa leads the SADC region in digital agriculture readiness (
+Earth System Governance Project, 2024
+), the operational implementation of digital technologies among smallholder farmers remains limited in comparison to commercial producers, who are more likely to adopt advanced tools such as precision agriculture and IoT-based systems (
+Choruma et al., 2024
+). Most smallholders rely on basic mobile applications for weather, market, and extension information, but their adoption is constrained by high data costs, limited rural connectivity, and low digital literacy (
+Mapiye et al., 2023
+; 
+Gumbi et al., 2023
+). Despite the existence of more than 50 digital innovations in the country, only a fraction is accessible or relevant to smallholder contexts, and infrastructural gaps—such as unreliable electricity and internet—pose significant barriers to scalability (
+Fanadzo and Ncube, 2018
+; 
+Kapari et al., 2023
+). To address these challenges and enable future expansion, research recommends the development of integrated, context-specific digital platforms, increased investment in rural infrastructure, and the rollout of targeted digital literacy programs tailored to smallholder needs (
+Choruma et al., 2024
+; 
+Mapiye et al., 2023
+; 
+Gumbi et al., 2023
+). Future research should focus on mapping the distribution of these tools and their adoption levels, while developing a widely accepted index to measure their impact and accessibility. Furthermore, policy coherence and multi-stakeholder partnerships are essential to ensure that digitalization efforts are inclusive, affordable, and capable of substantially improving productivity, resilience, and food security among smallholder farmers in South Africa (
+Fanadzo and Ncube, 2018
+; 
+Kapari et al., 2023
+). Interventions should go beyond infrastructure and training to include support for building psychological and social capital (
+Wale and Mkuna, 2025
+).
+5 Conclusion
+The reviewed literature indicates that digital transformation of agriculture supports smallholder farmers by providing tools to enhance productivity, sustainability, and market accessibility. For example, the eRFarSys platform enhanced marked access in areas such as Bushbuckridge. However, barriers such as inadequate infrastructure and limited finances and digital illiteracy have hindered the rate at which farms adopt digital tools for agricultural practices. These barriers require a structured and inclusive adaptation strategy to help empower smallholder farmers and enhance food security using digital tools. This review highlights the need for region specific interventions such as digital literacy programs, improved rural internet infrastructure and multistakeholder incentives. Lessons from other developing regions suggest a collaborative approach which includes policymakers, private sector stakeholders and farmers to ensure sustainable digital adaptation. Future research should focus on the evaluation of South African digital solutions, financial strategies, and training programmes to help address the digital divide among smallholder farmers.
+To accelerate digital transformation in South African smallholder agriculture, we recommend the following for future studies to analyse: (1) the expansion of rural broadband and electricity infrastructure, prioritizing underserved provinces and ensuring affordable connectivity for smallholder farmers, (2) digital literacy programs rolled out through local extension services, agricultural colleges, and innovation hubs, with a special focus on women, youth, and marginalized groups. (3) Regulatory frameworks that streamline technology licensing, ensure data privacy, and promote interoperability of digital platforms. Finally, ongoing monitoring and participatory feedback mechanisms to evaluate the impact of digital interventions and ensure they remain responsive to farmers’ evolving needs. Addressing these gaps will help bridge the digital divide and unlock the full potential of digital agriculture for smallholder farmers in South Africa.
+Statements
+Author contributions
+GN: Conceptualization, Data curation, Formal analysis, Funding acquisition, Investigation, Methodology, Project administration, Resources, Software, Supervision, Validation, Visualization, Writing – original draft, Writing – review & editing. HC: Conceptualization, Data curation, Formal analysis, Investigation, Methodology, Project administration, Resources, Software, Validation, Visualization, Writing – original draft, Writing – review & editing.
+Funding
+The author(s) declare that financial support was received for the research and/or publication of this article. The research presented in the article was conducted within the framework of the Széchenyi Plan Plus program with the support of the RRF 2.3.1 21 2022 00008 project and Higher Education PhD grant from the Republic of South Africa.
+Acknowledgments
+We thank Thabang Motaung, Tondani Sannah Ramabulana and Zibuyile Dlamini for their assistance with article screening and data verification.
+Conflict of interest
+The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
+Generative AI statement
+The authors declare that no Gen AI was used in the creation of this manuscript.
+Publisher’s note
+All claims expressed in this article are solely those of the authors and do not necessarily represent those of their affiliated organizations, or those of the publisher, the editors and the reviewers. Any product that may be evaluated in this article, or claim that may be made by its manufacturer, is not guaranteed or endorsed by the publisher.
+Supplementary material
+The Supplementary material for this article can be found online at: 
+https://www.frontiersin.org/articles/10.3389/fsufs.2025.1583224/full#supplementary-material
+References
+1
+Abdulai
+A. R.
+Quarshie
+T.
+Duncan
+E.
+Fraser
+E.
+ (
+2023
+). 
+Is agricultural digitization a reality among smallholder farmers in Africa? Unpacking farmers' lived realities of engagement with digital tools and services in rural northern Ghana
+. 
+Agric. Food Secur.
+12
+:
+42
+. doi: 
+10.1186/s40066-023-00399-1
+CrossRef 
+Google Scholar
+2
+Alant
+B. P.
+Bakare
+O. O.
+ (
+2021
+). 
+A case study of the relationship between smallholder farmers’ ICT literacy levels and demographic data w.r.t. their use and adoption of ICT for weather forecasting
+. 
+Heliyon
+7
+:
+e06403
+. doi: 
+10.1016/j.heliyon.2021.e06403
+Pubmed Abstract
+CrossRef 
+Google Scholar
+3
+Alfonsi
+R. M.
+ (
+2024
+). 
+Development of an information and communication technology (ICT) framework for local food systems in South Africa. The graduate program in sustainability science - global leadership initiative (GPSS-GLI)
+. 
+Kashiwa
+: 
+University of Tokyo
+.
+Google Scholar
+4
+Alfonsi
+R. M.
+Naidoo
+M.
+Gasparatos
+A.
+ (
+2024
+). 
+Adoption and desirable characteristics of information and communication technologies for urban small-scale food producers in South Africa
+. 
+Front. Sustain. Food Syst.
+8
+:
+1332978
+. doi: 
+10.3389/fsufs.2024.1332978
+CrossRef 
+Google Scholar
+5
+Atzberger
+C.
+ (
+2013
+). 
+Advances in remote sensing of agriculture: context description, existing operational monitoring systems and major information needs
+. 
+Remote Sens.
+5
+, 
+949
+–
+981
+. doi: 
+10.3390/rs5020949
+CrossRef 
+Google Scholar
+6
+Bontsa
+N.
+Mushunje
+A.
+Ngarava
+S.
+Zhou
+L.
+ (
+2023
+). 
+Utilisation of digital technologies by smallholder farmers in South Africa
+. 
+S. Afr. J. Agric. Ext.
+51
+, 
+104
+–
+114
+. doi: 
+10.17159/2413-3221/2023/v51n1a14308
+CrossRef 
+Google Scholar
+7
+Bontsa
+N. V.
+Mushunje
+A.
+Ngarava
+S.
+Zhou
+L.
+ (
+2024
+). 
+Awareness and perception of digital technologies by smallholder farmers in the eastern Cape Province, South Africa
+. 
+S. Afr. J. Agric. Ext.
+52
+, 
+73
+–
+93
+. doi: 
+10.17159/2413-3221/2024/v52n5a16200
+CrossRef 
+Google Scholar
+8
+Born
+L.
+Chirinda
+N.
+Mabaya
+E.
+Afun-Ogidan
+O.
+Girvetz
+E. H.
+Jarvis
+A.
+et al
+. (
+2021
+). 
+Digital agriculture profile: South Africa
+. 
+Rome
+: 
+Food and Agriculture Organization of the United Nations (FAO)
+.
+Google Scholar
+9
+Bramer
+W. M.
+Rethlefsen
+M. L.
+Kleijnen
+J.
+Franco
+O. H.
+ (
+2017
+). 
+Optimal database combinations for literature searches in systematic reviews: a prospective exploratory study
+. 
+Syst. Rev.
+6
+:
+245
+. doi: 
+10.1186/s13643-017-0644-y
+Pubmed Abstract
+CrossRef 
+Google Scholar
+10
+CCARDESA
+. (
+2022
+). 
+Digital agriculture country study annex: South Africa. Centre for Coordination of agricultural Research and Development for southern Africa (CCARDESA)
+. Available online at: 
+https://ccardesa.org/sites/default/files/2022-11/Digital%20Agriculture%20Country%20Study%20Annex%20-%20South%20Africa.pdf
+ (accessed October 8, 2024).
+Google Scholar
+11
+Cebiso
+Z.
+ (
+2022
+). 
+The effect of ICT use in enhancing market participation and household welfare outcomes among smallholder farmers in the eastern cape province of South Africa.
+ University of Fort Hare, South Africa [Master’s thesis].
+Google Scholar
+12
+Choruma
+D. J.
+Dirwai
+T. L.
+Mutenje
+M. J.
+Mustafa
+M.
+Chimonyo
+V. G. P.
+Jacobs-Mata
+I.
+et al
+. (
+2024
+). 
+Digitalisation in agriculture: a scoping review of technologies in practice, challenges, and opportunities for smallholder farmers in sub-Saharan Africa
+. 
+J. Agric. Food Res.
+18
+:
+101286
+. doi: 
+10.1016/j.jafr.2024.101286
+CrossRef 
+Google Scholar
+13
+Cole
+R.
+ (
+2024
+). 
+Inter-rater reliability methods in qualitative case study research
+. 
+Sociol. Methods Res.
+53
+, 
+1944
+–
+1975
+. doi: 
+10.1177/0049124123115697
+CrossRef 
+Google Scholar
+14
+Cooper
+H. M.
+ (
+2010
+). 
+Research synthesis and meta-analysis: A step-by-step approach
+. 
+4th
+ Edn. 
+London
+: 
+SAGE Publications
+.
+Google Scholar
+15
+Critical Appraisal Skills Programme (CASP)
+. (
+2018
+). 
+CASP Checklists
+. Available online at: 
+https://casp-uk.net/casp-tools-checklists/
+ (accessed November 25, 2024).
+Google Scholar
+16
+Department of Agriculture, Land Reform and Rural Development (DALRRD)
+. (
+2022
+). Agriculture and Agro-Processing Master Plan (AAMP). Pretoria: South African Government. Available at: 
+https://www.dalrrd.gov.za/
+ (Accessed April 01, 2025).
+Google Scholar
+17
+Department of Agriculture and Rural Development
+. (
+2025
+). 
+North west agriculture and rural development launches Agri-hub [press release]. South African government
+. Available online at: 
+https://www.gov.za/news/media-advisories/government-activities/north-west-agriculture-and-rural-development-launches
+ (accessed April 19, 2025).
+Google Scholar
+18
+Department of Agriculture, Forestry and Fisheries
+. (
+2015
+). 
+Strategy and ICT plan for agriculture (2015/16–2019/20). South Africa
+. Available online at: 
+https://cer.org.za/wp-content/uploads/2016/08/DAFF-15-16-19-20.pdf?utm_source=chatgpt.com
+ (accessed December 9, 2024).
+Google Scholar
+19
+Earth System Governance Project
+. (
+2024
+). 
+Climate-smart agriculture in sub-Saharan Africa: a scoping and policy review [scoping/policy review]. Sub-Saharan Africa
+. Available online at: 
+https://www.earthsystemgovernance.org/research/climate-smart-agriculture-in-sub-saharan-africa/
+ (accessed June 1, 2025).
+Google Scholar
+20
+Fanadzo
+M.
+Ncube
+B.
+ (
+2018
+). 
+Challenges and opportunities for revitalising smallholder irrigation schemes in South Africa
+. 
+Water SA
+44
+, 
+436
+–
+447
+. doi: 
+10.4314/wsa.v44i3.11
+CrossRef 
+Google Scholar
+21
+FAO
+. (
+2021
+). 
+Digital agriculture profile: South Africa [country report]. Rome, Italy
+. Available online at: 
+https://www.fao.org/3/cb2506en/cb2506en.pdf
+ (accessed January 4, 2025)
+Google Scholar
+22
+Gumbi
+N.
+Gumbi
+L.
+Twinomurinzi
+H.
+ (
+2023
+). 
+Towards sustainable digital agriculture for smallholder farmers: a systematic literature review
+. 
+Sustain. For.
+15
+:
+12530
+. doi: 
+10.3390/su151612530
+CrossRef 
+Google Scholar
+23
+Habiyaremye
+A.
+Ncube
+P.
+Sichoongwe
+K.
+Slater
+A.
+ (
+2024
+). 
+The use of advanced technology in south African agriculture: Insights from selected sub-sectors. SARChI industrial development working paper series WP 2024–07
+. 
+Auckland
+: 
+University of Johannesburg
+.
+Google Scholar
+24
+Hanegraaf
+P.
+Wondimu
+A.
+Mosselman
+J. J.
+de
+R.
+Abogunrin
+S.
+Queiros
+L.
+et al
+. (
+2024
+). 
+Inter-reviewer reliability of human literature reviewing and implications for the introduction of machine-assisted systematic reviews: a mixed-methods review
+. 
+BMJ Open
+14
+:
+e076912
+. doi: 
+10.1136/bmjopen-2023-076912
+Pubmed Abstract
+CrossRef 
+Google Scholar
+25
+Hawkins
+P.
+Geza
+W.
+Mabhaudhi
+T.
+Sutherland
+C.
+Queenan
+K.
+Dangour
+A.
+et al
+. (
+2022
+). 
+Dietary and agricultural adaptations to drought among smallholder farmers in South Africa: A qualitative study
+. 
+Weather Clim. Extrem.
+35
+:
+100413
+. doi: 
+10.1016/j.wace.2022.100413
+Pubmed Abstract
+CrossRef 
+Google Scholar
+26
+IFPRI
+. (
+2024
+). 
+Why agricultural research investment lags in Africa south of the Sahara. Policy/research report. International food policy research institute
+. Available online at: 
+https://www.ifpri.org/blog/why-agricultural-research-investment-lags-africa-south-sahara
+ (accessed June 1, 2025).
+Google Scholar
+27
+Jaffee
+S.
+Henson
+S.
+Unnevehr
+L.
+Grace
+D.
+Cassou
+E.
+ (
+2018
+). 
+The safe food imperative: Accelerating progress in low- and middle-income countries
+. 
+London
+: 
+World Bank
+.
+Google Scholar
+28
+Jumare
+H.
+Visser
+M.
+Brick
+K.
+. (
+2017
+). 
+Risk preferences and the poverty trap: a look at farm technology uptake among smallholder farmers in the Matzikama municipality, South Africa
+. Swedish Agency for International Development Cooperation; Resources for the Future
+. Available online at: 
+https://www.preventionweb.net/publication/south-africa-risk-preferences-and-poverty-trap-look-farm-technology-uptake-amongst
+ (accessed 17 June, 2025).
+Google Scholar
+29
+Kapari
+M.
+Hlophe-Ginindza
+S.
+Nhamo
+L.
+ (
+2023
+). 
+Contribution of smallholder farmers to food security and opportunities for resilient farming systems
+. 
+Front. Sustain. Food Syst.
+7
+:
+1149854
+. doi: 
+10.3389/fsufs.2023.1149854
+CrossRef 
+Google Scholar
+30
+Kapari
+M.
+Mapiye
+C.
+Gumbi
+R. V.
+ (
+2024
+). 
+Barriers to digital technology adoption among smallholder farmers in South Africa
+. 
+Afr. J. Sci. Technol. Innov. Dev.
+16
+, 
+123
+–
+135
+. doi: 
+10.1080/20421338.2023.2256789
+CrossRef 
+Google Scholar
+31
+Kom
+Z.
+Nethengwe
+N. S.
+Mpandeli
+N. S.
+Chikoore
+H.
+ (
+2022
+). 
+Determinants of small-scale farmers’ choice and adaptive strategies in response to climatic shocks in Vhembe District, South Africa
+. 
+GeoJournal
+87
+, 
+677
+–
+700
+. doi: 
+10.1007/s10708-020-10272-7
+CrossRef 
+Google Scholar
+32
+Loffstadt
+A.
+Ndlovu
+J.
+Padia
+M.
+ (
+2023
+). 
+Do South Africa's e-commerce VAT rules measure up to international trends and OECD guidelines?
+J. Econ. Financ. Sci.
+16
+:
+815
+. doi: 
+10.4102/jef.v16i1.815
+CrossRef 
+Google Scholar
+33
+Mabuza
+M. J.
+Ndoro
+J. T.
+ (
+2023
+). 
+Borich’s needs model analysis of smallholder farmers’ competence in irrigation water management: case study of Nkomazi local municipality, Mpumalanga Province in South Africa
+. 
+Sustain. For.
+15
+:
+4935
+. doi: 
+10.3390/su15064935
+CrossRef 
+Google Scholar
+34
+Makamane
+A.
+Van Niekerk
+J.
+Loki
+O.
+Mdoda
+L.
+ (
+2023
+). 
+Determinants of climate-smart agriculture (CSA) technologies adoption by smallholder food crop farmers in Mangaung metropolitan municipality, Free State
+. 
+S. Afr. J. Agric. Ext.
+51
+, 
+52
+–
+74
+. doi: 
+10.17159/2413-3221/2023/v51n4a1645
+CrossRef 
+Google Scholar
+35
+Malele
+V.
+ (
+2024
+). “
+Developing a digital platform for small-scale rural farmers at a village in Bushbuckridge, South Africa
+” in 
+Software engineering methods in systems and network systems
+. eds. 
+Silhavy
+R.
+Silhavy
+P.
+ (
+Cham
+: 
+Springer Nature
+), 
+403
+–
+413
+.
+Google Scholar
+36
+Manganyi
+B.
+Sotsha
+K.
+Rambau
+K.
+Chiloane
+D.
+ (
+2024
+). 
+Improving market access for smallholder farmers in South Africa. Policy brief 08
+. 
+Pretoria
+: 
+National Agricultural Marketing Council
+.
+Google Scholar
+37
+Mapiye
+C.
+Gumbi
+R. V.
+Mapiye
+O.
+ (
+2022
+). 
+Digital literacy and technology adoption among smallholder farmers in South Africa
+. 
+J. Rural. Stud.
+94
+, 
+1
+–
+11
+. doi: 
+10.1016/j.jrurstud.2022.07.005
+CrossRef 
+Google Scholar
+38
+Mapiye
+O.
+Makombe
+G.
+Molotsi
+A.
+Dzama
+K.
+Mapiye
+C.
+ (
+2023
+). 
+Information and communication technologies (ICTs): the potential for enhancing the dissemination of agricultural information and services to smallholder farmers in sub-Saharan Africa
+. 
+Inf. Dev.
+39
+, 
+638
+–
+658
+. doi: 
+10.1177/02666669211064847
+CrossRef 
+Google Scholar
+39
+Matt
+C.
+Hess
+T.
+Benlian
+A.
+ (
+2015
+). 
+Digital transformation strategies
+. 
+Bus. Inf. Syst. Eng.
+57
+, 
+339
+–
+343
+. doi: 
+10.1007/s12599-015-0401-
+CrossRef 
+Google Scholar
+40
+Mazwane
+S.
+Makhura
+M. N.
+Senyolo
+M. P.
+ (
+2022
+). 
+Important policy parameters for the development of inclusive digital agriculture: implications for the redistributive land reform program in South Africa
+. 
+Agriculture
+12
+:
+2129
+. doi: 
+10.3390/agriculture12122129
+CrossRef 
+Google Scholar
+41
+Mbatha
+B.
+ (
+2024
+). 
+Digital divide: a phenomenon of unequal adoption of technology by SMMEs in the agribusiness sector in South Africa
+. 
+Commun. J. Commun. Stud. Afr.
+43
+, 
+64
+–
+75
+. doi: 
+10.36615/comm.v43i1.2656
+CrossRef 
+Google Scholar
+42
+McHugh
+M. L.
+ (
+2012
+). 
+Interrater reliability: the kappa statistic
+. 
+Biochem. Med.
+22
+, 
+276
+–
+282
+. doi: 
+10.11613/BM.2012.031
+CrossRef 
+Google Scholar
+43
+Mdoda
+L.
+Mdiya
+L.
+ (
+2022
+). 
+Factors affecting the using information and communication technologies (ICTs) by livestock farmers in the Eastern Cape Province
+. 
+Cogent Soc. Sci.
+8
+:
+2026017
+. doi: 
+10.1080/23311886.2022.2026017
+CrossRef 
+Google Scholar
+44
+Mhlanga
+D.
+Ndhlovu
+E.
+ (
+2023
+). 
+Digital technology adoption in the agriculture sector: challenges and complexities in Africa
+. 
+Hum. Behav. Emerg. Technol.
+2023
+:
+6951879
+. doi: 
+10.1155/2023/6951879
+CrossRef 
+Google Scholar
+45
+Moher
+D.
+Liberati
+A.
+Tetzlaff
+J.
+Altman
+D. G.
+ (
+2009
+). 
+Preferred reporting items for systematic reviews and meta-analyses: the PRISMA statement
+. 
+BMJ
+339
+:
+b2535
+. doi: 
+10.1136/bmj.b2535
+Pubmed Abstract
+CrossRef 
+Google Scholar
+46
+Morepje
+M. T.
+Sithole
+M. Z.
+Msweli
+N. S.
+Agholor
+A. I.
+ (
+2024
+). 
+The influence of e-commerce platforms on sustainable agriculture practices among smallholder farmers in sub-Saharan Africa
+. 
+Sustain. For.
+16
+:
+6496
+. doi: 
+10.3390/su16156496
+CrossRef 
+Google Scholar
+47
+Mouratiadou
+I.
+Lemke
+N.
+Chen
+C.
+Wartenberg
+A.
+Bloch
+R.
+Donat
+M.
+et al
+. (
+2023
+). 
+The digital agricultural knowledge and information system (DAKIS): employing digitalisation to encourage diversified and multifunctional agricultural systems
+. 
+Environ Sci Ecotechnol
+16
+:
+100274
+. doi: 
+10.1016/j.ese.2023.100274
+Pubmed Abstract
+CrossRef 
+Google Scholar
+48
+Myeko
+Z.
+Rambe
+P.
+ (
+2024
+). 
+IoT appropriation for crop management and productivity enhancement in South Africa
+. 
+S. Afr. J. Inf. Manag.
+26
+:
+11
+. doi: 
+10.4102/sajim.v26i1.1741
+CrossRef 
+Google Scholar
+49
+Myeni
+L.
+Moeletsi
+M.
+Thavhana
+M.
+Randela
+M.
+Mokoena
+L.
+ (
+2019
+). 
+Barriers affecting sustainable agricultural productivity of smallholder farmers in the eastern Free State of South Africa
+. 
+Sustain. For.
+11
+:
+3003
+. doi: 
+10.3390/su11113003
+CrossRef 
+Google Scholar
+50
+Ncube
+B.
+ (
+2018
+). 
+Constraints to smallholder agricultural production in the Western cape, South Africa
+. 
+Phys. Chem. Earth A B C.
+106
+, 
+89
+–
+96
+. doi: 
+10.1016/j.pce.2018.05.012
+CrossRef 
+Google Scholar
+51
+Nemisa
+L. K.
+ (
+2022
+). 
+The influence of digital literacy initiatives in South Africa: A Nemisa case study
+. 
+Johannesburg
+: 
+University of the Witwatersrand
+.
+Google Scholar
+52
+Nxumalo
+G.
+Bashir
+B.
+Alsafadi
+K.
+Bachir
+H.
+Harsányi
+E.
+Arshad
+S.
+et al
+. (
+2022
+). 
+Meteorological drought variability and its impact on wheat yields across South Africa
+. 
+Int. J. Environ. Res. Public Health
+19
+:
+16469
+. doi: 
+10.3390/ijerph192416469
+Pubmed Abstract
+CrossRef 
+Google Scholar
+53
+Oyelami
+L. O.
+Sofoluwe
+N. A.
+Ajeigbe
+O. M.
+ (
+2022
+). 
+ICT and agricultural sector performance: empirical evidence from sub-Saharan Africa
+. 
+Future Bus. J.
+8
+:
+18
+. doi: 
+10.1186/s43093-022-00130-y
+CrossRef 
+Google Scholar
+54
+Pengelly
+C.
+Shai
+T.
+Kuschke
+I.
+ (
+2021
+). 
+Market analysis: determining the extent and potential of a water-smart agriculture market in South Africa
+. 
+Gezina
+: 
+Water Research Commission
+.
+Google Scholar
+55
+Sheahan
+M.
+Barrett
+C.
+ (
+2017
+). 
+Ten striking facts about agricultural input use in sub-Saharan Africa
+. 
+Food Policy
+67
+, 
+12
+–
+25
+. doi: 
+10.1016/j.foodpol.2016.09.010
+Pubmed Abstract
+CrossRef 
+Google Scholar
+56
+Slater
+A.
+ (
+2024
+). 
+Essays on innovation and technological change in south African enterprises. PhD thesis
+. 
+Auckland
+: 
+College of Business and Economics, University of Johannesburg
+.
+Google Scholar
+57
+Smidt
+H. J.
+ (
+2022
+). 
+Factors affecting digital technology adoption by small-scale farmers in agriculture value chains (AVCs) in South Africa
+. 
+Inf. Technol. Dev.
+28
+:
+1975256
+. doi: 
+10.1080/02681102.2021.1975256
+CrossRef 
+Google Scholar
+58
+Soeker
+I. A.
+Lusinga
+S.
+Chigona
+W.
+ (
+2021
+). 
+Readiness of the south African agricultural sector to implement IoT
+, hosted by Cornell University Library.
+Google Scholar
+59
+Srinatha
+T. N.
+Abhishek
+G. J.
+Kumar
+P.
+Aravinda
+B. J.
+Baruah
+D.
+Gireesh
+S.
+et al
+. (
+2024
+). 
+Agricultural policy reforms and their effects on smallholder farmers: a comprehensive review
+. 
+Arch Curr Res Int
+24
+, 
+467
+–
+474
+. doi: 
+10.9734/acri/2024/v24i51163
+CrossRef 
+Google Scholar
+60
+Sun
+S.
+ (
+2011
+). 
+Meta-analysis of Cohen’s kappa
+. 
+Health Serv. Outcome Res. Methodol.
+11
+, 
+145
+–
+163
+. doi: 
+10.1007/s10742-011-0077-3
+CrossRef 
+Google Scholar
+61
+Thamaga-Chitja
+J. M.
+Morojele
+P.
+ (
+2014
+). 
+The context of smallholder farming in South Africa: towards a livelihood asset building framework
+. 
+J. Hum. Ecol.
+45
+, 
+147
+–
+155
+. doi: 
+10.1080/09709274.2014.11906692
+CrossRef 
+Google Scholar
+62
+Tibesigwa
+B.
+Visser
+M.
+ (
+2016
+). 
+Assessing gender inequality in food security among small-holder farm households in urban and rural South Africa
+. 
+World Dev.
+88
+, 
+33
+–
+49
+. doi: 
+10.1016/j.worlddev.2016.07.008
+CrossRef 
+Google Scholar
+63
+Tricco
+A. C.
+Lillie
+E.
+Zarin
+W.
+O'Brien
+K. K.
+Colquhoun
+H.
+Levac
+D.
+et al
+. (
+2018
+). 
+PRISMA extension for scoping reviews (PRISMA-ScR): checklist and explanation
+. 
+Ann. Intern. Med.
+169
+, 
+467
+–
+473
+. doi: 
+10.7326/M18-0850
+Pubmed Abstract
+CrossRef 
+Google Scholar
+64
+Vieira
+S. M.
+Kaymak
+U.
+Sousa
+J. M.
+ (
+2010
+). “Cohen's kappa coefficient as a performance measure for feature selection,” in 
+Proceedings of the international conference on fuzzy systems (FUZZ-IEEE)
+. IEEE, 1–8.
+Google Scholar
+65
+von Maltitz
+L.
+Bahta
+Y. T.
+ (
+2023
+). 
+Data on investigating the resilience of female smallholder livestock farmers to agricultural drought in South Africa's northern Cape Province
+. 
+Data Brief
+51
+:
+109780
+. doi: 
+10.1016/j.dib.2023.109780
+Pubmed Abstract
+CrossRef 
+Google Scholar
+66
+Von Maltitz
+L.
+Van Niekerk
+J. A.
+Davis
+K.
+ (
+2024
+). 
+The digital readiness of agricultural advisory professionals: a south African case study
+. 
+S. Afr. J. Agric. Ext.
+52
+, 
+47
+–
+65
+. doi: 
+10.17159/2413-3221/2022/v50n1a14407
+CrossRef 
+Google Scholar
+67
+Wale
+E.
+Mkuna
+E.
+ (
+2025
+). 
+On smallholder crop productivity and on-farm entrepreneurship: empirical evidence from Ndumo-B and Makhathini irrigation schemes, KwaZulu-Natal, South Africa
+. 
+World Development Sustainability
+6
+:
+100226
+. doi: 
+10.1016/j.wds.2025.100226
+CrossRef 
+Google Scholar
+68
+Walker
+S.
+Ferguson
+J.
+van der Burgt
+F. R.
+ (
+2018
+). 
+Response farming using “AgriCloud” app for farmers in South Africa
+. 
+Pretoria
+: 
+Agricultural Research Council – Soil, climate and water, and weather impact
+.
+Google Scholar
+69
+Wang
+W.
+ (
+2024
+). 
+Research on the effect of digital economy development on the carbon emission intensity of agriculture
+. 
+Sustain. For.
+16
+:
+1457
+. doi: 
+10.3390/su16031457
+CrossRef 
+Google Scholar
+Summary
+Keywords
+smallholder agriculture
+, 
+digitization
+, 
+digital agriculture
+, 
+South Africa
+, 
+precision agriculture
+Citation
+Nxumalo GS and Chauke H (2025) 
+Challenges and opportunities in smallholder agriculture digitization in South Africa
+. 
+Front. Sustain. Food Syst.
+ 9:1583224. doi: 
+10.3389/fsufs.2025.1583224
+Received
+25 February 2025
+Accepted
+30 June 2025
+Published
+17 July 2025
+Volume
+9 - 2025
+Edited by
+ Julian Douglas May, University of the Western Cape, South Africa
+Reviewed by
+ Umar Adam, University for Development Studies, Ghana
+Konstantin Stoyanov, Trakia University, Bulgaria
+Updates
+Check for updates
+ Copyright 
+© 2025 Nxumalo and Chauke. 
+This is an open-access article distributed under the terms of the 
+Creative Commons Attribution License (CC BY)
+. The use, distribution or reproduction in other forums is permitted, provided the original author(s) and the copyright owner(s) are credited and that the original publication in this journal is cited, in accordance with accepted academic practice. No use, distribution or reproduction is permitted which does not comply with these terms.
+*Correspondence: Gift Siphiwe Nxumalo, 
+nxumalo.gift.siphiwe@agr.unideb.hu
+Disclaimer
+ All claims expressed in this article are solely those of the authors and do not necessarily represent those of their affiliated organizations, or those of the publisher, the editors and the reviewers. Any product that may be evaluated in this article or claim that may be made by its manufacturer is not guaranteed or endorsed by the publisher. 
+ Article metrics 
+View details
+ Download 
+PDF
+ Download other formats 
+ReadCube
+epub
+XML
+Cite article
+Share article
+our impact
+Your research is the real superpower
+Behind each article we publish stands a team of superheroes: authors, editors, and reviewers who chose to uphold quality standards and share knowledge openly. Read more about the impact your work achieves.
+Explore our impact metrics
+ Outline
+ Figures
+ Cite article
+Copy to clipboard
+Copy citation
+Export citation file
+BibTex
+EndNote
+Reference Manager
+Simple Text file
+ Share article
+Facebook
+X
+LinkedIn
+Email
+WeChat
+Share on WeChat
+Scan with WeChat to share this article
+ Article metrics

@@ -1,0 +1,424 @@
+AJCD 
+ 
+ African Journal of Career Development 
+ 
+ 2709-7420 
+ 2617-7471 
+ 
+ AOSIS 
+ 
+ 
+ 
+ AJCD-6-118 
+ 10.4102/ajcd.v6i1.118 
+ 
+ 
+ Original Research 
+ 
+ 
+ 
+ The psychological factors influencing youth moving from unemployment to employment in South Africa 
+ 
+ 
+ 
+ https://orcid.org/0000-0003-1411-9240 
+ 
+ Pereira 
+ Daphne J. 
+ 
+ 1 
+ 
+ 
+ https://orcid.org/0000-0003-4513-3942 
+ 
+ Joosub 
+ Noorjehan 
+ 
+ 1 
+ 
+ 
+ https://orcid.org/0000-0001-7291-0298 
+ 
+ Basson 
+ Pieter 
+ 
+ 1 
+ 
+ 1 Department of Psychology, Faculty of Humanities, University of Johannesburg, Johannesburg, South Africa 
+ 
+ 
+ Corresponding author: Daphne Pereira, daphne@options.co.za 
+ 
+ 26 09 2024 
+ 2024 
+ 6 
+ 1 
+ 118 
+ 
+ 10 04 2024 
+ 24 06 2024 
+ 
+ 
+ 2024. The Authors 
+ 2024 
+ 
+ Licensee: AOSIS. This work is licensed under the Creative Commons Attribution License. 
+ 
+ 
+ 
+ 
+ Background 
+ Youth unemployment in South Africa has increased significantly over the past decade. There are, however, stories of success in securing employment. Exploring factors influencing these successes is important because they may inform interventions that have the potential to increase youth employment. 
+ 
+ 
+ Objectives 
+ This study explored the experiences of four black female, South African youth who successfully transitioned from unemployment to employment. 
+ 
+ 
+ Methods 
+ Utilising a qualitative design methodology and the inductive thematic analysis of semi-structured interviews, data were gathered from four first-time employed participants regarding their experiences of progressing from unemployment to employment. 
+ 
+ 
+ Results 
+ Four main themes emerged from the analysis that highlighted the psychological impact of looking for employment among South African youth. The themes examined the value participants placed on tertiary education, the loss of identity caused by the negative consequences of job-search rejection, the positive impact of kin support and the influence of the participants psychological strengths. The final theme elucidated the participants positive identity formation post-employment. 
+ 
+ 
+ Conclusion 
+ The results from this study underscored the value of kin support, the use of specific psychological strengths in securing employment and the timing of identity formation in the school-to-work transition phase for South African youth. 
+ 
+ 
+ Contribution 
+ This study may contribute to the existing body of literature on youth unemployment, understanding the psychological impact of the journey to employment and the factors that contribute to securing employment. 
+ 
+ 
+ 
+ youth unemployment 
+ youth employment 
+ kinship support 
+ identity formation 
+ job search 
+ South Africa 
+ 
+ 
+ Funding information This research received no specific grant from any funding agency in the public, commercial or not-for-profit sectors. 
+ 
+ 
+ 
+ 
+ 
+ Introduction 
+ Unemployment in South Africa has reached significant proportions. According to a survey conducted by Statistics South Africa ( 2022a ), the general population unemployment rate was 32.6 in the first quarter of 2022. Of significant concern is the unemployment rate for South African youth, which is far higher than that of the general population. The survey reported that the unemployment rate among the 15 24-year-old group, who were active in the labour force, was 63.9 in the first quarter of 2022, with many of these young work seekers having been unemployed for more than a year (Statistics South Africa, 2022a ). 
+ The impact of generations of unemployment in South Africa has had severe psychological consequences for the vast majority of the black population, with historical employment practices forming the foundation of chronic unemployment and ensuring its continuation (Stead Watson, 2017 ). This historical legacy of apartheid is perhaps most widely manifested in the country s employment statistics (Stead Watson, 2017 ). 
+ Decades after apartheid was dismantled, there continues to be a divide between where many black people live and where resources and jobs are concentrated, increasing unemployment and poverty for people living on the periphery (Turok, 2018 ). According to Chibba and Luiz ( 2011 ), this legacy of apartheid persists in economics, business, sociology and land tenure. South Africa continues to endure structural inequalities and high levels of unemployment, which perpetuate poverty cycles. For most black South Africans, employment is a means of survival, lacking dignity or self-determination (Stead Watson, 2017 ). This is contrary to the idea that employment is essential in an individual s life as well as the functioning of society as a whole, as stressed by G rny ( 2018 ). Work shapes beliefs, aspirations, social status and position and is a source of income. The consequence of not being employed could be stigmatisation, which results in shame and emotional distress (Du Toit et al., 2018 ). 
+ 
+ 
+ Literature review 
+ Within this literature review, focussing on the psychological aspects impacting youth in the transition from unemployment to employment in South Africa, the gendered effects of unemployment, the burden of unemployment on youth and employability factors are highlighted. 
+ 
+ Gendered effects of unemployment 
+ When considering the gendered effects of unemployment in South Africa, the Quarterly labour force survey (Statistics South Africa, 2020 ) reported that the unemployment rate between 2016 and 2020 was consistently higher among women than men, reaching approximately 34.3 of the total labour force during the fourth quarter of 2020. This anomaly is concerning, as women constitute the majority of the population in South Africa (Statistics South Africa, 2020 ). 
+ As is the case internationally, South African women are marginalised in the labour market and disproportionately represented in care work for no pay (Casale Posel, 2020 ). In South Africa, across all the poverty measures and age groups, female-headed households consistently report the highest incidence of poverty compared to their male counterparts (Statistics South Africa, 2022b ). In addition, children are far more likely to live with their mothers than their fathers, resulting in the majority of children receiving financial and physical care from women without any contribution or support from their fathers (Hatch Posel, 2018 ). 
+ 
+ 
+ The burden of unemployment on youth 
+ In addition to the marginalisation of women of all ages, South Africa s youth bear the burden of unemployment (Statistics South Africa, 2022a ). South Africa has over 10 million young people aged 15 24 years; however, only 2.5 million young people were in the labour force in the first quarter of 2022. A South African study on youth unemployment suggested numerous reasons for this, including a lack of experience, inappropriate strategies for searching for work, population growth and a lack of career guidance in schools (Cloete, 2015 ). Furthermore, Cloete s ( 2015 ) study found that unemployed youth felt alienated from the larger society and experienced a sense of betrayal by the government because they realised that their lives had not improved since 1994. Dieltiens ( 2015 ) stated that a common contributing factor to youth unemployment in South Africa is that young people lack the experience and skills employers seek. De Lannoy et al. (2018) found that a lack of sustained economic growth, poor educational outcomes, inefficient coordination of national and provincial training programmes, limited understanding of what drives employer hiring preferences and the cost of seeking work all contributed to youth unemployment. 
+ Dube-Addae ( 2019 ) found that many young South Africans struggled to develop a vocational identity. The convergence of internal factors, for example, self-efficacy and self-confidence, and overwhelming external factors, such as a lack of job opportunities and insufficient funds to conduct an effective job search, obstructed their ability to plan for their preferred occupation (Dube-Addae, 2019 ). However, there are young people who successfully secure employment despite being unemployed for an extended period. According to Statistics South Africa ( 2022a ), 36 of the youth in the labour force are employed. The factors that assist young people in securing employment are important because being employed increases personal levels of happiness and life satisfaction and maximises the potential for youth to build their future on a solid foundation of productive employment (International Labour Organization, 2015 ). 
+ 
+ 
+ Employability 
+ Employability is considered a critical factor in the transition from unemployment to employment. R mgens et al. ( 2020 ) defined employability as an individual s ability to obtain and maintain employment. Various South African studies have explored the impact of employability interventions to understand the factors that help youth secure employment. These factors include vocational and skills-based programmes such as learnerships, work-integrated learning and social network development (De Lannoy et al., 2018; Lourens Fourie-Malherbe, 2016 ; Patel et al., 2020 ; Rankin et al., 2014 ). 
+ 
+ 
+ Psychological aspects impacting the transition from unemployment to employment 
+ Global research findings on the psychological aspects that seem to impact moving from unemployment to employment emphasise self-regulation, psychological capital, perceived progress and career identity development (Fern ndez-Valera et al., 2020 ; Fugate et al., 2004 ; Liu et al., 2014 ; Luthans et al., 2007 ; Van Hooft et al., 2020 ). In South Africa, there appears to be a dearth of information pertaining to psychological factors that may impact the employment success of youth. 
+ The low probability of securing employment and the high poverty and economic marginalisation rates in South Africa caution against merging work aspirations and work seeking (Perry Smith, 2017 ). For example, given resource limitations, job seekers may not be in a position to search intensely or actively for work, and they may be forced to rely instead on social networks to inform them when an employment opportunity becomes available. Mlatsheni and Ranchhod ( 2017 ) conducted a longitudinal study considering the factors that assisted school leavers in securing employment. The study found that inactive job searching may be related to the high cost of searching for work coupled with the low probability of securing employment. An important finding from this study was that utilising social networks is a popular and effective way of securing employment. A research study by Patel et al. ( 2020 ) provides evidence that non-economic indicators of success, such as resilience, self-esteem, self-efficacy and foresight, are essential in the transition to employment in South Africa. 
+ The youth unemployment crisis in South Africa has been widely acknowledged and interventions have attempted to address this critical situation (De Lannoy et al., 2018; Patel et al., 2020 ; Paver et al., 2019 ). Few of these interventions, however, have addressed the psychological factors that may have influenced the journey from unemployment to employment for the youth. A South African study found that of 496 employment interventions, less than 6 addressed psychological factors impacting the move from unemployment to employment (Paver et al., 2019 ). Therefore, psychological aspects that help or hinder securing employment may have been neglected in the literature. 
+ 
+ 
+ Purpose of the study 
+ This study aimed to explore the psychological factors influencing black, female, South African youth during their efforts to secure employment. The research question to be answered was: What are the lived experiences of black, female, South African youth who successfully transition from unemployment to employment. 
+ 
+ 
+ 
+ Method 
+ This research utilised a qualitative methodology, using in-depth interviews as a data collection tool with the aim of generating a coherent narrative to understand and portray the research participants experiences and actions as they confronted, struggled with and lived through the journey from unemployment to employment. An inductive thematic analysis framework was used to explore the psychological factors influencing the transition from unemployment to employment and to extract salient themes and sub-themes. Inductive thematic analysis is particularly beneficial as a method of enquiry when little is known about the research topic (Braun Clarke, 2006 , 2012 ), as was the case with this study. 
+ 
+ Participants 
+ Purposive sampling was used to recruit research participants, and potential participants were accessed with assistance from a career facilitator with youth networks. 
+ The inclusion criteria were as follows: 
+ 
+ Aged between 18 and 24 years 
+ Previously unemployed for approximately 1 year 
+ Employed at the time of being interviewed for this study. 
+ 
+ Four employed South Africans (see Table 1 ) were recruited for this study. All were black women based in Gauteng; three had completed Grade 12 and attained their National Senior Certificate, and one had left school in Grade 11. 
+ 
+ Table 1 
+ Socio-demographic information of participants. 
+ 
+ 
+ 
+ Name (pseudonyms) 
+ Age (years) 
+ Education level 
+ Employment status 
+ 
+ 
+ Unemployed previously (years) 
+ Employed during study 
+ 
+ 
+ 
+ 
+ Lerato 
+ 19 
+ Grade 12 
+ 1 (and 8 months) 
+ Yes 
+ 
+ 
+ Noni 
+ 21 
+ Grade 12 
+ 1 
+ Yes 
+ 
+ 
+ Zanelle 
+ 24 
+ Grade 10 
+ 3 
+ Yes 
+ 
+ 
+ Elene 
+ 23 
+ Grade 12 
+ 5 
+ Yes 
+ 
+ 
+ 
+ 
+ 
+ 
+ Procedure 
+ Participants were contacted to explain the research purpose and process. They were subsequently furnished with a written description of the research, including an assurance that participation was entirely discretionary. 
+ After completing biographical questionnaires with each participant, D.J.P. conducted in-person semi-structured interviews. A context of openness and trust was created during the interviews by taking adequate time to build rapport thereby ensuring interviewees felt comfortable to share personal information, posing questions in a calm and conversational tone, showing interest in the interviewee s experiences, and consistently summarising and checking for meaning. 
+ The interview guide was designed to explore potential factors that contributed to unemployment, the psychological impact of unemployment, the journey to employment, the potential factors that contributed to employment success and post-employment experiences. With the permission of each of the participants, the interviews were recorded and subsequently transcribed verbatim. 
+ Member checking was conducted by verifying interpretations with participants during the interview as well as after the fact by supervisors. 
+ 
+ 
+ Ethical considerations 
+ An application for full ethical approval was made to the Faculty of Humanities Research Ethics Committee and ethics consent was received on 11 December 2020. The ethics approval number is REC-01-285-2020. 
+ Confidentiality of participants data was ensured by using password protection of computer-based files, scanned and password-protected signed consent forms, and hard copies stored in a locked safe. All personal identifiers were removed from study documents and pseudonyms were used for participants names. The participants in this study were furnished with a verbal and written description of the research, including an assurance that participation was entirely discretionary. They were subsequently asked to give signed consent for the interviews to take place and for the information gathered to be used anonymously for research purposes. 
+ 
+ 
+ Data collection and sample sufficiency 
+ Information was collected using semi-structured interviews with four participants. Extensive probing by the researcher proved to be highly productive and expanded the amount of information accumulated from each participant to increase sample sufficiency and achieve item salience. A well-known standard in qualitative sample size is thematic saturation (DeJonckheere Vaughn, 2019 ). However, Weller et al. ( 2018 ) found item salience to be a more useful concept for considering sample size sufficiency than determining the point of thematic saturation. 
+ 
+ 
+ Data analysis 
+ Thematic analysis was conducted using Braun and Clarke s ( 2006 , 2012 ) six-step analysis process, which included becoming familiar with the data, generating initial codes, searching for themes, reviewing the themes, defining and naming themes, and writing the report. 
+ 
+ 
+ Analytic process 
+ The interviews were transcribed verbatim from the digital recordings of the interviews held with each participant. D.J.P. worked systematically through the entire data set to generate initial codes, which were subsequently collated into potential themes and all data relevant to each potential theme were gathered. Themes were identified inductively, meaning they were strongly linked to the data. Meetings were held among the three researchers to discuss preliminary themes and sub-themes and to explore nuances from the data that could have warranted further exploration. Refining themes and establishing if there was sufficient, relevant data to support the themes led the researchers to develop a detailed thematic map. The collated data extracts for each theme were reviewed and organised into a coherent and internally consistent account of what was interesting in relation to the exploration of the psychological factors influencing the transition from unemployment to employment as experienced by black, South African youth. 
+ 
+ 
+ Rigour of the study 
+ Lincoln and Guba s ( 1985 ) model of trustworthiness was used to enhance the rigour of this study using the following four criteria. Credibility : By verifying interpretations with participants during the interview, the researcher established if there was a match between the participants views and the researchers representations of them and provided in-depth and accurate descriptions of the collected data based on the participants verbatim quotes. Prolonged engagement allowed the researchers to become deeply familiar with patterns in the research data. Transferability : The researchers provided texts that were rich in detail such that the object of description is clear and substantial for the reader. Dependability : The process used in this study included working repeatedly through the data to ensure familiarity, generating initial codes, searching for, reviewing, defining and naming themes and reporting this process and the results thereby enabling other researchers in the future to repeat the work. Confirmability : In this study, all stages of the research were discussed and documented in detail. The researchers consistently appraised and reflected upon insights, perceptions and interpretations to maintain objectivity during the research. 
+ 
+ 
+ 
+ Results 
+ Four main themes and several sub-themes emerged from the analysis of the participants interviews. 
+ 
+ Theme 1: Dreams of continued education deferred 
+ This theme, through two sub-themes, tertiary education denied, and tertiary education delayed, elucidated the participants perceptions of the reasons for being excluded from tertiary education. Ineligibility for further education, mainly based on poor Grade 12 results, and, in one instance, non-completion of secondary school, coupled with a lack of funding for higher education, were reasons given by the participants for being denied the educational opportunities they desired. The participants accepted that they would have to delay further education: 
+ 
+ Lerato: It wasn t easy because when you have a higher certificate it s not easy to find a [ an academic institution ] you are unable to because that certain course want [ academic institution requires ] you to have at least a bachelor or a diploma [ Matric pass rate ] and then with the higher certificate you are unable to [ qualify ] . I applied at a lot of schools and then they were declining. 
+ Noni: I wanted to go and study, I really wanted to go [ but ] I didn t have the funds to go and study. 
+ 
+ The participants ultimately elected to cease their fruitless quest, defer pursuing further education and secure employment: 
+ 
+ Zanelle: I can still find a job, [ after qui tting school ] I can work for someone, I can do it as long as we can put food on the table I can still go to school after that. 
+ Lerato: that was when I realised that if I don t find school [ an opportunity to study ] I need to do something at least in life. 
+ Noni: Now that I don t [ since I did not ] have funds [ to attend a tertiary institution ], I need [needed] to look for a job to pay my fees to get me my career. 
+ 
+ The participants found themselves unemployed and searching for work without the necessary experience or qualifications demanded by the job market. 
+ 
+ 
+ Theme 2: Lost on the journey to employment 
+ Theme 2 encompassed five sub-themes: The anguish of unemployment, loss of personal identity, reflections and social comparisons, purpose giving rise to pressure to find work and the negative impact of rejection. These sub-themes highlighted the participants psychological distress caused by unemployment, which included depression, anxiety and feelings of alienation, and gave expression to a loss of personal identity. The participants described their distress in terms of feeling worthless: 
+ 
+ Zanelle: It s like I don t have a life anymore, it s like I m worthless, or it s like I just lose hope, like I m nobody. 
+ Lerato: I felt different that [ than ] others you know, because I feel like I m left out in a way of life I can t do anything. I just sit here at home. I can t study; I can t work; you know I feel [ felt ] left out a lot. 
+ Noni: I hated myself to be honest. I thought, I thought I was not worth it. I was not worth being someone s employee. I felt like I was not smart, I felt like I was dumb, I felt like I had bad luck like it, it, was so heavy on my heart. 
+ Noni: Psychologically, I was, I was how can I say this, I won t say short minded I couldn t think outside of the box. I felt caged, I felt like I was in a small box, a dark small box, where nobody, like nobody, could take me out of that box. Even if you tried to cheer me up, I was a very sad soul. 
+ 
+ The participants attempted to understand their circumstances by reflecting on their situation and making social comparisons: 
+ 
+ Zanelle: Eish it s when I see my age mates, when I see they had given up their dreams and just sleep with a man for money, so I said no, I don t want that life, I have to try harder, until something comes up. 
+ Elene: I did compare myself to my friends. In fact, [ to ] my friend because right after Matric she found a job. And then, knowing her grades, I said to myself, it was more. 
+ Lerato: I did feel like that [ unhappy ]. Because most of my friends are at school and with me, I m like just sitting here at home. Not even at school, I m not working. 
+ 
+ The participants described the pressure to find work as unrelenting and associated with family survival, guilt at using scarce family resources and a fear of the future without work: 
+ 
+ Zanelle: Ahh that thing it makes me to go faster, my age, I have to think like an adult so if I can go out and look for a job, I can help my family. 
+ Elene: I just felt like I did need to do this [ find work ]. It was hard on my parents I need [ needed ] to do something, in order to bring something to the table. 
+ Lerato: Mostly it was fear, you know, because like you fear what if I don t a get a job, what if I don t go to school, what is going to happen to me? Will I become like those [ her friends ], like you ask yourself. 
+ 
+ The psychological impact of job-search rejection was negative for the participants and included feelings of anxiety, exclusion, a lack of self-esteem, hurt, fear and loss of identity: 
+ 
+ Zanelle: It s very hard, very hurtful to every day wake up in the morning, look for a job when you know exactly, eish, I ll not get that job when they want something that I don t have. 
+ Elene: and then when I get to the manager the facial expression tells you everything the face is like you need to leave, there is nothing here for you. When you see [ the facial expression of ] a person like that, you change. 
+ Noni: I was very scared. I felt everyone was going to reject me even if I did good. What I believe is that everything that I touch turns into rust, so I was afraid to touch anything. But then now, I have learnt that that was all in my mind, that s what people inserted in me in my mind that you won t be anything, you won t do anything in life. 
+ 
+ 
+ 
+ Theme 3: Support in the search for employment 
+ Theme 3 was the dominant theme in this study, which included the sub-themes kin support, psychological strengths and training interventions. Participants contributions to this theme included the exceptional support of direct family, extended family and other kin who provided practical, emotional, spiritual and material assistance: 
+ 
+ Researcher: Who was helping you during this period [ in your attempt to find work ]? 
+ Zanelle: My mum. It was me and my mother. Together, we were together 
+ Elene: I had the best support system ever [ referring to family ]. 
+ Lerato: You [ we ] would have a talk and then once we ve had a talk, I would go to my room and then I d think to myself, Wow, I need to do what my granny said. 
+ Noni: So, so my mom, she did help me, it was so hard to find a job. My siblings as well, people sent me job applications, vacancies and WhatsApp links, everything. 
+ Noni: Mom was at work, she was helping a customer [ she asked the customer ], she s like, My daughter is looking for a job, could you just help her? 
+ 
+ Reciprocally, the participants expressed their compulsion to ensure that their respective families did not suffer while supporting them during their search for work: 
+ 
+ Zanelle: Uh, by that time there was a last born at home and she was brain damaged, so that place we were staying at the time we were supposed to go with a transport to get to school [ the family could not afford school transport money, food and assistance for a disabled sibling, so Zanelle decided to quit school ] by that time so with no food and no transport money, and [ with ] the money that we have, we [ were ] supposed to help that child. 
+ Elene: I just felt like I did need to do this [ find work ]. It was hard on my parents. I need [ needed ] to do something, in order to bring something to the table. 
+ Noni: I was so devastated, cos I couldn t help my mom. I would just sit there around and see her helpless, I felt helpless, and the thing is at home it s only my mom who is working. So now everyone is like a burden to her. 
+ 
+ Spiritual and ancestor beliefs provided hope for one of the participants: 
+ 
+ Elene: So, I went to this specific lady [ grave of an ancestor ], I was named after her, I ve never been to her graveyard. I went there, in fact my dad told me that, you know what ne, maybe if I take you there, things will change. And then he took me there, I went there, I just asked [ my ancestor ] you know what, I m in need of a job, I m in need of this, maybe you can do something as a guardian angel. And then, I think it was three months after we went there when I got a job. And then I said to myself, you know what, these things really do work. 
+ 
+ Three participants secured employment through their parents network connections, a significant finding within the kin sub-theme: 
+ 
+ Lerato: My mom was like there is a job at [ retail company ]. So, it took a while for them to at least review my CV and all that but then at least I had a connection through my mom and that s how I got this job. 
+ Noni: So, my mom actually found a job for me here [ retail company ], through a customer. 
+ Elene: I think it was also when I spoke to this friend, my dad s friend, he has always been coming to my place and my dad has always been telling him about me. And so, I went there [ for an interview at her father s friend s company ], and when I got there, things [ the interview ] just went smoothly I was so happy, and when [ then ] they said can you start now? 
+ 
+ Psychological strengths that assisted the participants in persisting with their job-seeking activities included self-motivation, grit and resilience: 
+ 
+ Researcher: What kept you going [ searching for employment ] for a whole three years? 
+ Zanelle: Maybe I saw it s not over, it s not over, I can still find a job, I can work for someone, I can do it as long as we can put food on the table, I can still go to school after that. 
+ Elene: And then I went to every shop. And then they would turn me down, it was so tiring, it was so exhausting [ inte rviewer s name ] I told myself I m not going to give up. Someone has to take my CV even if it s one company. 
+ Lerato: I kept on pushing, I kept on 
+ Noni: At some point I felt helpless [ about finding work ], but then I managed [ to keep searching for a job ], like I told myself that I can do this. I m still young, I have got potential, I am worth [ it ], I can do it. I have to, I have to go and look for a job. 
+ 
+ 
+ 
+ Theme 4: Finding myself more than finding a job 
+ The description of Theme 4 was the concluding statement in one of the participant s interviews. This expression summed up the self-discovery of all participants once they had secured employment: 
+ 
+ Zanelle: It s like I m natural, because I never, I mean a computer is not like a cashier but now I m a cashier, yes, I m natural hey, I have to trust myself. 
+ Elene: So, [ before finding a job ] I never knew that about myself [ after finding a job ] I learnt that I am a free-spirited person. 
+ Lerato: I didn t believe it when I looked at myself back, I m like no there s no but now I m actually seeing what my granny was seeing in me which is very motivating, very nice and beautiful. 
+ Noni: It [ finding a job ] completely changes the dialect [ expression ] of your life; it completely shape-shifts let me say that if I could say that. 
+ Noni: This is my purpose, I found I finally, finally found what I have wanted to do right now. And that took me out of that dark place that I was in, that gave me hope to wake up in the morning because I had a purpose now. I had a reason why I was doing this thing called life. 
+ Noni: Very huge that was me actually finding myself more than finding a job. 
+ 
+ 
+ 
+ 
+ Discussion 
+ All the participants expressed a desire to further their education before they commenced employment; however, they were denied the opportunity to do so as they were ineligible for further education based on poor results and a lack of funding. These reasons concur with several South African studies. Branson and Kahn ( 2016 ) postulated that the leading cause of limited enrolment in post-secondary education in South Africa is poor matric outcomes. The differences in the quality of education received at earlier levels of schooling, a lack of academic support and home environments characterised by limited resources mean that the student s academic performance is generally poor. Improved quality of schooling, financial assistance and strengthened post-school education and training are required to provide youth with access to opportunities for advancement (Perold et al., 2012 ). In more recent research, Mbandlwa ( 2020 ) stated that the basic education system is failing in South Africa. There appears to be a disconnect between the low pass mark required to achieve a matric qualification and the higher matric pass marks required to achieve an APS score acceptable to tertiary institutions. Naidoo ( 2021 ) examined South African youth schooling experiences and aspirations and found that many post-school youths had been significantly disadvantaged by their schooling. Participants in this study accepted that further education would have to be held in abeyance and consequently commenced their search for employment. 
+ Psychological distress and loss of identity caused by unsuccessful attempts at securing employment are mentioned in several research studies, which correspond with the reported high levels of psychological distress experienced by the research participants. A South African study by De Witte et al. ( 2012 ) on the psychological effects of unemployment found that unemployed individuals suffered from depression, fear, despair, and decreased self-esteem, life satisfaction and a sense of identity, which correspond with the findings in this study. The participants descriptions of rejection coincided with international research by Goldman-Mellor et al. ( 2016 ), Hisw ls et al. ( 2017 ) and Kossen and McIlveen ( 2018 ), which found that individuals who experienced job application rejection experienced anxiety, depression, a lack of self-esteem, detachment from society and loss of identity. 
+ The participants accounts in this study further highlighted the exceptional unemployment and job-seeking support provided by their respective kin. In a Ugandan study of school-to-work transitions, Paul et al. ( 2021 ) found that family is essential in assisting the youth to transition from school to the labour market. The study also found that the major effects of transitioning from school to work without family support include exploitation and poorly paid jobs, missing job opportunities, prolonged employment search, the risk of falling into the not in education, employment or training (NEET) category and feeling abandoned or stressed during the transition period. In a UK study, Hardgrove et al. ( 2015 ) also highlighted the crucial role of family support. They postulated that as youths plot a course through a labour market marked by uncertainty and insecurity, their ability to negotiate rapidly changing opportunities is enabled and strengthened through family support. However, there appears to be a gap in South African literature related to kin support during extended periods of unemployment and job searching. 
+ The psychological strengths that assisted the participants in their search for employment included self-motivation, resilience and grit. Research by Patel et al. ( 2020 ) provides evidence that non-economic indicators of success, such as resilience, are essential in the transition to employment. According to Armstrong et al. ( 2018 ), grit, defined as sustained perseverance and passion for long-term goals, is a new concept of interest in South African research. 
+ The expression finding myself more than finding a job describes one participant s identity growth and self-discovery after securing employment. Super et al. ( 1996 ) stated that individuals develop their understanding of who they are based on self-observations of their unique personal characteristics and experiences, as well as on feedback from others and social interactions. The participants narratives before employment reflected their belief that they were of no value to themselves or others. In other words, they had lost their identity. According to Meyer ( 2017 ), social constructionism emphasises that identity is entrenched in certain sociocultural norms and that this entrenchment affects the construction of self-narrative. The unwritten rules of society include that to earn respect in society and to be seen as contributing citizens, individuals should be employed (Du Toit et al., 2018 ). These findings were reflected in the participants narratives after they secured employment. While unemployed and seeking work, the participants had no aspirations regarding their career and job choices; their only purpose was to find a job any job. After being employed for a period, the participants progressed towards more mature career identity development and began planning their future with a newfound sense of well-being and life satisfaction. They appeared to need a job in order to find a more positive self-concept. The participants did not have a choice regarding their initial occupation; however, once employed, they entered a phase of developing an understanding of who they were and which occupational path to follow. The participants self-concept development process echoed Super s ( 1980 ) theory of the self-concept in the career development process. According to Stead and Watson ( 2017 ), an individual s choice of occupation can be considered an attempt to express the perception of self. However, for these participants, the process of vocational identification commenced after, and not before, employment, as advanced by Super ( 1980 ). 
+ 
+ Strengths and limitations of this study 
+ Through the rich, thick accounts of the participant narratives in this study, the research illuminated the depth of meaning expressed by the research participants. Descriptions included their experience of the transition from school to the unsuccessful pursuit of further education followed by the experience of prolonged unemployment, finding employment and, ultimately, self-discovery. The finding of the impact of kin support for the participants throughout the transition from unemployment to employment is particularly significant and appears to be under-reported in the literature. Grit, which appears to have been excluded from previous research on job seeking, was identified as a psychological strength in the search for employment. An additional noteworthy aspect of this research was the participants development of identity post-employment. 
+ This study was not without limitations; the small case study of black, female-only participants based geographically in the same province means that the study must be understood within that context because qualitative research does not aim for the generalisability of findings. The researchers attempted to provide rigorous and detailed thematic analysis so that readers could better understand participants lived experiences and use the information illuminated in this study as they best determined. 
+ 
+ 
+ Recommendations 
+ Based on the experiences elucidated in this study, it appears that the burden of supporting the youth in their search for further education and employment falls on family members who are usually not career specialists. The lack of career guidance may mean that young job seekers take longer to secure employment and suffer more than they should. Preparation for further education and career guidance should be effectively delivered at the high school stage (Armstrong et al., 2018 ). Implementation or improvement of high school career guidance and planning, including information on the matric marks required for specific study routes, may ensure that learners know early in their high school careers what they are aiming for. Such knowledge may motivate the achievement of better results. Providing information on potential academic pathways and registration processes could mitigate the stress and missed opportunities of post-school self-search for higher education. Job-seeking and employability skills are vitally important, particularly for new entrants to the labour market. 
+ The participants in this study developed their vocational identity only after securing employment. From a social constructionism perspective, the idea of job training simulations and frequent group excursions to a variety of organisations at the high school stage, as well as exposing students to holiday employment interventions, could enable them to develop their self-concept and vocational identity during their high school years, which this research has identified as critical to long-term career development. Well-trained career practitioners are in short supply in South Africa, particularly within public schools. The Department of Higher Education and Training has recognised this and, in 2017, gazetted a national policy for an integrated career development system for South Africa (Department of Higher Education and Training, 2017 ). This policy intends to ensure that all citizens, including the youth, have access to quality career information and services; however, this has been slow to gain traction and requires more focussed attention and skills. 
+ 
+ 
+ 
+ Conclusion 
+ This study explored the psychological impact of moving from unemployment to employment as well as what assisted this transition. A gap in the literature was highlighted regarding kin support for unemployed youth. The insights from this study may contribute to the literature on unemployed youth kin support, psychological strengths contributing to employment success, the psychological impact of unemployment and job seeking on youth, and the conditions required for developing self-concept and vocational identity. Possible strategies have been recommended to ameliorate the dearth of career guidance available to unemployed youth. 
+ 
+ 
+ 
+ 
+ Acknowledgements 
+ This article is partially based on D.J.P. s thesis entitled The psychological factors influencing moving from unemployment to employment in South Africa : a thematic analysis towards the degree of Master of Arts, Department of Psychology, Faculty of Humanities, University of Johannesburg in 2022, with supervisor Dr. Noorjehan Joosub and co-supervisor Dr. P. Basson. It is available at: Handle: https://hdl.handle.net/10210/504963 . 
+ 
+ Competing interests 
+ The authors declare that they have no financial or personal relationship that may have inappropriately influenced them in writing this article. 
+ 
+ 
+ Authors contributions 
+ D.J.P. conducted the research project. N.J. and P.B. supervised the project. 
+ 
+ 
+ Data availability 
+ The data are not publicly available because of confidential information that could compromise the privacy of research participants. 
+ 
+ 
+ Disclaimer 
+ The views and opinions expressed in this article are those of the authors and are the product of professional research. It does not necessarily reflect the official policy or position of any affiliated institution, funder, agency or that of the publisher. The authors are responsible for this article s results, findings and content. 
+ 
+ 
+ 
+ References 
+ Armstrong , A ., Van Der Lingen , E ., Lourens , R ., Chen , J.Y.J . ( 2018 ). Towards a new model of grit within a cognitive-affective framework of self-regulation . South African Journal of Business Management , 49 ( 1 ), a13 . https://doi.org/10.4102/sajbm.v49i1.13 
+ Branson , N ., Kahn , A . ( 2016 ). The post matriculation enrolment decision: Do public colleges provide students with a viable alternative? Evidence from the first four waves of the National Income Dynamics Study (Issue 182 ). Retrieved from https://ideas.repec.org/p/ldr/wpaper/182.html 
+ Braun , V ., Clarke , V . ( 2006 ). Using thematic analysis in psychology . Qualitative Research in Psychology , 3 ( 2 ), 77 101 . https://doi.org/10.1191/1478088706qp063oa 
+ Braun , V ., Clarke , V . ( 2012 ). Thematic analysis . In H. Cooper , P.M. Camic , D.L. Long , A.T. Panter , D. Rindskopf , K.J. Sher (Eds.) , APA handbook of research methods in psychology, Vol. 2. Research designs: Quantitative, qualitative, neuropsychological, and biological (pp. 57 71 ). American Psychological Association . 
+ Casale , D ., Posel , D . ( 2020 ). Gender and the early effects of the Covid-19 crisis in the paid and unpaid economies in South Africa . In National income dynamics study Coronavirus rapid mobile survey, July . Retrieved from https://cramsurvey.org/wp-content/uploads/2020/07/Casale-Gender-the-early-effects-of-the-COVID-19-crisis-in-the-paid-unpaid-economies-in-South-Africa.pdf 
+ Chibba , M ., Luiz , J.M . ( 2011 ). Poverty, inequality and unemployment in South Africa: Context, issues and the way forward . Economic Papers , 30 ( 3 ), 307 315 . https://doi.org/10.1111/j.1759-3441.2011.00129.x 
+ Cloete , A . ( 2015 ). Youth unemployment in South Africa: A theological reflection through the lens of human dignity . Missionalia , 43 ( 3 ), 513 525 . https://doi.org/10.7832/43-3-133 
+ DeJonckheere , M ., Vaughn , L.M . ( 2019 ). Semi-structured interviewing in primary care research: A balance of relationship and rigour . Family Medicine and Community Health , 7 ( 2 ), 57 . https://doi.org/10.1136/fmch-2018-000057 
+ De Lannoy , A ., Graham , L ., Patel , L ., Liebbrandt , M . ( 2020 ). Why is youth unemployment so intractable in South Africa? A synthesis of evidence at the micro-level . Journal of Applied Youth Studies , 3 , 115 131 . https://doi.org/10.1007/s43151-020-00012-6 
+ Department of Higher Education and Training (South Africa) . ( 2017 , April 20 ). National Qualification Framework Act, 2008 (Act no. 67 of 2008): National policy for an integrated career development system for South Africa (Notice 373) . Government Gazette , 40795 . Retrieved from https://www.gov.za/sites/default/files/gcis_document/201704/40795gon373.pdf 
+ De Witte , H ., Rothmann , S ., Jackson , L . ( 2012 ). The psychological consequences of unemployment in South Africa . South African Journal of Economic and Management Sciences , 15 ( 3 ), 235 252 . https://doi.org/10.4102/sajems.v15i3.153 
+ Dieltiens , V . ( 2015 ). A foot-in-the-door: NGOs as workplace intermediaries in the South African youth labour market (Issue Dieltiens) . Retrieved from www.econ3x3.org 
+ Dube-Addae , T . ( 2019 ). Narrative identities: Voices of the unemployed youth in a low-income community in South Africa . Unpublished doctoral dissertation , Stellenbosch University . Retrieved from https://scholar.sun.ac.za/server/api/core/bitstreams/0b2b6154-5316-428f-b835-c495d9849abb/content 
+ Du Toit , M ., De Witte , H ., Rothmann , S ., Van den Broeck , A . ( 2018 ). Contextual factors and the experience of unemployment: A review of qualitative studies . South African Journal of Economic and Management Sciences , 21 ( 1 ), 1 11 . https://doi.org/10.4102/sajems.v21i1.2083 
+ Fern ndez-Valera , M.M ., Meseguer de Pedro , M ., De Cuyper , N ., Garc a-Izquierdo , M ., Soler Sanchez , M . ( 2020 ). Explaining job search behavior in unemployed youngsters beyond perceived employability: The role of psychological capital . Frontiers in Psychology , 11 ( July ), 1 12 . https://doi.org/10.3389/fpsyg.2020.01698 
+ Fugate , M ., Kinicki , A.J ., Ashforth , B.E . ( 2004 ). Employability: A psycho-social construct, its dimensions, and applications . Journal of Vocational Behavior , 65 ( 1 ), 14 38 . https://doi.org/10.1016/j.jvb.2003.10.005 
+ Goldman-Mellor , S ., Caspi , A ., Arseneault , L ., Ajala , N ., Ambler , A ., Danese , A ., Fisher , H ., Hucker , A ., Odgers , C ., Williams , T ., Wong , C ., Moffitt , T.E . ( 2016 ). Committed to work but vulnerable: Self-perceptions and mental health in NEET 18-year olds from a contemporary British cohort . Journal of Child Psychology and Psychiatry and Allied Disciplines , 57 ( 2 ), 196 203 . https://doi.org/10.1111/jcpp.12459 
+ G rny , M . ( 2018 ). The importance of work in human life and development. The consequences of unemployment . Refleksje , 53 ( 9 ), 1689 1699 . https://doi.org/10.14746/r.2018.2.4 
+ Hardgrove , A ., McDowell , L ., Rootham , E . ( 2015 ). Precarious lives, precarious labour: Family support and young men s transitions to work in the UK . Journal of Youth Studies , 18 ( 8 ), 1057 1076 . https://doi.org/10.1080/13676261.2015.1020933 
+ Hatch , M ., Posel , D . ( 2018 ). Who cares for children? A quantitative study of childcare in South Africa . Development Southern Africa , 35 ( 2 ), 267 282 . https://doi.org/10.1080/0376835X.2018.1452716 
+ Hisw ls , A.S ., Marttila , A ., M lstam , E ., Macassa , G . ( 2017 ). Experiences of unemployment and well-being after job loss during economic recession: Results of a qualitative study in east central Sweden . Journal of Public Health Research , 6 ( 3 ), 135 141 . https://doi.org/10.4081/jphr.2017.995 
+ International Labour Organization . ( 2015 ). Global employment trends for youth 2015: Scaling up investments in decent jobs for youth . International Labour Office ; 2015 . 
+ Kossen , C ., McIlveen , P . ( 2018 ). Unemployment from the perspective of the psychology of working . Journal of Career Development , 45 ( 5 ), 474 488 . https://doi.org/10.1177/0894845317711043 
+ Lincoln , Y.S ., Guba , E.G . ( 1985 ). Naturalistic inquiry . Sage . Retrieved from https://us.sagepub.com/en-us/nam/naturalistic-inquiry/book842 
+ Liu , S ., Wang , M ., Liao , H ., Shi , J . ( 2014 ). Self-regulation during job search: The opposing effects of employment self-efficacy and job search behavior self-efficacy . Journal of Applied Psychology , 99 ( 6 ), 1159 1172 . https://doi.org/10.1037/a0036692 
+ Lourens , E ., Fourie-Malherbe , M . ( 2016 ). The employability of higher education graduates: Are qualifications enough? Econ3x3 Forum , 4 . Retrieved from http://www.econ3x3.org/article/employability-higher-education-graduates-are-qualifications-enough 
+ Luthans , F ., Avolio , B.J ., Avey , J.B ., Norman , S.M . ( 2007 ). Positive psychological capital : Measurement and relationship with performance and satisfaction . Personnel Psychology , 60 , 541 572 . 
+ Mbandlwa , Z . ( 2020 ). The articulation of the secondary education system to tertiary institutions in South Africa; A deliberate mismatch . Solid State Technology , 63 ( 6 ), 6821 6835 . Retrieved from https://www.researchgate.net/profile/Zamokuhle-Mbandlwa/publication/346972238_The_Articulation_Of_The_Secondary_Education_System_To_Tertiary_Institutions_In_South_Africa_A_Deliberate_Mismatch/links/5fd674eea6fdccdcb8c47c29/The-Articulation-Of-The-Secondar 
+ Meyer , J . ( 2017 ). Dominant discourses on what it means to be a real man in South Africa: The narratives of adolescent male orphans . HTS Teologiese Studies/ Theological Studies , 73 ( 2 ), a4591 . https://doi.org/10.4102/hts.v73i2.4591 
+ Mlatsheni , C ., Ranchhod , V . ( 2017 ). Youth labour market dynamics in South Africa: Evidence from NIDS 1-2-3 . Redi3x3 (Issue Working Paper 39) . Retrieved from http://www.redi3x3.org/sites/default/files/Mlatsheni 26 Ranchhod 2017 REDI3x3 Working Paper 39 Youth labour market dynamics.pdf 
+ Naidoo , D . ( 2021 ). Post-school youths schooling experiences and aspirations . Perspectives in Education , 39 ( 2 ), 19 32 . https://doi.org/10.18820/2519593X/pie.v39.i2.3 
+ Patel , L ., Graham , L ., Chowa , G . ( 2020 ). Evidence of non-economic indicators as markers of success for youth in youth employability programs: Insights from a South African study . Children and Youth Services Review , 118 , 105404 . https://doi.org/10.1016/j.childyouth.2020.105404 
+ Paul , O.T ., Kuluthum , N ., Divine , E.N . ( 2021 ). Family support and school-to-work transition: Perceptions and experiences of university graduates in Kampala city, Uganda . Educational Research and Reviews , 16 ( 12 ), 428 437 . https://doi.org/10.5897/err2021.4213 
+ Paver , R ., Rothmann , S ., Van den Broeck , A ., De Witte , H . ( 2019 ). Labour market interventions to assist the unemployed in two townships in South Africa . SA Journal of Industrial Psychology , 45 , 1 14 . https://doi.org/10.4102/sajip.v45i0.1596 
+ Pereira , D.P ., 2022 , The psychological factors influencing moving from unemployment to employment in South Africa : a thematic analysis , Thesis - MA , University of Johannesburg , Johannesburg, South Africa . 
+ Perold , H ., Cloete , N ., Papier , J . (Eds.) . ( 2012 ). Shaping the future of South Africa s youth: Rethinking post-school education and skills training . African Minds . Retrieved from http://www.africanminds.co.za/wp-content/uploads/2012/06/13407164351047234866.pdf 
+ Perry , C ., Smith , C . ( 2017 ). Career choice and poverty . In G. Stead M. Watson (Eds.) . Career psychology in the South African context ( 3rd ed., pp. 157 183 ). Van Schaik . 
+ Rankin , N ., Roberts , G ., Sch er , V . ( 2014 ). The success of learnerships?: Lessons from South Africa s Training and Education Programme . UNU-WIDER , Helsinki WIDER Working Paper 2014/068 . 
+ R mgens , I ., Scoupe , R ., Beausaert , S . ( 2020 ). Unraveling the concept of employability, bringing together research on employability in higher education and the workplace . Studies in Higher Education , 45 ( 12 ), 2588 2603 . https://doi.org/10.1080/03075079.2019.1623770 
+ Statistics South Africa . ( 2020 ). Quarterly labour force survey, Quarter 4: 2020. Statistical release PO211 . Retrieved from http://www.statssa.gov.za/publications/P0211/P02114thQuarter2020.pdf 
+ Statistics South Africa . ( 2022a ). Quarterly labour force survey, Quarter 1: 2022. Statistical release PO211 . Rerieved from https://www.statssa.gov.za/publications/P0211/P02111stQuarter2022.pdf 
+ Statistics South Africa . ( 2022b ). Subjective poverty in South Africa: Findings from general household survey, 2019 2022 Report No. 03-18-25 . Rerieved from https://www.statssa.gov.za/publications/P0318/P03182022.pdf 
+ Stead , G.B ., Watson , M.B . ( 2017 ). Career psychology in the South African context ( 3rd ed.). Van Schaik . 
+ Super , D.E . ( 1980 ). A life-span, life-space approach to career development . Journal of Vocational Behavior , 16 ( 3 ), 282 298 . https://doi.org/10.1016/0001-8791(80)90056-1 
+ Super , D.E ., Savickas , M.L ., Super , C.M . ( 1996 ). The life-span, life-space approach to careers . In D. Brown L. Brooks (Eds.) , Career choice and development ( 3rd ed., pp. 121 178 ). Jossey-Bass . 
+ Turok , I . ( 2018 ). Worlds apart: Spatial inequalities in South Africa . In M.N. Smith (Ed.) , Confronting inequality: The South African crisis (pp. 129 151 ). Jacana Media . Rerieved from http://hdl.handle.net/20.500.11910/13531 
+ Van Hooft , E.A.J ., Kammeyer-Mueller , J.D ., Wanberg , C.R ., Kanfer , R ., Basbug , G . ( 2020 ). Job search and employment success: A quantitative review and future research agenda . Journal of Applied Psychology , 106 ( 5 ), 674 713 . https://doi.org/10.1037/apl0000675 
+ Weller , S ., Vickers , B ., Bernard , H.R ., Blackburn , A ., Borgatti , S ., Gravlee , C ., Johnson , J . ( 2018 ). Open-ended interview questions and saturation . PLoS One , 13 ( 6 ), e0198606 . https://doi.org/10.1371/journal.pone.0198606 
+ 
+ 
+ How to cite this article: Pereira, D.J., Joosub, N., Basson, P. (2024). The psychological factors influencing youth moving from unemployment to employment in South Africa. African Journal of Career Development, 6 (1), a118. https://doi.org/10.4102/ajcd.v6i1.118

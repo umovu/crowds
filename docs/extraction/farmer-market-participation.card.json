@@ -1,0 +1,95 @@
+{
+  "id": "farmer-market-participation",
+  "citation": [
+    "Typology of market participation among smallholder farmers, Limpopo/Mpumalanga (PMC)",
+    "Commercialization of indigenous crops among smallholder farmers (Frontiers)"
+  ],
+  "segment_tags": [
+    "smallholder_emerging_farmer",
+    "grant_dependent_survivor"
+  ],
+  "mechanisms": [
+    "Risk aversion shaped by limited exposure to formal market systems locks out formal markets: when the familiar informal network already moves the small surplus, a new arrangement that demands technology or competitive selling is read through unfamiliarity and lack of information, not trust.",
+    "Market information is the binding constraint: without knowing grades, prices, or where to transact, a farmer cannot make a selling decision and therefore remains a price taker in whatever local outlet is available.",
+    "The harvest is mentally split into consumption first and surplus second; because the surplus is tiny, it is absorbed by the immediate community, making volume-dependent formal channels irrelevant.",
+    "Household labour is the single point of failure: when a household member's HIV-related illness withdraws a family worker, production drops to subsistence only, and any market-facing activity that needs extra hands is abandoned.",
+    "Distance is a fixed cost that eats the margin: poor roads and remoteness make the trip to a formal buyer more expensive than the gain, so the farmer defaults to the nearest informal buyer or does not sell at all."
+  ],
+  "mechanism_provenance": [
+    {
+      "mechanism_index": 0,
+      "chain_id": "C1",
+      "passages": [
+        "P10",
+        "P11",
+        "P12",
+        "P19"
+      ]
+    },
+    {
+      "mechanism_index": 1,
+      "chain_id": "C2",
+      "passages": [
+        "P2",
+        "P3",
+        "P5",
+        "P6",
+        "P22",
+        "P27"
+      ]
+    },
+    {
+      "mechanism_index": 2,
+      "chain_id": "C3",
+      "passages": [
+        "P1",
+        "P3",
+        "P8",
+        "P20",
+        "P23"
+      ]
+    },
+    {
+      "mechanism_index": 3,
+      "chain_id": "C4",
+      "passages": [
+        "P4",
+        "P15",
+        "P29"
+      ]
+    },
+    {
+      "mechanism_index": 4,
+      "chain_id": "C5",
+      "passages": [
+        "P7",
+        "P14",
+        "P19",
+        "P33"
+      ]
+    }
+  ],
+  "vocabulary": [
+    "price taker",
+    "informal markets",
+    "traditional social networks",
+    "market information",
+    "surplus",
+    "transaction costs"
+  ],
+  "objection_patterns": [
+    "Will this require me to sell outside the people I already know?",
+    "How will I know the right price or grade without someone I trust telling me?",
+    "Do I have enough left after feeding my household to make the trip worthwhile?",
+    "Who will do the extra work if someone at home is sick?"
+  ],
+  "claim_type": "qualitative",
+  "region": "Limpopo and Mpumalanga, South Africa",
+  "year_range": "not specified",
+  "confidence": "Mixed-methods and literature synthesis, two-study triangulation, Limpopo/Mpumalanga focus — mechanisms robust for the smallholder typology, magnitudes and national prevalence unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity",
+    "motivation"
+  ]
+}

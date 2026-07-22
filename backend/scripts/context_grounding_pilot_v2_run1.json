@@ -1,0 +1,73 @@
+{
+  "model": "qwen3.6-plus",
+  "scenario": "A fintech company is launching a savings app: you save small amounts automatically from your account, and you unlock a 10% bonus if you don't withdraw anything for 3 months. It costs R15/month after a free first month.",
+  "stats_block": "# Real current SA costs and amounts (curated, dated — use these magnitudes, never invent numbers)\n- R100 buys about 4.5 litres of petrol — nowhere near a full tank (a small car tank is ~45 L).\n- R100 buys roughly 4.8 litres of diesel.\n- A typical out-of-bundle/prepaid gig of data is about R85; bundles are cheaper but still a real monthly cost on a tight budget.\n- A single local minibus-taxi trip is roughly R15–R20; a daily commute is two trips, so ~R36/day, ~R720/month.\n- A standard loaf of brown bread is about R16.\n- Prepaid electricity is roughly R3/kWh; R100 buys about 33 units, a few days for a modest household.\n- The SASSA Child Support Grant is R560/month per child.\n- The SASSA Older Persons (old-age) grant is about R2,310/month.\n- The SASSA Disability Grant is about R2,310/month.\n- The SRD (Social Relief of Distress) grant is R370/month — survival money, not discretionary.\n- (Grant schedule effective 2026-04-01, SASSA published figures)",
+  "results": [
+    {
+      "persona": "Thandeka Nene",
+      "archetype": "grant_dependent_survivor",
+      "bound_cards": [
+        "orange-farm-stokvels-2014",
+        "csg-allocation-zembe-mkabile"
+      ],
+      "conditions": {
+        "baseline": {
+          "stance": "concerned",
+          "text": "I’d be tempted by the 10% bonus because every rand counts when I’m stretching my child support grant to cover maize meal and prepaid electricity in KwaMashu, but that R15 monthly fee immediately puts me on guard. When we’re already buying expensive bottled water during the constant outages, I simply cannot afford to lose fifteen rand every month to an app I don't fully trust. Locking my money away for three months is completely impractical when a sudden clinic visit or a tripped meter means I need cash on hand today, not next quarter. I’ve watched too many digital schemes promise relief and leave township folks empty-handed, so I’d rather keep my savings where I can physically control it.\n\nSTANCE: concerned"
+        },
+        "cards": {
+          "stance": "concerned",
+          "text": "My first reaction is that this sounds like another product that doesn't understand how we actually survive on the grant. Every rand is already split between food, taxi fares, school needs, and my stokvel payout, so I can't risk an automatic deduction pulling cash away when KwaMashu has a sudden water outage or when the bread price jumps again. That R15 monthly fee alone would eat a week's worth of maize meal, and locking my savings for three months means I'll have nothing left if a funeral or a school uniform bill suddenly hits. With how much data costs just to keep a phone working during load shedding, I'd rather keep our society money with the stokvel ladies who actually sit with me and know when I truly need access.\nSTANCE: concerned"
+        },
+        "cards+stats": {
+          "stance": "oppose",
+          "text": "My first thought is that R15 a month is a direct hit to a budget I am already straining to cover brown bread, prepaid electricity, and school transport with my SASSA child support grant. The three-month lock-up is impossible when a single water outage, clinic visit, or emergency taxi fare means I need every rand immediately, and a delayed 10% bonus does not put food on the table today. I have learned to trust my stokvel instead, because sitting face-to-face with neighbours who know my reality guarantees the payout lands exactly when our turn comes, not when an algorithm decides. This feels like another digital trap designed to quietly drain the little we have while pretending to build wealth for people like me in KwaMashu. I will not risk my month-end survival cash on a service that takes control out of my hands.\nSTANCE: oppose"
+        }
+      }
+    },
+    {
+      "persona": "Noluthando Mbeki",
+      "archetype": "informal_trader",
+      "bound_cards": [
+        "orange-farm-stokvels-2014",
+        "james-2015-credit-aspiration"
+      ],
+      "conditions": {
+        "baseline": {
+          "stance": "concerned",
+          "text": "My first reaction is that it sounds clever, but my daily cash flow simply doesn’t work that way because some days I barely scrape together enough for transport and maize meal, let alone lock money away for three months. My main concern is the R15 monthly fee quietly eating my thin margins when I never know if customers will actually have cash after paying for taxis to get to the rank. That 10% bonus might look good on paper, but if my supplier suddenly hikes prices or my nieces need school shoes, I’ll need every rand immediately and a three-month lock-in would leave my whole household stranded. I’ve watched enough new financial products come through Mdantsane to know they usually favour people with steady salaries, not informal traders surviving on unpredictable foot traffic.\nSTANCE: concerned"
+        },
+        "cards": {
+          "stance": "oppose",
+          "text": "My first reaction is to shake my head because I don’t trust a phone app to pull money from my account when I can’t even guarantee I’ll have enough for fresh stock or taxi fare tomorrow. Around here, we stick to our stokvel because we sit face-to-face, we know each other’s real struggles, and the payout hits exactly when we need it for school fees or December. Locking away my cash for three months just for a small bonus is a gamble I can’t afford when foot traffic at the Mdantsane rank dries up without warning. That R15 monthly charge feels like another hidden deduction waiting to eat into my thin margins, and I’ve learned that digital platforms don’t adjust when thieves clear my table or the rains kill my sales. I’d rather keep my society money under my own watch where it’s flexible and trusted.\nSTANCE: oppose"
+        },
+        "cards+stats": {
+          "stance": "concerned",
+          "text": "I’d look at that app with a heavy eye because my daily takings at the Mdantsane taxi rank jump up and down, and locking my money away for three months just to earn ten percent doesn’t match how I actually survive. That R15 monthly fee eats into my daily float, costing me nearly a full loaf of bread when I need every rand to restock after a slow day. I know how deductions work in this country; once the system starts pulling from you, hidden charges always follow, whereas my stokvel works because we sit face-to-face and adjust when the cash runs dry. If I have to pull out early because a niece falls sick or my stock gets lifted, I lose the bonus and still pay the fee, so I’d rather keep my money where I can touch it.\nSTANCE: concerned"
+        }
+      }
+    },
+    {
+      "persona": "Thabo Nkosi",
+      "archetype": "unemployed_youth",
+      "bound_cards": [
+        "orange-farm-stokvels-2014",
+        "james-2015-credit-aspiration"
+      ],
+      "conditions": {
+        "baseline": {
+          "stance": "concerned",
+          "text": "My first reaction is mixed because that 10% bonus sounds like a proper boost, but locking my money away for three months is a hard sell when my piecework income around the Mbombela township is so unpredictable. That R15 monthly fee adds up fast when I’m already counting every rand to keep the pantry stocked and handle sudden repairs for my wife and me. I’ve also learned to be deeply suspicious of anything on my phone that promises easy returns, especially with how many scammers target our neighbourhood. Still, I truly believe small, consistent steps can build a better future, so I’d study the terms carefully before risking any of our actual cash.\nSTANCE: concerned"
+        },
+        "cards": {
+          "stance": "concerned",
+          "text": "I’ve got irregular cash coming in from piece jobs and fixing neighbors’ gates, so an app that automatically pulls money from my phone worries me because I never know if next week’s R200 will even be there. That 10% bonus sounds nice until you remember life doesn’t wait three months—a sudden funeral, a leaking roof, or my wife needing transport can wipe out that plan in a day. After the free month they want R15 every time, and I’ve seen too many “free” services hide deductions until your balance disappears while the company goes quiet. I’d rather drop my cash with the stokvel group down the road where we look each other in the eye, share our problems, and know exactly whose turn it is to take the lump sum. Still, if I could set my own pace and see the bonus hit without any surprise charges, I might test it to finally build something steady for my household.\n\nSTANCE: concerned"
+        },
+        "cards+stats": {
+          "stance": "concerned",
+          "text": "I’d be interested at first because automatically putting away small amounts could actually help me save for proper power tools instead of waiting months for our turn in the stokvel. But the R15 monthly fee and the three-month lock-in make me nervous, since my cash flow depends on irregular piece jobs and I can’t risk freezing funds if a neighbour’s break-in happens or my wife falls ill. I’ve learned to expect hidden deductions with these digital products, and I don’t trust an app to hold my survival money when I can’t look the person in the eye to verify where it goes. I’d rather stick with our society group where the accountability is face-to-face, so I’ll keep my distance until I see exactly how it pays out.\nSTANCE: concerned"
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,11 @@
 # Claude Code project guidance — crowds
 
+> **THIS WORKTREE = context-grounding pilot** (branch `context-grounding-pilot`).
+> Before doing anything here, read `PILOT_README.md` at the repo root — it
+> carries the pilot's purpose, established findings, hard rules, and how to
+> run the experiment. Main repo lives at `D:/Fub-agentsociety`; this worktree
+> borrows its .venv and .env (no local setup).
+
 Notes Claude should follow when working in this repo.
 
 ## What this project is

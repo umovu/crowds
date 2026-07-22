@@ -1,0 +1,1756 @@
+
+ 
+1
+A day in the life of a South African teenager 
+Prepared by Ntebaleng Chobokoane and Debbie Budlender, Statistics South Africa 
+For the Norwegian Agency for Development Cooperation, South Africa 
+ 
+Introduction 
+This paper focuses on teenagers, defined here as young people between the ages of 
+10 and 19 years. It provides background statistics about the characteristics of 
+teenagers from the labour force survey of February 2001. It then uses data from the 
+time use survey of 2000 to discuss the households in which they reside, the amount 
+of time they spend on various activities, and the times of the day in which they 
+engage in those activities.  
+ 
+Characteristics of teenagers 
+This section uses data from the labour force survey (LFS) of February 2001, which is 
+a six-monthly panel survey focusing on labour market issues. Each round of the 
+survey covers 30 000 households from around the country, and collects 
+demographic information about all members of these households. The results are 
+then weighted so as to be representative of the total population. 
+ 
+Table 1 shows the numbers of males and females in the whole population and in the 
+10-19 age group. As one can see, 22% of males and 20% of females are teenagers, 
+and together they make up 21% of the total population. Although there are slightly 
+more male than female teenagers, there are more females than males in the total 
+population. (The individual items shown in this and other tables do not always add up 
+exactly to the given total, because particular data are sometimes missing.) 
+ 
+Table 1: Distribution of teenagers in the total population 
+Sex 
+10-19 years 
+Total population % 10-19 years
+Male 
+4 722 971
+21 160 000 
+22 
+Female 
+4 678 436
+22 880 000 
+20 
+Total 
+9 401 407
+44 404 000 
+21 
+ 
+ 
+Table 2 shows the distribution of teenagers, adults (people aged 20 or older) and 
+younger children living in urban and non-urban areas. It shows that 55% of the whole 
+population lives in urban areas. These urban dwellers include just under half (48%) 
+of all teenagers, the same percentage of younger children, and 61% of adults. 
+Further calculations reveal that teenagers make up 18% of the urban population and 
+21% of the non-urban population.  
+ 
+Table 2: Distribution of the population by age group and location 
+  
+Children 0-9 
+Teenagers 
+Adults 
+Total 
+Location 
+Number 
+% 
+Number 
+% 
+Number 
+% 
+Number 
+% 
+Urban 
+5 012 689 48 
+4 485 146
+48 
+14 780 000
+61 
+24 277 835
+55 
+Non-Urban 
+5 468 658 52 
+4 917 757
+52 
+9 318 078
+39 
+19 704 493
+45 
+Total 
+10 480 000 
+100 
+9 402 903 100 
+24 100 000
+100 
+43 982 903
+100 
+ 
+ 
+Table 3 shows a range of characteristics of teenagers, which provide the background 
+to the analysis of their use of time. For example, over two-fifths (82%) of them are 
+
+ 
+2
+African. Boys and girls differ little with respect to population group and location. They 
+do, however differ in respect of their highest educational qualification. Girls of this 
+age tend to have higher qualifications than boys: 52% of girls, but only 45% of boys, 
+have achieved grade 7 or higher. Almost all teenagers (97%) can read and write in at 
+least one language. 
+ 
+Table 3: Number and distribution of male and female teenagers according to 
+location, population group and education  
+ 
+ 
+Male 
+Female 
+All 
+ 
+ 
+Number 
+% 
+Number 
+% 
+Number 
+% 
+Location  
+Urban 
+2 225 327 47 
+2 258 644 48 
+4 483 970 48 
+ 
+Non-urban 
+2 497 645 53 
+2 419 792 52 
+4 917 437 52 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Population group 
+Non-African
+866 888 18 
+856 718 18 
+1 723 607 18 
+ 
+African 
+3 856 083 82 
+3 821 718 82 
+7 677 800 82 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Educational 
+qualification 
+No formal 
+92 112
+2 
+58 655
+1 
+   150 767
+2 
+ 
+Grade 1-6 
+2 484 517 53 
+2 169 085 46 
+4 653 601 49 
+ 
+Grade 7-11 
+1 997 832 42 
+2 242 243 48 
+4 240 075 45 
+ 
+Matric plus 
+137 557
+3 
+189 237
+4 
+   326 795
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Total 
+ 
+4 722 971100 
+4 678 436100
+9 401 407100 
+ 
+ 
+Table 4 reveals that over a fifth (22%) of teenagers live in KwaZulu-Natal, 18% in 
+Eastern Cape, and 15% in Northern Province (now Limpopo). Teenagers are, 
+therefore, more concentrated than adults in the poorer provinces. 
+ 
+Table 4: Distribution of teenagers and adults by province 
+ 
+Teenagers 
+Adults 
+Province 
+Number 
+%  
+Number 
+% 
+Western Cape 
+768 713
+8 
+2 570 910
+11 
+Eastern Cape 
+1 728 405
+18 
+3 409 181
+14 
+Northern Cape 
+187 381
+2 
+502 763
+2 
+Free State 
+578 298
+6 
+1 619 151
+7 
+KwaZulu-Natal 
+2 038 095
+22 
+4 803 625
+20 
+North West 
+761 901
+8 
+1 977 406
+8 
+Gauteng 
+1 217 936
+13 
+5 101 865
+21 
+Mpumalanga 
+682 513
+7 
+1 588 206
+7 
+Northern Province
+1 439 660
+15 
+2 524 463
+10 
+Total 
+9 402 903
+100 
+24 100 000 100 
+ 
+
+ 
+3
+ 
+Characteristics of households in which teenagers reside  
+In this section we use data from the time use survey to describe characteristics of 
+the households in which teenagers reside. This was the first national time use survey 
+in the country, and was carried out with financial support from the Norwegian Agency 
+for Development Cooperation and technical assistance from Statistics Norway. It 
+was conducted in three tranches, in February, June and October of 2000. It covered 
+a total of over 8 500 households in all parts of the country, and obtained information 
+from over 15 000 individuals aged 10 years and above about their activities on the 
+previous day. Of those interviewed, 3 573 (unweighted) were between the ages of 10 
+and 19 years. The results were then weighted so as to represent the profile of the 
+total population aged 10 years and above. 
+ 
+Table 5 shows the percentage of teenagers in households that are within 30 minutes 
+walk, or 2 km, of schools. It also shows the percentage of teenagers in households 
+with relatively easy access to a car or to public transportation such as a bus, train or 
+taxi. As can be seen, more urban than non-urban households have access to 
+transport, but the large majority of both have access to some form of transportation. 
+Moreover, nearly three-quarters of urban households are within 2 km of a secondary 
+school, and just over half (55%) of non-urban households. A little over three-quarters 
+of non-urban teenagers and more than four-fifths of urban teenagers live within 2 km 
+of a primary school.  
+ 
+Table 5: Percentage of teenagers in households with access to transport and 
+within 2km of schools 
+Facility 
+% Non-urban 
+% Urban 
+Transportation 
+88 
+98 
+Within 2 km of secondary school
+55 
+73 
+Within 2 km of primary school 
+77 
+83 
+ 
+ 
+Table 6 shows that over four-fifths (83%) of all urban teenagers live in households 
+with access to radio, and three-quarters (75%) have access to television. The 
+percentages are lower for non-urban teenagers, at 75% and 42% respectively. 
+ 
+Table 6: Percentage of teenagers in households with access to television and 
+radio 
+Amenity 
+% Non-urban 
+% Urban 
+Television 
+42 
+75 
+Radio 
+75 
+83 
+ 
+ 
+Table 7 reveals that 53% of non-urban teenagers but only 15% of urban teenagers 
+live in households with no access to electricity. The most common sources of 
+domestic water for non-urban teenagers are off-site sources such as dams, pools, 
+stagnant water sources, wells, springs and water from vendors. On the other hand 
+most (57%) of urban households where there are teenagers use mainly indoor water 
+sources.  
+ 
+
+ 
+4
+The households of about 10% of non-urban and 38% of urban teenagers have a 
+monthly income of R1 800 or more. Two-fifths of all non-urban teenagers live in 
+households with an income of between R400 and R1 799 a month, and a further 
+29% of them live in households with even lower incomes than this. 
+ 
+Table 7: Distribution of teenagers in households with various characteristics 
+Characteristics 
+  
+% Non-urban % Urban
+Electricity 
+Access 
+47 
+85 
+  
+No access 
+53 
+15 
+  
+  
+Domestic water source 
+Dwelling 
+7 
+57 
+  
+Yard 
+20 
+30 
+  
+Off-site 
+71 
+11 
+  
+Unspecified 
+2 
+1 
+  
+  
+Monthly household 
+income 
+R0-399 
+29 
+15 
+  
+R400-799 
+40 
+21 
+  
+R800-1799 
+21 
+27 
+  
+R1800 or more 
+10 
+38 
+Total 
+ 
+100 
+100 
+ 
+ 
+Time use patterns among the youth 
+The time use survey asked respondents to report what they had done during every 
+half-hour on the previous day. By averaging the data from these diaries, we derived 
+a typical day for various groups of teenagers.  
+ 
+Overall activity pattern 
+One can distinguish between three broad groups of activities formulated in 
+accordance with the System of National Accounts (SNA). 
+  
+SNA productive activities are activities which are included in calculations of the gross 
+domestic product (GDP) and which are generally conceived of as constituting 
+‘economic work’. They include paid work in the formal and informal sectors, as well 
+as subsistence production. Collecting fuel and water for household use, although not 
+usually considered by the layperson to be economic work, is considered to be SNA 
+productive activity. 
+ 
+Non-SNA productive activities include housework, care of other people including 
+children, and community activities. These activities produce goods and services and 
+are thus productive, although they are not included in the calculation of GDP and are 
+not usually paid. 
+ 
+Non-productive activities are all other activities including eating, sleeping, 
+participating in cultural and social activities, learning and leisure. 
+ 
+Table 8 shows the distribution of these three types of activity over the 1 440 minutes 
+of a typical day for younger and older teenagers. Where the columns do not add up 
+to exactly 1 440, this is because some data was not provided. Also note that the total 
+number of minutes spent on a category of activity are averaged over all those 
+
+ 
+5
+teenagers with specific characteristics, whether or not each of them engages in the 
+particular activity or not. As expected, teenagers between the ages of 15 and 19 tend 
+to spend more time on SNA and non-SNA production than their younger 
+counterparts do. The older teenagers spend an average of 48 minutes on SNA 
+production and 117 on non-SNA production, as compared to 30 minutes and 77 
+minutes respectively spent by their younger counterparts. The younger ones spend 
+almost all their time on non-productive activities such as learning, social and cultural 
+activities, mass media use and personal care such as sleeping and eating. 
+ 
+Table 8: Average number of minutes per day spent on SNA categories of 
+activities by younger and older teenagers  
+Activity 
+10-14 years 15-19 years All teenagers
+SNA production 
+30 
+48 
+38 
+Non-SNA production 
+77 
+117 
+95 
+Non-productive 
+1332 
+1275 
+1306 
+Total 
+1439 
+1440 
+1439 
+ 
+The three-way SNA grouping of activities can be further subdivided into ten broad 
+categories of activities. SNA production can be divided into three categories: work in 
+establishments, primary production not for establishments, and other non-
+establishment work. Non-SNA production can be divided into household 
+maintenance, caring for people, and community service. Non-productive activities 
+comprise social and cultural activities, mass media use, and personal care. 
+ 
+Table 9 reveals that younger and older teenagers tend to spend similar amounts of 
+time on learning, while those aged 10-14 years tend to spend less time than older 
+teenagers on mass media use, work in establishments, and household maintenance. 
+ 
+Younger and older teenagers tend to spend the same amount of time on primary 
+production. This is probably explained by the fact that primary production includes 
+collection of fuel and water, which are common activities for younger teenagers. 
+ 
+Table 9: Average number of minutes per day spent on the 10 activity 
+categories by younger and older teenagers  
+ 
+Activity 
+ 
+10-14 years
+ 
+14-19 years
+All 
+teenagers 
+Work in establishments 
+2 
+18 
+9 
+Primary production 
+26 
+26 
+26 
+Work in non-primary non-
+establishments 
+2 
+5 
+3 
+Household maintenance 
+71 
+104 
+86 
+Care of persons 
+4 
+11 
+7 
+Community service 
+1 
+2 
+1 
+Learning 
+265 
+265 
+265 
+Social and cultural activities 
+236 
+198 
+219 
+Mass media use 
+93 
+109 
+100 
+Personal care 
+737 
+703 
+722 
+Total 
+1438 
+1440 
+1439 
+ 
+
+ 
+6
+ 
+Leisure 
+Leisure activities include social and cultural activities and mass media use. Table 10 
+reveals that, in all types of settlement area, younger teenagers tend to spend more 
+time on leisure than those aged between 15 and 19. The biggest difference between 
+the two age groups is seen in commercial farming areas. Compared to teenagers in 
+other settlement areas, those in formal urban areas tend to spend the most time on 
+leisure activities, while those in ex-homeland areas have the least leisure.  
+ 
+Table 10: Average number of minutes per day spent on leisure activities by 
+teenagers in each type of area  
+Age 
+Formal 
+urban 
+Informal 
+urban 
+Ex-
+homelands 
+Commercial 
+farms 
+10-14
+382 
+333 
+288 
+339 
+15-19
+351 
+320 
+265 
+296 
+ 
+The columns showing percentages in the following tables indicate what percentage 
+of teenagers with specific characteristics engage in a particular activity. Unlike in 
+previous tables, the total time spent on a particular activity is averaged over only 
+those who engage in that activity.  
+ 
+Table 11 reveals that, among younger teenagers, boys are more likely than girls to 
+engage in socialising with family and friends. But, of those who do engage in 
+socialising, boys tend to spend about the same time as girls do. Thus 45% of boys 
+aged 10-14 years engage in socialising and spend on average 56 minutes per day 
+doing so, whereas 37% of girls engage in this activity and spend on average 55 
+minutes doing so. 
+ 
+More boys than girls participate in and watch sport, play games and attend other 
+events. This reflects the greater likelihood of males being involved in activities taking 
+place in public spaces. Although fewer girls than boys are engaged in sports, those 
+girls spend more time on them than boys.  
+ 
+Table 11: Percentage of boys and girls aged 10-14 engaging in social and 
+cultural activities and average number of minutes spent  
+ 
+Boys 
+Girls 
+ 
+Social & cultural activity 
+ 
+% engaging
+No. of 
+minutes 
+ 
+% engaging
+No. of 
+minutes 
+Socialising with family/friends 
+45 
+56 
+37 
+55 
+Sports games and other events 
+50 
+87 
+23 
+93 
+Other socialising activities 
+28 
+52 
+17 
+51 
+ 
+
+ 
+7
+Table 12 is similar to Table 11, but reflects the situation for older teenagers. Among 
+this age group, girls are about as likely as boys to socialise with family and friends. 
+Boys are again more likely than girls to engage in sports, games and other events. 
+However, only 22% of boys and 10% girls in this age group engage in sports and 
+games – fewer than their younger counterparts. The difference between girls and 
+boys with regards to time spent on sports and games is also much larger in this older 
+group than in the younger group. 
+ 
+Table 12: Percentage of boys and girls aged 15-19 engaging in social and 
+cultural activities and average number of minutes spent   
+ 
+Boys 
+Girls 
+ 
+Social & cultural activity 
+ 
+% engaging
+No. of 
+minutes 
+ 
+% engaging
+No. of 
+minutes 
+Socialising with family/friends 
+47 
+60 
+49 
+60 
+Sports games and other events 
+22 
+88 
+10 
+79 
+Other socialising activities 
+29 
+56 
+24 
+65 
+ 
+ 
+Table 13 shows that girls and boys aged 10-14 years are equally likely to watch 
+video and television, and listen to music or the radio. In addition, girls are more likely 
+than boys to read or visit the library. Each of the other activities is reported by very 
+few boys and girls. A small percentage of boys reported using the computer, but no 
+girls did so. 
+ 
+Table 13: Percentage of boys and girls aged 10-14 using the mass media and 
+average number of minutes spent   
+ 
+Boys 
+Girls 
+ 
+Mass media use 
+ 
+% engaging 
+No. of 
+minutes 
+ 
+% engaging
+No. of 
+minutes 
+Listening to music/radio 
+56 
+135 
+55 
+143 
+Watching TV /videos 
+19 
+55 
+21 
+60 
+Computer use 
+0 
+42 
+- 
+- 
+Reading/visiting the library 
+5 
+67 
+7 
+62 
+Other media use 
+2 
+57 
+1 
+25 
+Note: In this and other tables, ‘0’ indicates less than 0,5%, while ‘-‘ indicates no observations. 
+ 
+Table 14 shows that, among older teenagers, slightly more boys than girls listen to 
+music or the radio. However, both girls and boys who do so spend the same amount 
+of time on this activity. Compared to other mass media use, listening to music or the 
+radio is the most popular activity for older teenagers. It is also the activity on which 
+they tend to spend the longest time. They tend to spend more time listening to music 
+than watching television. Among the teenagers in the 15-19 age group boys tend to 
+spend more than twice as much time per day as girls using computers, although very 
+few report this activity. 
+ 
+
+ 
+8
+Table 14: Percentage of boys and girls aged 15-19 engaging in mass media 
+use and average number of minutes spent  
+ 
+Boys 
+Girls 
+ 
+Mass media use 
+% engaging 
+No. of 
+minutes 
+% engaging
+No. of 
+minutes 
+Listening to music/radio 
+56,0 
+136 
+53,0 
+136 
+Watching TV /Videos 
+35,8 
+85 
+31,4 
+77 
+Computer use 
+1,2 
+123 
+0,6 
+50 
+Reading/visiting the library 
+6,9 
+58 
+10,2 
+88 
+Other media use 
+1,5 
+27 
+1,3 
+34 
+ 
+ 
+Learning 
+The demographic section of the time use questionnaire did not ask respondents 
+whether they were currently studying. However, a question put to those who were 
+not economically active asked why the respondent was neither working nor looking 
+for work, and one of the given choice of responses was ‘in education or training’. 
+Table 15 classifies these respondents as ‘students’, and examines whether males 
+differ from females or students differ from non-students  with regard to the time spent 
+on learning activities. In this table, the minutes are averaged over all teenagers in a 
+particular category rather than over only those who engaged in learning. As 
+expected, the table shows that students tend to spend more time than non-students 
+on learning activities, but this difference is relatively small. The difference between 
+boy and girl students and non-students is even smaller. 
+ 
+Table 15: Average number of minutes per day spent on learning by male and 
+female students and non-students aged 10-19  
+Sex 
+Students 
+Non-students
+Male 
+280 
+258 
+Female 
+278 
+265 
+ 
+ 
+Table 16 focuses on the different learning activities of younger and older teenagers. 
+Among the younger group, girls tend to spend slightly more time on homework than 
+boys do, whereas the opposite is true for older teenagers. This could reflect the fact 
+that older girls are more likely than boys to be engaged in household maintenance 
+and therefore have less time for homework. Teenagers report almost no work-related 
+training activities. 
+ 
+Table 16: Average number of minutes per day spent on different learning 
+activities by younger and older girls and boys aged 10-19 
+ 
+10-14 years 
+15-19 years 
+Activity 
+Male 
+Female 
+Male 
+Female 
+School attendance 
+190 
+195 
+173 
+174 
+Homework/studies/course review 
+27 
+35 
+56 
+49 
+Additional study 
+2 
+1 
+2 
+2 
+Work related training 
+- 
+- 
+- 
+1 
+Travel related to training 
+39 
+38 
+35 
+36 
+Learning not elsewhere classified 
+1 
+1 
+- 
+- 
+ 
+
+ 
+9
+Table 17 provides information on where teenagers engage in their learning activities. 
+In both urban and non-urban areas, 25-30% of teenagers engage in some learning 
+activities in educational establishments. Similar percentages spend some time on 
+learning-related travel. The average time spent on learning in educational 
+establishments is longer than the average time spent elsewhere. 
+ 
+A significant percentage of urban and non-urban teenagers also spend some time 
+learning in their own dwellings. The average time spent learning there is over an 
+hour a day in both non-urban and urban areas.  
+ 
+Table 17: Percentage of urban and non-urban teenagers engaging in learning 
+activities in different places and average number of minutes spent  
+  
+Urban 
+Non-urban 
+ 
+% engaging No. of minutes % engaging No. of minutes
+Own dwelling 
+19 
+74 
+18 
+71 
+Someone else's dwelling 
+0 
+71 
+1 
+216 
+Other workplace outside dwelling
+0 
+117 
+- 
+- 
+Educational establishment 
+30 
+246 
+25 
+277 
+Public area 
+1 
+149 
+0 
+100 
+Travelling/waiting to travel 
+26 
+62 
+24 
+58 
+Other location 
+- 
+- 
+0 
+30 
+ 
+ 
+Personal care 
+Table 18 shows that over three-quarters of the teenagers’ personal care involves 
+sleep and related activities. The next most common activity for both boys and girls is 
+eating and drinking. This accounts for an average of 72 and 67 minutes of boys’ and 
+girls’ days respectively. Other common activities are hygiene and health and ‘doing 
+nothing’. ‘Doing nothing’ covers rest and relaxation time for which the respondent 
+reports no other activity. Boys and girls differ little in how they spend their personal 
+care time. 
+ 
+Table 18: Average number of minutes per day spent on personal care by boys 
+and girls aged 10-19  
+Activity 
+Male 
+Female 
+Sleep 
+573 
+578 
+Eat & drink 
+72 
+67 
+Hygiene & health 
+54 
+52 
+Receive medical & personal care from: 
+ 
+ 
+  Professional 
+1 
+1 
+  Household member 
+0 
+0 
+  Other person 
+- 
+0 
+  Waiting for care 
+0 
+0 
+Doing nothing 
+20 
+19 
+Individual religious 
+1 
+1 
+Travel 
+2 
+1 
+Waiting for travel 
+0 
+0 
+Personal care not elsewhere classified 
+0 
+0 
+Total 
+724 
+719 
+ 
+
+ 
+10
+Activities of teenagers according to the time of the day 
+ 
+Figure 1: A typical day for teenagers aged 10-14 
+00:00h
+01:00h
+02:00h
+03:00h
+04:00h
+05:00h
+06:00h
+07:00h
+08:00h
+09:00h
+10:00h
+11:00h
+12:00h
+13:00h
+14:00h
+15:00h
+16:00h
+17:00h
+18:00h
+19:00h
+20:00h
+21:00h
+22:00h
+23:00h
+0
+20
+40
+60
+80
+100
+%
+SNA production
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+2
+1
+2
+3
+3
+3
+3
+3
+4
+3
+2
+2
+2
+2
+2
+2
+2
+5
+8
+9
+10
+9
+7
+5
+4
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+Non-SNA production
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+3
+4
+12
+11
+11
+8
+9
+10
+8
+8
+7
+7
+5
+4
+5
+4
+4
+5
+7
+10
+12
+13
+12
+12
+11
+10
+10
+10
+7
+7
+5
+3
+2
+1
+0
+0
+0
+0
+Non productive
+100 100 100 100 100 100 100 100 100
+99
+97
+95
+86
+87
+87
+89
+88
+88
+89
+89
+89
+91
+92
+93
+93
+94
+94
+93
+91
+86
+81
+78
+78
+79
+82
+85
+86
+89
+93
+93
+95
+97
+98
+99 100 100 100 100
+ 
+ 
+ 
+Figure 2: A typical day for teenagers aged 15-19 
+00:00h
+01:00h
+02:00h
+03:00h
+04:00h
+05:00h
+06:00h
+07:00h
+08:00h
+09:00h
+10:00h
+11:00h
+12:00h
+13:00h
+14:00h
+15:00h
+16:00h
+17:00h
+18:00h
+19:00h
+20:00h
+21:00h
+22:00h
+23:00h
+0
+20
+40
+60
+80
+100
+%
+SNA production
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+2
+3
+4
+6
+6
+6
+5
+6
+6
+6
+6
+6
+5
+5
+4
+4
+5
+6
+8
+8
+11
+10
+10
+7
+6
+3
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+Non-SNA production
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+6
+7
+16
+15
+13
+12
+14
+13
+14
+14
+14
+13
+10
+9
+10
+8
+7
+8
+9
+11
+14
+16
+17
+17
+17
+17
+15
+13
+10
+8
+6
+5
+3
+1
+0
+0
+0
+0
+Non productive
+100 100 100 100 100 100 100 100 98
+99
+94
+92
+82
+82
+83
+82
+80
+81
+80
+80
+80
+81
+84
+85
+85
+87
+89
+87
+87
+83
+77
+76
+72
+72
+73
+76
+79
+84
+88
+91
+94
+95
+97
+98 100 99 100 100  
+ 
+ 
+Differences between the activities of younger and older teenagers can be expected. 
+For example, some teenagers aged 15-19 will be working, or looking for work, while 
+all children under 15 years should, legally, be attending school. Figures 1 and 2 
+show the percentage distribution of teenagers engaged in production and non-
+production activities at the different times of day.  
+
+ 
+11
+ 
+At any given time, more teenagers in both age groups are involved in non-productive 
+activities than in any other type of activity. The activity classification system used in 
+the time use survey categorises learning as a non-productive activity, and this 
+accounts for the high percentage of non-productive activities in the middle of the day. 
+As expected, the second most common type of activity is non-SNA production, and 
+the least common is SNA production. 
+ 
+At any given time, there are slightly more 15-19 year olds than 10-14 year olds 
+involved in SNA production activity. However, there is still a significant percentage of 
+children aged 10-14 involved in SNA production activity. South African law forbids 
+employment of children under 15 years of age. But, as the activity classification 
+categorises fetching of fuel and water as SNA production, some of the SNA activity 
+reflected on the graph might involve these household activities. 
+ 
+SNA and non-SNA production by children seem to start at about 04h30 at the 
+earliest for both age groups. 
+ 
+ 
+Figure 3: Percentage of teenagers engaged in learning at different times of day 
+00:00h
+01:00h
+02:00h
+03:00h
+04:00h
+05:00h
+06:00h
+07:00h
+08:00h
+09:00h
+10:00h
+11:00h
+12:00h
+13:00h
+14:00h
+15:00h
+16:00h
+17:00h
+18:00h
+19:00h
+20:00h
+21:00h
+22:00h
+23:00h
+0
+10
+20
+30
+40
+50
+60
+%
+Attending school
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+3 14 47 57 58 57 42 46 39 45 43 47 46 38 17
+9 3
+1
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0 0
+0
+0
+0
+0
+0
+Homework
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
+0
+0
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+3
+4 5
+5
+6
+7
+7
+7
+7
+9 10 10 11 10 7
+5
+3
+2
+1
+1
+Travel related to learning
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+5 19 26
+5
+2
+1
+0
+1
+1
+1
+2
+2
+1
+4
+9 18 10 7
+3
+2
+1
+1
+1
+0
+0
+0
+0
+0
+0 0
+0
+0
+0
+0
+0
+ 
+ 
+Figure 3 shows that until about 06h00, there is no form of activity related to learning. 
+During the period between 06h00 and about 07h00 there is travel to school, followed 
+by learning until approximately 14h00. At this time there is an increase in the 
+percentage of children travelling from school. Then there is time for homework or  
+studying in the evening. 
+ 
+
+ 
+12
+Figure 4: Percentage of boys and girls aged 10-19 engaged in leisure activities 
+at different times of day 
+00:00h
+01:00h
+02:00h
+03:00h
+04:00h
+05:00h
+06:00h
+07:00h
+08:00h
+09:00h
+10:00h
+11:00h
+12:00h
+13:00h
+14:00h
+15:00h
+16:00h
+17:00h
+18:00h
+19:00h
+20:00h
+21:00h
+22:00h
+23:00h
+0
+10
+20
+30
+40
+50
+60
+70
+%
+Male
+1
+1
+1
+0
+0
+0
+0
+0
+0
+0
+1
+1
+2
+5
+10 16 13 13 16 20 26 27 33 33 31 32 27 28 34 39 50 57 60 63 64 64 61 58 53 57 45 41 24 17 10
+6
+4
+2
+Female
+1
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
+1
+2
+5
+9 15 12 10 12 15 22 23 28 28 27 27 27 28 32 37 43 46 50 51 55 57 54 51 42 47 41 33 20 13
+7
+5
+3
+2
+ 
+ 
+Leisure activities refer to social and cultural activities and using mass media. Figure 
+4 indicates that the leisure activity patterns of boys and girls are similar. Both boys 
+and girls are most likely to be engaged in leisure activities between 16h00 and 
+21h30. 
+ 
+Although the leisure activity patterns for boys and girls are similar, at any time during 
+the day and evening more boys than girls are involved in leisure activities.  
+ 
+Figure 5: Percentage of younger and older boys and girls aged 10-19 engaged 
+in household maintenance at different times of day  
+00:00h
+01:00h
+02:00h
+03:00h
+04:00h
+05:00h
+06:00h
+07:00h
+08:00h
+09:00h
+10:00h
+11:00h
+12:00h
+13:00h
+14:00h
+15:00h
+16:00h
+17:00h
+18:00h
+19:00h
+20:00h
+21:00h
+22:00h
+23:00h
+0
+5
+10
+15
+20
+25
+%
+Young boys
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+2
+3
+8 10
+7
+6
+6
+6
+5
+6
+4
+4
+4
+3
+3
+3 3
+4
+3
+5
+7 10
+7
+5
+6
+5
+5
+4
+3
+4 4
+1
+1
+0
+0
+0
+0
+0
+Young girls
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+4
+5 15 12 13 10 12 12
+9
+9
+8
+8
+7
+5
+5
+4 4
+5
+8 13 15 14 15 16 13 13 14 15 10
+9 5
+4
+2
+1
+0
+0
+0
+0
+Older boys
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+5
+4 12 11
+8
+9 11
+9 11
+9 10
+9
+7
+5
+6
+5 5
+5
+5
+7
+9
+9
+8
+8
+7
+7
+6
+6
+4
+3 3
+2
+2
+1
+0
+0
+0
+0
+Older girls
+0
+0
+0
+0
+0
+0
+0
+0
+1
+2
+6
+9 19 18 16 13 14 14 15 17 16 14 11 11 11 10 9
+9
+9 12 17 19 23 23 24 24 22 19 15 12 7
+6
+3
+1
+0
+1
+0
+0  
+ 
+
+ 
+13
+Figure 5 indicates that, at most times of the day, a larger percentage of older girls 
+are engaged in household maintenance than of the other three groups of teenagers. 
+The difference between the four groups of teenagers is most striking between 15h00 
+and 20h00. The percentage of young girls involved in household maintenance after 
+14h00 is higher than that of older boys, whereas at other times it is more or less the 
+same. At most times of the day young boys are the least likely of all four groups to 
+engage in household maintenance. 
+ 
+Conclusion 
+This paper has used data from South Africa's first national time use survey to explore 
+the way in which teenagers spend their time. It looks at the overall time use patterns 
+in terms of different types of productive and non-productive activities; at particular 
+activities, such as socialising, use of media, learning, and personal care; and at what 
+teenagers tend to do at different times of the day. 
+ 
+The findings reveal some differences between younger and older teenagers, 
+between those living in urban and non-urban areas, and between boys and girls. 
+Government and other players, in developing policy and in planning and 
+implementing programmes, may find the overall patterns useful, and those relating to 
+particular sub-groups of teenagers. For example, information about teenagers’ 
+access to different forms of media and when different groups of teenagers use them 
+will make it easier to target effective interventions. Similarly, information about 
+patterns of study in terms of time and location may enable government to plan how 
+to improve the effectiveness of education. 
+ 

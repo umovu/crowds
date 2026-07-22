@@ -34,6 +34,13 @@ segment_tags, mechanisms, vocabulary, objection_patterns); at runtime cards
 bind to personas by archetype and inject documented reasoning patterns into
 the system prompt, with citations surfaced in the UI later.
 
+Card extraction follows `docs/EXTRACTION_PROTOCOL.md` (six-stage pipeline:
+harvest → chain → scope → formalize → gate → validate), one worksheet per
+card from `docs/extraction/WORKSHEET_TEMPLATE.md`. Stages 1-4 run
+programmatically via `backend/scripts/extract_card.py` (paper text in, draft
+worksheet + card JSON out, deterministic lint included); the human's job is
+proofreading the draft and signing off Stage 5.
+
 **What has been established so far** (details:
 `docs/CONTEXT_GROUNDING_PILOT_REPORT.md` in this worktree):
 
@@ -159,6 +166,66 @@ prompt also suppressed specific real place names (Umlazi, Khayelitsha →
 "a township in KwaZulu-Natal") — the invention prohibition costs local
 texture; may need a "real, province-consistent settings are encouraged"
 carve-out.
+
+## Invisible-numbers pilot (economic grounding without citation)
+
+Question: can a persona's surveyed economics shape its reaction WITHOUT the
+persona citing the figures? (Income band = independent variable; reaction =
+dependent variable. Restating the IV is echo, not grounding.) Trigger:
+production panels showed personas reciting injected income/fees verbatim.
+
+Spec (frozen, incl. lexicons + stats protocol):
+`docs/INVISIBLE_NUMBERS_PILOT.md`.
+
+- `backend/scripts/situation_compiler.py` — deterministic, LLM-free compiler:
+  persona record -> 1-3 sentences of lived circumstance (money rhythm +
+  licensed obligations). Number-free by test; situation only, never decision
+  style; tier gloss removed along with figures (the gloss is itself a leak
+  channel). Also owns both frozen lexicons (compiler vocabulary +
+  CLASSIFIER_MARKERS curated from production calibration) so the disjointness
+  guarantee is enforced in one place.
+- `backend/scripts/test_situation_compiler.py` — 12 LLM-off checks: no
+  numeric tokens, classifier/compiler lexicon disjointness, referent
+  licensing, income-banding/tier agreement on the cast, template
+  distinctness, role mapping, vocabulary self-consistency. All passing
+  (2026-07-17).
+
+- `backend/scripts/invisible_numbers_pilot.py` — A/B/C/D runner (48 sim-tier
+  calls per repeat). A_control mirrors production's budget-reality + real
+  numbers verbatim; B swaps in the compiled situation block; C adds the open
+  ask; D is production + a no-cite rule (cheapest patch). Research cards are
+  bound + recorded but NOT rendered (economic channel is the only variable).
+- `backend/scripts/score_invisible_numbers.py` — LLM-off scorer: post-strip
+  balanced accuracy (raw + echo-robust), cluster permutation test (10k),
+  persona-cluster bootstrap CI for C−A, paraphrase-leak containment,
+  number-leak (whitelist {50}∪{50k}), carried-over shape metrics,
+  economics-retained tables. Mechanics verified end-to-end on fabricated
+  data (2026-07-17): echo case masks to abstain, own-figure citation flags
+  as leak, permutation p-floor behaves as permutations allow.
+
+Run tests / scorer:
+```
+D:/Fub-agentsociety/backend/.venv/Scripts/python.exe backend/scripts/test_situation_compiler.py
+D:/Fub-agentsociety/backend/.venv/Scripts/python.exe backend/scripts/score_invisible_numbers.py
+```
+
+Experiment run (DONE 2026-07-17 — on `qwen3.7-max-2026-05-17` after
+qwen3.6-plus quota death, 144/144 valid, 0 errors):
+```
+SIM_LLM_MODEL=qwen3.7-max-2026-05-17  # or restore quota for qwen3.6-plus
+D:/Fub-agentsociety/backend/.venv/Scripts/python.exe backend/scripts/invisible_numbers_pilot.py 3
+D:/Fub-agentsociety/backend/.venv/Scripts/python.exe backend/scripts/score_invisible_numbers.py
+```
+
+**Run 1 verdict (docs/INVISIBLE_NUMBERS_RESULTS.md):** both gates FAIL —
+the situation block degraded measurable tier signal under the frozen
+instrument (A 0.41 > C 0.24 > B 0.10). But: (a) production cites own figures
+in 83% of responses; (b) D (rule-only) kills citation to 0% while keeping
+above-chance tier signal (p=0.044) — the evidence-backed production port;
+(c) frozen classifier under-measures the substituted model's idiolect
+(loose recall 0 in ALL conditions incl. A); (d) persona prose is a second
+figure-leak channel. Next: port D; rerun on qwen3.6-plus or pre-register an
+extended lexicon on a fresh run; block v2 with stronger loose texture.
 
 ## Papers behind the cards
 

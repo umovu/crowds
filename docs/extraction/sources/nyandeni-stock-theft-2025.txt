@@ -1,0 +1,622 @@
+Impact of Livestock Theft on the Welfare of Smallholder Livestock Farmers in Nyandeni Local Municipality, Eastern Cape Province
+
+ 
+ 
+
+  
+ 
+
+Services on Demand
+
+Journal
+
+SciELO Analytics
+
+Google Scholar H5M5 (
+)
+
+Article
+
+English (pdf)
+ 
+
+Article in xml format
+
+Article references
+
+How to cite this article
+
+SciELO Analytics
+
+Automatic translation
+
+Send this article by e-mail
+
+Indicators
+
+Related links
+
+Cited by Google 
+
+Similars in Google 
+
+Share
+
+More
+
+More
+
+Permalink
+
+South African Journal of Agricultural Extension 
+
+On-line version
+ ISSN 
+2413-3221
+Print version
+ ISSN 
+0301-603X
+
+S Afr. Jnl. Agric. Ext. vol.53 n.2 Pretoria  2025
+
+https://doi.org/10.17159/2413-3221/2025/v53n2a15998
+  
+
+ 
+ARTICLES
+ 
+ 
+ 
+Impact of Livestock Theft on the Welfare of Smallholder Livestock Farmers in Nyandeni Local Municipality, Eastern Cape Province
+ 
+ 
+ 
+ 
+ 
+Mdoda L
+ 
+Senior Lecturer, Discipline of Agricultural Economics, University of KwaZulu-Natal, P/Bag, X01, Scottsville, Pietermaritzburg, 3209, South Africa. Tel 033 260 5410; Email: 
+MdodaL@ukzn.ac.za
+; ORCID 0000-0002-54021304
+ 
+Correspondence
+ 
+ 
+ 
+ 
+ 
+ 
+ABSTRACT
+ 
+Livestock farming is crucial in sub-Saharan Africa, providing high-quality food and economic benefits. In South Africa, however, smallholder livestock farmers face challenges such as stock theft and limited technology, which impact their livelihoods and cause financial losses. Hence, the study sought to investigate the economic effect of livestock theft on the welfare of smallholder livestock farmers in Nyandeni Local Municipality, South Africa. The study used primary data and purposive sampling to collect data from 140 livestock farmers. The study made use of structured questionnaires, which were self-administered by enumerators. Descriptive statistics and linear regression were used for analysis. The results showed that smallholder farmers are typically male, aged 55 on average, with families of five. Smallholder livestock farmers use community grazing for their livestock, which is open to anyone in the community. Livestock farming positively contributes to household welfare, but stock theft exacerbates financial difficulties. The study found that factors like the farmer's age and livestock theft increase financial risks, while education and access to extension services have positive effects. The study recommends establishing community police forums, increasing police presence in rural areas, and investing in security technologies like tracking devices to combat stock theft and support farmers.
+ 
+Keywords
+: Food Security, Livestock Farming, Livestock Theft, Welfare.
+ 
+ 
+ 
+ 
+ 
+ 
+1. INTRODUCTION
+ 
+Livestock farming is one of sub-Saharan Africa's most practised agricultural activities (SSA). Livestock production is an essential constituent of farming systems, a third (33%) of developing countries gross domestic product originates from the livestock sector and also endures the livelihood of over one billion poor people in rural areas (Mutenje 
+et al., 
+2020; Swanepoel 
+et al., 
+2010). In SSA, livestock contributes about 40% to the agricultural GDP in sub-Saharan Africa (Nyam 
+et al., 
+2022). Livestock farming has great significance in the livelihoods of most rural households in SSA and has played an ancient role as a primary source of food and agricultural income for generations. According to Mugumaarhahama 
+et al. 
+(2021), livestock is treasured in sustainable agriculture by providing manure and labour for improved productivity, enhancing well-being, and increasing farmers' income in SSA. Apart from providing food and generating revenue, livestock plays a significant role by giving draught power and manure to improve soil fertility and water preservation. It is also a windbreak against vulnerability shocks.
+ 
+In South Africa, livestock farming is practised by both commercial and smallholder farmers because of its benefits. Mostly, livestock farming is practised by smallholder farmers and farming households as they generate livelihoods from farming. Livestock farming is crucial in South Africa as it contributes a projected 25-30% to the total agricultural output per year (Nyam 
+et al., 
+2022). As a result, livestock production in South Africa plays an essential role in economic development and poverty alleviation by contributing a significant share to the agricultural market, livelihood, and employment (Mahlobo, 2016). The most dominant livestock farming in South Africa is cattle, sheep, and goat farming, which inhabit 53% of all agricultural land (Bontsa 
+et al., 
+2024; Ngarava 
+et al., 
+2018). South Africa has approximately 13.9 million cattle, 24.2 million sheep, and 6.1 million goats (Department of Agriculture, Forestry and Fisheries (DAFF), 2017; Mahlobo, 2016). This indicates the importance of livestock and suggests that livestock farming can be used as a sustainable instrument for sustainable food systems for the growing population in the country.
+ 
+Livestock farming has the potential to significantly enhance the economic stability and resilience of households by providing a steady source of income, improving food security, and creating opportunities for local trade and employment. In addition to its direct economic benefits, livestock farming can help diversify income sources, reduce vulnerability to external shocks, and contribute to long-term wealth accumulation for farming families. Myeki and Bahta (2021) quantified that livestock production plays numerous roles in the lives of people with low incomes and meets the various purposes anticipated by resource-poor farmers. In rural areas, farming is the number one approach as it is seen as the only approach to lessen poverty, address household food insecurity, and enhance resilient livelihoods. Rural communities regard livestock as living wealth; these animals are often their only source of income and sustenance. Despite the livestock sector's invaluable contribution to South Africa's economy, recent years have shown a decline in production activities as many factors challenge the industry. Mdoda and Mdiya (2021) also agree that livestock farming is becoming inadequate due to these challenges, and several challenges are directly or indirectly affecting livestock farming. Several challenges are affecting livestock farming, either directly or indirectly. These challenges include livestock theft, grazing, natural resource degradation, water scarcity, and the spread of diseases. An increasing shortage of grazing and water for animals can significantly burden households, as grazing and water are critical factors in livestock production. Among all the challenges, the most devastating one is livestock theft, which farmers in South Africa face. This challenge costs the country billions of Rands, affecting farmers and the country's GDP and foreign earnings. Livestock theft has contributed to a total loss of R1.24 billion, which was stolen in South Africa in 2018/2019. Livestock theft adversely affects livestock production in South Africa by reducing the contribution of livestock to agricultural production potential, which is much lower than in many other countries (Aldosari 
+et al., 
+2017). As a result, livestock theft has made agriculture a risky venture.
+ 
+Livestock theft is not restricted to a specific continent, country, or region. Adverse effects manifest themselves on various scales and dimensions, posing adverse effects on the country's GDP and the well-being of farmers and livestock owners. Livestock theft not only affects the livestock contribution to agricultural production potential but also negatively affects farmers' health, such as traumatic stress, and threatens the economic lifeline of countless rural farmers when their livestock is stolen (Mabunda 
+et al., 
+2021). Gumba and Traore (2020) stipulate that livestock theft creates a problem that threatens to affect the economies of some countries (South Africa included), suggesting that the relevance of the issue is complex and far from exhausted. Livestock theft imposes a scary psychological impact on farmers' well-being. Corrigan (2019) noted that livestock farmers who develop these emotions are treated as living beings, not simple items. Livestock theft has impoverished thousands of farmers and households in rural areas in South Africa and some parts of the world. This has caused severe harm to many farmers and households, as some are affected by the stock theft in silence, which causes psychological distress and suicide, among many incidents. Additionally, livestock theft means a loss of not only the livestock but also time, hard work, and trust.
+ 
+Livestock theft has become a highly prearranged, commercialised, politicised, mobilised, forceful, and brutal criminal activity. Smallholder farmers and farming households are more affected by livestock theft compared to commercial farmers because the latter have insurance and financial means for rapid recovery compared to commercial farmers since the latter has insurance and financial means for rapid recovery compared to smallholder farmers. However, little attention has been given by researchers to understanding the effect livestock theft has on farmers' welfare. Most studies focus on the financial side of stock theft, not the livelihood perspective of farmers relying solely on livestock. It is against this background that this study was conducted. Therefore, the study aims to investigate the effects of livestock theft on the welfare of smallholder livestock farmers in Nyandeni Local Municipality, Eastern Cape Province.
+ 
+1.1. Theoretical Framework
+ 
+The study adopted the environmental criminology theory for this study. This is a theory that is made of a family of theories and is the one that best suits this study. The environmental criminology theory is described as a family of theories that share a joint typical attention in criminal events and the instant settings in which they occur (Wortley & Townsley, 2016). Environmental criminology is an all-encompassing theory that criminal conduct is influenced (though not necessarily caused) by the environment in which it happens. This theory means the first step to understanding livestock theft should be understanding the criminal events as convergences of offenders, victims, or criminal targets and laws in specific settings at particular times and places. The environmental criminology theory looks for crime patterns and seeks to enlighten people regarding environmental inspirations. These enlightenments derived rules that permit estimates to be made about developing crime problems, which eventually prompted the expansion of approaches that might be used to prevent crime. This theory comprises two perspectives within environmental criminology: the routine activity approach and rational choice. These perspectives comprise the environmental theory adopted to understand and explain livestock theft in the study area.
+ 
+1.1.1. Routine Activity Approach
+ 
+The routine activity theory is a modern Classical School of Thought theory. This theory was developed by Cohen and Felson (1979) as one of the leading models of environmental criminology to understand the reasons behind an individual committing a crime. According to Winfree and Abadinsky (2017), this theory places together a sum of theoretical thoughts and observed findings to increase purer insight into the fortune of crime victims. Routine activity theory enlightens how physical changes in routine activity forms influence crime rates when three elements of destructive acts become entangled in time and interplanetary (Doorewaard, 2020; Newburn, 2017). This theory is backed by three main elements that come together at any given space and time. The three elements include:
+ 
+ 
+❖
+ A suitable target (e.g., livestock).
+ 
+❖
+ The absence of a capable guardian (livestock owner, herd men, or neighbour).
+ 
+❖
+ The presence of a motivated offender (livestock thief).
+ 
+ 
+These three elements increase the likelihood of a crime, such as livestock theft, occurring as the livestock perpetrator has mastered them.
+ 
+The theory of routine activity approach firstly outlined that for livestock theft to occur, there must be a suitable target for the motivated offender to act upon, in this case, livestock. The suitability of a target is widely determined by four criteria: value, inactivity, distinguishability, and access. When these are practical to livestock theft, the subsequent questions emerge: What is the value of the livestock to the culprit? Can the livestock be occupied? How noticeable and how reachable is the livestock to the perpetrator? (Newburn, 2017). The livestock value motivates the offender because livestock does not lose value, so the monetary value motivates the offender to target livestock. Doorwaard (2020) further acknowledged that livestock can move from point A to point B, which is also a reason for livestock to be taken, as they are accessible and movable to the suitable target. The perpetrators even cut fences to move their trucks into the yards or grazing fields to take the livestock, as they are motivated by the value and accessibility of the livestock. Schlechter (2014) and Pasiwe 
+et al. 
+(2021) argued that the livestock perpetrators hide on farms and set up wire deceptions to entangle moving livestock or use movable kraals and ramps to gather livestock.
+ 
+The second element of the Routine Activities Approach is the absence of the livestock owner, neighbour, or herdsmen near the livestock. This theory argues that if livestock is adequately monitored and guarded, there is no likelihood that even the most inspired lawbreaker will be encouraged to pursue the target. This means that when the livestock is taken, in most cases, the herdsmen, the owner or the neighbour are absent in guarding the livestock, which gives the perpetrator a chance to access the livestock and take them away. This means there must be no one present to prevent the occurrence of the crime. Pasiwe 
+et al. 
+(2021) specified that the perpetrator who steals livestock knows there is no one else in the kraal to prevent the livestock from being stolen. The Third element is the motivation for stealing livestock. The primary motivation for stealing livestock is the profit incentive that livestock theft yields, which is used to satisfy other needs of perpetrators. Additionally, perpetrators steal livestock to ease boredom and instil wisdom, enthusiasm, and adventure into their lives. These are the elements that the study adopted to understand livestock theft among smallholder farmers and farming households.
+ 
+1.1.2. Rational Choice Approach
+ 
+Another environmental criminology theory that explains livestock theft and was adopted for the study was the rational choice approach. This theory involves how offenders make decisions about their involvement in livestock theft. The Rational Choice Theory influenced the Routine Activities Theory, as it assumes that inspired offenders carry out a danger calculation before pledging a livestock theft by assessing the estimated benefits, costs, and risks involved (Taylor, 2016; Pasiwe 
+et al., 
+2021; Willison & Backhouse, 2006). Livestock theft entails opportunity costs and choices. Stealing livestock involves opportunity and costs; as such, stealing is rational and grounded on cost and benefit aspects, individual obligation to social standards, and external effects. In short, the perpetrators steal livestock, too. This decision is manifested by the opportunities involved in committing this crime and the benefits involved.
+ 
+ 
+ 
+2. METHODOLOGY
+ 
+2.1. Description of the Study
+ 
+The study was conducted in Nyandeni Local Municipality (NLM) in the Eastern Cape Province of South Africa. NLM is a municipality under the OR Tambo District Municipality in the Eastern Cape Province. It is surrounded in the north by Mhlontlo Municipality, in the south by the Indian Ocean, in the east by Port St Johns Municipality, and in the west by King Sabata Dalindyebo Municipality. It is one of five municipalities in the district, making up almost a quarter of its geographical area, as NLM is 2,474 km
+2
+ (Eastern Cape Socioeconomic Consultative Council (ECSECC), 2017). The municipality is made up of Libode and Ngqeleni towns. The municipality has a population of 310,702 people dominated by males and 310,702 people dominated by males, with an average of 10 years spent in school. This is the home of the AmaMpondo Nation, which solely depends on agricultural activities and tourism as its source of livelihood (Qange & Mdoda, 2020).
+ 
+The people of NLM derive their livelihoods from practising agricultural activities and tourism. Agricultural activities are dominating for the people of NLM as they have fertile soil and grazing land for their livestock. As a result, crop, vegetable, and livestock farming are the most dominant agricultural activities practised. Farming is dominant in NLM due to the favourable climatic conditions that encourage farming. The temperatures in NLM range from 14.2 degrees Celsius to 26.52 degrees Celsius in Summer, while in winter they range from 12.7 degrees Celsius to 21.4 degrees Celsius. The rainfall pattern is moderate and increases towards the coast, and only reduces in the winter season. Such temperatures are a favourite for farming. Livestock is dominant in NLM for customary reasons and because cash generation is quicker than crop and vegetable farming. NLM is one of the leading municipalities under OR Tambo, where stock theft is on the rise, which is why the study was conducted in NLM, and the contribution of livestock farming towards people's livelihoods in the study area. The cross-sectional research design was employed because it collects data at one point and was cheap to use as the study was not funded (Apeh 
+et al., 
+2023).
+ 
+2.2. Sampling Procedure, Frame, and Sample Size
+ 
+NLM was purposively selected based on the livestock contribution to the well-being of farming households and farmers. The list of livestock farmers was obtained from extension officers and farm organisations, but it was not enough for the study. This motivated the study's use of snowball sampling. The study used snowball sampling to generate the required population for the study. This is a non-probability sampling method where livestock farmers recruited other livestock farmers to form part of the sample. The sampling was a useful way to research livestock farmers who share identical qualities that might be difficult to recognise. This was the best sampling procedure as it is easy to use and allows one livestock farmer to refer the researcher to the next farmer within the research area. The sample size of the study was 140 farmers within the study area. The study was limited strictly to the Nyandeni Local Municipality. This was motivated by the contribution of livestock to household welfare as there is a high unemployment rate, farming is a full-time occupation, and financial constraints.
+ 
+2.3. Data Collection
+ 
+The study employed both primary and secondary data collection methods. Primary data was gathered through face-to-face interviews with livestock farmers, utilising structured questionnaires to collect detailed information. The questionnaire was pre-tested to check reliability and appropriateness and to train enumerators. The questionnaires were self-administered with the help of enumerators. The collected data included demographic characteristics of farmers, reasons for farming, type of farming, livestock kept and reasons for keeping them, challenges they face concerning farming, the contribution of farming to households, and the impact of livestock theft on farmers' livelihoods. The secondary data was collected from peer-reviewed journal articles, books, and government gazettes.
+ 
+2.4. Data Analysis
+ 
+The collected data were coded in Excel and then transferred to STATA 15 for analysis. The study used descriptive and inferential statistics for analysis. The descriptive statistics used for analysis were percentages, frequencies, means, standard deviations, tables, and figures, while inferential statistics were in the form of t-tests and chi-square analysis.
+ 
+ 
+ 
+3. ANALYTICAL FRAMEWORK
+ 
+Linear regression was used in the study to estimate the impact of livestock farming on farmers' welfare. Mwadzingen 
+et al. 
+(2022), Workye 
+et al. 
+(2019), Nkonki-Mandleni 
+et al. 
+(2018), and Meyer and Nishimwe-Niyimbanira (2016) specified that this regression is a mathematical modelling method that can be used to define the relationship between an unceasing dependent variable and quite a few independent variables. It was used to analyse the mean response of the variable 'Welfare', which changes according to the extent of the interference of an independent variable (Green, 2018). The goal is to evaluate and model the relationship between the set of hypothesised fundamental variables to understand their influence over welfare farming.
+ 
+The Variance Inflation Factor (VIF) was less than 2.96 and further less than the cut-off point of 10, which shows the absence of possible multicollinearity. The Breusch-Pagan/Cook-Weisberg test demonstrated the absence of heteroskedasticity (Chi
+2
+(14) = 11.02). The Durbin-Watson test was conducted as part of the methodology to evaluate the presence of autocorrelation in the residuals of the regression model. Autocorrelation occurs when consecutive error terms are correlated, leading to biased estimates and unreliable results. By applying this test, the study ensured the robustness and validity of the regression analysis. A Durbin-Watson statistic close to 2 indicates no autocorrelation, while values significantly deviating from 2 suggest the presence of positive or negative autocorrelation. This step was crucial in confirming the accuracy of the regression model's assumptions and ensuring the integrity of the study's findings. The linear regression satisfies the need for this study due to its capability to provide the best estimations with continuous and coded welfare variables. The linear regression model that was used in this study can be labelled as follows:
+ 
+ 
+The empirical model was specified as in equation (2):
+ 
+ 
+Where:
+ 
+Y = dependent variable (welfare farming)
+ 
+X1 to Xn = Independent variables (sex, age, level of education, livestock theft, extension service, marital status.)
+ 
+β
+0 
+= the value of Y when all of the independent variables are equal to zero 
+β
+ 
+1 To 
+βη
+ 
+= explanatory coefficients
+ 
+ε
+ = the accepted error.
+ 
+ 
+ 
+4. RESULTS AND DISCUSSIONS
+ 
+4.1. Demographic Characteristics of Livestock Farmers
+ 
+Demographic characteristics are essential in giving a brief profile of the farmers in the study. 
+Table 1
+ shows the demographic characteristics of livestock farmers in the study. The study results reveal that livestock farming is dominated by men, with 69% to 32% of females. These results align with Mdoda and Mdiya (2022), who state that men primarily practice livestock farming, while females care for household and vegetable farming. The average age of livestock farmers was 55 years, with a family size of five people per household. These results show that experienced farmers practice livestock farming and know why they are involved in this type of farming. The members of the households were also crucial in assisting with looking out for the livestock with the hired herdman. The livestock farmers were hiring herdsmen to look for the livestock. Livestock farmers spend an average of 10 years in school, essential in caring for the livestock for cultural purposes and agribusiness. Education helped the farmers learn pricing, agricultural information access, and livestock control mechanisms. These results aligned with Christian 
+et al. 
+(2024), who stated that most smallholder farmers are literate and have secondary education, which helps them analyse their decisions and make informed farm management decisions. The results reveal that most livestock farmers have an average of 17 livestock they own for various reasons. Most of the total livestock units were farmers who owned single or multiple livestock, with a minimum of 17 each. Farmers had access to extension officers (74%) and members of farm organisations (52%), who assisted farmers with information regarding the control mechanism of the grazing land and treatment information for their livestock.
+ 
+4.2. Kept Livestock in the Study Area
+ 
+Figure 1
+ below shows the livestock kept by livestock farmers in the study area. Livestock is one of the most practised agricultural activities due to the landscape of South Africa. About 69% of the South African land is suitable for livestock farming and grazing due to its mountains (Vink & Kirsten, 2003). Based on the findings, the most dominant type of farming in the study area is livestock farming due to grazing velds and climatic conditions that favour livestock. Sheep farming is the most dominant type of livestock due to climatic conditions and livestock theft. The study area has endured prolonged drought, leading to grazing velds being more suitable for sheep farming than castles. Also, the higher levels of cattle theft than sheep have promoted sheep farming. The second type of livestock farming is cattle farming, as many farmers and farming households practice it for income generation and cultural purposes. The last practice is goats due to the type of grazing that suits them, which is limited in the area. Goats favour shrubs and forests, which are limited in the study area. These livestock play an important role in the lives of livestock farmers and households in the study, such as income generation, manure, cultural norms, and provision of raw materials.
+ 
+4.3. The Purpose of Keeping Livestock
+ 
+Table 2
+ shows the main reasons for keeping livestock in the study area. Livestock farming is kept for various reasons by livestock farmers due to its importance. The study results reveal that about 36% of livestock farmers kept them as a source of nourishment and protection against nature. This is the expected norm in the study area as many farming households only depend on livestock farming as a source of living (as they consume them in the households either as meat, milk, hides, etc) and believe they protect them against nature. The results further show that they generate income from livestock (30%) by selling them in exchange for cash to be used within the households, purchasing other household goods, and paying school fees. These results were in line with Khoabane and Black (2009).
+ 
+The results further reveal that the livestock was kept for dowry and cultural purposes. This is one of the most important reasons for livestock farming in rural areas, as farmers believe in cultural norms that use livestock for dowries at family reunions. Other farmers kept livestock for status purposes within the community. This is common in African communities, where a man is respected only if he practices livestock farming. Lastly, livestock farming was beneficial through the supply of manure, raw materials, and draught power for farming households.
+ 
+livestock farming is affected by several factors, including socioeconomic, farm characteristics, and institutional factors that reduce its impact on household welfare. The study used linear regression to estimate the contributing factors influencing livestock farming. Linear regression was a good fit for this analysis as R
+2
+ was 0.652 (65%), which means that the independent variables could predict the dependent variable. The results are shown in 
+Table 3
+ below.
+ 
+Access to extension services had a positive coefficient and was statistically significant at a 5% level. This suggests a positive relationship exists between access to extension services and livestock farming, which eventually contributes to farmers' welfare. This implies that a unit increase of 1% in access to extension services will increase livestock production, eventually contributing to household welfare. Extension officers provide farmers and farming households with innovative technologies and information that enhance production. They will also provide farmers with modern devices that will help them fight stock theft, which is on the rise. These results were in line with Sigigaba 
+et al. 
+(2021), Mdoda 
+et al. 
+(2019), and Mdiya and Mdoda (2021) that extension services are crucial in providing farmers with advice, training, and information for livestock farming and also assist in combating livestock theft. These results contradicted the findings of Nkonki-Mandleni 
+et al. 
+(2018).
+ 
+Years spent in school had a positive coefficient and was statistically significant at a 5% level. Education is crucial for farming as it assists farmers with new knowledge available to enhance farming and innovative technologies being used. The results suggest that an increase of one additional year spent on education will increase the contribution of livestock farming to the household's welfare. These results were in line with Ngqulana and Obi (2019), Qange and Mdoda (2019), Sihlobo and Nel (2016), Mwadzingen 
+et al. 
+(2022) and Mdoda 
+et al. 
+(2022) that education is crucial for farming as it influences the 'farmers' attitude, rationale, and ability to analyse the benefits and gains of new technology used which advances production and afterwards influences sales of livestock as well as providing devices to reduce livestock theft.
+ 
+Livestock sold had a positive coefficient and was statistically significant at the 1% level. This implies a positive relationship between livestock sold and 'farmers' welfare. This suggests that a unit increase of one additional livestock sold by the farmer will increase farmers' welfare. This is because livestock of sale provides farmers with income that can be used to take care of the households and purchase farm inputs and devices that can be used to reduce livestock theft. These findings aligned with Nkonki-Mandleni 
+et al. 
+(2018), who stated that livestock provides farmers with the only cash economy channel, contributing to cash income for smallholder livestock farms.
+ 
+The farmer's age had a negative coefficient and was statistically significant at a 5% level. This is not surprising given that farming is practised by older people who are not risk-takers when it comes to farming. This implies that a unit increase by adding an additional year to farmers' age will induce a decrease in farmers' welfare. This is because elderly farmers are only involved in agribusiness when they see that they will benefit; other than that, they would rather keep their livestock for status purposes, among other things. This has a negative consequence on the household welfare of farmers. These results were in line with Mdoda and Qange (2020) and Mashamaite (2014), who state that the farmers' age influences agriculture productivity and eventually exposes these farmers to livestock theft as environmental theory motivates the perpetrators.
+ 
+Livestock theft was found to have a negative coefficient and was statistically significant at 1%. This suggests an inverse relationship between livestock theft and livestock farming. This implies that a unit increase of 1% in livestock theft will induce a decrease in the contribution of livestock to household welfare. This is not surprising as livestock theft negatively influences livestock production, cutting the value chain and bringing income, among other things, to farmers and consumers.
+ 
+4.5. Impact of Livestock Theft on the Welfare of Farmers
+ 
+Figure 2
+ shows the impact of livestock theft on the welfare of farmers. Livestock theft is a delicate matter that brings adverse effects to the livestock farming community and the country as a whole. This crime is increasing the rate of poverty and food insecurity, among many challenges faced in rural households of South Africa. The impact of livestock theft is felt through the reduction in farm income generation, as farmers are left with no source of income when livestock are taken away from them. This cut the livelihoods of many livestock farmers who rely solely on livestock. These results were in line with Mabunda 
+et al. 
+(2021), who found that livestock theft ruins livelihoods, especially income generation. The study further reveals that livestock theft increases food insecurity and the poverty rate among farmers. This is because livestock farming provides farmers a pathway outside starvation and contributes to food security and sustainable livelihoods. The livestock theft cut the food consumption supply for farmers, further intensifying food consumption for farmers and food insecurity and poverty among rural communities. These results were in line with Pasiwe 
+et al. 
+(2021). Livestock theft reduces employment creation for herd men in rural communities, which affects their well-being. Lastly, farmers stated that livestock theft affects their health and well-being. This is the case for many farmers as they never recover from livestock theft.
+ 
+ 
+ 
+5. CONCLUSIONS AND RECOMMENDATIONS
+ 
+The study investigated the effect of livestock theft on the welfare of smallholder livestock farmers in Nyandeni Local Municipality, Eastern Cape Province. The study results reveal that livestock farming is crucial to farmers' welfare. There is a positive relationship between livestock farming and 'farmers' well-being. Livestock farming is considered an agribusiness, although livestock is still used for cultural purposes and community status. Cattle, sheep, and goats are the most kept livestock in NLM. Livestock farming plays an important role in 'farmers' welfare. Socioeconomic and institutional factors influence the contribution of livestock farming to the welfare of farmers. Livestock theft adversely affects welfare by reducing farm income generation, increasing poverty and food security by reducing food from livestock, causing job losses, and deteriorating the health and well-being of farmers. Therefore, the study recommends that the government, through extension officers, train farmers about the importance of installing tracking devices in their livestock to fight stock theft. Farmers must adopt innovative technologies to enhance their farming, such as remote sensing technologies, to track their livestock. Law enforcement must intensify road documentation operations, especially with vehicles with trailers transporting livestock, to check their brands and registration documents. The study recommends community partnership policing initiatives to combat this livestock theft among rural communities.
+ 
+ 
+ 
+6. ACKNOWLEDGMENT
+ 
+The author acknowledges the support and collaboration of livestock farmers and the various societies visited for data collection. Lastly, the author is very grateful to the research assistants who assisted in data collection.
+ 
+ 
+ 
+7. FUNDING
+ 
+This research received no specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+ 
+ 
+ 
+8. COMPETING INTERESTS
+ 
+The authors declare no conflict of interest.
+ 
+ 
+ 
+REFERENCES
+ 
+ALDOSARI, F., AL SHUNAIFI, M.S., ULLAH, M.U., MUDDASSIR, M. & NOOR, M.A., 2017. Farmers' perceptions regarding the use of information and communication technology (ICT) in Khyber Pakhtunkhwa, Northern Pakistan. 
+J. Saudi Soc. Agric. Sci., 
+18(2): 211-217.         [ 
+Links
+ ]
+ 
+APEH, C.C., AGBUGBA, I.K. & MDODA, L., 2023. Assessing the determinants adopting urban tree planting as climate change mitigation strategy in Enugu Metropolis, Nigeria. 
+Sustainability., 
+15: 12224. 
+https://doi.org/10.3390/su151612224
+.         [ 
+Links
+ ]
+ 
+BONTSA, N.V., GWALA, L., MDIYA, L. & MDODA, L., 2024. Determinants of Livestock Smallholder Farmer's Choice of Adaptation Strategies to Climate Change in Raymond Mhlaba Local Municipality, Eastern Cape, South Africa. 
+S. Afr. J. Agric. Ext., 
+52(4): 128147.         [ 
+Links
+ ]
+ 
+COHEN, L.E. & MARCUS, F., 1979. Social change and crime rate trends: A routine activity approach. 
+Am. Social. Rev., 
+44: 588-608.         [ 
+Links
+ ]
+ 
+CORRIGAN, T., 2019. 
+Stealing the future of farming. South African Institute of Race Relations. 
+Available from: 
+https://irr.org.za/media/stealing-the-future-of-farmingfarmersweekly
+.         [ 
+Links
+ ]
+ 
+CHRISTIAN, M., OBI, A., ZANTSI, S., MDODA, L. & JIBA, P., 2024. The role of cooperatives in improving smallholder participation in agri-food value chains: A case study of one Local Municipality in Eastern Cape, South Africa. 
+Sustainability., 
+16: 2241. 
+https://doi.org/10.3390/su16062241
+.         [ 
+Links
+ ]
+ 
+DEPARTMENT OF AGRICULTURE, FORESTRY AND FISHERIES (DAFF)., 2017. 
+Livestock
+ 
+production.
+ 
+Available from: 
+http://www.daff.gov.za/daffweb3/Branches/Agricultural-Production-Health-Food-Safety/AnimalProduction/Livestock-Production
+. (Accessed on 20 January 2024).         [ 
+Links
+ ]
+ 
+DOOREWAARD, C., 2020. Livestock theft: a criminological assessment and sample-specific profile of the perpetrators. Master's thesis, University of South Africa.         [ 
+Links
+ ]
+ 
+EASTERN CAPE SOCIOECONOMIC CONSULTATIVE COUNCIL (ECSECC)., 2017. 
+Nyandeni Local Municipality Socioeconomic Review and Outlook, 2017. 
+Available from: 
+chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.ecsecc.org/documentrepository/informationcentre/nyandeni-local-municipality_42470.pdf
+.         [ 
+Links
+ ]
+ 
+GREEN, W.H., 2018. 
+Econometric Analysis. 
+ed. Prentice Hall.         [ 
+Links
+ ]
+ 
+GUMBA, D. & TRAORE, D., 2020. 
+Mali's livestock theft is dangerously yoked with persistent insecurity. 
+Available from: 
+https://enactafrica.org/enact-observer/malislivestock-theft-is-dangerously-yoked-with-persistent-insecurity
+.         [ 
+Links
+ ]
+ 
+KHOABANE, S. & BLACK, P.A., 2009. 
+The effect of livestock theft on household poverty in developing countries: The case of Lesotho. 
+Working Paper. Department of Economics, Stellenbosch University. Available from: 
+http://ideas.repec.org/p/sza/wpaper/wpapers74.html
+.         [ 
+Links
+ ]
+ 
+MABUNDA, M.V., MALULEKE, W., BARKHUIZEN, J. & CLACK, W.J., 2021. Stock theft: Rural livestock 'farmers' entrepreneurial perspectives. 
+Int. J. Criminol. Sociol., 
+10: 929943.         [ 
+Links
+ ]
+ 
+MAHLOBO, B.T., 2016. Multi-criteria livestock assessment for sustainability of smallholder farms in Kwa-Zulu Natal. Unpublished doctoral dissertation, Stellenbosch University.         [ 
+Links
+ ]
+ 
+MALULEKE, W., MOKWENA, R.J. & MOTSEPA, L.L., 2016. Rural 'farmers' perspectives on stock theft: Police crime statistics. 
+S. Afr. J. Agric. Ext., 
+44(2): 256-274.         [ 
+Links
+ ]
+ 
+MASHAMAITE, K.A., 2014. The contributions of smallholder subsistence agriculture towards rural household food security in Maroteng Village, Limpopo Province. Master's dissertation, University of Limpopo.         [ 
+Links
+ ]
+ 
+MEYER, D.F. & NISHIMWE-NIYIMBANIRA, R., 2016. The impact of household size on poverty: An analysis of various low-income townships in the Northern Free State region, South Africa. 
+Afr. Popul. Stud., 
+30(2): 2283-2295.         [ 
+Links
+ ]
+ 
+MDIYA, L. & MDODA, L., 2021. Socioeconomic factors affecting home gardens as a livelihood strategy in rural areas of the Eastern Cape province, South Africa. 
+S. Afr. J. Agric. Ext., 
+49(3): 1-15.         [ 
+Links
+ ]
+ 
+MDODA, L. & MDIYA, L., 2022. Factors affecting the using information and communication technologies (ICTs) by livestock farmers in the Eastern Cape province. 
+Cogent Soc. Sci., 
+8(1): 2026017.         [ 
+Links
+ ]
+ 
+MDODA, L., OBI, A., NCOYINI-MANCIYA, Z.,CHRISTIAN, M. & MAYEKISO, A., 2022. Assessment of profit efficiency for spinach production under small-scale irrigated agriculture in the Eastern Cape Province, South Africa. 
+Sustainability., 
+14: 2991.         [ 
+Links
+ ]
+ 
+MDODA, L., MUSHUNJE, A., ALAKA, K.O. & LESALA, M.E., 2019. Climate change effects on agricultural productivity in the smallholder farming systems of the Eastern Cape Province, South Africa. 
+J Hum Ecol., 
+71(1-3): 236-244.         [ 
+Links
+ ]
+ 
+MDODA, L., 2020. Factors influencing farmers' awareness and choice of adaptation strategies to climate change by smallholder crop farmers. 
+J. Agribus. Rural Dev., 
+58(4): 401-413.         [ 
+Links
+ ]
+ 
+MUGUMAARHAHAMA, Y., AYAGIRWE, R.B.B., MUTWEDU, V.B., CIREZI, N.C., WASSO, D.S., AZINE, P.C. & KARUME, K., 2021. Characterisation of smallholder cattle production systems in South-Kivu province, eastern Democratic Republic of Congo. 
+Pastor Res Policy Pract, 
+11(4): 2-15.         [ 
+Links
+ ]
+ 
+MUTENJE, M.U., CHIPFUPA, W., MUPANGWA, I., NYAGUMBO, G., MANYAWU, I. & CHAKOMA, L.G., 2020. Understanding breeding preferences among small-scale cattle producers: Implications for livestock improvement programmes. 
+Animal., 
+14(8): 17571767.         [ 
+Links
+ ]
+ 
+MWADZINGENI, L., MUGANDANI, R. & MAFONGOY, P.L., 2022. Socio-demographic, institutional, and governance factors influencing the adaptive capacity of smallholder irrigators in Zimbabwe. 
+PLoS ONE., 
+17(8): e0273648.         [ 
+Links
+ ]
+ 
+MYEKI, V.A. & BAHTA, Y.T., 2021. Determinants of smallholder livestock farmers' household resilience to food insecurity in South Africa. 
+Climate., 
+9: 117.         [ 
+Links
+ ]
+ 
+NEWBURN, T., 2017. 
+Criminology. 
+3
+rd
+ ed. Oxon: Routledge.         [ 
+Links
+ ]
+ 
+NGARAVA, S., MUSHUNJE, A. & CHAMINUKA, P., 2018. Impact of livestock development programmes on production & risk: Case of the Kaonafatso Ya Dikgomo (KyD) Programme. The 
+56
+th
+ Annual Conference of the Agricultural Economics Association of Southern Africa, 
+25-27 September, Lord Charles Hotel, Somerset West, Western Cape, South Africa.         [ 
+Links
+ ]
+ 
+NGQULANA, A. & OBI, A., 2019. The impact of extension intensities on income of sheep producers in the Eastern Cape Province of South Africa. 
+S. Afr. J. Agric. Ext., 
+47(1): 5460.         [ 
+Links
+ ]
+ 
+NKONKI-MANDLENI, B., OGUNKOYA, F.T. & OMOTAYO, A.O., 2018. Socioeconomic factors influencing livestock production among smallholder farmers in the Free State Province of South Africa. 
+Int. J. Entrep., 
+22(4): 1-17.         [ 
+Links
+ ]
+ 
+NYAMA, Y.S., BAHTA, Y.T., ODUNIYI, O.S. & MATHEWS, N., 2022. Smallholder sheep farmers' perception of production constraints and competitiveness strategies in South Africa. 
+Sci. Afr.,16: 
+e01192.         [ 
+Links
+ ]
+ 
+PASIWE, Q.S., EARL-TAYLOR, M. & SINEFU, A., 2021. Unintended consequences of stock theft on victims: Findings from Alice, Amathole District, Eastern Cape, South Africa. 
+Acta Criminal., 
+34(1): 154-169.         [ 
+Links
+ ]
+ 
+QANGE, S. &MDODA, L., 2020. Factors affecting subsistence farming in rural areas of Nyandeni Local Municipality in the Eastern Cape Province. 
+S. Afr. J. Agric. Ext., 
+48(2): 92-105.         [ 
+Links
+ ]
+ 
+SCHLECHTER, J., 2014. 
+Namibia: Cops strike against cattle syndicates. New Era. 
+Available from: 
+https://allafrica.com/stories/201408070878.html
+.         [ 
+Links
+ ]
+ 
+SIGIGABA, M., MDODA, L. & MDITSHWA, A., 2021. Adoption drivers of improved open-pollinated (opvs) maize varieties by smallholder farmers in the Eastern Cape Province of South Africa. 
+Sustainability., 
+13: 13644.         [ 
+Links
+ ]
+ 
+SIHLOBO, W. & NEL, L., 2016. Is South 'Africa's agricultural sector addressing inclusive socioeconomic development? 
+Opp. Chan., 
+68: 65-81.         [ 
+Links
+ ]
+ 
+SOTSHA, K., FAKUDZE, B., KHOZA, T., MMBENGWA, V., NGQANGWENI, S., LUBINGA, M.H., MAZIBUKO, N., NTSHANGASE, T., NYHODO, B., MYEKI, L. & NGETU, X., 2018. Factors influencing communal livestock 'farmers' participation in the National Red Meat Development Programme (NRMDP) in South Africa: The case of the Eastern Cape Province. 
+OIDA Int. J. Sustain. Dev., 
+11(01): 1-8.         [ 
+Links
+ ]
+ 
+SWANEPOEL, F., STROEBEL, A. & MOYO, S., 2010. 
+The role of livestock in developing communities: Enhancing multifunctionality. 
+The University of the Free State and CTA.         [ 
+Links
+ ]
+ 
+VINK, N. & KIRSTEN, J., 2003. Agriculture in the national economy. In L. Nieuwoudt & J. Groenewald (eds.), 
+The challenge of change: Agriculture, land and the South African economy. 
+Pietermaritzburg: University of Natal Press, pp. 3-19.         [ 
+Links
+ ]
+ 
+TAYLOR, S., 2016. 
+Crime and criminality: A multidisciplinary approach. 
+Oxon: Routledge.         [ 
+Links
+ ]
+ 
+WILLISON, R. & BACKHOUSE, J., 2006. Opportunities for computer crime: Considering systems risk from a criminological perspective. 
+Eur. J. Inf. Syst., 
+15(4): 403- 441.         [ 
+Links
+ ]
+ 
+WINFREE, L.T. & ABADINSKY, H., 2017. 
+Essentials of criminology theory. 
+ed. Long Grove, IL: Waveland.         [ 
+Links
+ ]
+ 
+WORKYE, A., GOSHU, D. & TEGEGNE, B., 2019. Analysis of factors influencing market supply of rice by smallholder farmers in Guraferda District, Southwest Ethiopia. 
+Agriculture, Forestry, and Fisheries., 
+8(5): 95-99.         [ 
+Links
+ ]
+ 
+WORTLEY, R. & TOWNSLEY, M., 2016. 
+Environmental criminology and crime analysis. 
+2
+nd
+ ed. New York: Routledge.         [ 
+Links
+ ]
+ 
+ 
+ 
+ 
+ 
+ 
+Correspondence
+: 
+ L. Mdoda 
+ Email: 
+MdodaL@ukzn.ac.za
+ 
+
+ ©  2026  
+ 
+South African Society for Agricultural Extension (SASAE)
+South African Society of Agricultural Extension (SASAE)
+Department of Agricultural Economic, Extension and Rural Development,
+University of Pretoria, Pretoria, Gauteng, ZA, 0002, 
+Tel: +27 12 420 4623
+SwanepoelJW@ufs.ac.za

@@ -1,0 +1,1522 @@
+Determinants of livestock species ownership at household level: Evidence from rural OR Tambo District Municipality, South Africa | Pastoralism | Springer Nature Link
+
+Skip to main content
+
+Advertisement
+
+SpringerOpen journals have moved to Springer Nature Link. 
+Learn more about website changes.
+
+Determinants of livestock species ownership at household level: Evidence from rural OR Tambo District Municipality, South Africa
+
+Research
+
+Open access
+
+ Published: 
+01 March 2022
+
+Volume 12
+, article number 
+8
+ (
+2022
+)
+ 
+
+Cite this article
+
+ You have full access to this 
+open access
+ article
+
+Download PDF
+
+Save article
+
+View saved research
+
+Pastoralism
+
+ Determinants of livestock species ownership at household level: Evidence from rural OR Tambo District Municipality, South Africa
+ 
+
+Download PDF
+
+Abstract
+An understanding of factors influencing smallholder farmers’ livestock ownership at the household level is vital in formulating pro-poor livestock production policies and technologies. Hence, this study examined factors that influence livestock ownership of smallholder farmers. The data was collected randomly from three purposively selected study areas in the OR Tambo District (King Sabata Dalindyebo, Port St Johns and Ingquza Hill local municipalities) in the Eastern Cape Province of South Africa using a cross-sectional survey of 650 households. A multivariate probit model (MPM) was used to estimate correlates of livestock species ownership at the household level. Results indicated that education, age, household income, marital status, religion, rainfall, gender, household size and employment status influence livestock species ownership at the household level. Therefore, efforts to promote livestock ownership and production should be guided by these significant explanatory variables in the study area. Interdependence among species was also noted (cattle and sheep; goats and pigs; sheep and pigs; cattle and goats; goats and sheep), suggesting complementarity among the different types of livestock species. This complementarity among the species can possibly be explained by functional diversity generic with multi-species livestock farming which is worth supporting to enhance biodiversity conservation, climate change mitigation, rural resource use efficiency and socio-economic sustainability at the household level.
+
+Similar content being viewed by others
+
+Climate-driven adaptation in livestock species choice among smallholder farmers in the Eastern Cape, South Africa
+ 
+
+Article
+
+Open access
+
+23 June 2026
+
+Livestock and livelihoods of smallholder cattle-owning households in Cambodia: the contribution of on-farm and off-farm activities to income and food security
+ 
+
+Article
+
+23 May 2018
+
+Livestock feeding practices in South Kivu, Eastern Democratic Republic of Congo: challenges and opportunities
+ 
+
+Article
+
+Open access
+
+13 February 2025
+
+Explore related subjects
+
+Discover the latest articles, books and news in related subjects, suggested using machine learning.
+
+Agroecology
+
+Agricultural Geography
+
+Agriculture
+
+Animal Agriculture
+
+Rural Sociology
+
+Subsistence Agriculture
+
+Introduction
+Livestock are critical livelihoods for most rural households (Kaur et al. 
+2017
+) with multiple direct and indirect benefits (Pica-Ciamarra et al. 
+2011
+). The direct benefits include household income, household food sources (meat, milk and eggs), manure, draft power and transport services, while indirect benefits include social status, collateral security, form of savings and insurance (Pica-Ciamarra et al. 
+2011
+). Literature also suggests that with warming and high precipitation, livestock presents an adaptation option for farming households switching from crop production (Seo and Mendelsohn 
+2008
+), although faced with livestock species diversity limitation (Taruvinga et al. 
+2013
+). From a nutrition point of view, eating animal source foods (meat, milk, fish and eggs) is reported to address several nutritional challenges (Darapheak et al. 
+2013
+). In Jin and Iannotti’s (
+2014
+) study in Kenya, children’s weight-for-age 
+Z
+ scores under the age of 5 years were positively correlated with females’ ownership of livestock. Taruvinga et al. (
+2013
+) also reported a positive association between ownership of small-livestock and high dietary diversity at the household level, possibly explained by the income effect and the fact that livestock food sources contain several food groups. Thus far, supporting livestock ownership and production for poor rural households may increase their livelihood opportunities (Catley 
+2008
+; Pica-Ciamarra 
+2009
+), address their nutritional challenges (Kaur et al. 
+2017
+) and improve their ability to cope with climate change issues. Despite several benefits of livestock, especially for rural households as suggested by literature, not all rural households own livestock. For those that own livestock, productivity is claimed to be poor and declining (Hajdu et al. 
+2020
+), forcing many rural households to consider other livelihood options. This also contradicts limited quantitative studies that explain drivers of rural livestock species ownership at the household level. Evidence-based programming becomes difficult for rural development agencies (government, NGOs and the private sector) that seek to improve livestock production and ownership (Pica-Ciamarra et al. 
+2011
+). This may therefore explain why rural livestock productivity is low and has been declining lately. Against this background, this study estimated correlates of rural livestock ownership at the household level for purposes of understanding their barriers, as well as the opportunities for rural livestock ownership to enhance evidence-based programming, given the potential of livestock to address rural poverty (Pica-Ciamarra 
+2009
+; Brown 
+2003
+; Delgado 
+2003
+).
+.
+Literature review
+According to the FAO (
+2012
+), livestock is a strategic asset for a majority of poor households, worth promoting to address their poverty (Pica-Ciamarra 
+2009
+; Brown 
+2003
+; Delgado 
+2003
+). Thus far, animal production has been and is a vital livelihood source to the majority of rural households in developing countries. Additionally, livestock has a number of functions such as provision of traction power, source of nutritious food, building social capital, providing manure, source of income and wealth (Moll 
+2005
+; Njuki and Miller 
+2012
+; Rosenzweig and Wolpin 
+1993
+; Upton 
+2004
+; Bebe et al. 
+2003
+).
+Livestock production in South Africa, typical of many developing countries, is an important rural farming enterprise for rural dwellers especially for vulnerable groups such as rural women and the poor (Sotsha et al. 
+2018
+; Nkonki-Mandleni et al. 
+2018
+; Hajdu et al. 
+2020
+). Smallholder farmers’ livestock production in the Eastern Cape Province of South Africa faces a number of challenges such as overgrazing, poor infrastructure, water scarcity, low productivity and diseases (Hajdu et al. 
+2020
+). As such, smallholder farmers’ livestock ownership has been declining over the years particularly regarding cattle, goats, pigs and sheep (Hajdu et al. 
+2020
+). Despite these challenges, communal livestock farming continues to provide great potential for job creation in the Eastern Cape Province of South Africa (Mmbengwa et al. 
+2015
+). Therefore, livestock production is a very important rural livelihood source in the Eastern Cape Province of South Africa and it is the province with the highest numbers of livestock in the communal farming sector compared with the rest of the country.
+Various studies across the globe have confirmed the influence of different socio-economic and environmental factors on livestock production and ownership (Ibrahim et al. 
+2013
+; Debela 
+2017
+; Offor et al. 
+2019
+; Nkonki-Mandleni et al. 
+2018
+). However, empirical studies which comprehensively analyse socio-economic factors that influence livestock ownership of different species by rural households in South Africa are limited. Pica-Ciamarra et al. (
+2011
+) noted that it is difficult to generalise whether the poor or the rich are more likely to keep livestock, further suggesting that the importance of livestock keeping for the two groups is an empirical question best answered at the country or local level. Several studies from Kenya, Malawi, Tanzania, Uganda and Botswana also suggest a positive correlation between income and livestock ownership (Ellis and Freeman 
+2004
+; USAID 
+2007
+). Pica-Ciamarra et al. (
+2011
+) reported an inverse relationship between expenditure level and livestock ownership in rural Ghana and Nigeria with no clear relationship for Nepal and Vietnam. Studies from India reveal a positive association between farm size and ownership of large and small ruminants as well as poultry (GoI 
+2006
+). An understanding of these socio-economic factors is crucial in formulation of livestock promotion policies and technologies especially for the pro-poor rural communities in South Africa. It is against this background that this study is premised.
+Methodology
+Description of study area
+The study was conducted in the OR Tambo District Municipality of the Eastern Cape Province of South Africa. OR Tambo, one of the poorest districts in South Africa, is located along the Wild Coast incorporating a greater portion of the former Transkei homeland area of the Eastern Cape Province (OR Tambo District Municipality 
+2020
+). The district is classified as a Category C2 municipality—largely rural (OR Tambo District Municipality 
+2020
+). High rainfall areas (Port St Johns), average rainfall areas (Ingquza Hill) and low rainfall areas (King Sabata Dalindyebo) of the district were purposively selected to provide a diverse climatic environment, given that the OR Tambo District has a diverse climatic environment that responds to elevation and distance from the Indian Ocean (OR Tambo District Municipality 
+2020
+). OR Tambo is estimated to be the most densely populated district in the province (123 people per square kilometre) with an estimated population of 1.51 million people (OR Tambo District Municipality 
+2020
+).
+Data source and sampling methods
+Household livestock ownership information was obtained using a semi-structured questionnaire. The data was collected randomly from three purposively selected study areas in the OR Tambo District Municipality (Port St Johns, Ingquza Hill and King Sabata Dalindyebo local municipalities) using a cross-sectional survey. The three areas were purposively selected due to different agro-ecological zones, namely King Sabata Dalindyebo local municipality (low rainfall), Ingquza Hill local municipality (moderate rainfall) and Port St Johns (high rainfall). Port St Johns local municipality had an estimated agricultural household population of 15,962 while King Sabata Dalindyebo local municipality had an agricultural household population of 37,168 and Ingquza Hill local municipality had an agricultural household population of 32,883 (Eastern Cape Socio Economic Consultative Council (ECSECC) 
+2017
+; ECSECC 
+2017a
+; ECSECC 
+2017b
+). The three local municipalities comprising the sample thus had a total agricultural household population of 86,013. This was used as a proxy estimate of livestock households given that the actual population of livestock households is not known and a majority of agricultural households from the study areas owned livestock (General Household Survey 
+2019
+). Following Israel (
+2013
+), the sample size was calculated as illustrated in Eq. 
+1
+.
+
+$$ n=\frac{N}{1+N{(e)}^2} $$
+
+ (1)
+ 
+where 
+n
+ is the sample size, 
+N
+ is the population size and 
+e
+ is the level of precision.
+
+$$ n=\frac{86,013}{1+86,013(0.05)}\approx 398\;\mathrm{respondents} $$
+Thus far, 398 is the lowest statistically acceptable number of respondents at a 95% confidence level. To increase precision, a sample size of 650 livestock farmers was randomly drawn from the three study sites (Port St Johns = 242, Ingquza Hill = 249 and King Sabata Dalindyebo = 159).
+Theoretical framework
+The researchers assume that rural households keep livestock for different socio-economic reasons (Pica-Ciamarra et al. 
+2011
+), implying that livestock are livelihood assets for this subsector (Kaur et al. 
+2017
+). With this background, livestock ownership may be explained by individual households’ socio-economic and institutional attributes (Pica-Ciamarra et al. 
+2011
+; Ibrahim et al. 
+2013
+; Debela 
+2017
+; Offor et al. 
+2019
+; Nkonki-Mandleni et al. 
+2018
+) based on the associated utility for each choice made. The utility associated with each livestock species owned by the 
+i
+th
+ rural household is not directly observable, while the livestock species owned are observable, and unordered (Deressa et al. 
+2008
+). Against this background, livestock ownership can therefore be explained by the random utility maximisation theory as follows: A rational rural household from the study area is expected to own livestock species “
+m
+” over species “
+n
+” if, and only if, the perceived utility from livestock species “
+m
+” is greater than that of “
+n
+”, as illustrated in Eq. 
+2
+ (Gbetibouo et al. 
+2010
+).
+
+$$ {U}_{im}\left({\beta}_m^{\hbox{'}}{X}_i+{\varepsilon}_m\right)>\left({U}_{in}\left({\beta}_n^{\hbox{'}}{X}_i+{\varepsilon}_n\right)\right),\forall m\ne n $$
+
+ (2)
+ 
+where:
+
+U
+mn
+ = denotes perceived utilities of livestock species 
+m
+ and 
+n
+
+X
+i
+ = vector of explanatory variables
+
+β
+mn
+ = parameters to be estimated
+
+ε
+mn
+ = error terms (assumed to be independently and identically distributed)
+
+Assuming rural households own different types of livestock species for complementary and substitutability reasons (Feleke et al. 
+2016
+; Ekemini-Richard et al. 
+2020
+), a multivariate econometric analysis should be able to relate observable socio-economic, institutional and climate variables to livestock ownership choices made by the 
+i
+th
+ rural household (Feleke et al. 
+2016
+; Ojo and Baiyegunhi 
+2020
+; Ekemini-Richard et al. 
+2020
+). This approach will capture the unobserved factors and interrelationships among the dependent variables (owned different types of livestock species), thus avoiding bias and inefficient estimates (Greene 
+2012
+).
+Analysis
+A multivariate probit model (MPM) was used to estimate correlates of livestock species ownership at the household level. Several choice models (binary regression, probit regression, multinomial logit regression) can be used to understand factors that influence households’ choices between different alternatives (Taruvinga et al. 
+2013
+; Bryan et al. 
+2013
+; Zeleke and Aberra 
+2014
+; Mabe et al. 
+2014
+; Taruvinga et al. 
+2016
+). In cases where the dependent variables are correlated (substitutive or supplementary) and binary, the MPM becomes more appropriate to enhance the interpretation for the simultaneous influences of explanatory variables on each outcome variable (Feleke et al. 
+2016
+; Ojo and Baiyegunhi 
+2020
+; Ekemini-Richard et al. 
+2020
+; Lin et al. 
+2005
+). Following Lin et al. (
+2005
+), the MPM was used to estimate factors that influence ownership of different livestock species at the household level. The analysis had five dependent variables representing different types of livestock species common in the study area (cattle, goats, sheep, pigs and chicken). The following livestock species were dropped from the analysis because they were not owned by a majority of respondents (ducks and geese, horses and donkey). The researchers specify the MPM as illustrated in Eq. 
+3
+ below (Lin et al. 
+2005
+) and assume the model to have a set of “
+n
+” dichotomous dependent variables “
+y
+i
+” such that:
+
+$$ {y}_i=1\kern0.24em if\;{x}^{\prime }{\beta}_i+{\varepsilon}_i>0, $$
+$$ =0\kern0.36em if\;{x}^{\prime }{\beta}_i+{\varepsilon}_i\le 0,i=1,2,\dots, n, $$
+
+ (3)
+ 
+Where:
+
+x
+=vector of explanatory variables
+
+β
+1
+, 
+β
+2
+, …, 
+β
+n
+= conformable parameter vectors
+
+ε
+1
+, 
+ε
+2
+, …, 
+ε
+n
+= random error terms distributed as multivariate normal distribution with zero means, unitary variance and an 
+n
+ × 
+n
+ contemporaneous correlation matrix 
+R
+ = [
+ρ
+ij
+], with density 
+ϕ
+(
+ε
+1
+ε
+2
+, …, 
+ε
+n
+; 
+R
+).
+
+Results and discussion
+This section presents results of the study, initially focusing on basic sample statistics results as summarised in Table 
+1
+. Descriptive statistics results for types of livestock owned are then presented in Fig. 
+1
+. Lastly, parameter estimates for factors that influence ownership of livestock species at the household level are presented in Table 
+2
+.
+
+Table 1 Basic sample statistics
+Full size table
+Fig. 1
+Full size image
+Number of households who reported owning different livestock species expressed as a percentage
+Table 2 Correlation matrix for different types of livestock species owned by rural households
+Full size table
+Basic sample statistics
+A sample of 650 rural livestock farmers was considered with a mean age of 57 years, dominated by female-headed households. The distribution revealed that a majority of the respondents were married with a household size of seven family members. The majority of the respondents were educated up to the primary level with an average income range of R1001(US$63)–R2000 (US$125) per month. A majority of respondents were also Christians, as indicated in Table 
+1
+. Lastly, a majority of the respondents were unemployed.
+Types of livestock species owned by respondents from the study area
+Figure 
+1
+ summarises types of livestock species owned by the respondents. Chickens were the most popular livestock owned by respondents from the study area (26%). This was followed by cattle (22%), sheep (17%), goats (16%) and pigs (14%). Chickens are strategic rural livelihood assets owned by almost everyone (Fotsa 
+2008
+; Mubamba et al. 
+2018
+; Conan et al. 
+2012
+) with multiple socio-economic benefits (Guèye 
+2005
+; Moges 
+2010
+) and they are highly adaptable to local conditions (Mubamba et al. 
+2018
+; Akinola and Essien 
+2011
+). This is in line with South Africa’s General Household Survey (
+2019
+) estimates that indicate that poultry (chicken) production comprises 67.4% of the agricultural production activities in the Eastern Cape Province.
+Goats, sheep and pigs also fall in the small livestock category, easy to maintain and dispose of, significantly generating the much-needed household income. These species (chicken, goats, sheep and pigs) are claimed to positively contribute to household food and nutrition security through household consumption and indirectly through the income effect. Their popularity is therefore more linked to household food and nutritional security. Despite cattle production being an income-generating rural enterprise, literature also highlights several social and cultural (social capital, traditional rituals) benefits. The observed ownership could be explained by multiple direct and indirect benefits. Estimates by the General Household Survey (
+2019
+) of South Africa also indicate that livestock production (excluding poultry) comprises 83.4% of the agricultural production activities in the Eastern Cape Province.
+Factors that influence livestock ownership at the household level
+This section summarises econometrics results of the study as detailed in Tables 
+2
+ and 
+3
+. Table 
+2
+ presents the correlation matrix of the five dominant livestock species (dependent variables) in the study area. Table 
+3
+ further presents the MPM results for each of the dependent variables.
+
+Table 3 Multivariate probit estimates of determinants of household livestock ownership
+Full size table
+Correlation matrix for the different types of livestock species owned by rural households
+Table 
+2
+ presents the correlation matrix from the multivariate probit model of different types of livestock species owned by rural households from the study area. The results reveal that the five outcomes are significantly and positively correlated.
+The results also indicate interdependence among the five dominant livestock species owned by rural households from the study area. The pair-wise coefficients were positively correlated, revealing complementarity among the different types of livestock species owned (Belderbos et al. 
+2004
+). Moderate to strong complementarity is observed between the following species: cattle and sheep (0.6084), goats and pigs (0.4714), sheep and pigs (0.4765), cattle and goats (0.4619) and goats and sheep (0.4420). This may be explained by the fact that these species (cattle, sheep, goats and pigs) share a bulk of related production activities and costs that can easily be shared and present positive synergies—functional diversity (Rolo et al. 
+2016
+) resource use efficiency (Wang et al. 
+2019
+), climate change mitigation and biodiversity conservation (Fraser et al. 
+2014
+) and socio-economic sustainability (Forteau et al. 
+2020
+; de Roest et al. 
+2018
+; Martin et al. 
+2020
+). The weak positive correlation between chickens and the other livestock species may be because of the poor relationship between chicken production activities (costs) and the other species, making it difficult to share resources. Against this background, the use of the MPM to allow free correlation among the unobserved factors is therefore justified (Lin et al. 
+2005
+).
+Factors that influence livestock species ownership
+Factors that influence livestock species ownership at the household level are summarised in Table 
+3
+.
+Rainfall
+With reference to rainfall, results indicate that an increase in precipitation negatively influences ownership of all livestock species under consideration (cattle, goats, sheep, pigs and chicken). A unit increase in precipitation is associated with a decrease in pig ownership, a decrease in sheep ownership, a decrease in chicken ownership, a decrease in cattle ownership and a decrease in goat ownership 
+ceteris paribus
+. Taruvinga et al. (
+2013
+) noted similar observations for sheep, pigs and broilers, arguing that these species are sensitive to high precipitation. Seo and Mendelsohn (
+2007
+) noted similar observations for beef cattle, dairy cattle and sheep (Seo and Mendelsohn 
+2008
+). In contrast to this, Taruvinga et al. (
+2013
+) reported an increase in the probability of selecting beef, goats and dual purpose indigenous chicken with increased precipitation. The researchers of this study therefore argue that rainfall remains a key factor that influences ownership of plant-based rural livestock species (Ogutu et al. 
+2008
+), given that precipitation influences plant biomass (Sankaran et al. 
+2005
+) and plant nutrient concentration (Boutton et al. 
+1988
+). An extreme rainfall season common in Port St Johns area, with possible flooding, reduces forage quality as a result of excessive plant growth and dilution of plant nutrients (Olff et al. 
+2002
+; Ogutu et al. 
+2012
+; Ogutu et al. 
+2013
+). Moreover, flooding is also reported to promote transmission of diseases like anthrax (Prins and Weyerhaeuser 
+1987
+), Rift Valley Fever (Davies et al. 
+1985
+), African Horse Sickness (Baylis et al. 
+1999
+) and infestation with parasites (Fosbrooke 
+1962
+).
+Gender
+Results reveal that gender positively influences ownership of cattle and sheep at a 1% significance level as well as goats at a 10% significance level. A positive unit change from female-headed household to male-headed household is associated with an increase in sheep ownership, an increase in cattle ownership and an increase in goat ownership 
+ceteris paribus
+. The results suggest that male-headed households are more likely to own income-generating livestock species like cattle and sheep and cultural-related species like goats compared to their female counterparts who are more likely to own small livestock such as indigenous chickens. Some of the possible factors causing this disparity are better access to resources by male-headed households such as high endowment of land area, water, labour and access to financial services. Molefi and Mbajiorgu (
+2017
+) attested that livestock rearing, especially cattle, is a preserve and a duty for men. Conversely, women have limited decision-making powers and means of production which are attributed to cultural norms in the study area; hence, skewed livestock ownership of large animals is in favour of males. The results are in tandem with previous studies which unearthed pronounced gender differences in ownership of large animals compared to ownership of small animals by rural smallholder farmers (Debela 
+2017
+; Ibrahim et al. 
+2013
+; Njuki and Sanginga 
+2013
+).
+Age
+There is positive correlation between age and ownership of cattle and chickens at a 10% significance level. Results reveal that a positive unit change in household head age is associated with an increase in cattle ownership and an increase in chicken ownership 
+ceteris paribus
+. Age is associated with wealth accumulation in rural areas through access to productive assets like land, experience and access to 
+lobola
+ payments (cattle). Thus far, older household heads are more likely to own cattle and chicken than younger household heads who normally focus on formal local employment opportunities and off-farm income generating activities like tuck-shops, stockvels and taxi business. This finding corroborates Debela (
+2017
+) who found that age had a positive effect on livestock ownership in Northern Ethiopia. Literature also suggests that the youth are known not to be interested in agriculture (livestock production) (Ainslie et al. 
+2002
+; Molefi and Mbajiorgu 
+2017
+).
+Marital status
+With regard to the parameter of marital status, it is statistically significant and positive for goats and pig ownership at 5% and 10% respectively. The results indicate that a positive unit change in marital status from single to married is associated with an increase in goat ownership and an increase in ownership of pigs, holding other independent variables constant. These findings suggest that married household heads are more likely to own pigs and goats than single-headed households. This may be explained by availability of labour given that pig and goat production is labour intensive. Also, from a demand point of view (more mouth to feed), married household heads are more likely to keep pigs and goats for provision of food and sale of surplus to generate the much need household income. These findings reinforce suggestions by Nkonki-Mandleni et al. (
+2018
+) on the labour benefits for livestock production from family members.
+Household size
+The results indicate a positive relationship between household size and cattle ownership at the 10% significance level. Per every positive unit change in household size holding other independent variables constant, results reveal an increase in cattle ownership. This signifies that bigger household sizes are more likely to keep cattle than smaller household sizes. This can be attributed to labour which is required during herding of the cattle, where households with more family members are likely to have surplus labour for these activities. These findings are in line with those of Nkonki-Mandleni et al. (
+2018
+) who found that the amount of available family labour has a bearing on livestock production and ultimately income that accrue from such activities in the Free State Province of South Africa. Household size is deemed a key variable in determining family labour available in smallholder farming activities to carry out farming practices and ensure completion of tasks timeously (Moyo 
+2010
+; Ngigi et al. 
+2015
+; Akinyemi and Mushunje 
+2019
+). Most importantly, according to Majekodunmi (
+2011
+), management of large herds successful for the maximum benefit of the household requires family labour from both genders.
+Education
+There is an inverse relationship between educational level and ownership of goats at 5% significance levels. Per every unit increase in education level 
+ceteris paribus
+, results indicate a decrease in goat ownership. The results suggest that as the educational level of household increases goat ownership declines. In the study area, goats are mainly used for traditional purposes and the majority of people in the area prefer not to consume goat meat; instead, they deem sheep meat as a delicacy. This might explain the following relationship—when a household’s educational level increases they might prefer to buy goats only for performing traditional purposes instead of rearing them, given the positive correlation between education and employment 
+cum
+ income. These findings are consistent with those of Kabubo-Mariara (
+2008
+), who found a negative correlation between both goat and sheep rearing probabilities in Kenya. Similarly, this also supports previous studies which suggest that educated farmers are likely to keep less livestock compared with less educated farmers, because education opens up opportunities for alternative income earnings (Kabubo-Mariara 
+2007
+).
+Religion
+Christianity is negatively correlated with ownership of cattle at a 10% significance level. Results indicate that a positive unit change from Islamic to Christian religion is associated with a decrease in cattle ownership 
+ceteris paribus
+. These findings confirm other studies that have noted that religion and ethnicity are some of the households’ cultural settings which determine the type of livestock species to raise in most African societies (Adams and Ohene-Yankyera 
+2014
+; Ndamukong et al. 
+1989
+). Kim et al. (
+2019
+) noted that different religious cultures practise fasting. These include the Islamic Ramadan and Orthodox Christianity Lent, where fasters abstain from meat, eggs and dairy products (Trepanowski and Bloomer 
+2010
+). This may influence the type and number of livestock species these households keep.
+Household income
+With reference to household income, results reveal a positive association with ownership of sheep (
+p
+ < 10%), pigs (
+p
+ < 1%), cattle, goats and chickens at a 5% significance level. Results indicate that a unit increase in household income is associated with an increase in cattle ownership, an increase in goat ownership, an increase in sheep ownership, an increase in pig ownership and an increase in chicken ownership. The findings indicate that as household income increases, their chances of owning pigs, sheep, cattle, goats and chicken also increase. Availability of household income can also mean that farmers are able to replenish their herd and also buy other essentials that are required for livestock rearing such as animal feed and drugs for vaccinations. Hence, a positive relationship exists between household income and ownership of pigs, sheep, cattle, goats and chicken livestock species. The present findings are similar to those of Ngarava et al. (
+2020
+) who observed that household income assists smallholder farmers to improve their feeding strategies, easy barriers to market entry and ultimately diversification of livestock species reared. In the same vein, household income improves farmers’ adaptive capacity to climate-related events which constrain livestock production.
+Employment status
+The results show a negative relationship between employment status and ownership of sheep and chicken at a 10% significance level. Per every positive unit change in the employment status of the household head 
+ceteris paribus
+, results reveal a decrease in sheep ownership and a decrease in chicken ownership. The results reveal that when a household head is employed, they tend to move away from rearing of sheep and chickens possibly because of lack of time and availability of alternative basic household income. Formally employed household heads normally do not have time to look after their livestock which may negatively affect ownership. Similar results were also reported by Dossa et al. (
+2008
+) in southern Benin.
+Conclusions
+This study examined factors that influence livestock ownership of smallholder farmers in the Eastern Cape province of South Africa. With reference to livestock ownership, results revealed that the majority of the respondents kept chickens, cattle, sheep, goats and pigs for food and nutritional benefits, source of household income and other indirect socio-cultural benefits. Donkeys, horses, ducks and geese, although reported by some respondents, were not widely owned. With respect to donkeys and horses, low ownership was mainly attributed to limited non-consumptive benefits. The results also indicate interdependence among the five dominant livestock species owned by rural households, suggesting complementarity among the different types of livestock species owned which is possibly explained by functional diversity common in multi-species livestock farming. On the other hand, results of the multivariate probit model revealed that rainfall, socio-economic factors such as gender, age, marital status, household size, education, religion, household income and employment status influence livestock species ownership at the household level. Hence, in efforts to promote livestock ownership and production at the household level, strategic targeting may focus on supplementary feeding in high rainfall areas normally recommended for dry low rainfall areas and strict disease monitoring and management. Several households’ socio-economic attributes can also be deliberately targeted to bridge barriers that normally limit women and youth from participating in a diverse of livestock species. As such, the research shares the following policy insights:
+Policy insights
+
+Promotion of multi-species livestock farming: The results revealed a moderate to strong interdependence among the following species: cattle and sheep (0.6084), goats and pigs (0.4714), sheep and pigs (0.4765), cattle and goats (0.4619) and goats and sheep (0.4420), suggesting complementarity among the different types of livestock species owned which could boost functional diversity through resource use efficiency, climate change mitigation and biodiversity conservation, and socio-economic sustainability at the household level.
+
+Promotion of cattle, sheep and goat production: Too much rainfall may negatively affect cattle, sheep and goat production because of poor forage quality (excessive plant growth and dilution of plant nutrients) and outbreak of diseases. Supplementary feeding and strict disease management programmes should be some of the targeted management practices for high rainfall areas like Port St Johns local municipality. Deliberate promotion of cattle, sheep and goats clubs for women and youth will bridge current gender and age barriers that limit youth and women’s participation in cattle, sheep and goat production. Establishment and effective maintenance of communal grazing paddocks will significantly reduce labour requirements that also disadvantage households with small family sizes.
+
+Promotion of pig and poultry production: Too much water also affects these species, mainly through disease outbreaks, and it is thus worth monitoring in high rainfall areas. Household income plays a critical role in ownership of pigs and chickens. Promotion of rural income-generating activities (beekeeping, horticultural home gardens) may finance purchase of livestock species like chicken and pigs.
+
+In high rainfall areas, complementary feeding may target quality protein maize while low rainfall areas may target high protein climate smart cereal grains (finger and pearl millets) and legumes (cowpeas).
+
+Availability of data and materials
+
+“Not applicable”
+
+References
+Adams, F., and K. Ohene-Yankyera. 2014. Determinants of factors that influence small ruminant livestock production decisions in northern Ghana: Application of discrete regression model. 
+Journal of Biology, Agriculture and Healthcare
+ 4 (27): 310–321. 
+https://search.ebscohost.com/login.aspx?direct=true&db=lah&AN=20153026417&site=ehost-live%5Cn
+, 
+http://www.iiste.org/Journals/index.php/JBAH/article/view/18662/18938%5Cnemail: fazztop@yahoo.com
+.
+Ainslie, A., T. Kepe, L. Ntebeza, Z. Ntshona, and S. Turner. 2002. Cattle ownership and prodution in the communal areas of the Eastern Cape, South Africa. 
+Programme for Land and Agrarian Studies
+ 40 (10): 1475–1485.
+
+ Google Scholar
+ 
+ 
+Akinola, L.A.F., and A. Essien. 2011. Relevance of rural poultry production in developing countries with special reference to Africa. 
+World’s Poultry Science Journal
+ 67 (4): 697–705. 
+https://www.tandfonline.com/doi/abs/10.1017/S0043933911000778
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Akinyemi, B.E., and A. Mushunje. 2019. Land ownership and usage for agriculture: Empirical evidence from South African Living Conditions Survey. 
+Cogent Social Sciences
+ 5 (1): 1663691. 
+https://doi.org/10.1080/23311886.2019.1663691
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Baylis, M., P.S. Mellor, and R. Meiswinkel. 1999. Horse sickness and ENSO in South Africa. 
+Nature
+ 397 (6720): 574. 
+https://doi.org/10.1038/17512
+https://www.nature.com/articles/17512.pdf
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Bebe, B.O., H.M.J. Udo, G.J. Rowlands, and W. Thorpe. 2003. Smallholder dairy systems in the Kenya highlands: Breed preferences and breeding practices. 
+Livestock Production Science
+ 82 (2–3): 117–127. 
+https://doi.org/10.1016/S0301-6226(03)00029-0
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Belderbos, R., M. Carree, and B. Lokshin. 2004. Cooperative R&D and firm performance. 
+Research Policy
+ 33 (10): 1477–1492. 
+https://doi.org/10.1016/j.respol.2004.07.003
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Boutton, T.W., L.L. Tieszen, and S.K. Imbamba. 1988. Seasonal changes in the nutrient content of East African grassland vegetation. 
+African Journal of Ecology
+ 26 (2): 103–115. 
+https://doi.org/10.1111/j.1365-2028.1988.tb00961.x
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Brown, A. 2003. 
+The livestock revolution: A pathway from poverty? Proceedings of a conference held at the ATSE Crawford Fund, Parliament House, Canberra
+. Canberra: ATSE Crawford Fund In Canberra.
+
+ Google Scholar
+ 
+ 
+Bryan, E., C. Ringler, B. Okoba, C. Roncoli, S. Silvestri, and M. Herrero. 2013. Adapting agriculture to climate change in Kenya: Household strategies and determinants. 
+Journal of Environmental Management
+ 114: 26–35. 
+https://doi.org/10.1016/j.jenvman.2012.10.036
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Catley, A. 2008. The growing demand for livestock. In 
+Will policy and institutional changes benefit poor people?
+ Brighton: University of Sussex. 
+https://agris.fao.org/agris-search/search.do?recordID=GB2013203143
+.
+
+ Google Scholar
+ 
+ 
+Conan, A., F.L. Goutard, S. Sorn, and S. Vong. 2012. Biosecurity measures for backyard poultry in developing countries: A systematic review. 
+BMC Veterinary Research
+ 8 (1): 240. 
+https://doi.org/10.1186/1746-6148-8-240
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Darapheak, C., T. Takano, M. Kizuki, K. Nakamura, and K. Seino. 2013. Consumption of animal source foods and dietary diversity reduce stunting in children in Cambodia. 
+International Archives of Medicine
+ 6 (1): 1–11. 
+https://intarchmed.biomedcentral.com/track/pdf/10.1186/1755-7682-6-29.pdf
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Davies, F.G., K.J. Linthicum, and A.D. James. 1985. Rainfall and epizootic Rift Valley fever. 
+Bulletin of the World Health Organization
+ 63 (5): 941–943.
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+de Roest, K., P. Ferrari, and K. Knickel. 2018. Specialisation and economies of scale or diversification and economies of scope? Assessing different agricultural development pathways. 
+Journal of Rural Studies
+ 59: 222–231. 
+https://doi.org/10.1016/j.jrurstud.2017.04.013
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Debela, B.L. 2017. Factors affecting differences in livestock asset ownership between male-and female-headed households in Northern Ethiopia. 
+The European Journal of Development Research
+ 29 (2): 328–347. 
+https://doi.org/10.1057/ejdr.2016.9
+https://link.springer.com/article/10.1057%2Fejdr.2016.9
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Delgado, C.L. 2003. Rising consumption of meat and milk in developing countries has created a new food revolution. 
+Journal of Nutrition
+ 133 (11): 3907–3910. 
+https://doi.org/10.1093/jn/133.11.3907S
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Deressa, T., R. Hassan, C. Ringler, T. Alemu, and M. Yesuf. 2008. 
+Analysis of the determinants of farmers’ choice of adaptation methods and perceptions of climate change in the Nile Basin of Ethiopia
+. Washington D. C: International Food Policy Research Institute. 
+https://ideas.repec.org/p/fpr/resbrf/15(9)amh.html
+.
+
+ Google Scholar
+ 
+ 
+Dossa, L.H., B. Rischkowsky, R. Birner, and C. Wollny. 2008. Socio-economic determinants of keeping goats and sheep by rural people in southern Benin. 
+Agriculture and Human Values
+ 25 (4): 581–592. 
+https://doi.org/10.1007/s10460-008-9138-9
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Eastern Cape Socio Economic Consultative Council (ECSECC). 2017. 
+King Sabata Dalindyebo Local Municipality Social Economic Review and Outlook, 2017
+. Vincent: 
+https://www.ecsecc.org/documentrepository/informationcentre/king-sabata-dalindyebo-local-municipality_52786.pdf
+.
+ECSECC. 2017a. 
+Ingquza Hill Local Municipality Social Economic Review and Outlook, 2017
+. Vincent: 
+https://www.ecsecc.org/documentrepository/informationcentre/ngquza-hill-local-municipality_35291.pdf
+.
+ECSECC. 2017b. 
+Port St Johns Local Municipality Social Economic Review and Outlook, 2017
+. Vincent: 
+https://www.ecsecc.org/documentrepository/informationcentre/port-st-jonhs-local-municipality_82667.pdf
+.
+Ekemini-Richard, M., A.B. Ayanwale, and O.J. Adelegan. 2020. Factors influencing the choice of climate change adaptation methods among underutilized indigenous vegetable farmers. 
+International Journal of Vegetable Science
+ 28 (2): 1–10. 
+https://www.tandfonline.com/doi/abs/10.1080/19315260.2020.1848960
+.
+Ellis, F., and H. Freeman. 2004. Rural livelihoods and poverty reduction strategies in four African countries. 
+Journal of Development Studies
+ 40 (4): 1–30. 
+https://www.tandfonline.com/doi/abs/10.1080/00220380410001673175
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+FAO. 2012. 
+Livestock sector development for poverty reduction: An economic and policy perspective– Livestock’s many virtues
+. Rome: 
+http://www.fao.org/3/i2744e/i2744e00.pdf
+.
+Feleke, F.B., M. Berhe, G. Gebru, and D. Hoag. 2016. Determinants of adaptation choices to climate change by sheep and goat farmers in Northern Ethiopia: The case of Southern and Central Tigray, Ethiopia. 
+SpringerPlus
+ 5 (1): 1692. 
+https://doi.org/10.1186/s40064-016-3042-3
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Forteau, L., B. Dumont, G. Sallé, G. Bigot, and G. Fleurance. 2020. Horses grazing with cattle have reduced strongyle egg count due to the dilution effect and increased reliance on macrocyclic lactones in mixed farms. 
+Animal
+ 14 (5): 1076–1082. 
+https://doi.org/10.1017/S1751731119002738
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Fosbrooke, H. 1962. The stomoxys plague in Ngorongoro. 
+African Journal of Ecology
+ 1 (1): 124–126. 
+https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2028.1963.tb00190.x
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Fotsa, J.C. 2008. 
+Characterization of populations of local hens (Gallus gallus) in Cameroon
+. Paris: Institut national agronomique Paris-Grignon. 
+https://pastel.archives-ouvertes.fr/pastel-00004904/document
+.
+
+ Google Scholar
+ 
+ 
+Fraser, M.D., J.M. Moorby, J.E. Vale, and D.M. Evans. 2014. Mixed grazing systems benefit both upland biodiversity and livestock production. 
+PLoS One
+ 9 (2): e89054. 
+https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0089054
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Gbetibouo, G.A., R.M. Hassan, and C. Ringler. 2010. Modelling farmers’ adaptation strategies for climate change and variability: The case of the Limpopo Basin, South Africa. 
+Agrekon
+ 49 (2): 217–234. 
+https://doi.org/10.1080/03031853.2010.491294
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+General Household Survey. 2019. 
+Statistical Release P0318, General Household Survey 2019
+. Pretoria: 
+http://www.statssa.gov.za/publications/P0318/P03182019.pdf
+.
+Ministry of Statistics & Programme Implementation Government of India. 2006. 
+Livestock ownership across operational land holding classes in India, 2002-2003. NSS 59th Round, Report No. 493 (59/18.1/1)
+. New Delhi.
+Greene, W. 2012. 
+Econometric analysis, international edition
+. 7th ed. Harlow: Pearson Education Limited.
+
+ Google Scholar
+ 
+ 
+Guèye, E.F. 2005. Gender aspects in family poultry management systems in developing countries. 
+World’s Poultry Science Journal
+ 61 (1): 39–46. 
+https://www.tandfonline.com/doi/abs/10.1079/WPS200440
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Hajdu, F., D. Neves, and S. Granlund. 2020. Changing livelihoods in rural Eastern Cape, South Africa (2002–2016): Diminishing employment and expanding social protection. 
+Journal of Southern African Studies
+ 46 (4): 1–30. 
+https://www.tandfonline.com/doi/full/10.1080/03057070.2020.1773721
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ibrahim, A.M., X. Shiwei, and Y. Wen. 2013. The impact of social factors of rural households on livestock production and rural household income in White Nile State of Sudan. 
+International Journal of Agricultural and Food Research
+ 2 (4): 1–13. 
+https://doi.org/10.24102/ijafr.v2i4.343
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Israel, G. 2013. 
+Determining sample size
+. Gainesville: University of Florida Cooperative Extension Service, Institute of Food and Agriculture Sciences, EDIS.
+
+ Google Scholar
+ 
+ 
+Jin, M., and L.L. Iannotti. 2014. Livestock production, animal source food intake, and young child growth: The role of gender for ensuring nutrition impacts. 
+Social Science and Medicine
+ 105: 16–21. 
+https://doi.org/10.1016/j.socscimed.2014.01.001
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Kabubo-Mariara, J. 2007. Poverty and rural livelihoods in Kenya: Evidence from a semi-arid region. In 
+Poverty, Poverty Alleviation and Social Disadvantage: Analysis, Case Studies and Policies
+. India: Serials Publications.
+
+ Google Scholar
+ 
+ 
+Kabubo-Mariara, J. 2008. Climate change adaptation and livestock activity choices in Kenya: An economic analysis. 
+Natural Resources Forum
+ 32 (2): 131–141. 
+https://doi.org/10.1111/j.1477-8947.2008.00178.x
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Kaur, M., J.P. Graham, and J.N.S. Eisenberg. 2017. Livestock ownership among rural households and child morbidity and mortality: An analysis of demographic health survey data from 30 Sub-Saharan African Countries (2005-2015). 
+American Journal of Tropical Medicine and Hygiene
+ 96 (3): 741–748. 
+https://doi.org/10.4269/ajtmh.16-0664
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Kim, S.S., P.H. Nguyen, L.M. Tran, Y. Abebe, Y. Asrat, M. Tharaney, and P. Menon. 2019. Maternal behavioural determinants and livestock ownership are associated with animal source food consumption among young children during fasting in rural Ethiopia. 
+Maternal and Child Nutrition
+ 15 (2): 12695. 
+https://doi.org/10.1111/mcn.12695
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Lin, C.T.J., K.L. Jensen, and S.T. Yen. 2005. Awareness of foodborne pathogens among US consumers. 
+Food Quality and Preference
+ 16 (5): 401–412. 
+https://doi.org/10.1016/j.foodqual.2004.07.001
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Mabe, F., G. Sienso, and S. Donkoh. 2014. Determinants of choice of climate change adaptation strategies in Northern Ghana. 
+Research in Applied Economics
+ 6 (4): 75–94. 
+https://doi.org/10.5296/rae.v6i4.6121
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Majekodunmi, A. 2011. 
+Pastoral livelihoods and the epidemiology of emergent trypanosomiasis on the Jos plateau
+. Nigeria: University of Edinburgh.
+
+ Google Scholar
+ 
+ 
+Martin, G., K. Barth, M. Benoit, C. Brock, M. Destruel, B. Dumont, M. Grillot, S. Hübner, M.A. Magne, M. Moerman, C. Mosnier, D. Parsons, B. Ronchi, L. Schanz, L. Steinmetz, S. Werne, C. Winckler, and R. Primi. 2020. Potential of multi-species livestock farming to improve the sustainability of livestock farms: A review. 
+Agricultural Systems
+ 181: 102821. 
+https://doi.org/10.1016/j.agsy.2020.102821
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Mmbengwa, V., B. Nyhodo, L. Myeki, X. Ngethu, and H. van Schalkwyk. 2015. Communal livestock farming in South Africa: Does this farming system create jobs for poverty stricken rural areas? 
+Sylwan
+ 159 (10): 176–192.
+
+ Google Scholar
+ 
+ 
+Moges, F. 2010. 
+Indigenous chicken production and marketing systems in Ethiopia: Characteristics and opportunities for market-oriented development
+. Nairobi: International Livestock Research Institute.
+
+ Google Scholar
+ 
+ 
+Molefi, S.H., and C.A. Mbajiorgu. 2017. Assessing the potential of beef cattle farming as contributor to income of communal households of Chief Albert Luthuli municipality in Mpumalanga province, South Africa. 
+Indian Journal of Animal Research
+ 51 (2): 350–357.
+
+ Google Scholar
+ 
+ 
+Moll, H. 2005. Costs and benefits of livestock systems and the role of market and nonmarket relationships. 
+Agricultural Economics
+ 32 (2): 181–193. 
+https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.0169-5150.2005.00210.x
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Moyo, B.H.Z. 2010. 
+The use and role of indigenous knowledge in small-scale agricultural systems in Africa: The case of farmers in northern Malawi
+. University of Glasgow.
+
+ Google Scholar
+ 
+ 
+Mubamba, C., G. Ramsay, C. Abolnik, G. Dautu, and B. Gummow. 2018. Analysing production and financial data from farmers can serve as a tool for identifying opportunities for enhancing extension delivery among the rural poultry sub-sector in Zambia. 
+Preventive Veterinary Medicine
+ 158: 152–159. 
+https://doi.org/10.1016/j.prevetmed.2018.08.005
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ndamukong, K.J.N., M.M.H. Sewell, and M.F. Asanji. 1989. Management and productivity of small ruminants in the North West province of Cameron. 
+Tropical Animal Health Production
+ 21 (2): 109–119. 
+https://doi.org/10.1007/BF02236189
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ngarava, S., A. Mushunje, and P. Chaminuka. 2020. Qualitative benefits of livestock development programmes. Evidence from the Kaonafatso ya Dikgomo (KyD ) Scheme in South Africa. 
+Evaluation and Program Planning
+ 78 (August 2019): 101722. 
+https://doi.org/10.1016/j.evalprogplan.2019.101722
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ngigi, M., U. Mueller, and R. Birner. 2015. 
+The role of livestock portfolios and group-based approaches for building resilience in the face of accelerating climate change: An asset-based panel data analysis from rural Kenya, ZEF- Discussion Papers on Development Policy No. 205, Center for Development Research, Bonn.
+ 
+https://deliverypdf.ssrn.com/delivery.php?ID=208022116002083091002125067028069081102087090027053041122082090093125029110101065109033023100005039055006124068071110082071121017087031082011019118075080101010101108072033081021002074117126023023084103015064001094016095095099092064097026068101089104103&EXT=pdf&INDEX=TRUE
+.
+Njuki, J., and B. Miller. 2012. 
+Livestock and gender. Achieving poverty alleviation and food security through livestock policies that benefit women
+. London: Global Alliance for Livestock Veterinary Medicines.
+
+ Google Scholar
+ 
+ 
+Njuki, J., and P.C. Sanginga. 2013. 
+Women, livestock ownership and markets: Bridging the gender gap in Eastern and Southern Africa
+. New York: Routledge. 
+https://doi.org/10.4324/9780203083604
+.
+Book
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Nkonki-Mandleni, B., F.T. Ogunkoya, and A.O. Omotayo. 2018. Socioeconomic factors influencing livestock production among smallholder farmers in the Free state Province of South Africa. 
+International Journal of Entrepreneurship
+ 23 (1): 1–17.
+
+ Google Scholar
+ 
+ 
+Offor, E.I., N.M. Ekweanya, and A.C. Oleka. 2019. Effects of socio-economic factors on small ruminant production in Ohafia Agricultural Zone of Abia State, Nigeria. 
+Agro-Science Journal of Tropical Agriculture, Food, Environment and Extension
+ 17 (3): 7.
+
+ Google Scholar
+ 
+ 
+Ogutu, J.O., N. Owen-Smith, H.P. Piepho, B. Kuloba, and J. Edebe. 2012. Dynamics of ungulates in relation to climatic and land use changes in an insularized African savanna ecosystem. 
+Biodiversity and Conservation
+ 21 (4): 1033–1053 
+https://link.springer.com/article/10.1007/s10531-012-0239-9
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ogutu, J.O., N. Owen-Smith, H.P. Piepho, M.Y. Said, S.C. Kifugo, R.S. Reid, H. Gichohi, P. Kahumbu, and S. Andanje. 2013. Changing wildlife populations in Nairobi national park and adjoining Athi-Kaputiei Plains: Collapse of the migratory wildebeest. 
+Open Conservation Biology Journal
+ 7 (1): 11–26. 
+https://doi.org/10.2174/1874839201307010011
+https://benthamopen.com/contents/pdf/TOCONSBJ/TOCONSBJ-7-11.pdf
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ogutu, J.O., H.P. Piepho, H.T. Dublin, N. Bhola, and R.S. Reid. 2008. Rainfall influences on ungulate population abundance in the Mara-Serengeti ecosystem. 
+Journal of Animal Ecology
+ 77 (4): 814–829. 
+https://doi.org/10.1111/j.1365-2656.2008.01392.x
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Ojo, T.O., and L.J.S. Baiyegunhi. 2020. Determinants of climate change adaptation strategies and its impact on the net farm income of rice farmers in south-west Nigeria. 
+Land Use Policy
+ 95: 103946. 
+https://doi.org/10.1016/j.landusepol.2019.04.007
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Olff, H., M.E. Ritchie, and H.H. Prins. 2002. Global environmental controls of diversity in large herbivores. 
+Nature
+ 415 (6874): 901–904. 
+https://doi.org/10.1038/415901a
+https://www.nature.com/articles/415901a
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+OR Tambo District Municipality. 2020. 
+OR Tambo District Municipality EC: Profile and analysis, District Development Model
+. Pretoria: 
+https://www.cogta.gov.za/ddm/wp-content/uploads/2020/11/ORTamnco-September-2020.pdf
+.
+Pica-Ciamarra, U. 2009. Livestock-poverty linkages in Latin America. 
+Livestock Research for Rural Development
+ 21 (1). 
+http://lrrd.cipav.org.co/lrrd21/1/pica21011.htm
+.
+Pica-Ciamarra, U., L. Tasciotti, J. Otte, and A. Zezza. 2011. 
+Livestock assets, livestock income and rural households: Cross-country evidence from household surveys
+, Food and Agriculture Organization of the United Nations (FAO) ESA Working Paper No. 11-17. Rome: 
+http://www.fao.org/3/am724e/am724e00.pdf
+.
+Prins, H.H.T., and F.J. Weyerhaeuser. 1987. Epidemics in populations of wild ruminants: Anthrax and impala, rinderpest and buffalo in Lake Manyara National Park, Tanzania. 
+Oikos
+ 49 (1): 28–38. 
+https://doi.org/10.2307/3565551
+https://www.jstor.org/stable/pdf/3565551.pdf?refreqid=excelsior%3Abe6e26b1bedc45604a0c5642fdc395b5
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Rolo, V., D. Rivest, M. Lorente, J. Kattge, and G. Moreno. 2016. Taxonomic and functional diversity in Mediterranean pastures: Insights on the biodiversity–productivity trade-off. 
+Journal of Applied Ecology
+ 53 (5): 1575–1584. 
+https://doi.org/10.1111/1365-2664.12685
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Rosenzweig, M.R., and K.I. Wolpin. 1993. Credit market constraints, consumption smoothing, and the accumulation of durable production assets in low-income countries: Investments in bullocks in India. 
+Journal of Political Economy
+ 101 (2): 223–244. 
+https://doi.org/10.1086/261874
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Sankaran, M., N.P. Hanan, R.J. Scholes, J. Ratnam, D.J. Augustine, B.S. Cade, J. Gignoux, S.I. Higgins, X. Le Roux, F. Ludwig, and J. Ardo. 2005. Determinants of woody cover in African savannas. 
+Nature
+ 438 (7069): 846–849. 
+https://doi.org/10.1038/nature04070
+https://www.nature.com/articles/nature04070
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Seo, S., and R. Mendelsohn. 2007. 
+An analysis of livestock choice: Adapting to climate change in Latin American farms
+, World Bank Policy Research Working Paper No. 4164. Washington D. C: 
+https://elibrary.worldbank.org/doi/abs/10.1596/1813-9450-4164
+.
+Seo, S., and R. Mendelsohn. 2008. Animal husbandry in Africa: Climate change impacts and adaptations. 
+African Journal of Agricultural and Resource Economics
+ 2 (1): 65–82. 
+https://ageconsearch.umn.edu/record/56968/
+.
+
+ Google Scholar
+ 
+ 
+Sotsha, K., B. Fakudze, L. Myeki, S. Ngqangweni, B. Nyhodo, X. Ngetu, N. Mazibuko, T. Khoza, T. Ntshangase, and V. Mmbengwa. 2018. Factors influencing communal livestock farmers’ participation into the National Red Meat Development Programme (NRMDP) in South Africa: The case of the Eastern Cape Province. 
+International Journal of Sustainable Development
+ 11 (1): 73–80.
+
+ Google Scholar
+ 
+ 
+Taruvinga, A., V. Muchenje, and A. Mushunje. 2013. Climate change impacts and adaptations on small-scale livestock production. 
+International Journal of Development and Sustainability
+ 2 (2): 664–685. 
+https://isdsnet.com/ijds-v2n2-16.pdf
+.
+
+ Google Scholar
+ 
+ 
+Taruvinga, A., M. Visser, and L. Zhou. 2016. Determinants of rural farmers’ adoption of climate change adaptation strategies: Evidence from the Amathole District Municipality, Eastern Cape Province, South Africa. 
+International Journal of Environmental Science and Development
+ 7 (9): 687–692. 
+https://doi.org/10.18178/ijesd.2016.7.9.863
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Trepanowski, J.F., and R.J. Bloomer. 2010. The impact of religious fasting on human health. 
+Nutrition Journal
+ 9 (1): 1–9. 
+https://doi.org/10.1186/1475-2891-9-57
+.
+Article
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Upton, M. 2004. 
+The role of livestock in economic development and poverty reduction. PPLPI Working Paper No. 10, Pro-poor Livestock Policy Initiative (PPLPI)
+. Rome: FAO.
+
+ Google Scholar
+ 
+ 
+USAID. 2007. 
+Analysis of the poverty impact of the January 2006 increase in beef and cattle prices in Botswana
+. Gaborone: USAID / Southern Africa.
+
+ Google Scholar
+ 
+ 
+Wang, L., M. Delgado-Baquerizo, D. Wang, F. Isbell, Jun Liu, C. Feng, Jushan Liu, Z. Zhong, H. Zhu, X. Yuan, Q. Chang, and C. Liu. 2019. Diversifying livestock promotes multidiversity and multifunctionality in managed grasslands. 
+Proceedings of the National Academy of Sciences of the United States of America
+ 116 (13): 6187–6192. 
+https://doi.org/10.1073/pnas.1807354116
+.
+Article
+ 
+ 
+CAS
+ 
+ 
+
+ Google Scholar
+ 
+ 
+Zeleke, M.T., and Y. Aberra. 2014. Determinants of the adoption of land management strategies against climate change in Northwest Ethiopia. 
+Ethiopian Renaissance Journal of Social Sciences and Humanities
+ 1 (1): 93–118. 
+http://www.erjssh-uog.org/index.php/ERJSSH/article/view/109/72
+.
+
+ Google Scholar
+ 
+ 
+Download references
+Acknowledgements
+We acknowledge the support and cooperation of our respondents and the various communities visited for data collection and our research assistants who aided our data collection.
+Funding
+This research did not receive any specific grant from funding agencies in the public, commercial or not-for-profit sectors.
+Author information
+Authors and Affiliations
+Department of Agricultural Economics and Extension, University of Fort Hare, Private Bag X1314, Alice, 5700, South Africa
+A. Taruvinga
+Department of Social Sciences, Business Management & Organization, Wageningen University and Research, P.O. Box 8130, Wageningen, 6700 EW, the Netherlands
+A. Kambanje
+Department of Agricultural Economics and Extension, University of Fort Hare, Private Bag X1314, Alice, 5700, South Africa
+A. Mushunje
+Department of Agricultural Economics and Extension, National University of Lesotho, P. O. Roma 180, Roma, Lesotho
+P. Mukarumbwa
+Authors
+A. Taruvinga
+View author publications
+Search author on:
+PubMed
+ 
+Google Scholar
+A. Kambanje
+View author publications
+Search author on:
+PubMed
+ 
+Google Scholar
+A. Mushunje
+View author publications
+Search author on:
+PubMed
+ 
+Google Scholar
+P. Mukarumbwa
+View author publications
+Search author on:
+PubMed
+ 
+Google Scholar
+Contributions
+Conceptualisation, A.T., P.M and A.M.; methodology, P.M and A.T.; validation, A.T., A.K and A.M; formal analysis, P.M.; investigation, A.T and A.M.; resources, A.T. and A.M.; data curation, P.M.; writing—original draft preparation, A.T., P.M., A.K and A.M; writing—review and editing, A.T., A.K., and P.M.; visualisation, A.T.; supervision, A.T. The authors  read and approved the final manuscript.
+Corresponding author
+Correspondence to
+ 
+P. Mukarumbwa
+.
+Ethics declarations
+
+Ethics approval and consent to participate
+
+“Not applicable”. Informed consent was obtained from all individual participants included in the study.
+
+Consent for publication
+
+Informed consent for publication was obtained from all individual participants.
+
+Competing interests
+
+The authors declare no conflict of interest.
+
+Additional information
+Publisher’s Note
+Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+Rights and permissions
+
+Open Access
+ This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article's Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article's Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit 
+http://creativecommons.org/licenses/by/4.0/
+.
+
+Reprints and permissions
+About this article
+Cite this article
+Taruvinga, A., Kambanje, A., Mushunje, A. 
+et al.
+ Determinants of livestock species ownership at household level: Evidence from rural OR Tambo District Municipality, South Africa.
+ 
+Pastoralism
+ 
+12
+, 8 (2022). https://doi.org/10.1186/s13570-021-00220-6
+Download citation
+Received
+: 
+12 May 2021
+Accepted
+: 
+09 October 2021
+Published
+: 
+01 March 2022
+Version of record
+: 
+01 March 2022
+DOI
+: 
+https://doi.org/10.1186/s13570-021-00220-6
+Share this article
+Anyone you share the following link with will be able to read this content:
+Get shareable link
+Sorry, a shareable link is not currently available for this article.
+Copy shareable link to clipboard
+
+ Provided by the Springer Nature SharedIt content-sharing initiative
+ 
+Keywords
+Smallholder farmers
+Household
+Animal-source foods
+Factors
+Dietary diversity
+Multivariate probit
+
+Advertisement

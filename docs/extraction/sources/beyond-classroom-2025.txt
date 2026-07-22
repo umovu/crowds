@@ -1,0 +1,1640 @@
+Frontiers in Education 01 frontiersin.org
+Beyond the classroom: how 
+parents view motivation as a key 
+to self-directed learning in 
+township schools
+Tebogo Siziba 1,2, Bernadette Geduld 1,2* and 
+Charlene Du Toit-Brits 1,2*
+1 Research Unit for Self-directed Learning, North West University, Potchefstroom, North West, 
+South Africa, 2 Faculty of Education, North West University, Potchefstroom, North West, South Africa
+Numerous researchers have emphasized the critical role of self-directed learning 
+(SDL) in education, particularly in township schools, where academic challenges 
+contribute to high failure and dropout rates. Learner struggles are often associated 
+with a lack of motivation and self-direction. In SDL, motivation is related to more 
+than just doing well in school. It is also linked to being resilient, being able to 
+solve problems and being able to change to different learning settings. Recent 
+studies on academic motivation among South African learners reveal the adverse 
+impact of low motivation on energy levels, perseverance, and the pursuit of 
+academic goals. Research on the influence of motivation on SDL in township 
+school contexts, particularly from the perspective of parents, is limited. In response 
+to the imperative for lifelong learning, researchers advocate for the integration 
+of SDL into classrooms. This research investigates the nexus between motivation 
+and the development of self-directed learners in township secondary schools 
+of the lower quintile. Situated within an interpretivist research paradigm, this 
+qualitative study engages parents or legal guardians to explore their perceptions 
+of the role of motivation in the development of learners’ SDL in township schools. 
+The study explores both internal and external motivators that influence learners’ 
+SDL skills to ensure that effective learning can take place. Using a purpose-
+orientated and convenient sampling, 10 parents or guardians of two schools in 
+Gauteng were selected. Semi-structured face-to-face interviews facilitated data 
+collection and inductive thematic analysis was used. The findings revealed that 
+parents have high expectations of their children’s academic success, believe in their 
+children’s intrinsic drive, and provide comprehensive support. However, motivation 
+alone does not ensure SDL; rather, it must be supplemented by properly defined 
+learning techniques, access to resources, and organized help (from parents and 
+teachers). Hindered by factors such as late working hours and limited educational 
+knowledge, parental involvement was limited. Teacher-learner and parent–child 
+relationships supporting motivation for self-directedness were also lacking. These 
+imply that to improve SDL in township schools, a comprehensive approach is 
+important that combines parental direction, teacher participation, and learner-
+driven strategies. The findings of this study contribute to a broader discourse on 
+motivation and SDL, highlighting the need for targeted interventions to support 
+learners in township schools.
+KEYWORDS
+parental involvement, motivation, township schools, self-directed learning, role 
+models
+OPEN ACCESS
+EDITED BY
+Yael Fisher,  
+Achva Academic College, Israel
+REVIEWED BY
+Omar Ramzy,  
+Heliopolis University, Egypt
+Ken Reimer,  
+University of Winnipeg, Canada
+*CORRESPONDENCE
+Bernadette Geduld  
+ bernadette.geduld@nwu.ac.za 
+Charlene Du Toit-Brits  
+ charlene.dutoit@nwu.ac.za
+RECEIVED 12 March 2025
+ACCEPTED 01 May 2025
+PUBLISHED 04 June 2025
+CITATION
+Siziba T, Geduld B and Du  Toit-Brits C (2025) 
+Beyond the classroom: how parents view 
+motivation as a key to self-directed learning 
+in township schools.
+Front. Educ. 10:1587470.
+doi: 10.3389/feduc.2025.1587470
+COPYRIGHT
+© 2025 Siziba, Geduld and Du Toit-Brits. This 
+is an open-access article distributed under 
+the terms of the Creative Commons 
+Attribution License (CC BY). The use, 
+distribution or reproduction in other forums is 
+permitted, provided the original author(s) and 
+the copyright owner(s) are credited and that 
+the original publication in this journal is cited, 
+in accordance with accepted academic 
+practice. No use, distribution or reproduction 
+is permitted which does not comply with 
+these terms.
+TYPE Original Research
+PUBLISHED 04 June 2025
+DOI 10.3389/feduc.2025.1587470
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 02 frontiersin.org
+1 Introduction
+The 2020 results of the National Senior Certificate, disclosed by 
+the Minister of Basic Education, Mrs. Angie Motshekga, highlighted 
+the substantial impact of the COVID-19 pandemic on learners from 
+school districts of the lower quintile. Numerous studies indicate that 
+learners in poor and under-resourced educational institutions, such 
+as community schools in South  Africa, face greater challenges in 
+achieving academic success. Problems are exacerbated when learners 
+lack motivation to learn or do not possess adequate self-directed 
+learning skills ( Department of Basic Education (South  Africa), 
+2021; Blignaut and du Toit-Brits, 2022; Van Zyl and Mentz, 2019). 
+Self-directed learning is a crucial academic competency and a method 
+of addressing structural challenges in education, such as those 
+presented by the COVID-19 pandemic (Mahlaba, 2020), highlighting 
+the importance of this research. These learners faced significant 
+challenges during stringent lockdown, being forced to participate in 
+an independent study (Mahlaba, 2020). This shift/change revealed the 
+differences in the preparation of SDL among learners in urban and 
+township schools, therefore, stressing the need for motivational 
+support systems. The pandemic prompted schools to adopt remote 
+teaching and learning, a transition that proved difficult for many 
+township school learners, mainly due to their unfamiliarity with self-
+directed study methods. Consequently, this situation has reinforced 
+the need to explore and investigate sustainable SDL interventions that 
+can prepare township school learners for future disruptions. A 
+considerable number of learners in lower-quintile township schools 
+lack the essential skills for SDL, making it difficult to navigate 
+academic tasks without direct teacher guidance. Motivation plays a 
+crucial role in the promotion of SDL, which is essential for the 
+academic success of learners.
+This research serves as a valuable contribution to educators’ 
+understanding of motivation and SDL. While studies on learner 
+motivation in general and SDL in higher education institutions exist 
+(Beard and MacTavish, 2022; Bull, 2017; Conrad et al., 2020; Song and 
+Bonk, 2016), little attention has been paid to investigating the role of 
+motivation in nurturing self-directed learners in primary schools, 
+specifically within lower quintile schools in townships ( Yiga et al., 
+2019). The primary objective is to provide information on the 
+influence of motivation on the skills of township learners on SDL, 
+drawing perspectives from parents or legal guardians. In doing so, this 
+research article aims to contribute valuable information that can assist 
+the Department of Basic Education (DBE) in formulating effective 
+strategies to encourage and support learners. Furthermore, it seeks to 
+educate parents and legal guardians about the pivotal role of 
+motivation in nurturing the growth of self-directed learners. 
+Ultimately, this study aims to be instrumental in the cultivation of 
+self-directed skills among township learners, fostering an environment 
+that facilitates their academic success and personal development.
+2 Background and problem statement
+Geduld (2017, p. 6) notes that learners from low socio-economic 
+backgrounds, predominantly represented in township schools, often 
+lack positive role models who exemplify self-directedness and 
+emphasize the value of education. The lack of parental and institutional 
+support could cause learners to lose interest in learning activities 
+(Nasri, 2019; Herawati et al., 2024). There has to be more research 
+done on SDL ’s role in desire. There is a lack of research on the 
+importance of motivation in low-income neighborhoods where 
+learners learn on their own (Du Plessis and Mestry, 2019; Yiga et al., 
+2019; Zhu, 2022). It is important to understand how the learning 
+environment, both at home and in school, influences motivation to 
+learn and the capacity for independent study. This absence of role 
+models, combined with limited exposure to SDL, hinders the ability 
+of learners to perceive education as a transformative path beyond their 
+socioeconomic limitations (Nasri, 2019). In the South African context, 
+where inequalities persist, the lack of role models for SDL can 
+contribute to a cycle of educational disengagement. Mahlaba (2020) 
+observed that learners in lower-quintile schools struggle to adapt to 
+university systems and embrace SDL. This transition challenge 
+highlights the importance of developing SDL skills at the foundational 
+school level to ensure a smoother academic progression and transition.
+Township school learners often exhibit lower levels of motivation 
+and SDL skills due to a lack of exposure to self-directed behavior 
+modeled by teachers, parents, or legal guardians (Zhu, 2022; Mokoena, 
+2022). Mokoena (2022) further illustrates the challenges that township 
+schools face in fostering self-directed and motivated learners. These 
+difficulties contribute to low motivation and insufficient SDL skills, 
+negatively impacting learners’ academic progress and potentially 
+leading to demoralization ( Riaan, 2018 ). Given the difficulties 
+presented in the background, it is essential to investigate how 
+motivation affects learners’ potential for autonomous learning. To 
+bridge this gap, stakeholders must identify strategies that not only 
+improve motivation but also equip learners with SDL skills.
+3 Self-directed learning
+The concept of SDL has historical roots dating back to 1800 in 
+England, where terms such as self-help, self-education, and self-
+improvement were commonly used. According to Collier (2022a, 
+2022b) and Houle’s (1961) publication, The Enquiring Mind, played a 
+crucial role in bringing the concept of self-directed learning to the 
+forefront. However, the current definition of SDL extends beyond 
+adult education and now includes strategies for school learners, 
+especially in marginalized communities. Although Houle did not 
+frequently use the term SDL in his book, his definition laid the 
+foundation for considering SDL a legitimate form of adult education 
+(Collier, 2022a). The work of Houle (1961) paved the way for the term 
+SDL. To gain a comprehensive understanding of SDL, influential 
+research has been conducted by various scholars, including Knowles 
+(1975), Tough (1966, 1968, 1979, 1982), Hiemstra (1976, 1982, 2002, 
+2011), Guglielmino et al. (2001) , Guglielmino and Hillard (2007), 
+Guglielmino (1978, 1991, 1996, 1997, 2013), Houle (1961), Durr 
+(1991), Kop and Fournier (2011), and Douglas and Morris (2014), 
+among others. Although SDL has been defined in various ways, this 
+research adopts the well-known definition provided by Knowles 
+(1975). According to Knowles, SDL is a process in which “individuals 
+take the initiative, with or without the help of others, in diagnosing 
+their learning needs, formulating learning goals, identifying human 
+and material resources for learning, choosing and implementing 
+appropriate learning strategies, and evaluating learning outcomes” 
+(Knowles, 1975, p. 18). SDL is essential for learners to acquire essential 
+skills. For township school learners, SDL is not just a learning 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 03 frontiersin.org
+approach, but a means of survival to overcome socio-economic and 
+educational barriers. Research by Du Toit-Brits (2019), Morris (2019), 
+and Robinson and Persky (2020)  emphasizes the need for the 
+implementation of the SDL in education to prepare learners for 
+lifelong SDL, crucial beyond secondary school. The research on the 
+importance of Mahlaba (2020)  SDL in South  Africa during the 
+COVID-19 pandemic further underscores its significance. According 
+to Mahlaba (2020), self-directed learners perceive learning as a way of 
+life and a survival mechanism, making any change in their normal 
+learning space challenging but manageable (Murniati et al., 2022).
+Merriam et al. (2007) outline three main SDL goals. First, to foster 
+transformational learning, emphasize critical reflection as an intrinsic 
+component of SDL that leads to transformational learning (Gibbons, 
+2020). Second, to promote the liberation of learning and social action 
+as integral to SDL. Third, to improve the determination of learners in 
+their studies. These goals are crucial for learners in township schools 
+to set their own goals, formulate their learning paths, and learn 
+independently. Critical reflection supports the second and third goals 
+and is essential for transformational learning (Gibbons, 2020). The 
+work of Freire (2005) also aligns with the idea that SDL and critical 
+reflection empower learners to equip themselves and take positive 
+actions. Problem-based education that recognizes the true 
+components of SDL is vital to promote self-determination and self-
+direction, ultimately leading to transformational learning (Blignaut 
+et al., 2023).
+Furthermore, transformational learning and critical reflection 
+enhance and support the second and third goals ( Merriam et  al., 
+2007). These goals, outlined by Merriam et al. (2007), are crucial for 
+developing SDL in township learners, as they contribute to fostering, 
+liberating, and intensifying learners’ abilities to be  self-directed. 
+Merriam et  al. (2012)  categorize learning into five approaches: 
+cognitivist, humanist, constructivist, behaviorist, and social learning. 
+Among these, the cognitive and constructivist approaches are related 
+to SDL. In the cognitivist approach, learners develop critical thinking, 
+creative thinking, self-awareness, and self-monitoring, improving 
+their learning styles. The constructivist approach, according to 
+Merriam et al. (2012), emphasizes SDL as one of its most significant 
+features. Malison and Thammakoranonta (2018)  identify key 
+characteristics suitable for self-directed learners, including the ability 
+to apply knowledge in real life, critical thinking, and accountability for 
+their learning (Murniati et al., 2022). Suknaisith (2014) adds that self-
+directed learners are independent thinkers. They perceive learning as 
+an integral aspect of life and development, not restricted to specific 
+periods. Timpau (2015)  highlights the importance of SDL in 
+cultivating independent thinking, creativity, and problem-solving 
+skills, especially in the 21st century. SDL plays a crucial role in 
+teaching learners how to acquire knowledge independently (Loeng, 
+2020; Timpau, 2015).
+3.1 The importance of self-directed 
+learning for township learners
+Self-directed learning has been a subject of increasing interest in 
+recent years, and the COVID-19 pandemic has underscored its critical 
+importance in education. Mahlaba (2020) contends that the pandemic 
+has introduced numerous disruptions to people’s lives, compelling 
+those in the education sector, particularly South African learners and 
+learners, to rely on their capabilities. Given the socio-economic 
+difficulties encountered by township schools, having the ability to 
+participate in SDL is not only beneficial but also essential for 
+overcoming systemic educational hurdles. Remote learning, an 
+unfamiliar concept for many, became a necessity during the pandemic 
+and Mahlaba (2020) suggests that without SDL skills, learners would 
+have struggled to adapt to this new mode of learning (Blignaut and du 
+Toit-Brits, 2022; Loeng, 2020). Mahlaba (2020) further reveals that the 
+lack of SDL skills posed a significant challenge for both learners and 
+teachers during the pandemic, emphasizing the crucial role of SDL in 
+navigating unexpected disruptions in education. After the pandemic, 
+SDL is essential to equip township learners with the skills needed for 
+higher education and to adapt to future career changes in a constantly 
+changing job market.
+In SDL, the onus of learning rests with the learner rather than the 
+teacher (Mahlaba, 2020), shifting the focus to empowering learners in 
+the educational process. Van Zyl and Mentz (2019) highlight SDL as 
+an essential skill for 21st-century learners, emphasizing the need for 
+deeper learning, competence in interpersonal and intrapersonal 
+domains, and adaptability to various learning modalities, including 
+remote and online learning. The ability to adapt is especially important 
+for township learners, who may have restricted access to formal 
+learning environments and need to develop independence in their 
+educational pathways. Van Zyl and Mentz (2019) stress that strong 
+SDL competencies enable learners to unlock their full learning 
+potential. However, motivation acts as an intermediary in facilitating 
+learners’ successful engagement with SDL techniques, necessitating 
+the investigation of methods to enhance both intrinsic and extrinsic 
+motivators within township educational settings. SDL is considered a 
+vital skill in the modern world, where individuals must take charge of 
+their learning, adapt to change, and plan their educational journey in 
+digital environments (Brandt, 2020; Murniati et al., 2022).
+Van Zyl and Mentz (2019) highlight that SDL not only enhances 
+the confidence of the learner but also contributes to increased 
+competency. Long (2000) underscored that learners are unlikely to 
+be self-directed if they feel incompetent, emphasizing the importance 
+of SDL in boosting learners’ confidence and fostering critical and 
+creative thinking skills. This highlights the necessity of developing 
+SDL skills for learners, as it not only promotes academic integrity by 
+discouraging cheating but also encourages a thorough understanding 
+of learning activities and assignments (Mahlaba, 2020). Furthermore, 
+Mahlaba (2020) argues that SDL is transformative in how learners 
+perceive learning, helping them recognize the importance of education 
+and, subsequently, the importance of SDL in their educational journey. 
+Considering the widespread exclusion of digital technologies in 
+schools in the lower quintile, it is crucial to design SDL strategies that 
+incorporate affordable technological solutions to close the 
+educational gap.
+3.1.1 Application and relevance of self-directed 
+learning to school learners
+Although SDL was initially applied to adults, emerging evidence 
+indicates that younger learners, particularly adolescents, may require it 
+to a greater extent. Mahlaba (2020) asserts that high school learners in 
+South  Africa, especially those in rural and community schools, 
+developed the skills required to navigate the challenges presented by 
+COVID-19. Blignaut et  al. (2023), Collier (2022a, 2022b), Cronin-
+Golomb and Bauer (2023), Gonzalez-DeHass (2019), Nasri (2019), 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 04 frontiersin.org
+Robinson and Persky (2020), Sebotsa (2020), and Van Deur (2018) 
+investigated SDL through the eyes of teacher educators and learners 
+(primary and secondary schools). This article examines SDL from the 
+parent’s perspective, highlighting how parents view motivation as a key 
+to self-directed learning in township schools.
+3.2 The role of motivation in self-directed 
+learning
+Despite initial struggles, as learners progress into their second year 
+of university, many begin to adapt and take responsibility for their 
+learning. Peer influence and learning culture within universities play a 
+crucial role in motivating these learners (Tullis and Goldstone, 2020, 
+p. 1). This observation suggests that to develop SDL skills in township 
+schools, learners need sustained motivation within a conducive 
+environment and a supportive community. This underscores the 
+importance of developing SDL readiness in schools so that learners begin 
+higher education equipped with basic skills that facilitate autonomous 
+learning. Township schools face numerous challenges, including 
+insufficient resources such as books, smart boards, and computers, as 
+well as inadequate infrastructure, including classrooms and laboratories 
+(Geduld, 2017). These suboptimal conditions significantly dampen 
+learners’ motivation, leading to academic underperformance (Du Plessis 
+and Mestry, 2019). Additionally, resource limitations often transfer the 
+responsibility for learning to the family, increasing the importance of 
+parents and guardians in cultivating SDL practices. The role of schools 
+as learning environments cannot be overstated, as appropriate resources 
+and infrastructure correlate with higher motivation levels (Herawati 
+et al., 2024). A supportive and distraction-free environment stimulates 
+the interest of learners and allows them to reach their academic potential 
+(Labahn, 2019; Chindanya, 2020).
+On the contrary, an unsupportive and discouraged learning 
+environment negatively affects learners’ academic performance. Beyond 
+the physical learning environment, teachers, parents, and legal guardians 
+play a crucial role in the motivation of learners (Labahn, 2019). Positive 
+relationships between learners and teachers, together with successful 
+strategies for classroom participation, can mitigate certain external 
+discouragement factors in township educational settings. Unfortunately, 
+many teachers in schools of the lower quintiles neglect to cultivate SDL 
+skills, exacerbating the challenges of learners, including limited access 
+to textbooks and internet connectivity (Labahn, 2019; Chang et al., 
+2021). Strategies that encourage teacher education in SDL facilitation 
+methods can play a crucial role in overcoming these shortcomings.
+3.2.1 Theoretical approach to motivation in this 
+study
+This article explores motivation from the perspective of self-
+determination theory (SDT) as proposed by Deci and Ryan (2020). 
+SDT differentiates intrinsic motivation, which arises from inherent 
+satisfaction, from extrinsic motivation, which is influenced by external 
+rewards. Hafızoglu and Y erdelen (2019) demonstrated that intrinsic 
+motivation factors significantly mediate the relationship between 
+supportive learning environments and academic achievement in 
+adolescents. Motivation dimensions, including intrinsic motivation 
+(interest, enjoyment), extrinsic motivation (rewards, recognition), and 
+psychological needs satisfaction (autonomy, competence, relatedness), 
+are essential analytical categories in this research.
+3.3 Parental participation in learning 
+motivation and SDL
+The lack of parental and teacher support significantly hinders 
+township learners from becoming self-directed in their studies 
+(Sebotsa, 2020). Transitioning from high school to higher education 
+institutions requires a greater SDL, but many township learners 
+struggle due to low motivation ( Mahlaba, 2020 ). Fostering a 
+supportive ecosystem that involves educators, parents, and peers is 
+crucial to equip township learners with the skills necessary for success 
+in higher education. However, considering the economic challenges 
+that restrict parental participation, community-led mentoring 
+initiatives could provide an alternative framework to support SDL.
+Parental involvement is integral to the academic progress of 
+learners (Y ang et al., 2023). It manifests itself in academic and emotional 
+support, such as helping with homework and attending school meetings 
+(Y ang et al., 2023). Gonzalez-DeHass (2019) highlights that parents and 
+teachers play a motivational role in fostering resilience in learners when 
+faced with challenges. Geduld (2017) emphasizes the psychological 
+impact on learners in impoverished communities marked by crime, 
+alcohol abuse, and lack of moral guidance, which further hinders their 
+academic aspirations. Many township parents lack formal education, 
+limiting their ability to provide cognitive support to learners (Bunijevac, 
+2017). Consequently, their educational limitations lead to minimal 
+participation in school activities, as they lack the knowledge to assist 
+with academic tasks (Geduld and Mdakane, 2020). Closing this gap 
+requires organized guidance programs for parents that equip them with 
+essential strategies to support self-directed learning. Additional barriers 
+include high levels of noise in communities, time restrictions due to 
+work commitments, and financial limitations that affect their ability to 
+support their children’s education (Bunijevac, 2017). Measures such as 
+adaptable learning timelines, mobile educational apps, and self-directed 
+learning support initiatives after school can help overcome these 
+obstacles and increase learner motivation.
+3.3.1 Dimensions of parental involvement 
+relevant to this study
+Parents’ participation significantly influences both the motivation 
+of learners and their readiness for the SDL. Epstein (2011) framework 
+offers a comprehensive overview of various forms of engagement, 
+emphasizing learning at home, where parents support their children’s 
+academic endeavors by helping with homework and fostering 
+conducive learning environments. Furthermore, psychological support, 
+including emotional encouragement and resilience development, 
+improves learners’ motivation and self-directed learning abilities, 
+particularly in disadvantaged contexts (Geduld and Mdakane, 2020). 
+This research specifically examines these variables to assess parental 
+responsibilities in the educational outcomes of township learners.
+3.4 The role of parental motivation in 
+supporting their children to 
+be self-directed learners
+Bunijevac (2017)  emphasizes that parental involvement extends 
+beyond school settings, fostering a supportive learning 
+environment at home. The Center on Education Policy (CET) 
+(2012) highlights a strong correlation between family background 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 05 frontiersin.org
+factors, such as parents’ education level and income, and learner 
+achievement. Engaged parents contribute to educational 
+development and intrinsic motivation in learners, improving their 
+academic success ( Center on Education Policy (CET), 2012 ). 
+Geduld and Mdakane (2020)  note that learners acquire academic 
+behavior and skills by observing their teachers, peers, and parents. 
+Actions such as turning off distractions to help with homework 
+help structure a productive learning environment. The Department 
+of Education (South  Africa) (2016)  emphasizes that parental 
+relationships and encouragement directly influence the motivation 
+and academic performance of the learner.
+Despite the benefits of parental participation, barriers such as 
+financial restrictions, low educational attainment, and demanding 
+schedules hinder active participation (Y ang et al., 2023). Some parents 
+refrain from participating due to negative personal experiences with 
+education, which affects their confidence (Y ang et al., 2023; Geduld 
+and Mdakane, 2020). Schools can address these challenges by fostering 
+open and welcoming environments where teachers support parents as 
+partners in their children’s education (Bunijevac, 2017).
+3.5 Summary and integration of the 
+theoretical framework
+This section of the article was driven by the findings of a literature 
+review, which focused on the role of motivation in shaping learners’ 
+capacity for SDL in low-quintile secondary township schools. It laid 
+the foundation by delving into two key motivational theories. SDT 
+and SDL theory. Furthermore, the article explored the influence of 
+parental motivation in supporting children’s development of self-
+directed skills. Although indicating that ongoing work is needed to 
+foster self-directed skills in learners, especially in low-quintile 
+township schools, the literature also showed that achieving these skills 
+and motivation is feasible, even if initially challenging.
+4 Motivation for the study
+This research serves as a valuable contribution to understanding 
+motivation and SDL by teachers. Although there are studies on 
+learner motivation in general and SDL in higher education 
+institutions (Yiga et al., 2019 ; Y ang et al., 2023; Nasri, 2019), little 
+attention has been paid to investigating the role of motivation in 
+nurturing self-directed learners specifically within schools of the 
+lower quintile in townships ( Yiga et  al., 2019 ). Focused on the 
+context of secondary schools in the lower quintile of townships, this 
+study aims to unravel the intricate relationship between motivation 
+and the development of SDL skills. The primary objective is to 
+provide information on the influence of motivation on SDL skills of 
+township learners, drawing the perspectives of parents or legal 
+guardians. Therefore, this study explores how parental motivation 
+contributes to the development of self-directed learning (SDL) in 
+township schools. This is particularly relevant in the context of 
+post-pandemic learning disruptions, where learner independence 
+and resilience have become essential for academic success. 
+Therefore, the purpose of the study is also to understand how 
+parents perceive and support the development of learners’ SDL and 
+how motivation plays a key role in this support. The study 
+contributes to the growing field of SDL in developing contexts by 
+investigating how parents in township schools experience and shape 
+learner motivation.
+The research objectives of this article are to:
+ a) Investigate how parents or guardians support learners in 
+developing SDL skills.
+ b) Explore parents’ perceptions about the influence of motivation 
+on the SDL of learners in township schools.
+ c) To identify how parents or legal guardians support the 
+motivation of learners to become self-directed.
+The main research question is:
+How do parents perceive and support the motivation of the 
+student in the development of self-directed learning among secondary 
+school learners in township schools?
+The research sub-questions are:
+ a) In what ways do parents or legal guardians support their 
+children’s development of self-directed learning (SDL) skills?
+ b) How do parents perceive the role of motivation in influencing 
+their children’s SDL in township school contexts?
+ c) What strategies or practices do parents use to support and 
+strengthen their children’s motivation to become self-
+directed learners?
+The study focused on secondary schools in the Sebokeng West 
+District 8 townships in Gauteng, which face significant challenges, 
+particularly in terms of resources and infrastructure [ Department 
+of Basic Education (South Africa), 2020 ]. These schools struggle 
+due to socio-economic conditions, including high unemployment, 
+crime, and vandalism, further exacerbating low motivation levels 
+among learners [ Department of Basic Education (South Africa), 
+2020]. Addressing these motivational challenges is critical to 
+fostering SDL and improving academic outcomes in 
+township schools.
+4.1 Research design and methodology
+This research adopted a qualitative research approach and a basic 
+qualitative research design as the research strategy (Merriam et al., 
+2007). This approach helped to gain an understanding of how parents 
+or guardians perceive the role of motivation in the development of 
+self-directed learning. The research design enabled the researcher to 
+understand the social experiences and perceptions of parents or legal 
+guardians in the natural world and the lived context of township 
+schools. This choice is in line with the nature of the basic qualitative 
+research design, which explores answers to research questions by 
+studying different social settings and understanding how the people 
+in those settings make sense of their surroundings through social 
+roles, rituals, and so forth ( Creswell et  al., 2010). In this study, a 
+qualitative approach enabled the researchers to explore personal 
+experiences and engagements with the phenomenon being studied. 
+This study focusses on the lived experiences and involvement of 
+parents. It also provides a naturalistic inquiry, which allows the study 
+of the natural world as it unfolds naturally. The researchers chose a 
+basic qualitative research study as a research strategy.
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 06 frontiersin.org
+4.1.1 Population and sampling
+The population included teachers, parents, or legal guardians of 
+two secondary schools in Sebokeng District 8. Purpose sampling was 
+used to select participants with direct experience related to the focus 
+of the study. Purposive sampling ensures that participants provide 
+relevant and experience-driven insights about motivation and SDL 
+dynamics in township schools. The sample consisted of 10 teachers 
+and 10 parents or legal guardians of township schools. Teachers 
+provided information on the motivation of learners and SDL practices, 
+while parents or guardians provided perspectives on motivational 
+influences outside the classroom.
+4.1.2 Inclusion criteria
+The participants were drawn from the Sedibeng West District 8 
+Department of Education District. Eligible teachers were permanently 
+appointed secondary school teachers teaching grade 10. This selection 
+guideline guaranteed that the participating teachers had adequate 
+experience with the educational and motivational difficulties 
+encountered by learners in township schools. Parents or guardians had 
+to have school-going learners in the further education and Training 
+(FET) phase.
+4.1.3 Data collection method and analysis
+The data collection method used was face-to-face semi-structured 
+individual interviews, where the participants conversationally shared 
+their lived experiences. This method increased the credibility of the 
+data. The researcher selected participants who were directly involved 
+in the lives of learners and therefore had first-hand experience in 
+teaching and learning. These were parents or legal guardians who 
+worked with learners after school and teachers who worked with 
+learners during school hours. This meant that parents, legal guardians, 
+and teachers had direct or indirect involvement in the academic lives 
+of learners. The researcher used purpose sampling to select 
+participants. According to Creswell et al. (2010), purposive sampling 
+is used in exceptional cases where a sample is selected for a specific 
+purpose. The sample in this investigation consisted of parents or legal 
+guardians who lived in the township.
+The researcher used a face-to-face semi-structured individual 
+interview with teachers, parents, or legal guardians as a data collection 
+method. The purpose of using these interviews is to ensure that there 
+is high-quality data and that researchers remain focused and 
+understand the perceptions of the participants about SDL, where the 
+participants had the opportunity to speak freely and explain their 
+experiences with the phenomenon being studied. The interview guide 
+helped the researchers prepare open questions. The researchers 
+followed up the interview guide questions with additional questions 
+to obtain detailed responses from the participants about their lived 
+experiences with the research problem. The open-ended questions 
+were guided by the research objective and the research objectives; for 
+example, parents or guardians were asked about their perceptions of 
+motivation influences on their children’s SDL in township schools. The 
+interviews were conducted in a secure place and at the convenience of 
+the participants. This was done to ensure that the participants felt 
+comfortable expressing themselves. The COVID-19 pandemic 
+regulations were followed when interviews were conducted. Each 
+participant was interviewed once and the interview lasted 
+approximately 30 min. All interviews were recorded in voice with the 
+participants’ permission to ensure that information was not lost.
+4.1.4 Data analysis
+Data analysis in the research of this article followed an inductive 
+content analysis process (Elo and Kyngäs, 2008). After transcription, 
+researchers engaged in open coding, carefully reading the data to 
+identify recurring ideas, words, and statements relevant to the research 
+questions. These codes were manually grouped into categories based 
+on similarity, guided by the constant comparative method. Through 
+this iterative process, subcategories were created, followed by main 
+categories, which culminated in broader themes that reflected the 
+shared experiences and unique perspectives of the participants. To 
+ensure analytical rigor, the researchers applied Miles and Huberman’s 
+(1994) data analysis model involving three flows of activity:
+ a) Data reduction: Selection and simplification of relevant 
+textual data.
+ b) Display of data: The use of tables and thematic matrices to 
+organize emerging categories.
+ c) Drawing and verification of conclusions: Synthesis of findings 
+and confirmation through triangulation with research 
+questions and member checks.
+Additionally, the researchers employed the following steps 
+suggested by Leedy and Ormrod (2014):
+ a) All recorded interviews were transcribed into typed text.
+ b) The transcripts were organized chronologically.
+ c) The data were read repeatedly.
+ d) The researcher started categorizing the data.
+ e) Themes were developed by interpreting and reinterpreting 
+the data.
+ f) The conclusion was drawn.
+Inductive content analysis was the primary strategy, with theme 
+development being one of its integral outcomes, not a separate 
+approach. Unlike deductive content analysis, this inductive method 
+allowed the voices of participants and parents to guide the 
+construction of meaning without enforcing preconceived codes. 
+Throughout the process, the researchers maintained an audit trail, 
+documenting analytic decisions, and reflecting on positionality and 
+potential bias. Member checks were used after transcription to 
+confirm the intended meanings of the participants and to enhance the 
+credibility of the findings. This analytical approach provided rich 
+information on how motivation, as perceived by parents and teachers, 
+contributes to the development of SDL by learners, especially within 
+the challenging socioeconomic contexts of township schools. The 
+following questions assisted in the data analysis process:
+ a) What commonalities and patterns are there?
+ b) What are the beliefs, values, attitudes, and emotions of 
+the participants?
+ c) What is the interpretation?
+ d) What categories can be created?
+ e) What are the generalizations and conclusions?
+4.1.5 Trustworthiness, ethics issues, and 
+clearance
+Trustworthiness in qualitative research was maintained through 
+credibility and confirmability. The study ensured precision and 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 07 frontiersin.org
+integrity in data collection and interpretation. The member checking 
+involved participants examining their transcribed responses to 
+confirm precision, thereby ensuring the reliability of the findings. 
+Furthermore, ethical clearance was granted by the EduRec committee 
+of North-West University. Permission was also obtained from the 
+Gauteng Provincial Education Department and the relevant school 
+governing bodies. An independent individual facilitated the 
+recruitment of participants and obtained informed consent. All data 
+collected were securely stored for 5 years, with restricted access and 
+password protection, according to North-West University policy. 
+Paper documents and consent forms containing personal information 
+were securely stored. Storage devices were encrypted and managed 
+exclusively by the researcher and supervisors to ensure data security. 
+The following ethical guidelines protected the confidentiality of the 
+participants and strengthened the credibility and validity of 
+the investigation.
+5 Results and discussion
+Data collected from semi-structured face-to-face interviews with 
+participating teachers, parents, and legal guardians provided a wealth 
+of in-depth information, allowing a profound understanding of their 
+perceptions regarding the role of motivation in developing self-
+directed learners in lower quintile secondary township schools (Siziba, 
+2024). The themes were derived through inductive processes during 
+the coding of the transcribed interviews. Eight themes were 
+constructed. To ensure confidentiality and anonymity, we  employ 
+codes such as P1S1 to denote Parent 1 of School 1, and P1S2 to signify 
+Parent 1 of the second school coded as S2. This approach aligns with 
+the principles of anonymity and confidentiality, ensuring that 
+participants’ identities remain concealed, as emphasized by Kang and 
+Hwang (2021).
+5.1 Theme 1: the participation of parents or 
+legal guardians in supporting learners 
+academically, mentally, and emotionally
+This theme delves into the participation of parents or legal 
+guardians in their children’s education, Parent participants and legal 
+guardians were asked about their participation in their children’s 
+education, leading to two subthemes: academic support and mental 
+and emotional involvement, Academic support, as defined by the 
+Department of Education (South Africa) (2016), includes parents who 
+help with homework, provide the necessary materials, and participate 
+in the overall educational journey of their children, Emotional and 
+mental involvement is focused on protecting the psychological well-
+being of children [Department of Education (South Africa), 2016]. 
+The ensuing subtheme will explore academic support.
+5.1.1 Sub-theme 1.1: academic support
+When asked how they contribute to the academic success of their 
+learners, a prevalent approach among participants was the application 
+of positive reinforcement to inspire, motivate, and reward 
+improvement in the learning of their learners. Various supportive 
+measures were described by participants. Participants (P1S1, P2S1, 
+P3S1, P2S2, P3S2, P5S1) detailed their provision of school materials, 
+including books, calculators and Wi-Fi for Internet access. Some 
+participants (P5S1, P5S2, and P3S2) stressed financial support for 
+various needs, with P5S1 specifying:
+I also make sure that they have whatever is needed at school, and if 
+something is needed, I make sure that I get it for them. I try to get a 
+fibre Wi-Fi, so they got their laptops to access more information, so 
+the environment is friendly for learning. P1S1 also added that they 
+use incentives in his family to encourage his children to work hard 
+and achieve good academic results.
+Another participant added:
+We have incentives. We say a few let’s say for months or whatever 
+you will get a certain thing so she would set a certain target for 
+herself in order for her to achieve whatever goals so yes they do set 
+they own goals (T5S1).
+This participant’s response aligns with Zhu (2022) who notes that 
+many individuals, including learners, are motivated by extrinsic 
+factors or engage in an activity with the expectation of a reward. P5S2 
+expressed the practice of providing airtime and lending a cell phone 
+for educational research, acknowledging the importance of 
+improvising in areas where functional libraries or wireless facilities 
+may be  lacking in townships. On the other hand, challenges in 
+financial means were evident among some participants, including 
+unemployed parents (P5S2, P3S1, P2S1, and P4S1), who struggled to 
+articulate how they supported their children academically. 
+Furthermore, some parents who were educators (P4S2, P1S1, and 
+P4S1) found it easier to support their children academically due to 
+their professions. They emphasized monitoring their children’s 
+progress, occasionally checking their books, and signing them. 
+However, it became apparent that the child of P4S1 relied more on her 
+teacher and mother for support than on cultivating independent 
+study habits.
+P4S1 elaborated:
+I think he relies on me as an educator because sometimes if you don’t 
+talk, you don't shout, they will just say everything is fine. Now when 
+he sees his results are poor, it’s when he’s going to pick his socks and 
+want to do better next time.
+Geduld and Mdakane (2020) caution against parents taking over 
+the responsibility for their children’s learning. They emphasize that 
+while parents should provide support, it is crucial not to assume 
+learning responsibility, as learners need to develop the SDL. According 
+to this advice, P4S1, an educator, shared that while helping with 
+homework and experiments, they also take the initiative to check their 
+student’s books.
+P4S1 also explained her involvement in the education of her child:
+Checking his homework, helping him here and there when he needs 
+help. If maybe, I don’t have time I hire a tutor.
+Some parents, such as P3S2, underscored the importance of 
+attending school meetings and actively seeking feedback on their 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 08 frontiersin.org
+children’s performance from class teachers to engage academically and 
+support their children. This perspective aligns with the guidance from 
+the Department of Education (South Africa) (2016), which emphasizes 
+that participating in school meetings and consistently seeking 
+feedback from teachers are crucial ways for parents to be actively 
+involved in their children’s education.
+P3S2 alluded to:
+… yes I am involved sir with the help of home works I even go to 
+their school to check, and I sign their books every day.
+Parents play a crucial role in supporting their children 
+academically by ensuring that they have essential study materials, 
+such as books, stationery, and Internet access. Some parents face 
+challenges such as lack of electricity, unemployment, and long 
+working hours, which affect their ability to care for their children’s 
+academic needs. High levels of crime were also identified as a 
+contextual factor that influences the motivation of learners to 
+be  self-directed. The involvement of parents in helping with 
+homework and seeking help from knowledgeable tutors, neighbors, 
+or relatives was highlighted as a strategy. This aligns with the 
+guidelines of Department of Education (South Africa) (2016)  to 
+support parental participation. Therefore, the theme emphasizes the 
+importance of extrinsic motivation in guiding learners toward 
+academic success and avoiding failure. Here, parental support that 
+satisfies learners’ fundamental psychological need for competence 
+is recognized ( Deci and Ryan, 2020 ) in contributing to increased 
+self-confidence and intrinsic motivation for SDL. The next 
+subtheme will explore parents’ mental and emotional involvement.
+5.1.2 Sub-theme 1.2: parents’ mental and 
+emotional involvement
+Bunijevac (2017) emphasizes that learners with involved parents 
+perform well academically and are intrinsically motivated. Parents in 
+this study were asked to share their perspectives on whether they 
+could provide emotional or mental support to their children in 
+education. Although some parents expressed confidence in their 
+ability to support their children emotionally and mentally, others felt 
+less equipped for this responsibility.
+For example, P1S1 shared their approach to encouraging their 
+child to aim high and foster self-belief. They observe study habits, 
+promote attendance at additional classes, and motivate the child to set 
+ambitious goals. This illustrates the parent’s commitment to motivating 
+the child by instilling confidence and emphasizing high aspirations. 
+Such actions align with Deci and Ryan's (2020) notion of supporting 
+the child’s basic need for competence. Parents like P1S1, who 
+encourage their children to set high goals, contribute to fulfilling their 
+children’s basic needs for relatedness and competence.
+Another participant highlighted the challenges of providing 
+academic assistance to their child while being unemployed.
+I tried but it gets difficult for a child to be motivated because there 
+are so many unemployed graduates that makes a learner to find it 
+difficult to be motivated at school (P3S2).
+The P3S2 perspective indicates that the socioeconomic status of 
+the community, including high unemployment rates, affects the 
+motivation of the learners. It can be  inferred that elevated 
+unemployment rates have a detrimental impact on learners’ 
+motivation to be  self-directed or to take responsibility for their 
+learning, shaping their perception of school.
+P3S2 added:
+I get from work late sometimes I  find the child sleeping and 
+already late.
+P3S2 said that work commitments, including long hours and early 
+morning shifts, make it difficult to provide mental support to their child. 
+This aligns with the findings of Y ang et al. (2023) and Labahn (2019), 
+highlighting that parental participation positively correlates with academic 
+performance and motivation. The participant’s limited involvement in 
+their child’s education due to work responsibilities is evident. Some 
+parents highlighted their role in providing mental and emotional support 
+by encouraging their children to concentrate during study time (Geduld 
+and Mdakane, 2020). Furthermore, P3S2 mentioned seeking the help of 
+an educated neighbor, illustrating the lengths that some parents go to 
+ensure their children receive the necessary educational support and care.
+P4S1 elaborated:
+I never find it difficult because to motivate, when you motivate your 
+child, you want them to be a better person. Responsibility is my job as 
+a parent.
+P5S1 actively motivates and encourages his child to complete daily 
+homework, a practice supported by the literature that emphasizes the 
+importance of parental motivation and encouragement for children to 
+succeed (Geduld and Mdakane, 2020). The analysis underscores that 
+most parents are involved in various aspects of their children’s education, 
+financial, mental, and emotional. However, it is also evident that certain 
+parents face challenges due to their circumstances, which can lead to 
+undesirable outcomes for learners. These outcomes include poor 
+academic performance, psychological distress, school dropouts, and 
+susceptibility to substance abuse. Lack of parental time and participation 
+can contribute to demotivation and loss of interest in education and 
+hinder learners’ attempts to become self-directed, ultimately impacting 
+their motivation.
+The inconsistent parental participation observed implies that many 
+township learners lack motivation and do not develop SDL 
+characteristics. In the absence of monitoring and encouragement, these 
+learners tend to engage in activities other than studying, such as playing 
+and socializing. Participants who actively motivate their children by 
+reminding them to study, encouraging responsibility for their learning, 
+and helping set goals contribute to the development of autonomy in their 
+children. This support addresses the basic psychological needs of learners 
+for competence and relatedness, fostering self-determination and 
+motivation for learning. The upcoming topic will explore the contextual 
+factors that impede parental participation.
+5.2 Theme 2: contextual factors that hinder 
+parental participation to motivate their 
+children to be self-directed
+Parental participation is crucial, as demonstrated in Research 
+Chapter 2; learners whose parents are interested in their schoolwork 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 09 frontiersin.org
+and development are more likely to succeed academically ( Schmid 
+and Garrels, 2021 ). In this theme, the aim was to explore the 
+perspectives of parents or legal guardians on the factors that hinder 
+their active participation in their children’s education. Several 
+identified various issues that impede their participation. A parent 
+(P1S1) mentioned that when their child experiences school pressure 
+due to difficulty understanding the content of the topic, it creates 
+stress for both the child and the parent. P1S1, who is a teacher, 
+alluded:
+When she feels the pressure from school, she usually complains 
+about homework. When she doesn’t understand a particular topic 
+in class, I must now make sure that I teach her and we both get it 
+correct which sometimes I also struggle to get the correct answer.
+The analysis also revealed that certain learners created challenges 
+for their parents’ participation by exhibiting mood swings and 
+negative attitudes toward both their parents and their education.
+P1S2 is explained as follows:
+I think because he is a teenage boy and you know teenagers go 
+through their own phases and all that, so me trying to be there all 
+the time might not be  something that he  is very fond of what 
+he wants to do his own things but that’s difficult but we do not have 
+time, I would say that’s the difficult part him trying to find out his 
+teenage self.
+P1S2 was also added:
+At times, remember our kids are rebels especially the older one. 
+I would tell her to work hard whenever she feels that she would and 
+yell me “mom I struggle here “my oldest child, 16 years old, she is a 
+bit of a problem she is much to be honest about school she cares a lot 
+about fashion.
+The following encapsulates the views of participants who shared 
+the same feelings about work and home responsibilities that hindered 
+their involvement and support:
+…I am a single parent, I do not have enough time because I have to 
+cook, clean, wash their school uniforms and still have to clean the 
+house sir (P3S1, P2S1, and P3S2).
+P5S1 said that he often feels tired and unable to help his children, 
+believing that his children understand that this fatigue results from his 
+efforts to provide for them.
+…I think my children understand that I cannot assist because every 
+time I come home from work, I am always tired and cannot even 
+prepare for tomorrow so I do not think I can assist.
+Some parents or guardians, such as P2S1 and P4S2, who did not 
+have the educational background to help their children, advised their 
+children to wait for corrections from their teachers. Several parents 
+cited their limited academic knowledge as a barrier to helping their 
+children with homework, highlighting the impact of parental 
+educational levels on their ability to support their children in becoming 
+self-directed learners. The next section will discuss an analysis of the 
+contextual influences that enable parental motivation and support.
+5.3 Theme 3: contextual influences that 
+enable parental motivation and assistance 
+for self-directedness
+Throughout the interviews, parents/guardians shared their 
+perspectives on contextual influences that enable or hinder parental 
+motivation and support. Educated parents or those with a strong 
+educational background, such as P1S1, P5S1, and P4S2, found it easier 
+to support their children due to their knowledge and professional 
+experience. These participants, who were educated or educators, were 
+able to help their children with specific subjects such as mathematics 
+and physical sciences, providing valuable guidance on studying 
+techniques and modeling self-directed learning skills.
+P1S2 stated as follows:
+I think what makes it easy is that he is a very determined child and 
+when it comes to his studies he puts more effort so that makes it 
+easy for me.
+P1S2 also highlighted the importance of providing her child with 
+access to a quiet study room, echoing the findings of Labahn (2019). 
+Schmid and Garrels (2021) further support the idea that having a 
+quiet and conducive space for studying contributes to better focus and 
+fewer distractions.
+P1S1 added:
+Is she studies and knows the concepts; my help is just to top on that 
+so it is easier for me to help her unlike a person who does not study 
+in their her own study room.
+The participant said that helping a child who was already actively 
+involved in his education was more manageable. This could 
+be attributed to the child of P3S1 who already exhibits self-directed 
+learning characteristics, such as the ability to initiate learning 
+independently, understand concepts, and study autonomously. In such 
+cases, parental participation becomes more about nurturing existing 
+SDL skills. In contrast, a childless child involved in their learning can 
+pose challenges to parents seeking to support their education.
+Another participant added:
+I think my children only comes to me when they have a problem they 
+start their work; I  only help wherever they want to be  assisted. 
+I don’t like doing everything for them (P3S2).
+P5S1 added:
+My child only come to me only when she struggle not with all 
+their schoolwork.
+The accounts of the participants suggest that their children are 
+motivated by a genuine love of learning. These learners exhibit 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 10 frontiersin.org
+characteristics such as seeking help when faced with challenges, 
+persistent effort, and taking responsibility for their work, all of which 
+contribute to their motivation (Adamma et al., 2018). Furthermore, 
+P4S2 highlighted the positive relationship their child has with 
+neighbors, indicating that the child feels comfortable asking for help 
+from them. Some participants, like P3S2, also mentioned relying on 
+neighbors or their children for help, underlining the importance of 
+community support and relationship building in townships. This 
+emphasizes the communal spirit, the concept of ubuntu, and mutual 
+care within township communities, where people come together to 
+help each other. Furthermore, P1S2 noted that the ease of participation 
+was influenced by the level of commitment of their child. This suggests 
+that learners in townships who demonstrate a strong commitment to 
+their studies make it easier for parents or legal guardians to actively 
+participate and support them.
+P1S2 elaborated:
+I think what makes it easy is that he is a very determined child, 
+when it comes to his studies he wants more, like he puts an effort so 
+that makes it easy for me because if he is putting in the effort when 
+I come it’s like “Oh you had been doing good”.
+The findings suggest that some learners exhibit SDL skills, such as 
+taking responsibility for their learning and demonstrating a 
+willingness to persist and learn independently. However, it should 
+be noted that only a few parents (P1S1, P1S2) explicitly mentioned 
+that their children are dedicated and determined to study without 
+external interference. In contrast, the majority of parents indicated 
+that their children still rely on external regulation, studying only when 
+directed by their parents, and taking their education seriously only 
+when asked. This implies that for many learners, the development of 
+SDL skills may be a gradual process influenced by various factors, 
+including parental guidance. Furthermore, the theme highlighted the 
+importance of parental education, and parents who have a higher 
+educational background (tertiary education) are better equipped to 
+help and encourage their children. This support contributes to 
+fulfilling the psychological needs of relatedness and competence as 
+outlined by Deci and Ryan (2020) and Geduld and Mdakane (2020).
+This theme underscores the importance of community support, 
+including the role of neighbors and teachers, in improving student 
+education. Although some learners demonstrate certain SDL skills, 
+the theme emphasizes the ongoing need for guidance. Furthermore, 
+factors such as parental education level, community involvement, 
+learners possessing SDL skills, parents who are teachers with subject 
+knowledge, and financial means all contribute to enabling parents and 
+legal guardians in this study to be involved and support their children’s 
+education. The next section will explore parents’ perceptions regarding 
+whether their children set their own learning goals.
+5.4 Theme 4: perceptions of parents about 
+whether their children set their own 
+learning goals
+In exploring the aspect of goal setting, parents were questioned 
+about their children’s ability to set their own goals. Some parents say 
+that their children are capable of setting and pursuing their own goals 
+(P1S1, P3S1). In contrast, other parents indicated that their children 
+do not actively set their own learning goals (P3S2, P4S1, P5S1 and 
+P5S2). Furthermore, four parents expressed uncertainty about 
+whether their children can independently set goals or not (P1S2, P2S1, 
+P4S2, and P3S1). The implication is that for those learners whose 
+parents state that they do not set learning goals for themselves; 
+motivation might be adversely affected. This is noteworthy, as setting 
+learning goals is recognized as a motivational factor that encourages 
+individuals to exert effort toward goal attainment (Deci and Ryan, 
+2020, p.  3). Furthermore, it was observed that some learners rely 
+heavily on their parents for setting goals rather than taking the 
+initiative themselves. This dependency on parents could hinder the 
+development of SDL skills and autonomy, as learners ideally need to 
+be in control of their own goals (Deci and Ryan, 2020).
+One participant elaborated:
+My child relies on me much because I am educated, he/she does not 
+set her own goals and I must be the one who helps (P4S1).
+P1S1 alluded to:
+Yes she does, and I try to set my own standards just to motivate her. 
+When she targets 60% in certain subjects, I target higher and tell her 
+to believe in herself because she is more than capable to 
+achieve higher.
+The statement from P1S1 suggests a dynamic where the parent 
+holds a dominant role in goal setting, potentially limiting the child’s 
+autonomy in determining goals based on their potential. Although 
+this approach may contribute to building the learner’s competence and 
+motivation for academic success, it is essential to strike a balance to 
+foster the development of intrinsic motivation and SDL skills. Goal 
+setting is in fact a critical element of intrinsic motivation and 
+SDL. Township learners benefit from the ability to independently set 
+their learning goals, contributing to their intrinsic motivation and 
+fostering SDL characteristics (Adamma et al., 2018). Although parents 
+play an important role in helping their children set goals, they must 
+avoid dictating goals, allowing learners to develop autonomy in their 
+academic journey. The next section will dive into parents’ perceptions 
+of their learners’ academic success at school.
+5.5 Theme 5: parent’s perception of their 
+learner’s academic success at school
+Parents and legal guardians’ perspectives on whether they 
+anticipate their children’s academic success at school are crucial to 
+understanding their expectations. These expectations, as indicated in 
+the literature (Geduld and Mdakane, 2020), can significantly influence 
+the motivation of learners. When exploring this, parents were asked 
+about their beliefs about their children’s potential success in school 
+and the reasons behind their convictions.
+P1S1 expressed confidence in his child’s ability to succeed at 
+school, even in the face of certain challenges.
+Yes, but for now she’s not happy academically because of the Grade 
+10 workload.
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 11 frontiersin.org
+The following perception encapsulates the view of one parent 
+when asked if their child was academically successful or not.
+Looking at his previous results and the way his not committed in 
+doing his school work I  can see that he  can be  successful 
+academically (P3S2).
+Another participant alluded to the following.
+Definitely, because I am an example to him and also my child likes 
+good things. He is so ambitious, also, he likes money (P4S1).
+The views of P4S1 are also supported by Geduld and Mdakane 
+(2020), who state that learners can learn new academic behaviors 
+and skills by watching their teachers, peers, and parents. A parent 
+participant whose child was determined and possessed certain SDL 
+skills asserted:
+…. because as I said I think he is a responsible child, and he is very 
+determined even with difficulties of him being a teenager and all 
+that. But you can see that he is determined to do something with his 
+life and the academics his academics are just superb. (P1S2) P5S2, 
+P3S1 and P5S1 believed that their children would be academically 
+successful at school but could not elaborate on why they believed 
+that their children would be academically successful at school.
+Another participant expanded:
+… they will be academically successful at school because they are 
+smart, they take from me (P4S2).
+The perspective of P4S2 implies that the academic competence of 
+her children can be  attributed to the influence she has on their 
+learning. Analysis of the collected responses reveals a prevalent belief 
+among most parents or legal guardians that their children are poised 
+for academic success at school. This confidence is rooted in various 
+factors, such as their children’s contentment at school, positive 
+performance in previous report cards, the determination and focus 
+exhibited by some learners, and the belief that they serve as positive 
+role models. On the contrary, certain parents have reservations about 
+their children’s academic prospects. This skepticism is often linked to 
+concerns that their children are not sufficiently dedicated to their 
+schoolwork and display a greater interest in fashion and social media 
+than in their education. The forthcoming section will delve into the 
+perceptions of parents and legal guardians regarding their children’s 
+happiness at school.
+5.6 Theme 6: parents’ perceptions of 
+learners’ happiness at school
+Recognizing whether their children are content at school is 
+crucial for parents, as it engenders their active involvement in 
+ensuring a sense of belonging and relatedness in their children’s 
+lives (Deci and Ryan, 2020). This awareness can serve as an indicator 
+of the level of motivation that their children have to attend school. 
+Moreover, understanding the sources of their children’s happiness 
+or unhappiness in the school environment is of paramount 
+importance. P3S1 emphasized that her child’s presence at school is 
+mainly influenced by social factors, such as friends and the 
+company she keeps. The participant also disclosed that her child’s 
+underperformance in grade 9 had a consequential impact on her 
+choices of subjects for grade 10. This highlights the 
+interconnectedness between a learner’s social experiences, academic 
+performance, and subsequent decisions regarding their educational 
+path. P3S1 elaborated:
+The 16 year old it’s more social because she is not doing subjects she 
+wanted to do because she lacked in grade 9 she had then had to 
+choose her second option of subjects but she is not academically 
+entirely happy with the subjects, my youngest one she doesn’t like 
+school she knows that she had to but she gets excited to perform 
+somethings or when doing sports but academically my child is an 
+artist so I think she will preferably be an artist.
+P3S2 similarly indicated that his child’s contentment at school is 
+solely attributed to the presence of friends. P3S2 “Well what can I say 
+in most cases he  talks about his friends but he  does not talk about 
+academics mostly so I can say his happy at school because of his friends. ”
+Another participant stated:
+I think they are because I have never received a complaint, no child 
+of mine has ever come home with a problem (P5S1).
+P5S1 elaborated on the perspective that her children lack 
+happiness at school due to the way they are treated, citing 
+discrimination based on their economic circumstances. The parent 
+expressed concern that her children, who do not come from a 
+financially affluent background and live in a shack, feel marginalized. 
+However, the parents did not provide specific reasons for this 
+perceived discrimination.
+No, not at all. My child was sick and I wrote them a letter saying 
+after he’s done writing, they must release him. He says he took an 
+hour before they assist him but where others are assisted quickly. 
+They are discriminating, but whether he is happy or not, he must 
+work very hard.
+Some parents opted not to respond to inquiries about their 
+children’s happiness at school. The uncertainty surrounding their 
+children’s emotional state stemmed from limited time spent 
+together and concerns about potential discrimination by teachers. 
+In contrast, those who reported contentment attributed it to 
+positive influences from friends, peers, and the general school 
+environment, with no reported grievances about school 
+management. In particular, the main identified need was 
+relatedness, encompassing a sense of closeness to others and 
+belonging to a social group, as highlighted by Deci and Ryan 
+(2020). This sense of connection, or attachment, is crucial for 
+children’s motivation and overall well-being ( Van den Broeck et al., 
+2016; Deci and Ryan, 2020 ). In the subsequent subtheme, 
+we explore parents’ perceptions regarding actions that other parents 
+can take to inspire their children to assume responsibility for 
+their learning.
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 12 frontiersin.org
+5.7 Theme 7: parents’ perceptions about 
+what other parents can do to motivate 
+their children to take responsibility for their 
+own learning
+This study revealed that certain parents or guardians observed 
+that their children showed a sense of responsibility for their learning, 
+demonstrating SDL skills. To go deeper into the parents’ 
+comprehension of their roles in fostering motivation for SDL, I sought 
+their advice for other parents. The following examples illustrate the 
+recommendations they provided.
+P4S1 alluded to:
+They must follow up on their schoolwork and they mustn’t pressurise 
+their kids especially with on their subjects’ choice, so allow your 
+children to take something easy that will benefit him.
+Another participant expanded:
+I think parents should try and make their children have positive role 
+models, their children must want to be somebody who achieve a lot, 
+and somebody who is a singer cannot be a child’s role model if the 
+child does not have the talent to sing (P5S1).
+The participant further alluded that township learners lack 
+positive role models who have achieved success through education 
+and encouraged parents to advise their children about having role 
+models that are educationally orientated. P3S2 suggested that parents 
+in the township should not give their children the opportunity to 
+openly discuss their problems with them.
+Some don’t participate in helping their children. Parents need to 
+know their children and they need to be part of the lives for their 
+children. They must always check their books, always try to help 
+where they can if they can’t seek to someone who can help. They 
+must come to school for the feedback about their children and take 
+action and motivate, encourage them and make sure that they study 
+at home (P1S1).
+Another participant added:
+As a parent you can always give out something like a reward to a 
+child for the achieved results on every term, I think that will make 
+the child want to improve more academically (P5S2).
+Based on the aforementioned analysis, participants offered several 
+recommendations to parents who want to support their children in 
+taking responsibility for their learning. First, they proposed that 
+parents consistently review their children’s schoolbooks, a suggestion 
+endorsed by the Department of Education (South  Africa) (2016). 
+Additionally, the participants emphasized the importance of allowing 
+children to select subjects based on their strengths and weaknesses 
+rather than imposing parental preferences. Although not extensively 
+addressed in the existing literature, participants noted that many 
+township learners face challenges when choosing subject streams, 
+often influenced by peer pressure or parental expectations. 
+Furthermore, participants underscored the importance of parental 
+involvement in their children’s education, advocating for attendance 
+at school meetings and the regular acquisition of performance 
+feedback (Bunijevac, 2017). Another piece of advice was to ensure that 
+children have positive role models, aligning with existing literature 
+that encourages exposure to self-directed role models, including 
+parents and teachers (Tokan and Imakulata, 2019). The subsequent 
+subtheme will explore participants’ recommendations for teachers at 
+school to motivate children to assume responsibility for their learning.
+5.8 Theme 8: parental advice on what 
+teachers at school can do to motivate 
+children to take responsibility for their own 
+learning
+This section analyses the advice provided by participants in 
+parents/legal guardians to teachers on motivating learners to be self-
+directed in their learning and take responsibility for their education. 
+The following is an example of the recommendations they offered:
+P4S1 suggested that teachers should participate in the ongoing 
+assessment of learners, provide training, and emphasize that achieving 
+the desired results may take time, but is achievable.
+…. As a teacher, you must keep on assessing your learners, it trains 
+them to be used to studying you cannot assess them once in a month, 
+you must do it continuously because they forget. Also show them 
+their results at the end of the day so that they can be motivated (P4S1).
+P5S1 recommended that teachers establish emotional connections 
+with their learners. The participant also proposed that teachers share 
+positive stories about people who achieved greatness through 
+education. The belief is that such narratives could inspire learners to 
+work diligently and foster a sense of self-direction in their learning.
+P5S1 elaborated:
+I think teachers have to try and come to the level of learners 
+sometimes tell them stories of people who achieved something 
+through education. I think by that some of learners might change 
+their attitude, some learners can start to understand that education 
+can help them to achieve whatever they want.
+This participant’s suggestion holds particular significance for 
+township learners who require role models, positive narratives, and 
+motivation to persevere in their studies. P5S1 highlighted that teachers 
+should serve as inspirations for learners, particularly if academic 
+success is the goal. The participant emphasized the importance of 
+teachers being aware of their learners’ performance to effectively 
+provide motivation.
+If you need every learner in your class to pass, you should inspire 
+them. You must also know the performance of your learners and try 
+to motivate them.
+P3S2, P1S2, P3S1, P5S2, and P2S2 collectively recommended that 
+schools institute a system of recognition of hard-working learners. 
+Specifically, P3S2 suggested honoring and providing incentives for the 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 13 frontiersin.org
+top achievers, proposing a system in which the top 10 achievers per 
+term are recognized to instill motivation in learners. This aligns with 
+the understanding that extrinsic motivation, involving rewards for 
+achieving desired results, can effectively encourage learners to exert 
+effort. Furthermore, P2S1 proposed that schools should impart the 
+skill of creating study schedules to learners. The participant, 
+acknowledging personal limitations as an uneducated parent, 
+emphasized the importance of teaching learners how to manage their 
+study schedules, as parents may only be able to monitor whether the 
+child is engaging in studying or not:
+I think the school must help us by ensuring that our children have 
+study timetables and adhere to it, I am not educated and therefore 
+cannot understand some of these things (P2S1).
+This theme brought to light several key recommendations from 
+parents, emphasizing the importance of continuous assessment, 
+positive reinforcement, teacher encouragement, providing positive 
+feedback to learners, and offering practical guidance in creating study 
+schedules. The participants also stressed the importance of teachers 
+knowing and understanding their learners, fostering personal 
+connections with them, and serving as sources of inspiration and 
+motivation. In the context of township learners, motivation is of 
+particular importance in shaping their educational journey.
+Mahlaba (2020)  further supports the claim that SDL is 
+transformative for learners, altering their perception of learning, 
+instilling an understanding of the value of education, and 
+subsequently cultivating SDL skills. Viewing education through a 
+positive lens is crucial for township learners, fostering enthusiasm 
+for learning and the acquisition of SDL skills. The implementation 
+of positive reinforcement, including rewards and certificates, 
+serves as an initial step in cultivating intrinsic motivation and 
+fostering a sense of responsibility for learning. Recognizing the 
+collaboration needed between parents and teachers, particularly in 
+creating study timetables, is crucial for supporting, encouraging, 
+and monitoring children’s learning. The following section will 
+compare and discuss the perspectives of teacher-participants and 
+parent/legal guardian-participants.
+5.9 Findings regarding determining how 
+parents or legal guardians could support 
+the learners’ motivation to become 
+self-directed
+Parental involvement is crucial for the educational development 
+of a learner, creating a secure and nurturing environment that fosters 
+learning. Parents who actively participate in their children’s education 
+led to better academic results, enhanced self-directed learning skills, 
+and increased student confidence. The research underscores a strong 
+association between factors from family history, such as parental 
+educational level and income, and learning achievement. Actively 
+engaged parents not only contribute to educational development but 
+also stimulate intrinsic motivation. This discovery is important as it 
+demonstrates that even parents without formal academic education 
+can help /aid in the development of SDL by providing encouragement, 
+structure, and emotional support. The literature consistently affirms 
+that children are more likely to succeed, and their performance 
+improves when parents or guardians are actively involved in their 
+education. By expressing interest in their children’s academic pursuits, 
+parents instill a profound appreciation for education and its 
+significance in their children’s lives.
+It is essential to note that parental involvement should not 
+be contingent on formal education; parents can provide valuable social 
+and emotional support. Involvement may manifest itself through 
+helping with homework, regular attendance at school meetings, or 
+monitoring their child’s academic progress. Additionally, support 
+programs in which experienced parents’ mentor new ones in 
+navigating the school setting can enhance parental participation, 
+particularly in resource-constrained communities. Establishing a 
+robust teacher-parent relationship is paramount to allowing parents 
+to understand how best to intervene and support their children. 
+Despite the undeniable benefits of parental participation, several 
+barriers can impede participation, including limited financial 
+resources, educational attainment, and busy schedules. Some parents 
+may refrain from participating due to past experiences with academic 
+challenges, which can affect their self-esteem. To overcome these 
+barriers, schools must cultivate an open and inviting environment in 
+which teachers and staff respond to parents. Viewing parents as 
+indispensable partners in realizing children’s educational objectives 
+fosters a positive parent-teacher relationship. This relationship 
+empowers parents and promotes their active participation in their 
+children’s education.
+5.10 Findings with regards to parents’ or 
+legal guardians’ perceptions of the 
+influences of motivation on their children’s 
+self-directed learning in township schools
+The research findings highlight a prevalent positive attitude and 
+belief among parents about their children’s potential for success at 
+school. Parents expressed confidence in their children’s motivation to 
+complete their academic journeys, attributing this motivation to 
+positive outcomes such as self-directedness in learning. In particular, 
+parents who perceived motivation as positively influencing their 
+children’s learning were those who actively ensured the fulfillment of 
+their children’s basic needs, autonomy, relatedness, and competence, 
+and foster positive parent–child relationships.
+Furthermore, parents who believed that motivation positively 
+impacted their children’s self-directedness were characterized by their 
+proactive efforts to expose, support and maintain high educational 
+expectations for their children. These parents consistently affirmed 
+their children’s strengths and competence in the classroom, 
+emphasizing the pivotal role of support, motivation, parental beliefs, 
+and ongoing involvement in shaping learners’ motivation and SDL 
+skills ( Geduld and Mdakane, 2020 ). Most parents and guardians 
+perceive their academic and emotional support to be a significant 
+motivating factor for their children. Participants actively seek the help 
+of tutors and knowledgeable individuals within their communities to 
+motivate and support their children, with the goal of school success.
+Conversely, a few participants acknowledge the impact of 
+socioeconomic factors, such as unemployment and financial 
+constraints, coupled with the challenges of meeting the cognitive 
+demands of their children’s schoolwork due to job responsibilities. 
+These contextual factors are identified as affecting their children’s 
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 14 frontiersin.org
+motivation to learn. In such cases, these parents rely on teachers 
+to guide, motivate, and support their children. However, it was 
+observed that some parents did not believe that motivation 
+positively influenced their children’s self-directedness. These 
+parents were also uncertain whether their children were 
+intrinsically or extrinsically motivated. The data collection 
+process further revealed instances of limited or no child–parent 
+relationships, negatively impacting the fulfillment of the children’s 
+three innate needs ( Deci and Ryan, 2020 ). This underscores the 
+importance of a positive parent–child relationship in fostering 
+motivation and SDL skills in learners.
+6 Recommendations on improving 
+parental and community 
+involvement and conclusion
+This article concludes that the development of SDL among 
+learners in township schools is influenced by motivation, intrinsic 
+and extrinsic, as well as parental involvement and support. The 
+findings reveal that while parents and guardians generally believe 
+in the academic potential of their children, their ability to provide 
+structured support is hampered by factors such as limited time, 
+educational background, and access to resources. Research found 
+that motivation requires the support of family and school 
+environments, access to learning resources, and alignment with 
+educational methodologies to be effective. The findings indicate 
+that integrated interventions aimed at educators, parents and 
+learners are essential to improve SDL.
+Based on these conclusions, the following recommendations 
+are made.
+ a) To the Department of Basic Education (DBE): Provide targeted 
+training and resources to support teachers in the promotion of 
+SDL and implement policies that formalize parental 
+participation as a key aspect of student development.
+ b) To District Officials: Establish mentoring programs that train 
+educators in SDL methodologies and support parental 
+empowerment workshops.
+ c) To teachers: Integrate SDL-promoting strategies into classroom 
+practice, such as learner goal-setting sessions, progress 
+monitoring tools, and peer collaboration techniques.
+ d) To parents and guardians: Engage in simple and consistent 
+practices at home that reinforce autonomy and responsibility, 
+such as helping with homework, setting routines, and 
+encouraging independent reading.
+These recommendations are based on data and align with the 
+conceptual framework of the article. They underscore the need for a 
+systemic and collaborative approach to improve motivation and SDL 
+among learners in disadvantaged educational contexts.
+Data availability statement
+Publicly available datasets were analyzed in this study. This data 
+can be found here: https://repository.nwu.ac.za/handle/10394/42474.
+Ethics statement
+The studies involving humans were approved by North West 
+University EDU Rec Committee (NWU-00313-22-A2). The studies 
+were conducted in accordance with the local legislation and 
+institutional requirements. The participants provided their written 
+informed consent to participate in this study. Written informed 
+consent was obtained from the individual(s) for the publication of any 
+potentially identifiable images or data included in this article.
+Author contributions
+TS: Methodology, Investigation, Writing – original draft, Formal 
+analysis. CT-B: Writing – review & editing, Conceptualization. BG: 
+Writing – review & editing, Supervision.
+Funding
+The author(s) declare that no financial support was received for 
+the research and/or publication of this article.
+Conflict of interest
+The authors declare that the research was conducted in the 
+absence of any commercial or financial relationships that could 
+be construed as a potential conflict of interest.
+Generative AI statement
+The authors declare that no Gen AI was used in the creation of 
+this manuscript.
+Publisher’s note
+All claims expressed in this article are solely those of the 
+authors and do not necessarily represent those of their affiliated 
+organizations, or those of the publisher, the editors and the 
+reviewers. Any product that may be evaluated in this article, or 
+claim that may be made by its manufacturer, is not guaranteed or 
+endorsed by the publisher.
+References
+Adamma, O. N., Ekwutosim, O. P ., and Unamba, E. C. (2018). Influence of extrinsic 
+and intrinsic motivation on pupils academic performance in mathematics. Supremum J 
+Maths Educ 2, 52–59. doi: 10.5281/zenodo.1405857
+Beard, J., and MacTavish, E. (2022). Facilitating self-directed learning environments: 
+a CLEAR path to making learners thirsty for technological knowledge. Int J Self Direct 
+Learn 19, 11–20.
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 15 frontiersin.org
+Blignaut, H., and du Toit-Brits, C. (2022). Challenges and implications for the 
+implementation of self-directed learning during Covid-19. Tydskrif vir 
+Geesteswetenskappe 62, 150–168. doi: 10.17159/2224-7912/2022/v62n1a8
+Blignaut, J. H., Erasmus, E., and Du Toit-Brits, C. (2023). “Joyful learning: advocating 
+for self-directed learning through authentic, playful problem-based learning” in 
+Problem-based learning and pedagogies of play: Active approaches towards self-directed 
+learning (pp.  71–94). eds. M. Hvenga, J. Olivier and J. B. Bunt 
+(Cape Town, South Africa: AOSIS).
+Brandt, C. (2020) Instructing & assessing 21st century skills: A focus on self-directed 
+learning. National Center for the Improvement of Educational Assessment. Available 
+online at: https://www.nciea.org/blog/instructing-assessing-21st-century-skills-a-focus-
+on-self-directed-learning (Accessed April 14, 2022).
+Bull, B. D. (2017). Adventures in self-directed learning: A guide for nurturing learner 
+agency and ownership: Wipf and Stock.
+Bunijevac, M. (2017). Parental involvement as a important factor for successful 
+education. Center Educ Policy Stud J 7, 137–153. doi: 10.26529/cepsj.291
+Center on Education Policy (CET). (2012). What roles do parent involvement, family 
+background, and culture play in student motivation? Graduate School of Education and 
+Human Development.
+Chang, W . W ., Zhang, L., Wen, L. Y ., Su, H., and Jin, Y . L. (2021). Association between 
+online self-directed learning ability and negative emotions among college students 
+during the COVID-19 pandemic: a cross-sectional study in Anhui Province, East China. 
+Front Psychol 12:911. doi: 10.3389/fpsyg.2021.720911
+Chindanya, A. (2020). Parental involvement in primary schools: a case study of the 
+Zaka district of Zimbabwe [doctoral dissertation, University of South Africa]. UNISA 
+Institutional Repository. Available online at: http://hdl.handle.net/10500/5798 (Accessed 
+April 14, 2022).
+Collier, C. (2022a). Self-directed learning: Historical and theoretical arguments for 
+learner-led education. Doctoral dissertation: Atlanta, Georgia State University.
+Collier, C. (2022b). Becoming an autonomous learner: building the skills of self-
+directed learning. J Transform Learn 9, 111–120. doi: 10.4324/9781003357094-17
+Conrad, D., Morris, H., and Rohs, M. (2020). Problems, chances and limitations of 
+facilitating self-directed learning at a German gymnasium. Bachelor of education thesis: 
+institution name if known. pp. 1–58.
+Creswell, J. W ., Ebersohn, I., ElofFerreira, M. V ., Jansen, L., Niewenhuis, J., Plano, V . L., 
+et al. (2010). First step in research. 4th ed. Hatfield Pretoria: Van Schaik Publishers.
+Cronin-Golomb, L. M., and Bauer, P . J. (2023). Self-motivated and directed learning 
+across the lifespan. Acta Psychol. 235:103621. doi: 10.1016/j.actpsy.2023.103621
+Deci, E. L., and Ryan, R. M. (2020). Intrinsic and extrinsic motivation from a self-
+determination theory perspective: definitions, theory, practices, and future directions. 
+Contemp. Educ. Psychol. 61:101860. doi: 10.1016/j.cedpsych.2020.101860
+Department of Basic Education (South Africa). (2020). Annual performance plan 
+2020/2021: Revised 2020/21 APP July 2020. Available at: https://www.gov.za/speeches/
+basic-education-condemns-vandalism-397-schools-coronavirus-covid-19-
+lockdown-17-apr-2020 (Accessed April 18, 2023).
+Department of Basic Education (South  Africa). (2021). Education–Coronavirus 
+COVID-19. South  African Government. Available online at: https://www.gov.za/
+covid-19/individuals-and-households/education-coronavirus-covid-19 (Accessed 
+March 10, 2023).
+Department of Education (South Africa). (2016). Practical guidelines: How parents 
+can contribute meaningfully to the success of their children in schools. Available online 
+at: https://www.education.gov.za/Portals/0/Documents/Publications/parents/Parent%20
+Practical%20Guidelines.pdf?ver=2018-06-08-094707-360 (Accessed April 16, 2022).
+Douglas, C., and Morris, S. (2014). Student perspectives on self-directed learning. J 
+Scholarsh Teach Learn 14, 13–25. doi: 10.14434/josotl.v14i1.3202
+Du Plessis, P ., and Mestry, R. (2019). Teachers for rural schools–a challenge for 
+South Africa. S. Afr. J. Educ. 39:9. doi: 10.15700/saje.v39ns1a1774
+Du Toit-Brits, C. (2019). A focus on self-directed learning: the role that educators’ 
+expectations play in the enhancement of students’ self-directedness. S. Afr. J. Educ. 39, 
+1–11. doi: 10.15700/saje.v39n2a1645
+Durr, R. (1991). An examination of readiness for self-directed learning and selected 
+personnel variables at a large Midwestern electronics development and manufacturing 
+corporation. Doctoral dissertation: Florida Atlantic University.
+Epstein, J. L. (2011). School, Family, and Community Partnerships: Preparing Educators 
+and Improving Schools (2nd ed.). Philadelphia, PA: Westview Press.
+Elo, S., and Kyngas, H. (2008). The qualitative content analysis process. J. Adv. Nurs. 
+62, 107–115. doi: 10.1111/j.1365-2648.2007.04569.x
+Freire, P . (2005). Teachers as cultural workers: Letters to those who dare teach. 1st Edn. 
+New Y ork, NY: Routledge.
+Geduld, B. (2017). Personal and contextual influences on township school learners’ 
+motivation and self-regulated learning. Afric Educ Rev  14, 122–139. doi: 
+10.1080/18146627.2017.1291279
+Geduld, B., and Mdakane, M. (2020). “ A contextual consideration of parental 
+involvement in homework to develop self-regulated learning” in Self-directed learning 
+research and its impact on educational practice. eds. E. Mentz and R. Bailey (Cape Town, 
+South Africa: AOSIS), 329–360.
+Gibbons, M. (2020). The self-directed learning handbook: challenging adolescent 
+students to excel. San Francisco, CA: Jossey-Bass.
+Gonzalez-DeHass, A. (2019). Parent involvement for motivated learners: Encouraging 
+self-directed and resilient students. New Y ork, NY: Routledge.
+Guglielmino, L. M. (1978). Development of the self-directed learning readiness scale 
+(Publication No. 6467A). Doctoral dissertation: University of Georgia. Dissertation 
+Abstracts International, 38, 6467A.
+Guglielmino, L. M. (1991). Developing self-directed learners: Why and how. Changing 
+Schools, 19, 6–7 &11.
+Guglielmino, L. M. (1996). “ An examination of self-directed learning readiness and 
+selected demographic variables of top female executives” in Current developments in 
+self-directed learning. ed. H. B. Long (Norman, OK: Public Managers Center, College 
+of Education, University of Oklahoma, College of Education), 11–22.
+Guglielmino, L. M. (1997). “Reliability and validity of the self-directed learning 
+readiness scale and the learning preference assessment” in Expanding horizons in self-
+directed learning. ed. H. B. Long (Norman, OK: Public Managers Center, University of 
+Oklahoma, College of Education), 209–222.
+Guglielmino, L. M. (2013). The case for promoting self-directed learning in formal 
+educational institutions. SA-eDUC 10, 1–18. doi: 10.10520/EJC144540
+Guglielmino, L. M., Guglielmino, P . J., and Choy, S. (2001). “Readiness for self-
+directed learning, job characteristics, and workplace performance: an Australian sample” 
+in self-directed learning in the information age. ed. H. B. Long (Chicago, IL: Motorola 
+University Press), 165–182.
+Guglielmino, L. M., and Hillard, L. C. (2007). Self-directed learning of exemplary 
+principals. Int J Self-Direct Learn 4, 19–37.
+Hafızoglu, A., and Y erdelen, S. (2019). The role of students' motivation in the 
+relationship between perceived learning environment and achievement in science: a 
+mediation analysis. Sci. Educ. Int. 30:51. doi: 10.33828/sei.v30.i4.2
+Herawati, N., Jafari, M., and Sanders, K. (2024). Teachers' perceptions of the efficacy 
+of positive behavior support systems. Int J Educ Cogn Sci  5, 8–15. doi: 
+10.61838/kman.ijeas.5.2.2
+Hiemstra, R. (1976). The older adult’s learning projects. Educ. Gerontol. 1, 331–341. 
+doi: 10.1080/0360127760010402
+Hiemstra, D. R. (1982). Self-directed adult learning: some implications for practice. 
+IACE Hall of Fame Repository. Available online at: https://roghiemstra.com/policy2.
+html (Accessed May 9, 2022).
+Hiemstra, R. (2002). Teaching online: not just another teaching assignment! PAACE 
+J. Lifelong Learn. 11, 1–10.
+Hiemstra, R. (2011). International self-directed learning Symposia: Annual 
+publications from symposia presentations. Cocoa Beach, FL: IACE Hall of Fame 
+Repository.
+Houle, C. O. (1961). The inquiring mind. Madison, WI: University of Wisconsin Press.
+Kang, E., and Hwang, H. J. (2021). Ethical Conducts in Qualitative Research 
+Methodology: Participant Observation and Interview Process. Journal of Research and 
+Publication Ethics 2, 5–10.
+Knowles, M. S. (1975). Self-directed learning: A guide for learners and teachers. 
+Englewood Cliffs, NJ: Prentice Hall/Cambridge.
+Kop, R., and Fournier, H. (2011). New dimensions of self-directed learning in an open 
+networked learning environment. Int J Self-Direct Learn 7, 1–20.
+Labahn, J. (2019). Education and parental involvement in secondary schools: 
+problems, solutions, and effects. Available online at: http://www.edpsycinteractive.org/
+files/parinvol.html (Accessed January 10, 2025).
+Leedy, P . D., and Ormrod, J. E. (2014). Practical Research: Planning and Design (10th 
+ed.). Edinburgh Gate: Pearson Education.
+Loeng, S. (2020). Self-directed learning: A core concept in adult education. Educ Res 
+Int 2020:3816132. doi: 10.1155/2020/3816132
+Long, H. B. (2000). “Understanding self-direction in learning” in Practice & theory in 
+self-directed learning. ed. H. B. Long (Schaumburg, IL: Motorola University 
+Press), 11–24.
+Mahlaba, S. C. (2020). Reasons why self-directed learning is important in South Africa 
+during the COVID-19 pandemic. South Afr J High Educ  34, 120–136. doi: 
+10.20853/34-6-4192
+Malison, K., and Thammakoranonta, N. (2018). An exploratory study of self-directed 
+learning: the differences between IT and non-IT employees in Thailand. J Entrepreneursh 
+Educ 21, 1–16.
+Merriam, S. B., Caffarella, R. S., and Baumgartner, L. M. (2007). Learning in 
+adulthood: A comprehensive guide. 3rd Edn. San Francisco, CA: Jossey-Bass.
+Merriam, S. B., Caffarella, R. S., and Baumgartner, L. M. (2012). Learning in 
+adulthood: A comprehensive guide. 4th Edn. Hoboken, NJ: Jossey-Bass.
+Miles, M. B., and Huberman, A. M. (1994). Qualitative Data Analysis: An Expanded 
+Sourcebook. Thousand Oaks, CA: Sage Publications.
+Siziba et al. 10.3389/feduc.2025.1587470
+Frontiers in Education 16 frontiersin.org
+Mokoena, M. (2022). Using self-directed learning to mitigate the post-COVID-19 
+pedagogical needs of rural English first additional language learners. Euras Human Soc 
+Sci 3, 184–201. doi: 10.38159/ehass.2022sp31115
+Morris, T. H. (2019). Self-directed learning: a fundamental competence in a rapidly 
+changing world. Int. Rev. Educ. 65, 633–653. doi: 10.1007/s11159-019-09793-2
+Murniati, C. T., Hartono, H., and Nugroho, A. C. (2022). Self-directed learning, self-
+efficacy, and technology readiness in e-learning among university students. KnE Social 
+Sciences 7, 213–224. doi: 10.18502/kss.v7i14.11970
+Nasri, N. M. (2019). Self-directed learning through the eyes of teacher educators. 
+Kasetsart J Soc Sci 40, 164–171. doi: 10.1016/j.kjss.2017.08.006
+Riaan, N. T. (2018). Low motivation in learners: Causes, consequences and correctives. 
+Available online at: http://japari.co.za/low-motivation-learners/ (Accessed September 
+30, 2021).
+Robinson, J. D., and Persky, A. M. (2020). Developing self-directed learners. Am. J. 
+Pharm. Educ. 84:512. doi: 10.5688/ajpe847512
+Schmid, E., and Garrels, V . (2021). Parental involvement and educational success 
+among vulnerable students in vocational education and training. Educ. Res. 63, 456–473. 
+doi: 10.1080/00131881.2021.1988672
+Sebotsa, T. (2020). Teachers' lived experiences of contextualised interventions, and its 
+affordances for their professional development and for self-directed learning in physical 
+sciences. Doctoral dissertation: North-West University. Available at: https://repository.
+nwu.ac.za/bitstream/handle/10394/36662/Sebotsa_T.pdf?sequence=1&isAllowed=y
+Siziba, T. (2024). The role of motivation to develop self-directed learners in lower 
+quintile secondary township schools. Master’s dissertation: North-West University.
+Song, D., and Bonk, C. J. (2016). Motivational factors in self-directed informal learning 
+from online learning resources. Cogent Educ 3, 1–11. doi: 10.1080/2331186X.2016.1205838
+Suknaisith, A. (2014). The results of self-directed learning for project evaluation skills 
+of undergraduate students. Procedia Soc. Behav. Sci.  116, 1676–1682. doi: 
+10.1016/j.sbspro.2014.01.455
+Timpau, C. (2015). Importance of self-directed learning. Logos Univers Mental Educ 
+Novel Soc Sci 4, 37–49. doi: 10.18662/lumenss.2015.0401.03
+Tokan, M. K., and Imakulata, M. M. (2019). The effect of motivation and learning 
+behaviour on student achievement. South African. J. Educ. 39, 1–8. doi: 10.15700/saje. 
+v39n1a1510
+Tough, A. M. (1966). The assistance obtained by adult self-teachers. Adult Educ. 17, 
+30–37. doi: 10.1177/074171366601700105
+Tough, A. M. (1968). Why adults learn. Toronto: Ontario Institute for Studies in Education.
+Tough, A. M. (1979). The adult's learning projects: A fresh approach to theory and 
+practice in adult learning. Toronto: Ontario Institute for Studies in Education.
+Tough, A. M. (1982). Intentional changes: a fresh approach to helping people change. 
+Acad Manag Rev. 8, 509–511.
+Tullis, J. G., and Goldstone, R. L. (2020). Why does peer instruction benefit student 
+learning? Cogn Res 5, 218. doi: 10.1186/s41235-020-00218-5
+Van den Broeck, A., Ferris, D. L., Chen, C.-H., and Rosen, C. C. (2016). A review of 
+self-determination theory’s basic psychological needs at work. J. Manag. 42, 1195–1229. 
+doi: 10.1177/0149206316632058
+Van Deur, P . (2018). Managing self-directed learning in primary school education: 
+emerging research and opportunities. IGI Global.  doi: 10.4018/978-1-5225-3068-8
+Van Zyl, S., and Mentz, E. (2019). Moving to deeper self-directed learning as an 
+essential competency for the 21st century. In E. Mentz, BeerJ. de and R. Bailey (Eds.), 
+Self-directed learning for the 21st century: Implications for higher education (pp. 
+67–102). Durbanville, South Africa: AOSIS.
+Y ang, D., Chen, P ., Wang, K., Li, Z., Zhang, C., and Huang, R. (2023). Parental 
+involvement and student engagement: A review of the literature. Sustainability 15:5859. 
+doi: 10.3390/su15075859
+Yiga, S. I., Khoarai, L., Khosana, T., Lesupi, R., Mduli, J., Botes, J., et al. (2019). Profile 
+of factors influencing academic motivation among grade 6 and 7 learners at a state 
+school. South Afr J Childhood Educ 9, 1–5. doi: 10.4102/sajce.v9i1.623
+Zhu, M. (2022). Designing and delivering MOOCs to motivate participants for 
+self-directed learning. Open Learn  39, 353–372. doi: 10.1080/02680513.2022.2026213

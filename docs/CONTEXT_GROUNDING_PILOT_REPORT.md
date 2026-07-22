@@ -115,3 +115,63 @@ The last row is the one concrete gap this pilot exposed that wasn't already
 written down: `segment_tags` on cards need a defined, closed vocabulary that
 maps 1:1 onto persona fields (archetype ∪ geotype ∪ asset flags), or binding
 degrades back into ad hoc string matching like this script did.
+
+## v3 — qual-grounded need-vs-want (evaluative rules drive the impulse elicitation)
+
+Question: does walking a persona through its segment's **documented evaluative
+rules** before it rates its impulse produce better-grounded want-reasoning than
+injecting the card as flat context? (`backend/scripts/context_grounding_pilot_v3.py`,
+output `context_grounding_pilot_v3_output.json`.)
+
+Setup: cards gained an `evaluative_rules` field (the Stage-2 chains'
+"therefore evaluative rule" links restated as decision heuristics, with chain +
+passage provenance; linted like mechanisms — no numbers, max 5). Two cases with
+real library personas and shipped cards:
+
+- `guardian_parent` × `education-payment-conversion` × edtech free→paid pitch
+- `grant_dependent_survivor` × `stokvels-calibration` × locked-savings-app pitch
+
+Three arms × 5 repeats at temperature 0.7 (single runs are never evidence):
+**A** baseline (no card), **B** card as flat context (v2 style), **C** card +
+"HOW PEOPLE LIKE YOU DECIDE" block and a restructured elicitation — answer your
+segment's documented questions first, then give `impulse` as the residue.
+The budget-tier block was byte-identical across arms (asserted LLM-off);
+affordability never moved with the card.
+
+### Result — decision framing beats card presence alone
+
+| metric (per 5 runs) | edtech A / B / C | savings A / B / C |
+|---|---|---|
+| impulse mean | 0.52 / 0.52 / **0.38** | 0.18 / 0.22 / **0.10** |
+| impulse stdev | 0.11 / 0.11 / **0.045** | 0.045 / 0.045 / **0.0** |
+| objection grounded in documented patterns | 2 / 1 / **3** | 0 / 1 / **5** |
+| card-vocabulary hits | 0 / 1 / **3** | 0 / 3 / **5** |
+
+- **Arm B ≈ arm A on impulse.** Merely injecting mechanisms did not change how
+  much the persona "wanted" the product — the flat card restyles prose but the
+  want-rating stays generic.
+- **Arm C shifted and stabilised impulse** in both cases (lower mean, lower
+  variance), and the reasoning shows why: the savings persona reasoned through
+  the documented trust rule unprompted ("my stokvel members are my neighbors
+  who know where I live and will shame me if I don't pay") and its
+  `primary_objection` matched a documented pattern in 5/5 runs vs 0/5 baseline.
+- **Over-scripting check passed**: near-duplicate objections stayed below the
+  flag threshold (1 pair of 10 in edtech C; 0 in savings C), and the edtech
+  persona *adapted* a documented question rather than parroting it ("Adapted:
+  can I justify this recurring cost…").
+- **Leaks unchanged by the intervention**: one invented rand amount in arm A
+  (a fabricated household income) and one in arm C (an invented stokvel
+  contribution). This is the known invent-a-figure failure the prompt-hardening
+  pilot targets — orthogonal to decision framing, but worth keeping the leak
+  check in any future run.
+
+### Verdict
+
+Rules-first elicitation (arm C) is the version worth shipping: it changes the
+*want* reasoning, not just the prose, while the deterministic affordability
+side stays untouched. Production path (per the framework note above): render
+the bound card's `evaluative_rules` + `objection_patterns` into the
+`research_context` profile key and adopt the rules-first impulse wording in
+`mode_specs.build_economic_lens` — gated so a persona with no bound card gets
+today's prompt byte-for-byte. Caveat: one sim-tier model, two personas, two
+scenarios; repeat on a second model before treating the magnitude as stable.
