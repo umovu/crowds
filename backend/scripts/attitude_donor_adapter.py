@@ -49,6 +49,25 @@ ATTITUDE_VOCAB: Dict[str, List[str]] = {
     "education_satisfaction": ["dissatisfied", "mixed", "satisfied"],
 }
 
+# Material circumstances the donor also reports. Deliberately NOT part of ATTITUDE_VOCAB:
+# "owns no car" and "went without food several times" are FACTS ABOUT A LIFE, not opinions.
+# Attitudes are stances the LLM may restate in voice; circumstances are constraints it must
+# not contradict. Merging the two vocabularies would destroy that distinction.
+#
+# These ride the SAME donor match as attitudes — one real respondent supplies the whole
+# vector, so a persona's deprivation, assets and outlook stay internally coherent (a real
+# person held all of them at once). They are not matched or sampled independently.
+CIRCUMSTANCE_VOCAB: Dict[str, List[str]] = {
+    # Afrobarometer Lived Poverty Index: mean of the five Q6 "gone without" items.
+    "lived_poverty": ["none", "low", "moderate", "high"],
+    "owns_vehicle": ["none", "household", "own"],
+    "owns_computer": ["none", "household", "own"],
+    "owns_bank_account": ["none", "household", "own"],
+    "owns_television": ["none", "household", "own"],
+    "internet_use": ["never", "rarely", "monthly", "weekly", "daily"],
+    "electricity_reliability": ["never", "occasional", "half", "most", "always"],
+}
+
 # The demographic fields a donor must carry to be matchable. These are exactly the
 # fields QLFS already fills on a skeleton (after banding), so they are the join surface.
 JOIN_KEYS = ["gender", "province", "education_band", "employment_status", "age_band"]
@@ -171,6 +190,19 @@ def _validate_donor(d: Dict, idx: int) -> None:
     w = d.get("weight")
     if not isinstance(w, (int, float)) or w <= 0:
         raise ValueError(f"donor[{idx}] non-positive weight {w!r}")
+    # circumstances may be absent entirely (synthetic fixture, or a respondent who
+    # answered none of them) — but a present value must be in vocab.
+    circ = d.get("circumstances")
+    if circ is not None:
+        if not isinstance(circ, dict):
+            raise ValueError(f"donor[{idx}] circumstances must be a dict, got {type(circ)}")
+        for field, val in circ.items():
+            if field not in CIRCUMSTANCE_VOCAB:
+                raise ValueError(f"donor[{idx}] unknown circumstance '{field}'")
+            if val not in CIRCUMSTANCE_VOCAB[field]:
+                raise ValueError(
+                    f"donor[{idx}] circumstance {field}='{val}' not in vocab "
+                    f"{CIRCUMSTANCE_VOCAB[field]}")
     # race/geotype are not yet join keys, so None is legal (the synthetic fixture has
     # neither). A *present* value must be canonical — an un-normalised label would
     # silently never match once these are promoted to join keys.
@@ -296,6 +328,65 @@ def _ab_max(row, cols) -> Optional[float]:
     return max(vals) if vals else None
 
 
+def _ab_code(row, col, table: Dict[float, str]) -> Optional[str]:
+    """Map a single Afrobarometer coded answer through a code→label table.
+
+    Anything not in the table (missing, refused, DK, 'not applicable') → None, which the
+    fuser fills from the population mode and flags. Never coerced to a real answer.
+    """
+    v = row.get(col)
+    if v is None or v != v or v in _AB_MISSING:
+        return None
+    return table.get(float(v))
+
+
+# Q90 asset battery: 0 = nobody in household, 1 = someone else, 2 = personally owns.
+_AB_ASSET = {0.0: "none", 1.0: "household", 2.0: "own"}
+# Q90i internet frequency: 0 never … 4 every day.
+_AB_INTERNET = {0.0: "never", 1.0: "rarely", 2.0: "monthly", 3.0: "weekly", 4.0: "daily"}
+# Q92b mains electricity availability: 1 never … 5 all of the time.
+_AB_ELECTRICITY = {1.0: "never", 2.0: "occasional", 3.0: "half", 4.0: "most", 5.0: "always"}
+
+
+def _decode_ab_circumstances(row) -> Dict[str, str]:
+    """Decode one Afrobarometer row into the CIRCUMSTANCE_VOCAB dict.
+
+    Unlike attitudes, a donor missing every circumstance is still a usable donor (their
+    attitudes remain valid), so this returns a possibly-empty dict rather than None.
+    """
+    out: Dict[str, str] = {}
+
+    # Lived Poverty Index — the standard Afrobarometer construct: mean of the five Q6
+    # "how often have you gone without" items, each 0 (never) … 4 (always). Banded rather
+    # than kept numeric so it shares the ordinal vocabulary style of every other field.
+    lpi = _ab_mean(row, ["Q6A", "Q6B", "Q6C", "Q6D", "Q6E"])
+    if lpi is not None:
+        if lpi == 0:
+            out["lived_poverty"] = "none"
+        elif lpi <= 1.0:
+            out["lived_poverty"] = "low"
+        elif lpi <= 2.0:
+            out["lived_poverty"] = "moderate"
+        else:
+            out["lived_poverty"] = "high"
+
+    for field, col in (("owns_vehicle", "Q90C"), ("owns_computer", "Q90D"),
+                       ("owns_bank_account", "Q90E"), ("owns_television", "Q90B")):
+        val = _ab_code(row, col, _AB_ASSET)
+        if val:
+            out[field] = val
+
+    net = _ab_code(row, "Q90I", _AB_INTERNET)
+    if net:
+        out["internet_use"] = net
+
+    elec = _ab_code(row, "Q92B", _AB_ELECTRICITY)
+    if elec:
+        out["electricity_reliability"] = elec
+
+    return out
+
+
 def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
     """Decode one Afrobarometer row into the ATTITUDE_VOCAB dict. Returns None if the
     respondent lacks usable answers across all four dimensions (a donor with no attitude
@@ -372,6 +463,8 @@ def load_afrobarometer(sav_path: str) -> List[Dict]:
             "age_band": age_to_band(int(age)),
             "weight": float(weight),
             "attitudes": attitudes,
+            # Material facts from the SAME respondent, so the persona stays coherent.
+            "circumstances": _decode_ab_circumstances(row),
             # Carried but NOT yet join keys — promoting them to the backoff ladder is a
             # separate change with a measurable match-quality trade-off. None where the
             # respondent answered 'Other'/'Don't know' (4 people in R9 SA).

@@ -180,6 +180,26 @@ def _population_modal_stances(donors: List[Dict]) -> Dict[str, str]:
     return modal
 
 
+def _population_modal_circumstances(donors: List[Dict]) -> Dict[str, Optional[str]]:
+    """Survey-weighted most-common value per circumstance field.
+
+    Same role as _population_modal_stances: fills a field the matched donor didn't answer.
+    Unlike attitudes there is NO neutral-middle fallback — if nothing was measured anywhere
+    (the synthetic fixture carries no circumstances) the field stays None and is omitted
+    entirely, rather than inventing a middle value for a material fact."""
+    from collections import defaultdict
+    weighted = {field: defaultdict(float) for field in ada.CIRCUMSTANCE_VOCAB}
+    for d in donors:
+        w = float(d.get("weight", 1.0))
+        for field, value in (d.get("circumstances") or {}).items():
+            if field in weighted:
+                weighted[field][value] += w
+    return {
+        field: (max(vals.items(), key=lambda kv: kv[1])[0] if vals else None)
+        for field, vals in weighted.items()
+    }
+
+
 def fuse_attitudes(
     skeletons: List[Dict],
     seed: int = 0,
@@ -202,6 +222,7 @@ def fuse_attitudes(
         source = "synthetic_donor" if ada.is_synthetic() else "afrobarometer_r9_sa"
 
     modal = _population_modal_stances(pool)
+    modal_circ = _population_modal_circumstances(pool)
 
     out: List[Dict] = []
     for sk in skeletons:
@@ -219,6 +240,27 @@ def fuse_attitudes(
         merged["attitudes"] = attitudes
         merged["beliefs"] = beliefs
         merged["attitude_match_quality"] = quality
+        # Material circumstances ride the SAME donor, so the persona stays internally
+        # coherent. Missing fields fall back to the population mode and are flagged
+        # per-field, exactly as attitudes are — a modal fill is never passed off as a match.
+        circ_rows = []
+        donor_circ = donor.get("circumstances") or {}
+        for field in ada.CIRCUMSTANCE_VOCAB:
+            value = donor_circ.get(field)
+            field_quality = quality
+            if value is None:
+                value = modal_circ.get(field)
+                field_quality = "population_modal"
+            if value is None:
+                continue  # nothing measured anywhere (synthetic fixture) — emit nothing
+            circ_rows.append({
+                "field": field,
+                "value": value,
+                "source": source,
+                "match_quality": field_quality,
+            })
+        if circ_rows:
+            merged["circumstances"] = circ_rows
         out.append(merged)
     return out
 
