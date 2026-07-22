@@ -565,6 +565,23 @@ class OpinionCitizenAgent(PersonAgent):
         if detail == "full":
             if bg_story:
                 lines.append(f"\nBackground: {bg_story[:600]}")
+            # Measured attitudes (Afrobarometer, fused onto the QLFS body at library
+            # build). These reached the profile but never the prompt: `beliefs` was
+            # referenced nowhere in the sim path, and the psychological-state loader
+            # below discards `attitudes` because the library ships it as a LIST of
+            # {topic, stance, source, match_quality} rows while that loader expects a
+            # numeric dict. So the whole survey-grounded layer was silently dropped.
+            #
+            # Rendered as FIXED FACTS, not suggestions: the model may express them in
+            # its own words but must not contradict or invent them. Same contract the
+            # texture generator already honours at build time.
+            belief_lines = [b for b in (profile.get("beliefs") or []) if isinstance(b, str)]
+            if belief_lines:
+                lines.append(
+                    "\nWHAT YOU HOLD TO BE TRUE — measured survey data about people like "
+                    "you, not opinions to be argued out of:\n"
+                    + "\n".join(f"- {b}" for b in belief_lines[:6])
+                )
             if voice_guide:
                 lines.append(f"\nVOICE INSTRUCTIONS — follow exactly:\n{voice_guide}")
             if behavioral_tendencies:
