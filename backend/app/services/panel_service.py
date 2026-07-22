@@ -53,59 +53,59 @@ DEFAULT_CAST_SIZE = 12
 SEGMENTS = {
     "everyone": {
         "label": "Everyone",
-        "description": "Representative cross-section of SA, tilted toward your pitch",
+        "description": "The real SA mix — grant and informal voices dominate, as in the population",
         "predicate": None,
     },
     "unemployed": {
         "label": "Unemployed",
-        "description": "Unemployed and discouraged job seekers (QLFS employment status)",
+        "description": "Unemployed and discouraged job seekers",
         "predicate": lambda p: p.get("employment_status") in ("Unemployed", "Discouraged job seeker"),
     },
     "grant_recipients": {
         "label": "Grant recipients",
-        "description": "Households surviving on SASSA grants",
+        "description": "Households living on SASSA grants",
         "predicate": lambda p: p.get("actor_archetype") == "grant_dependent_survivor",
     },
     "informal_traders": {
         "label": "Informal traders",
-        "description": "Spaza, street and informal-economy operators",
+        "description": "Spaza and street traders",
         "predicate": lambda p: p.get("actor_archetype") == "informal_trader",
     },
     "small_business": {
         "label": "Small business owners",
-        "description": "Formal small-business operators",
+        "description": "Formal small-business owners",
         "predicate": lambda p: p.get("actor_archetype") == "small_business_owner",
     },
     "youth": {
         "label": "Youth (under 35)",
-        "description": "18-34, across employment statuses",
+        "description": "Ages 18–34, all employment statuses",
         "predicate": lambda p: isinstance(p.get("age"), int) and p["age"] < 35,
     },
     "employed": {
         "label": "Employed",
-        "description": "Formally employed (QLFS employment status)",
+        "description": "In formal employment",
         "predicate": lambda p: p.get("employment_status") == "Employed",
     },
     # Education roles (GHS 2025 library build) — counts stay 0 until the
     # education personas are built into the library.
     "learners": {
         "label": "Learners",
-        "description": "High-school-age learners (15-18) in the school system (GHS)",
+        "description": "High-school learners, ages 15–18",
         "predicate": lambda p: p.get("actor_archetype") == "learner",
     },
     "guardians": {
         "label": "Parents & guardians",
-        "description": "Heads/spouses of households with school-age learners (GHS)",
+        "description": "Household heads with school-age children",
         "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian"),
     },
     "gogo_guardians": {
         "label": "Gogo guardians",
-        "description": "Grandparent-headed learner households (~39% of SA learners)",
+        "description": "Grandparents raising learners (~39% of SA)",
         "predicate": lambda p: p.get("actor_archetype") == "gogo_guardian",
     },
     "educators": {
         "label": "Educators",
-        "description": "Teachers (QLFS professional pool, role assigned)",
+        "description": "Teachers from the QLFS professional pool",
         "predicate": lambda p: p.get("actor_archetype") == "educator",
     },
     # Fee status (GHS) — households already spending on education vs no-fee-school
@@ -113,12 +113,12 @@ SEGMENTS = {
     # so a paid-product pitch can target families with proven education spend.
     "fee_paying": {
         "label": "Fee-paying households",
-        "description": "Learners/guardians already paying school fees (GHS) — proven education spend",
+        "description": "Families already paying school fees",
         "predicate": lambda p: _pays_school_fees(p),
     },
     "no_fee_school": {
         "label": "No-fee-school households",
-        "description": "Learners/guardians at no-fee schools (GHS) — tightest affordability test",
+        "description": "No-fee schools — toughest affordability test",
         "predicate": lambda p: _no_fee_only(p),
     },
 }

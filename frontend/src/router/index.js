@@ -83,6 +83,14 @@ const router = createRouter({
 // These are plain HTML outside the Vue router, so we hard-navigate with
 // window.location and cancel the in-app navigation.
 router.beforeEach(async (to) => {
+  // Local dev shortcut: skip the marketing landing page + auth gate. `/`
+  // renders FlowView (the default landing experience) directly. Only active
+  // when running under `vite` (import.meta.env.DEV) — production builds are
+  // unaffected. Say the word to turn this off.
+  if (import.meta.env.DEV) {
+    return true
+  }
+
   // A magic-link / OAuth code can land on a non-callback path (e.g. the root)
   // when Supabase falls back to the Site URL. Route it through the callback
   // view — which settles the session — instead of letting the guard below

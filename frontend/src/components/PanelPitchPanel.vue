@@ -75,6 +75,7 @@
           :key="seg.id"
           class="pp-segment"
           :class="{ selected: selectedSegments.includes(seg.id) }"
+          :title="seg.label + ' — ' + seg.description"
           :disabled="busy"
           @click="toggleSegment(seg.id)"
         >
@@ -718,12 +719,15 @@ onMounted(async () => {
 .pp-segments {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-auto-rows: 1fr;
   gap: 10px;
 }
 .pp-segment {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  height: 100%;
+  min-height: 118px;
   padding: 12px 14px;
   border: 1px solid #E5E5E5;
   border-radius: 12px;
@@ -736,7 +740,10 @@ onMounted(async () => {
 .pp-segment.selected { border-color: #1E9E5A; background: #F0FAF4; }
 .pp-segment:disabled { opacity: 0.6; cursor: not-allowed; }
 .pp-segment-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.pp-segment-label { font-weight: 600; font-size: 0.88rem; color: #000; }
+.pp-segment-label {
+  font-weight: 600; font-size: 0.88rem; color: #000;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .pp-segment-count {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
@@ -746,7 +753,11 @@ onMounted(async () => {
   padding: 1px 7px;
   border-radius: 8px;
 }
-.pp-segment-desc { font-size: 0.73rem; color: #777; line-height: 1.4; }
+.pp-segment-desc {
+  font-size: 0.73rem; color: #777; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* Controls row */
 .pp-controls {
