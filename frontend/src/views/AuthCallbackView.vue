@@ -16,16 +16,20 @@ const message = ref('Signing you in…')
 onMounted(async () => {
   // detectSessionInUrl (set on the client) parses the PKCE code / tokens from
   // the redirect URL automatically. We just wait for the session to settle.
-  const { data, error } = await supabase.auth.getSession()
-  if (error || !data.session) {
-    // Give the URL-detection a brief moment, then re-check once.
-    await new Promise((r) => setTimeout(r, 300))
-    const retry = await supabase.auth.getSession()
-    if (!retry.data.session) {
-      message.value = 'Could not complete sign-in. Redirecting…'
-      window.location.href = '/auth.html'
-      return
-    }
+  // Mobile mail-app browsers are often slower here, so poll a few times
+  // before giving up rather than checking just once.
+  let session = (await supabase.auth.getSession()).data.session
+  for (let attempt = 0; !session && attempt < 5; attempt++) {
+    await new Promise((r) => setTimeout(r, 400))
+    session = (await supabase.auth.getSession()).data.session
+  }
+  if (!session) {
+    // Most common cause: the link was opened in a different browser/app
+    // (e.g. the Mail app's in-app browser) than the one that requested it,
+    // so the PKCE verifier saved in that browser's localStorage isn't here.
+    message.value = 'Could not complete sign-in. Redirecting…'
+    window.location.href = '/auth.html?reason=session_lost'
+    return
   }
   const next = typeof route.query.next === 'string' ? route.query.next : '/'
   router.replace(next)
