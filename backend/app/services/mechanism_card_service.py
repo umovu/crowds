@@ -69,10 +69,24 @@ def load_cards(cards_dir: str = _CARDS_DIR) -> List[Dict]:
     return cards
 
 
+# Archetypes that are RURAL by definition. A card naming one of these is about a
+# rural activity (subsistence/market farming, livestock), so it is "rural-scoped".
+_RURAL_ARCHETYPES = {"communal_farmer", "smallholder_emerging_farmer"}
+# QLFS/GHS geotype values that count as rural for binding.
+_RURAL_GEOTYPES = {"Traditional", "Farms"}
+
+
+def _is_rural_scoped(card: Dict) -> bool:
+    """A card is rural-scoped if any of its segment_tags is a rural archetype — i.e. its
+    studied population lives and works rurally (farming, livestock)."""
+    return bool(_RURAL_ARCHETYPES & set(card.get("segment_tags") or []))
+
+
 def cards_for_archetype(
     archetype: str,
     cap: int = DEFAULT_CARD_CAP,
     budget_tier: str | None = None,
+    geotype: str | None = None,
 ) -> List[Dict]:
     """Cards whose segment_tags contain `archetype`, most specific first.
 
@@ -86,6 +100,17 @@ def cards_for_archetype(
     the human at extraction time. A card without economic_tags applies to all
     tiers (back-compat and the honest default for class-blind studies). Policy
     casts have no tier, so no filtering happens there.
+
+    `geotype` guards RURAL-SCOPED cards. A broad archetype like
+    `grant_dependent_survivor` lumps two lives together — an urban township grant
+    recipient (no land) and a rural subsistence grower (lives inside the farming
+    mechanisms). Without this, a farming card bound via the broad tag reached the
+    urban persona too (measured: 57 mis-bindings across the farm cards, e.g. a
+    KwaMashu grant recipient handed "price taker / market surplus" reasoning). A
+    persona binds a rural-scoped card only if they are a farmer themselves
+    (archetype in _RURAL_ARCHETYPES) OR live rurally. `geotype=None` (unknown, e.g.
+    a pre-rebuild persona) is left untouched — the guard only tightens where the
+    settlement is actually known.
     """
     if not archetype or not _enabled():
         return []
@@ -93,6 +118,10 @@ def cards_for_archetype(
     if budget_tier:
         matched = [c for c in matched
                    if not c.get("economic_tags") or budget_tier in c["economic_tags"]]
+    # Rural-scope coherence: drop a rural-scoped card for an urban non-farmer persona.
+    if geotype is not None and archetype not in _RURAL_ARCHETYPES \
+            and geotype not in _RURAL_GEOTYPES:
+        matched = [c for c in matched if not _is_rural_scoped(c)]
     matched.sort(key=lambda c: (len(c.get("segment_tags") or []), c.get("id", "")))
     return matched[:cap]
 
@@ -144,6 +173,7 @@ def attach_research_context(profile: Dict, cap: int = DEFAULT_CARD_CAP) -> Dict:
         profile.get("actor_archetype", ""),
         cap=cap,
         budget_tier=profile.get("budget_tier"),
+        geotype=profile.get("geotype"),
     )
     if bound:
         profile["research_context"] = render_research_context(bound)
