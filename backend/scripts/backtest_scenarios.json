@@ -1,0 +1,100 @@
+{
+  "_readme": [
+    "Benchmark set for backtest_panel.py — real questions with known answers.",
+    "",
+    "ground_truth.kind:",
+    "  'afrobarometer' — computed EXACTLY from the held-out .sav column at runtime.",
+    "                    Only use questions NOT fused into personas (see fused list in",
+    "                    attitude_donor_adapter). These are the defensible ones.",
+    "  'external'      — a documented real-world outcome. Approximate, must carry a",
+    "                    source and an honest confidence note.",
+    "",
+    "contamination: how likely the LLM already knows the answer from training data.",
+    "  Framing deliberately avoids naming the event, date, or place where possible.",
+    "  'high' scenarios prove little on their own — read them alongside the others."
+  ],
+
+  "scenarios": [
+    {
+      "id": "eskom-privatisation",
+      "event": "Support for privatising Eskom to improve electricity supply",
+      "framing": "Some people say the state power utility should be sold to private companies, because private owners would run it more efficiently and keep the lights on. Others say electricity is too important to hand to private owners chasing profit. Where do you stand?",
+      "answers": ["agree", "disagree", "neither"],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q80A_SAF",
+        "map": {"1": "disagree", "2": "disagree", "3": "neither", "4": "agree", "5": "agree"}
+      },
+      "contamination": "low",
+      "notes": "Q80A is HELD OUT (we fused Q80C only). Every persona has lived electricity_reliability, so this tests whether a measured circumstance drives a policy view."
+    },
+    {
+      "id": "electricity-competition",
+      "event": "Allowing other companies to compete with the state power utility",
+      "framing": "Some people say other companies should be allowed to generate and sell electricity in competition with the state utility. Others say that would only benefit those who can pay more. Where do you stand?",
+      "answers": ["agree", "disagree", "neither"],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q80B_SAF",
+        "map": {"1": "disagree", "2": "disagree", "3": "neither", "4": "agree", "5": "agree"}
+      },
+      "contamination": "low",
+      "notes": "Held out. Pairs with eskom-privatisation — a panel that gets one right and the other wrong tells you it is pattern-matching on 'privatisation', not reasoning."
+    },
+    {
+      "id": "jobs-vs-environment",
+      "event": "Whether government should prioritise jobs over protecting the environment",
+      "framing": "Some people say government should focus on creating jobs even if that harms the environment. Others say protecting the environment matters more, even if it costs jobs. Where do you stand?",
+      "answers": ["jobs", "environment", "neither"],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q71",
+        "map": {"1": "jobs", "2": "environment", "3": "neither"}
+      },
+      "contamination": "low",
+      "notes": "Held out. Unemployment is the top self-reported problem in SA, so a panel that does NOT lean heavily to jobs is failing an easy case."
+    },
+    {
+      "id": "democracy-satisfaction",
+      "event": "Satisfaction with the way democracy works in South Africa",
+      "framing": "Overall, how satisfied are you with the way democracy works in this country?",
+      "answers": ["satisfied", "dissatisfied", "neither"],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q31",
+        "map": {"1": "dissatisfied", "2": "dissatisfied", "3": "satisfied", "4": "satisfied"}
+      },
+      "contamination": "medium",
+      "notes": "Held out, but adjacent to fused gov_trust — a strong result here is partly expected, so treat it as a sanity check rather than evidence of generalisation."
+    },
+    {
+      "id": "etolls-noncompliance",
+      "event": "Gauteng e-toll non-payment (gantries installed 2013, scheme scrapped 2022)",
+      "framing": "Government installs electronic toll gantries on the highways you use. You will be billed monthly for every trip. Many people around you are saying they simply will not pay, and it is not clear what happens to those who refuse. Would you pay your toll bill?",
+      "answers": ["pay", "not_pay", "unsure"],
+      "ground_truth": {
+        "kind": "external",
+        "distribution": {"not_pay": 0.75},
+        "source": "SANRAL reported e-toll compliance collapsing to roughly 20-25% of billed amounts before the scheme was scrapped in 2022; non-payment is therefore ~75-80%.",
+        "confidence": "approximate — compliance figures were reported as a range and varied by year. Treat +/-10pp as within tolerance."
+      },
+      "subgroup": {"province": "Gauteng"},
+      "contamination": "medium",
+      "notes": "The strongest case in the set because ground truth is a measured BEHAVIOUR, not a poll. Tests whether low gov_trust plus a legitimacy objection produces non-compliance. Framing deliberately omits 'e-toll', 'SANRAL' and the date."
+    },
+    {
+      "id": "vat-increase",
+      "event": "Proposed VAT increase (0.5pp proposed in the 2025 Budget, withdrawn after backlash)",
+      "framing": "Government proposes raising VAT — the tax added to almost everything you buy — by half a percentage point, to pay for public services. Prices on most goods would rise slightly. Do you support this?",
+      "answers": ["support", "oppose", "neither"],
+      "ground_truth": {
+        "kind": "external",
+        "distribution": {"oppose": 0.70},
+        "source": "The 2025 Budget VAT increase was withdrawn after broad public and coalition opposition — a revealed-preference outcome rather than a single poll.",
+        "confidence": "low precision — no single authoritative poll figure. The testable claim is DIRECTION AND INTENSITY (strong majority opposition), not the exact share."
+      },
+      "contamination": "medium",
+      "notes": "Tests intensity, not direction: everyone dislikes a tax rise, so the signal is whether tight-budget and grant-dependent personas object strongly enough to imply a reversal."
+    }
+  ]
+}
