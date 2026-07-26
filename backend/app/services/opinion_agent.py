@@ -826,6 +826,13 @@ class OpinionCitizenAgent(PersonAgent):
                 "stance_after": stance_before,
                 "stance_changed": False,
                 "internal_state": {},
+                # TOP-LEVEL error, not only the nested one. batch_impact_interview
+                # counts failures with `"error" in result`, so nesting it under
+                # impact_metadata made a failed interview count as SUCCESSFUL — an
+                # LLM outage was reported as "successful: 25, failed: 0" while every
+                # persona said "I have no comment on that." Keep the nested copy for
+                # existing consumers.
+                "error": str(e),
                 "impact_metadata": {"error": str(e)},
                 "reframed_question": reframed_question,
                 "original_question": original_question,
