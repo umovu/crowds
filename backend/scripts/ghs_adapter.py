@@ -37,6 +37,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pyreadstat
 
+# Shared vocabulary owner (bands, race, settlement) — so every skeleton source
+# normalises the same way, whatever survey it came from.
+import attitude_donor_adapter as ada
+
 # ── Paths ──────────────────────────────────────────────────────────────────
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _GHS_DIR = os.path.join(_HERE, "..", "data", "microdata", "ghs-2025-v1")
@@ -55,6 +59,17 @@ GUARDIAN_MIN_AGE = 25
 _SENTINELS = {7.0, 8.0, 9.0, 88.0, 98.0, 99.0}   # NA / refused / DK / unspecified
 
 _GEOTYPE = {1: "Urban", 2: "Traditional", 3: "Farms"}  # Stats SA convention (unlabelled var)
+
+# GHS `Population` → the canonical race vocabulary shared with QLFS/Afrobarometer.
+# GHS labels carry a numeric prefix ("1. African/Black"), so map by code, not label.
+_GHS_RACE = {1: "African/Black", 2: "Coloured", 3: "Indian/Asian", 4: "White"}
+
+
+def _race_from_ghs(value) -> Optional[str]:
+    """Canonical race from GHS `Population`. Unknown/missing → None, never coerced."""
+    if value is None or value != value:
+        return None
+    return _GHS_RACE.get(int(value))
 
 _REL_HEAD, _REL_SPOUSE, _REL_CHILD, _REL_GRANDCHILD = 1, 2, 3, 7
 
@@ -240,6 +255,12 @@ def _base_skeleton(row, value_labels) -> Dict[str, Any]:
         "marriage_status": _label(value_labels, "hhc_marital", row.get("hhc_marital")),
         "is_neet": None,
         # GHS extensions
+        # race is a JOIN KEY (attitude_donor_adapter.JOIN_KEYS). Omitting it here sent
+        # every education skeleton down the ladder to the race-unknown rung, where only
+        # 2 of 1,384 donors live — 39 of 40 education personas would have drawn their
+        # attitudes from the same two respondents. GHS `Population` uses the same four
+        # categories as QLFS Q15POPULATION, so it normalises through the shared mapper.
+        "race": _race_from_ghs(row.get("Population")),
         "geotype": _GEOTYPE.get(int(row["geotype"])) if row.get("geotype") == row.get("geotype") else None,
         "home_language": _label(value_labels, "Languages", row.get("Languages")),
         # REAL household income (rand/month) — affordability anchor, never modelled.

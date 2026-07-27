@@ -37,23 +37,39 @@ from typing import Dict, List, Optional, Tuple
 
 import attitude_donor_adapter as ada
 
-# Backoff ladder: full 5-key match first, then drop keys left-to-right. age_band and
+# Backoff ladder: full 6-key match first, then drop keys left-to-right. age_band and
 # education_band are dropped before province because province is a stronger attitude
 # predictor in SA (service delivery, provincial government performance vary by province).
 # employment_status and gender are kept longest — both correlate hard with economic mood.
+#
+# `race` is dropped LAST, just above whole-population. Chosen by held-out evaluation over
+# five candidate ladders (eval_attitude_match.py, 5-fold, subgroup distribution fidelity):
+# this shape scored best overall (TVD 2.5 vs 2.8 for the previous ladder) and roughly
+# halved distribution error for the minority groups it exists to serve —
+# Indian/Asian 14.0 -> 7.0, White 12.7 -> 7.8, Coloured 6.7 -> 3.9 — while leaving the
+# African/Black majority marginally better. Swapping race in for age instead of adding it
+# scored WORST of the five, so it is a sixth key, not a replacement.
+#
+# Cost, measured and accepted: top-rung ("exact") share falls from ~85% to ~76%, because
+# six keys over 1,384 donors leaves more cells empty. A same-race donor one rung down is a
+# better match than a different-race donor at the top rung, so the label is what changes,
+# not the quality.
 _BACKOFF_LADDER: List[List[str]] = [
-    ["gender", "province", "education_band", "employment_status", "age_band"],  # exact
-    ["gender", "province", "education_band", "employment_status"],              # drop age
-    ["gender", "province", "employment_status"],                                # drop education
-    ["gender", "employment_status"],                                            # drop province
-    ["employment_status"],                                                      # status only
-    [],                                                                         # whole-population
+    ["gender", "province", "education_band", "employment_status", "age_band", "race"],  # exact
+    ["gender", "province", "education_band", "employment_status", "race"],              # drop age
+    ["gender", "province", "employment_status", "race"],                                # drop education
+    ["gender", "employment_status", "race"],                                            # drop province
+    ["employment_status", "race"],                                                      # drop gender
+    ["race"],                                                                           # race only
+    [],                                                                                 # whole-population
 ]
 
-# Human-readable label per ladder rung, for match_quality provenance.
+# Human-readable label per ladder rung, for match_quality provenance. Named for what is
+# PRESERVED, not merely how far down the ladder we went: every rung above "population"
+# keeps race, which is the point of the ordering.
 _QUALITY_LABELS = [
     "exact", "age_backoff", "education_backoff",
-    "province_backoff", "status_only", "population",
+    "province_backoff", "status_race", "race_only", "population",
 ]
 
 # Deterministic belief phrasing per (dimension, stance). Kept LLM-free on purpose: the
@@ -90,6 +106,8 @@ def _skeleton_join_view(skeleton: Dict) -> Dict[str, Optional[str]]:
         "education_band": ada.education_to_band(skeleton.get("education")),
         "employment_status": skeleton.get("employment_status"),
         "age_band": ada.age_to_band(int(age)) if age is not None else None,
+        # Already canonicalised by persona_sampler via the adapter, so no banding needed.
+        "race": skeleton.get("race"),
     }
 
 
@@ -180,6 +198,70 @@ def _population_modal_stances(donors: List[Dict]) -> Dict[str, str]:
     return modal
 
 
+def _population_distributions(donors: List[Dict], key: str, vocab: Dict) -> Dict[str, Tuple[List[str], List[float]]]:
+    """Survey-weighted stance distribution per dimension, for the population fallback.
+
+    Used INSTEAD of the modal value when a matched donor didn't answer a dimension.
+    Filling every gap with the mode biases the library toward that mode in proportion to
+    how often the dimension is missing — invisible at 99% coverage, but business_trust is
+    only 89% answered and modal-filling drifted its marginals 6pp (caught by
+    validate_attitude_fuser). A weighted draw preserves the population marginals by
+    construction, and is just as honest: "someone plausible from this population" rather
+    than "the most typical person".
+    """
+    from collections import defaultdict
+    weighted = {dim: defaultdict(float) for dim in vocab}
+    for d in donors:
+        w = float(d.get("weight", 1.0))
+        for dim, value in (d.get(key) or {}).items():
+            if dim in weighted:
+                weighted[dim][value] += w
+    return {
+        dim: (list(vals.keys()), list(vals.values()))
+        for dim, vals in weighted.items() if vals
+    }
+
+
+def _population_draw(
+    dists: Dict[str, Tuple[List[str], List[float]]], dim: str, skeleton: Dict, seed: int
+) -> Optional[str]:
+    """Deterministic weighted draw from the population distribution for one dimension.
+
+    Seeded on (skeleton, dim) so the same persona always fills the same gap the same way,
+    and two personas don't both collapse onto the same value.
+    """
+    dist = dists.get(dim)
+    if not dist:
+        return None
+    options, weights = dist
+    key = json.dumps({k: skeleton.get(k) for k in
+                      ("age", "gender", "province", "education", "employment_status",
+                       "occupation", "industry", "marriage_status", "is_neet")},
+                     sort_keys=True, ensure_ascii=False) + f"|{dim}"
+    h = int(hashlib.sha256(key.encode("utf-8")).hexdigest()[:8], 16)
+    return random.Random(seed ^ h).choices(options, weights=weights, k=1)[0]
+
+
+def _population_modal_circumstances(donors: List[Dict]) -> Dict[str, Optional[str]]:
+    """Survey-weighted most-common value per circumstance field.
+
+    Same role as _population_modal_stances: fills a field the matched donor didn't answer.
+    Unlike attitudes there is NO neutral-middle fallback — if nothing was measured anywhere
+    (the synthetic fixture carries no circumstances) the field stays None and is omitted
+    entirely, rather than inventing a middle value for a material fact."""
+    from collections import defaultdict
+    weighted = {field: defaultdict(float) for field in ada.CIRCUMSTANCE_VOCAB}
+    for d in donors:
+        w = float(d.get("weight", 1.0))
+        for field, value in (d.get("circumstances") or {}).items():
+            if field in weighted:
+                weighted[field][value] += w
+    return {
+        field: (max(vals.items(), key=lambda kv: kv[1])[0] if vals else None)
+        for field, vals in weighted.items()
+    }
+
+
 def fuse_attitudes(
     skeletons: List[Dict],
     seed: int = 0,
@@ -202,6 +284,9 @@ def fuse_attitudes(
         source = "synthetic_donor" if ada.is_synthetic() else "afrobarometer_r9_sa"
 
     modal = _population_modal_stances(pool)
+    modal_circ = _population_modal_circumstances(pool)
+    dist_att = _population_distributions(pool, "attitudes", ada.ATTITUDE_VOCAB)
+    dist_circ = _population_distributions(pool, "circumstances", ada.CIRCUMSTANCE_VOCAB)
 
     out: List[Dict] = []
     for sk in skeletons:
@@ -211,14 +296,36 @@ def fuse_attitudes(
         per_dim_quality = {dim: quality for dim in full}
         for dim in ada.ATTITUDE_VOCAB:
             if dim not in full:
-                full[dim] = modal[dim]
-                per_dim_quality[dim] = "population_modal"
+                # Weighted draw, not the mode — see _population_distributions.
+                full[dim] = _population_draw(dist_att, dim, sk, seed) or modal[dim]
+                per_dim_quality[dim] = "population_draw"
 
         attitudes, beliefs = _attitudes_to_fields(full, source, per_dim_quality)
         merged = dict(sk)
         merged["attitudes"] = attitudes
         merged["beliefs"] = beliefs
         merged["attitude_match_quality"] = quality
+        # Material circumstances ride the SAME donor, so the persona stays internally
+        # coherent. Missing fields fall back to the population mode and are flagged
+        # per-field, exactly as attitudes are — a modal fill is never passed off as a match.
+        circ_rows = []
+        donor_circ = donor.get("circumstances") or {}
+        for field in ada.CIRCUMSTANCE_VOCAB:
+            value = donor_circ.get(field)
+            field_quality = quality
+            if value is None:
+                value = _population_draw(dist_circ, field, sk, seed) or modal_circ.get(field)
+                field_quality = "population_draw"
+            if value is None:
+                continue  # nothing measured anywhere (synthetic fixture) — emit nothing
+            circ_rows.append({
+                "field": field,
+                "value": value,
+                "source": source,
+                "match_quality": field_quality,
+            })
+        if circ_rows:
+            merged["circumstances"] = circ_rows
         out.append(merged)
     return out
 

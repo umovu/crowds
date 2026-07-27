@@ -85,7 +85,7 @@ TEXTURE_FIELDS = [
 FROZEN_FIELDS = [
     "age", "gender", "province", "education", "occupation",
     "employment_status", "informal", "industry", "marriage_status",
-    "is_neet", "actor_archetype",
+    "is_neet", "actor_archetype", "race",
     # GHS education-build facts (absent on civic personas — None is skipped).
     # All REAL surveyed circumstances the texture must write around, not invent:
     "geotype", "home_language", "monthly_household_income_rand",
@@ -139,6 +139,90 @@ _STANCE_GLOSS = {
         "mixed": "sees both real effort and real failure in how local schools are run",
         "satisfied": "feels schools and education services are broadly doing their job",
     },
+    # Policy-mode dimensions (added with the WP2 attitude expansion).
+    "councillor_responsiveness": {
+        "low": "believes their local councillor never listens to people like them",
+        "mid": "thinks their councillor listens only sometimes",
+        "high": "feels their local councillor can be made to listen",
+    },
+    "official_responsiveness": {
+        "low": "expects no help if they approach a government official",
+        "mid": "is unsure whether officials would help if asked",
+        "high": "believes officials would likely respond if they asked for help",
+    },
+    "crime_handling": {
+        "dissatisfied": "thinks the government is handling crime very badly",
+        "mixed": "sees the government's handling of crime as patchy",
+        "satisfied": "thinks the government handles crime reasonably well",
+    },
+    "immigration_priority": {
+        "low": "does not feel strongly that South Africans should be prioritised over immigrants",
+        "mid": "has mixed feelings about prioritising South Africans over immigrants",
+        "high": "strongly believes South Africans should be prioritised over immigrants for jobs and services",
+    },
+    # Product-mode dimensions.
+    "pays_for_quality": {
+        "no": "is not willing to pay more for better services — cost comes first",
+        "mixed": "might pay more for better services, but only if convinced it's worth it",
+        "yes": "is willing to pay more for a service that genuinely works better",
+    },
+    "business_trust": {
+        "low": "assumes most companies and business executives are corrupt or out for themselves",
+        "mid": "is cautious about companies but not wholly cynical",
+        "high": "is relatively willing to trust reputable businesses",
+    },
+    "social_trust": {
+        "low": "trusts other people very little — keeps their guard up with strangers and neighbours",
+        "mid": "extends some trust to people they know, less to strangers",
+        "high": "is fairly trusting of other people, including neighbours and strangers",
+    },
+}
+
+# How a measured circumstance reads as a fixed lived fact the texture must write AROUND
+# (never contradict, never restate as a number). Only fields we carry appear; a field the
+# donor didn't answer simply isn't constrained. Kept plain-language for the same reason as
+# _STANCE_GLOSS — the model gets a constraint, not a code to mis-read.
+_CIRCUMSTANCE_GLOSS = {
+    "lived_poverty": {
+        "none": "has not gone without basic necessities this year",
+        "low": "has occasionally gone without a basic necessity this year",
+        "moderate": "has several times gone without food, water, or cash this year",
+        "high": "frequently goes without basic necessities like food, water, or cash",
+    },
+    "owns_vehicle": {
+        "none": "has no car or vehicle in the household",
+        "household": "has access to a vehicle someone else in the household owns",
+        "own": "personally owns a car or vehicle",
+    },
+    "owns_computer": {
+        "none": "has no computer at home",
+        "household": "shares a computer owned by someone else in the household",
+        "own": "personally owns a computer",
+    },
+    "owns_bank_account": {
+        "none": "has no bank account",
+        "household": "relies on another household member's bank account",
+        "own": "has their own bank account",
+    },
+    "internet_use": {
+        "never": "never uses the internet",
+        "rarely": "uses the internet less than once a month",
+        "monthly": "uses the internet a few times a month",
+        "weekly": "uses the internet a few times a week",
+        "daily": "uses the internet every day, mostly on a mobile phone",
+    },
+    "electricity_reliability": {
+        "never": "has no reliable mains electricity",
+        "occasional": "has mains electricity only occasionally",
+        "half": "has mains electricity about half the time",
+        "most": "has mains electricity most of the time, with regular interruptions",
+        "always": "has reliable mains electricity",
+    },
+    "money_decision": {
+        "self": "decides how their household's money is spent themselves",
+        "joint": "decides household spending jointly with their partner or family",
+        "other": "does not control how the household's money is spent — someone else decides",
+    },
 }
 
 
@@ -153,6 +237,17 @@ def _attitude_constraints(skeleton: Dict) -> List[str]:
     return lines
 
 
+def _circumstance_constraints(skeleton: Dict) -> List[str]:
+    """Plain-language lived-fact lines from the fused `circumstances` block, for the
+    prompt. Empty on un-fused skeletons or ones with no circumstances attached."""
+    lines = []
+    for c in (skeleton.get("circumstances") or []):
+        gloss = _CIRCUMSTANCE_GLOSS.get(c.get("field"), {}).get(c.get("value"))
+        if gloss:
+            lines.append(f"- This person {gloss}.")
+    return lines
+
+
 def _prompt(skeleton: Dict) -> str:
     facts = {k: skeleton.get(k) for k in FROZEN_FIELDS if skeleton.get(k) is not None}
     attitude_lines = _attitude_constraints(skeleton)
@@ -161,6 +256,13 @@ def _prompt(skeleton: Dict) -> str:
         "write MUST express these; do NOT write a person who feels the opposite, and do "
         "NOT restate them as new fields):\n" + "\n".join(attitude_lines) + "\n"
         if attitude_lines else ""
+    )
+    circumstance_lines = _circumstance_constraints(skeleton)
+    circumstance_block = (
+        "\nFIXED MEASURED CIRCUMSTANCES (real survey facts about this person's material "
+        "life — write AROUND them, keep them true; do NOT contradict them and do NOT "
+        "restate them as numbers or new fields):\n" + "\n".join(circumstance_lines) + "\n"
+        if circumstance_lines else ""
     )
     return f"""Write English-only persona texture for this South African individual.
 
@@ -171,7 +273,7 @@ with exactly these):
 Unit note: fees_band / learner_fee_bands are ANNUAL school-fee amounts (per year);
 monthly_household_income_rand is per month. If the texture mentions fees, it must
 keep them annual — never restate a fee band as a monthly figure.
-{attitude_block}
+{attitude_block}{circumstance_block}
 Produce a JSON object with ONLY these fields:
 - persona: 1-2 sentences on who they are and their situation. Reference a real local
   setting consistent with the province. English only.
