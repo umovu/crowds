@@ -13,6 +13,7 @@ import os
 import json
 import asyncio
 import tempfile
+from collections import Counter
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, List, Optional
@@ -499,12 +500,33 @@ class InterviewService:
         # Build aggregate impact dashboard
         dashboard = self._build_impact_dashboard(results)
 
+        failures = [r for r in results if "error" in r]
+        # Fail LOUDLY when the whole round collapsed. The per-agent fallback returns
+        # "I have no comment on that." on any exception, so a total LLM outage (expired
+        # key, blown quota, bad base_url) otherwise renders as a full, plausible-looking
+        # panel of non-answers with no error anywhere — users have read that as
+        # "the personas had nothing to say" instead of "nothing ran".
+        if results and len(failures) == len(results):
+            reasons = Counter(str(r.get("error", ""))[:160] for r in failures)
+            top = reasons.most_common(1)[0][0] if reasons else "unknown"
+            logger.error(
+                "Impact interview round FAILED COMPLETELY: all %d interviews errored. "
+                "Most common cause: %s", len(results), top,
+            )
+
         output = {
             "simulation_id": self.simulation_id,
             "original_question": question,
             "total_interviewed": len(results),
-            "successful": len([r for r in results if "error" not in r]),
-            "failed": len([r for r in results if "error" in r]),
+            "successful": len(results) - len(failures),
+            "failed": len(failures),
+            # Explicit signal for callers/UI: every interview failed, so the responses
+            # below are fallbacks, not opinions. Absent on a healthy round.
+            **({"all_failed": True,
+                "failure_reason": Counter(
+                    str(r.get("error", ""))[:160] for r in failures
+                ).most_common(1)[0][0]}
+               if results and len(failures) == len(results) else {}),
             "question_archetype": reframer.detect_archetype(question),
             "impact_dashboard": dashboard,
             "results": results,
