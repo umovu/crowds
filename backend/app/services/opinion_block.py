@@ -623,15 +623,19 @@ class OpinionCaptureSkill:
         # In PRODUCT mode the founder's pitch IS the subject — anchor on it directly
         # so "stay on topic" points at the actual product, not the document's first
         # sentence or a random personal interest.
-        interested_topics = agent.init_state.get("interested_topics", []) if hasattr(agent, 'init_state') else []
+        # NOTE: interested_topics is deliberately NOT a fallback here. It used to be,
+        # and that was the off-topic-drift bug in its worst form: topic_hint feeds the
+        # "STAY ON THIS SCENARIO" rule below, so a missing scenario didn't merely nudge
+        # an agent toward a personal interest — it ORDERED the whole room to stay on one
+        # randomly chosen personal topic (ask about a school policy, get told about
+        # water, insistently). interested_topics is also LLM-invented at texture time and
+        # highly repetitive across the library, so it was never a good anchor. When no
+        # scenario can be recovered, a neutral anchor is the honest answer.
         pitch_topic = (self._pitch.get("what_it_is") or "").strip() if self._mode == "product" else ""
         if pitch_topic:
             topic_hint = pitch_topic
         else:
-            sim_topic = self._extract_simulation_topic(initial_prompt)
-            topic_hint = sim_topic if sim_topic else (
-                random.choice(interested_topics) if interested_topics else "the current situation"
-            )
+            topic_hint = self._extract_simulation_topic(initial_prompt) or "the current situation"
 
         # Anti-drift rule. Product mode pins every reaction to the founder's pitch
         # — but objections (cost, trust, load-shedding, fit) are still allowed AS
