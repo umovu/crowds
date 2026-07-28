@@ -81,6 +81,37 @@ async function signOut() {
   if (error) throw error
 }
 
+// Waitlist: an account only reaches the app once someone flips `approved` in
+// the Supabase `profiles` table (RLS lets a user read their own row). Checked
+// once per page load — the API interceptor catches any later change via the
+// backend's 403 "waitlist".
+//
+// Fails OPEN: if the lookup errors we let the user through rather than
+// stranding an approved user on the waitlist page. The backend gate is the
+// real enforcement; this check only avoids showing a dead-looking app.
+let approvedCache = null
+
+async function isApproved() {
+  if (AUTH_DISABLED) return true
+  if (approvedCache !== null) return approvedCache
+  const userId = session.value?.user?.id
+  if (!userId) return true
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('approved')
+      .eq('id', userId)
+      .maybeSingle()
+    if (error) throw error
+    // No row yet (trigger hasn't fired) = still pending.
+    approvedCache = !!(data && data.approved)
+  } catch (e) {
+    console.warn('Approval check failed, allowing through:', e?.message || e)
+    approvedCache = true
+  }
+  return approvedCache
+}
+
 // Current access token (JWT) for attaching to backend API calls.
 async function getAccessToken() {
   if (AUTH_DISABLED) return null // backend AUTH_DISABLED accepts tokenless requests
@@ -99,6 +130,7 @@ export function useAuth() {
     signUpWithPassword,
     signInWithMagicLink,
     signOut,
-    getAccessToken
+    getAccessToken,
+    isApproved
   }
 }

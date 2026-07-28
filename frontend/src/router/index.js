@@ -96,7 +96,7 @@ router.beforeEach(async (to) => {
     return { path: '/auth/callback', query: to.query }
   }
 
-  const { initAuth, isAuthenticated } = useAuth()
+  const { initAuth, isAuthenticated, isApproved } = useAuth()
   await initAuth()
 
   if (to.meta.public) return true
@@ -105,6 +105,13 @@ router.beforeEach(async (to) => {
     window.location.href = to.path === '/'
       ? '/landing.html'
       : `/auth.html?next=${encodeURIComponent(to.fullPath)}`
+    return false
+  }
+
+  // Signed in but still on the waitlist: the backend would 403 every call, so
+  // send them to the waitlist page instead of an app that can't load anything.
+  if (!(await isApproved())) {
+    window.location.href = '/waitlist.html'
     return false
   }
   return true

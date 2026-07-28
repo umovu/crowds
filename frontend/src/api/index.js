@@ -89,6 +89,16 @@ service.interceptors.response.use(
       return Promise.reject(error)
     }
 
+    // 403 + code "waitlist" = signed in, but the account hasn't been approved
+    // yet. Send them to the waitlist page rather than showing a broken app.
+    if (error.response?.data?.code === 'waitlist') {
+      if (typeof window !== 'undefined' &&
+          !window.location.pathname.startsWith('/waitlist.html')) {
+        window.location.assign('/waitlist.html')
+      }
+      return Promise.reject(error)
+    }
+
     // 401 = token missing/expired/invalid. Before nuking the session (which
     // would drop the user's whole view on a mere token blip after a refresh),
     // try refreshing the session once and replaying the request. Only if that
