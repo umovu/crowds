@@ -149,6 +149,9 @@ def _log_auth_config(logger):
         return
     logger.info("Auth: SUPABASE_URL = %s | SUPABASE_JWT_SECRET set = %s",
                 url or "(UNSET!)", has_secret)
+    from .approval import waitlist_enabled
+    logger.info("Auth: waitlist gate = %s (approve users in the profiles table)",
+                "ON" if waitlist_enabled() else "off")
     if not url and not has_secret:
         logger.error(
             "Auth: neither SUPABASE_URL nor SUPABASE_JWT_SECRET is set -> every "
@@ -215,6 +218,7 @@ def create_app(config_class=Config):
     # Auth guard: every /api/* request must carry a valid Supabase JWT.
     # Non-/api routes (e.g. /health) and CORS preflight (OPTIONS) are exempt.
     from .auth import verify_request
+    from .approval import verify_approved
 
     @app.before_request
     def require_supabase_auth():
@@ -226,7 +230,15 @@ def create_app(config_class=Config):
         # HMAC signature inside the handler instead.
         if request.path == '/api/billing/webhook':
             return None
-        return verify_request()
+        failed = verify_request()
+        if failed is not None:
+            return failed
+        # Waitlist: a verified-but-unapproved account gets 403 everywhere except
+        # the account status route, which is what tells the UI to show the
+        # waitlist screen.
+        if request.path.startswith('/api/account/'):
+            return None
+        return verify_approved()
 
     # Request logging middleware
     @app.before_request
@@ -243,7 +255,8 @@ def create_app(config_class=Config):
         return response
 
     # Register blueprints
-    from .api import graph_bp, simulation_bp, report_bp, config_bp, research_bp, panel_bp, billing_bp
+    from .api import (graph_bp, simulation_bp, report_bp, config_bp, research_bp,
+                      panel_bp, billing_bp, account_bp)
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
@@ -251,6 +264,7 @@ def create_app(config_class=Config):
     app.register_blueprint(research_bp, url_prefix='/api/research')
     app.register_blueprint(panel_bp, url_prefix='/api/panel')
     app.register_blueprint(billing_bp, url_prefix='/api/billing')
+    app.register_blueprint(account_bp, url_prefix='/api/account')
 
     # Health check
     @app.route('/health')

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crowds — You're on the waitlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #1E9E5A;
+    --accent-deep: #178048;
+    --accent-soft: #F0FAF4;
+    --ink: #141414;
+    --ink-2: #4a4a4a;
+    --ink-3: #888;
+    --line: #E8E8E8;
+    --bg: #ffffff;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --err: #C0392B;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: linear-gradient(160deg, #f8fdfb 0%, #eef9f2 100%);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 20px;
+  }
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(20,20,20,0.06);
+    max-width: 480px; width: 100%;
+    padding: 40px;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 11px;
+    text-decoration: none; margin-bottom: 28px;
+  }
+  .brand-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
+    color: #fff;
+    font-family: var(--mono); font-weight: 800; font-size: 1.2rem; line-height: 1;
+    box-shadow: 0 2px 8px rgba(30,158,90,0.30);
+  }
+  .brand-word {
+    font-family: var(--mono); font-weight: 800; font-size: 1.25rem;
+    letter-spacing: -0.4px; color: var(--ink);
+  }
+  .brand-word .accent { color: var(--accent); }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.6px;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--accent-deep); background: var(--accent-soft);
+    border-radius: 999px; padding: 5px 11px; margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 1.6rem; font-weight: 600; letter-spacing: -0.6px;
+    line-height: 1.2; margin: 0 0 12px;
+  }
+  p { color: var(--ink-2); margin: 0 0 14px; font-size: 0.96rem; }
+  .email {
+    font-family: var(--mono); font-size: 0.85rem;
+    background: #FAFAFA; border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px 12px; margin: 4px 0 22px;
+    word-break: break-all; color: var(--ink);
+  }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  button {
+    font-family: var(--sans); font-size: 0.92rem; font-weight: 600;
+    border-radius: 10px; padding: 11px 18px; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; color: var(--ink-2);
+  }
+  button.primary {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  button.primary:hover { background: var(--accent-deep); }
+  button:disabled { opacity: 0.55; cursor: default; }
+  .msg { font-size: 0.88rem; margin-top: 16px; min-height: 20px; }
+  .msg.err { color: var(--err); }
+  .msg.ok { color: var(--accent-deep); }
+  .foot {
+    margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: 0.84rem; color: var(--ink-3);
+  }
+  .foot a { color: var(--ink-2); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <a class="brand" href="/landing.html">
+      <span class="brand-mark">C</span>
+      <span class="brand-word">crowd<span class="accent">s</span></span>
+    </a>
+
+    <div class="pill">Waitlist</div>
+    <h1>You're on the list</h1>
+    <p>
+      Crowds is invite-only while we run a closed beta. Your account is created
+      and waiting for approval — we'll email you the moment it's open.
+    </p>
+    <div class="email" id="email">…</div>
+
+    <div class="row">
+      <button class="primary" id="btn-check" type="button">Check again</button>
+      <button id="btn-signout" type="button">Sign out</button>
+    </div>
+    <div class="msg" id="msg"></div>
+
+    <div class="foot">
+      Think you should already have access?
+      <a href="/contact.html">Get in touch</a>.
+    </div>
+  </div>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+
+var msgEl = document.getElementById('msg');
+var emailEl = document.getElementById('email');
+var btnCheck = document.getElementById('btn-check');
+var btnSignout = document.getElementById('btn-signout');
+
+function showMsg(text, kind) {
+  msgEl.textContent = text || '';
+  msgEl.className = 'msg' + (kind ? ' ' + kind : '');
+}
+
+// The approval flag lives in `public.profiles`, readable by the owner under
+// RLS — so this page needs no backend call of its own.
+async function isApproved(userId) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('approved')
+    .eq('id', userId)
+    .maybeSingle();
+  if (error) throw error;
+  return !!(data && data.approved);
+}
+
+async function refresh(interactive) {
+  const { data } = await supabase.auth.getSession();
+  const session = data.session;
+  if (!session) {
+    window.location.replace('/auth.html');
+    return;
+  }
+  emailEl.textContent = session.user.email || session.user.id;
+
+  if (interactive) { btnCheck.disabled = true; showMsg('Checking…'); }
+  try {
+    if (await isApproved(session.user.id)) {
+      showMsg('Approved. Taking you in…', 'ok');
+      window.location.replace('/');
+      return;
+    }
+    if (interactive) showMsg('Not approved yet. We\'ll email you as soon as you are.');
+  } catch (e) {
+    showMsg(e?.message || 'Could not check your status. Try again shortly.', 'err');
+  } finally {
+    btnCheck.disabled = false;
+  }
+}
+
+btnCheck.addEventListener('click', function () { refresh(true); });
+btnSignout.addEventListener('click', async function () {
+  await supabase.auth.signOut();
+  window.location.replace('/landing.html');
+});
+
+refresh(false);
+</script>
+</body>
+</html>

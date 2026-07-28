@@ -725,10 +725,12 @@ import { supabase, callbackUrl } from './supabase-client.js';
         // If email confirmation is on, there's no session yet — tell them to
         // check their inbox. If it's off, a session is returned and we go in.
         if (data.session) {
+          // Access is granted by hand — the app itself shows the waitlist screen
+          // until an admin approves the account.
           showMsg('Account created. Redirecting…', 'ok');
           window.location.href = nextUrl;
         } else {
-          showMsg('Account created — we sent a confirmation link to ' + email + '. Click it to verify your address, then sign in. No email after a minute? Check your spam folder.', 'ok');
+          showMsg('Account created — we sent a confirmation link to ' + email + '. Click it to verify your address, then sign in. Crowds is invite-only right now, so you will join the waitlist and we will email you once you are approved. No email after a minute? Check your spam folder.', 'ok');
           btnSubmit.disabled = false;
           updateSubmitLabel();
         }
