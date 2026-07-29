@@ -230,6 +230,10 @@ def create_app(config_class=Config):
         # HMAC signature inside the handler instead.
         if request.path == '/api/billing/webhook':
             return None
+        # The waitlist request form is the front door for people with no
+        # account at all, so it can't require one.
+        if request.path.startswith('/api/waitlist/'):
+            return None
         failed = verify_request()
         if failed is not None:
             return failed
@@ -256,7 +260,7 @@ def create_app(config_class=Config):
 
     # Register blueprints
     from .api import (graph_bp, simulation_bp, report_bp, config_bp, research_bp,
-                      panel_bp, billing_bp, account_bp)
+                      panel_bp, billing_bp, account_bp, waitlist_bp)
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
@@ -265,6 +269,7 @@ def create_app(config_class=Config):
     app.register_blueprint(panel_bp, url_prefix='/api/panel')
     app.register_blueprint(billing_bp, url_prefix='/api/billing')
     app.register_blueprint(account_bp, url_prefix='/api/account')
+    app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
     # Non-/api on purpose: tapped from a Telegram link with no session, and
     # authenticated by ADMIN_APPROVE_TOKEN in the URL instead of a JWT.
     from .admin import admin_bp
