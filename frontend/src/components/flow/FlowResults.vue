@@ -46,6 +46,14 @@
             {{ statusLabel }}
           </span>
 
+          <!-- Replay the first-time coach marks at any point. -->
+          <template v-if="hasReactions">
+            <div class="step-divider"></div>
+            <button class="run-ctrl" title="Show the tips again" @click="replayCoach">
+              ? How to use
+            </button>
+          </template>
+
           <!-- Live run controls (sim mode only, while the run is alive) -->
           <template v-if="!isPanel && feedLive">
             <div class="step-divider"></div>
@@ -98,6 +106,10 @@
               </button>
             </div>
             <p v-if="!reportBusy && reportMsg" class="report-dl-msg">{{ reportMsg }}</p>
+            <div v-if="showCoach && !isPanel && simulationId" class="coach-mark coach-mark--flush">
+              <span class="coach-dot">⤓</span>
+              <span>Once the run settles, download the full write-up here.</span>
+            </div>
             <div class="spectrum-summary-body">
               <!-- One summary only: the counts read is a live placeholder while
                    the run is in flight; once the LLM synthesis lands it replaces it. -->
@@ -111,6 +123,11 @@
             <div class="sim-feed-head">
               <span>Reactions</span>
               <span class="sim-feed-count">{{ feed.length }} events</span>
+            </div>
+            <div v-if="showCoach" class="coach-mark">
+              <span class="coach-dot">👆</span>
+              <span>Click any reaction to open a private chat with that person.</span>
+              <button class="coach-got" @click="dismissCoach">Got it</button>
             </div>
             <TransitionGroup name="reaction-item" tag="div" class="sim-feed-list">
               <div
@@ -215,7 +232,7 @@
         </div>
 
         <!-- Bottom broadcast bar — speak to the room -->
-        <div v-if="showCoach && isPanel && panelReactions.length" class="coach-mark coach-mark--room">
+        <div v-if="showCoach && hasReactions" class="coach-mark coach-mark--room">
           <span class="coach-dot">💬</span>
           <span>Ask the room to follow up with everyone at once.</span>
         </div>
@@ -461,18 +478,6 @@ const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_chang
 // summaryText; this only adds the "why". Empty when unavailable.
 const llmSummary = ref('')
 
-// First-time coach marks on the results page: show once (per browser) when a
-// panel's reactions first appear, then remember dismissal.
-const COACH_KEY = 'crowds_results_coached_v1'
-const showCoach = ref(false)
-const dismissCoach = () => {
-  showCoach.value = false
-  try { localStorage.setItem(COACH_KEY, '1') } catch (_) { /* ignore */ }
-}
-watch(() => panelReactions.value.length, (n) => {
-  if (n > 0 && isPanel.value && !localStorage.getItem(COACH_KEY)) showCoach.value = true
-}, { immediate: true })
-
 // ── Reaction map: cluster personas into stance columns (deterministic) ───────
 // Buckets follow the STANCES spread (won over → resistant); any stray stance
 // falls into its own column. No LLM, no scoring — holds with the model off.
@@ -573,6 +578,24 @@ const summaryText = computed(() => {
 const feed = ref([])
 const feedLive = ref(true)
 const scrollContainer = ref(null)
+
+// Coach marks on the results page: shown once per browser when the first
+// reactions land (both modes), dismissable, and replayable any time from the
+// "? How to use" button in the header. Declared after `feed` because the
+// immediate watcher reads it on setup.
+const COACH_KEY = 'crowds_results_coached_v1'
+const showCoach = ref(false)
+const hasReactions = computed(() =>
+  isPanel.value ? panelReactions.value.length > 0 : feed.value.length > 0
+)
+const dismissCoach = () => {
+  showCoach.value = false
+  try { localStorage.setItem(COACH_KEY, '1') } catch (_) { /* ignore */ }
+}
+const replayCoach = () => { showCoach.value = true }
+watch(hasReactions, (has) => {
+  if (has && !localStorage.getItem(COACH_KEY)) showCoach.value = true
+}, { immediate: true })
 
 // ── Live run controls (sim mode): pause / resume / stop ─────────────────────
 const paused = ref(false)
@@ -1308,6 +1331,7 @@ onUnmounted(() => {
   font-size: 13px; color: #178048;
 }
 .coach-mark--room { margin: 0 24px 8px; }
+.coach-mark--flush { margin: 8px 0 0; }
 .coach-dot { font-size: 15px; line-height: 1; }
 .coach-got {
   margin-left: auto; padding: 5px 12px; border: none; border-radius: 7px; cursor: pointer;
