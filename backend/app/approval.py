@@ -114,6 +114,70 @@ def invalidate(user_id: str) -> None:
     _cache.pop(user_id, None)
 
 
+def approve(user_id: str) -> bool:
+    """Mark a user approved. Returns False if the write failed."""
+    if not waitlist_enabled() or not user_id:
+        return False
+    try:
+        resp = requests.patch(
+            f"{_supabase_url()}/rest/v1/profiles",
+            params={"id": f"eq.{user_id}"},
+            json={"approved": True},
+            headers={**_rest_headers(), "Prefer": "return=representation"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        ok = bool(resp.json())
+    except Exception as e:
+        logger.warning("Approve failed for %s: %s", user_id, e)
+        return False
+    invalidate(user_id)
+    return ok
+
+
+def get_profile(user_id: str) -> dict:
+    """Fetch a profile row (or {} if missing / unreadable)."""
+    if not waitlist_enabled() or not user_id:
+        return {}
+    try:
+        resp = requests.get(
+            f"{_supabase_url()}/rest/v1/profiles",
+            params={"id": f"eq.{user_id}",
+                    "select": "id,email,full_name,approved,requested_at"},
+            headers=_rest_headers(),
+            timeout=10,
+        )
+        resp.raise_for_status()
+        rows = resp.json()
+        return rows[0] if rows else {}
+    except Exception as e:
+        logger.warning("Profile lookup failed for %s: %s", user_id, e)
+        return {}
+
+
+def claim_notification(user_id: str) -> bool:
+    """Claim the right to send this user's sign-up ping, exactly once.
+
+    Stamps `notified_at` only while it is still null, so two concurrent
+    requests can't both fire a ping — the second one matches no rows.
+    """
+    if not waitlist_enabled() or not user_id:
+        return False
+    try:
+        resp = requests.patch(
+            f"{_supabase_url()}/rest/v1/profiles",
+            params={"id": f"eq.{user_id}", "notified_at": "is.null"},
+            json={"notified_at": "now()"},
+            headers={**_rest_headers(), "Prefer": "return=representation"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        return bool(resp.json())
+    except Exception as e:
+        logger.warning("Could not claim notification for %s: %s", user_id, e)
+        return False
+
+
 def current_user_approved() -> bool:
     user = getattr(g, "user", None) or {}
     meta = user.get("user_metadata") or {}

@@ -14,9 +14,9 @@
    That keeps real keys out of this open-source repo; each deployer supplies
    their own (Vercel env vars in prod, frontend/.env locally). */
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js'
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, API_BASE_URL } from './supabase-config.js'
 
-export { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY }
+export { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, API_BASE_URL }
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {

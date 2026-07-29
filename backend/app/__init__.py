@@ -265,6 +265,10 @@ def create_app(config_class=Config):
     app.register_blueprint(panel_bp, url_prefix='/api/panel')
     app.register_blueprint(billing_bp, url_prefix='/api/billing')
     app.register_blueprint(account_bp, url_prefix='/api/account')
+    # Non-/api on purpose: tapped from a Telegram link with no session, and
+    # authenticated by ADMIN_APPROVE_TOKEN in the URL instead of a JWT.
+    from .admin import admin_bp
+    app.register_blueprint(admin_bp, url_prefix='/admin')
 
     # Health check
     @app.route('/health')

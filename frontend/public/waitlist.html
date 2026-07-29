@@ -126,7 +126,7 @@
   </div>
 
 <script type="module">
-import { supabase } from './supabase-client.js';
+import { supabase, API_BASE_URL } from './supabase-client.js';
 
 var msgEl = document.getElementById('msg');
 var emailEl = document.getElementById('email');
@@ -138,16 +138,29 @@ function showMsg(text, kind) {
   msgEl.className = 'msg' + (kind ? ' ' + kind : '');
 }
 
-// The approval flag lives in `public.profiles`, readable by the owner under
-// RLS — so this page needs no backend call of its own.
-async function isApproved(userId) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('approved')
-    .eq('id', userId)
-    .maybeSingle();
-  if (error) throw error;
-  return !!(data && data.approved);
+// Ask the backend, not Supabase directly: this call is also what fires the
+// operator's "someone is waiting" ping (once per person, server-side).
+async function isApproved(session) {
+  const base = (API_BASE_URL || '').replace(/\/$/, '');
+  try {
+    const res = await fetch(base + '/api/account/status', {
+      headers: { Authorization: 'Bearer ' + session.access_token }
+    });
+    if (!res.ok) throw new Error('status ' + res.status);
+    const body = await res.json();
+    return !!(body && body.data && body.data.approved);
+  } catch (e) {
+    // Backend unreachable — fall back to reading our own profile row, which
+    // RLS allows. Keeps the page honest even if the API is down.
+    console.warn('Falling back to direct profile read:', e?.message || e);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('approved')
+      .eq('id', session.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    return !!(data && data.approved);
+  }
 }
 
 async function refresh(interactive) {
@@ -161,7 +174,7 @@ async function refresh(interactive) {
 
   if (interactive) { btnCheck.disabled = true; showMsg('Checking…'); }
   try {
-    if (await isApproved(session.user.id)) {
+    if (await isApproved(session)) {
       showMsg('Approved. Taking you in…', 'ok');
       window.location.replace('/');
       return;
