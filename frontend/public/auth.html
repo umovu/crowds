@@ -206,17 +206,17 @@
     font-family: var(--mono); font-size: 0.66rem; font-weight: 700;
     letter-spacing: .5px; text-transform: uppercase; color: var(--ink-3);
   }
-  .field input {
+  .field input, .field textarea {
     width: 100%; padding: 11px 14px;
     border: 1px solid var(--line); border-radius: 10px;
     font-family: var(--sans); font-size: 0.92rem; color: var(--ink);
     background: #fff; outline: none; transition: border-color .15s;
   }
-  .field input:focus {
+  .field input:focus, .field textarea:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(30,158,90,0.10);
   }
-  .field input::placeholder { color: #bbb; }
+  .field input::placeholder, .field textarea::placeholder { color: #bbb; }
   .field input.invalid { border-color: var(--err); }
   .field input.invalid:focus { box-shadow: 0 0 0 3px rgba(192,57,43,0.10); }
   .field input.valid { border-color: var(--accent); }
@@ -360,7 +360,7 @@
       <!-- Mode toggle -->
       <div class="auth-toggle">
         <button class="active" id="tab-signin" type="button">Sign in</button>
-        <button id="tab-signup" type="button">Sign up</button>
+        <button id="tab-signup" type="button">Request access</button>
       </div>
 
       <h2 class="auth-title" id="form-title">Welcome back</h2>
@@ -395,6 +395,13 @@
           <label>Email</label>
           <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
           <div class="field-error" id="email-error">Please enter a valid email address.</div>
+        </div>
+
+        <!-- What they want to use it for (request-access only) -->
+        <div class="field" id="note-field" style="display:none">
+          <label>What do you want to use Crowds for? <span style="color:var(--ink-3);font-weight:400">(optional)</span></label>
+          <textarea id="note" rows="3" placeholder="e.g. testing policy announcements for a municipality"
+                    style="font-family:inherit;resize:vertical"></textarea>
         </div>
 
         <div class="field" id="password-field">
@@ -446,11 +453,15 @@
 </div>
 
 <script type="module">
-import { supabase, callbackUrl } from './supabase-client.js';
+import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
 
 (function () {
   // ── State ──────────────────────────────────────────────────────────────
-  var mode = 'signin';        // 'signin' | 'signup'
+  // Crowds is invite-only: nobody can create their own account. The second tab
+  // files an access request (name + email + why) and the operator invites the
+  // ones they want from Supabase. 'signup' is kept as the internal name so old
+  // ?mode=signup links still land on the right tab.
+  var mode = 'signin';        // 'signin' | 'signup' (= request access)
   var emailMode = false;      // email form visible?
   var magic = false;          // magic link mode?
 
@@ -471,6 +482,8 @@ import { supabase, callbackUrl } from './supabase-client.js';
   // New fields
   var nameField = document.getElementById('name-field');
   var nameInput = document.getElementById('name');
+  var noteField = document.getElementById('note-field');
+  var noteInput = document.getElementById('note');
   var confirmField = document.getElementById('confirm-field');
   var confirmInput = document.getElementById('confirm');
   var pwStrength = document.getElementById('pw-strength');
@@ -538,47 +551,63 @@ import { supabase, callbackUrl } from './supabase-client.js';
 
   function updateCopy() {
     if (mode === 'signup') {
-      formTitle.textContent = 'Create your account';
-      formSub.textContent = 'Start simulating public reactions in minutes.';
+      // Request access: no password anywhere — we're not making an account.
+      formTitle.textContent = 'Request access';
+      formSub.textContent = 'Crowds is invite-only while we run a closed beta. Leave your details and we\'ll be in touch.';
       tabSignin.classList.remove('active');
       tabSignup.classList.add('active');
       nameField.style.display = 'flex';
-      confirmField.style.display = 'flex';
-      pwStrength.classList.add('show');
+      noteField.style.display = 'flex';
+      passwordField.style.display = 'none';
+      confirmField.style.display = 'none';
+      pwStrength.classList.remove('show');
+      magicToggle.style.display = 'none';
+      if (!emailMode) btnEmail.click();      // the form IS the page here
+      // Nothing to choose between, so drop the "Continue with email" button
+      // and the "or" rule it separates.
+      btnEmail.style.display = 'none';
+      formDivider.style.display = 'none';
     } else {
       formTitle.textContent = 'Welcome back';
       formSub.textContent = 'Sign in to run simulations and access your reports.';
       tabSignin.classList.add('active');
       tabSignup.classList.remove('active');
       nameField.style.display = 'none';
+      noteField.style.display = 'none';
+      passwordField.style.display = magic ? 'none' : 'flex';
       confirmField.style.display = 'none';
       pwStrength.classList.remove('show');
+      magicToggle.style.display = '';
+      btnEmail.style.display = '';
+      formDivider.style.display = emailMode ? 'flex' : 'none';
     }
     updateSubmitLabel();
-    passwordInput.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+    passwordInput.autocomplete = 'current-password';
     validate();
   }
 
   function updateSubmitLabel() {
-    if (magic) {
+    if (mode === 'signup') {
+      btnSubmitText.textContent = 'Request access';
+    } else if (magic) {
       btnSubmitText.textContent = 'Send magic link';
     } else {
-      btnSubmitText.textContent = mode === 'signup' ? 'Sign up' : 'Sign in';
+      btnSubmitText.textContent = 'Sign in';
     }
   }
 
   function validate() {
     var hasEmail = validEmail(emailInput.value.trim());
-    var s = pwScore(passwordInput.value);
-    var hasPass = mode === 'signup' ? s.score >= 4 : passwordInput.value.length >= 6;
+    var hasPass = passwordInput.value.length >= 6;
     var nameOk = mode !== 'signup' || nameInput.value.trim().length >= 2;
-    var confirmOk = mode !== 'signup' || (confirmInput.value === passwordInput.value && confirmInput.value.length > 0);
-    if (magic) {
+    if (mode === 'signup') {
+      btnSubmit.disabled = !(hasEmail && nameOk);   // no password involved
+    } else if (magic) {
       btnSubmit.disabled = !hasEmail;
     } else {
-      btnSubmit.disabled = !(hasEmail && hasPass && nameOk && confirmOk);
+      btnSubmit.disabled = !(hasEmail && hasPass);
     }
-    return { hasEmail: hasEmail, hasPass: hasPass, nameOk: nameOk, confirmOk: confirmOk };
+    return { hasEmail: hasEmail, hasPass: hasPass, nameOk: nameOk, confirmOk: true };
   }
 
   // ── Mode toggle (Sign in / Sign up) ────────────────────────────────────
@@ -664,7 +693,7 @@ import { supabase, callbackUrl } from './supabase-client.js';
     }
     // Password validity for sign-in (6+) vs sign-up (4/5 strength)
     var s = pwScore(passwordInput.value);
-    var minOk = mode === 'signup' ? s.score >= 4 : passwordInput.value.length >= 6;
+    var minOk = passwordInput.value.length >= 6;
     setFieldError(passwordInput, passwordError, passwordInput.value.length > 0 && !minOk);
     if (minOk) passwordInput.classList.add('valid');
     validate();
@@ -702,6 +731,28 @@ import { supabase, callbackUrl } from './supabase-client.js';
     var password = passwordInput.value;
 
     try {
+      if (mode === 'signup') {
+        // Invite-only: file a request, don't create an account.
+        const base = (API_BASE_URL || '').replace(/\/$/, '');
+        const res = await fetch(base + '/api/waitlist/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            name: nameInput.value.trim(),
+            note: noteInput.value.trim()
+          })
+        });
+        const body = await res.json().catch(function () { return {}; });
+        if (!res.ok || !body.success) {
+          throw new Error((body && body.error) || 'Could not send your request. Please try again.');
+        }
+        showMsg('Thanks. You\'re on the list — we\'ll email ' + email +
+                ' when a spot opens. Nothing else to do for now.', 'ok');
+        emailForm.style.display = 'none';
+        return;
+      }
+
       if (magic) {
         // Magic link → returns through the SPA's /auth/callback.
         const { error } = await supabase.auth.signInWithOtp({
@@ -712,28 +763,6 @@ import { supabase, callbackUrl } from './supabase-client.js';
         showMsg('Sign-in link sent to ' + email + '. Open the email and click the link to finish signing in — it expires in about an hour. No email after a minute? Check your spam folder.', 'ok');
         btnSubmit.disabled = false;
         updateSubmitLabel();
-      } else if (mode === 'signup') {
-        const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: { full_name: nameInput.value.trim() },
-            emailRedirectTo: callbackUrl(nextUrl)
-          }
-        });
-        if (error) throw error;
-        // If email confirmation is on, there's no session yet — tell them to
-        // check their inbox. If it's off, a session is returned and we go in.
-        if (data.session) {
-          // Access is granted by hand — the app itself shows the waitlist screen
-          // until an admin approves the account.
-          showMsg('Account created. Redirecting…', 'ok');
-          window.location.href = nextUrl;
-        } else {
-          showMsg('Account created — we sent a confirmation link to ' + email + '. Click it to verify your address, then sign in. Crowds is invite-only right now, so you will join the waitlist and we will email you once you are approved. No email after a minute? Check your spam folder.', 'ok');
-          btnSubmit.disabled = false;
-          updateSubmitLabel();
-        }
       } else {
         // Sign in — session is set synchronously; carry straight into the app.
         const { error } = await supabase.auth.signInWithPassword({
