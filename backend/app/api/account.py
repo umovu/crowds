@@ -37,17 +37,13 @@ def _ping_operator(user_id: str, email: str, name: str) -> None:
     """Tell the operator a new person is waiting. Best-effort, fires once."""
     if not approval.claim_notification(user_id):
         return
-    lines = [
-        "<b>New Crowds waitlist sign-up</b>",
-        f"Name: {name or '(not given)'}",
-        f"Email: {email or '(unknown)'}",
-    ]
     link = _approve_link(user_id)
+    body = f"{name or '(no name given)'}\n{email or '(unknown email)'}"
     if link:
-        lines.append(f'\n<a href="{link}">Tap to approve</a>')
+        body += "\n\nTap to approve."
     else:
-        lines.append("\nApprove them in the Supabase profiles table.")
-    notify.send_telegram("\n".join(lines))
+        body += "\n\nApprove them in the Supabase profiles table."
+    notify.send_alert("New Crowds waitlist sign-up", body, link)
 
 
 @account_bp.route('/status', methods=['GET'])
