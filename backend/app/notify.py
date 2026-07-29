@@ -2,10 +2,14 @@
 Outbound admin notifications — pings the operator when someone joins the
 waitlist, so a new sign-up doesn't sit unnoticed.
 
-Two channels, both optional, both best-effort. A failed ping must never break
+Three channels, all optional, all best-effort. A failed ping must never break
 the request that triggered it.
 
-ntfy (default, free, no account):
+Discord (free, and the URL is send-only — nobody can read your alerts with it):
+  Server -> channel gear -> Integrations -> Webhooks -> New Webhook -> Copy URL.
+  Put it in DISCORD_WEBHOOK_URL. Leaked? Delete the webhook and make another.
+
+ntfy (free, no account at all):
   1. Install the "ntfy" app (Android / iOS) or open https://ntfy.sh in a browser.
   2. Subscribe to a private, hard-to-guess topic name.
   3. Set NTFY_TOPIC to that same name on the backend.
@@ -17,6 +21,7 @@ Telegram (alternative; needs a phone number to register an account):
   https://api.telegram.org/bot<TOKEN>/getUpdates.
 
 Env:
+  DISCORD_WEBHOOK_URL  channel webhook (enables Discord)
   NTFY_TOPIC           private topic name (enables ntfy)
   NTFY_SERVER          defaults to https://ntfy.sh
   TELEGRAM_BOT_TOKEN   from @BotFather
@@ -34,6 +39,10 @@ logger = get_logger("fub.notify")
 _NTFY_DEFAULT_SERVER = "https://ntfy.sh"
 
 
+def discord_enabled() -> bool:
+    return bool(os.environ.get("DISCORD_WEBHOOK_URL"))
+
+
 def ntfy_enabled() -> bool:
     return bool(os.environ.get("NTFY_TOPIC"))
 
@@ -44,7 +53,27 @@ def telegram_enabled() -> bool:
 
 
 def notify_enabled() -> bool:
-    return ntfy_enabled() or telegram_enabled()
+    return discord_enabled() or ntfy_enabled() or telegram_enabled()
+
+
+def send_discord(title: str, body: str, link: str = "") -> bool:
+    """Post to a Discord channel webhook. Returns True if it went out; never raises."""
+    if not discord_enabled():
+        return False
+    text = f"**{title}**\n{body}"
+    if link:
+        text += f"\n{link}"
+    try:
+        resp = requests.post(
+            os.environ["DISCORD_WEBHOOK_URL"],
+            json={"content": text, "allowed_mentions": {"parse": []}},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        return True
+    except Exception as e:
+        logger.warning("Discord ping failed: %s", e)
+        return False
 
 
 def send_ntfy(title: str, body: str, link: str = "") -> bool:
@@ -101,7 +130,8 @@ def send_alert(title: str, body: str, link: str = "") -> bool:
     if not notify_enabled():
         logger.info("No notification channel configured — skipping: %s", title)
         return False
-    sent = send_ntfy(title, body, link)
+    sent = send_discord(title, body, link)
+    sent = send_ntfy(title, body, link) or sent
     if telegram_enabled():
         text = f"<b>{title}</b>\n{body}"
         if link:
