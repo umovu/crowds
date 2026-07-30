@@ -744,7 +744,10 @@ const submitPanel = async () => {
     const res = await createSession({
       pitch: q,
       n: panelSize.value,
-      segments: selectedSegments.value
+      segments: selectedSegments.value,
+      // Marks the pitch as a poster: the cast then meets it mid-scroll and gets
+      // asked poster questions instead of pitch questions.
+      ...(posterId.value ? { poster_id: posterId.value } : {})
     })
     const sessionId = res.data?.session_id
     if (!sessionId) throw new Error('No session id returned')
