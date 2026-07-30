@@ -102,13 +102,14 @@ def _reframe(**kwargs):
 
 # ── feed framing (panel_service.frame_pitch) ──────────────────────────────
 
-def test_poster_arrives_mid_scroll_with_no_obligation():
+def test_poster_arrives_mid_scroll():
     framed = panel.frame_pitch(BRIEF, "product", poster=True)
     low = framed.lower()
     assert "scrolling" in low
     assert "feed" in low
-    # No obligation to engage: the framing must say nobody is asking them.
-    assert "nobody" in low
+    # The situation is a feed, but the cast is still asked how it lands — the
+    # run exists to learn that, so the framing must not licence a non-answer.
+    assert "how it lands" in low
     # The brief itself still reaches the cast verbatim.
     assert "SAVE R500, GET R7 000 BACK" in framed
 
@@ -149,11 +150,14 @@ def test_poster_questions_are_sourced_from_poster_service():
         assert q not in src
 
 
-def test_scrolling_past_is_a_legal_answer():
+def test_the_cast_must_answer_rather_than_opt_out():
+    """The panel exists to tell the founder how the poster lands. An earlier
+    version let a persona reply "I'd just keep scrolling" and stop there —
+    honest to real behaviour, useless as a test result."""
     out = _reframe(mode="product", poster=True).lower()
-    assert "keep scrolling" in out
-    # And it must not be treated as a non-answer needing padding.
-    assert "real answer" in out
+    assert "answer all four" in out
+    assert "how it lands" in out
+    assert "keep scrolling" not in out
 
 
 def test_poster_does_not_get_the_product_reaction_wording():

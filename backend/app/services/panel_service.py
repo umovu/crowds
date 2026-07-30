@@ -816,20 +816,19 @@ def frame_pitch(pitch: str, mode: str, poster: bool = False) -> str:
     Product mode uses founder framing — describing the product, asking for an
     honest reaction. Never a buy solicitation (product honesty rule). LLM-free.
 
-    A poster gets FEED framing instead. Founder framing ("I'm putting this in
-    front of you") hands the poster over and so grants it attention for free —
-    but attention is the main thing a poster is being tested for, so the framing
-    must not give it away. A poster is met mid-scroll, with no obligation to
-    engage, and that is what this says. The questions asked on top of it live in
-    ImpactReframer (Layer 4).
+    A poster gets FEED framing instead — it is met while scrolling, not handed
+    over by a founder. That is the situation the poster has to survive, so it is
+    the situation we put the cast in. What the framing does NOT do is licence a
+    non-answer: the point of the run is to learn how the poster lands, so the
+    cast still says how it landed. The questions live in ImpactReframer (Layer 4).
     """
     text = (pitch or "").strip()
     if poster:
         return (
             "You were scrolling on your phone and this came past you in your feed:\n"
             f"{text}\n"
-            "Nobody handed it to you and nobody is asking you for feedback. It is "
-            "just something that went by."
+            "Take it the way you would take any post that goes by, then say how "
+            "it lands with you."
         )
     if mode != "product":
         return text
