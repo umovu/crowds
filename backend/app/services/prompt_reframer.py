@@ -381,9 +381,8 @@ class ImpactReframer:
             lines.extend(f"  - {q}" for q in POSTER_QUESTIONS)
             lines.append("")
             lines.append(
-                "If you would just keep scrolling, say that plainly and say why. "
-                "That is a real answer and it does not need padding out. Do not "
-                "pretend to study it more closely than you would."
+                "Answer all four in your own words. Do not pretend to study it "
+                "more closely than you would, but do say how it lands with you."
             )
         elif mode == "product":
             # Open question, no response choreography: the old 3-beat wording
