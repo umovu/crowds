@@ -18,7 +18,7 @@ Example
 import json
 import logging
 import os
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import tiktoken
 
@@ -61,11 +61,16 @@ _DEFAULT_PRICING: Dict[str, Tuple[float, float]] = {
 }
 
 
-def _get_pricing(model_name: str) -> Tuple[float, float]:
-    """Return (prompt_price_per_1m, completion_price_per_1m)."""
+def _get_pricing(model_name: str, price_prefix: str = "LLM") -> Tuple[float, float]:
+    """
+    Return (prompt_price_per_1m, completion_price_per_1m).
+
+    `price_prefix` selects which env pair to read, so a separate tier (e.g.
+    VISION_PRICE_*) can be priced without touching the research tier.
+    """
     # Allow global override via env
-    env_prompt = os.environ.get("LLM_PRICE_PROMPT_PER_1M")
-    env_completion = os.environ.get("LLM_PRICE_COMPLETION_PER_1M")
+    env_prompt = os.environ.get(f"{price_prefix}_PRICE_PROMPT_PER_1M")
+    env_completion = os.environ.get(f"{price_prefix}_PRICE_COMPLETION_PER_1M")
     if env_prompt is not None and env_completion is not None:
         try:
             return (float(env_prompt), float(env_completion))
@@ -88,7 +93,7 @@ def _get_pricing(model_name: str) -> Tuple[float, float]:
             return price
 
     # Default fallback (cheap local model assumption)
-    logger.warning(f"No pricing found for '{model_name}' — assuming $0.  Set LLM_PRICE_PROMPT_PER_1M and LLM_PRICE_COMPLETION_PER_1M to override.")
+    logger.warning(f"No pricing found for '{model_name}' — assuming $0.  Set {price_prefix}_PRICE_PROMPT_PER_1M and {price_prefix}_PRICE_COMPLETION_PER_1M to override.")
     return (0.0, 0.0)
 
 
@@ -102,10 +107,17 @@ class TokenCounter:
         The model identifier (e.g. ``deepseek-chat``, ``gpt-4o``).
     """
 
-    def __init__(self, model_name: Optional[str] = None):
+    # Flat per-image prompt-token estimate. Real cost depends on the provider's
+    # tiling of the image; this keeps reported spend in the right ballpark
+    # without decoding the base64.
+    IMAGE_TOKEN_ESTIMATE = 1024
+
+    def __init__(self, model_name: Optional[str] = None, price_prefix: str = "LLM"):
         self.model_name = model_name or os.environ.get("LLM_MODEL_NAME", "unknown")
         self._encoding = self._get_encoding(self.model_name)
-        self._prompt_price_1m, self._completion_price_1m = _get_pricing(self.model_name)
+        self._prompt_price_1m, self._completion_price_1m = _get_pricing(
+            self.model_name, price_prefix
+        )
 
     # ------------------------------------------------------------------
     # Encoding
@@ -147,7 +159,7 @@ class TokenCounter:
             return 0
         return len(self._encoding.encode(text))
 
-    def count_messages(self, messages: List[Dict[str, str]]) -> int:
+    def count_messages(self, messages: List[Dict[str, Any]]) -> int:
         """
         Count tokens in an OpenAI-style message list.
 
@@ -165,6 +177,18 @@ class TokenCounter:
             num_tokens += tokens_per_message
             for key, value in message.items():
                 if value is None:
+                    continue
+                if isinstance(value, list):
+                    # Multimodal content: a list of {"type": "text"|"image_url"}
+                    # parts. Encoding the raw base64 of an image would be both
+                    # slow and wildly wrong, so count text and estimate images.
+                    for part in value:
+                        if not isinstance(part, dict):
+                            num_tokens += len(self._encoding.encode(str(part)))
+                        elif part.get("type") == "text":
+                            num_tokens += len(self._encoding.encode(part.get("text") or ""))
+                        else:
+                            num_tokens += self.IMAGE_TOKEN_ESTIMATE
                     continue
                 num_tokens += len(self._encoding.encode(str(value)))
                 if key == "name":
@@ -198,7 +222,7 @@ class TokenCounter:
 
     def count_and_estimate(
         self,
-        messages: List[Dict[str, str]],
+        messages: List[Dict[str, Any]],
         completion_text: str,
     ) -> Dict[str, any]:
         """One-shot count + estimate."""
@@ -231,7 +255,7 @@ def quick_count(text: str) -> int:
     return get_default_counter().count_text(text)
 
 
-def quick_count_messages(messages: List[Dict[str, str]]) -> int:
+def quick_count_messages(messages: List[Dict[str, Any]]) -> int:
     return get_default_counter().count_messages(messages)
 
 

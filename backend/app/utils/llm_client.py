@@ -22,7 +22,8 @@ class LLMClient:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         model: Optional[str] = None,
-        timeout: float = 300.0
+        timeout: float = 300.0,
+        price_prefix: str = "LLM",
     ):
         self.api_key = api_key or Config.LLM_API_KEY
         self.base_url = base_url or Config.LLM_BASE_URL
@@ -47,12 +48,44 @@ class LLMClient:
         self._num_ctx = int(os.environ.get('OLLAMA_NUM_CTX', '8192'))
 
         # Token counting & cost estimation
-        self._token_counter = TokenCounter(self.model)
+        self._token_counter = TokenCounter(self.model, price_prefix=price_prefix)
         self._stats = {
             "calls": 0,
             "prompt_tokens": 0,
             "completion_tokens": 0,
             "estimated_cost_usd": 0.0,
+        }
+
+    @classmethod
+    def for_vision(cls, timeout: float = 600.0) -> "LLMClient":
+        """
+        Client for the vision tier (reads images into text).
+
+        Separate from the research/sim tiers so pointing at a vision model never
+        swaps the model those tiers use.  Longer default timeout: the thinking
+        variants take a while on a dense image.
+        """
+        return cls(
+            api_key=Config.VISION_API_KEY,
+            base_url=Config.VISION_BASE_URL,
+            model=Config.VISION_MODEL,
+            timeout=timeout,
+            price_prefix="VISION",
+        )
+
+    @staticmethod
+    def image_message(prompt: str, image_bytes: bytes, mime_type: str = "image/png",
+                      role: str = "user") -> Dict[str, Any]:
+        """Build one multimodal message: prompt text plus an inline image."""
+        import base64
+        encoded = base64.b64encode(image_bytes).decode("ascii")
+        return {
+            "role": role,
+            "content": [
+                {"type": "text", "text": prompt},
+                {"type": "image_url",
+                 "image_url": {"url": f"data:{mime_type};base64,{encoded}"}},
+            ],
         }
 
     def _is_ollama(self) -> bool:
@@ -61,7 +94,7 @@ class LLMClient:
 
     def chat(
         self,
-        messages: List[Dict[str, str]],
+        messages: List[Dict[str, Any]],
         temperature: float = 0.7,
         max_tokens: int = 4096,
         response_format: Optional[Dict] = None
@@ -96,12 +129,14 @@ class LLMClient:
 
         # Provider-specific extras (e.g. enable_thinking:false for Qwen)
         from ..config import Config
-        extras = Config.llm_extra_body()
+        extras = Config.llm_extra_body(self.model)
         if extras:
             kwargs.setdefault("extra_body", {}).update(extras)
 
         response = self.client.chat.completions.create(**kwargs)
-        content = response.choices[0].message.content
+        # Reasoning models return content=None when the whole budget went to
+        # thinking (usually max_tokens too low) — treat as empty, not a crash.
+        content = response.choices[0].message.content or ""
         # Some models (like MiniMax M2.5) include <think>thinking content in response, need to remove
         content = re.sub(r'<think>[\s\S]*?</think>', '', content).strip()
 
@@ -134,7 +169,7 @@ class LLMClient:
     # Token counting & stats
     # ------------------------------------------------------------------
 
-    def count_tokens(self, messages: List[Dict[str, str]]) -> int:
+    def count_tokens(self, messages: List[Dict[str, Any]]) -> int:
         """Count prompt tokens for a message list."""
         return self._token_counter.count_messages(messages)
 
@@ -151,7 +186,7 @@ class LLMClient:
             "estimated_cost_usd": 0.0,
         }
 
-    def _record_usage(self, messages: List[Dict[str, str]], response_text: str,
+    def _record_usage(self, messages: List[Dict[str, Any]], response_text: str,
                       usage: Optional[Dict[str, int]] = None):
         """Update internal stats after a chat call."""
         if usage:
@@ -179,7 +214,7 @@ class LLMClient:
 
     def chat_json(
         self,
-        messages: List[Dict[str, str]],
+        messages: List[Dict[str, Any]],
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> Dict[str, Any]:
