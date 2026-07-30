@@ -495,7 +495,6 @@ def create_session(
     segments: Optional[List[str]] = None,
     budget_tiers: Optional[List[str]] = None,
     user_id: Optional[str] = None,
-    poster_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
@@ -511,11 +510,6 @@ def create_session(
     product". An affordability FILTER from real data is sanctioned; a "% who
     would buy" score is not, and none is produced. Returns the session metadata
     including the roster summary.
-
-    `poster_id` marks the pitch as an uploaded poster read into text. It changes
-    only how the pitch is presented and what the cast is asked (feed framing +
-    poster questions — see frame_pitch and ImpactReframer); cast selection and
-    economics are identical either way.
     """
     if not (pitch or "").strip():
         raise ValueError("pitch text is required")
@@ -589,9 +583,6 @@ def create_session(
         "mode": mode,
         "panel_session": True,
         "pitch": pitch,
-        # Read back by InterviewService._load_mode, so every round of this
-        # session asks poster questions without the caller re-stating it.
-        "poster": bool(poster_id),
     })
 
     meta = {
@@ -612,8 +603,6 @@ def create_session(
         "archetype_distribution": _count_by(profiles, "actor_archetype"),
         "province_distribution": _count_by(profiles, "province"),
     }
-    if poster_id:
-        meta["poster_id"] = poster_id
     if mode == "product":
         meta["budget_tier_distribution"] = _tier_distribution(profiles)
     if tier_list:
@@ -810,26 +799,13 @@ def latest_round_exchange(session_id: str, agent_id: int) -> Optional[Dict[str, 
     return None
 
 
-def frame_pitch(pitch: str, mode: str, poster: bool = False) -> str:
+def frame_pitch(pitch: str, mode: str) -> str:
     """Wrap the raw pitch text the way it reaches agents.
 
     Product mode uses founder framing — describing the product, asking for an
     honest reaction. Never a buy solicitation (product honesty rule). LLM-free.
-
-    A poster gets FEED framing instead — it is met while scrolling, not handed
-    over by a founder. That is the situation the poster has to survive, so it is
-    the situation we put the cast in. What the framing does NOT do is licence a
-    non-answer: the point of the run is to learn how the poster lands, so the
-    cast still says how it landed. The questions live in ImpactReframer (Layer 4).
     """
     text = (pitch or "").strip()
-    if poster:
-        return (
-            "You were scrolling on your phone and this came past you in your feed:\n"
-            f"{text}\n"
-            "Take it the way you would take any post that goes by, then say how "
-            "it lands with you."
-        )
     if mode != "product":
         return text
     return (

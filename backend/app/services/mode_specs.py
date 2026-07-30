@@ -227,13 +227,7 @@ def disposition(impulse: float, tier: str) -> str:
     return _DISPOSITION_MAP[t][_impulse_band(impulse)]
 
 
-PITCH_COST_CLOSING = (
-    "  Weigh the pitch's cost against these actual figures in your own voice.\n"
-)
-
-
-def _build_real_numbers_block(econ_state: Dict[str, Any],
-                              closing: Optional[str] = None) -> str:
+def _build_real_numbers_block(econ_state: Dict[str, Any]) -> str:
     """Render the persona's OWN real figures (income + school fees) as a prompt
     block, or "" when none are present (non-library personas).
 
@@ -241,12 +235,6 @@ def _build_real_numbers_block(econ_state: Dict[str, Any],
     as fake point precision. Income is shown as an approximate monthly rand
     figure. These are anchors the agent reasons against — it must use these
     rather than invent a cost (the fix for the "two tanks" hallucination).
-
-    `closing` overrides the trailing instruction. It defaults to weighing the
-    pitch's cost, which is right whenever something is being sold — and wrong
-    for a poster in a feed, which asks for a WhatsApp, not a purchase. The
-    figures themselves stay either way: income says whether an offer is even
-    relevant to you.
     """
     lines = []
 
@@ -284,7 +272,7 @@ def _build_real_numbers_block(econ_state: Dict[str, Any],
     return (
         "\n=== YOUR REAL NUMBERS (surveyed — reason against THESE, do not invent figures) ===\n"
         + "\n".join(lines)
-        + "\n" + (closing if closing is not None else PITCH_COST_CLOSING)
+        + "\n  Weigh the pitch's cost against these actual figures in your own voice.\n"
     )
 
 

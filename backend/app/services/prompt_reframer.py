@@ -55,7 +55,6 @@ class ImpactReframer:
         agent_profile: Dict[str, Any],
         mode: str = "policy",
         secondary_lens: Optional[str] = None,
-        poster: bool = False,
     ) -> str:
         """
         Transform a generic user question into a persona-specific impact question.
@@ -76,12 +75,6 @@ class ImpactReframer:
           - lens="policy" on a product primary: appends a civic-impact sub-question.
         The lens is purely additive prompt text + the already-deterministic budget
         block; it never emits a number and never merges wanting with affording.
-
-        poster=True swaps the reaction question for poster questions (comprehension,
-        attention, what feels off, trust) and lets the persona scroll past. Every
-        other layer, the budget block included, is unchanged: income still says
-        whether an offer is even relevant, it is just not what they are asked to
-        weigh. A poster sells nothing, so there is nothing to justify the spend on.
         """
         domain = self._detect_domain(user_question)
         stake = self._find_personal_stake(agent_profile, domain, user_question)
@@ -104,8 +97,8 @@ class ImpactReframer:
         # Layer 3b: fixed budget reality, computed from real persona data. Shown when
         # the product lens is in play — either as the primary mode, or as a secondary
         # lens layered onto a policy-primary converged run.
-        if mode == "product" or secondary_lens == "product" or poster:
-            budget_layer = self._build_budget_reality(agent_profile, poster=poster)
+        if mode == "product" or secondary_lens == "product":
+            budget_layer = self._build_budget_reality(agent_profile)
             if budget_layer:
                 layers.append(f"\n{budget_layer}")
 
@@ -119,8 +112,7 @@ class ImpactReframer:
 
         # Layer 4: Impact Question (reframed), plus any additive secondary lens.
         impact_question = self._build_impact_question(
-            user_question, agent_profile, domain, mode=mode,
-            secondary_lens=secondary_lens, poster=poster,
+            user_question, agent_profile, domain, mode=mode, secondary_lens=secondary_lens
         )
         layers.append(f"\n{impact_question}")
 
@@ -129,8 +121,7 @@ class ImpactReframer:
 
         return "\n".join(layers)
 
-    def _build_budget_reality(self, profile: Dict[str, Any],
-                              poster: bool = False) -> Optional[str]:
+    def _build_budget_reality(self, profile: Dict[str, Any]) -> Optional[str]:
         """Render the persona's computed budget tier as a fixed constraint,
         anchored by their OWN surveyed figures.
 
@@ -141,34 +132,20 @@ class ImpactReframer:
         inventing them — the figures place the persona in an economic position;
         the research context describes how people in that position decide.
         Wanting and affording stay separate.
-
-        `poster` keeps the whole block but drops the spend language from it. The
-        figures still place the persona — a R500/month offer is simply not for a
-        R4,200/month household, and that shapes the reaction — but a poster is
-        not asking anyone to buy, so nothing should ask them to justify a cost.
         """
         tier = profile.get("budget_tier")
         if not tier:
             return None
         from .mode_specs import BUDGET_TIER_GLOSS, _build_real_numbers_block
         gloss = BUDGET_TIER_GLOSS.get(tier, BUDGET_TIER_GLOSS["moderate"])
-        real_numbers = _build_real_numbers_block(
-            {
-                "real_household_income_rand": profile.get("monthly_household_income_rand"),
-                "real_fees_band": profile.get("fees_band"),
-                "real_learner_fee_bands": profile.get("learner_fee_bands"),
-            },
-            closing=(
-                "  These figures are simply your situation. Let them colour whether "
-                "an offer like this is even meant for someone like you.\n"
-                if poster else None
-            ),
-        )
+        real_numbers = _build_real_numbers_block({
+            "real_household_income_rand": profile.get("monthly_household_income_rand"),
+            "real_fees_band": profile.get("fees_band"),
+            "real_learner_fee_bands": profile.get("learner_fee_bands"),
+        })
         block = (
             f"YOUR BUDGET REALITY (fixed — set by your real circumstances): {tier.upper()}. {gloss}\n"
-            + ("Wanting something and being able to afford it are different things."
-               if poster else
-               "You may WANT something and still not be able to justify the spend.")
+            "You may WANT something and still not be able to justify the spend."
         )
         if real_numbers:
             block += (
@@ -339,23 +316,16 @@ class ImpactReframer:
         domain: str,
         mode: str = "policy",
         secondary_lens: Optional[str] = None,
-        poster: bool = False,
     ) -> str:
         """Layer 4: Rewrite the question as a personal impact query.
 
         The primary `mode` chooses the main question. A `secondary_lens` (converged
         runs only) APPENDS a second sub-question — it never replaces the primary.
-        `poster` takes precedence over both: a poster in a feed is a different
-        situation, not a variant of a pitch.
         """
         name = profile.get("name", "You")
 
-        # Extract core event from user question. Never for a poster: the poster's
-        # own words ARE the stimulus, and _extract_event REPLACES the text with
-        # the fragment it matched — so a poster reading "SAVE R500 if you join
-        # before July" would reach the cast as "you join before july", with the
-        # headline, the price and the ask all gone.
-        event = None if poster else self._extract_event(user_question)
+        # Extract core event from user question
+        event = self._extract_event(user_question)
 
         # Construct impact question
         lines = ["QUESTION:", ""]
@@ -366,25 +336,7 @@ class ImpactReframer:
             lines.append(f"{user_question}")
 
         lines.append("")
-        if poster:
-            # A poster fails at being understood long before it fails at being
-            # liked, and it dies on one wrong detail — so the questions are
-            # comprehension, attention, what jars, and trust. Sourced from
-            # poster_service so the wording cannot drift from the API's copy.
-            # Imported here (not at module scope) to keep this module import-light,
-            # matching the mode_specs import in _build_budget_reality.
-            from .poster_service import POSTER_QUESTIONS
-            lines.append(
-                f"You gave it a couple of seconds, {name}, the way you would any "
-                "post. In your own voice, say:"
-            )
-            lines.extend(f"  - {q}" for q in POSTER_QUESTIONS)
-            lines.append("")
-            lines.append(
-                "Answer all four in your own words. Do not pretend to study it "
-                "more closely than you would, but do say how it lands with you."
-            )
-        elif mode == "product":
+        if mode == "product":
             # Open question, no response choreography: the old 3-beat wording
             # ("what works / what puts you off / what would change") made every
             # persona write the same three-slot essay. Structure for reports
@@ -403,10 +355,6 @@ class ImpactReframer:
             )
 
         # Additive secondary lens for converged runs (never replaces the above).
-        # Skipped for a poster: the affordability sub-question asks them to
-        # justify a spend, and a poster in a feed is not asking for one.
-        if poster:
-            return "\n".join(lines)
         if secondary_lens == "product" and mode != "product":
             lines.append("")
             lines.append(
