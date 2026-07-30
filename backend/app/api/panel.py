@@ -17,6 +17,7 @@ from .. import billing
 from ..config import Config
 from ..services import panel_service
 from ..services import mode_detector
+from ..services import poster_service
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger
 
@@ -230,6 +231,58 @@ def pitch(session_id: str):
     except Exception as e:
         logger.error(f"Panel pitch failed for {session_id}: {e}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+
+
+@panel_bp.route('/posters', methods=['POST'])
+def upload_poster():
+    """Upload a poster (multipart, field name "image") and read it into a brief.
+
+    One vision call per poster, here — not once per persona. The returned brief
+    is the `pitch` string the rest of the panel flow already takes, so the cast
+    only ever sees text.
+
+    Pass ?read=0 to store the image without calling the model.
+    """
+    try:
+        upload = request.files.get('image')
+        if upload is None:
+            return jsonify({"success": False, "error": "No file on the request (field name: image)"}), 400
+
+        image_bytes = upload.read()
+        mime = (upload.mimetype or '').lower()
+        record = poster_service.save_poster(image_bytes, mime, upload.filename or '')
+
+        if request.args.get('read', '1') != '0':
+            record = poster_service.read_poster(record["poster_id"])
+
+        return jsonify({"success": True, "data": _poster_payload(record)})
+
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Poster upload failed: {e}")
+        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+
+
+@panel_bp.route('/posters/<poster_id>', methods=['GET'])
+def get_poster(poster_id: str):
+    """The stored poster and its brief, if it has been read."""
+    record = poster_service.get_poster(poster_id)
+    if not record:
+        return jsonify({"success": False, "error": f"Poster {poster_id} not found"}), 404
+    return jsonify({"success": True, "data": _poster_payload(record)})
+
+
+def _poster_payload(record: dict) -> dict:
+    """Public shape — never leaks the on-disk path."""
+    return {
+        "poster_id": record["poster_id"],
+        "filename": record.get("filename"),
+        "bytes": record.get("bytes"),
+        "created_at": record.get("created_at"),
+        "brief": record.get("brief"),
+        "questions": poster_service.POSTER_QUESTIONS,
+    }
 
 
 @panel_bp.route('/sessions/<session_id>/rounds', methods=['GET'])

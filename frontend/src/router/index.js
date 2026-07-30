@@ -7,6 +7,7 @@ import SimulationRunView from '../views/SimulationRunView.vue'
 import ReportView from '../views/ReportView.vue'
 import InteractionView from '../views/InteractionView.vue'
 import AuthCallbackView from '../views/AuthCallbackView.vue'
+import PosterTestView from '../views/PosterTestView.vue'
 import { useAuth } from '../composables/useAuth'
 
 const routes = [
@@ -34,6 +35,12 @@ const routes = [
     path: '/classic',
     name: 'Classic',
     component: Home
+  },
+  {
+    // Poster test: upload a social poster, read it into a text brief.
+    path: '/poster',
+    name: 'PosterTest',
+    component: PosterTestView
   },
   {
     path: '/process/:projectId',

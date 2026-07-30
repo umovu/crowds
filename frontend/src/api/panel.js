@@ -28,3 +28,16 @@ export const listRounds = (sessionId, full = false) =>
 
 export const askAgent = (sessionId, agentId, question) =>
   service.post(`/api/panel/sessions/${sessionId}/agents/${agentId}/ask`, { question })
+
+// Poster upload — one vision call reads the image into a text brief. Pass
+// read=false to store the image without calling the model.
+export const uploadPoster = (file, read = true) => {
+  const form = new FormData()
+  form.append('image', file)
+  return service.post(`/api/panel/posters?read=${read ? 1 : 0}`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+}
+
+export const getPoster = (posterId) =>
+  service.get(`/api/panel/posters/${posterId}`)

@@ -4,6 +4,7 @@ Loads configuration from .env file in project root directory
 """
 
 import os
+from typing import Optional
 from dotenv import load_dotenv
 
 # Load .env file from project root
@@ -43,8 +44,18 @@ class Config:
     LLM_PRICE_PROMPT_PER_1M = os.environ.get('LLM_PRICE_PROMPT_PER_1M')
     LLM_PRICE_COMPLETION_PER_1M = os.environ.get('LLM_PRICE_COMPLETION_PER_1M')
 
+    # Vision tier — reads uploaded images (posters) into text, once per image.
+    # Separate from LLM_* (research) and SIM_LLM_* (runtime) so pointing at a
+    # vision model never swaps the research or simulation model.
+    # Falls back to the research tier when unset.
+    VISION_MODEL = os.environ.get('VISION_MODEL') or LLM_MODEL_NAME
+    VISION_API_KEY = os.environ.get('VISION_API_KEY') or LLM_API_KEY
+    VISION_BASE_URL = os.environ.get('VISION_BASE_URL') or LLM_BASE_URL
+    VISION_PRICE_PROMPT_PER_1M = os.environ.get('VISION_PRICE_PROMPT_PER_1M')
+    VISION_PRICE_COMPLETION_PER_1M = os.environ.get('VISION_PRICE_COMPLETION_PER_1M')
+
     @staticmethod
-    def llm_extra_body() -> dict:
+    def llm_extra_body(model: Optional[str] = None) -> dict:
         """
         Provider-specific extra_body parameters for the configured LLM.
 
@@ -60,9 +71,15 @@ class Config:
         Per-model opt-in: set ENABLE_LLM_THINKING=1 in the environment to
         force-enable thinking for a specific run (e.g. a research call that
         benefits from CoT). Default is OFF — keeps texture fast.
+
+        Pass `model` to decide per client instead of per process. Reasoning-only
+        variants (e.g. qwen3-vl-...-thinking) can't have thinking switched off,
+        so they get {} — sending the flag there either 400s or is ignored.
         """
         want_thinking = os.environ.get('ENABLE_LLM_THINKING', '').lower() in ('1', 'true', 'yes')
-        model = (os.environ.get('LLM_MODEL_NAME') or '').lower()
+        model = (model or os.environ.get('LLM_MODEL_NAME') or '').lower()
+        if 'thinking' in model:
+            return {}
         if 'qwen' in model:
             return {'enable_thinking': want_thinking}
         if 'deepseek' in model:
@@ -114,6 +131,9 @@ class Config:
     # Panel pitch sessions (library-backed casts, no simulation) live apart from
     # sim dirs so simulation listings never pick them up.
     PANEL_SESSION_DATA_DIR = os.path.join(DATA_ROOT, 'uploads', 'panel_sessions')
+
+    # Uploaded posters + the text brief the vision tier reads out of them.
+    POSTER_DATA_DIR = os.path.join(DATA_ROOT, 'uploads', 'posters')
 
     # Coverage simulator configuration — this tool surfaces the RANGE of distinct
     # reactions, not a majority. Convergence is the failure mode. The run stops on

@@ -212,11 +212,28 @@
                   ref="panelInput"
                   v-model="panelPitch"
                   class="simple-prompt-input"
-                  placeholder="What do you want to test? Describe a policy or announcement, or a product and its price — the way you'd explain it to someone. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
+                  :placeholder="promptPlaceholder"
                   @focus="panelFocused = true"
                   @blur="panelFocused = false"
+                  @input="autosizePrompt"
                 ></textarea>
                 <div class="simple-prompt-bar">
+                  <!-- Poster upload: one vision call reads the image into a
+                       text brief, which becomes the pitch above. The cast only
+                       ever sees text. -->
+                  <label class="crowd-btn" :class="{ busy: posterBusy }">
+                    <input
+                      type="file"
+                      class="poster-file"
+                      accept="image/png,image/jpeg,image/webp"
+                      :disabled="posterBusy"
+                      @change="onPosterPick"
+                    />
+                    <span class="crowd-btn-icon">▣</span>
+                    <span>{{ posterBusy ? 'Reading poster…' : 'Upload poster' }}</span>
+                    <span v-if="posterName" class="crowd-btn-summary">{{ posterName }}</span>
+                  </label>
+
                   <button ref="tourCrowd" class="crowd-btn" @click="crowdPickerOpen = true">
                     <span class="crowd-btn-icon">◇</span>
                     <span>Select crowds</span>
@@ -254,8 +271,42 @@
                 </div>
               </div>
 
+              <!-- Reading takes 30-60s. Show a thumbnail, a moving bar, the
+                   stage it is on, and a counting clock, so the wait never looks
+                   like nothing happening. -->
+              <div v-if="posterBusy" class="poster-loading">
+                <img v-if="posterPreview" :src="posterPreview" class="poster-thumb" alt="" />
+                <div class="poster-loading-body">
+                  <div class="poster-loading-top">
+                    <span class="poster-spinner"></span>
+                    <span class="poster-loading-title">Reading your poster</span>
+                    <span class="poster-loading-clock">{{ posterElapsed }}s</span>
+                  </div>
+                  <div class="poster-bar"><span class="poster-bar-fill"></span></div>
+                  <div class="poster-loading-stage">{{ posterStage }}</div>
+                </div>
+              </div>
+
+              <p v-else-if="posterError" class="poster-note error">{{ posterError }}</p>
+
+              <!-- Poster attached. The brief lives here, out of the way, so the
+                   box above stays free for the founder's own question. -->
+              <div v-if="posterBrief" class="poster-card">
+                <div class="poster-card-head">
+                  <img v-if="posterPreview" :src="posterPreview" class="poster-chip" alt="" />
+                  <span v-else class="poster-card-icon">▣</span>
+                  <span class="poster-card-name">{{ posterName }}</span>
+                  <span class="poster-card-tag">read into text</span>
+                  <button class="poster-card-link" @click="briefOpen = !briefOpen">
+                    {{ briefOpen ? 'Hide what it says' : 'See what it says' }}
+                  </button>
+                  <button class="poster-card-x" title="Remove poster" @click="clearPoster">×</button>
+                </div>
+                <pre v-if="briefOpen" class="poster-card-brief">{{ posterBrief }}</pre>
+              </div>
+
               <!-- First-timer examples: click to prefill the prompt -->
-              <div v-if="!panelPitch.trim()" class="ob-examples">
+              <div v-if="!panelPitch.trim() && !posterBrief" class="ob-examples">
                 <span class="ob-examples-label">Try:</span>
                 <button
                   v-for="(ex, i) in EXAMPLES"
@@ -270,14 +321,14 @@
                   <button
                     ref="tourSim"
                     class="pp-sim-btn"
-                    :disabled="!panelPitch.trim() || panelSubmitting"
+                    :disabled="!canSubmit || panelSubmitting"
                     title="Run a full simulation — the deeper, slower process: a population reacts and the reaction spreads over rounds."
                     @click="submitDirectSim"
                   >Run full simulation</button>
                   <button
                     ref="tourRun"
                     class="pp-assemble-btn"
-                    :disabled="!panelPitch.trim() || panelSubmitting"
+                    :disabled="!canSubmit || panelSubmitting"
                     @click="submitPanel"
                   >
                     <span>Assemble panel</span>
@@ -300,7 +351,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
-import { createSession, listSessions, listSegments } from '../../api/panel'
+import { createSession, listSessions, listSegments, uploadPoster } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
@@ -512,7 +563,10 @@ onMounted(() => {
   if (!localStorage.getItem(ONBOARD_KEY)) showWelcome.value = true
   window.addEventListener('resize', updateTourRect)
 })
-onUnmounted(() => window.removeEventListener('resize', updateTourRect))
+onUnmounted(() => {
+  window.removeEventListener('resize', updateTourRect)
+  stopPosterProgress()
+})
 
 // ── New-test state (one input, drives both panel and direct sim) ─────────────
 const panelPitch = ref('')
@@ -521,6 +575,115 @@ const panelInput = ref(null)
 const panelSize = ref(12)
 const sizeOptions = [8, 12, 20]
 const selectedSegments = ref(['everyone'])
+
+// ── Poster upload → pitch text ──────────────────────────────────────────────
+// The vision model reads the image ONCE into a brief, and the brief lands in
+// the box above as ordinary editable text. Personas never see the image.
+const posterBusy = ref(false)
+const posterName = ref('')
+const posterError = ref('')
+const posterBrief = ref('')
+const posterId = ref('')
+const briefOpen = ref(false)
+const posterPreview = ref('')
+const posterElapsed = ref(0)
+
+// Stage captions, shown on a timer. They describe what the read involves, so a
+// long wait reads as progress rather than a hang. They are not a real progress
+// signal — the call is one round trip and returns all at once.
+const POSTER_STAGES = [
+  'Uploading the image…',
+  'Looking at the layout…',
+  'Transcribing every word, including the small print…',
+  'Working out what it claims and what it asks…',
+  'Almost there — writing the brief…',
+]
+const posterStageIndex = ref(0)
+const posterStage = computed(() => POSTER_STAGES[posterStageIndex.value])
+let posterTimer = null
+
+function startPosterProgress () {
+  posterElapsed.value = 0
+  posterStageIndex.value = 0
+  clearInterval(posterTimer)
+  posterTimer = setInterval(() => {
+    posterElapsed.value += 1
+    // Advance a stage roughly every 12 seconds, holding on the last one.
+    const next = Math.floor(posterElapsed.value / 12)
+    posterStageIndex.value = Math.min(next, POSTER_STAGES.length - 1)
+  }, 1000)
+}
+
+function stopPosterProgress () {
+  clearInterval(posterTimer)
+  posterTimer = null
+}
+
+// A long question can outgrow the box. Grow it to fit, up to the CSS
+// max-height, then let it scroll.
+function autosizePrompt () {
+  const el = panelInput.value
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
+
+async function onPosterPick (event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''          // let the same file be picked again
+  if (!file) return
+
+  posterBusy.value = true
+  posterError.value = ''
+  clearPoster()
+  posterPreview.value = URL.createObjectURL(file)
+  startPosterProgress()
+  try {
+    const res = await uploadPoster(file)
+    // The brief is held aside, NOT dropped in the box — the box stays free for
+    // the founder's own question about the poster.
+    posterBrief.value = res.data.brief || ''
+    posterId.value = res.data.poster_id || ''
+    posterName.value = file.name
+    await nextTick()
+    panelInput.value?.focus()
+  } catch (e) {
+    posterError.value = e.message || 'Could not read that poster'
+  } finally {
+    posterBusy.value = false
+    stopPosterProgress()
+  }
+}
+
+function clearPoster () {
+  posterBrief.value = ''
+  posterId.value = ''
+  posterName.value = ''
+  briefOpen.value = false
+  if (posterPreview.value) URL.revokeObjectURL(posterPreview.value)
+  posterPreview.value = ''
+}
+
+// What actually goes to the panel: the poster brief first (what the cast is
+// looking at), then the founder's question. The cast only ever sees text.
+const composedPitch = () => {
+  const question = panelPitch.value.trim()
+  if (!posterBrief.value) return question
+  const parts = ['THE POSTER', posterBrief.value]
+  if (question) parts.push('WHAT THE FOUNDER WANTS TO KNOW', question)
+  return parts.join('\n\n')
+}
+
+// A poster on its own is enough to run — the question is optional.
+const canSubmit = computed(() =>
+  Boolean(panelPitch.value.trim() || posterBrief.value)
+)
+
+// With a poster attached the box is for the founder's question, not the pitch.
+const promptPlaceholder = computed(() => posterBrief.value
+  ? "Ask the room something about your poster. e.g. Would you trust this? What would stop you? Leave it blank to just get their reactions."
+  : "What do you want to test? Describe a policy or announcement, or a product and its price — the way you'd explain it to someone. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
+)
 
 // Crowd picker (segments + size live behind a modal, off the home view).
 const crowdPickerOpen = ref(false)
@@ -574,7 +737,7 @@ const panelSubmitting = ref(false)
 // Panel: fast read. Mode (policy/product) is inferred backend-side from the pitch
 // (no toggle); omit `mode` so the server detects it.
 const submitPanel = async () => {
-  const q = panelPitch.value.trim()
+  const q = composedPitch()
   if (!q || panelSubmitting.value) return
   panelSubmitting.value = true
   try {
@@ -620,7 +783,7 @@ const onSpeedOutside = (e) => {
 // Direct sim: the deeper, additional run off the same pitch. No mode toggle —
 // modeIsManual stays false so the backend auto-detects policy/product at /prepare.
 const submitDirectSim = () => {
-  const q = panelPitch.value.trim()
+  const q = composedPitch()
   if (!q || panelSubmitting.value) return
   setPendingUpload([], q, [], false, false)
   setSimPreset(simPreset.value)
@@ -739,7 +902,7 @@ onUnmounted(() => {
 .simple-prompt.focused { border-color: #1E9E5A; box-shadow: 0 2px 12px rgba(30, 158, 90, 0.12); }
 .simple-prompt-input {
   width: 100%; border: none; background: transparent; outline: none; resize: none;
-  min-height: 56px; max-height: 240px;
+  min-height: 56px; max-height: 240px; overflow-y: auto;
   font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
   font-size: 1.05rem; line-height: 1.55; color: #1a1a1a;
 }
@@ -759,6 +922,95 @@ onUnmounted(() => {
 .crowd-btn-summary {
   color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
   padding: 1px 8px; border-radius: 8px; font-size: 0.68rem;
+  max-width: 14ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* The whole pill is the <label>, so the raw input is hidden. */
+.poster-file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.crowd-btn.busy { opacity: 0.6; cursor: default; }
+.poster-note {
+  margin: 10px 0 0; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; color: #777;
+}
+.poster-note.error { color: #99372A; }
+
+/* ── Reading a poster: thumbnail + spinner + moving bar + clock ───────────── */
+.poster-loading {
+  margin-top: 10px; padding: 12px 14px;
+  display: flex; gap: 14px; align-items: center;
+  border: 1px solid #E5E5E5; border-radius: 12px; background: #FAFCFB;
+  font-family: 'JetBrains Mono', monospace;
+}
+.poster-thumb {
+  width: 46px; height: 60px; object-fit: cover; flex: none;
+  border-radius: 6px; border: 1px solid #E5E5E5;
+}
+.poster-loading-body { flex: 1; min-width: 0; }
+.poster-loading-top { display: flex; align-items: center; gap: 9px; }
+.poster-loading-title { font-size: 0.78rem; font-weight: 600; color: #333; }
+.poster-loading-clock { margin-left: auto; font-size: 0.72rem; color: #999; }
+.poster-loading-stage { margin-top: 7px; font-size: 0.72rem; color: #777; }
+
+.poster-spinner {
+  width: 13px; height: 13px; flex: none;
+  border: 2px solid rgba(30, 158, 90, 0.25);
+  border-top-color: #1E9E5A;
+  border-radius: 50%;
+  animation: poster-spin 0.75s linear infinite;
+}
+@keyframes poster-spin { to { transform: rotate(360deg); } }
+
+/* Indeterminate bar — the call returns all at once, so it sweeps rather than
+   pretending to measure real progress. */
+.poster-bar {
+  margin-top: 9px; height: 3px; border-radius: 999px;
+  background: #EDEFEE; overflow: hidden;
+}
+.poster-bar-fill {
+  display: block; width: 38%; height: 100%; border-radius: 999px;
+  background: #1E9E5A;
+  animation: poster-sweep 1.5s ease-in-out infinite;
+}
+@keyframes poster-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(265%); }
+}
+
+.poster-chip {
+  width: 18px; height: 24px; object-fit: cover; flex: none;
+  border-radius: 4px; border: 1px solid #E5E5E5;
+}
+
+/* ── Attached poster: the brief lives out of the way, collapsed ───────────── */
+.poster-card {
+  margin-top: 10px; padding: 10px 14px;
+  border: 1px solid #E5E5E5; border-radius: 12px; background: #FAFCFB;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;
+}
+.poster-card-head { display: flex; align-items: center; gap: 10px; }
+.poster-card-icon { color: #1E9E5A; }
+.poster-card-name {
+  font-weight: 600; color: #333;
+  max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.poster-card-tag {
+  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  padding: 1px 8px; border-radius: 8px; font-size: 0.68rem;
+}
+.poster-card-link {
+  margin-left: auto; border: none; background: none; cursor: pointer;
+  font-family: inherit; font-size: 0.72rem; color: #777;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.poster-card-link:hover { color: #1E9E5A; }
+.poster-card-x {
+  border: none; background: none; cursor: pointer;
+  font-size: 1.05rem; line-height: 1; color: #999; padding: 0 2px;
+}
+.poster-card-x:hover { color: #99372A; }
+.poster-card-brief {
+  margin: 10px 0 0; padding-top: 10px; border-top: 1px solid #EDEFEE;
+  max-height: 260px; overflow-y: auto;
+  white-space: pre-wrap; font-size: 0.72rem; line-height: 1.6; color: #555;
 }
 
 /* ── Crowd picker modal ───────────────────────────────────────────────────── */
