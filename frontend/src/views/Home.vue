@@ -207,6 +207,18 @@
               </div>
             </div>
 
+            <!-- Worked business-case example — one click fills the box so a new
+                 user can see the shape of a good seed. -->
+            <div v-if="!formData.simulationRequirement.trim()" class="simple-example">
+              <span class="simple-example-label">Example business case:</span>
+              <button
+                type="button"
+                class="simple-example-btn"
+                :disabled="loading || seedLoading"
+                @click="useExampleSeed"
+              >{{ pitchCopy.seedExample }}</button>
+            </div>
+
             <!-- Web-research feedback: error or source list, below the box -->
             <div v-if="seedError" class="simple-ground-error">{{ seedError }}</div>
             <div v-else-if="seedSources.length" class="simple-ground-sources">
@@ -634,7 +646,8 @@ const pitchCopy = computed(() => {
       bullet3: 'Pause and test a price, feature, or pitch change. Compare reactions.',
       modeHint: 'How would a SA market react to your product idea?',
       seedHeader: 'Product Idea',
-      seedPlaceholder: 'Describe the product idea, pitch, or positioning you want to stress-test. What is it? Who is it for? What problem does it solve?'
+      seedPlaceholder: 'Describe the product idea, pitch, or positioning you want to stress-test. What is it? Who is it for? What problem does it solve?',
+      seedExample: 'We are an early-stage startup launching a mobile app that lets South Africans save and invest small amounts, from R50 a month, with no monthly fees. It is aimed at working people in cities who have never invested before. We want to know if they trust an app with their savings, what would stop them signing up, and whether R50 a month feels realistic.'
     }
   }
   return {
@@ -643,9 +656,14 @@ const pitchCopy = computed(() => {
     bullet3: 'Pause and test a policy announcement. Compare trajectories.',
     modeHint: 'How would the public react to your policy or announcement?',
     seedHeader: 'Seed Message',
-    seedPlaceholder: 'Describe the policy, event, or scenario you want to simulate. What are you testing? Who is the audience?'
+    seedPlaceholder: 'Describe the policy, event, or scenario you want to simulate. What are you testing? Who is the audience?',
+    seedExample: 'A national retail chain announces it is closing 40 underperforming stores and moving those jobs to a new online fulfilment centre. Staff are offered relocation or a severance package. We want to know how workers, customers and unions react to the announcement, and which part of the message causes the most backlash.'
   }
 })
+
+const useExampleSeed = () => {
+  formData.value.simulationRequirement = pitchCopy.value.seedExample
+}
 
 onMounted(() => {
   // Simple view is the default and needs the picker data up front.
@@ -1343,6 +1361,37 @@ const startSimulation = async () => {
 .simple-ground:hover:not(:disabled) { border-color: #1E9E5A; color: #1E9E5A; }
 .simple-ground.active { background: #F0FAF4; border-color: #1E9E5A; color: #1E9E5A; }
 .simple-ground:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.simple-example {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.simple-example-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+.simple-example-btn {
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px dashed #D8D8D8;
+  border-radius: 8px;
+  background: #FAFAFA;
+  color: #666;
+  font-family: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.simple-example-btn:hover:not(:disabled) {
+  border-color: #1E9E5A;
+  color: #1E9E5A;
+  background: #F4FBF7;
+}
+.simple-example-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .simple-ground-error {
   margin: 0;
