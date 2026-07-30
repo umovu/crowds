@@ -489,6 +489,7 @@ const tourSim = ref(null)
 
 // Example pitches — click to prefill so a first-timer sees a good input at once.
 const EXAMPLES = [
+  { label: 'R50/mo investing app', text: 'A startup launching a mobile app that lets South Africans invest from R50 a month with no monthly fees, aimed at working people in cities who have never invested before.' },
   { label: 'R99/mo solar lantern', text: 'A R99/month prepaid solar lantern subscription for township households, paid via airtime.' },
   { label: 'New e-toll on the N3', text: 'A new e-toll on the N3 between Durban and Johannesburg at R85 per trip.' },
   { label: 'Free scholar transport', text: 'Free scholar transport for high-school learners in Soweto, funded by the province.' },
