@@ -43,9 +43,6 @@ class InterviewService:
         self.mode = "policy"
         self.converged = False
         self.secondary_lens: Optional[str] = None
-        # Poster sessions ask poster questions (see ImpactReframer). Read from the
-        # session context so every round inherits it without the caller re-stating.
-        self.poster = False
         self._load_mode()
         self._load_profiles()
 
@@ -66,7 +63,6 @@ class InterviewService:
         self.converged = bool(ctx.get("converged"))
         lens = ctx.get("secondary_lens")
         self.secondary_lens = lens if lens in ("policy", "product") else None
-        self.poster = bool(ctx.get("poster"))
 
     def _load_profiles(self):
         """Load agent profiles from simulation directory."""
@@ -464,7 +460,6 @@ class InterviewService:
                     reframed = reframer.reframe(
                         question, profile, mode=self.mode,
                         secondary_lens=self.secondary_lens if self.converged else None,
-                        poster=self.poster,
                     )
                     archetype = reframer.detect_archetype(question)
 

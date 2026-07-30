@@ -76,15 +76,10 @@ def create_session():
             "segment": "unemployed",    // Optional: single-group shorthand
             "province": "Gauteng",      // Optional: province focus
             "seed": 7,                  // Optional: deterministic cast selection
-            "budget_tiers": ["moderate", "loose"],
+            "budget_tiers": ["moderate", "loose"]
                                         // Optional affordability lens: only
                                         // personas whose deterministic budget
                                         // tier (real income data) is in the set
-            "poster_id": "poster_2026..."
-                                        // Optional: the pitch is an uploaded
-                                        // poster read into text. Switches the
-                                        // cast to feed framing + poster
-                                        // questions; cast/economics unchanged.
         }
 
     Session creation is LLM-free: cast selection, grant detection and budget
@@ -119,7 +114,6 @@ def create_session():
             segments=data.get('segments'),
             budget_tiers=data.get('budget_tiers'),
             user_id=billing.current_user_id(),
-            poster_id=data.get('poster_id'),
         )
         # Count this panel against the user's quota (no-op on paid / billing off).
         billing.increment_panel_used(billing.current_user_id())
@@ -196,10 +190,7 @@ def pitch(session_id: str):
         concurrency = max(1, min(int(data.get('concurrency', 6)), 10))
 
         service = _interview_service(session_id)
-        framed = panel_service.frame_pitch(
-            pitch_text, meta.get('mode', 'product'),
-            poster=bool(meta.get('poster_id')),
-        )
+        framed = panel_service.frame_pitch(pitch_text, meta.get('mode', 'product'))
         result = _run_async(service.batch_impact_interview(
             question=framed,
             agent_ids=agent_ids,
