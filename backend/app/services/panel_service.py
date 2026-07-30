@@ -495,6 +495,7 @@ def create_session(
     segments: Optional[List[str]] = None,
     budget_tiers: Optional[List[str]] = None,
     user_id: Optional[str] = None,
+    poster_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
@@ -510,6 +511,11 @@ def create_session(
     product". An affordability FILTER from real data is sanctioned; a "% who
     would buy" score is not, and none is produced. Returns the session metadata
     including the roster summary.
+
+    `poster_id` marks the pitch as an uploaded poster read into text. It changes
+    only how the pitch is presented and what the cast is asked (feed framing +
+    poster questions — see frame_pitch and ImpactReframer); cast selection and
+    economics are identical either way.
     """
     if not (pitch or "").strip():
         raise ValueError("pitch text is required")
@@ -583,6 +589,9 @@ def create_session(
         "mode": mode,
         "panel_session": True,
         "pitch": pitch,
+        # Read back by InterviewService._load_mode, so every round of this
+        # session asks poster questions without the caller re-stating it.
+        "poster": bool(poster_id),
     })
 
     meta = {
@@ -603,6 +612,8 @@ def create_session(
         "archetype_distribution": _count_by(profiles, "actor_archetype"),
         "province_distribution": _count_by(profiles, "province"),
     }
+    if poster_id:
+        meta["poster_id"] = poster_id
     if mode == "product":
         meta["budget_tier_distribution"] = _tier_distribution(profiles)
     if tier_list:
@@ -799,13 +810,27 @@ def latest_round_exchange(session_id: str, agent_id: int) -> Optional[Dict[str, 
     return None
 
 
-def frame_pitch(pitch: str, mode: str) -> str:
+def frame_pitch(pitch: str, mode: str, poster: bool = False) -> str:
     """Wrap the raw pitch text the way it reaches agents.
 
     Product mode uses founder framing — describing the product, asking for an
     honest reaction. Never a buy solicitation (product honesty rule). LLM-free.
+
+    A poster gets FEED framing instead. Founder framing ("I'm putting this in
+    front of you") hands the poster over and so grants it attention for free —
+    but attention is the main thing a poster is being tested for, so the framing
+    must not give it away. A poster is met mid-scroll, with no obligation to
+    engage, and that is what this says. The questions asked on top of it live in
+    ImpactReframer (Layer 4).
     """
     text = (pitch or "").strip()
+    if poster:
+        return (
+            "You were scrolling on your phone and this came past you in your feed:\n"
+            f"{text}\n"
+            "Nobody handed it to you and nobody is asking you for feedback. It is "
+            "just something that went by."
+        )
     if mode != "product":
         return text
     return (
