@@ -490,8 +490,8 @@ const tourSim = ref(null)
 // Example pitches — click to prefill so a first-timer sees a good input at once.
 const EXAMPLES = [
   { label: 'R50/mo investing app', text: 'A startup launching a mobile app that lets South Africans invest from R50 a month with no monthly fees, aimed at working people in cities who have never invested before.' },
-  { label: 'Policy announcement', text: 'Government announces that from next year the minimum wage rises by 8%, and small businesses get a tax rebate to help cover it. We want to know how workers and small business owners react to the announcement.' },
-  { label: 'A rumour spreading', text: 'A voice note spreads on WhatsApp claiming that a major bank is about to freeze customer accounts and that people should withdraw their money now. The bank has denied it. We want to see who believes it, who passes it on, and what the denial does.' },
+  { label: 'Migration policy', text: 'After the anti-immigrant marches, government announces a national permit verification drive: employers must confirm every worker\'s papers within 90 days, and undocumented workers are offered a route to regularise instead of deportation. We want to know how residents, employers and migrants react, and which part of the message causes the most anger.' },
+  { label: 'A rumour spreading', text: 'A voice note spreads on WhatsApp claiming a local clinic is turning South Africans away to treat foreign nationals first. The health department has denied it. We want to see who believes it, who passes it on, and whether the denial changes anything.' },
 ]
 function useExample(ex) {
   panelPitch.value = ex.text
