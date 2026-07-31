@@ -68,7 +68,9 @@
       </header>
 
       <!-- ── Simulation panel ──────────────────────────────────────────── -->
-      <div class="simulation-panel">
+      <!-- Hidden (not destroyed) while a chat is open: the chat is a full page
+           of its own, but the live feed keeps running behind it. -->
+      <div v-show="!showChat" class="simulation-panel">
 
         <!-- ── Results body — shared layout for both modes ──────────────── -->
         <!-- Sim and panel now read the same way: a scenario banner, the stance
@@ -249,21 +251,19 @@
           </button>
         </div>
       </div>
-    </main>
 
-    <!-- Chat panel — right-side slide-out overlay -->
-    <Transition name="scrim">
-      <div v-if="showChat" class="chat-scrim" @click="closeChat"></div>
-    </Transition>
-    <Transition name="slide-right">
-      <aside v-if="showChat" class="chat-side-panel">
+      <!-- ── Chat page — a full screen of its own, one persona at a time ── -->
+      <section v-if="showChat" class="chat-page">
         <div class="chat-panel-header">
+          <button class="chat-back-btn" @click="closeChat">
+            <span class="flow-back-arrow">←</span>
+            <span>Back to the room</span>
+          </button>
           <div class="chat-panel-title">
             <span class="panel-icon">💬</span>
             <span>Chat with {{ selectedAgentName }}</span>
             <span v-if="selectedAgentArchetype" class="archetype-badge">{{ selectedAgentArchetype }}</span>
           </div>
-          <button class="chat-close-btn" @click="closeChat">×</button>
         </div>
 
         <!-- Who you're talking to + the reaction they already gave, so the
@@ -276,9 +276,13 @@
           </div>
           <span v-if="selectedAgent.stance_after" class="chat-agent-stance">{{ stanceLabel(selectedAgent.stance_after) }}</span>
         </div>
+        <!-- Collapsible so a long reaction doesn't push the chat off-screen. -->
         <div v-if="selectedAgent && selectedAgent.currentReaction" class="chat-agent-reaction">
-          <span class="chat-agent-reaction-label">Their reaction</span>
-          <p class="chat-agent-reaction-text">{{ selectedAgent.currentReaction }}</p>
+          <button class="chat-agent-reaction-toggle" @click="reactionOpen = !reactionOpen">
+            <span class="chat-agent-reaction-label">Their reaction</span>
+            <span class="chat-agent-reaction-caret" :class="{ open: reactionOpen }">▾</span>
+          </button>
+          <p v-if="reactionOpen" class="chat-agent-reaction-text">{{ selectedAgent.currentReaction }}</p>
         </div>
 
         <div class="chat-messages-container">
@@ -322,8 +326,8 @@
             <span v-else class="btn-spinner"></span>
           </button>
         </div>
-      </aside>
-    </Transition>
+      </section>
+    </main>
   </div>
 </template>
 
@@ -349,7 +353,10 @@ const props = defineProps({
   query: { type: String, default: '' },
   mode: { type: String, default: 'sim' },  // 'sim' | 'panel'
   simulationId: { type: String, default: null },
-  sessionId: { type: String, default: null }
+  sessionId: { type: String, default: null },
+  // Preview mode (/demo/chat): seed canned personas + replies and call no API,
+  // so the results and chat screens can be looked at without running a sim.
+  demo: { type: Boolean, default: false }
 })
 const emit = defineEmits(['back'])
 
@@ -517,22 +524,28 @@ const showReactionPop = (a, ev) => {
   left = Math.max(MARGIN, Math.min(left, container.clientWidth - W - MARGIN))
   const avatarTop = rect.top - crect.top + container.scrollTop
   const avatarBottom = rect.bottom - crect.top + container.scrollTop
-  // Direction follows the scrollbar: open DOWN by default; only flip UP when the
-  // area actually scrolls AND is scrolled to the bottom (where down would be
-  // cut). If the content fits (no scroll), that's "at the top" -> open down.
-  const scrollable = container.scrollHeight - container.clientHeight > 8
-  const atBottom = scrollable && container.scrollTop + container.clientHeight >= container.scrollHeight - 8
-  if (!atBottom) {
-    popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px' }
-  } else {
-    // Render hidden at the down spot, measure, then place above the agent.
-    popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px', visibility: 'hidden' }
-    nextTick(() => {
-      const h = popEl.value ? popEl.value.offsetHeight : 0
-      const top = Math.max(container.scrollTop + MARGIN, avatarTop - GAP - h)
-      popStyle.value = { left: left + 'px', top: top + 'px' }
-    })
-  }
+  // Fit it in what you can actually SEE, not in the scroll canvas: on a short
+  // window opening down would run under the bottom "Ask the room" bar. Render
+  // hidden, measure, then pick the side with room; if neither has room, cap the
+  // height so the box scrolls inside itself instead of being cut off.
+  popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px', visibility: 'hidden' }
+  nextTick(() => {
+    if (popAgentId.value !== a.id) return
+    const h = popEl.value ? popEl.value.offsetHeight : 0
+    const viewTop = container.scrollTop + MARGIN
+    const viewBottom = container.scrollTop + container.clientHeight - MARGIN
+    const roomBelow = viewBottom - (avatarBottom + GAP)
+    const roomAbove = (avatarTop - GAP) - viewTop
+    if (h <= roomBelow) {
+      popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px' }
+    } else if (h <= roomAbove) {
+      popStyle.value = { left: left + 'px', top: (avatarTop - GAP - h) + 'px' }
+    } else if (roomAbove > roomBelow) {
+      popStyle.value = { left: left + 'px', top: viewTop + 'px', maxHeight: roomAbove + 'px', overflowY: 'auto' }
+    } else {
+      popStyle.value = { left: left + 'px', top: (avatarBottom + GAP) + 'px', maxHeight: Math.max(roomBelow, 160) + 'px', overflowY: 'auto' }
+    }
+  })
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
 const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
@@ -834,6 +847,7 @@ const loadPanel = async () => {
 
 // ── Chat panel — slide-out, matches Step3Simulation ─────────────────────────
 const showChat = ref(false)
+const reactionOpen = ref(true)
 const chatAgentId = ref(null)
 const chatInput = ref('')
 const chatLoading = ref(false)
@@ -863,6 +877,7 @@ const openChat = (agentId) => {
     const last = [...feed.value].reverse().find(f => f.agent_id === agentId)
     if (a && last) a.currentReaction = last.content
   }
+  reactionOpen.value = true
   showChat.value = true
 }
 const closeChat = () => {
@@ -884,7 +899,10 @@ const sendChatMessage = async () => {
   chatLoading.value = true
   try {
     let reply = ''
-    if (isPanel.value) {
+    if (props.demo) {
+      await new Promise(r => setTimeout(r, 700))
+      reply = DEMO_REPLIES[demoReplyIndex++ % DEMO_REPLIES.length]
+    } else if (isPanel.value) {
       const res = await askAgent(props.sessionId, agentId, text)
       reply = res.data?.response || ''
     } else {
@@ -911,7 +929,13 @@ const broadcast = async () => {
   roomReplying.value = true
   roomReplies.value = []
   try {
-    if (isPanel.value) {
+    if (props.demo) {
+      await new Promise(r => setTimeout(r, 900))
+      roomReplies.value = agents.value.map((a, i) => ({
+        id: `${a.id}-demo-reply`, agentId: a.id, name: a.name, avatarUrl: a.avatarUrl,
+        text: DEMO_REPLIES[i % DEMO_REPLIES.length]
+      }))
+    } else if (isPanel.value) {
       // Ask the room — a sample of the panel answers, shown as room replies.
       const sample = agents.value.slice(0, 6)
       await Promise.all(sample.map(async (a) => {
@@ -939,8 +963,43 @@ const broadcast = async () => {
 // Escape closes chat
 const onKeydown = (e) => { if (e.key === 'Escape' && showChat.value) closeChat() }
 
+// ── Demo fixtures (preview only) ────────────────────────────────────────────
+const DEMO_AGENTS = [
+  { id: 1, name: 'Nomsa Dlamini', archetype: 'retail supervisor', stance: 'concerned',
+    currentReaction: "Honest reaction? Starting from R50 a month is sensible — too many people think investing needs a lump sum. What puts me off is trusting a startup I've never heard of with my money. Who backs it, is my money protected, and how fast can I get that R50 back if something urgent comes up?" },
+  { id: 2, name: 'Sipho Mahlangu', archetype: 'delivery driver', stance: 'support',
+    currentReaction: "R50 I can do. That's one takeaway I skip. If the app is simple and I can pull out when I need to, I'd try it this month." },
+  { id: 3, name: 'Aisha Patel', archetype: 'small business owner', stance: 'neutral',
+    currentReaction: "Low fees sound good, but low fees on a small amount is still small. Show me what R50 a month looks like after three years before I get excited." },
+  { id: 4, name: 'Johan Venter', archetype: 'municipal clerk', stance: 'oppose',
+    currentReaction: "I've been burned before. Until I see an FSCA licence number and a name I recognise on the board, this is a no from me." },
+]
+const DEMO_REPLIES = [
+  "Fair enough. The trial account helps — I could test it without putting real money in.",
+  "That answers the safety part. I'd still want to see it work for a month or two first.",
+  "Okay, if I can withdraw that fast then the risk feels smaller than I thought.",
+  "I hear you, but I'd want to ask my sister who works at a bank before I sign up.",
+]
+let demoReplyIndex = 0
+
+const startDemo = () => {
+  agents.value = DEMO_AGENTS.map(normalizeAgent)
+  agents.value.forEach((a, i) => { a.currentReaction = DEMO_AGENTS[i].currentReaction })
+  feed.value = DEMO_AGENTS.map((a, i) => ({
+    id: 'demo-' + a.id,
+    agent_id: a.id,
+    agent_name: a.name,
+    action_type: i === 0 ? 'post' : 'comment',
+    round: i === 0 ? 1 : 2,
+    content: a.currentReaction,
+    stance_changed: false,
+  }))
+  feedLive.value = false
+}
+
 onMounted(() => {
-  if (isPanel.value) loadPanel()
+  if (props.demo) startDemo()
+  else if (isPanel.value) loadPanel()
   else startSim()
   window.addEventListener('keydown', onKeydown)
 })
@@ -1099,31 +1158,25 @@ onUnmounted(() => {
 .action-btn.primary:hover:not(:disabled) { background: #333; }
 .action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-/* ── Chat panel — right-side slide-out overlay ────────────────────────────── */
-.chat-scrim {
-  position: absolute; inset: 0; z-index: 40;
-  background: rgba(0, 0, 0, 0.15); cursor: pointer;
-}
-.chat-side-panel {
-  position: absolute; top: 0; right: 0; bottom: 0; z-index: 50;
-  width: 400px; max-width: 90vw;
-  background: #FFF; border-left: 1px solid #EAEAEA;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+/* ── Chat page — takes over the main column, one persona at a time ───────── */
+.chat-page {
+  flex: 1; min-height: 0;
   display: flex; flex-direction: column;
-}
-/* Phones: give long reactions the whole screen to read. */
-@media (max-width: 640px) {
-  .chat-side-panel { width: 100vw; max-width: 100vw; border-left: none; }
+  background: #FFF;
 }
 .chat-panel-header {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex; align-items: center; gap: 16px;
   padding: 16px 20px; border-bottom: 1px solid #F0F0F0; flex-shrink: 0;
 }
+.chat-back-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid #E5E7EB; border-radius: 8px;
+  padding: 6px 12px; font-size: 13px; color: #555; cursor: pointer;
+}
+.chat-back-btn:hover { border-color: #1E9E5A; color: #1E9E5A; }
 .chat-panel-title { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: #333; }
 .panel-icon { font-size: 18px; }
 .archetype-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; background: #F0F0F0; color: #666; border-radius: 10px; text-transform: lowercase; }
-.chat-close-btn { background: none; border: none; font-size: 24px; color: #999; cursor: pointer; padding: 0; line-height: 1; }
-.chat-close-btn:hover { color: #333; }
 
 /* Agent context card — who you're talking to, shown above the follow-up thread */
 .chat-agent-card {
@@ -1143,11 +1196,17 @@ onUnmounted(() => {
 }
 /* The reaction they already gave — full text, readable */
 .chat-agent-reaction { padding: 14px 20px; border-bottom: 1px solid #F0F0F0; background: #F9FAFB; flex-shrink: 0; }
+.chat-agent-reaction-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; padding: 0; background: none; border: none; cursor: pointer; text-align: left;
+}
 .chat-agent-reaction-label {
   display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
-  letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF; margin-bottom: 6px;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF;
 }
-.chat-agent-reaction-text { margin: 0; font-size: 14px; line-height: 1.55; color: #374151; }
+.chat-agent-reaction-caret { font-size: 11px; color: #9CA3AF; transition: transform 0.15s ease; }
+.chat-agent-reaction-caret.open { transform: rotate(180deg); }
+.chat-agent-reaction-text { margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #374151; }
 
 .chat-messages-container { flex: 1; overflow-y: auto; background: #F9F9F9; border-radius: 0; padding: 16px; }
 .chat-messages-list { display: flex; flex-direction: column; gap: 10px; }
@@ -1178,10 +1237,12 @@ onUnmounted(() => {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Right-side slide + scrim transitions */
-.slide-right-enter-active, .slide-right-leave-active { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
-.slide-right-enter-from, .slide-right-leave-to { transform: translateX(100%); }
-.scrim-enter-active, .scrim-leave-active { transition: opacity 0.3s ease; }
-.scrim-enter-from, .scrim-leave-to { opacity: 0; }
+/* Chat page: keep everything in one readable centre column, like the room. */
+.chat-page .chat-agent-card,
+.chat-page .chat-agent-reaction,
+.chat-page .chat-messages-list,
+.chat-page .chat-input-container { max-width: 780px; margin-left: auto; margin-right: auto; width: 100%; }
+.chat-page .chat-message { max-width: 70%; }
 
 .main-content-area {
   flex: 1; overflow-y: scroll; position: relative;
