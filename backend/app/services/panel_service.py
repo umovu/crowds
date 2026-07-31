@@ -297,6 +297,56 @@ def list_segments() -> List[Dict[str, Any]]:
     return out
 
 
+# Human-readable names for the survey sources stamped onto persona attitudes.
+# Keyed by the `source` prefix the attitude fuser writes.
+_ATTITUDE_SOURCE_LABELS = {
+    "afrobarometer_r9_sa": "Afrobarometer Round 9 (South Africa)",
+}
+
+
+def grounding_summary() -> Dict[str, Any]:
+    """Provenance of the persona library, counted live off the real file.
+
+    Feeds the home page's "where these people come from" strip. Everything here
+    is derived — nothing is a hardcoded marketing number — so the page can never
+    claim more coverage than the library actually has.
+    """
+    personas = get_library().all()
+
+    provinces = {p.get("province") for p in personas if p.get("province")}
+    occupations = {p.get("occupation") for p in personas if p.get("occupation")}
+
+    topics: set = set()
+    sources: set = set()
+    with_attitudes = 0
+    exact_matches = 0
+    for p in personas:
+        attitudes = p.get("attitudes") or []
+        if not attitudes:
+            continue
+        with_attitudes += 1
+        for a in attitudes:
+            if a.get("topic"):
+                topics.add(a["topic"])
+            src = (a.get("source") or "").split(":")[0]
+            if src:
+                sources.add(src)
+            if a.get("match_quality") == "exact":
+                exact_matches += 1
+
+    return {
+        "people": len(personas),
+        "provinces": len(provinces),
+        "occupations": len(occupations),
+        "with_attitudes": with_attitudes,
+        "attitude_topics": len(topics),
+        "exact_attitude_matches": exact_matches,
+        "attitude_sources": sorted(
+            _ATTITUDE_SOURCE_LABELS.get(s, s) for s in sources
+        ),
+    }
+
+
 def _base_dir() -> str:
     d = Config.PANEL_SESSION_DATA_DIR
     os.makedirs(d, exist_ok=True)

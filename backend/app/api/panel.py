@@ -61,6 +61,17 @@ def list_segments():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@panel_bp.route('/grounding', methods=['GET'])
+def grounding():
+    """What the cast is actually made of — counted off the real library, so the
+    home page can show provenance without anyone hardcoding a number."""
+    try:
+        return jsonify({"success": True, "data": panel_service.grounding_summary()})
+    except Exception as e:
+        logger.error(f"Failed to build grounding summary: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @panel_bp.route('/sessions', methods=['POST'])
 def create_session():
     """Create a panel session.

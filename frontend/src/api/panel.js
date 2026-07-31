@@ -5,6 +5,11 @@ import service from './index'
 export const listSegments = () =>
   service.get('/api/panel/segments')
 
+// Where the cast comes from — real counts off the persona library, for the
+// home page's provenance strip.
+export const getGrounding = () =>
+  service.get('/api/panel/grounding')
+
 export const suggestSegments = (pitch) =>
   service.get('/api/panel/segments/suggest', { params: { pitch } })
 

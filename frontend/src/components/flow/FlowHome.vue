@@ -83,8 +83,8 @@
         <div class="ob-card-kicker">Welcome to crowds</div>
         <div class="ob-card-title">See how South Africa reacts — before it's real.</div>
         <ol class="ob-list">
-          <li><b>Describe</b> what you want to test — a policy, an announcement, or a product and its price.</li>
-          <li><b>Pick your crowd</b>, or leave the default South African mix.</li>
+          <li><b>Describe</b> what you want to test — a policy, an announcement, or a product and its price. Or upload the poster and we'll read it for you.</li>
+          <li><b>Pick your crowd</b> — real South Africans built from national survey data, or leave the default mix.</li>
           <li><b>Run it</b> — read each person's honest reaction, then ask the room follow-ups.</li>
         </ol>
         <div class="ob-card-actions">
@@ -206,8 +206,23 @@
             <!-- ════ NEW TEST (panel + optional direct sim) ════ -->
             <div v-if="activeTab === 'panel'" class="simple-ask">
               <h1 class="simple-greeting">See how South Africa reacts — before it's real.</h1>
+              <p class="simple-subgreeting">{{ groundingLine }}</p>
 
-              <div ref="tourPrompt" class="simple-prompt" :class="{ focused: panelFocused }">
+              <div
+                ref="tourPrompt"
+                class="simple-prompt"
+                :class="{ focused: panelFocused, dragging: posterDragging }"
+                @dragover.prevent="onPosterDragOver"
+                @dragleave="onPosterDragLeave"
+                @drop.prevent="onPosterDrop"
+              >
+                <!-- Dropping an image anywhere on the box is the same as
+                     picking one with the button below. -->
+                <div v-if="posterDragging" class="poster-drop-veil">
+                  <span class="poster-drop-icon">▣</span>
+                  <span>Drop your poster to read it</span>
+                </div>
+
                 <textarea
                   ref="panelInput"
                   v-model="panelPitch"
@@ -314,6 +329,21 @@
                   class="ob-example"
                   @click="useExample(ex)"
                 >⊕ {{ ex.label }}</button>
+                <span class="ob-example-or">or drop a poster into the box</span>
+              </div>
+
+              <!-- Who's actually in the room. Faces make the library visible
+                   without opening the Personas tab. -->
+              <div v-if="facePeople.length" class="room-faces" @click="activeTab = 'personas'">
+                <span class="room-face-stack">
+                  <span
+                    v-for="p in facePeople"
+                    :key="p.id || p.name"
+                    class="room-face"
+                    :title="`${p.name} · ${p.occupation || '—'} · ${p.province || '—'}`"
+                  >{{ initials(p.name) }}</span>
+                </span>
+                <span class="room-faces-text">{{ roomFacesLine }}</span>
               </div>
 
               <div class="pp-controls">
@@ -337,6 +367,25 @@
                 </div>
               </div>
               <p class="pp-hint">Policy or product is detected automatically. Panel is the fast read; the full simulation is an additional, deeper run.</p>
+
+              <!-- Provenance. Every number here is counted off the real
+                   library by /api/panel/grounding — nothing is hardcoded. -->
+              <div class="ground-strip">
+                <div class="ground-chips">
+                  <button
+                    v-for="c in groundingChips"
+                    :key="c.id"
+                    class="ground-chip"
+                    :class="{ open: openGroundChip === c.id }"
+                    @click="openGroundChip = openGroundChip === c.id ? '' : c.id"
+                  >
+                    <span class="ground-chip-dot"></span>
+                    <span>{{ c.label }}</span>
+                  </button>
+                </div>
+                <p v-if="currentGroundChip" class="ground-explain">{{ currentGroundChip.detail }}</p>
+                <p class="ground-foot">No invented people. Every panellist is a real survey profile, not something a model made up.</p>
+              </div>
             </div>
 
           </div>
@@ -351,7 +400,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
-import { createSession, listSessions, listSegments, uploadPoster } from '../../api/panel'
+import { createSession, listSessions, listSegments, uploadPoster, getGrounding } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
@@ -452,6 +501,69 @@ const loadPersonas = async () => {
     personasLoading.value = false
   }
 }
+
+// ── Grounding: where the cast comes from ───────────────────────────────────
+// Real counts off the persona library. The home page states provenance in
+// plain words, and every figure is measured, never written by hand.
+const grounding = ref(null)
+const openGroundChip = ref('')
+
+const loadGrounding = async () => {
+  try {
+    // The API layer already unwraps to the response body, so `.data` here is
+    // the payload — same shape the segments loader reads.
+    grounding.value = (await getGrounding()).data || null
+  } catch (e) {
+    console.error('Failed to load grounding summary:', e)
+  }
+}
+
+const groundingLine = computed(() => {
+  const g = grounding.value
+  if (!g?.people) return 'Real South African profiles, built from national survey data — not people a model invented.'
+  return `${g.people} real South African profiles across ${g.provinces} provinces, built from national survey data — not people a model invented.`
+})
+
+const groundingChips = computed(() => {
+  const g = grounding.value
+  if (!g?.people) return []
+  const chips = [
+    {
+      id: 'bodies',
+      label: `${g.people} survey-built people`,
+      detail: `Each panellist's age, job, schooling, province and household come from South Africa's national labour force survey. That is why the room looks like the country — ${g.occupations} different occupations across ${g.provinces} provinces — instead of looking like whoever a model felt like writing.`,
+    },
+  ]
+  if (g.with_attitudes) {
+    chips.push({
+      id: 'attitudes',
+      label: `${g.attitude_topics} measured opinions each`,
+      detail: `${g.with_attitudes} of these people carry real recorded opinions — trust in government, fear of crime, how they feel about services and the economy — taken from ${g.attitude_sources.join(' and ') || 'national attitude surveys'}. Opinions are matched onto people with the same profile, so nobody's views are guesswork. The model only puts them into words.`,
+    })
+  }
+  chips.push({
+    id: 'today',
+    label: 'Today\'s SA news',
+    detail: 'Before a run, the system pulls what is actually happening in South Africa right now and gives it to the room. That stops the panel reacting to last year\'s crises, and keeps prices, politics and mood current.',
+  })
+  return chips
+})
+
+const currentGroundChip = computed(() =>
+  groundingChips.value.find(c => c.id === openGroundChip.value) || null
+)
+
+// A handful of real faces from the library, so the crowd is visible before
+// anyone opens the Personas tab.
+const facePeople = computed(() => personas.value.slice(0, 5))
+const roomFacesLine = computed(() => {
+  const total = personas.value.length
+  const rest = Math.max(total - facePeople.value.length, 0)
+  if (!total) return ''
+  return rest
+    ? `${crowdSummary.value} — and ${rest} more real people. See who's in the room →`
+    : `${crowdSummary.value} — see who's in the room →`
+})
 
 // ── Previous sims / panels — saved on disk, click to revisit ───────────────
 const sims = ref([])
@@ -631,6 +743,36 @@ function autosizePrompt () {
 async function onPosterPick (event) {
   const file = event.target.files?.[0]
   event.target.value = ''          // let the same file be picked again
+  await readPoster(file)
+}
+
+// Dropping an image on the prompt box is the same action as the pill button.
+const posterDragging = ref(false)
+const POSTER_TYPES = ['image/png', 'image/jpeg', 'image/webp']
+
+function onPosterDragOver (event) {
+  if (posterBusy.value) return
+  // Only light up for files, not for text being dragged around.
+  if (!Array.from(event.dataTransfer?.types || []).includes('Files')) return
+  posterDragging.value = true
+}
+function onPosterDragLeave (event) {
+  // Moving between child elements fires dragleave; ignore those.
+  if (event.currentTarget.contains(event.relatedTarget)) return
+  posterDragging.value = false
+}
+async function onPosterDrop (event) {
+  posterDragging.value = false
+  if (posterBusy.value) return
+  const file = event.dataTransfer?.files?.[0]
+  if (file && !POSTER_TYPES.includes(file.type)) {
+    posterError.value = 'That file is not an image. Drop a PNG, JPG or WEBP.'
+    return
+  }
+  await readPoster(file)
+}
+
+async function readPoster (file) {
   if (!file) return
 
   posterBusy.value = true
@@ -682,7 +824,7 @@ const canSubmit = computed(() =>
 // With a poster attached the box is for the founder's question, not the pitch.
 const promptPlaceholder = computed(() => posterBrief.value
   ? "Ask the room something about your poster. e.g. Would you trust this? What would stop you? Leave it blank to just get their reactions."
-  : "What do you want to test? Describe a policy or announcement, or a product and its price — the way you'd explain it to someone. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
+  : "What do you want to test? Describe a policy or announcement, or a product and its price — or drop your poster straight in here. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
 )
 
 // Crowd picker (segments + size live behind a modal, off the home view).
@@ -816,6 +958,8 @@ onMounted(() => {
 
   panelInput.value?.focus()
   loadSegments()
+  loadGrounding()
+  loadPersonas()   // home shows real faces, so the library loads up front now
   loadSims()
   loadPanels()
   document.addEventListener('mousedown', onSpeedOutside)
@@ -900,6 +1044,23 @@ onUnmounted(() => {
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .simple-prompt.focused { border-color: #1E9E5A; box-shadow: 0 2px 12px rgba(30, 158, 90, 0.12); }
+.simple-prompt { position: relative; }
+.simple-prompt.dragging { border-color: #1E9E5A; border-style: dashed; background: #F5FCF8; }
+
+/* Drop-a-poster veil — only visible while a file is over the box. */
+.poster-drop-veil {
+  position: absolute; inset: 0; z-index: 2; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(245, 252, 248, 0.94);
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  font-weight: 600; color: #178048; pointer-events: none;
+}
+.poster-drop-icon { font-size: 1.1rem; }
+
+.simple-subgreeting {
+  margin: -14px 0 0; text-align: center;
+  font-size: 0.92rem; line-height: 1.55; color: #6B7280;
+}
 .simple-prompt-input {
   width: 100%; border: none; background: transparent; outline: none; resize: none;
   min-height: 56px; max-height: 240px; overflow-y: auto;
@@ -1053,6 +1214,51 @@ onUnmounted(() => {
   font-size: 12.5px; color: #374151; cursor: pointer; transition: border-color .15s, background .15s;
 }
 .ob-example:hover { border-color: #1E9E5A; background: #F0FBF4; color: #178048; }
+.ob-example-or { font-size: 12px; color: #9CA3AF; }
+
+/* ── Who's in the room: real faces from the library ───────────────────────── */
+.room-faces {
+  display: flex; align-items: center; gap: 10px; margin: 12px 2px 0;
+  cursor: pointer;
+}
+.room-face-stack { display: flex; }
+.room-face {
+  width: 26px; height: 26px; margin-right: -7px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 2px solid #fff; background: #E8F5EE;
+  font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700;
+  color: #178048;
+}
+.room-faces-text { font-size: 12.5px; color: #6B7280; }
+.room-faces:hover .room-faces-text { color: #178048; }
+
+/* ── Provenance strip: measured, never hardcoded ──────────────────────────── */
+.ground-strip {
+  margin-top: 4px; padding-top: 16px; border-top: 1px solid #EFEFEF;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ground-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ground-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-radius: 999px;
+  border: 1px solid #E5E7EB; background: #fff; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  color: #4B5563; transition: border-color .15s, background .15s, color .15s;
+}
+.ground-chip:hover { border-color: #1E9E5A; color: #178048; }
+.ground-chip.open { border-color: #1E9E5A; background: #F0FBF4; color: #178048; }
+.ground-chip-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #1E9E5A; flex: none;
+}
+.ground-explain {
+  margin: 0; padding: 12px 14px; border-radius: 10px;
+  background: #FAFCFB; border: 1px solid #EAF3ED;
+  font-size: 13px; line-height: 1.6; color: #4B5563;
+}
+.ground-foot {
+  margin: 0; font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.2px; color: #9CA3AF;
+}
 
 .tour-overlay { position: fixed; inset: 0; z-index: 200; }
 .tour-spot {
