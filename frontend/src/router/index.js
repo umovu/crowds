@@ -8,6 +8,7 @@ import ReportView from '../views/ReportView.vue'
 import InteractionView from '../views/InteractionView.vue'
 import AuthCallbackView from '../views/AuthCallbackView.vue'
 import PosterTestView from '../views/PosterTestView.vue'
+import ChatDemoView from '../views/ChatDemoView.vue'
 import { useAuth } from '../composables/useAuth'
 
 const routes = [
@@ -35,6 +36,12 @@ const routes = [
     path: '/classic',
     name: 'Classic',
     component: Home
+  },
+  {
+    // Layout preview of the results + full-page chat, with canned personas.
+    path: '/demo/chat',
+    name: 'ChatDemo',
+    component: ChatDemoView
   },
   {
     // Poster test: upload a social poster, read it into a text brief.
