@@ -114,11 +114,10 @@ dependency, not vendored source.
    abandoned experiments. Same smell in storage: `search_service`,
    `embedding_service`, `ner_extractor` may be orphaned.
 
-4. **Root-level doc sprawl / handoff artifacts** — `IMPLEMENTATION_COMPLETE.md`,
-   `CUSTOM_AGENT_WEB_RESEARCH_IMPLEMENTATION.md`, `EDUCATION_PERSONAS_HANDOFF.md`,
-   `frontend/CHINESE_TEXT_INVENTORY.md` (a March scan; the Chinese it inventories
-   is now fully translated — **0 CJK chars remain in app/frontend code**, so this
-   file is a stale orphan). CLAUDE.md itself says "avoid adding orphan files."
+4. ~~**Root-level doc sprawl / handoff artifacts**~~ — resolved. The handoff
+   notes, the shipping instructions, the fork's leftover screenshots and the
+   one-off pilot scripts with their committed output dumps have all been
+   removed. CLAUDE.md's "avoid adding orphan files" now holds at the root.
 
 5. **`.bak` clutter checked into the tree** — `personas.json.bak` (currently
    untracked in git status) and a series of `ladybug_data.corrupt-*.bak`
@@ -140,9 +139,9 @@ dependency, not vendored source.
    carry Chinese-origin comments about `\uXXXX` escaping. Cosmetic, but signals
    the fork was translated in a hurry.
 
-9. **`test_implementation.sh` / `test_implementation_simple.sh` + many
-   `validate_*.py` scripts** are ad-hoc validators rather than a real test suite
-   (`backend/tests/` exists but is thin relative to 40k+ LOC of services).
+9. **`validate_*.py` scripts** are ad-hoc validators rather than a real test
+   suite (`backend/tests/` exists but is thin relative to 40k+ LOC of services).
+   The two `test_implementation*.sh` grep-scripts they sat next to are gone.
 
 ### What is genuinely well-kept (not slop)
 - The **persona-source and economy hard rules** (no LLM-authored identity;
