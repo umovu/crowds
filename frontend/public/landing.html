@@ -174,15 +174,14 @@
     margin-top: 10px;
   }
   .seed-modes { display: flex; gap: 5px; flex-wrap: wrap; }
-  .seed-mode, .seed-ground {
+  .seed-mode, .seed-ground, .seed-poster {
     padding: 6px 14px; border: 1px solid var(--line); background: #fff;
     border-radius: 999px; font-family: var(--mono); font-size: 0.72rem;
     font-weight: 600; color: var(--ink-3); cursor: pointer;
     transition: all .15s;
   }
-  .seed-mode:hover:not(:disabled), .seed-ground:hover:not(:disabled) {
-    border-color: var(--accent); color: var(--accent);
-  }
+  .seed-mode:hover:not(:disabled), .seed-ground:hover:not(:disabled),
+  .seed-poster:hover { border-color: var(--accent); color: var(--accent); }
   .seed-mode.active { background: #141414; border-color: #141414; color: #fff; }
   .seed-ground.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
   .seed-mode:disabled, .seed-ground:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -334,6 +333,14 @@
   }
   .cap-title { font-size: 1.1rem; font-weight: 600; margin: 0 0 8px; letter-spacing: -.2px; }
   .cap-text { font-size: 0.9rem; color: var(--ink-2); margin: 0; line-height: 1.55; }
+
+  /* ── Grounding note ───────────────────────────────────────────────────── */
+  .ground-note {
+    margin: 26px 0 0; padding: 16px 18px;
+    border: 1px solid var(--line-2); border-left: 3px solid var(--accent);
+    border-radius: 10px; background: var(--bg-2);
+    font-size: 0.92rem; line-height: 1.6; color: var(--ink-2);
+  }
 
   /* ── Honest scope ─────────────────────────────────────────────────────── */
   .scope {
@@ -587,6 +594,7 @@
       <a href="#how">How it works</a>
       <a href="#modes">Modes</a>
       <a href="#capabilities">Capabilities</a>
+      <a href="#grounding">The data</a>
       <a href="#pricing">Pricing</a>
       <a href="#scope">What it isn't</a>
     </div>
@@ -606,9 +614,10 @@
       before you run it past <em>real people</em>.
     </h1>
     <p class="hero-sub">
-      Describe a policy, an announcement, a product pitch, or an event.
-      Crowds generates a population of AI agents — each with its own
-      background, biases, and viewpoint — and plays your message past them.
+      Describe a policy, an announcement, a product pitch, or an event — or just
+      upload the poster. Crowds plays it past a room of South Africans built from
+      national survey data: real ages, jobs, incomes and recorded opinions.
+      Nobody in the room was invented by a model.
     </p>
 
     <!-- Working seed box — mirrors Home.vue's simple-prompt -->
@@ -624,6 +633,9 @@
           <button class="seed-mode active" id="mode-policy" type="button">Policy</button>
           <button class="seed-mode" id="mode-product" type="button">Product</button>
           <button class="seed-ground" id="seed-ground" type="button" disabled>🌐 Ground in web research</button>
+          <!-- Posters are read by a vision call inside the app, so this button
+               carries the visitor there rather than pretending to read here. -->
+          <button class="seed-poster" id="seed-poster" type="button" title="Posters are read inside the app">▣ Upload a poster</button>
         </div>
         <button class="seed-send" id="seed-send" type="button" disabled title="Start simulation">↑</button>
       </div>
@@ -649,9 +661,9 @@
     </div>
 
     <div class="hero-meta">
-      <span>Policy &amp; product modes</span>
+      <span id="hero-meta-people">Built from SA survey data</span>
+      <span>Upload a poster, not just text</span>
       <span>Intervene mid-run</span>
-      <span>Bring your own personas</span>
     </div>
   </div>
 </header>
@@ -662,7 +674,7 @@
     <div class="sec-head">
       <div class="sec-eyebrow">How it works</div>
       <h2 class="sec-title">From a sentence to a crowd in four moves.</h2>
-      <p class="sec-sub">No surveys to field. No panels to recruit. Describe the situation, Crowds builds a synthetic public around it — then runs your message through them.</p>
+      <p class="sec-sub">No surveys to field. No panels to recruit. Describe the situation, Crowds picks a room out of real South African survey data — then runs your message through them.</p>
     </div>
 
     <div class="flow">
@@ -679,12 +691,13 @@
               <div class="cm-pills">
                 <span class="cm-pill on">Policy</span>
                 <span class="cm-pill gr">✓ Grounded</span>
+                <span class="cm-pill">▣ Poster</span>
               </div>
               <span class="cm-send">↑</span>
             </div>
           </div>
         </div>
-        <div class="flow-cap"><b>Describe</b> the scenario in plain language. Optionally ground it in live web research.</div>
+        <div class="flow-cap"><b>Describe</b> the scenario in plain language — or drop in your poster and we read it for you.</div>
       </div>
 
       <!-- 02 Populate -->
@@ -696,12 +709,12 @@
         <div class="flow-body">
           <div class="cm-card">
             <div class="cm-card-h">
-              <span><span class="n">02</span><span class="t">Generate Personas</span></span>
+              <span><span class="n">02</span><span class="t">Select the room</span></span>
               <span class="cm-badge proc">68%</span>
             </div>
             <div class="cm-card-b">
-              <div class="cm-row"><span class="l">Entities</span><span class="v">42</span></div>
-              <div class="cm-row"><span class="l">Personas</span><span class="v">168 / 247</span></div>
+              <div class="cm-row"><span class="l">Survey profiles</span><span class="v">297</span></div>
+              <div class="cm-row"><span class="l">Picked for this</span><span class="v">168 / 247</span></div>
               <div class="cm-prog"><i style="width:68%"></i></div>
             </div>
           </div>
@@ -715,7 +728,7 @@
             </div>
           </div>
         </div>
-        <div class="flow-cap"><b>Generate</b> a population of agents — learners, guardians, traders, educators — grounded in real SA data.</div>
+        <div class="flow-cap"><b>Pick</b> the room from a library of real survey profiles — learners, guardians, traders, educators. Never people a model made up.</div>
       </div>
 
       <!-- 03 Run -->
@@ -852,6 +865,37 @@
         <p class="cap-text">Inject custom agents — named stakeholders, specific groups — merged into the population, or run on their own.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── Grounding: where the people come from ───────────────────────────── -->
+<section id="grounding" style="border-top:1px solid var(--line-2);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Where the people come from</div>
+      <h2 class="sec-title">The room is built from real data, not written by a model.</h2>
+      <p class="sec-sub">Most AI "focus groups" ask a model to invent people. We don't. Every panellist starts as a real survey record, and the model is only ever allowed to put existing facts into words.</p>
+    </div>
+
+    <div class="caps">
+      <div class="cap">
+        <div class="cap-icon">◉</div>
+        <h3 class="cap-title">Their lives: national labour data</h3>
+        <p class="cap-text" id="ground-bodies">Age, job, schooling, household and province come from South Africa's national labour force survey. That is why the room looks like the country instead of looking like whatever a model felt like writing.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">◑</div>
+        <h3 class="cap-title">Their views: measured, not guessed</h3>
+        <p class="cap-text" id="ground-attitudes">Trust in government, fear of crime, feelings about services and the economy are taken from a national attitude survey and matched onto people with the same profile. Nobody's opinions are invented.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">◐</div>
+        <h3 class="cap-title">Their world: today's SA news</h3>
+        <p class="cap-text">Before each run we pull what is actually happening in South Africa right now and hand it to the room. Prices, politics and mood stay current, so nobody reacts to last year's crisis.</p>
+      </div>
+    </div>
+
+    <p class="ground-note">Your own material is grounded too: paste the pitch, or upload the poster and a vision model reads it into plain text first. The room only ever sees words — so you can see exactly what they were shown.</p>
   </div>
 </section>
 
@@ -1035,6 +1079,11 @@
     ground.textContent = grounded ? '✓ Grounded' : '🌐 Ground in web research';
   });
 
+  // "Upload a poster" — the vision read happens in the app, so this just
+  // carries the visitor there (through auth if needed) with whatever they typed.
+  var poster = document.getElementById('seed-poster');
+  if (poster) poster.addEventListener('click', function () { submit(); });
+
   function submit() {
     // Carry the seed into the app via query params. The SPA's Home view reads
     // ?seed=&mode= and pre-fills the prompt (gated by the Supabase session
@@ -1085,6 +1134,42 @@
   if (qSeed) { input.value = qSeed; }
   refresh();
 })();
+</script>
+
+<script type="module">
+/* Real grounding numbers. The copy on the page already stands on its own, so
+   this only sharpens it when the API answers — the page never waits on it and
+   never shows a number that wasn't counted off the live persona library. */
+import { API_BASE_URL } from './supabase-config.js';
+
+fetch((API_BASE_URL || '') + '/api/panel/grounding')
+  .then(function (r) { return r.ok ? r.json() : null; })
+  .then(function (res) {
+    var g = res && res.success && res.data;
+    if (!g || !g.people) return;
+
+    var meta = document.getElementById('hero-meta-people');
+    if (meta) meta.textContent = g.people + ' survey-built South Africans';
+
+    var bodies = document.getElementById('ground-bodies');
+    if (bodies) {
+      bodies.textContent = 'Age, job, schooling, household and province come from '
+        + "South Africa's national labour force survey — "
+        + g.people + ' people, ' + g.occupations + ' occupations, all '
+        + g.provinces + ' provinces. That is why the room looks like the country '
+        + 'instead of looking like whatever a model felt like writing.';
+    }
+
+    var att = document.getElementById('ground-attitudes');
+    if (att && g.with_attitudes) {
+      att.textContent = 'Trust in government, fear of crime, feelings about services '
+        + 'and the economy — ' + g.attitude_topics + ' measured topics per person, '
+        + 'taken from ' + (g.attitude_sources || []).join(' and ')
+        + ' and matched onto people with the same profile. '
+        + "Nobody's opinions are invented.";
+    }
+  })
+  .catch(function () { /* keep the written copy */ });
 </script>
 
 <script type="module">
