@@ -42,6 +42,59 @@ def _import_ladybug():
     return _ladybug
 
 
+def _container_memory_bytes() -> Optional[int]:
+    """Memory limit of this container, or None if not containerised/unlimited.
+
+    Ladybug sizes its buffer pool off the *machine's* RAM, which inside a
+    Railway container is the big host, not our small slice — so it reserves
+    far more than we're allowed and the process gets OOM-killed mid build.
+    Read the real limit from the cgroup instead.
+    """
+    for path in ("/sys/fs/cgroup/memory.max",  # cgroup v2
+                 "/sys/fs/cgroup/memory/memory.limit_in_bytes"):  # cgroup v1
+        try:
+            with open(path) as fh:
+                raw = fh.read().strip()
+        except OSError:
+            continue
+        if raw == "max":
+            return None
+        try:
+            value = int(raw)
+        except ValueError:
+            continue
+        # cgroup v1 reports a nonsense huge number when unlimited.
+        if value <= 0 or value >= (1 << 62):
+            return None
+        return value
+    return None
+
+
+def _db_limits() -> tuple:
+    """(buffer_pool_size, max_num_threads) to open the DB with. 0 = library default."""
+    mb = os.environ.get("LADYBUG_BUFFER_POOL_MB")
+    if mb:
+        try:
+            buffer_pool = max(int(mb), 0) * 1024 * 1024
+        except ValueError:
+            buffer_pool = 0
+    else:
+        limit = _container_memory_bytes()
+        # Leave the bulk of the container to Flask, the sim subprocess and the
+        # LLM clients; a quarter is plenty for the graph working set.
+        buffer_pool = max(limit // 4, 64 * 1024 * 1024) if limit else 0
+
+    try:
+        threads = max(int(os.environ.get("LADYBUG_MAX_THREADS", "0")), 0)
+    except ValueError:
+        threads = 0
+    if not threads and buffer_pool:
+        # Thread count also scales memory; the host's CPU count is not ours.
+        threads = 2
+
+    return buffer_pool, threads
+
+
 class LadybugStorage(GraphStorage):
     """LadybugDB implementation of the GraphStorage interface."""
 
@@ -73,8 +126,20 @@ class LadybugStorage(GraphStorage):
         # the next startup throws "Corrupted wal file" and graph_storage stays
         # None — every graph build then 500s. Quarantine the bad files and
         # try again with a clean DB so the user is unblocked.)
+        buffer_pool, max_threads = _db_limits()
+        if buffer_pool:
+            logger.info(
+                f"LadybugDB memory capped: buffer_pool={buffer_pool // (1024 * 1024)}MB, "
+                f"max_threads={max_threads}"
+            )
+
+        def _open():
+            return ladybug.Database(
+                db_path, buffer_pool_size=buffer_pool, max_num_threads=max_threads
+            )
+
         try:
-            self._db = ladybug.Database(db_path)
+            self._db = _open()
         except Exception as e:
             msg = str(e)
             msg_l = msg.lower()
@@ -103,7 +168,7 @@ class LadybugStorage(GraphStorage):
                     except OSError as move_err:
                         logger.error(f"  failed to quarantine {candidate}: {move_err}")
             # Retry with a clean slate. Any second failure is unrecoverable.
-            self._db = ladybug.Database(db_path)
+            self._db = _open()
         self._conn = ladybug.Connection(self._db)
 
         self._embedding = embedding_service or EmbeddingService()

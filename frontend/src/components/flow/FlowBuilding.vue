@@ -577,11 +577,18 @@ const runPipeline = async () => {
     const taskId = build.data.task_id
 
     let graphId = null
+    // Task state lives in the backend's memory. If the backend restarts the
+    // task vanishes (404 forever) — bail out instead of polling for eternity.
+    let misses = 0
     while (!cancelled) {
       await sleep(2000)
       let task = null
-      try { const r = await getTaskStatus(taskId); task = r.success ? r.data : null } catch (_) { continue }
-      if (!task) continue
+      try { const r = await getTaskStatus(taskId); task = r.success ? r.data : null } catch (_) { task = null }
+      if (!task) {
+        if (++misses >= 10) { fail('Lost contact with the graph build — the server restarted. Please try again.'); return }
+        continue
+      }
+      misses = 0
       progress.value = 15 + Math.min(100, task.progress || 0) * 0.45  // 15 → 60
       if (task.status === 'completed') break
       if (task.status === 'failed') { fail(task.error || 'Graph build failed'); return }
