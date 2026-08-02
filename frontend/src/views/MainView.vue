@@ -503,17 +503,33 @@ const fetchGraphData = async () => {
   }
 }
 
+// Task state lives in the backend's memory. If the backend restarts the task
+// vanishes (404 forever) — give up after a few misses instead of polling on.
+let taskMisses = 0
+
 const startPollingTask = (taskId) => {
+  taskMisses = 0
   pollTaskStatus(taskId)
   pollTimer = setInterval(() => pollTaskStatus(taskId), 2000)
+}
+
+const giveUpOnTask = () => {
+  stopPolling()
+  error.value = 'Lost contact with the graph build — the server restarted. Please try again.'
+  addLog(error.value)
 }
 
 const pollTaskStatus = async (taskId) => {
   try {
     const res = await getTaskStatus(taskId)
-    if (res.success) {
+    if (!res.success) {
+      if (++taskMisses >= 10) giveUpOnTask()
+      return
+    }
+    {
       const task = res.data
-      
+      taskMisses = 0
+
       // Log progress message if it changed
       if (task.message && task.message !== buildProgress.value?.message) {
         addLog(task.message)
@@ -541,6 +557,7 @@ const pollTaskStatus = async (taskId) => {
     }
   } catch (e) {
     console.error(e)
+    if (++taskMisses >= 10) giveUpOnTask()
   }
 }
 
