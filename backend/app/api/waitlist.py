@@ -1,11 +1,18 @@
 """
 Public waitlist API — the front door for people who have no account yet.
 
-  POST /api/waitlist/request   {email, name?, note?}
+  POST /api/waitlist/request         {email, name?, note?}
+  POST /api/waitlist/password-reset  {email}
 
 Auth-exempt on purpose (see `create_app`): the caller is a stranger. Nothing
 here creates an auth user — it only files a request the operator reviews, so
 the operator decides who ever gets an account.
+
+The reset route is deliberately here rather than in the Supabase client: calling
+supabase.auth.resetPasswordForEmail() straight from the browser would mail a
+link to anyone who has ever been created, approved or not. Routing it through
+the backend lets us check `profiles.approved` first, so only accounts the
+operator let in can recover a password.
 
 Always answers 200 with the same message, whether the email is new or already
 queued. That keeps the form from telling a stranger who has already applied.
@@ -112,3 +119,78 @@ def create_request():
     return jsonify({"success": True, "data": {
         "message": "Thanks. We'll be in touch by email.",
     }})
+
+
+# ── Password reset (approved accounts only) ──────────────────────────────────
+
+_RESET_MESSAGE = ("If that email belongs to an approved account, a reset link "
+                  "is on its way. Check your inbox and your spam folder.")
+
+
+def _is_approved(email: str) -> bool:
+    """True only when a profile row exists for the email AND approved is set."""
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+    url = os.environ["SUPABASE_URL"].rstrip("/")
+    try:
+        resp = requests.get(
+            f"{url}/rest/v1/profiles",
+            params={"select": "approved", "email": f"eq.{email}", "limit": "1"},
+            headers={"apikey": key, "Authorization": f"Bearer {key}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        rows = resp.json()
+        return bool(rows and rows[0].get("approved"))
+    except Exception as e:
+        # Fail CLOSED: an unknown approval state must not send a reset mail.
+        logger.error("Approval lookup failed for %s: %s", email, e)
+        return False
+
+
+def _send_recovery(email: str, redirect_to: str) -> bool:
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+    url = os.environ["SUPABASE_URL"].rstrip("/")
+    try:
+        resp = requests.post(
+            f"{url}/auth/v1/recover",
+            json={"email": email},
+            params={"redirect_to": redirect_to} if redirect_to else None,
+            headers={"apikey": key, "Content-Type": "application/json"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        return True
+    except Exception as e:
+        logger.error("Could not send recovery mail to %s: %s", email, e)
+        return False
+
+
+@waitlist_bp.route('/password-reset', methods=['POST'])
+def password_reset():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+
+    if not _EMAIL_RE.match(email):
+        return jsonify({"success": False, "error": "Please enter a valid email address."}), 400
+
+    ip = (request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+          or request.remote_addr or "?")
+    if _rate_limited(ip):
+        return jsonify({"success": False,
+                        "error": "Too many requests. Try again later."}), 429
+
+    if not _supabase_ready():
+        logger.error("Password reset requested but Supabase isn't configured")
+        return jsonify({"success": False,
+                        "error": "Password reset isn't available right now."}), 503
+
+    # Same answer either way — never reveal whether an account exists or was
+    # approved. The only difference is whether an email actually goes out.
+    if _is_approved(email):
+        base = (os.environ.get("PUBLIC_APP_URL") or "").rstrip("/")
+        redirect_to = f"{base}/auth/callback?next=/auth/reset" if base else ""
+        _send_recovery(email, redirect_to)
+    else:
+        logger.info("Password reset ignored for non-approved address")
+
+    return jsonify({"success": True, "data": {"message": _RESET_MESSAGE}})

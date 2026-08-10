@@ -7,6 +7,7 @@ import SimulationRunView from '../views/SimulationRunView.vue'
 import ReportView from '../views/ReportView.vue'
 import InteractionView from '../views/InteractionView.vue'
 import AuthCallbackView from '../views/AuthCallbackView.vue'
+import PasswordResetView from '../views/PasswordResetView.vue'
 import PosterTestView from '../views/PosterTestView.vue'
 import ChatDemoView from '../views/ChatDemoView.vue'
 import { useAuth } from '../composables/useAuth'
@@ -16,6 +17,15 @@ const routes = [
     path: '/auth/callback',
     name: 'AuthCallback',
     component: AuthCallbackView,
+    meta: { public: true }
+  },
+  {
+    // Landing spot for a password-reset email. The recovery link creates a real
+    // session, so this is public only in the sense that the waitlist/approval
+    // gate doesn't apply — the user is already signed in by the time they land.
+    path: '/auth/reset',
+    name: 'PasswordReset',
+    component: PasswordResetView,
     meta: { public: true }
   },
   {
