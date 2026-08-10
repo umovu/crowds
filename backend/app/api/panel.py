@@ -9,6 +9,7 @@ No simulation build pipeline involved.
 
 import asyncio
 import traceback
+import uuid
 
 from flask import jsonify, request
 
@@ -26,6 +27,20 @@ logger = get_logger("fub.api.panel")
 
 def _interview_service(session_id: str) -> InterviewService:
     return InterviewService(session_id, base_dir=Config.PANEL_SESSION_DATA_DIR)
+
+
+def _server_error(e: Exception, user_message: str):
+    """Log the real failure, hand the caller a sentence and a reference code.
+
+    Replaces the old `{"error": str(e), "traceback": ...}` shape. That put Python
+    exception text on the user's screen — unreadable to them, and an internals
+    leak — while the thing they actually needed (what to do now) was missing. The
+    code is short enough to read back over a support message, and it's the key to
+    finding the full traceback in the log.
+    """
+    ref = uuid.uuid4().hex[:6].upper()
+    logger.error("[ERR-%s] %s\n%s", ref, e, traceback.format_exc())
+    return jsonify({"success": False, "error": user_message, "code": f"ERR-{ref}"}), 500
 
 
 def _run_async(coro):
@@ -121,8 +136,7 @@ def create_session():
     except (ValueError, RuntimeError) as e:
         return jsonify({"success": False, "error": str(e)}), 400
     except Exception as e:
-        logger.error(f"Panel session creation failed: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        return _server_error(e, "Could not set up the panel. Try again.")
 
 
 @panel_bp.route('/sessions', methods=['GET'])
@@ -197,6 +211,29 @@ def pitch(session_id: str):
             concurrency=concurrency,
         ))
 
+        # Too few people answered for this to be a read of the room. Refuse it
+        # rather than saving and rendering it: a partly-collapsed round drawn as
+        # a normal one is the worst failure this product can have — it looks like
+        # a result. The round is NOT saved, so nothing is spent and a retry is
+        # clean. The real cause stays in the log; the user gets a plain sentence.
+        if result.get("unusable") or result.get("all_failed"):
+            logger.error(
+                "Panel round refused for %s: %d of %d answered. Cause: %s",
+                session_id, result.get("successful", 0),
+                result.get("total_interviewed", 0), result.get("failure_reason", "unknown"),
+            )
+            answered = result.get("successful", 0)
+            return jsonify({
+                "success": False,
+                "code": "round_failed",
+                "error": ("We could not reach the room. This is on us, not your "
+                          "pitch. Nothing was counted — try again."
+                          if not answered else
+                          f"Only {answered} of {result.get('total_interviewed', 0)} "
+                          "people could be reached, too few for an honest read. "
+                          "Nothing was counted — try again."),
+            }), 503
+
         # One cheap LLM pass: a qualitative read of the room (objections + what
         # would move them). Real counts stay deterministic; this is themes only,
         # and never a buy/validation score. Persisted with the round so it
@@ -229,8 +266,7 @@ def pitch(session_id: str):
     except FileNotFoundError as e:
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
-        logger.error(f"Panel pitch failed for {session_id}: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        return _server_error(e, "The room could not be reached. Nothing was counted — try again.")
 
 
 @panel_bp.route('/posters', methods=['POST'])
@@ -260,8 +296,7 @@ def upload_poster():
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 400
     except Exception as e:
-        logger.error(f"Poster upload failed: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        return _server_error(e, "Could not read that poster. Try a clearer photo, or type it instead.")
 
 
 @panel_bp.route('/posters/<poster_id>', methods=['GET'])
@@ -327,5 +362,4 @@ def ask_agent(session_id: str, agent_id: int):
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
-        logger.error(f"Panel follow-up failed for {session_id}/{agent_id}: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
+        return _server_error(e, "That question did not go through. Try again.")

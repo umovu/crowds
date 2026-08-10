@@ -112,6 +112,10 @@
               <span class="coach-dot">⤓</span>
               <span>Once the run settles, download the full write-up here.</span>
             </div>
+            <!-- Degraded round: say so before any number is read. Every count
+                 below is of the people who answered, so the reader has to know
+                 the room was short before they trust the shape of it. -->
+            <p v-if="roomHealth" class="room-health">{{ roomHealth }}</p>
             <div class="spectrum-summary-body">
               <!-- One summary only: the counts read is a live placeholder while
                    the run is in flight; once the LLM synthesis lands it replaces it. -->
@@ -347,6 +351,7 @@ import {
   stopSimulation
 } from '../../api/simulation'
 import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
+import { useToast } from '../../composables/useToast'
 import { generateReport, getReportStatus, getReport } from '../../api/report'
 
 const props = defineProps({
@@ -359,6 +364,7 @@ const props = defineProps({
   demo: { type: Boolean, default: false }
 })
 const emit = defineEmits(['back'])
+const toast = useToast()
 
 const isPanel = computed(() => props.mode === 'panel')
 
@@ -468,7 +474,16 @@ const STANCES = [
 const agentsByStance = (stance) => panelAgents.value.filter(a => a.stance_after === stance)
 
 // The roster the summary counts read off (live for both modes).
-const panelAgents = computed(() => agents.value)
+const panelAgents = computed(() => agents.value.filter(a => !a.failed))
+
+// "10 of 12 answered." Null on a healthy round so the UI stays clean; only
+// speaks up when there is something the user needs to discount.
+const roomHealth = computed(() => {
+  const seats = agents.value.length
+  const answered = panelAgents.value.length
+  if (!seats || answered === seats) return null
+  return `${answered} of ${seats} people answered. ${seats - answered} could not be reached.`
+})
 
 // Panel reaction cards: only personas that actually returned reaction text.
 // (Stance can be set without a response, so guard on currentReaction to avoid
@@ -635,7 +650,11 @@ const togglePause = async () => {
       paused.value = true
     }
   } catch (e) {
-    console.warn('Pause/resume failed:', e)
+    // Silence here is dangerous, not just untidy: the button resets and the user
+    // believes the run is paused while it is still going.
+    toast.error(paused.value ? 'Could not resume the run.'
+                             : 'Could not pause. The run is still going.',
+                { retry: togglePause })
   } finally {
     controlBusy.value = false
   }
@@ -650,7 +669,7 @@ const stopRun = async () => {
     feedLive.value = false
     stopSimPolling()
   } catch (e) {
-    console.warn('Stop failed:', e)
+    toast.error('Could not stop the run.', { retry: stopRun })
   } finally {
     controlBusy.value = false
   }
@@ -722,6 +741,31 @@ const pushActionToFeed = (action) => {
   }
 }
 
+// A poll fires every 2-3 seconds, so one failure means nothing — a blip would
+// otherwise flash a scary message on a perfectly healthy run. Only after a few
+// consecutive misses is the connection genuinely gone, and only then do we say
+// so. Before this the feed simply stopped moving and a broken run was
+// indistinguishable from a finished one.
+const POLL_FAILS_BEFORE_WARNING = 3
+let pollFails = 0
+let offlineToastId = null
+
+const notePollFailure = () => {
+  pollFails++
+  if (pollFails === POLL_FAILS_BEFORE_WARNING && offlineToastId === null) {
+    offlineToastId = toast.error('Lost connection to the run. Retrying…')
+  }
+}
+
+const notePollSuccess = () => {
+  if (offlineToastId !== null) {
+    toast.dismiss(offlineToastId)
+    offlineToastId = null
+    toast.info('Back online.')
+  }
+  pollFails = 0
+}
+
 const pollSimActions = async () => {
   if (!props.simulationId) return
   try {
@@ -730,8 +774,9 @@ const pollSimActions = async () => {
       ;(res.data.all_actions || []).forEach(pushActionToFeed)
       scrollToBottom()
     }
+    notePollSuccess()
   } catch (e) {
-    console.warn('Failed to poll sim actions:', e)
+    notePollFailure()
   }
 }
 
@@ -761,8 +806,9 @@ const pollSimStatus = async () => {
         stopSimPolling()
       }
     }
+    notePollSuccess()
   } catch (e) {
-    console.warn('Failed to poll sim status:', e)
+    notePollFailure()
   }
 }
 
@@ -773,6 +819,11 @@ const startSimPolling = () => {
 const stopSimPolling = () => {
   if (actionTimer) { clearInterval(actionTimer); actionTimer = null }
   if (statusTimer) { clearInterval(statusTimer); statusTimer = null }
+  // Polling stopping on purpose (run finished, view closed) must not leave a
+  // "lost connection, retrying" bar on screen promising a retry that will never
+  // come. Errors persist until dismissed, so this has to be explicit.
+  if (offlineToastId !== null) { toast.dismiss(offlineToastId); offlineToastId = null }
+  pollFails = 0
 }
 
 const startSim = async () => {
@@ -830,8 +881,16 @@ const loadPanel = async () => {
     agents.value = agents.value.map(a => {
       const r = byId[a.id]
       if (!r) return a
+      // A failed interview is not a quiet person. Its fallback text ("I have no
+      // comment on that.") reads exactly like an opinion, and its stance_after is
+      // copied from stance_before — so rendering it both invents a reaction and
+      // counts that person as "did not move". Mark it and keep it out of the room.
+      if (r.failed || r.error) {
+        return { ...a, failed: true, currentReaction: '' }
+      }
       return {
         ...a,
+        failed: false,
         stance_before: r.stance_before || a.stance_before,
         stance_after: r.stance_after || r.stance_before || a.stance_after,
         stance_changed: !!r.stance_changed,
@@ -839,7 +898,11 @@ const loadPanel = async () => {
       }
     })
   } catch (e) {
-    console.warn('Failed to load / pitch panel:', e)
+    // Includes the server refusing a collapsed round (503 "round_failed"), which
+    // carries its own plain-English sentence — show that, not a generic one. The
+    // room stays empty rather than half-drawn, which is the honest state.
+    toast.error(e?.message || 'Could not load this panel.',
+                { retry: loadPanel, code: e?.response?.data?.code })
   } finally {
     feedLive.value = false
   }
@@ -1371,6 +1434,16 @@ onUnmounted(() => {
 .report-dl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .report-dl-btn .btn-spinner { border-color: #fff; border-top-color: transparent; }
 .report-dl-msg { margin: 8px 20px 0; font-size: 12.5px; color: #C0392B; }
+
+/* Degraded-round notice. Amber, not red: the round is usable, just short. */
+.room-health {
+  margin: 8px 20px 0;
+  padding: 6px 10px;
+  border-left: 3px solid #F59E0B;
+  background: #FFFBEB;
+  font-size: 12.5px;
+  color: #92400E;
+}
 .spectrum-summary-body {
   padding: 16px 20px;
 }

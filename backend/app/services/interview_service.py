@@ -26,6 +26,24 @@ from ..utils.logger import get_logger
 
 logger = get_logger("fub.interview_service")
 
+# Minimum share of a cast that must actually answer for a round to count as a
+# read of the room. Below this, the survivors are a biased slice (whatever the
+# provider happened not to reject), so the round is marked `unusable` and the
+# caller refuses it rather than drawing a half-empty room as if it were real.
+# Pure constant — assertable with the LLM switched off.
+MIN_ANSWERED_SHARE = 2 / 3
+
+
+def round_is_unusable(answered: int, total: int) -> bool:
+    """True when too few of the cast answered for the round to mean anything.
+
+    Split out as a plain function so the rule is unit-testable with the LLM
+    switched off — the same standard the economic logic is held to.
+    """
+    if total <= 0:
+        return False
+    return answered < total * MIN_ANSWERED_SHARE
+
 
 class InterviewService:
     """Service for conducting post-hoc interviews with simulated agents."""
@@ -491,42 +509,70 @@ class InterviewService:
                     return {
                         "agent_id": aid,
                         "error": str(e),
+                        # `failed` is the flag the UI filters on. `error` alone was
+                        # too easy to miss (it's absent on healthy rows, so callers
+                        # kept forgetting to check) and the fallback text below
+                        # reads like an opinion when rendered. A failed persona is
+                        # NOT a quiet persona: never draw one in the room.
+                        "failed": True,
                         "response": "Interview failed.",
                         "original_question": question,
                     }
 
         results = list(await asyncio.gather(*(run_one(aid) for aid in targets)))
 
+        # Normalise the failure flag in ONE place. A failure can be born in two
+        # spots — here (run_one's own except) or inside do_impact_interview, which
+        # swallows its exception and returns an error-carrying dict that run_one
+        # then happily enriches. Both leave an "error" key, so stamp `failed` off
+        # that rather than trusting either producer to remember.
+        for r in results:
+            if "error" in r:
+                r["failed"] = True
+
         # Build aggregate impact dashboard
         dashboard = self._build_impact_dashboard(results)
 
         failures = [r for r in results if "error" in r]
-        # Fail LOUDLY when the whole round collapsed. The per-agent fallback returns
+        top_reason = (
+            Counter(str(r.get("error", ""))[:160] for r in failures).most_common(1)[0][0]
+            if failures else ""
+        )
+        # Fail LOUDLY when the round collapsed. The per-agent fallback returns
         # "I have no comment on that." on any exception, so a total LLM outage (expired
         # key, blown quota, bad base_url) otherwise renders as a full, plausible-looking
         # panel of non-answers with no error anywhere — users have read that as
         # "the personas had nothing to say" instead of "nothing ran".
         if results and len(failures) == len(results):
-            reasons = Counter(str(r.get("error", ""))[:160] for r in failures)
-            top = reasons.most_common(1)[0][0] if reasons else "unknown"
             logger.error(
                 "Impact interview round FAILED COMPLETELY: all %d interviews errored. "
-                "Most common cause: %s", len(results), top,
+                "Most common cause: %s", len(results), top_reason or "unknown",
             )
+        elif failures:
+            logger.warning(
+                "Impact interview round degraded: %d of %d interviews errored. "
+                "Most common cause: %s", len(failures), len(results), top_reason or "unknown",
+            )
+
+        # `unusable` is the caller's cue to refuse the round outright rather than
+        # render it. Below the threshold a room isn't a read of the population any
+        # more — it's whichever personas happened to survive, which is a biased
+        # sample presented as a representative one. Distinct from `all_failed`
+        # (kept for existing consumers): all_failed means nothing ran at all.
+        answered = len(results) - len(failures)
+        unusable = round_is_unusable(answered, len(results))
 
         output = {
             "simulation_id": self.simulation_id,
             "original_question": question,
             "total_interviewed": len(results),
-            "successful": len(results) - len(failures),
+            "successful": answered,
             "failed": len(failures),
             # Explicit signal for callers/UI: every interview failed, so the responses
             # below are fallbacks, not opinions. Absent on a healthy round.
-            **({"all_failed": True,
-                "failure_reason": Counter(
-                    str(r.get("error", ""))[:160] for r in failures
-                ).most_common(1)[0][0]}
+            **({"all_failed": True, "failure_reason": top_reason}
                if results and len(failures) == len(results) else {}),
+            **({"unusable": True, "failure_reason": top_reason} if unusable else {}),
             "question_archetype": reframer.detect_archetype(question),
             "impact_dashboard": dashboard,
             "results": results,
@@ -554,9 +600,12 @@ class InterviewService:
         emotional_shifts = []
         predicted_actions = []
 
+        answered = 0
+
         for r in results:
             if "error" in r:
                 continue
+            answered += 1
 
             # Stance
             stance = r.get("stance_after", "unknown")
@@ -612,7 +661,12 @@ class InterviewService:
             "emotional_temperature": emotional_temperature,
             "stance_distribution": stance_distribution,
             "stance_changed_count": stance_changed_count,
-            "stance_changed_rate": stance_changed_count / max(len(results), 1),
+            # Rates are per ANSWERED person, not per seat. Every loop above skips
+            # failures, so dividing by len(results) quietly deflated every rate in
+            # proportion to how many interviews had errored — a bad round didn't
+            # look broken, it looked calm.
+            "answered": answered,
+            "stance_changed_rate": stance_changed_count / max(answered, 1),
             "mobilization_risk": mobilization_risk,
             "granularity_distribution": granularity_distribution,
             "affected_entities": affected_entities,

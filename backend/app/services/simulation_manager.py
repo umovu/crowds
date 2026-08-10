@@ -85,6 +85,11 @@ class SimulationState:
     prepare_completion_tokens: int = 0
     prepare_cost_usd: float = 0.0
 
+    # True once /start has charged this sim's credit. Persisted so a sim that is
+    # started, stopped and started again never pays twice, even across a Railway
+    # restart (never rely on in-memory state for billing).
+    credit_charged: bool = False
+
     def to_dict(self) -> Dict[str, Any]:
         """Complete status dict (internal use)"""
         return {
@@ -105,6 +110,7 @@ class SimulationState:
             "prepare_prompt_tokens": self.prepare_prompt_tokens,
             "prepare_completion_tokens": self.prepare_completion_tokens,
             "prepare_cost_usd": self.prepare_cost_usd,
+            "credit_charged": self.credit_charged,
         }
     
     def to_simple_dict(self) -> Dict[str, Any]:
@@ -197,6 +203,7 @@ class SimulationManager:
             prepare_prompt_tokens=data.get("prepare_prompt_tokens", 0),
             prepare_completion_tokens=data.get("prepare_completion_tokens", 0),
             prepare_cost_usd=data.get("prepare_cost_usd", 0.0),
+            credit_charged=data.get("credit_charged", False),
         )
 
         self._simulations[simulation_id] = state
