@@ -4,6 +4,7 @@ Step2: Entity reading and filtering, OASIS simulation preparation and execution 
 """
 
 import os
+import json
 import traceback
 import asyncio
 from typing import Dict, Any, List, Optional
@@ -20,6 +21,7 @@ from ..services.interview_service import InterviewService
 from ..services.custom_agent_parser import CustomAgentParser
 from ..services.agent_enricher import AgentContextEnricher
 from ..services import mode_detector
+from ..services.sim_presets import SIM_PRESETS, apply_preset
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
 
@@ -205,7 +207,7 @@ def parse_custom_agent_document():
             return jsonify({"success": False, "error": "Empty filename"}), 400
 
         # Save uploaded file temporarily
-        upload_dir = os.path.join(os.path.dirname(__file__), '../../uploads/temp')
+        upload_dir = os.path.join(Config.UPLOAD_FOLDER, 'temp')
         os.makedirs(upload_dir, exist_ok=True)
         filename = secure_filename(file.filename)
         file_path = os.path.join(upload_dir, filename)
@@ -269,8 +271,10 @@ def create_simulation():
         }
     """
     # Simulations are paid, with a free trial (FREE_SIM_LIMIT) for closed-beta
-    # testing while Paystack approval is pending. Counted once here at create;
-    # prepare/run of an already-created sim are not re-gated.
+    # testing while Paystack approval is pending. The quota is checked here so a
+    # user is told up front they are out of runs; the credit itself is charged
+    # only when the run actually starts (see /start), so a sim that is created
+    # but never started costs nothing.
     gate = billing.check_sim_quota()
     if gate is not None:
         return gate
@@ -305,10 +309,8 @@ def create_simulation():
             user_id=billing.current_user_id(),
         )
 
-        # Trial accounting: one created sim = one trial credit. Counts for every
-        # plan, but only free plans are gated on it (paid passes the quota check).
-        billing.increment_sim_used(billing.current_user_id())
-
+        # No charge here — the sim credit is taken at /start, once the run
+        # actually begins (see start_simulation).
         return jsonify({
             "success": True,
             "data": state.to_dict()
@@ -374,7 +376,6 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
     # Check status in state.json
     state_file = os.path.join(simulation_dir, "state.json")
     try:
-        import json
         with open(state_file, 'r', encoding='utf-8') as f:
             state_data = json.load(f)
         
@@ -485,8 +486,9 @@ def prepare_simulation():
     from ..models.task import TaskManager, TaskStatus
     from ..config import Config
 
-    # No paywall here: a sim is gated + counted once at create (check_sim_quota).
-    # Preparing an already-created sim must always be allowed for its owner.
+    # No paywall here: a sim is gated at create (check_sim_quota) and its
+    # credit is charged at /start, so preparing an already-created sim must
+    # always be allowed for its owner.
 
     try:
         data = request.get_json() or {}
@@ -987,12 +989,10 @@ def _get_report_id_for_simulation(simulation_id: str) -> str:
     Returns:
         report_id Or None
     """
-    import json
     from datetime import datetime
     
     # reports Directory path：backend/uploads/reports
-    # __file__ Is app/api/simulation.py，Need to go up two levels to backend/
-    reports_dir = os.path.join(os.path.dirname(__file__), '../../uploads/reports')
+    reports_dir = os.path.join(Config.UPLOAD_FOLDER, 'reports')
     if not os.path.exists(reports_dir):
         return None
     
@@ -1408,7 +1408,6 @@ def get_simulation_profiles_realtime(simulation_id: str):
             }
         }
     """
-    import json
     import csv
     from datetime import datetime
     
@@ -1505,7 +1504,6 @@ def get_simulation_config_realtime(simulation_id: str):
             }
         }
     """
-    import json
     from datetime import datetime
     
     try:
@@ -1821,8 +1819,47 @@ def start_simulation():
                 "error": f"Simulation does not exist: {simulation_id}"
             }), 404
 
+        # The sim credit is charged here, once, on the first successful start
+        # (guarded by the persisted credit_charged flag, so start→stop→start costs
+        # one credit and a restart is never re-gated even after the trial runs
+        # out). A sim created but never started charges nothing.
+        if not state.credit_charged:
+            gate = billing.check_sim_quota()
+            if gate is not None:
+                return gate
+
         force_restarted = False
-        
+
+        # A sim marked READY skips the whole preparedness block below, so nothing
+        # ever confirmed its files were still on disk — the runner just tried to
+        # open simulation_config.json and raised "Simulation config does not
+        # exist, call /prepare endpoint first" at the user. That message is
+        # internal (it names an endpoint they can't call) and it dead-ends: the
+        # status stays READY, so every retry takes the same path and fails the
+        # same way.
+        #
+        # The status is a claim about the files; verify the claim. If the files
+        # are gone (a wiped/partially-restored sim dir, an ephemeral volume, a
+        # prepare that set the status then lost its output), demote the status so
+        # the pipeline's own probe reports "not prepared" and re-prepares instead
+        # of looping.
+        if state.status == SimulationStatus.READY:
+            is_prepared, prepare_info = _check_simulation_prepared(simulation_id)
+            if not is_prepared:
+                logger.warning(
+                    "Simulation %s claims READY but is not on disk (%s) — demoting to CREATED",
+                    simulation_id, prepare_info.get("reason"),
+                )
+                state.status = SimulationStatus.CREATED
+                state.config_generated = False
+                manager._save_simulation_state(state)
+                return jsonify({
+                    "success": False,
+                    "code": "needs_prepare",
+                    "error": "This simulation's setup is missing, so it can't start. "
+                             "Build it again — nothing was charged.",
+                }), 409
+
         # Intelligently handle status: if preparation work is complete, reset status to ready
         if state.status != SimulationStatus.READY:
             # Check if preparation is complete
@@ -1862,10 +1899,15 @@ def start_simulation():
                 manager._save_simulation_state(state)
             else:
                 # Preparation not complete
+                # Same reasoning as the READY check above: name the state in words
+                # the person reading it can act on, and give the client a code it
+                # can branch on rather than parsing prose.
                 return jsonify({
                     "success": False,
-                    "error": f"Simulation not ready. Current status: {state.status.value}. Please call /prepare first"
-                }), 400
+                    "code": "needs_prepare",
+                    "error": "This simulation hasn't finished being set up yet, so "
+                             "it can't start. Build it again — nothing was charged.",
+                }), 409
         
         # Get knowledge graphID（For knowledge graph memory update）
         graph_id = None
@@ -1900,29 +1942,9 @@ def start_simulation():
                         config = json.load(f)
 
                     # Apply preset
-                    if preset in ['quick', 'balanced', 'deep']:
-                        presets = {
-                            'quick':    {'convergence_threshold': 0.08, 'convergence_window': 3, 'max_agents_per_round': 10, 'min_agents_per_round': 2},
-                            'balanced': {'convergence_threshold': 0.05, 'convergence_window': 3, 'max_agents_per_round': 15, 'min_agents_per_round': 3},
-                            'deep':     {'convergence_threshold': 0.03, 'convergence_window': 5, 'max_agents_per_round': 30, 'min_agents_per_round': 5},
-                        }
-                        config.update(presets[preset])
-                        # Also set max_rounds explicitly from preset
-                        preset_rounds = {'quick': 6, 'balanced': 12, 'deep': 24}
-                        max_rounds_from_preset = preset_rounds[preset]
-                        
-                        # Apply preset time_config to control total rounds
-                        # Aligned with run_simulation_as.py presets
-                        time_overrides = {
-                            'quick':    {'total_simulation_hours': 6, 'minutes_per_round': 60},   # 6 rounds
-                            'balanced': {'total_simulation_hours': 12, 'minutes_per_round': 60},  # 12 rounds
-                            'deep':     {'total_simulation_hours': 24, 'minutes_per_round': 60},  # 24 rounds
-                        }
-                        if 'time_config' not in config:
-                            config['time_config'] = {}
-                        config['time_config'].update(time_overrides[preset])
-                        
-                        logger.info(f"Applied preset '{preset}' to config: {simulation_id}, time_config={time_overrides[preset]}")
+                    if preset in SIM_PRESETS:
+                        max_rounds_from_preset, time_overrides = apply_preset(config, preset)
+                        logger.info(f"Applied preset '{preset}' to config: {simulation_id}, time_config={time_overrides}")
 
                     # Apply individual overrides
                     if convergence_threshold is not None:
@@ -1953,7 +1975,15 @@ def start_simulation():
             enable_graph_memory_update=enable_graph_memory_update,
             graph_id=graph_id
         )
-        
+
+        # Charge the sim credit now that the run actually started. Guarded by the
+        # persisted credit_charged flag so a stopped + restarted sim never pays
+        # twice (and recharging is skipped on restart even after the trial runs
+        # out). The flag survives Railway restarts because it is saved with state.
+        if not state.credit_charged:
+            billing.increment_sim_used(billing.current_user_id())
+            state.credit_charged = True
+
         # Update simulation status
         state.status = SimulationStatus.RUNNING
         manager._save_simulation_state(state)
@@ -2335,8 +2365,8 @@ def get_simulation_posts(simulation_id: str):
         offset = request.args.get('offset', 0, type=int)
         
         sim_dir = os.path.join(
-            os.path.dirname(__file__),
-            f'../../uploads/simulations/{simulation_id}'
+            Config.OASIS_SIMULATION_DATA_DIR,
+            simulation_id
         )
         
         db_file = f"{platform}_simulation.db"
@@ -2411,8 +2441,8 @@ def get_simulation_comments(simulation_id: str):
         offset = request.args.get('offset', 0, type=int)
         
         sim_dir = os.path.join(
-            os.path.dirname(__file__),
-            f'../../uploads/simulations/{simulation_id}'
+            Config.OASIS_SIMULATION_DATA_DIR,
+            simulation_id
         )
         
         db_path = os.path.join(sim_dir, "reddit_simulation.db")
@@ -2813,7 +2843,6 @@ def interview_agents_post_simulation():
     """
     import sqlite3
     import os
-    import json
 
     try:
         data = request.get_json() or {}

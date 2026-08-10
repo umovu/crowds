@@ -356,6 +356,7 @@ import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
 import { useAuth } from '../../composables/useAuth'
+import { useToast } from '../../composables/useToast'
 import ProfileModal from './ProfileModal.vue'
 
 const emit = defineEmits(['submit', 'open'])
@@ -372,6 +373,7 @@ watch(activeTab, () => { sidebarOpen.value = false })
 
 // ── Auth user → sidebar profile ────────────────────────────────────────────
 const { user } = useAuth()
+const toast = useToast()
 const displayName = computed(() => {
   const m = user.value?.user_metadata || {}
   const name = [m.first_name, m.surname].filter(Boolean).join(' ')
@@ -756,7 +758,12 @@ const submitPanel = async () => {
       sessionId
     })
   } catch (e) {
-    console.error('Failed to assemble panel:', e)
+    // The user pressed run and paid attention. Silence here read as "nothing
+    // happened" — the button just stopped spinning.
+    if (!e?.upgradeRequired) {
+      toast.error(e?.message || 'Could not set up the panel.',
+                  { retry: submitPanel, code: e?.response?.data?.code })
+    }
   } finally {
     panelSubmitting.value = false
   }

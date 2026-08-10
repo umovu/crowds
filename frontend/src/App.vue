@@ -1,11 +1,14 @@
 <template>
   <router-view />
   <UpgradeModal />
+  <Toast />
 </template>
 
 <script setup>
 // Use Vue Router to manage pages
 import UpgradeModal from './components/UpgradeModal.vue'
+// One message bar for the whole app — see composables/useToast.js.
+import Toast from './components/Toast.vue'
 </script>
 
 <style>
