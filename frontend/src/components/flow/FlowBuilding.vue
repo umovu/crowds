@@ -69,9 +69,15 @@ import { generateOntology, buildGraph, getTaskStatus, getProject, getGraphData }
 import { createSimulation, prepareSimulation, getPrepareStatus, startSimulation, getSimulationProfilesRealtime } from '../../api/simulation'
 
 const props = defineProps({
-  query: { type: String, default: '' }
+  query: { type: String, default: '' },
+  // Restore handles for resuming a build that was interrupted mid-pipeline
+  // (page refresh, re-opened from the sidebar). When set, the corresponding
+  // stage is skipped because its output already exists on the backend.
+  initialProjectId: { type: String, default: null },
+  initialGraphId: { type: String, default: null },
+  initialSimulationId: { type: String, default: null }
 })
-const emit = defineEmits(['viewReactions', 'back'])
+const emit = defineEmits(['viewReactions', 'created', 'back'])
 
 const PHASES = [
   'Searching sources',
@@ -86,9 +92,12 @@ const activePhase = ref(0)
 const done = ref(false)
 const error = ref('')
 
-// Live simulation id, set once the pipeline creates the simulation. Handed up
-// to the results overlay via the viewReactions event.
-let simulationId = null
+// Live backend handles for the in-flight build. Component-level refs (not local
+// let/const inside runPipeline) so a retry can resume from the furthest stage
+// that already succeeded instead of re-running the whole pipeline.
+const projectId = ref(props.initialProjectId || null)
+const graphId = ref(props.initialGraphId || null)
+const simulationId = ref(props.initialSimulationId || null)
 let cancelled = false
 
 const canvasEl = ref(null)
@@ -528,6 +537,10 @@ const phaseState = (i) => {
 // (poll) → startSimulation. Each backend stage maps onto one narration phase,
 // and the real graph fills the canvas at the "matching entities" phase.
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
+// Back off while a poll keeps missing. A tight retry loop against a host that
+// is already rate-limiting us just deepens the block (the 429 comes back
+// without CORS headers, so the browser reports it as a bare network error).
+const pollDelay = (base, misses) => Math.min(base * Math.pow(2, misses), 30000)
 
 const setPhase = (i) => {
   if (i > activePhase.value) {
@@ -545,81 +558,105 @@ const runPipeline = async () => {
   const mode = pending.mode || 'policy'
   const modeIsManual = !!pending.modeIsManual
   const hasFiles = !!(pending.files && pending.files.length)
-  if (!requirement.trim() && !hasFiles) {
+  // On a resume the project handle already exists (restored from localStorage),
+  // so the seed input may be gone from the store — don't gate on it then.
+  if (!projectId.value && !requirement.trim() && !hasFiles) {
     fail('No simulation input found. Go back and describe a scenario.')
     return
   }
   // Mirror the backend's /ontology/generate rule so short seeds fail here with
   // a clear message instead of a 400 from the server.
-  if (!hasFiles && requirement.trim().length < 100) {
+  if (!projectId.value && !hasFiles && requirement.trim().length < 100) {
     fail('Your scenario description is too short. Write at least 100 characters (or attach a document) so the simulation has enough to work with.')
     return
   }
 
   try {
     // ── Phase 0: Searching sources — generate the ontology from the seed ──
-    setPhase(0)
-    progress.value = 5
-    const formData = new FormData()
-    ;(pending.files || []).forEach(f => formData.append('files', f))
-    formData.append('simulation_requirement', requirement)
-    const ont = await generateOntology(formData)
-    if (cancelled) return
-    if (!ont.success) { fail(ont.error || 'Ontology generation failed'); return }
-    const projectId = ont.data.project_id
-    progress.value = 15
+    if (!projectId.value) {
+      setPhase(0)
+      progress.value = Math.max(progress.value, 5)
+      const formData = new FormData()
+      ;(pending.files || []).forEach(f => formData.append('files', f))
+      formData.append('simulation_requirement', requirement)
+      const ont = await generateOntology(formData)
+      if (cancelled) return
+      if (!ont.success) { fail(ont.error || 'Ontology generation failed'); return }
+      projectId.value = ont.data.project_id
+    }
+    progress.value = Math.max(progress.value, 15)
 
     // ── Phase 1: Constructing graph — kick off the build and poll the task ──
-    setPhase(1)
-    const build = await buildGraph({ project_id: projectId })
-    if (cancelled) return
-    if (!build.success) { fail(build.error || 'Graph build failed to start'); return }
-    const taskId = build.data.task_id
+    if (!graphId.value) {
+      setPhase(1)
+      const build = await buildGraph({ project_id: projectId.value })
+      if (cancelled) return
+      if (!build.success) { fail(build.error || 'Graph build failed to start'); return }
+      const taskId = build.data.task_id
 
-    let graphId = null
-    // Task state lives in the backend's memory. If the backend restarts the
-    // task vanishes (404 forever) — bail out instead of polling for eternity.
-    let misses = 0
-    while (!cancelled) {
-      await sleep(2000)
-      let task = null
-      try { const r = await getTaskStatus(taskId); task = r.success ? r.data : null } catch (_) { task = null }
-      if (!task) {
-        if (++misses >= 10) { fail('Lost contact with the graph build — the server restarted. Please try again.'); return }
-        continue
+      // Task state lives in the backend's memory. If the backend restarts the
+      // task vanishes (404 forever) — bail out instead of polling for eternity.
+      let misses = 0
+      while (!cancelled) {
+        await sleep(pollDelay(3000, misses))
+        let task = null
+        try { const r = await getTaskStatus(taskId); task = r.success ? r.data : null } catch (_) { task = null }
+        if (!task) {
+          if (++misses >= 10) { fail('Lost contact with the graph build — the server restarted. Please try again.'); return }
+          continue
+        }
+        misses = 0
+        progress.value = Math.max(progress.value, 15 + Math.min(100, task.progress || 0) * 0.45)  // 15 → 60
+        if (task.status === 'completed') break
+        if (task.status === 'failed') { fail(task.error || 'Graph build failed'); return }
       }
-      misses = 0
-      progress.value = 15 + Math.min(100, task.progress || 0) * 0.45  // 15 → 60
-      if (task.status === 'completed') break
-      if (task.status === 'failed') { fail(task.error || 'Graph build failed'); return }
+      if (cancelled) return
+
+      // ── Phase 2: Matching entities — load the real graph into the canvas ──
+      setPhase(2)
+      progress.value = Math.max(progress.value, 60)
+      try {
+        const proj = await getProject(projectId.value)
+        if (proj.success && proj.data.graph_id) {
+          graphId.value = proj.data.graph_id
+          const g = await getGraphData(graphId.value)
+          if (g.success) ingestGraphData(g.data)
+        }
+      } catch (_) { /* graph visual is best-effort; the run can still proceed */ }
+      if (cancelled) return
+    } else {
+      // Resume: the graph handle already exists. Paint it back in if the canvas
+      // is empty (fresh mount after a refresh), otherwise carry on.
+      setPhase(2)
+      progress.value = Math.max(progress.value, 60)
+      if (!NODES.length) {
+        try {
+          const g = await getGraphData(graphId.value)
+          if (g.success) ingestGraphData(g.data)
+        } catch (_) { /* graph visual is best-effort */ }
+      }
+      if (cancelled) return
     }
-    if (cancelled) return
-
-    // ── Phase 2: Matching entities — load the real graph into the canvas ──
-    setPhase(2)
-    progress.value = 60
-    try {
-      const proj = await getProject(projectId)
-      if (proj.success && proj.data.graph_id) {
-        graphId = proj.data.graph_id
-        const g = await getGraphData(graphId)
-        if (g.success) ingestGraphData(g.data)
-      }
-    } catch (_) { /* graph visual is best-effort; the run can still proceed */ }
-    if (cancelled) return
 
     // ── Phase 3: Pulling personas — create + prepare the simulation ──
     setPhase(3)
-    progress.value = 64
-    const created = await createSimulation({ project_id: projectId, graph_id: graphId || undefined })
-    if (cancelled) return
-    if (!created.success || !created.data?.simulation_id) {
-      fail(created.error || 'Could not create simulation'); return
+    progress.value = Math.max(progress.value, 64)
+    let simCreatedThisRun = false
+    if (!simulationId.value) {
+      const created = await createSimulation({ project_id: projectId.value, graph_id: graphId.value || undefined })
+      if (cancelled) return
+      if (!created.success || !created.data?.simulation_id) {
+        fail(created.error || 'Could not create simulation'); return
+      }
+      simulationId.value = created.data.simulation_id
+      simCreatedThisRun = true
+      // Hand the sim id up as soon as it exists so a mid-build refresh (or the
+      // sidebar) can restore this exact build instead of losing it.
+      emit('created', { simulationId: simulationId.value, projectId: projectId.value, graphId: graphId.value })
     }
-    simulationId = created.data.simulation_id
 
     const preparePayload = {
-      simulation_id: simulationId,
+      simulation_id: simulationId.value,
       parallel_profile_count: 5,
       mode_is_manual: modeIsManual,
     }
@@ -628,20 +665,42 @@ const runPipeline = async () => {
       preparePayload.custom_agents = pending.customAgents
       if (pending.customAgentsOnly) preparePayload.custom_agents_only = true
     }
-    const prep = await prepareSimulation(preparePayload)
-    if (cancelled) return
-    if (!prep.success) { fail(prep.error || 'Preparation failed'); return }
 
-    if (!prep.data?.already_prepared) {
-      const prepareTaskId = prep.data?.task_id
+    // A sim created in this run always needs preparing. On a resume (retry after
+    // a start failure, or a restored build) preparation may already be complete —
+    // probe first so we don't re-run the LLM cast unnecessarily.
+    let prepared = false
+    let prep = null
+    if (!simCreatedThisRun) {
+      try {
+        const probe = await getPrepareStatus({ simulation_id: simulationId.value })
+        prepared = !!(probe.success && (probe.data?.already_prepared || probe.data?.status === 'ready'))
+      } catch (_) { prepared = false }
+    }
+
+    if (!prepared) {
+      prep = await prepareSimulation(preparePayload)
+      if (cancelled) return
+      if (!prep.success) { fail(prep.error || 'Preparation failed'); return }
+    }
+
+    if (!prepared && !prep?.data?.already_prepared) {
+      const prepareTaskId = prep?.data?.task_id
+      // Same miss-tolerance as the graph build: a backend restart kills the
+      // in-memory task, so bail instead of polling forever.
+      let misses = 0
       while (!cancelled) {
-        await sleep(2500)
+        await sleep(pollDelay(3500, misses))
         let st = null
         try {
-          const r = await getPrepareStatus({ task_id: prepareTaskId, simulation_id: simulationId })
+          const r = await getPrepareStatus({ task_id: prepareTaskId, simulation_id: simulationId.value })
           st = r.success ? r.data : null
-        } catch (_) { continue }
-        if (!st) continue
+        } catch (_) { st = null }
+        if (!st) {
+          if (++misses >= 10) { fail('Lost contact with preparation — the server restarted. Please try again.'); return }
+          continue
+        }
+        misses = 0
         progress.value = 64 + Math.min(100, st.progress || 0) * 0.26  // 64 → 90
         if (st.status === 'completed' || st.status === 'ready' || st.already_prepared) break
         if (st.status === 'failed') { fail(st.error || 'Preparation failed'); return }
@@ -653,7 +712,7 @@ const runPipeline = async () => {
     // "Drawing the cast" phase actually shows which agents will run. Best-effort:
     // a failure here doesn't block the run.
     try {
-      const pr = await getSimulationProfilesRealtime(simulationId, 'opinion_space')
+      const pr = await getSimulationProfilesRealtime(simulationId.value, 'opinion_space')
       const profiles = Array.isArray(pr.data) ? pr.data : (pr.data?.profiles || [])
       ingestPersonas(profiles)
     } catch (_) { /* persona overlay is best-effort */ }
@@ -661,9 +720,9 @@ const runPipeline = async () => {
 
     // ── Phase 4: Preparing simulation — start the run ──
     setPhase(4)
-    progress.value = 92
+    progress.value = Math.max(progress.value, 92)
     const started = await startSimulation({
-      simulation_id: simulationId,
+      simulation_id: simulationId.value,
       platform: 'opinion_space',
       preset: ['quick', 'balanced', 'deep'].includes(pending.preset) ? pending.preset : 'balanced',
       enable_graph_memory_update: true,
@@ -681,12 +740,13 @@ const runPipeline = async () => {
   }
 }
 
-const emitViewReactions = () => emit('viewReactions', simulationId)
+const emitViewReactions = () => emit('viewReactions', simulationId.value)
 
 const retry = () => {
+  // Resume from the furthest stage that succeeded: the component-level handles
+  // (projectId/graphId/simulationId) are kept, so any stage whose output already
+  // exists is skipped. Retry never buys a second project or simulation.
   error.value = ''
-  progress.value = 0
-  activePhase.value = 0
   runPipeline()
 }
 

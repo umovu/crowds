@@ -439,6 +439,7 @@
           <span id="btn-submit-text">Sign in</span>
         </button>
         <button class="magic-toggle" id="magic-toggle" type="button">Email me a magic link instead</button>
+        <button class="magic-toggle" id="forgot-toggle" type="button">Forgot your password?</button>
       </form>
 
       <!-- Message -->
@@ -478,6 +479,7 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
   var btnSubmit = document.getElementById('btn-submit');
   var btnSubmitText = document.getElementById('btn-submit-text');
   var magicToggle = document.getElementById('magic-toggle');
+  var forgotToggle = document.getElementById('forgot-toggle');
   var msg = document.getElementById('msg');
   // New fields
   var nameField = document.getElementById('name-field');
@@ -562,6 +564,7 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
       confirmField.style.display = 'none';
       pwStrength.classList.remove('show');
       magicToggle.style.display = 'none';
+      forgotToggle.style.display = 'none';   // nothing to recover without an account
       if (!emailMode) btnEmail.click();      // the form IS the page here
       // Nothing to choose between, so drop the "Continue with email" button
       // and the "or" rule it separates.
@@ -578,6 +581,7 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
       confirmField.style.display = 'none';
       pwStrength.classList.remove('show');
       magicToggle.style.display = '';
+      forgotToggle.style.display = '';
       btnEmail.style.display = '';
       formDivider.style.display = emailMode ? 'flex' : 'none';
     }
@@ -659,6 +663,41 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
     updateSubmitLabel();
     validate();
     clearMsg();
+  });
+
+  // ── Forgot password ────────────────────────────────────────────────────
+  // Goes through the backend, not supabase.auth.resetPasswordForEmail: the
+  // backend checks the account is approved before any mail goes out. The reply
+  // is the same either way, so this never reveals who has an account.
+  forgotToggle.addEventListener('click', async function () {
+    var email = emailInput.value.trim();
+    if (!email) {
+      showMsg('Enter your email address above first, then click again.', 'err');
+      emailInput.focus();
+      return;
+    }
+    clearMsg();
+    forgotToggle.disabled = true;
+    forgotToggle.textContent = 'Sending…';
+    try {
+      const base = (API_BASE_URL || '').replace(/\/$/, '');
+      const res = await fetch(base + '/api/waitlist/password-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+      const body = await res.json().catch(function () { return {}; });
+      if (!res.ok || !body.success) {
+        throw new Error((body && body.error) || 'Could not send the reset link. Please try again.');
+      }
+      showMsg((body.data && body.data.message) ||
+              'If that email belongs to an approved account, a reset link is on its way.', 'ok');
+    } catch (e) {
+      showMsg(e.message || 'Could not send the reset link. Please try again.', 'err');
+    } finally {
+      forgotToggle.disabled = false;
+      forgotToggle.textContent = 'Forgot your password?';
+    }
   });
 
   // ── Input validation (real-time feedback) ──────────────────────────────

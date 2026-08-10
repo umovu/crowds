@@ -98,6 +98,28 @@
           </div>
         </div>
 
+        <!-- Security panel — set / change the account password -->
+        <div v-if="activeTab === 'security' && !showMobileMenu" class="tab-panel">
+          <div class="field-group">
+            <div class="field">
+              <label class="field-label">New password</label>
+              <input class="field-input" type="password" v-model="pw.next" autocomplete="new-password" placeholder="At least 8 characters">
+              <span class="field-help">Invited accounts start on a temporary password. Setting one here replaces it.</span>
+            </div>
+            <div class="field">
+              <label class="field-label">Confirm new password</label>
+              <input class="field-input" type="password" v-model="pw.confirm" autocomplete="new-password" placeholder="Type it again">
+            </div>
+          </div>
+          <div class="modal-actions">
+            <span v-if="pwMsg" class="save-msg" :class="pwMsg.type">{{ pwMsg.text }}</span>
+            <button class="btn" @click="closeFullpage">Cancel</button>
+            <button class="btn primary" :disabled="savingPassword" @click="savePassword">
+              {{ savingPassword ? 'Saving…' : 'Update password' }}
+            </button>
+          </div>
+        </div>
+
         <!-- Dashboard panel -->
         <div v-if="activeTab === 'dashboard' && !showMobileMenu" class="tab-panel">
           <DashboardPanel @open-sim="onOpenSim" />
@@ -272,6 +294,39 @@ async function saveProfile() {
   }
 }
 
+// ── Security: set a new password ─────────────────────────────────────────────
+// Invited accounts are created with a temporary password by an operator, so the
+// account can be used before this screen existed. This is how the owner takes
+// it over. Supabase re-issues the session on success, so nobody gets signed out.
+const pw = ref({ next: '', confirm: '' })
+const savingPassword = ref(false)
+const pwMsg = ref(null)  // { type: 'ok' | 'err', text }
+
+async function savePassword() {
+  if (savingPassword.value) return
+  const next = pw.value.next
+  if (next.length < 8) {
+    pwMsg.value = { type: 'err', text: 'Use at least 8 characters.' }
+    return
+  }
+  if (next !== pw.value.confirm) {
+    pwMsg.value = { type: 'err', text: 'The two passwords do not match.' }
+    return
+  }
+  savingPassword.value = true
+  pwMsg.value = null
+  try {
+    const { error } = await supabase.auth.updateUser({ password: next })
+    if (error) throw error
+    pw.value = { next: '', confirm: '' }
+    pwMsg.value = { type: 'ok', text: 'Password updated. Use it next time you sign in.' }
+  } catch (e) {
+    pwMsg.value = { type: 'err', text: e?.message || 'Could not update the password. Please try again.' }
+  } finally {
+    savingPassword.value = false
+  }
+}
+
 async function doUpgrade() {
   upgrading.value = true
   try {
@@ -307,6 +362,7 @@ const showMobileMenu = computed(() => isMobile && mobileMenu.value)
 
 const tabs = [
   { id: 'profile', label: 'Profile' },
+  { id: 'security', label: 'Security' },
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'billing', label: 'Billing' },
   { id: 'keys', label: 'API Keys' },

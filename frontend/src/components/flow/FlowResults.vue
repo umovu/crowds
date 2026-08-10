@@ -112,10 +112,19 @@
               <span class="coach-dot">⤓</span>
               <span>Once the run settles, download the full write-up here.</span>
             </div>
+            <!-- Degraded round: say so before any number is read. Every count
+                 below is of the people who answered, so the reader has to know
+                 the room was short before they trust the shape of it. -->
+            <p v-if="roomHealth" class="room-health">{{ roomHealth }}</p>
             <div class="spectrum-summary-body">
               <!-- One summary only: the counts read is a live placeholder while
-                   the run is in flight; once the LLM synthesis lands it replaces it. -->
-              <p v-if="!llmSummary">{{ summaryText }}</p>
+                   the run is in flight; once the LLM synthesis lands it replaces it.
+                   Pointer views (fit / ab) answer with their own, so their
+                   deterministic room read is suppressed. -->
+              <p v-if="!llmSummary && !isPointerView">{{ summaryText }}</p>
+              <p v-else-if="!llmSummary && isPointerView" class="summary-read muted">
+                {{ isAbView ? 'Run both versions to compare the room.' : 'The segment ranking appears below.' }}
+              </p>
               <p v-else class="summary-read">{{ llmSummary }}</p>
             </div>
           </div>
@@ -155,11 +164,81 @@
             </TransitionGroup>
           </div>
 
+          <!-- ── Panel: `fit` ranked segments (instead of the room) ────────── -->
+          <!-- The pick is the answer: an ordered list, most-won-over first. Each
+               row shows that segment's stance split and its members' own words.
+               Real data only — the ranking order came from the backend. -->
+          <div v-if="isPanel && isFitView && fitRanking.length" class="sim-feed">
+            <div class="sim-feed-head">
+              <span>Ranked fit</span>
+              <span class="sim-feed-count">{{ fitRanking.length }} segments</span>
+            </div>
+            <div class="fit-ranking">
+              <div v-for="(seg, i) in fitRanking" :key="seg.segment_id" class="fit-card" :class="{ top: i === 0 }">
+                <div class="fit-card-head">
+                  <span class="fit-rank">#{{ i + 1 }}</span>
+                  <span class="fit-card-label">{{ seg.label }}</span>
+                  <div class="fit-card-split">
+                    <span v-for="(count, st) in seg.stance_split" :key="st" class="fit-stance" :class="`stance-${st}`">
+                      {{ stanceLabel(st) }} {{ count }}
+                    </span>
+                  </div>
+                </div>
+                <div v-for="m in seg.members" :key="m.agent_id" class="fit-member" @click="openChat(m.agent_id)">
+                  <img :src="getAvatarUrl(m.agent_name)" :alt="m.agent_name" class="fit-member-avatar" />
+                  <div class="fit-member-body">
+                    <span class="fit-member-name">
+                      {{ m.agent_name }}
+                      <span class="fit-member-stance" :class="`stance-${m.stance_after}`">{{ stanceLabel(m.stance_after) }}</span>
+                    </span>
+                    <p class="fit-member-text">{{ m.response }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Panel: `ab` two versions of the same cast, side by side ────── -->
+          <div v-if="isPanel && isAbView && abVersions.length" class="sim-feed">
+            <div class="sim-feed-head">
+              <span>A/B comparison</span>
+              <span class="sim-feed-count">one room, two versions</span>
+            </div>
+            <div v-if="abMoved.length" class="ab-moved">
+              <span class="ab-moved-label">Who moved between versions:</span>
+              <span v-for="m in abMoved" :key="m.id" class="ab-moved-item">
+                {{ m.name }} — <span :class="`stance-${m.from}`">{{ stanceLabel(m.from) }}</span> → <span :class="`stance-${m.to}`">{{ stanceLabel(m.to) }}</span>
+              </span>
+            </div>
+            <div class="ab-columns">
+              <div v-for="v in abVersions" :key="v.key" class="ab-column" :class="`ab-${v.key}`">
+                <div class="ab-col-head">
+                  <span class="ab-col-title">{{ v.label }}</span>
+                  <div class="ab-col-split">
+                    <span v-for="(count, st) in v.stanceSplit" :key="st" class="fit-stance" :class="`stance-${st}`">
+                      {{ stanceLabel(st) }} {{ count }}
+                    </span>
+                  </div>
+                </div>
+                <p class="ab-col-summary">{{ v.summary || 'No summary for this version.' }}</p>
+                <div class="ab-col-pitch">{{ v.pitch }}</div>
+                <div v-for="a in v.agents" :key="a.id" class="ab-person" @click="openChat(a.id)">
+                  <img :src="a.avatarUrl" :alt="a.name" class="ab-person-avatar" />
+                  <div class="ab-person-body">
+                    <span class="ab-person-name">{{ a.name }}</span>
+                    <span class="ab-person-stance" :class="`stance-${a.stance_after}`">{{ stanceLabel(a.stance_after) }}</span>
+                    <p class="ab-person-text">{{ a.currentReaction }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- ── Panel reactions (panel mode) — avatars clustered by stance ── -->
           <!-- Personas group into deterministic stance buckets; clicking a face
                opens an anchored popover with their reaction, and "Ask a
                follow-up" hands off to the existing chat slide-out. -->
-          <div v-if="isPanel && panelReactions.length" class="sim-feed">
+          <div v-if="isPanel && !isPointerView && panelReactions.length" class="sim-feed">
             <div class="sim-feed-head">
               <span>Reactions</span>
               <span class="sim-feed-count">{{ panelReactions.length }} personas</span>
@@ -347,6 +426,7 @@ import {
   stopSimulation
 } from '../../api/simulation'
 import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
+import { useToast } from '../../composables/useToast'
 import { generateReport, getReportStatus, getReport } from '../../api/report'
 
 const props = defineProps({
@@ -359,8 +439,22 @@ const props = defineProps({
   demo: { type: Boolean, default: false }
 })
 const emit = defineEmits(['back'])
+const toast = useToast()
 
 const isPanel = computed(() => props.mode === 'panel')
+
+// ── Pointer state (panel mode) ─────────────────────────────────────────────
+// `fit` renders a ranked segment list instead of the room; `ab` shows two
+// versions of the same cast side by side. Everything here is real data — no
+// LLM meant for presentation.
+const panelPointer = ref(null)
+const panelSlots = reactive({})
+const fitRanking = ref([])
+const abVersions = ref([])
+const abMoved = ref([])
+const isFitView = computed(() => isPanel.value && panelPointer.value === 'fit')
+const isAbView = computed(() => isPanel.value && panelPointer.value === 'ab')
+const isPointerView = computed(() => isFitView.value || isAbView.value)
 
 // ── Report download (sim mode) ──────────────────────────────────────────────
 // Generate the full insight report on the backend, poll until it's written,
@@ -467,8 +561,21 @@ const STANCES = [
 
 const agentsByStance = (stance) => panelAgents.value.filter(a => a.stance_after === stance)
 
-// The roster the summary counts read off (live for both modes).
-const panelAgents = computed(() => agents.value)
+// The roster the summary counts read off (live for both modes). Personas whose
+// interview errored are excluded: every count downstream (stances, shifts, the
+// dashboard) must be "of the people who actually answered", never "of the seats
+// we booked". The seats are reported separately by `roomHealth` below, because
+// dropping them quietly would present a shrunken room as the full one.
+const panelAgents = computed(() => agents.value.filter(a => !a.failed))
+
+// "10 of 12 answered." Null on a healthy round so the UI stays clean; only
+// speaks up when there is something the user needs to discount.
+const roomHealth = computed(() => {
+  const seats = agents.value.length
+  const answered = panelAgents.value.length
+  if (!seats || answered === seats) return null
+  return `${answered} of ${seats} people answered. ${seats - answered} could not be reached.`
+})
 
 // Panel reaction cards: only personas that actually returned reaction text.
 // (Stance can be set without a response, so guard on currentReaction to avoid
@@ -598,9 +705,14 @@ const scrollContainer = ref(null)
 // immediate watcher reads it on setup.
 const COACH_KEY = 'crowds_results_coached_v1'
 const showCoach = ref(false)
-const hasReactions = computed(() =>
-  isPanel.value ? panelReactions.value.length > 0 : feed.value.length > 0
-)
+const hasReactions = computed(() => {
+  if (!isPanel.value) return feed.value.length > 0
+  if (isAbView.value) {
+    return abVersions.value.some(v => v.agents.some(a => (a.currentReaction || '').trim()))
+  }
+  if (isFitView.value) return fitRanking.value.length > 0 || panelReactions.value.length > 0
+  return panelReactions.value.length > 0
+})
 const dismissCoach = () => {
   showCoach.value = false
   try { localStorage.setItem(COACH_KEY, '1') } catch (_) { /* ignore */ }
@@ -635,7 +747,11 @@ const togglePause = async () => {
       paused.value = true
     }
   } catch (e) {
-    console.warn('Pause/resume failed:', e)
+    // Silence here is dangerous, not just untidy: the button resets and the user
+    // believes the run is paused while it is still going.
+    toast.error(paused.value ? 'Could not resume the run.'
+                             : 'Could not pause. The run is still going.',
+                { retry: togglePause })
   } finally {
     controlBusy.value = false
   }
@@ -650,7 +766,7 @@ const stopRun = async () => {
     feedLive.value = false
     stopSimPolling()
   } catch (e) {
-    console.warn('Stop failed:', e)
+    toast.error('Could not stop the run.', { retry: stopRun })
   } finally {
     controlBusy.value = false
   }
@@ -674,7 +790,6 @@ const scrollToBottom = () => {
 // ── Sim mode: real-time profiles + action timeline ──────────────────────────
 const seenActionIds = new Set()
 let actionTimer = null
-let statusTimer = null
 
 const loadSimAgents = async () => {
   if (!props.simulationId) return
@@ -722,6 +837,32 @@ const pushActionToFeed = (action) => {
   }
 }
 
+// ── Connection health ───────────────────────────────────────────────────────
+// A poll fires every 2-3 seconds, so one failure means nothing — a blip would
+// otherwise flash a scary message on a perfectly healthy run. Only after a few
+// consecutive misses is the connection genuinely gone, and only then do we say
+// so. Before this the feed simply stopped moving and a broken run was
+// indistinguishable from a finished one.
+const POLL_FAILS_BEFORE_WARNING = 3
+let pollFails = 0
+let offlineToastId = null
+
+const notePollFailure = () => {
+  pollFails++
+  if (pollFails === POLL_FAILS_BEFORE_WARNING && offlineToastId === null) {
+    offlineToastId = toast.error('Lost connection to the run. Retrying…')
+  }
+}
+
+const notePollSuccess = () => {
+  if (offlineToastId !== null) {
+    toast.dismiss(offlineToastId)
+    offlineToastId = null
+    toast.info('Back online.')
+  }
+  pollFails = 0
+}
+
 const pollSimActions = async () => {
   if (!props.simulationId) return
   try {
@@ -730,8 +871,9 @@ const pollSimActions = async () => {
       ;(res.data.all_actions || []).forEach(pushActionToFeed)
       scrollToBottom()
     }
+    notePollSuccess()
   } catch (e) {
-    console.warn('Failed to poll sim actions:', e)
+    notePollFailure()
   }
 }
 
@@ -761,18 +903,57 @@ const pollSimStatus = async () => {
         stopSimPolling()
       }
     }
+    notePollSuccess()
   } catch (e) {
-    console.warn('Failed to poll sim status:', e)
+    notePollFailure()
   }
 }
 
+// A long run polled on fixed 2-3s intervals fires thousands of requests, which
+// the hosting edge rate-limits (429 without CORS headers → the browser reports
+// a bare "Network Error" and the run looks dead). So: one self-scheduling loop
+// instead of two timers, a slower base cadence, no polling while the tab is
+// hidden, and exponential backoff whenever calls are failing.
+const POLL_BASE_MS = 6000
+const POLL_MAX_MS = 60000
+const STATUS_EVERY_N_TICKS = 2   // status check at half the action cadence
+let pollTick = 0
+let simPolling = false
+
+const nextPollDelay = () => (
+  pollFails === 0
+    ? POLL_BASE_MS
+    : Math.min(POLL_BASE_MS * Math.pow(2, pollFails), POLL_MAX_MS)
+)
+
+const scheduleNextPoll = () => {
+  if (!simPolling) return
+  actionTimer = setTimeout(simPollTick, nextPollDelay())
+}
+
+const simPollTick = async () => {
+  // A hidden tab has nothing to show; keep the loop alive but spend no requests.
+  if (typeof document !== 'undefined' && document.hidden) { scheduleNextPoll(); return }
+  await pollSimActions()
+  if (simPolling && pollTick % STATUS_EVERY_N_TICKS === 0) await pollSimStatus()
+  pollTick++
+  scheduleNextPoll()
+}
+
 const startSimPolling = () => {
-  actionTimer = setInterval(pollSimActions, 3000)
-  statusTimer = setInterval(pollSimStatus, 2000)
+  if (simPolling) return
+  simPolling = true
+  pollTick = 1   // status was just polled by startSim
+  scheduleNextPoll()
 }
 const stopSimPolling = () => {
-  if (actionTimer) { clearInterval(actionTimer); actionTimer = null }
-  if (statusTimer) { clearInterval(statusTimer); statusTimer = null }
+  simPolling = false
+  if (actionTimer) { clearTimeout(actionTimer); actionTimer = null }
+  // Polling stopping on purpose (run finished, view closed) must not leave a
+  // "lost connection, retrying" bar on screen promising a retry that will never
+  // come. Errors persist until dismissed, so this has to be explicit.
+  if (offlineToastId !== null) { toast.dismiss(offlineToastId); offlineToastId = null }
+  pollFails = 0
 }
 
 const startSim = async () => {
@@ -787,6 +968,93 @@ const startSim = async () => {
 }
 
 // ── Panel mode: assembled session roster + a single pitch round ─────────────
+const applyRound = (results) => {
+  const byId = {}
+  for (const r of results) byId[r.agent_id] = r
+  agents.value = agents.value.map(a => {
+    const r = byId[a.id]
+    if (!r) return a
+    // A failed interview is not a quiet person. Its fallback text ("I have no
+    // comment on that.") reads exactly like an opinion, and its stance_after is
+    // copied from stance_before — so rendering it both invents a reaction and
+    // counts that person as "did not move". Mark it and keep it out of the room.
+    if (r.failed || r.error) {
+      return { ...a, failed: true, currentReaction: '' }
+    }
+    return {
+      ...a,
+      failed: false,
+      stance_before: r.stance_before || a.stance_before,
+      stance_after: r.stance_after || r.stance_before || a.stance_after,
+      stance_changed: !!r.stance_changed,
+      currentReaction: r.response || a.currentReaction
+    }
+  })
+}
+
+// Build the A/B comparison: run (or reuse) one round per version against the
+// SAME cast, then read who moved between them. Two rounds, one room.
+const buildAb = async (rounds) => {
+  const va = (panelSlots.version_a || '').trim()
+  const vb = (panelSlots.version_b || '').trim()
+  const versions = [
+    { key: 'a', label: 'Version A', pitch: va || 'Version A' },
+    { key: 'b', label: 'Version B', pitch: vb || 'Version B' },
+  ]
+  const byPitch = {}
+  for (const r of rounds) byPitch[r.pitch] = r
+  abVersions.value = []
+  abMoved.value = []
+  const perVersion = {}
+  for (const v of versions) {
+    let r = byPitch[v.pitch]
+    if (!r) {
+      const res = await pitchSession(props.sessionId, { pitch: v.pitch, concurrency: 6 })
+      r = { pitch: v.pitch, result: { results: res.data?.results || [],
+                                       summary_narrative: res.data?.summary_narrative || '' } }
+    }
+    const res = (r.result || {}).results || []
+    const byId = {}
+    for (const rr of res) byId[rr.agent_id] = rr
+    const versionAgents = agents.value.map(a => {
+      const rr = byId[a.id]
+      return rr
+        ? { ...a, stance_after: rr.stance_after || rr.stance_before || a.stance_after,
+            currentReaction: rr.response || a.currentReaction }
+        : a
+    })
+    const stanceSplit = {}
+    for (const a of versionAgents) {
+      const k = a.stance_after || 'neutral'
+      stanceSplit[k] = (stanceSplit[k] || 0) + 1
+    }
+    perVersion[v.key] = { versionAgents, stanceSplit }
+    abVersions.value.push({
+      key: v.key, label: v.label, pitch: v.pitch,
+      agents: versionAgents, stanceSplit,
+      summary: (r.result || {}).summary_narrative || ''
+    })
+  }
+  // Who moved between the two versions — deterministic per-agent comparison.
+  const a = perVersion.a && perVersion.a.versionAgents
+  const b = perVersion.b && perVersion.b.versionAgents
+  if (a && b) {
+    const bMap = {}
+    for (const ag of b) bMap[ag.id] = ag
+    const moved = []
+    for (const ag of a) {
+      const o = bMap[ag.id]
+      if (o && o.stance_after !== ag.stance_after) {
+        moved.push({ ...ag, from: ag.stance_after, to: o.stance_after })
+      }
+    }
+    abMoved.value = moved
+    llmSummary.value = moved.length
+      ? `${moved.length} of ${a.length} personas reacted differently between the two versions.`
+      : 'The two versions landed about the same across this room.'
+  }
+}
+
 const loadPanel = async () => {
   if (!props.sessionId) return
   feedLive.value = true
@@ -808,38 +1076,41 @@ const loadPanel = async () => {
         if (thread.length) interviewThreads[a.id] = thread
       }
     }
-    // Revisiting a saved panel? Load its latest pitch round instead of running a
-    // new one. Only pitch when the session has no rounds yet (a fresh assemble).
-    let results = null
+    panelPointer.value = detail.data?.pointer || null
+    for (const k of Object.keys(panelSlots)) delete panelSlots[k]
+    Object.assign(panelSlots, detail.data?.slots || {})
+
+    // Existing rounds — a fresh assemble has none; a saved session has one+.
+    let rounds = []
     try {
       const rRes = await listRounds(props.sessionId, true)
-      const rounds = rRes.data?.rounds || []
-      if (rounds.length) {
-        const last = rounds[rounds.length - 1]
+      rounds = rRes.data?.rounds || []
+    } catch (_) { /* fall through to a fresh pitch */ }
+
+    if (panelPointer.value === 'ab') {
+      await buildAb(rounds)
+    } else {
+      const last = rounds[rounds.length - 1]
+      let results = null
+      if (last) {
         results = (last.result || {}).results || []
         llmSummary.value = (last.result || {}).summary_narrative || ''
+        if (panelPointer.value === 'fit') fitRanking.value = (last.result || {}).by_segment || []
       }
-    } catch (_) { /* fall through to a fresh pitch */ }
-    if (!results) {
-      const res = await pitchSession(props.sessionId, { concurrency: 6 })
-      results = res.data?.results || []
-      llmSummary.value = res.data?.summary_narrative || ''
+      if (!results) {
+        const res = await pitchSession(props.sessionId, { concurrency: 6 })
+        results = res.data?.results || []
+        llmSummary.value = res.data?.summary_narrative || ''
+        if (panelPointer.value === 'fit') fitRanking.value = res.data?.by_segment || []
+      }
+      applyRound(results)
     }
-    const byId = {}
-    for (const r of results) byId[r.agent_id] = r
-    agents.value = agents.value.map(a => {
-      const r = byId[a.id]
-      if (!r) return a
-      return {
-        ...a,
-        stance_before: r.stance_before || a.stance_before,
-        stance_after: r.stance_after || r.stance_before || a.stance_after,
-        stance_changed: !!r.stance_changed,
-        currentReaction: r.response || a.currentReaction
-      }
-    })
   } catch (e) {
-    console.warn('Failed to load / pitch panel:', e)
+    // Includes the server refusing a collapsed round (503 "round_failed"), which
+    // carries its own plain-English sentence — show that, not a generic one. The
+    // room stays empty rather than half-drawn, which is the honest state.
+    toast.error(e?.message || 'Could not load this panel.',
+                { retry: loadPanel, code: e?.response?.data?.code })
   } finally {
     feedLive.value = false
   }
@@ -1371,6 +1642,16 @@ onUnmounted(() => {
 .report-dl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .report-dl-btn .btn-spinner { border-color: #fff; border-top-color: transparent; }
 .report-dl-msg { margin: 8px 20px 0; font-size: 12.5px; color: #C0392B; }
+
+/* Degraded-round notice. Amber, not red: the round is usable, just short. */
+.room-health {
+  margin: 8px 20px 0;
+  padding: 6px 10px;
+  border-left: 3px solid #F59E0B;
+  background: #FFFBEB;
+  font-size: 12.5px;
+  color: #92400E;
+}
 .spectrum-summary-body {
   padding: 16px 20px;
 }
@@ -1441,4 +1722,101 @@ onUnmounted(() => {
 }
 .room-bar-send:hover:not(:disabled) { background: #178048; }
 .room-bar-send:disabled { background: #DDD; cursor: not-allowed; }
+
+/* ── Scoped stance flavours (FlowResults owns these) ──────────────────────── */
+.stance-support { background: rgba(30,158,90,0.12); color: #178048; }
+.stance-neutral { background: #F3F4F6; color: #6B7280; }
+.stance-concerned { background: #FFF4E5; color: #C2700A; }
+.stance-oppose, .stance-resist { background: #FDEDEB; color: #C0392B; }
+
+/* ── fit: ranked segment list ─────────────────────────────────────────────── */
+.fit-ranking { display: flex; flex-direction: column; gap: 14px; }
+.fit-card {
+  border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px 16px;
+  background: #FFF; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.fit-card.top {
+  border-color: #1E9E5A; background: #F7FCF9;
+  box-shadow: 0 3px 14px rgba(30,158,90,0.14);
+}
+.fit-card-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.fit-rank {
+  font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 0.8rem;
+  color: #1E9E5A; background: rgba(30,158,90,0.1);
+  border-radius: 8px; padding: 2px 8px;
+}
+.fit-card-label { font-size: 1rem; font-weight: 700; color: #111827; }
+.fit-card-split { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.fit-stance {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700;
+  border-radius: 999px; padding: 2px 9px;
+}
+.fit-member {
+  display: flex; gap: 10px; padding: 8px 6px; border-radius: 10px;
+  cursor: pointer; transition: background 0.12s;
+}
+.fit-member:hover { background: #F0FAF4; }
+.fit-member-avatar { width: 32px; height: 32px; border-radius: 50%; flex: none; }
+.fit-member-body { min-width: 0; }
+.fit-member-name { font-size: 0.8rem; font-weight: 600; color: #333; }
+.fit-member-stance {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700;
+  border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: middle;
+}
+.fit-member-text {
+  margin: 3px 0 0; font-size: 0.8rem; line-height: 1.5; color: #4B5563;
+  white-space: pre-wrap;
+}
+
+/* ── ab: two versions of one room, side by side ───────────────────────────── */
+.ab-moved {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px 14px; border: 1px solid #E5E7EB; border-radius: 12px;
+  background: #FBFDFC; margin-bottom: 14px;
+}
+.ab-moved-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700;
+  color: #9AA0A6; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.ab-moved-item { font-size: 0.78rem; color: #374151; }
+.ab-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ab-column {
+  border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px 16px;
+  background: #FFF;
+}
+.ab-column.ab-a { border-left: 3px solid #1E9E5A; }
+.ab-column.ab-b { border-left: 3px solid #3B82F6; }
+.ab-col-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.ab-col-title { font-size: 0.95rem; font-weight: 700; color: #111827; }
+.ab-col-split { display: flex; gap: 5px; flex-wrap: wrap; margin-left: auto; }
+.ab-col-summary {
+  margin: 0 0 8px; font-size: 0.8rem; line-height: 1.5; color: #374151;
+  background: #F7F8FA; border-radius: 8px; padding: 8px 10px;
+}
+.ab-col-pitch {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #9AA0A6;
+  border-bottom: 1px dashed #E5E7EB; padding-bottom: 8px; margin-bottom: 8px;
+  white-space: pre-wrap;
+}
+.ab-person {
+  display: flex; gap: 9px; padding: 7px 4px; border-radius: 9px; cursor: pointer;
+  transition: background 0.12s;
+}
+.ab-person:hover { background: #F5F8FB; }
+.ab-person-avatar { width: 30px; height: 30px; border-radius: 50%; flex: none; }
+.ab-person-body { min-width: 0; }
+.ab-person-name { font-size: 0.78rem; font-weight: 600; color: #333; }
+.ab-person-stance {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 700;
+  border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: middle;
+}
+.ab-person-text {
+  margin: 3px 0 0; font-size: 0.78rem; line-height: 1.5; color: #4B5563;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 720px) { .ab-columns { grid-template-columns: 1fr; } }
 </style>
