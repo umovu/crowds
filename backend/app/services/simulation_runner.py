@@ -190,11 +190,12 @@ class SimulationRunner:
     4. Supporting pause/stop/resume operations
     """
     
-    # Storage directory for run state
-    RUN_STATE_DIR = os.path.join(
-        os.path.dirname(__file__),
-        '../../uploads/simulations'
-    )
+    # Storage directory for run state. Lives under Config.DATA_ROOT so it sits
+    # on the mounted volume in prod (Railway /data), matching where /prepare
+    # writes simulation_config.json. The old source-relative
+    # '../../uploads/simulations' diverged on hosts where DATA_ROOT=/data and
+    # made /start 400 on every run (config not found).
+    RUN_STATE_DIR = Config.OASIS_SIMULATION_DATA_DIR
     
     # Script directory
     SCRIPTS_DIR = os.path.join(
