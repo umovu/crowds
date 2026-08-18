@@ -213,3 +213,134 @@ def invite():
     logger.info("Invited %s via admin link", email)
     return _form(token, f"Invite sent to {email}. They can set a password now.",
                  "#178048", 200)
+
+
+# ── Trial usage ──────────────────────────────────────────────────────────────
+#
+#   GET /admin/usage?token=<ADMIN_APPROVE_TOKEN>
+#
+# One table: who signed up, how much of their free trial they've spent, and
+# when they last actually ran a panel. Trial counters come from Supabase
+# (`subscriptions`); the "last panel" column comes from the panel session files
+# on this server's data volume, which is the only place a real timestamp lives.
+
+_USAGE_PAGE = """<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crowds usage</title>
+<style>
+  body {{ font-family: system-ui, sans-serif; background: #FAFAFA; color: #141414;
+         margin: 0; padding: 24px; }}
+  h1 {{ font-size: 1.2rem; margin: 0 0 4px; }}
+  p.sub {{ color: #6a6a6a; font-size: 0.85rem; margin: 0 0 18px; }}
+  table {{ border-collapse: collapse; width: 100%; max-width: 900px;
+           background: #fff; border: 1px solid #E8E8E8; border-radius: 10px; }}
+  th, td {{ text-align: left; padding: 9px 12px; font-size: 0.87rem;
+            border-bottom: 1px solid #F0F0F0; white-space: nowrap; }}
+  th {{ background: #F6F6F6; font-weight: 600; }}
+  tr:last-child td {{ border-bottom: none; }}
+  .paid {{ color: #178048; font-weight: 600; }}
+  .spent {{ color: #C0392B; font-weight: 600; }}
+  .muted {{ color: #9a9a9a; }}
+</style>
+<h1>Trial usage</h1>
+<p class="sub">{note}</p>
+<table>
+<tr><th>Email</th><th>Plan</th><th>Panels</th><th>Sims</th><th>Last panel</th><th>Approved</th></tr>
+{rows}
+</table>
+"""
+
+
+def _last_panel_runs() -> dict:
+    """{user_id: (last_created_at, count)} read from panel session files."""
+    out: dict = {}
+    try:
+        from app.services import panel_service
+        for meta in panel_service.list_sessions(None):
+            uid = meta.get("user_id")
+            if not uid:
+                continue
+            created = meta.get("created_at") or ""
+            last, count = out.get(uid, ("", 0))
+            out[uid] = (max(last, created), count + 1)
+    except Exception as e:
+        logger.warning("Usage page: could not read panel sessions: %s", e)
+    return out
+
+
+@admin_bp.route('/usage', methods=['GET'])
+def usage():
+    expected = os.environ.get("ADMIN_APPROVE_TOKEN", "")
+    if not expected:
+        return _page("Not available", "The usage page isn't configured on this server.",
+                     "#C0392B", 503)
+    if not hmac.compare_digest(request.args.get("token", ""), expected):
+        logger.warning("Admin usage rejected: bad token")
+        return _page("Not allowed", "That link isn't valid.", "#C0392B", 403)
+    if not os.environ.get("SUPABASE_SERVICE_ROLE_KEY"):
+        return _page("Not available", "Supabase isn't configured on this server.",
+                     "#C0392B", 503)
+
+    try:
+        profiles = requests.get(
+            _rest("/rest/v1/profiles"),
+            params={"select": "id,email,full_name,approved", "limit": "500"},
+            headers=_service_headers(), timeout=15,
+        )
+        profiles.raise_for_status()
+        subs = requests.get(
+            _rest("/rest/v1/subscriptions"),
+            params={"select": "user_id,plan,panel_used,sim_used,status", "limit": "500"},
+            headers=_service_headers(), timeout=15,
+        )
+        subs.raise_for_status()
+    except Exception as e:
+        logger.error("Usage page lookup failed: %s", e)
+        return _page("Didn't work", "Couldn't reach Supabase. Try again.", "#C0392B", 502)
+
+    by_user = {s.get("user_id"): s for s in (subs.json() or [])}
+    runs = _last_panel_runs()
+
+    def sort_key(p):
+        last, _ = runs.get(p.get("id"), ("", 0))
+        return last
+    people = sorted(profiles.json() or [], key=sort_key, reverse=True)
+
+    from .billing import FREE_PANEL_LIMIT, FREE_SIM_LIMIT
+
+    rows = []
+    for p in people:
+        sub = by_user.get(p.get("id")) or {}
+        plan = sub.get("plan") or "free"
+        panels = int(sub.get("panel_used") or 0)
+        sims = int(sub.get("sim_used") or 0)
+        last, _count = runs.get(p.get("id"), ("", 0))
+        paid = plan == "paid"
+
+        def cell(used, limit):
+            if paid:
+                return f'<span class="paid">{used}</span>'
+            css = "spent" if used >= limit else ""
+            return f'<span class="{css}">{used} / {limit}</span>'
+
+        plan_cell = '<span class="paid">paid</span>' if paid else 'free'
+        last_cell = last[:16].replace('T', ' ') if last else '<span class="muted">never</span>'
+        appr_cell = 'yes' if p.get('approved') else '<span class="muted">pending</span>'
+        who = p.get('email') or p.get('id')
+        rows.append(
+            "<tr>"
+            f"<td>{who}</td>"
+            f"<td>{plan_cell}</td>"
+            f"<td>{cell(panels, FREE_PANEL_LIMIT)}</td>"
+            f"<td>{cell(sims, FREE_SIM_LIMIT)}</td>"
+            f"<td>{last_cell}</td>"
+            f"<td>{appr_cell}</td>"
+            "</tr>"
+        )
+
+    note = (f"{len(people)} accounts. Free trial is {FREE_PANEL_LIMIT} panels "
+            f"and {FREE_SIM_LIMIT} sims. Newest activity first.")
+    html = _USAGE_PAGE.format(note=note, rows="\n".join(rows) or
+                              '<tr><td colspan="6" class="muted">No accounts yet.</td></tr>')
+    return html, 200, {"Content-Type": "text/html; charset=utf-8"}
