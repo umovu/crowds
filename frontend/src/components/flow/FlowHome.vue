@@ -336,26 +336,47 @@
                 <pre v-if="briefOpen" class="poster-card-brief">{{ posterBrief }}</pre>
               </div>
 
-              <!-- The four lenses: pick a job and the same sentence re-runs
-                   under that lens. No form ever opens — structure lives behind
-                   the input, the user only types and optionally corrects. -->
-              <div v-if="!posterBrief" class="ptr-section">
-                <div class="ptr-grid">
-                  <div
+              <!-- The four pointers: pick the job you want done and the same
+                   sentence re-runs under it. Rows, not cards — one hovered row
+                   stays lit while its siblings dim, and the zone below reveals
+                   the scaffold that pointer actually asks for. Those slot
+                   labels/hints come from the server's POINTERS table, so what
+                   is read here is what the seed is assembled from. The zone has
+                   a reserved height so revealing never moves the page. -->
+              <div v-if="!posterBrief" class="ptr-section" @mouseleave="closeSubPrompts">
+                <!-- Level one: the pointers themselves. -->
+                <div v-if="!openCard" class="ptr-list">
+                  <button
                     v-for="c in LENS_CARDS"
                     :key="c.id"
-                    class="ptr-card"
+                    class="ptr-row"
                     :class="{ active: lens === c.id }"
+                    @click="openLens(c.id)"
                   >
-                    <button class="ptr-card-main" @click="selectLens(c.id)">
-                      <span class="ptr-card-label">{{ c.label }}</span>
-                      <span class="ptr-card-blurb">{{ c.blurb }}</span>
-                      <span v-if="studyLoading && lens === c.id" class="ptr-card-busy">reading…</span>
-                    </button>
-                    <button class="ptr-card-eg" title="Fill the sentence with this example" @click="useExample(c.id)">
-                      “{{ c.example }}”
-                    </button>
+                    <LensIcon :name="c.id" />
+                    <span class="ptr-row-label">{{ c.label }}</span>
+                    <span v-if="studyLoading && lens === c.id" class="ptr-row-busy">reading…</span>
+                  </button>
+                </div>
+
+                <!-- Level two: the same space, now holding that pointer's own
+                     questions. Moving the cursor out of the zone brings the
+                     pointers back; the arrow does the same for touch and
+                     keyboard, which have no mouseleave. -->
+                <div v-else class="ptr-list">
+                  <div class="ptr-crumb">
+                    <button class="ptr-back" @click="closeSubPrompts">←</button>
+                    <span class="ptr-crumb-label">{{ openCard.label }}</span>
                   </div>
+                  <button
+                    v-for="q in openCard.prompts"
+                    :key="q"
+                    class="ptr-row is-sub"
+                    @click="useSubPrompt(openCard.id, q)"
+                  >
+                    <LensIcon name="sub" :size="19" />
+                    <span class="ptr-row-label">{{ q }}</span>
+                  </button>
                 </div>
               </div>
 
@@ -481,13 +502,14 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
-import { createSession, listSessions, listSegments, readStudy, uploadPoster } from '../../api/panel'
+import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
 import { useAuth } from '../../composables/useAuth'
 import { useToast } from '../../composables/useToast'
 import ProfileModal from './ProfileModal.vue'
+import LensIcon from './LensIcon.vue'
 
 const emit = defineEmits(['submit', 'open'])
 
@@ -634,16 +656,77 @@ const tourSim = ref(null)
 // only input; structure (audience, probes, mode, price) is derived and shown
 // back as chips they may correct or approve and run.
 const LENS_CARDS = [
-  { id: 'land', label: 'How does this land?', blurb: 'The honest first read on what you’re putting out.', example: 'A startup launching a mobile app that lets South Africans invest from R50 a month with no monthly fees, aimed at young professionals in cities who have never invested before.' },
-  { id: 'breaks', label: 'What breaks it?', blurb: 'Blockers only. Same run, sharper question.', example: 'Government announces a national permit verification drive: employers must confirm every worker’s papers within 90 days.' },
-  { id: 'fit', label: 'Which segment fits best?', blurb: 'Same offer, six buyer groups. See who it lands with.', example: 'A mobile app that lets South Africans invest from R50 a month with no monthly fees.' },
-  { id: 'ab', label: 'A/B two versions', blurb: 'Two ways of saying it, one room, side by side.', example: 'A: Start investing from R50 a month — no monthly fees.  B: R50 puts you in the market.', exampleA: 'Start investing from R50 a month — no monthly fees.', exampleB: 'R50 puts you in the market. Stop watching from the side.' },
+  // Each pointer carries the sub-questions it can answer. Clicking a pointer
+  // reveals them; clicking one of them writes it into the composer. These are
+  // UI copy only — unlike the server's slots they never touch seed assembly,
+  // so they live here where the screen can render them without a round trip.
+  { id: 'land', label: 'Test how a message lands', prompts: [
+    'Does my pitch make sense in 5 seconds?',
+    'Which headline makes people want to try it?',
+    'How should this read in isiZulu, not just English?',
+    'What do people think I am actually selling?',
+  ] },
+  { id: 'breaks', label: 'Find what stops people saying yes', prompts: [
+    'What would stop people saying yes to this?',
+    'Where do people get stuck in my sign-up flow?',
+    'Is data cost a reason people will not use this?',
+    'Should this live inside WhatsApp instead of an app?',
+  ] },
+  { id: 'fit', label: 'Find out which group it’s for', prompts: [
+    'At R99 a month, who can afford this and who cannot?',
+    'Which group is this really for, if I stop guessing?',
+    'Card, EFT, or mobile money — how do people want to pay?',
+  ] },
+  { id: 'ab', label: 'Compare two ways of saying it', prompts: [
+    'Which of these two lines pulls harder?',
+    'Which version makes it clearer what I am selling?',
+    'Why would someone pick A over B?',
+  ], exampleA: 'Start investing from R50 a month — no monthly fees.', exampleB: 'R50 puts you in the market. Stop watching from the side.' },
+  { id: 'poster', label: 'Test a poster before you print it', prompts: [
+    'What do people think this poster is offering?',
+    'Does the price on this poster read as cheap or as a catch?',
+    'What would make someone walk past this?',
+  ] },
+  { id: 'website', label: 'Test a page on your website', prompts: [
+    'Does this page work on a cheap phone and slow data?',
+    'What do people think this page offers?',
+    'Do people trust this page enough to put their money in?',
+    'Does my data consent message reassure or scare people off?',
+  ] },
 ]
 
 const lens = ref(null)
 const abA = ref('')
 const abB = ref('')
 const lensLabel = computed(() => LENS_CARDS.find(c => c.id === lens.value)?.label || '')
+
+// Which pointer has been opened into its sub-questions. Null means the zone is
+// showing the pointers themselves. Opening one selects it too — the sentence in
+// the box is re-read under that pointer straight away.
+const openLensId = ref(null)
+
+// The scaffold behind each pointer, fetched once from /api/panel/pointers. Kept
+// server-side-sourced on purpose: hardcoding the hints here would let the UI
+// drift from the slots the seed is actually built from.
+const pointerSpecs = ref([])
+
+// The pointer whose sub-questions currently fill the zone, or null while the
+// pointers themselves are showing.
+const openCard = computed(() =>
+  LENS_CARDS.find(c => c.id === openLensId.value) || null)
+
+// Opening a pointer does two things at once: it selects that pointer (so a
+// sentence already typed is re-read under it) and it swaps the zone over to
+// that pointer's own questions.
+function openLens(id) {
+  openLensId.value = id
+  selectLens(id)
+}
+
+function closeSubPrompts() {
+  openLensId.value = null
+}
+
 
 // The confirmed study spec (what the /read endpoint derived). Chips render from
 // it and every correction writes straight back into it — the two never drift.
@@ -723,28 +806,37 @@ function selectLens(id) {
   lens.value = id
   study.value = null
   probesOpen.value = false
+  // No auto-fill here: clicking a pointer opens its questions, and picking one
+  // of those is what writes into the box.
   if (id !== 'ab') nextTick(() => panelInput.value?.focus())
   scheduleRead()
 }
 
-function useExample(id) {
-  const card = LENS_CARDS.find(c => c.id === id)
-  if (!card) return
-  if (id === 'ab') {
-    abA.value = card.exampleA || ''
-    abB.value = card.exampleB || ''
-  } else {
-    panelPitch.value = card.example || ''
-  }
+// Picking a sub-question: it becomes the sentence in the box, under its own
+// pointer. Appends rather than overwrites when the founder has already typed,
+// so their own words are never lost to a click.
+function useSubPrompt(id, question) {
   lens.value = id
+  openLensId.value = null
   study.value = null
+  probesOpen.value = false
+  if (id === 'ab') {
+    const card = LENS_CARDS.find(c => c.id === id)
+    if (!abA.value.trim()) abA.value = card?.exampleA || ''
+    if (!abB.value.trim()) abB.value = card?.exampleB || ''
+  } else {
+    const typed = panelPitch.value.trim()
+    panelPitch.value = typed ? `${typed}
+
+${question}` : question
+  }
   runRead().then(() => {
     if (id !== 'ab') panelInput.value?.focus()
   })
 }
 
 function cycleLens() {
-  const order = ['land', 'breaks', 'fit', 'ab']
+  const order = ['land', 'breaks', 'fit', 'ab', 'poster', 'website']
   selectLens(order[(order.indexOf(lens.value) + 1) % order.length])
 }
 
@@ -860,7 +952,8 @@ function buildSlots(spec) {
 }
 
 function tryExample() {
-  useExample('land')
+  const card = LENS_CARDS.find(c => c.id === 'land')
+  useSubPrompt('land', card.prompts[0])
   dismissWelcome()
 }
 
@@ -924,6 +1017,10 @@ const tourTipStyle = computed(() => {
 onMounted(() => {
   if (!localStorage.getItem(ONBOARD_KEY)) showWelcome.value = true
   window.addEventListener('resize', updateTourRect)
+  // Best-effort: if this fails the rows still work, the peek zone just stays idle.
+  listPointers()
+    .then(res => { pointerSpecs.value = res.data?.pointers || [] })
+    .catch(() => { pointerSpecs.value = [] })
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updateTourRect)
@@ -1819,34 +1916,59 @@ onUnmounted(() => {
 }
 
 /* ── The four lenses: pick one, the sentence re-runs under it ─────────────── */
-.ptr-section { margin-top: 14px; }
-.ptr-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
+.ptr-section { margin-top: 18px; }
+
+/* Rows, not cards. No border, no box — the row is padding, an icon and a
+   label, and the hover state is the only chrome. The zone holds its height so
+   swapping pointers for their questions never moves the page. */
+.ptr-section { min-height: 236px; }
+.ptr-list { display: flex; flex-direction: column; gap: 2px; }
+.ptr-row {
+  display: flex; align-items: center; gap: 15px;
+  width: 100%; text-align: left;
+  padding: 11px 8px; border: none; border-radius: 10px;
+  background: transparent; cursor: pointer;
+  color: var(--ink-soft);
+  font-family: inherit;
+  transition: opacity 0.15s, background 0.15s;
 }
-.ptr-card {
-  display: flex; flex-direction: column; text-align: left;
-  padding: 0; border: 1px solid var(--hairline); border-radius: 12px;
-  background: var(--card); overflow: hidden;
-  transition: border-color .15s, box-shadow .15s;
+/* The design's focus trick: hovering the list fades every row, and the one
+   under the cursor comes back. Makes choosing feel like choosing. */
+.ptr-list:hover .ptr-row { opacity: 0.45; }
+.ptr-list .ptr-row:hover,
+.ptr-list .ptr-row:focus-visible,
+.ptr-list .ptr-row.active { opacity: 1; }
+.ptr-row:hover { background: var(--paper-hover, #faf9f7); }
+.ptr-row.active { background: var(--accent-pill); }
+.ptr-row.active .ptr-row-label { color: var(--accent-text, var(--accent)); }
+.ptr-row-label { font-size: 1rem; font-weight: 600; color: var(--ink); }
+.ptr-row-busy { margin-left: auto; font-size: 0.68rem; color: var(--accent); }
+
+/* Level two: the questions read a shade quieter than the pointers they came
+   from, so the two levels never look like the same list. */
+.ptr-row.is-sub { color: var(--muted); }
+.ptr-row.is-sub .ptr-row-label { font-weight: 600; color: var(--ink-soft); }
+.ptr-row.is-sub:hover .ptr-row-label { color: var(--accent-text, var(--accent)); }
+
+/* The crumb: which pointer you are inside, and the way back out. */
+.ptr-crumb { display: flex; align-items: center; gap: 10px; padding: 2px 8px 8px; }
+.ptr-back {
+  width: 26px; height: 26px; flex: none;
+  border: 1px solid var(--hairline); border-radius: 50%;
+  background: transparent; color: var(--ink-soft);
+  font-family: inherit; font-size: 0.8rem; line-height: 1; cursor: pointer;
 }
-.ptr-card.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-ring); }
-.ptr-card-main {
-  border: none; background: none; cursor: pointer; padding: 12px 14px 6px;
-  display: flex; flex-direction: column; gap: 4px; text-align: left;
+.ptr-back:hover { background: var(--paper-hover, #faf9f7); }
+.ptr-crumb-label {
+  font-size: 0.68rem; letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--muted-soft); font-weight: 600;
 }
-.ptr-card-main:hover .ptr-card-label { color: var(--accent); }
-.ptr-card-label { font-size: 0.9rem; font-weight: 700; color: var(--ink); }
-.ptr-card-blurb { font-size: 0.74rem; color: var(--muted); line-height: 1.35; }
-.ptr-card-eg {
-  border: none; background: var(--paper); cursor: pointer;
-  padding: 6px 14px; text-align: left;
-  font-size: 0.68rem; line-height: 1.35; color: var(--muted);
-  border-top: 1px solid var(--hairline-soft); font-style: italic;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+
+/* Touch has no hover: show every row at full strength and keep the zone idle
+   until a row is actually tapped. */
+@media (hover: none) {
+  .ptr-list:hover .ptr-row { opacity: 1; }
 }
-.ptr-card-eg:hover { color: var(--accent); background: var(--accent-pill); }
-.ptr-card-busy { font-size: 0.68rem; color: var(--accent); font-family: var(--font-body); }
 
 /* A/B needs two lines — the only exception to the one-sentence rule. */
 .ab-box { display: flex; flex-direction: column; gap: 10px; }
