@@ -791,6 +791,10 @@ async function ensureStudy() {
 
 function onComposerInput() {
   autosizePrompt()
+  // Typed over the picked question? Then there is nothing left to swap out.
+  if (pickedPrompt.value && !panelPitch.value.includes(pickedPrompt.value)) {
+    pickedPrompt.value = ''
+  }
   study.value = null
   probesOpen.value = false
   if (lens.value) scheduleRead()
@@ -812,9 +816,14 @@ function selectLens(id) {
   scheduleRead()
 }
 
-// Picking a sub-question: it becomes the sentence in the box, under its own
-// pointer. Appends rather than overwrites when the founder has already typed,
-// so their own words are never lost to a click.
+// The last sub-question this screen wrote into the box, exactly as written. It
+// is how a second pick knows what to replace: the founder's own words stay, the
+// previous question does not.
+const pickedPrompt = ref('')
+
+// Picking a sub-question. The first pick puts it in the box (after anything the
+// founder already typed). Every pick after that swaps the previous question out
+// for the new one, so the box always holds one question, not a growing pile.
 function useSubPrompt(id, question) {
   lens.value = id
   openLensId.value = null
@@ -825,10 +834,20 @@ function useSubPrompt(id, question) {
     if (!abA.value.trim()) abA.value = card?.exampleA || ''
     if (!abB.value.trim()) abB.value = card?.exampleB || ''
   } else {
-    const typed = panelPitch.value.trim()
-    panelPitch.value = typed ? `${typed}
+    const prev = pickedPrompt.value
+    const text = panelPitch.value
+    let own = text
+    // Peel the previous question back off the end. If it isn't there any more
+    // — the founder rewrote it — whatever is in the box is theirs and stays.
+    if (prev && text.trimEnd().endsWith(prev)) {
+      own = text.trimEnd().slice(0, -prev.length)
+    }
+    own = own.trim()
+    panelPitch.value = own ? `${own}
 
 ${question}` : question
+    pickedPrompt.value = question
+    nextTick(autosizePrompt)
   }
   runRead().then(() => {
     if (id !== 'ab') panelInput.value?.focus()
