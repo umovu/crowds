@@ -117,23 +117,32 @@
           <button class="crowd-modal-close" @click="crowdPickerOpen = false">✕</button>
         </div>
         <div class="crowd-modal-body">
-          <div class="pp-field-label">Who's in the room?</div>
-          <div class="pp-segments">
-            <button
-              v-for="seg in segments"
-              :key="seg.id"
-              class="pp-segment"
-              :class="{ selected: selectedSegments.includes(seg.id) }"
-              :title="seg.label + ' — ' + seg.description"
-              @click="toggleSegment(seg.id)"
-            >
-              <span class="pp-segment-top">
-                <span class="pp-segment-label">{{ seg.label }}</span>
-                <span class="pp-segment-count">{{ seg.count }}</span>
-              </span>
-              <span class="pp-segment-desc">{{ seg.description }}</span>
-            </button>
-          </div>
+          <!-- fit asks which of six named groups lands the offer — there's no
+               crowd to pick, and the size is fixed: six × two seats. -->
+          <template v-if="isFit">
+            <div class="pp-field-label">Which fits best?</div>
+            <p class="pp-fit-note">Six buyer groups, two seats each — a fixed 12-person cast. The ranking IS the answer.</p>
+          </template>
+          <template v-else>
+            <div class="pp-field-label">Who's in the room?</div>
+            <input v-model="crowdSearch" class="crowd-search" type="text" placeholder="Search groups…">
+            <div class="pp-segments">
+              <button
+                v-for="seg in filteredSegments"
+                :key="seg.id"
+                class="pp-segment"
+                :class="{ selected: selectedSegments.includes(seg.id) }"
+                :title="seg.label + ' — ' + seg.description"
+                @click="toggleSegment(seg.id)"
+              >
+                <span class="pp-segment-top">
+                  <span class="pp-segment-label">{{ seg.label }}</span>
+                  <span class="pp-segment-count">{{ seg.count }}</span>
+                </span>
+                <span class="pp-segment-desc">{{ seg.description }}</span>
+              </button>
+            </div>
+          </template>
 
           <div class="pp-control-row">
             <span class="pp-control-label">Panel size</span>
@@ -142,15 +151,16 @@
                 v-for="opt in sizeOptions"
                 :key="opt"
                 class="pp-size-btn"
-                :class="{ active: panelSize === opt }"
+                :class="{ active: effectiveSize === opt }"
+                :disabled="isFit"
                 @click="panelSize = opt"
               >{{ opt }}</button>
             </div>
           </div>
         </div>
         <div class="crowd-modal-foot">
-          <span class="crowd-foot-summary">{{ crowdSummary }} · {{ panelSize }} people</span>
-          <button class="crowd-done-btn" @click="crowdPickerOpen = false">Done</button>
+          <span class="crowd-foot-summary">{{ crowdSummary }} · {{ effectiveSize }} people</span>
+          <button class="crowd-done-btn" @click="applyAudience">Done</button>
         </div>
       </div>
     </div>
@@ -209,19 +219,41 @@
 
               <div ref="tourPrompt" class="simple-prompt" :class="{ focused: panelFocused }">
                 <textarea
+                  v-if="lens !== 'ab'"
                   ref="panelInput"
                   v-model="panelPitch"
                   class="simple-prompt-input"
                   :placeholder="promptPlaceholder"
                   @focus="panelFocused = true"
                   @blur="panelFocused = false"
-                  @input="autosizePrompt"
+                  @input="onComposerInput"
                 ></textarea>
+                <div v-else class="ab-box" @focus="panelFocused = true" @blur="panelFocused = false">
+                  <textarea
+                    ref="abAInput"
+                    v-model="abA"
+                    class="ab-box-input"
+                    placeholder="Version A — the first way of saying it."
+                    @input="onComposerInput"
+                  ></textarea>
+                  <textarea
+                    ref="abBInput"
+                    v-model="abB"
+                    class="ab-box-input"
+                    placeholder="Version B — change one thing, not everything."
+                    @input="onComposerInput"
+                  ></textarea>
+                </div>
                 <div class="simple-prompt-bar">
                   <!-- Poster upload: one vision call reads the image into a
                        text brief, which becomes the pitch above. The cast only
                        ever sees text. -->
-                  <label class="crowd-btn" :class="{ busy: posterBusy }">
+                  <label
+                    class="crowd-btn clip-btn"
+                    :class="{ busy: posterBusy }"
+                    :title="posterBusy ? 'Reading image…' : 'Attach an image'"
+                    aria-label="Attach an image"
+                  >
                     <input
                       type="file"
                       class="poster-file"
@@ -229,15 +261,20 @@
                       :disabled="posterBusy"
                       @change="onPosterPick"
                     />
-                    <span class="crowd-btn-icon">▣</span>
-                    <span>{{ posterBusy ? 'Reading poster…' : 'Upload poster' }}</span>
+                    <svg class="clip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21.44 11.05l-8.49 8.49a5.5 5.5 0 01-7.78-7.78l8.49-8.49a3.67 3.67 0 015.19 5.19l-8.49 8.49a1.83 1.83 0 01-2.6-2.6l7.78-7.78" />
+                    </svg>
                     <span v-if="posterName" class="crowd-btn-summary">{{ posterName }}</span>
                   </label>
 
-                  <button ref="tourCrowd" class="crowd-btn" @click="crowdPickerOpen = true">
+                  <button v-if="lens !== 'fit'" ref="tourCrowd" class="crowd-btn" @click="openAudiencePicker">
                     <span class="crowd-btn-icon">◇</span>
                     <span>Select crowds</span>
                     <span class="crowd-btn-summary">{{ crowdSummary }}</span>
+                  </button>
+                  <button v-else ref="tourCrowd" class="crowd-btn" disabled title="Fit ranks every buyer group — there's no one crowd to pick.">
+                    <span class="crowd-btn-icon">◇</span>
+                    <span>All six buyer groups</span>
                   </button>
 
                   <!-- Run speed — collapsible dropdown (sim depth/rounds) -->
@@ -305,15 +342,132 @@
                 <pre v-if="briefOpen" class="poster-card-brief">{{ posterBrief }}</pre>
               </div>
 
-              <!-- First-timer examples: click to prefill the prompt -->
-              <div v-if="!panelPitch.trim() && !posterBrief" class="ob-examples">
-                <span class="ob-examples-label">Try:</span>
-                <button
-                  v-for="(ex, i) in EXAMPLES"
-                  :key="i"
-                  class="ob-example"
-                  @click="useExample(ex)"
-                >⊕ {{ ex.label }}</button>
+              <!-- The four pointers: pick the job you want done and the same
+                   sentence re-runs under it. Rows, not cards — one hovered row
+                   stays lit while its siblings dim, and the zone below reveals
+                   the scaffold that pointer actually asks for. Those slot
+                   labels/hints come from the server's POINTERS table, so what
+                   is read here is what the seed is assembled from. The zone has
+                   a reserved height so revealing never moves the page. -->
+              <div v-if="!posterBrief" class="ptr-section" @mouseleave="closeSubPrompts">
+                <!-- Level one: the pointers themselves. -->
+                <div v-if="!openCard" class="ptr-list">
+                  <button
+                    v-for="c in LENS_CARDS"
+                    :key="c.id"
+                    class="ptr-row"
+                    :class="{ active: lens === c.id }"
+                    @click="openLens(c.id)"
+                  >
+                    <LensIcon :name="c.id" />
+                    <span class="ptr-row-label">{{ c.label }}</span>
+                    <span v-if="studyLoading && lens === c.id" class="ptr-row-busy">reading…</span>
+                  </button>
+                </div>
+
+                <!-- Level two: the same space, now holding that pointer's own
+                     questions. Moving the cursor out of the zone brings the
+                     pointers back; the arrow does the same for touch and
+                     keyboard, which have no mouseleave. -->
+                <div v-else class="ptr-list">
+                  <div class="ptr-crumb">
+                    <button class="ptr-back" @click="closeSubPrompts">←</button>
+                    <span class="ptr-crumb-label">{{ openCard.label }}</span>
+                  </div>
+                  <button
+                    v-for="q in openCard.prompts"
+                    :key="q"
+                    class="ptr-row is-sub"
+                    @click="useSubPrompt(openCard.id, q)"
+                  >
+                    <LensIcon name="sub" :size="19" />
+                    <span class="ptr-row-label">{{ q }}</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Confirmation chips: what the machine read. Tap to correct,
+                   or just run — approving is the default. Required gate: the
+                   safety net that replaces the old four-field form. -->
+              <div v-if="study && !studyLoading" class="study-block">
+                <div class="study-reading">
+                  <button class="study-chip" title="Edit the sentence — re-reads everything" @click="editFromSentence">
+                    <span class="study-chip-label">Testing</span>
+                    <span class="study-chip-value">{{ study.what }}</span>
+                    <span class="study-chip-mark">✎</span>
+                  </button>
+                  <button
+                    v-if="lens !== 'fit'"
+                    class="study-chip"
+                    title="Pick the audience"
+                    @click="openAudiencePicker"
+                  >
+                    <span class="study-chip-label">Audience</span>
+                    <span class="study-chip-value">{{ audienceLabel }}</span>
+                    <span class="study-chip-conf" :class="study.audience.confidence">{{ confBadge }}</span>
+                  </button>
+                  <button v-else class="study-chip is-static" title="Fit ranks every buyer group — there's no one crowd to pick.">
+                    <span class="study-chip-label">Audience</span>
+                    <span class="study-chip-value">All six buyer groups</span>
+                  </button>
+                  <button class="study-chip" title="Toggle what the panel is asked" @click="probesOpen = !probesOpen">
+                    <span class="study-chip-label">Probing</span>
+                    <span class="study-chip-value">{{ probesLabel }}</span>
+                    <span class="study-chip-mark" :class="{ open: probesOpen }">▾</span>
+                  </button>
+                  <button v-if="study.mode === 'product'" class="study-chip" title="Set the price — the affordability step needs it" @click="startPriceEdit">
+                    <span class="study-chip-label">Price</span>
+                    <span class="study-chip-value" :class="{ 'is-missing': !study.price }">{{ study.price || 'not set' }}</span>
+                  </button>
+                  <button class="study-chip" title="Switch the lens — re-reads your sentence under it" @click="cycleLens">
+                    <span class="study-chip-label">Mode</span>
+                    <span class="study-chip-value">{{ study.mode }} · {{ lensLabel }}</span>
+                  </button>
+                </div>
+                <p class="study-note" :class="{ warn: study.audience.confidence === 'thin-data' }">
+                  <template v-if="study.audience.confidence === 'thin-data'">Audience is guessed (auto-chosen default) — tap to check it.</template>
+                  <template v-else>Audience routed from your sentence.</template>
+                </p>
+
+                <div v-if="editingPrice" class="price-edit">
+                  <input
+                    ref="priceEditor"
+                    v-model="priceInput"
+                    class="price-edit-input"
+                    placeholder="e.g. R50/month"
+                    @keyup.enter="commitPrice"
+                    @blur="commitPrice"
+                  />
+                </div>
+
+                <!-- Probes: the sub-questions the panel is asked, toggleable. -->
+                <Transition name="probe-pop">
+                <div v-if="probesOpen" class="probe-pop">
+                  <div v-for="p in study.probes" :key="p.id" class="probe-row">
+                    <label class="probe-toggle">
+                      <input
+                        type="checkbox"
+                        :checked="p.active"
+                        :disabled="p.base"
+                        @change="toggleProbe(p)"
+                      />
+                      <span>
+                        <span class="probe-question">{{ p.question }}</span>
+                        <span class="probe-meta">{{ p.base ? 'always asked' : p.confidence }}</span>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="probe-add">
+                    <input
+                      v-model="newProbe"
+                      class="probe-add-input"
+                      placeholder="Add your own question…"
+                      @keyup.enter="addProbe"
+                    />
+                    <button class="probe-add-btn" @click="addProbe">Add</button>
+                  </div>
+                </div>
+                </Transition>
               </div>
 
               <div class="pp-controls">
@@ -336,7 +490,10 @@
                   </button>
                 </div>
               </div>
-              <p class="pp-hint">Policy or product is detected automatically. Panel is the fast read; the full simulation is an additional, deeper run.</p>
+              <p class="pp-hint">
+                <template v-if="study">Mode ({{ study.mode }}) is detected automatically from your sentence — the chips above are your chance to correct the reading.</template>
+                <template v-else>At the end we read your sentence back as a checkable summary — approve it or correct a chip, then run. Panel is the fast read; the full simulation is an additional, deeper run.</template>
+              </p>
             </div>
 
           </div>
@@ -351,13 +508,14 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
-import { createSession, listSessions, listSegments, uploadPoster } from '../../api/panel'
+import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
 import { useAuth } from '../../composables/useAuth'
 import { useToast } from '../../composables/useToast'
 import ProfileModal from './ProfileModal.vue'
+import LensIcon from './LensIcon.vue'
 
 const emit = defineEmits(['submit', 'open'])
 
@@ -475,7 +633,16 @@ const loadPanels = async () => {
 }
 
 const openSim = (s) =>
-  emit('open', { mode: 'sim', simulationId: s.simulation_id, query: s.simulation_requirement || '' })
+  emit('open', {
+    mode: 'sim',
+    simulationId: s.simulation_id,
+    query: s.simulation_requirement || '',
+    // Status + project handles let the flow view route a half-built sim back
+    // into the build box (resume) instead of opening a blank results room.
+    status: s.status,
+    projectId: s.project_id,
+    graphId: s.graph_id,
+  })
 const openPanel = (p) =>
   emit('open', { mode: 'panel', sessionId: p.session_id, query: p.pitch || '' })
 
@@ -489,15 +656,330 @@ const tourCrowd = ref(null)
 const tourRun = ref(null)
 const tourSim = ref(null)
 
-// Example pitches — click to prefill so a first-timer sees a good input at once.
-const EXAMPLES = [
-  { label: 'R50/mo investing app', text: 'A startup launching a mobile app that lets South Africans invest from R50 a month with no monthly fees, aimed at working people in cities who have never invested before.' },
-  { label: 'Migration policy', text: 'After the anti-immigrant marches, government announces a national permit verification drive: employers must confirm every worker\'s papers within 90 days, and undocumented workers are offered a route to regularise instead of deportation. We want to know how residents, employers and migrants react, and which part of the message causes the most anger.' },
-  { label: 'A rumour spreading', text: 'A voice note spreads on WhatsApp claiming a local clinic is turning South Africans away to treat foreign nationals first. The health department has denied it. We want to see who believes it, who passes it on, and whether the denial changes anything.' },
+// ── The study flow: one sentence, picked lens, editable confirmation chips ──
+// The four lenses are the old mode cards, but tapping one never opens a form —
+// it re-reads the SAME sentence under that lens. The sentence stays the user's
+// only input; structure (audience, probes, mode, price) is derived and shown
+// back as chips they may correct or approve and run.
+const LENS_CARDS = [
+  // Each pointer carries the sub-questions it can answer. Clicking a pointer
+  // reveals them; clicking one of them writes it into the composer. These are
+  // UI copy only — unlike the server's slots they never touch seed assembly,
+  // so they live here where the screen can render them without a round trip.
+  { id: 'land', label: 'Test how a message lands', prompts: [
+    'Does my pitch make sense in 5 seconds?',
+    'Which headline makes people want to try it?',
+    'How should this read in isiZulu, not just English?',
+    'What do people think I am actually selling?',
+  ] },
+  { id: 'breaks', label: 'Find what stops people saying yes', prompts: [
+    'What would stop people saying yes to this?',
+    'Where do people get stuck in my sign-up flow?',
+    'Is data cost a reason people will not use this?',
+    'Should this live inside WhatsApp instead of an app?',
+  ] },
+  { id: 'fit', label: 'Find out which group it’s for', prompts: [
+    'At R99 a month, who can afford this and who cannot?',
+    'Which group is this really for, if I stop guessing?',
+    'Card, EFT, or mobile money — how do people want to pay?',
+  ] },
+  { id: 'ab', label: 'Compare two ways of saying it', prompts: [
+    'Which of these two lines pulls harder?',
+    'Which version makes it clearer what I am selling?',
+    'Why would someone pick A over B?',
+  ], exampleA: 'Start investing from R50 a month — no monthly fees.', exampleB: 'R50 puts you in the market. Stop watching from the side.' },
+  { id: 'poster', label: 'Test a poster before you print it', prompts: [
+    'What do people think this poster is offering?',
+    'Does the price on this poster read as cheap or as a catch?',
+    'What would make someone walk past this?',
+  ] },
+  { id: 'website', label: 'Test a page on your website', prompts: [
+    'Does this page work on a cheap phone and slow data?',
+    'What do people think this page offers?',
+    'Do people trust this page enough to put their money in?',
+    'Does my data consent message reassure or scare people off?',
+  ] },
 ]
-function useExample(ex) {
-  panelPitch.value = ex.text
-  nextTick(() => panelInput.value && panelInput.value.focus())
+
+const lens = ref(null)
+const abA = ref('')
+const abB = ref('')
+const lensLabel = computed(() => LENS_CARDS.find(c => c.id === lens.value)?.label || '')
+
+// Which pointer has been opened into its sub-questions. Null means the zone is
+// showing the pointers themselves. Opening one selects it too — the sentence in
+// the box is re-read under that pointer straight away.
+const openLensId = ref(null)
+
+// The scaffold behind each pointer, fetched once from /api/panel/pointers. Kept
+// server-side-sourced on purpose: hardcoding the hints here would let the UI
+// drift from the slots the seed is actually built from.
+const pointerSpecs = ref([])
+
+// The pointer whose sub-questions currently fill the zone, or null while the
+// pointers themselves are showing.
+const openCard = computed(() =>
+  LENS_CARDS.find(c => c.id === openLensId.value) || null)
+
+// Opening a pointer does two things at once: it selects that pointer (so a
+// sentence already typed is re-read under it) and it swaps the zone over to
+// that pointer's own questions.
+function openLens(id) {
+  openLensId.value = id
+  selectLens(id)
+}
+
+function closeSubPrompts() {
+  openLensId.value = null
+}
+
+
+// The confirmed study spec (what the /read endpoint derived). Chips render from
+// it and every correction writes straight back into it — the two never drift.
+const study = ref(null)
+const studyLoading = ref(false)
+const probesOpen = ref(false)
+const editingPrice = ref(false)
+const priceInput = ref('')
+const newProbe = ref('')
+const crowdSearch = ref('')
+const priceEditor = ref(null)
+const abAInput = ref(null)
+let readTimer = null
+let audienceManuallySet = false
+
+// The one sentence to read right now (A/B keeps its two lines separate).
+function currentPitch() {
+  if (lens.value === 'ab') {
+    return [abA.value, abB.value].map(s => s.trim()).filter(Boolean).join('\n\n')
+  }
+  return composedPitch()
+}
+
+function scheduleRead() {
+  clearTimeout(readTimer)
+  readTimer = setTimeout(runRead, 350)
+}
+
+async function runRead() {
+  clearTimeout(readTimer)
+  if (studyLoading.value) return
+  const text = currentPitch()
+  if (!text.trim() || !lens.value) return
+  studyLoading.value = true
+  try {
+    const res = await readStudy({ pitch: text, lens: lens.value })
+    const spec = res && res.data
+    if (spec && spec.what) {
+      study.value = spec
+      // A crowd the user picked before reading wins over the inferred reading.
+      if (audienceManuallySet) {
+        study.value.audience.segments = selectedSegments.value.filter(s => s !== 'everyone')
+        study.value.audience.confidence = 'strong-data'
+        audienceManuallySet = false
+      }
+    }
+  } catch (e) {
+    study.value = null
+  } finally {
+    studyLoading.value = false
+  }
+}
+
+// Running always goes through the read first — the chips ARE the confirm step,
+// and running is the approval.
+async function ensureStudy() {
+  if (study.value) return study.value
+  if (!lens.value) lens.value = 'land'
+  await runRead()
+  return study.value
+}
+
+function onComposerInput() {
+  autosizePrompt()
+  // Typed over the picked question? Then there is nothing left to swap out.
+  if (pickedPrompt.value && !panelPitch.value.includes(pickedPrompt.value)) {
+    pickedPrompt.value = ''
+  }
+  study.value = null
+  probesOpen.value = false
+  if (lens.value) scheduleRead()
+}
+
+function selectLens(id) {
+  // Carry the sentence across the single-composer / A/B switch.
+  if (lens.value === 'ab' && id !== 'ab') {
+    if (!panelPitch.value.trim() && abA.value.trim()) panelPitch.value = abA.value
+  } else if (id === 'ab' && lens.value !== 'ab') {
+    if (!abA.value.trim()) abA.value = panelPitch.value
+  }
+  lens.value = id
+  study.value = null
+  probesOpen.value = false
+  // No auto-fill here: clicking a pointer opens its questions, and picking one
+  // of those is what writes into the box.
+  if (id !== 'ab') nextTick(() => panelInput.value?.focus())
+  scheduleRead()
+}
+
+// The last sub-question this screen wrote into the box, exactly as written. It
+// is how a second pick knows what to replace: the founder's own words stay, the
+// previous question does not.
+const pickedPrompt = ref('')
+
+// Picking a sub-question. The first pick puts it in the box (after anything the
+// founder already typed). Every pick after that swaps the previous question out
+// for the new one, so the box always holds one question, not a growing pile.
+function useSubPrompt(id, question) {
+  lens.value = id
+  openLensId.value = null
+  study.value = null
+  probesOpen.value = false
+  if (id === 'ab') {
+    const card = LENS_CARDS.find(c => c.id === id)
+    if (!abA.value.trim()) abA.value = card?.exampleA || ''
+    if (!abB.value.trim()) abB.value = card?.exampleB || ''
+  } else {
+    const prev = pickedPrompt.value
+    const text = panelPitch.value
+    let own = text
+    // Peel the previous question back off the end. If it isn't there any more
+    // — the founder rewrote it — whatever is in the box is theirs and stays.
+    if (prev && text.trimEnd().endsWith(prev)) {
+      own = text.trimEnd().slice(0, -prev.length)
+    }
+    own = own.trim()
+    panelPitch.value = own ? `${own}
+
+${question}` : question
+    pickedPrompt.value = question
+    nextTick(autosizePrompt)
+  }
+  runRead().then(() => {
+    if (id !== 'ab') panelInput.value?.focus()
+  })
+}
+
+function cycleLens() {
+  const order = ['land', 'breaks', 'fit', 'ab', 'poster', 'website']
+  selectLens(order[(order.indexOf(lens.value) + 1) % order.length])
+}
+
+function editFromSentence() {
+  study.value = null
+  nextTick(() => {
+    if (lens.value === 'ab') abAInput.value?.focus()
+    else panelInput.value?.focus()
+  })
+}
+
+// ── Audience picker: the audience chip's editor ────────────────────────────
+const filteredSegments = computed(() => {
+  const q = crowdSearch.value.trim().toLowerCase()
+  if (!q) return segments.value
+  return segments.value.filter(s =>
+    (s.label || '').toLowerCase().includes(q) ||
+    (s.description || '').toLowerCase().includes(q))
+})
+
+function openAudiencePicker() {
+  if (lens.value === 'fit') return
+  const cur = study.value?.audience?.segments || []
+  selectedSegments.value = cur.length ? [...cur] : ['everyone']
+  crowdSearch.value = ''
+  crowdPickerOpen.value = true
+}
+
+function applyAudience() {
+  const picked = selectedSegments.value.filter(s => s !== 'everyone')
+  if (study.value && lens.value !== 'fit') {
+    study.value.audience.segments = picked
+    study.value.audience.confidence = 'strong-data'
+  } else {
+    audienceManuallySet = picked.length > 0
+  }
+  crowdPickerOpen.value = false
+}
+
+// ── Chips: labels + editors ───────────────────────────────────────────────
+const audienceLabel = computed(() => {
+  const segs = study.value?.audience?.segments || []
+  if (!segs.length) return 'the default South African mix'
+  return segmentsText(segs)
+})
+const confBadge = computed(() =>
+  study.value?.audience?.confidence === 'strong-data' ? 'from sentence' : 'guessed')
+const probesLabel = computed(() => {
+  const active = (study.value?.probes || []).filter(p => p.active)
+  const themed = active.filter(p => !p.base).map(p => p.label)
+  return themed.length ? themed.join(' + ') : (active[0]?.label || 'First reaction')
+})
+
+function segmentsText(ids) {
+  return (ids || []).map(id => segments.value.find(s => s.id === id)?.label || id).join(' + ')
+}
+
+function toggleProbe(p) {
+  p.active = !p.active
+}
+
+function addProbe() {
+  const t = newProbe.value.trim()
+  if (!t || !study.value) return
+  study.value.probes.push({
+    id: 'custom_' + Date.now(),
+    label: 'Your probe',
+    question: t,
+    base: false,
+    confidence: 'strong-data',
+    active: true,
+  })
+  newProbe.value = ''
+}
+
+function startPriceEdit() {
+  if (study.value.mode !== 'product') return
+  priceInput.value = study.value.price || ''
+  editingPrice.value = true
+  nextTick(() => priceEditor.value?.focus())
+}
+
+function commitPrice() {
+  if (!editingPrice.value) return
+  editingPrice.value = false
+  const v = priceInput.value.trim()
+  study.value.price = v || null
+}
+
+// ── Build the slot scaffold from the approved spec ────────────────────────
+// The runnable seed itself is assembled server-side by pointers.assemble_seed,
+// so this client half never repeats (and can't drift from) that template.
+
+// Required-slot values + the confirmed probes, in the exact scaffold shape
+// backend/app/services/pointers.py validates (mirror of the old slot forms).
+function buildSlots(spec) {
+  const l = spec.lens
+  const segs = spec.audience.segments || []
+  const slots = { probes: spec.probes }
+  if (l === 'land' || l === 'breaks') {
+    slots.announcement = spec.what || ''
+    if (segs.length) slots.audience = segmentsText(segs)
+    if (spec.worry) slots.worry = spec.worry
+  } else if (l === 'fit') {
+    slots.offer = spec.what || ''
+    if (spec.price) slots.price = spec.price
+  } else {
+    slots.version_a = abA.value || ''
+    slots.version_b = abB.value || ''
+    if (spec.worry) slots.decision = spec.worry
+  }
+  return slots
+}
+
+function tryExample() {
+  const card = LENS_CARDS.find(c => c.id === 'land')
+  useSubPrompt('land', card.prompts[0])
+  dismissWelcome()
 }
 
 // The tour walks the four things a first-timer needs to find, in order.
@@ -534,10 +1016,6 @@ function dismissWelcome() {
   showWelcome.value = false
   localStorage.setItem(ONBOARD_KEY, '1')
 }
-function tryExample() {
-  useExample(EXAMPLES[0])
-  dismissWelcome()
-}
 function openHelp() { showWelcome.value = true }
 
 const tourSpotStyle = computed(() => {
@@ -564,6 +1042,10 @@ const tourTipStyle = computed(() => {
 onMounted(() => {
   if (!localStorage.getItem(ONBOARD_KEY)) showWelcome.value = true
   window.addEventListener('resize', updateTourRect)
+  // Best-effort: if this fails the rows still work, the peek zone just stays idle.
+  listPointers()
+    .then(res => { pointerSpecs.value = res.data?.pointers || [] })
+    .catch(() => { pointerSpecs.value = [] })
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updateTourRect)
@@ -576,6 +1058,9 @@ const panelFocused = ref(false)
 const panelInput = ref(null)
 const panelSize = ref(12)
 const sizeOptions = [8, 12, 20]
+// fit ranks six buyer groups — fan-out breadth is not a user setting.
+const isFit = computed(() => lens.value === 'fit')
+const effectiveSize = computed(() => (isFit.value ? 12 : panelSize.value))
 const selectedSegments = ref(['everyone'])
 
 // ── Poster upload → pitch text ──────────────────────────────────────────────
@@ -676,10 +1161,13 @@ const composedPitch = () => {
   return parts.join('\n\n')
 }
 
-// A poster on its own is enough to run — the question is optional.
-const canSubmit = computed(() =>
-  Boolean(panelPitch.value.trim() || posterBrief.value)
-)
+// A poster on its own is enough to run — the question is optional. A/B needs
+// both versions; every other lens just needs the one sentence.
+const canSubmit = computed(() => {
+  if (posterBrief.value) return true
+  if (lens.value === 'ab') return Boolean(abA.value.trim() && abB.value.trim())
+  return Boolean(panelPitch.value.trim() || posterBrief.value)
+})
 
 // With a poster attached the box is for the founder's question, not the pitch.
 const promptPlaceholder = computed(() => posterBrief.value
@@ -687,11 +1175,17 @@ const promptPlaceholder = computed(() => posterBrief.value
   : "What do you want to test? Describe a policy or announcement, or a product and its price — the way you'd explain it to someone. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime."
 )
 
-// Crowd picker (segments + size live behind a modal, off the home view).
+// Crowd picker (segments + size live behind a modal, off the home view). The
+// summary reads the confirmed study spec once the chips are up, else the raw
+// picker selection — never both, so they can't drift.
 const crowdPickerOpen = ref(false)
 const crowdSummary = computed(() => {
-  const sel = selectedSegments.value
-  if (!sel.length || (sel.length === 1 && sel[0] === 'everyone')) return 'Everyone'
+  if (isFit.value) return 'All six buyer groups'
+  const src = (study.value && lens.value !== 'fit')
+    ? (study.value.audience.segments || [])
+    : selectedSegments.value
+  const sel = src && src.length ? src : ['everyone']
+  if (sel.length === 1 && sel[0] === 'everyone') return 'Everyone'
   const labelOf = (id) => (segments.value.find(s => s.id === id)?.label || id)
   if (sel.length <= 2) return sel.map(labelOf).join(' + ')
   return `${sel.length} groups`
@@ -736,26 +1230,45 @@ const toggleSegment = (id) => {
 }
 
 const panelSubmitting = ref(false)
-// Panel: fast read. Mode (policy/product) is inferred backend-side from the pitch
-// (no toggle); omit `mode` so the server detects it.
+// Panel: fast read. Runs through the study spec the user just saw as chips —
+// the read IS the confirm step. Mode, audience, price and probes all come from
+// that approved spec, never from hidden re-inference.
 const submitPanel = async () => {
-  const q = composedPitch()
-  if (!q || panelSubmitting.value) return
+  if (panelSubmitting.value) return
+  const spec = await ensureStudy()
+  if (!spec) return
   panelSubmitting.value = true
   try {
-    const res = await createSession({
-      pitch: q,
-      n: panelSize.value,
-      segments: selectedSegments.value
-    })
+    const slots = buildSlots(spec)
+    const body = {
+      n: effectiveSize.value,
+      pointer: spec.lens,
+      slots,
+      mode: spec.mode,
+    }
+    // The server assembles the seed from the slots (pointers.assemble_seed is
+    // the one implementation of that template). ab is the exception: each
+    // version is already a whole pitch, so A rides in as the explicit pitch.
+    if (spec.lens === 'ab') body.pitch = slots.version_a
+    else if (!LENS_CARDS.some(c => c.id === spec.lens)) body.pitch = composedPitch()
+    // The confirmed audience wins; fit ranks all six by design, so no segments.
+    if (spec.lens !== 'fit') {
+      const segs = spec.audience.segments || []
+      if (segs.length) body.segments = segs
+    }
+    const res = await createSession(body)
     const sessionId = res.data?.session_id
     if (!sessionId) throw new Error('No session id returned')
+    // The assembled seed is what the room saw — take it back from the server,
+    // never rebuild it here.
+    const q = res.data?.pitch || spec.what
     emit('submit', {
       query: q,
       mode: 'panel',
-      segments: selectedSegments.value,
-      size: panelSize.value,
-      sessionId
+      segments: spec.lens === 'fit' ? null : (spec.audience.segments || []),
+      size: effectiveSize.value,
+      sessionId,
+      pointer: spec.lens,
     })
   } catch (e) {
     // The user pressed run and paid attention. Silence here read as "nothing
@@ -787,10 +1300,13 @@ const onSpeedOutside = (e) => {
   }
 }
 
-// Direct sim: the deeper, additional run off the same pitch. No mode toggle —
-// modeIsManual stays false so the backend auto-detects policy/product at /prepare.
-const submitDirectSim = () => {
-  const q = composedPitch()
+// Direct sim: the deeper, additional run off the same approved sentence. No
+// mode toggle — modeIsManual stays false so the backend auto-detects
+// policy/product at /prepare (the detected mode is preserved by the prompt).
+const submitDirectSim = async () => {
+  if (panelSubmitting.value) return
+  const spec = await ensureStudy()
+  const q = spec ? (spec.what || composedPitch()) : composedPitch()
   if (!q || panelSubmitting.value) return
   setPendingUpload([], q, [], false, false)
   setSimPreset(simPreset.value)
@@ -835,132 +1351,149 @@ onUnmounted(() => {
 
 <style scoped>
 /* ── App shell — exact copy of Home.vue ──────────────────────────────────── */
-.app-shell { display: flex; height: 100vh; overflow: hidden; }
+.app-shell {
+  display: flex; height: 100vh; overflow: hidden;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--fs-base);
+}
 .sidebar {
-  flex-shrink: 0; width: 256px; height: 100vh;
-  background: #FAFAFA; border-right: 1px solid #E8E8E8;
+  flex-shrink: 0; width: var(--sidebar-w); height: 100vh;
+  background: var(--paper); border-right: 1px solid var(--hairline);
   display: flex; flex-direction: column;
-  padding: 16px 12px; gap: 8px; overflow: hidden;
+  padding: 22px 16px; gap: 10px; overflow: hidden;
 }
 .sidebar-brand {
   display: flex; align-items: center; gap: 10px;
-  padding: 6px 8px 12px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 800; font-size: 1.15rem; cursor: pointer; user-select: none;
+  padding: 2px 10px 18px;
+  font-family: var(--font-body);
+  font-weight: 700; font-size: var(--fs-lg); cursor: pointer; user-select: none;
 }
 .brand-mark {
   display: inline-flex; align-items: center; justify-content: center;
   width: 28px; height: 28px; border-radius: 8px;
-  background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
-  color: #fff; font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(160deg, #25b368 0%, var(--accent) 60%, var(--accent-strong) 100%);
+  color: var(--card); font-family: var(--font-body);
   font-weight: 800; font-size: 1.15rem; line-height: 1; flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(30, 158, 90, 0.28);
+  box-shadow: 0 2px 6px var(--accent-soft);
 }
-.brand-word { line-height: 1; letter-spacing: -0.3px; color: #6b6b6b; font-weight: 700; }
-.brand-strong { color: #1E9E5A; }
+.brand-word { line-height: 1; letter-spacing: var(--tracking-tight); color: var(--ink); font-weight: 700; }
+.brand-strong { color: var(--accent); }
 .side-section {
   display: flex; flex-direction: column; gap: 2px;
-  padding-bottom: 8px; border-bottom: 1px solid #ECECEC;
+  padding-bottom: 8px; border-bottom: 1px solid var(--hairline-soft);
 }
 .side-item {
   display: flex; align-items: center; gap: 10px; width: 100%;
-  padding: 9px 12px; background: transparent; border: none;
-  border-radius: 8px; cursor: pointer;
-  font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
-  font-weight: 600; color: #555; text-align: left;
+  padding: 9px 10px; background: transparent; border: none;
+  border-radius: var(--r-sm); cursor: pointer;
+  font-family: var(--font-body); font-size: var(--fs-sm);
+  font-weight: 500; color: var(--ink-soft); text-align: left;
   transition: background 0.15s, color 0.15s;
 }
-.side-item:hover { background: #F0F0F0; color: #1a1a1a; }
-.side-item.active { background: #F0FAF4; color: #1E9E5A; }
+.side-item:hover { background: var(--hairline-soft); color: var(--ink); }
+.side-item.active { background: var(--accent-pill); color: var(--accent-text); font-weight: 600; }
 .side-icon { font-size: 0.95rem; line-height: 1; width: 18px; text-align: center; }
 .side-label { flex: 1; }
 .side-recents { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 1px; padding-top: 4px; }
-.side-recents-head { padding: 6px 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #aaa; }
-.side-recents-empty { padding: 6px 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #bbb; }
+.side-recents-head {
+  flex: none; padding: 6px 10px; font-family: var(--font-body); font-size: var(--fs-2xs);
+  font-weight: 500; letter-spacing: var(--tracking-label);
+  text-transform: uppercase; color: var(--muted-soft);
+}
+.side-recents-empty { flex: none; padding: 6px 10px; font-family: var(--font-body); font-size: var(--fs-xs); color: var(--muted-soft); }
 .flow-recent {
-  display: block; width: 100%; padding: 7px 12px;
-  background: transparent; border: none; border-radius: 8px; cursor: pointer;
-  font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
-  font-size: 0.8rem; color: #555; text-align: left;
+  display: block; width: 100%; flex: none; padding: 7px 10px;
+  background: transparent; border: none; border-radius: var(--r-sm); cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm); color: var(--ink-soft); text-align: left;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   transition: background 0.15s, color 0.15s;
 }
-.flow-recent:hover { background: #F0F0F0; color: #1a1a1a; }
+.flow-recent:hover { background: var(--hairline-soft); color: var(--ink); }
 
 /* Main column */
 .app-main { flex: 1; min-width: 0; height: 100vh; overflow-y: auto; }
-.main-inner { max-width: 1200px; margin: 0 auto; padding: 40px; }
+.main-inner { max-width: calc(var(--column-w) + 80px); margin: 0 auto; padding: 40px; }
 .simple-view { position: relative; min-height: calc(100vh - 80px); }
 .simple-center { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 80px); }
 .simple-ask {
-  width: 100%; max-width: 680px;
-  display: flex; flex-direction: column; gap: 24px;
+  width: 100%; max-width: var(--column-w);
+  display: flex; flex-direction: column; gap: 22px;
   margin-top: -40px;
 }
 .simple-greeting {
-  margin: 0; text-align: center;
-  font-size: 1.9rem; font-weight: 500; letter-spacing: -0.5px; color: #1a1a1a;
+  margin: 0 auto; text-align: center; max-width: 26ch;
+  font-family: var(--font-body);
+  font-size: var(--fs-display); font-weight: 400;
+  line-height: var(--lh-tight); letter-spacing: var(--tracking-tight);
+  color: var(--ink); text-wrap: balance;
 }
 .simple-prompt {
-  border: 1px solid #DDD; border-radius: 16px; background: #fff;
-  padding: 16px 16px 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--hairline); border-radius: var(--r-xl); background: var(--card);
+  padding: 18px 18px 14px; box-shadow: var(--shadow-card);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-.simple-prompt.focused { border-color: #1E9E5A; box-shadow: 0 2px 12px rgba(30, 158, 90, 0.12); }
+.simple-prompt.focused {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-card), 0 0 0 3px var(--accent-ring);
+}
 .simple-prompt-input {
   width: 100%; border: none; background: transparent; outline: none; resize: none;
-  min-height: 56px; max-height: 240px; overflow-y: auto;
-  font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
-  font-size: 1.05rem; line-height: 1.55; color: #1a1a1a;
+  min-height: 84px; max-height: 240px; overflow-y: auto;
+  font-family: var(--font-body);
+  font-size: var(--fs-md); line-height: var(--lh-body); color: var(--ink);
 }
-.simple-prompt-input::placeholder { color: #9a9a9a; }
-.simple-prompt-bar { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.simple-prompt-input::placeholder { color: var(--muted-soft); }
+.simple-prompt-bar { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
 
 /* ── Select-crowds button (opens the picker modal) ────────────────────────── */
 .crowd-btn {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 14px; border: 1px solid #E5E5E5; background: #fff;
-  border-radius: 999px; cursor: pointer;
-  font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;
-  font-weight: 600; color: #555; transition: border-color 0.15s, color 0.15s;
+  padding: 7px 14px; border: 1px solid var(--hairline); background: var(--card);
+  border-radius: var(--r-pill); cursor: pointer;
+  font-family: var(--font-body); font-size: var(--fs-xs);
+  font-weight: 500; color: var(--ink-soft);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
-.crowd-btn:hover { border-color: #1E9E5A; color: #1E9E5A; }
-.crowd-btn-icon { font-size: 0.85rem; line-height: 1; }
+.crowd-btn:hover { border-color: var(--accent); color: var(--accent-text); background: var(--accent-pill); }
+.crowd-btn-icon { font-size: var(--fs-sm); line-height: 1; color: var(--muted); }
 .crowd-btn-summary {
-  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
-  padding: 1px 8px; border-radius: 8px; font-size: 0.68rem;
+  color: var(--accent-text); background: var(--accent-soft);
+  padding: 1px 8px; border-radius: var(--r-pill); font-size: var(--fs-2xs);
   max-width: 14ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 /* The whole pill is the <label>, so the raw input is hidden. */
 .poster-file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.clip-btn { padding-left: 10px; padding-right: 10px; }
+.clip-icon { width: 16px; height: 16px; display: block; }
 .crowd-btn.busy { opacity: 0.6; cursor: default; }
 .poster-note {
-  margin: 10px 0 0; font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem; color: #777;
+  margin: 10px 0 0; font-family: var(--font-body);
+  font-size: 0.72rem; color: var(--muted);
 }
-.poster-note.error { color: #99372A; }
+.poster-note.error { color: var(--danger); }
 
 /* ── Reading a poster: thumbnail + spinner + moving bar + clock ───────────── */
 .poster-loading {
   margin-top: 10px; padding: 12px 14px;
   display: flex; gap: 14px; align-items: center;
-  border: 1px solid #E5E5E5; border-radius: 12px; background: #FAFCFB;
-  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid var(--hairline); border-radius: 12px; background: var(--card-sunk);
+  font-family: var(--font-body);
 }
 .poster-thumb {
   width: 46px; height: 60px; object-fit: cover; flex: none;
-  border-radius: 6px; border: 1px solid #E5E5E5;
+  border-radius: 6px; border: 1px solid var(--hairline);
 }
 .poster-loading-body { flex: 1; min-width: 0; }
 .poster-loading-top { display: flex; align-items: center; gap: 9px; }
-.poster-loading-title { font-size: 0.78rem; font-weight: 600; color: #333; }
-.poster-loading-clock { margin-left: auto; font-size: 0.72rem; color: #999; }
-.poster-loading-stage { margin-top: 7px; font-size: 0.72rem; color: #777; }
+.poster-loading-title { font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); }
+.poster-loading-clock { margin-left: auto; font-size: 0.72rem; color: var(--muted); }
+.poster-loading-stage { margin-top: 7px; font-size: 0.72rem; color: var(--muted); }
 
 .poster-spinner {
   width: 13px; height: 13px; flex: none;
-  border: 2px solid rgba(30, 158, 90, 0.25);
-  border-top-color: #1E9E5A;
+  border: 2px solid var(--accent-soft);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: poster-spin 0.75s linear infinite;
 }
@@ -970,11 +1503,11 @@ onUnmounted(() => {
    pretending to measure real progress. */
 .poster-bar {
   margin-top: 9px; height: 3px; border-radius: 999px;
-  background: #EDEFEE; overflow: hidden;
+  background: var(--hairline-soft); overflow: hidden;
 }
 .poster-bar-fill {
   display: block; width: 38%; height: 100%; border-radius: 999px;
-  background: #1E9E5A;
+  background: var(--accent);
   animation: poster-sweep 1.5s ease-in-out infinite;
 }
 @keyframes poster-sweep {
@@ -984,40 +1517,40 @@ onUnmounted(() => {
 
 .poster-chip {
   width: 18px; height: 24px; object-fit: cover; flex: none;
-  border-radius: 4px; border: 1px solid #E5E5E5;
+  border-radius: 4px; border: 1px solid var(--hairline);
 }
 
 /* ── Attached poster: the brief lives out of the way, collapsed ───────────── */
 .poster-card {
   margin-top: 10px; padding: 10px 14px;
-  border: 1px solid #E5E5E5; border-radius: 12px; background: #FAFCFB;
-  font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;
+  border: 1px solid var(--hairline); border-radius: 12px; background: var(--card-sunk);
+  font-family: var(--font-body); font-size: 0.74rem;
 }
 .poster-card-head { display: flex; align-items: center; gap: 10px; }
-.poster-card-icon { color: #1E9E5A; }
+.poster-card-icon { color: var(--accent); }
 .poster-card-name {
-  font-weight: 600; color: #333;
+  font-weight: 600; color: var(--ink-soft);
   max-width: 22ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .poster-card-tag {
-  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  color: var(--accent); background: var(--accent-soft);
   padding: 1px 8px; border-radius: 8px; font-size: 0.68rem;
 }
 .poster-card-link {
   margin-left: auto; border: none; background: none; cursor: pointer;
-  font-family: inherit; font-size: 0.72rem; color: #777;
+  font-family: inherit; font-size: 0.72rem; color: var(--muted);
   text-decoration: underline; text-underline-offset: 2px;
 }
-.poster-card-link:hover { color: #1E9E5A; }
+.poster-card-link:hover { color: var(--accent); }
 .poster-card-x {
   border: none; background: none; cursor: pointer;
-  font-size: 1.05rem; line-height: 1; color: #999; padding: 0 2px;
+  font-size: 1.05rem; line-height: 1; color: var(--muted); padding: 0 2px;
 }
-.poster-card-x:hover { color: #99372A; }
+.poster-card-x:hover { color: var(--danger); }
 .poster-card-brief {
-  margin: 10px 0 0; padding-top: 10px; border-top: 1px solid #EDEFEE;
+  margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--hairline-soft);
   max-height: 260px; overflow-y: auto;
-  white-space: pre-wrap; font-size: 0.72rem; line-height: 1.6; color: #555;
+  white-space: pre-wrap; font-size: 0.72rem; line-height: 1.6; color: var(--ink-soft);
 }
 
 /* ── Crowd picker modal ───────────────────────────────────────────────────── */
@@ -1029,54 +1562,54 @@ onUnmounted(() => {
 }
 .ob-card {
   width: 100%; max-width: 460px;
-  background: #fff; border-radius: 16px; padding: 28px;
+  background: var(--card); border-radius: 16px; padding: 28px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 .ob-card-kicker {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  letter-spacing: 0.6px; text-transform: uppercase; color: #1E9E5A;
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.6px; text-transform: uppercase; color: var(--accent);
 }
-.ob-card-title { margin: 6px 0 16px; font-size: 20px; font-weight: 700; color: #111827; line-height: 1.3; }
+.ob-card-title { margin: 6px 0 16px; font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1.3; }
 .ob-list { margin: 0 0 22px; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; }
-.ob-list li { font-size: 14px; line-height: 1.55; color: #374151; }
-.ob-list b { color: #111827; }
+.ob-list li { font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+.ob-list b { color: var(--ink); }
 .ob-card-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .ob-btn {
   padding: 9px 16px; border-radius: 9px; font-size: 13px; font-weight: 700;
   cursor: pointer; border: 1px solid transparent; transition: background .15s, border-color .15s;
 }
-.ob-btn.ghost { background: #fff; border-color: #E5E7EB; color: #374151; }
-.ob-btn.ghost:hover { background: #F3F4F6; }
-.ob-btn.primary { background: #1E9E5A; color: #fff; }
-.ob-btn.primary:hover { background: #178048; }
+.ob-btn.ghost { background: var(--card); border-color: var(--hairline); color: var(--ink-soft); }
+.ob-btn.ghost:hover { background: var(--hairline-soft); }
+.ob-btn.primary { background: var(--accent); color: var(--card); }
+.ob-btn.primary:hover { background: var(--accent-strong); }
 
 .ob-examples { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 2px 0; }
 .ob-examples-label {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.4px;
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px;
 }
 .ob-example {
-  padding: 6px 12px; border-radius: 999px; border: 1px solid #E5E7EB; background: #fff;
-  font-size: 12.5px; color: #374151; cursor: pointer; transition: border-color .15s, background .15s;
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--card);
+  font-size: 12.5px; color: var(--ink-soft); cursor: pointer; transition: border-color .15s, background .15s;
 }
-.ob-example:hover { border-color: #1E9E5A; background: #F0FBF4; color: #178048; }
+.ob-example:hover { border-color: var(--accent); background: var(--accent-pill); color: var(--accent-strong); }
 
 .tour-overlay { position: fixed; inset: 0; z-index: 200; }
 .tour-spot {
   position: fixed; border-radius: 10px; pointer-events: none;
   box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.55);
-  outline: 2px solid #1E9E5A; transition: left .2s, top .2s, width .2s, height .2s;
+  outline: 2px solid var(--accent); transition: left .2s, top .2s, width .2s, height .2s;
 }
 .tour-tip {
-  position: fixed; background: #fff; border-radius: 12px; padding: 16px;
+  position: fixed; background: var(--card); border-radius: 12px; padding: 16px;
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
 }
 .tour-tip-step {
-  font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700;
-  color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+  font-family: var(--font-body); font-size: 10.5px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
 }
-.tour-tip-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px; }
-.tour-tip-body { font-size: 13px; line-height: 1.55; color: #4B5563; margin-bottom: 14px; }
+.tour-tip-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.tour-tip-body { font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin-bottom: 14px; }
 .tour-tip-actions { display: flex; justify-content: space-between; gap: 8px; }
 
 .crowd-backdrop {
@@ -1087,40 +1620,40 @@ onUnmounted(() => {
 .crowd-modal {
   width: 100%; max-width: 680px; max-height: 84vh;
   display: flex; flex-direction: column;
-  background: #fff; border-radius: 16px; overflow: hidden;
+  background: var(--card); border-radius: 16px; overflow: hidden;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
 }
 .crowd-modal-head {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 22px; border-bottom: 1px solid #ECECEC;
+  padding: 18px 22px; border-bottom: 1px solid var(--hairline-soft);
 }
-.crowd-modal-title { font-size: 1.05rem; font-weight: 600; color: #1a1a1a; }
+.crowd-modal-title { font-size: 1.05rem; font-weight: 600; color: var(--ink); }
 .crowd-modal-close {
   border: none; background: transparent; cursor: pointer;
-  font-size: 1rem; color: #999; line-height: 1; padding: 4px;
+  font-size: 1rem; color: var(--muted); line-height: 1; padding: 4px;
 }
-.crowd-modal-close:hover { color: #1a1a1a; }
+.crowd-modal-close:hover { color: var(--ink); }
 .crowd-modal-body { padding: 20px 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
 .pp-control-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .crowd-modal-foot {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 14px 22px; border-top: 1px solid #ECECEC;
+  padding: 14px 22px; border-top: 1px solid var(--hairline-soft);
 }
-.crowd-foot-summary { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #999; }
+.crowd-foot-summary { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); }
 .crowd-done-btn {
-  background: #1E9E5A; color: #fff; border: none; border-radius: 999px;
-  padding: 9px 24px; font-family: 'JetBrains Mono', monospace;
+  background: var(--accent); color: var(--card); border: none; border-radius: 999px;
+  padding: 9px 24px; font-family: var(--font-body);
   font-weight: 700; font-size: 0.8rem; letter-spacing: 0.4px;
   cursor: pointer; transition: background 0.15s;
 }
-.crowd-done-btn:hover { background: #178048; }
+.crowd-done-btn:hover { background: var(--accent-strong); }
 
 /* ── Panel pitch fields — copied from PanelPitchPanel ─────────────────────── */
 .pp-field-group { display: flex; flex-direction: column; gap: 10px; }
 .pp-field-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-body);
   font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.5px; text-transform: uppercase; color: #999;
+  letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted);
 }
 .pp-segments {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -1129,24 +1662,24 @@ onUnmounted(() => {
 .pp-segment {
   display: flex; flex-direction: column; gap: 4px;
   height: 100%; min-height: 118px;
-  padding: 12px 14px; border: 1px solid #E5E5E5; border-radius: 12px;
-  background: #fff; cursor: pointer; text-align: left;
+  padding: 12px 14px; border: 1px solid var(--hairline); border-radius: 12px;
+  background: var(--card); cursor: pointer; text-align: left;
   transition: border-color 0.15s, background 0.15s;
 }
-.pp-segment:hover { border-color: #1E9E5A; }
-.pp-segment.selected { border-color: #1E9E5A; background: #F0FAF4; }
+.pp-segment:hover { border-color: var(--accent); }
+.pp-segment.selected { border-color: var(--accent); background: var(--accent-pill); }
 .pp-segment-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .pp-segment-label {
-  font-weight: 600; font-size: 0.88rem; color: #000;
+  font-weight: 600; font-size: 0.88rem; color: var(--ink);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .pp-segment-count {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700;
-  color: #1E9E5A; background: rgba(30, 158, 90, 0.1);
+  font-family: var(--font-body); font-size: 0.7rem; font-weight: 700;
+  color: var(--accent); background: var(--accent-soft);
   padding: 1px 7px; border-radius: 8px;
 }
 .pp-segment-desc {
-  font-size: 0.73rem; color: #777; line-height: 1.4;
+  font-size: 0.73rem; color: var(--muted); line-height: 1.4;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -1155,25 +1688,28 @@ onUnmounted(() => {
   display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
 }
 .pp-control-label {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
-  color: #999; letter-spacing: 0.5px; text-transform: uppercase;
+  font-family: var(--font-body); font-size: 0.72rem;
+  color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase;
 }
 .pp-size-btns { display: flex; gap: 4px; }
 .pp-size-btn {
-  padding: 5px 14px; border: 1px solid #E5E5E5; background: #fff;
-  border-radius: 999px; font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem; font-weight: 600; color: #777; cursor: pointer;
+  padding: 5px 14px; border: 1px solid var(--hairline); background: var(--card);
+  border-radius: 999px; font-family: var(--font-body);
+  font-size: 0.72rem; font-weight: 600; color: var(--muted); cursor: pointer;
   transition: all 0.15s;
 }
-.pp-size-btn:hover { border-color: #1E9E5A; color: #1E9E5A; }
-.pp-size-btn.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
+.pp-size-btn:hover { border-color: var(--accent); color: var(--accent); }
+.pp-size-btn:disabled { opacity: 0.45; cursor: not-allowed; background: var(--hairline-soft); }
+.pp-size-btn:disabled:hover { border-color: var(--hairline); color: var(--muted); }
+.pp-size-btn.active { background: var(--accent); border-color: var(--accent); color: var(--card); }
+.pp-fit-note { margin: 0 0 14px; font-size: 0.78rem; line-height: 1.5; color: var(--ink-soft); }
 /* Run-speed dropdown — lives in the seed-box bar next to Select crowds */
 .speed-dd { position: relative; }
-.speed-caret { font-size: 0.6rem; color: #9CA3AF; transition: transform 0.15s; }
+.speed-caret { font-size: 0.6rem; color: var(--muted); transition: transform 0.15s; }
 .speed-caret.open { transform: rotate(180deg); }
 .speed-menu {
   position: absolute; top: calc(100% + 6px); left: 0; z-index: 30;
-  min-width: 240px; background: #fff; border: 1px solid #E5E7EB;
+  min-width: 240px; background: var(--card); border: 1px solid var(--hairline);
   border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   padding: 6px; display: flex; flex-direction: column; gap: 2px;
 }
@@ -1182,15 +1718,15 @@ onUnmounted(() => {
   padding: 8px 10px; border: none; background: transparent; border-radius: 8px;
   cursor: pointer; text-align: left; transition: background 0.12s;
 }
-.speed-item:hover { background: #F5F5F5; }
-.speed-item.active { background: #F0FAF4; }
+.speed-item:hover { background: var(--hairline-soft); }
+.speed-item.active { background: var(--accent-pill); }
 .speed-item-top { display: flex; align-items: baseline; gap: 8px; }
 .speed-item-name {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #444;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: var(--ink-soft);
 }
-.speed-item.active .speed-item-name { color: #1E9E5A; }
-.speed-item-rounds { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: #9CA3AF; }
-.speed-item-hint { font-size: 0.7rem; color: #888; line-height: 1.35; }
+.speed-item.active .speed-item-name { color: var(--accent); }
+.speed-item-rounds { font-family: var(--font-body); font-size: 0.66rem; color: var(--muted); }
+.speed-item-hint { font-size: 0.7rem; color: var(--muted); line-height: 1.35; }
 
 .speed-pop-enter-active, .speed-pop-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
 .speed-pop-enter-from, .speed-pop-leave-to { opacity: 0; transform: translateY(-4px); }
@@ -1198,27 +1734,30 @@ onUnmounted(() => {
 .pp-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .pp-assemble-btn {
   display: flex; align-items: center; gap: 12px;
-  background: #1E9E5A; color: #fff; border: none; border-radius: 999px;
-  padding: 11px 24px; font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px;
+  background: var(--accent); color: var(--card); border: none; border-radius: var(--r-pill);
+  padding: 12px 26px; font-family: var(--font-body);
+  font-weight: 600; font-size: var(--fs-sm); letter-spacing: 0;
   cursor: pointer; transition: background 0.15s;
 }
-.pp-assemble-btn:hover:not(:disabled) { background: #178048; }
+.pp-assemble-btn:hover:not(:disabled) { background: var(--accent-strong); }
 .pp-assemble-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* Direct sim — secondary action (the deeper, additional run) */
 .pp-sim-btn {
-  background: #fff; color: #1E9E5A; border: 1px solid #1E9E5A;
-  border-radius: 999px; padding: 10px 18px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.3px;
-  cursor: pointer; transition: background 0.15s, color 0.15s;
+  background: var(--card); color: var(--accent-text); border: 1px solid var(--hairline);
+  border-radius: var(--r-pill); padding: 11px 20px;
+  font-family: var(--font-body);
+  font-weight: 500; font-size: var(--fs-sm); letter-spacing: 0;
+  cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.pp-sim-btn:hover:not(:disabled) { background: #F0FAF4; }
+.pp-sim-btn:hover:not(:disabled) { border-color: var(--accent); }
+.pp-sim-btn:hover:not(:disabled) { background: var(--accent-pill); }
 .pp-sim-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .pp-hint {
-  margin: 12px 0 0; font-size: 0.76rem; color: #999; line-height: 1.5;
+  margin: 4px 0 0; text-align: center;
+  font-family: var(--font-body); font-size: var(--fs-xs);
+  color: var(--muted-soft); line-height: var(--lh-body);
 }
 
 /* ── Mobile burger + off-canvas sidebar ──────────────────────────────────── */
@@ -1226,13 +1765,13 @@ onUnmounted(() => {
   display: none;
   position: fixed; top: 12px; left: 12px; z-index: 96;
   width: 40px; height: 40px; border-radius: 10px;
-  background: #fff; border: 1px solid #E5E5E5; cursor: pointer;
+  background: var(--card); border: 1px solid var(--hairline); cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   align-items: center; justify-content: center;
 }
 .burger-lines { display: flex; flex-direction: column; gap: 4px; width: 18px; }
 .burger-lines i {
-  display: block; height: 2px; border-radius: 2px; background: #444;
+  display: block; height: 2px; border-radius: 2px; background: var(--ink-soft);
   transition: transform 0.18s, opacity 0.18s;
 }
 .burger-lines.open i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -1261,13 +1800,14 @@ onUnmounted(() => {
   .side-foot {
     flex-shrink: 0;
     padding-bottom: calc(4px + env(safe-area-inset-bottom));
-    background: #FAFAFA;
+    background: var(--paper);
   }
   .sidebar.open { transform: translateX(0); }
-  .sidebar-brand { padding-top: 2px; }
+  /* clear the fixed burger button, which sits at top-left */
+  .sidebar-brand { padding-top: 2px; padding-left: 46px; }
   .app-main { width: 100%; }
   .main-inner { padding: 68px 16px 24px; }
-  .simple-greeting { font-size: 1.4rem; }
+  .simple-greeting { font-size: 26px; }
   .simple-center { min-height: calc(100vh - 120px); }
   .simple-prompt-bar { flex-wrap: wrap; }
   .pp-actions { margin-left: 0; width: 100%; flex-wrap: wrap; }
@@ -1280,17 +1820,17 @@ onUnmounted(() => {
 
 /* ── Sidebar additions ─────────────────────────────────────────────────── */
 .side-badge {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-body);
   font-size: 0.62rem; font-weight: 700;
-  color: #1E9E5A; background: rgba(30,158,90,0.1);
+  color: var(--accent); background: var(--accent-soft);
   border-radius: 999px; padding: 1px 7px;
 }
 
 /* Profile button — bottom of sidebar */
 .side-foot {
   margin-top: auto;
-  padding: 12px 12px 4px;
-  border-top: 1px solid #ECECEC;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--hairline-soft);
 }
 .profile-item {
   display: flex; align-items: center; gap: 10px;
@@ -1299,61 +1839,61 @@ onUnmounted(() => {
   cursor: pointer; text-align: left; font: inherit; color: inherit;
   transition: background 0.15s;
 }
-.profile-item:hover { background: #F0F0F0; }
+.profile-item:hover { background: var(--hairline-soft); }
 .profile-avatar {
   width: 30px; height: 30px; border-radius: 50%;
-  background: linear-gradient(160deg, #25b368 0%, #1E9E5A 60%, #178048 100%);
-  color: #fff;
-  font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(160deg, #25b368 0%, var(--accent) 60%, var(--accent-strong) 100%);
+  color: var(--card);
+  font-family: var(--font-body);
   font-weight: 700; font-size: 0.78rem;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 .profile-body { display: flex; flex-direction: column; min-width: 0; flex: 1; gap: 1px; }
 .profile-name {
-  font-size: 0.82rem; font-weight: 600; color: #1a1a1a;
+  font-size: 0.82rem; font-weight: 600; color: var(--ink);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;
 }
 .profile-sub {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem; color: #999;
+  font-family: var(--font-body);
+  font-size: 0.6rem; color: var(--muted);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;
 }
-.profile-chevron { color: #bbb; font-size: 0.7rem; flex-shrink: 0; }
+.profile-chevron { color: var(--muted-soft); font-size: 0.7rem; flex-shrink: 0; }
 
 /* ── Personas tab ─────────────────────────────────────────────────────── */
 .persona-view { display: flex; flex-direction: column; gap: 20px; }
 .persona-view .page-head {
   display: flex; align-items: baseline; justify-content: space-between;
 }
-.persona-view .page-title { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.5px; color: #1a1a1a; }
-.persona-view .page-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: #999; letter-spacing: 0.4px; }
+.persona-view .page-title { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.5px; color: var(--ink); }
+.persona-view .page-sub { font-family: var(--font-body); font-size: 0.74rem; color: var(--muted); letter-spacing: 0.4px; }
 
 .persona-filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .persona-search {
   flex: 1; min-width: 200px;
-  border: 1px solid #DDD; border-radius: 8px;
+  border: 1px solid var(--hairline); border-radius: 8px;
   padding: 9px 14px;
-  font-family: 'Space Grotesk', system-ui, sans-serif;
-  font-size: 0.84rem; color: #1a1a1a;
-  background: #F2F2F2; outline: none;
+  font-family: var(--font-body);
+  font-size: 0.84rem; color: var(--ink);
+  background: var(--paper); outline: none;
   transition: border-color 0.15s, background 0.15s;
 }
-.persona-search:focus { border-color: #1E9E5A; background: #fff; }
+.persona-search:focus { border-color: var(--accent); background: var(--card); }
 .persona-filter-chip {
-  padding: 6px 14px; border: 1px solid #DDD; background: #fff;
+  padding: 6px 14px; border: 1px solid var(--hairline); background: var(--card);
   border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem; font-weight: 600; color: #777;
+  font-family: var(--font-body);
+  font-size: 0.7rem; font-weight: 600; color: var(--muted);
   cursor: pointer; transition: all 0.15s;
 }
-.persona-filter-chip:hover { border-color: #1E9E5A; color: #1E9E5A; }
-.persona-filter-chip.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
+.persona-filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.persona-filter-chip.active { background: var(--accent); border-color: var(--accent); color: var(--card); }
 .chip-count { opacity: 0.6; font-size: 0.62rem; margin-left: 2px; }
 
 .persona-loading {
   padding: 40px; text-align: center;
-  font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #999;
+  font-family: var(--font-body); font-size: 0.82rem; color: var(--muted);
 }
 
 .persona-grid {
@@ -1362,43 +1902,194 @@ onUnmounted(() => {
   gap: 14px;
 }
 .persona-card {
-  background: #fff; border: 1px solid #E8E8E8; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--hairline); border-radius: 12px;
   padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   display: flex; gap: 14px; cursor: pointer;
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 .persona-card:hover {
-  border-color: #1E9E5A; box-shadow: 0 4px 14px rgba(0,0,0,0.06); transform: translateY(-1px);
+  border-color: var(--accent); box-shadow: 0 4px 14px rgba(0,0,0,0.06); transform: translateY(-1px);
 }
 .persona-card-avatar {
   width: 40px; height: 40px; border-radius: 50%;
-  background: #F0FAF4; border: 1px solid rgba(30,158,90,0.3);
-  color: #1E9E5A;
-  font-family: 'JetBrains Mono', monospace;
+  background: var(--accent-pill); border: 1px solid var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-body);
   font-size: 0.82rem; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 .persona-card-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
 .persona-card-name {
-  font-size: 0.88rem; font-weight: 600; color: #1a1a1a;
+  font-size: 0.88rem; font-weight: 600; color: var(--ink);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .persona-card-arch {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.64rem; color: #1E9E5A; font-weight: 700;
+  font-family: var(--font-body);
+  font-size: 0.64rem; color: var(--accent); font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.3px;
 }
 .persona-card-occ {
-  font-size: 0.74rem; color: #555;
+  font-size: 0.74rem; color: var(--ink-soft);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .persona-card-meta {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem; color: #bbb; margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: 0.6rem; color: var(--muted-soft); margin-top: 2px;
 }
 
 @media (max-width: 860px) {
   .persona-grid { grid-template-columns: 1fr; }
 }
+
+/* ── The four lenses: pick one, the sentence re-runs under it ─────────────── */
+.ptr-section { margin-top: 18px; }
+
+/* Rows, not cards. No border, no box — the row is padding, an icon and a
+   label, and the hover state is the only chrome. The zone holds its height so
+   swapping pointers for their questions never moves the page. */
+.ptr-section { min-height: 236px; }
+.ptr-list { display: flex; flex-direction: column; gap: 2px; }
+.ptr-row {
+  display: flex; align-items: center; gap: 15px;
+  width: 100%; text-align: left;
+  padding: 11px 8px; border: none; border-radius: 10px;
+  background: transparent; cursor: pointer;
+  color: var(--ink-soft);
+  font-family: inherit;
+  transition: opacity 0.15s, background 0.15s;
+}
+/* The design's focus trick: hovering the list fades every row, and the one
+   under the cursor comes back. Makes choosing feel like choosing. */
+.ptr-list:hover .ptr-row { opacity: 0.45; }
+.ptr-list .ptr-row:hover,
+.ptr-list .ptr-row:focus-visible,
+.ptr-list .ptr-row.active { opacity: 1; }
+.ptr-row:hover { background: var(--paper-hover, #faf9f7); }
+.ptr-row.active { background: var(--accent-pill); }
+.ptr-row.active .ptr-row-label { color: var(--accent-text, var(--accent)); }
+.ptr-row-label { font-size: 1rem; font-weight: 600; color: var(--ink); }
+.ptr-row-busy { margin-left: auto; font-size: 0.68rem; color: var(--accent); }
+
+/* Level two: the questions read a shade quieter than the pointers they came
+   from, so the two levels never look like the same list. */
+.ptr-row.is-sub { color: var(--muted); }
+.ptr-row.is-sub .ptr-row-label { font-weight: 600; color: var(--ink-soft); }
+.ptr-row.is-sub:hover .ptr-row-label { color: var(--accent-text, var(--accent)); }
+
+/* The crumb: which pointer you are inside, and the way back out. */
+.ptr-crumb { display: flex; align-items: center; gap: 10px; padding: 2px 8px 8px; }
+.ptr-back {
+  width: 26px; height: 26px; flex: none;
+  border: 1px solid var(--hairline); border-radius: 50%;
+  background: transparent; color: var(--ink-soft);
+  font-family: inherit; font-size: 0.8rem; line-height: 1; cursor: pointer;
+}
+.ptr-back:hover { background: var(--paper-hover, #faf9f7); }
+.ptr-crumb-label {
+  font-size: 0.68rem; letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--muted-soft); font-weight: 600;
+}
+
+/* Touch has no hover: show every row at full strength and keep the zone idle
+   until a row is actually tapped. */
+@media (hover: none) {
+  .ptr-list:hover .ptr-row { opacity: 1; }
+}
+
+/* A/B needs two lines — the only exception to the one-sentence rule. */
+.ab-box { display: flex; flex-direction: column; gap: 10px; }
+.ab-box-input {
+  width: 100%; border: 1px solid var(--hairline); border-radius: 10px; background: var(--card-sunk);
+  padding: 10px 12px; resize: none; min-height: 52px; max-height: 140px;
+  font-family: var(--font-body);
+  font-size: 1rem; line-height: 1.5; color: var(--ink); outline: none;
+}
+.ab-box-input:focus { border-color: var(--accent); background: var(--card); }
+.ab-box-input::placeholder { color: var(--muted-soft); }
+
+/* ── Confirmation chips: the machine's reading, yours to correct ──────────── */
+.study-block { margin-top: 12px; }
+.study-reading { display: flex; flex-wrap: wrap; gap: 8px; }
+.study-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border: 1px solid var(--hairline); border-radius: 999px;
+  background: var(--card); cursor: pointer; max-width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+}
+.study-chip:hover { border-color: var(--accent); }
+.study-chip.is-static { cursor: default; }
+.study-chip.is-static:hover { border-color: var(--hairline); }
+.study-chip-label {
+  font-family: var(--font-body); font-size: 0.64rem;
+  font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase;
+  color: var(--accent); flex: none;
+}
+.study-chip-value {
+  font-size: 0.78rem; font-weight: 600; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40ch;
+}
+.study-chip-value.is-missing { color: var(--danger); font-style: italic; }
+.study-chip-conf {
+  font-family: var(--font-body); font-size: 0.6rem; font-weight: 600;
+  padding: 1px 7px; border-radius: 8px; flex: none;
+}
+.study-chip-conf.strong-data { color: var(--accent); background: var(--accent-soft); }
+.study-chip-conf.thin-data { color: var(--warn-text); background: var(--warn-soft); }
+.study-chip-mark { color: var(--muted); font-size: 0.72rem; flex: none; }
+.study-chip-mark.open { color: var(--accent); }
+
+.study-note { margin: 8px 0 0; font-size: 0.72rem; color: var(--warn-text); }
+.study-note.warn { color: var(--warn-text); }
+
+/* Price inline editor — appears under the chips when tapped. */
+.price-edit { margin-top: 8px; }
+.price-edit-input {
+  width: 190px; border: 1px solid var(--accent); border-radius: 8px;
+  padding: 6px 10px; font-size: 0.8rem; color: var(--ink); outline: none;
+  font-family: var(--font-body);
+  box-shadow: 0 0 0 2px var(--accent-ring);
+}
+.price-edit-input::placeholder { color: var(--muted-soft); }
+
+/* ── Probes popover: toggle, add your own ─────────────────────────────────── */
+.probe-pop {
+  margin-top: 8px; padding: 10px 12px;
+  border: 1px solid var(--hairline); border-radius: 12px; background: var(--card-sunk);
+}
+.probe-toggle {
+  display: flex; align-items: flex-start; gap: 9px; cursor: pointer;
+  padding: 5px 0;
+}
+.probe-toggle input { margin-top: 2px; accent-color: var(--accent); }
+.probe-question { font-size: 0.8rem; color: var(--ink); line-height: 1.4; }
+.probe-meta {
+  font-family: var(--font-body); font-size: 0.6rem;
+  color: var(--muted); margin-left: 8px;
+}
+.probe-add { display: flex; gap: 8px; margin-top: 8px; }
+.probe-add-input {
+  flex: 1; border: 1px solid var(--hairline); border-radius: 8px;
+  padding: 6px 10px; font-size: 0.78rem; color: var(--ink); outline: none;
+}
+.probe-add-input:focus { border-color: var(--accent); }
+.probe-add-btn {
+  border: 1px solid var(--accent); background: var(--accent); color: var(--card);
+  border-radius: 8px; padding: 0 14px; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.72rem; font-weight: 600;
+}
+.probe-add-btn:hover { background: var(--accent-strong); }
+.probe-pop-enter-active { transition: opacity .16s ease, transform .16s ease; }
+.probe-pop-leave-active { transition: opacity .12s ease; }
+.probe-pop-enter-from { opacity: 0; transform: translateY(-4px); }
+.probe-pop-leave-to { opacity: 0; }
+
+/* Audience picker search */
+.crowd-search {
+  width: 100%; border: 1px solid var(--hairline); border-radius: 8px;
+  padding: 7px 10px; font-size: 0.8rem; color: var(--ink); outline: none;
+  margin-bottom: 10px; box-sizing: border-box;
+}
+.crowd-search:focus { border-color: var(--accent); }
+.crowd-search::placeholder { color: var(--muted-soft); }
 </style>

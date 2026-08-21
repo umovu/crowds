@@ -31,6 +31,7 @@ from ..utils.logger import get_logger
 from .income_seeder import detect_grant, GRANT_PROVENANCE
 from .mode_specs import budget_tier
 from . import mechanism_card_service
+from . import objections
 from .persona_library import get_library
 from .persona_retrieval import select_for_query
 
@@ -495,6 +496,8 @@ def create_session(
     segments: Optional[List[str]] = None,
     budget_tiers: Optional[List[str]] = None,
     user_id: Optional[str] = None,
+    pointer: Optional[str] = None,
+    slots: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
@@ -603,6 +606,9 @@ def create_session(
         "archetype_distribution": _count_by(profiles, "actor_archetype"),
         "province_distribution": _count_by(profiles, "province"),
     }
+    if pointer:
+        meta["pointer"] = pointer
+        meta["slots"] = dict(slots or {})
     if mode == "product":
         meta["budget_tier_distribution"] = _tier_distribution(profiles)
     if tier_list:
@@ -616,6 +622,100 @@ def create_session(
     return meta
 
 
+def add_segment(session_id: str, segment_id: str,
+                seats: int = 6) -> Tuple[Dict[str, Any], List[int]]:
+    """Seat a NEW segment in an existing session, and say who to interview.
+
+    The "one segment didn't bite, try the next room" move. Everything about the
+    session is append-only: existing profiles keep their agent ids and their
+    saved rounds, so the two rooms sit side by side for the rest of the session
+    instead of one overwriting the other.
+
+    People already seated are skipped, so re-adding a segment that overlaps an
+    existing one can seat fewer than `seats` — or nobody, which raises, because
+    silently running a round against an empty room would look like a result.
+
+    Returns (updated meta, agent_ids of the newly seated) — the caller pitches
+    at exactly those ids.
+    """
+    meta = get_session(session_id)
+    if not meta:
+        raise FileNotFoundError(f"Session {session_id} not found")
+    if segment_id not in SEGMENTS or segment_id == "everyone":
+        raise ValueError(f"Unknown segment: {segment_id}")
+
+    sdir = session_dir(session_id)
+    profiles = _read_json(os.path.join(sdir, PROFILES_FILE)) or []
+    # `library_id` is the library persona's own id (_build_profile stamps it);
+    # `id` is the per-session agent number, which says nothing about identity.
+    seated_library_ids = {p.get("library_id") for p in profiles
+                          if p.get("library_id") is not None}
+
+    pred = SEGMENTS[segment_id]["predicate"]
+    province = meta.get("province")
+    pool = [p for p in get_library().all() if pred(p)]
+    if province:
+        pool = [p for p in pool if p.get("province") == province]
+    # Same deterministic draw as create_session: seeded shuffle, so re-running
+    # the same add on the same session seats the same people.
+    random.Random(meta.get("seed") or 0).shuffle(pool)
+    pool = [p for p in pool if p.get("id") not in seated_library_ids]
+    if not pool:
+        raise ValueError(
+            f"No one new from {SEGMENTS[segment_id]['label']} is available"
+            + (f" in {province}" if province else "")
+            + " — everyone matching is already in the room.")
+
+    mode = meta.get("mode", "product")
+    start = max((p.get("id") or 0) for p in profiles) + 1 if profiles else 0
+    new_profiles = [_build_profile(p, start + i, mode)
+                    for i, p in enumerate(pool[:max(1, seats)])]
+    for p in new_profiles:
+        mechanism_card_service.attach_research_context(p)
+    # Same guard as create_session: a panel cast stays library-only.
+    assert_library_cast(new_profiles)
+
+    profiles.extend(new_profiles)
+    _write_json(os.path.join(sdir, PROFILES_FILE), profiles)
+
+    seg_list = list(meta.get("segments") or [])
+    # A session that started as "everyone" becomes a comparison the moment a
+    # named room is added; the mix is no longer one of the candidates.
+    seg_list = [s for s in seg_list if s != "everyone"]
+    if segment_id not in seg_list:
+        seg_list.append(segment_id)
+    meta["segments"] = seg_list
+    meta["segment_label"] = " + ".join(SEGMENTS[s]["label"] for s in seg_list)
+    alloc = dict(meta.get("segment_allocation") or {})
+    label = SEGMENTS[segment_id]["label"]
+    alloc[label] = alloc.get(label, 0) + len(new_profiles)
+    meta["segment_allocation"] = alloc
+    meta["cast_size"] = len(profiles)
+    meta["archetype_distribution"] = _count_by(profiles, "actor_archetype")
+    meta["province_distribution"] = _count_by(profiles, "province")
+    if mode == "product":
+        meta["budget_tier_distribution"] = _tier_distribution(profiles)
+    _write_json(os.path.join(sdir, META_FILE), meta)
+
+    logger.info("Panel %s: seated %d from %s (cast now %d)",
+                session_id, len(new_profiles), segment_id, len(profiles))
+    return meta, [p["id"] for p in new_profiles]
+
+
+def carry_probe(objection_id: Optional[str]) -> Optional[str]:
+    """Turn an objection type from the last room into one follow-up question.
+
+    This is what makes a re-pitch a conversation rather than a rerun: the wall
+    the previous room hit becomes the thing the new room is asked about. Returns
+    None for an unknown or absent id, so a bad value is a no-op, never an error.
+    """
+    if not objection_id or objection_id not in objections.LABELS:
+        return None
+    return (f"The last group we spoke to kept coming back to this: "
+            f"{objections.LABELS[objection_id].lower()}. Does that land the "
+            f"same way for you?")
+
+
 def _count_by(profiles: List[Dict[str, Any]], key: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     for p in profiles:
@@ -626,6 +726,182 @@ def _count_by(profiles: List[Dict[str, Any]], key: str) -> Dict[str, int]:
 
 def get_session(session_id: str) -> Optional[Dict[str, Any]]:
     return _read_json(os.path.join(session_dir(session_id), META_FILE))
+
+
+def rank_by_segment(session_id: str, meta: Dict[str, Any],
+                    results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Group a pitch round's reactions by the session's segments — the `fit`
+    deliverable. Deterministic and LLM-free: each persona is assigned to the
+    FIRST matching segment predicate (real library fields only, stable order),
+    so the ranking never depends on a model. Returns [] when the session has
+    fewer than two concrete segments or nothing maps.
+
+    Every requested segment gets an entry — a group that drew zero (or no
+    matching) members is an explicit empty row, so the UI can say "no one from
+    this group was available" instead of the group vanishing. Empty rows rank
+    last. The ordering IS the answer: segments rank by most won over (support
+    count desc, then fewer opponents / unconvinced, then label asc for a stable,
+    deterministic tie-break).
+
+    Each row also carries the three fit-card readings, kept deliberately
+    SEPARATE (collapsing them would be the banned single "would buy" score):
+
+    - `stance_split` — what people said (LLM output, qualitative)
+    - `budget_tiers` — what their real income supports (computed, never LLM)
+    - `top_objections` — the wall this room kept hitting (deterministic
+      keyword classifier, `objections.py`, no LLM)
+
+    plus `seats` (how many of this segment were in the room) and `heard_count`
+    (how many of them actually answered). A round where the two diverge is a
+    degraded round, and the UI needs to be able to say so.
+    """
+    seg_ids = [s for s in (meta.get("segments") or []) if s and s != "everyone"]
+    if len(seg_ids) < 2 or not results:
+        return []
+    profiles = _read_json(os.path.join(session_dir(session_id), PROFILES_FILE)) or []
+    by_agent = {p.get("id"): p for p in profiles if p.get("id") is not None}
+    groups = {s: [] for s in seg_ids}
+    for r in results:
+        profile = by_agent.get(r.get("agent_id"))
+        if not profile:
+            continue
+        for seg_id in seg_ids:
+            pred = SEGMENTS[seg_id]["predicate"]
+            if pred is None or pred(profile):
+                groups[seg_id].append(r)
+                break
+    # Seats are assigned by the SAME first-match walk over every profile in the
+    # room, not just the ones that answered — so `budget_tiers` covers the whole
+    # segment and doesn't quietly shrink when an interview fails.
+    seat_profiles: Dict[str, List[Dict[str, Any]]] = {s: [] for s in seg_ids}
+    for profile in profiles:
+        for seg_id in seg_ids:
+            pred = SEGMENTS[seg_id]["predicate"]
+            if pred is None or pred(profile):
+                seat_profiles[seg_id].append(profile)
+                break
+    out: List[Dict[str, Any]] = []
+    for seg_id in seg_ids:
+        members = groups[seg_id]
+        seats = seat_profiles[seg_id]
+        if not members:
+            out.append({
+                "segment_id": seg_id,
+                "label": SEGMENTS[seg_id]["label"],
+                "stance_split": {},
+                "budget_tiers": _tier_distribution(seats),
+                "top_objections": [],
+                "seats": len(seats),
+                "heard_count": 0,
+                "members": [],
+            })
+            continue
+        stances: Dict[str, int] = {}
+        for r in members:
+            s = r.get("stance_after") or "neutral"
+            stances[s] = stances.get(s, 0) + 1
+        out.append({
+            "segment_id": seg_id,
+            "label": SEGMENTS[seg_id]["label"],
+            "stance_split": stances,
+            "budget_tiers": _tier_distribution(seats),
+            "top_objections": objections.top(
+                [r.get("response") or "" for r in members]),
+            "seats": len(seats),
+            "heard_count": len(members),
+            "members": [{
+                "agent_id": r.get("agent_id"),
+                "agent_name": r.get("agent_name") or f"Persona {r.get('agent_id')}",
+                "stance_after": r.get("stance_after") or "neutral",
+                "response": r.get("response"),
+            } for r in members],
+        })
+    # Rank deterministically: support desc, then fewer oppose/concerned, then
+    # label asc (stable sort keeps the label tie-break in order). Rows with no
+    # members at all carry no signal, so they always sink to the bottom in
+    # label order rather than ranking by an empty stance dict.
+    empty = [e for e in out if not e["members"]]
+    empty.sort(key=lambda s: s["label"].lower())
+    ranked = [e for e in out if e["members"]]
+    ranked.sort(key=lambda s: s["label"].lower())
+    ranked.sort(key=lambda s: (s["stance_split"].get("support", 0),
+                               -s["stance_split"].get("oppose", 0),
+                               -s["stance_split"].get("concerned", 0)),
+                reverse=True)
+    return ranked + empty
+
+
+def coverage_summary(meta: Dict[str, Any]) -> Dict[str, int]:
+    """How much of the library this ranking actually looked at.
+
+    The UI states this out loud ("compared across 4 of our 8 groups") rather
+    than implying the whole market was searched. Our answer is bounded by our
+    coverage, and saying so is what keeps the ranking an honest claim.
+    """
+    compared = [s for s in (meta.get("segments") or []) if s and s != "everyone"]
+    return {
+        "segments_compared": len(compared),
+        # "everyone" is a mix, not a group you could switch to — it is never a
+        # candidate room, so it must not inflate the denominator.
+        "segments_available": len([s for s in SEGMENTS if s != "everyone"]),
+    }
+
+
+def latest_results(session_id: str) -> List[Dict[str, Any]]:
+    """Every persona's most recent reaction, across all rounds of the session.
+
+    A re-pitch only interviews the NEW room, so this round's results alone hold
+    one segment. The compare strip is meant to show the rooms side by side, so
+    the ranking is fed the union: each agent contributes once, from the latest
+    round they answered in. Rounds are read in order, so later answers win.
+    """
+    by_agent: Dict[Any, Dict[str, Any]] = {}
+    # Sort on the round number rather than trusting list_rounds' filename sort.
+    # That sort is correct today only because save_round zero-pads to round_%03d;
+    # "latest wins" is load-bearing here, so it shouldn't rest on the padding.
+    rounds = sorted(list_rounds(session_id, include_results=True),
+                    key=lambda r: r.get("round") or 0)
+    for rnd in rounds:
+        for r in ((rnd.get("result") or {}).get("results") or []):
+            if r.get("agent_id") is not None:
+                by_agent[r["agent_id"]] = r
+    return list(by_agent.values())
+
+
+COVERAGE_LOG = "coverage_gaps.jsonl"
+
+
+def log_coverage_gap(session_id: str, meta: Dict[str, Any],
+                     chosen: Optional[str] = None,
+                     abandoned: Optional[List[str]] = None,
+                     note: str = "") -> None:
+    """Append one line about where our library did NOT have the user's people.
+
+    This is the most valuable thing the fit strip produces for us. A ranking is
+    only ever as good as the segments we have; the rooms a user walks away from
+    — and the room they say we're missing — are demand-led evidence for what to
+    build into the persona library next.
+
+    Deliberately append-only JSONL next to the sessions, under DATA_ROOT: it
+    survives a redeploy on the Railway volume, and nothing reads it at request
+    time, so a write failure must never break the user's round.
+    """
+    line = {
+        "ts": datetime.now().isoformat(),
+        "user_id": meta.get("user_id"),
+        "session_id": session_id,
+        "pitch": (meta.get("pitch") or "")[:500],
+        "segments_offered": [s for s in (meta.get("segments") or []) if s != "everyone"],
+        "segment_chosen": chosen,
+        "segments_abandoned": list(abandoned or []),
+        "note": (note or "")[:1000],
+    }
+    try:
+        path = os.path.join(_base_dir(), COVERAGE_LOG)
+        with open(path, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(line, ensure_ascii=False) + "\n")
+    except OSError as e:
+        logger.warning("Coverage-gap log skipped for %s: %s", session_id, e)
 
 
 def list_sessions(user_id: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -799,23 +1075,33 @@ def latest_round_exchange(session_id: str, agent_id: int) -> Optional[Dict[str, 
     return None
 
 
-def frame_pitch(pitch: str, mode: str) -> str:
+def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> str:
     """Wrap the raw pitch text the way it reaches agents.
 
     Product mode uses founder framing — describing the product, asking for an
     honest reaction. Never a buy solicitation (product honesty rule). LLM-free.
+
+    `probes` are the confirmed sub-questions from the study chips — each adds a
+    line the persona still has to address. The base reaction is always invited;
+    probes only narrow or widen what the panel is additionally asked.
     """
     text = (pitch or "").strip()
     if mode != "product":
-        return text
-    return (
-        f"I'm putting this in front of you: {text}\n"
-        "I want your honest reaction — what works, what doesn't, what would put you off."
-    )
+        framed = text
+    else:
+        framed = (
+            f"I'm putting this in front of you: {text}\n"
+            "I want your honest reaction — what works, what doesn't, what would put you off."
+        )
+    active = [p for p in (probes or []) if (p or "").strip()]
+    if active:
+        framed += "\n\nAlso address these specifically:\n" + "\n".join("- " + p for p in active)
+    return framed
 
 
 def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: str = "product",
-                             session_id: Optional[str] = None) -> str:
+                             session_id: Optional[str] = None,
+                             summary_contract: Optional[str] = None) -> str:
     """A short qualitative read of how the room reacted — the recurring
     objections and (qualitatively) what would move them — synthesized from the
     actual reaction text by the cheap sim-tier LLM (SIM_LLM_*).
@@ -825,6 +1111,12 @@ def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: st
     The real figures (stance split, who moved) are computed deterministically and
     shown alongside — never authored here. Returns "" on any failure so the
     deterministic summary stands on its own.
+
+    A pre-rendered `summary_contract` (computed by the caller from the pointer's
+    slots) only adds focus to the existing prompt — the hard rules above never
+    relax. summary_contract=None reproduces today's prompt byte-for-byte. The
+    contract string is assembled by the caller so this module never imports the
+    pointers module (the import direction stays one-way: pointers -> panel_service).
     """
     reactions = [r for r in (results or []) if r.get("response") and "error" not in r]
     if not reactions:
@@ -849,6 +1141,8 @@ def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: st
         "counts, percentages, prices, or a 'who would buy' / validation / conversion score; "
         "do NOT invent affordability figures. Qualitative synthesis only."
     )
+    if summary_contract:
+        system = f"{system}\n{summary_contract}"
     user = f"The {subject}:\n{pitch}\n\nThe reactions:\n{roster}\n\nBrief the founder:"
 
     api_key = os.environ.get("SIM_LLM_API_KEY") or os.environ.get("LLM_API_KEY") or ""

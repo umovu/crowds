@@ -1,0 +1,81 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   theme.css — shared design tokens.
+
+   Source: the Study.dc.html design canvas (claude.ai design project
+   f01be819-6266-4989-81eb-3a6a00f0ba6d). Palette, radii and type scale are
+   adopted from the design; the accent is deliberately NOT the design's
+   #2f9e5b — CLAUDE.md fixes our accent at #1E9E5A, and the soft/pill/text
+   tints below are derived from ours.
+
+   Imported once, in main.js. Components consume var(--…) instead of
+   hardcoding hex values, so a restyle reads as a diff of values.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Surfaces ─────────────────────────────────────────────────────────── */
+  --paper: #f6f5f2;          /* app / sidebar ground */
+  --card: #ffffff;           /* raised surfaces: prompt card, modals, chips */
+  --card-sunk: #fbfaf8;      /* inset panels inside a card */
+
+  /* ── Ink ──────────────────────────────────────────────────────────────── */
+  --ink: #33312e;            /* primary text */
+  --ink-soft: #5c5954;       /* secondary text */
+  --muted: #9a9791;          /* tertiary / meta text */
+  --muted-soft: #a4a19b;     /* placeholders, disabled, faintest labels */
+
+  /* ── Lines ────────────────────────────────────────────────────────────── */
+  --hairline: #e6e4df;       /* borders on raised surfaces */
+  --hairline-soft: #ecebe7;  /* internal dividers, section rules */
+
+  /* ── Accent — OURS (#1E9E5A), not the design's #2f9e5b ─────────────────── */
+  --accent: #1E9E5A;
+  --accent-strong: #178048;  /* hover / pressed */
+  --accent-text: #178048;    /* accent used as body-size text (contrast) */
+  --accent-soft: rgba(30, 158, 90, 0.10);   /* pill + badge fills */
+  --accent-pill: #eff8f3;    /* opaque equivalent of --accent-soft on paper */
+  --accent-ring: rgba(30, 158, 90, 0.12);   /* focus ring */
+
+  /* ── Status ───────────────────────────────────────────────────────────── */
+  --warn-text: #8a5b00;
+  --warn-soft: rgba(180, 120, 0, 0.12);
+  --danger: #99372A;
+
+  /* ── Radii (from the design) ──────────────────────────────────────────── */
+  --r-sm: 10px;
+  --r-md: 12px;
+  --r-lg: 13px;
+  --r-xl: 18px;
+  --r-pill: 999px;
+
+  /* ── Shadow — the design's two-layer card shadow ──────────────────────── */
+  --shadow-card: 0 1px 2px rgba(51, 49, 46, 0.04),
+                 0 8px 24px rgba(51, 49, 46, 0.06);
+  --shadow-pop:  0 2px 6px rgba(51, 49, 46, 0.06),
+                 0 16px 40px rgba(51, 49, 46, 0.12);
+  --shadow-modal: 0 4px 10px rgba(51, 49, 46, 0.08),
+                  0 24px 64px rgba(51, 49, 46, 0.18);
+
+  /* ── Type ─────────────────────────────────────────────────────────────── */
+  --font-body: 'Spline Sans Mono', ui-monospace, 'JetBrains Mono', monospace;
+  --font-mono: var(--font-body);
+
+  --fs-display: 40px;   /* the balanced headline */
+  --fs-xl: 24px;
+  --fs-lg: 18px;
+  --fs-md: 15px;
+  --fs-base: 14px;
+  --fs-sm: 13px;
+  --fs-xs: 12px;
+  --fs-2xs: 11px;
+
+  --lh-tight: 1.18;
+  --lh-snug: 1.35;
+  --lh-body: 1.55;
+
+  --tracking-tight: -0.4px;
+  --tracking-label: 0.5px;
+
+  /* ── Layout (from the design) ─────────────────────────────────────────── */
+  --sidebar-w: 300px;
+  --column-w: 880px;
+}

@@ -29,6 +29,34 @@ from ..utils.logger import get_logger
 logger = get_logger("fub.opinion_agent")
 
 
+def normalize_attitudes(attitudes: Any) -> Dict[str, str]:
+    """Collapse the three real attitude shapes to {topic: stance}.
+
+    - dict: {topic: stance} — used verbatim.
+    - library list: rows of {topic, stance, source, match_quality}.
+    - custom-agent list: rows of {topic, rating, description} (rating 0-10).
+    - anything else (None, str, ...): nothing measured -> {}.
+    """
+    if isinstance(attitudes, dict):
+        return {str(k): str(v) for k, v in attitudes.items() if v is not None}
+    if not isinstance(attitudes, list):
+        return {}
+    out: Dict[str, str] = {}
+    for row in attitudes:
+        if not isinstance(row, dict):
+            continue
+        topic = row.get("topic") or row.get("name")
+        if not topic:
+            continue
+        stance = row.get("stance")
+        if stance is None and row.get("rating") is not None:
+            rating = float(row["rating"])
+            stance = "oppose" if rating <= 3 else ("neutral" if rating <= 6 else "support")
+        if stance is not None:
+            out[str(topic)] = str(stance)
+    return out
+
+
 # ── Self-reported stance ────────────────────────────────────────────────────
 # Interview answers end with a structured "STANCE: <x>" line the agent writes
 # about itself — its own judgement of its position, parsed here. This replaces
@@ -296,11 +324,23 @@ class OpinionCitizenAgent(PersonAgent):
             for k in self.NEEDS_KEYS
         }
 
-        # Attitudes: topic ratings 0-10
-        attitudes = profile.get("attitudes", {})
-        if not isinstance(attitudes, dict):
-            attitudes = {}
-        self.init_state["attitudes"] = dict(attitudes)
+        # Attitudes: topic ratings 0-10. The library ships them as a LIST of
+        # {topic, stance, source, match_quality} rows, custom-agent profiles as a
+        # list of {topic, rating, description}; a plain dict {topic: stance} also
+        # appears. normalize_attitudes collapses all three to {topic: stance} so
+        # the survey-grounded layer is no longer silently dropped.
+        raw_attitudes = profile.get("attitudes", {})
+        self.init_state["attitudes"] = normalize_attitudes(raw_attitudes)
+
+        # Fail loudly: a profile that CLAIMS to carry attitudes must not end up
+        # with none. Shape drift between producer and consumer used to vanish
+        # here as a quiet {} (the 0.1 bug) — make the next drift visible.
+        if raw_attitudes and not self.init_state["attitudes"]:
+            logger.warning(
+                "attitudes present in profile (%r) but normalized to empty "
+                "for agent %s — shape drift between producer and consumer",
+                type(raw_attitudes).__name__, self.name,
+            )
 
         # Persist
         self.set_skill_state("emotion", self.init_state["emotion"])
