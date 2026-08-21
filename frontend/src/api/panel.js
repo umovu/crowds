@@ -8,6 +8,11 @@ export const listSegments = () =>
 export const suggestSegments = (pitch) =>
   service.get('/api/panel/segments/suggest', { params: { pitch } })
 
+// One plain sentence -> the structured study spec the confirmation chips
+// approve (what / mode / audience / price / probes). Deterministic, no LLM.
+export const readStudy = (payload) =>
+  service.post('/api/panel/read', payload)
+
 export const createSession = (payload) =>
   service.post('/api/panel/sessions', payload)
 
@@ -41,3 +46,9 @@ export const uploadPoster = (file, read = true) => {
 
 export const getPoster = (posterId) =>
   service.get(`/api/panel/posters/${posterId}`)
+
+// The four pointers plus the scaffold slots each one asks for. Deterministic
+// read off the server's POINTERS table, so the hints shown on the home screen
+// can't drift from the ones the seed is assembled from.
+export const listPointers = () =>
+  service.get('/api/panel/pointers')
