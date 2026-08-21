@@ -19,6 +19,8 @@ from ..config import Config
 from ..services import panel_service
 from ..services import mode_detector
 from ..services import poster_service
+from ..services import pointers
+from ..services import study_reader
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger
 
@@ -76,6 +78,80 @@ def list_segments():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@panel_bp.route('/pointers', methods=['GET'])
+def list_pointers():
+    """The four pointers with the scaffold each one asks for.
+
+    Pure dict read off `pointers.POINTERS` — no LLM, no I/O. The home screen
+    reveals these slot hints under each pointer row, so the hints the user
+    reads are the same ones the seed is assembled from and cannot drift.
+    `summary_contract` and `seed_slots` stay server-side; they are prompt
+    internals, not UI copy.
+    """
+    try:
+        out = [
+            {
+                "id": pid,
+                "label": p["label"],
+                "blurb": p["blurb"],
+                "slots": [
+                    {"key": s["key"], "label": s["label"],
+                     "hint": s["hint"], "required": s["required"]}
+                    for s in p["slots"]
+                ],
+            }
+            for pid, p in pointers.POINTERS.items()
+        ]
+        return jsonify({"success": True, "data": {"pointers": out}})
+    except Exception as e:
+        logger.error(f"Failed to list pointers: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@panel_bp.route('/read', methods=['POST'])
+def read_study():
+    """Read one plain sentence into a structured study spec for the chips.
+
+    Deterministic structural pre-processing (keyword + regex, no LLM): what's
+    being tested, the mode, the audience suggestion, the price, the worry, and
+    the probes to ask the panel. The UI shows this spec as editable chips and
+    only sends the approved version on run. The reader authors nothing — it
+    only labels what the sentence did or didn't say.
+
+    Request (JSON): {"pitch": "...", "lens": "land"|"breaks"|"fit"|"ab"}
+    """
+    try:
+        data = request.get_json() or {}
+        text = (data.get('pitch') or '').strip()
+        if not text:
+            return jsonify({"success": False, "error": "Type one sentence to test before we read it."}), 400
+        lens = (data.get('lens') or 'land').strip().lower()
+        if lens not in pointers.POINTERS:
+            lens = 'land'
+        return jsonify({"success": True, "data": study_reader.read_study(text, lens=lens)})
+    except Exception as e:
+        return _server_error(e, "Could not read that sentence. Try again.")
+
+
+def _read_page_text(url: str, limit: int = 6000) -> str:
+    """A web page -> the readable words on it, or "" if it can't be read.
+
+    Thin wrapper over the existing Jina reader. Trimmed to `limit` characters:
+    the room reacts to the page's message, and a whole site's markdown would
+    bury it. No LLM here — this is a fetch, not a summary.
+    """
+    try:
+        from ..services.jina_service import JinaService
+        res = JinaService().scrape(url)
+        if not res.get('success'):
+            return ""
+        text = (res.get('content') or res.get('text') or '').strip()
+        return text[:limit]
+    except Exception as e:
+        logger.warning(f"Page read failed for {url}: {e}")
+        return ""
+
+
 @panel_bp.route('/sessions', methods=['POST'])
 def create_session():
     """Create a panel session.
@@ -106,11 +182,38 @@ def create_session():
         return gate
     try:
         data = request.get_json() or {}
-        # Mode is inferred from the pitch unless the caller pins one explicitly.
-        # Keyword-only detection (no llm_client) — pure, deterministic, cheap.
+        pointer = data.get('pointer')
+        slots = data.get('slots') or {}
+        # Pointer scaffold: must fill required slots before we run a junk seed.
+        if pointer:
+            missing = pointers.missing_required(pointer, slots)
+            if missing:
+                return jsonify({
+                    "success": False,
+                    "error": f"Missing required field(s): {', '.join(missing)}",
+                }), 400
+        # An assembled seed stands in for the pitch when none sent. An explicit
+        # pitch always wins.
+        pitched = (data.get('pitch') or '').strip()
+        # The website pointer takes an address, but a person can't react to a
+        # URL. Read the page into text first and let that stand in as the slot
+        # value, so the cast only ever sees words — the same rule the poster
+        # path follows with its vision read.
+        if pointer == 'website' and (slots.get('url') or '').strip():
+            page = _read_page_text(slots['url'].strip())
+            if not page:
+                return jsonify({
+                    "success": False,
+                    "error": "Couldn't read that page. Check the address, or paste the text instead.",
+                }), 400
+            slots = {**slots, 'url': page}
+        if pointer and not pitched:
+            pitched = pointers.assemble_seed(pointer, slots)
+        # Mode is inferred from the (possibly assembled) pitch unless the caller
+        # pins one explicitly. Keyword-only detection — pure, deterministic, cheap.
         mode = data.get('mode')
         if not mode:
-            mode = mode_detector.detect(data.get('pitch', '') or '').get('mode', 'product')
+            mode = mode_detector.detect(pitched or '').get('mode', 'product')
         # Free tier: cap the panel cast at 12 (paid may go up to MAX_CAST_SIZE).
         n = data.get('n', panel_service.DEFAULT_CAST_SIZE)
         ent = billing.get_entitlement(billing.current_user_id())
@@ -119,16 +222,27 @@ def create_session():
                 n = min(int(n), 12)
             except (ValueError, TypeError):
                 n = 12
+        # Auto-route the segment from the seed when the caller didn't pick one.
+        # An explicit segment choice always wins.
+        routed_segments = data.get('segments')
+        if not routed_segments and data.get('segment'):
+            routed_segments = [data.get('segment')]
+        if pointer and not routed_segments:
+            routed = pointers.route_segments(pointer, pitched)
+            if routed:
+                routed_segments = routed
         meta = panel_service.create_session(
-            pitch=data.get('pitch', ''),
+            pitch=pitched,
             mode=mode,
             n=n,
             province=data.get('province'),
             seed=data.get('seed'),
-            segment=data.get('segment'),
-            segments=data.get('segments'),
+            segment=routed_segments[0] if len(routed_segments or []) == 1 else None,
+            segments=routed_segments,
             budget_tiers=data.get('budget_tiers'),
             user_id=billing.current_user_id(),
+            pointer=pointer,
+            slots=slots if pointer else None,
         )
         # Count this panel against the user's quota (no-op on paid / billing off).
         billing.increment_panel_used(billing.current_user_id())
@@ -202,9 +316,36 @@ def pitch(session_id: str):
             return jsonify({"success": False, "error": "No pitch text on the request or the session"}), 400
         agent_ids = data.get('agent_ids')
         concurrency = max(1, min(int(data.get('concurrency', 6)), 10))
+        return _run_round(session_id, meta, pitch_text, agent_ids, concurrency)
 
+    except FileNotFoundError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:
+        return _server_error(e, "The room could not be reached. Nothing was counted — try again.")
+
+
+def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
+               concurrency: int, carried_probe: str = None):
+    """Run one pitch round and return the Flask response.
+
+    Shared by `/pitch` and `/segments`, so a re-pitch at a new room is the same
+    round in every respect — same framing, same refusal rules, same saved shape
+    — differing only in WHO hears it and one carried-over question. Two code
+    paths here would drift, and the whole point of the compare strip is that the
+    rooms are comparable.
+    """
+    try:
         service = _interview_service(session_id)
-        framed = panel_service.frame_pitch(pitch_text, meta.get('mode', 'product'))
+        # The confirmed probes from the study chips become explicit follow-ups
+        # the cast is asked, on top of the base reaction (see frame_pitch).
+        slots = meta.get("slots") or {}
+        probes = [p.get("question") for p in (slots.get("probes") or [])
+                  if isinstance(p, dict) and p.get("active") and (p.get("question") or "").strip()]
+        # The wall the previous room hit, carried over as one more question.
+        if carried_probe:
+            probes = probes + [carried_probe]
+        framed = panel_service.frame_pitch(
+            pitch_text, meta.get('mode', 'product'), probes=probes)
         result = _run_async(service.batch_impact_interview(
             question=framed,
             agent_ids=agent_ids,
@@ -242,14 +383,39 @@ def pitch(session_id: str):
             result["summary_narrative"] = panel_service.synthesize_panel_summary(
                 pitch_text, result.get("results", []), meta.get('mode', 'product'),
                 session_id=session_id,
+                # Contract text is rendered here (this module already imports
+                # pointers) so panel_service stays import-free of pointers.
+                summary_contract=pointers.summary_contract(
+                    meta.get('pointer'), meta.get('slots') or {}),
             )
         except Exception as _e:
             logger.warning(f"Panel summary synthesis skipped for {session_id}: {_e}")
+
+        # `fit` surfaces a segment-ranked read (one row per segment) instead of
+        # one flat room. Deterministic, real fields only — no LLM. Persisted with
+        # the round so a reload of a saved session shows the same ranking.
+        concrete_segments = [s for s in (meta.get("segments") or []) if s and s != "everyone"]
+        if len(concrete_segments) >= 2:
+            # Ranked over the whole SESSION, not just this round: a re-pitch
+            # interviews only the new room, and the strip compares rooms. Older
+            # answers first, this round's on top — so a persona re-interviewed
+            # in this round contributes their newest answer, once.
+            union = {r["agent_id"]: r
+                     for r in panel_service.latest_results(session_id)
+                     if r.get("agent_id") is not None}
+            union.update({r["agent_id"]: r for r in result.get("results", [])
+                          if r.get("agent_id") is not None})
+            result["by_segment"] = panel_service.rank_by_segment(
+                session_id, meta, list(union.values()))
+            # Say the scope out loud — the ranking is bounded by our library,
+            # not by the market.
+            result["coverage"] = panel_service.coverage_summary(meta)
 
         round_num = panel_service.save_round(session_id, {
             "pitch": pitch_text,
             "framed_pitch": framed,
             "agent_ids": agent_ids,
+            "carried_probe": carried_probe,
             "result": result,
         })
 
@@ -267,6 +433,86 @@ def pitch(session_id: str):
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
         return _server_error(e, "The room could not be reached. Nothing was counted — try again.")
+
+
+@panel_bp.route('/sessions/<session_id>/segments', methods=['POST'])
+def add_segment(session_id: str):
+    """Take the SAME pitch to a different room.
+
+    Request (JSON):
+        {
+            "segment_id": "guardians",         // required, a library segment
+            "seats": 6,                        // optional, default 6
+            "carry_objection": "fee_sensitivity",  // optional objection type id
+            "abandoned": ["professionals"],    // optional, for the coverage log
+            "concurrency": 6
+        }
+
+    The pitch is never rewritten — that is the point. Only the audience changes,
+    plus one carried-over question about the wall the last room hit. Rounds are
+    append-only, so both rooms stay on screen and stay comparable.
+
+    Returns the same shape as `/pitch`, with the ranking recomputed across every
+    room in the session.
+    """
+    try:
+        data = request.get_json() or {}
+        segment_id = (data.get('segment_id') or '').strip()
+        if not segment_id:
+            return jsonify({"success": False, "error": "No segment_id given"}), 400
+
+        try:
+            meta, agent_ids = panel_service.add_segment(
+                session_id, segment_id, seats=int(data.get('seats', 6)))
+        except ValueError as e:
+            # A real, user-facing answer: the group is unknown, or everyone in
+            # it is already in the room. Neither is a server fault.
+            return jsonify({"success": False, "error": str(e)}), 400
+
+        # Learn from the switch itself, not only from the escape hatch — a user
+        # walking away from a room is the same demand signal, silently given.
+        panel_service.log_coverage_gap(
+            session_id, meta, chosen=segment_id,
+            abandoned=data.get('abandoned') or [])
+
+        pitch_text = (meta.get('pitch') or '').strip()
+        if not pitch_text:
+            return jsonify({"success": False, "error": "This session has no pitch to re-run"}), 400
+
+        return _run_round(
+            session_id, meta, pitch_text, agent_ids,
+            max(1, min(int(data.get('concurrency', 6)), 10)),
+            carried_probe=panel_service.carry_probe(data.get('carry_objection')),
+        )
+
+    except FileNotFoundError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:
+        return _server_error(e, "We could not take the pitch to that group. Try again.")
+
+
+@panel_bp.route('/sessions/<session_id>/coverage-gap', methods=['POST'])
+def coverage_gap(session_id: str):
+    """"None of these are my people" — record who we were missing.
+
+    Request (JSON): {"note": "rural clinic nurses", "abandoned": ["learners"]}
+
+    Writes to the coverage log and returns success. Deliberately cheap and
+    unconditional: this is our roadmap input, and a user who bothers to tell us
+    should never see it fail.
+    """
+    try:
+        meta = panel_service.get_session(session_id)
+        if not meta:
+            return jsonify({"success": False, "error": f"Session {session_id} not found"}), 404
+        data = request.get_json() or {}
+        panel_service.log_coverage_gap(
+            session_id, meta,
+            abandoned=data.get('abandoned') or [],
+            note=(data.get('note') or '').strip())
+        return jsonify({"success": True, "data": {"recorded": True}})
+    except Exception as e:
+        return _server_error(e, "We could not record that. Try again.")
 
 
 @panel_bp.route('/posters', methods=['POST'])

@@ -248,7 +248,12 @@
                   <!-- Poster upload: one vision call reads the image into a
                        text brief, which becomes the pitch above. The cast only
                        ever sees text. -->
-                  <label class="crowd-btn" :class="{ busy: posterBusy }">
+                  <label
+                    class="crowd-btn clip-btn"
+                    :class="{ busy: posterBusy }"
+                    :title="posterBusy ? 'Reading image…' : 'Attach an image'"
+                    aria-label="Attach an image"
+                  >
                     <input
                       type="file"
                       class="poster-file"
@@ -256,8 +261,9 @@
                       :disabled="posterBusy"
                       @change="onPosterPick"
                     />
-                    <span class="crowd-btn-icon">▣</span>
-                    <span>{{ posterBusy ? 'Reading poster…' : 'Upload poster' }}</span>
+                    <svg class="clip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21.44 11.05l-8.49 8.49a5.5 5.5 0 01-7.78-7.78l8.49-8.49a3.67 3.67 0 015.19 5.19l-8.49 8.49a1.83 1.83 0 01-2.6-2.6l7.78-7.78" />
+                    </svg>
                     <span v-if="posterName" class="crowd-btn-summary">{{ posterName }}</span>
                   </label>
 
@@ -1458,6 +1464,8 @@ onUnmounted(() => {
 }
 /* The whole pill is the <label>, so the raw input is hidden. */
 .poster-file { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.clip-btn { padding-left: 10px; padding-right: 10px; }
+.clip-icon { width: 16px; height: 16px; display: block; }
 .crowd-btn.busy { opacity: 0.6; cursor: default; }
 .poster-note {
   margin: 10px 0 0; font-family: var(--font-body);
