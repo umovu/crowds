@@ -10,6 +10,7 @@ import logging
 from typing import Dict, Tuple
 from flask import Blueprint, request, jsonify, current_app
 
+from ..config import Config
 from ..services.literature_service import LiteratureSearchService
 from ..services.deep_research_service import _is_available
 from ..utils.logger import get_logger
@@ -1158,9 +1159,7 @@ No explanation, no extra text."""
 # Persona Library — browse cached/generated personas in the UI side panel
 # ============================================================================
 
-_PERSONA_CACHE_DIR = os.path.join(
-    os.path.dirname(__file__), "..", "..", "uploads", "persona_cache"
-)
+_PERSONA_CACHE_DIR = os.path.join(Config.UPLOAD_FOLDER, "persona_cache")
 
 
 def _persona_cache_dir() -> str:
@@ -1225,6 +1224,9 @@ def list_personas():
                 "province":   lp.get("province"),
                 "fees_band":         lp.get("fees_band"),
                 "learner_fee_bands": lp.get("learner_fee_bands") or [],
+                # Living-standard proxy band, stamped at library load
+                # (services/lsm_proxy.py). Pure asset score, no LLM.
+                "lsm_proxy":  lp.get("lsm_proxy"),
                 "level":      "library",
             })
 
@@ -1267,6 +1269,9 @@ def list_personas():
                 # personas without an N-call waterfall.
                 "fees_band":         fees_band,
                 "learner_fee_bands": learner_fee_bands,
+                # Only library personas carry a band; cache entries stay None
+                # unless the library matched them above.
+                "lsm_proxy":  (lib_index.get((name.strip(), archetype.strip())) or {}).get("lsm_proxy"),
                 "level":      meta.get("level", "exact"),
             })
         # De-dupe: each persona is stored under two keys (exact + archetype) so

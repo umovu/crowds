@@ -16,6 +16,12 @@
           {{ pretty(a.key) }} ({{ a.count }})
         </option>
       </select>
+      <select v-if="bands.length" v-model="bandFilter" class="ap-filter" title="Living-standard proxy band">
+        <option value="">All living standards</option>
+        <option v-for="b in bands" :key="b.key" :value="b.key">
+          {{ b.key }} ({{ b.count }})
+        </option>
+      </select>
     </div>
 
     <div v-if="filtered.length === 0" class="ap-empty">No agents match.</div>
@@ -40,6 +46,12 @@
             <span v-if="agent.stance" class="ap-stance" :class="'stance-' + agent.stance">{{ stanceLabel(agent.stance) }}</span>
             <span v-if="agent.budget_tier" class="ap-tier" :class="'tier-' + agent.budget_tier">{{ agent.budget_tier }}</span>
             <span v-if="agent.is_institutional" class="ap-inst">institutional</span>
+            <span
+              v-if="bandOf(agent)"
+              class="ap-band"
+              :class="'band-' + bandNumber(agent)"
+              :title="bandTitle(agent)"
+            >{{ bandOf(agent) }}</span>
           </div>
         </div>
       </button>
@@ -65,6 +77,7 @@ const emit = defineEmits(['select', 'toggle'])
 
 const search = ref('')
 const archetypeFilter = ref('')
+const bandFilter = ref('')
 
 const agentId = (a) => a.id ?? a.agent_id ?? a.name
 const name = (a) => a.name || `Agent ${agentId(a)}`
@@ -77,6 +90,34 @@ const PRODUCT_STANCE_LABELS = {
 const stanceLabel = (s) => (props.mode === 'product' ? (PRODUCT_STANCE_LABELS[s] || s) : s)
 
 const avatar = (a) => createAvatar(initials, { seed: name(a), size: 36 }).toDataUri()
+
+// Living-standard proxy band, stamped on every library persona at load time
+// (backend/app/services/lsm_proxy.py). Pure asset-based score, no LLM. Absent on
+// runtime-cached personas and on sims run before the stamp shipped — hide the
+// badge rather than guess a band.
+const bandOf = (a) => (a.lsm_proxy && a.lsm_proxy.band) || ''
+const bandNumber = (a) => {
+  const m = /Band (\d)/.exec(bandOf(a))
+  return m ? m[1] : '0'
+}
+const bandTitle = (a) => {
+  const l = a.lsm_proxy
+  if (!l) return ''
+  // Always say "proxy" where a client can read it — this approximates LSM, it
+  // is not the SAARF measure.
+  return `${l.band} — ${l.band_meaning || ''} (living-standard proxy, ${l.confidence || 'unknown'} confidence)`
+}
+
+const bands = computed(() => {
+  const counts = {}
+  for (const a of props.agents) {
+    const b = bandOf(a)
+    if (b) counts[b] = (counts[b] || 0) + 1
+  }
+  return Object.entries(counts)
+    .map(([key, count]) => ({ key, count }))
+    .sort((a, b) => a.key.localeCompare(b.key))
+})
 
 const archetypes = computed(() => {
   const counts = {}
@@ -93,6 +134,7 @@ const filtered = computed(() => {
   const q = search.value.trim().toLowerCase()
   return props.agents.filter((a) => {
     if (archetypeFilter.value && (a.actor_archetype || 'unknown') !== archetypeFilter.value) return false
+    if (bandFilter.value && bandOf(a) !== bandFilter.value) return false
     if (!q) return true
     return (
       name(a).toLowerCase().includes(q) ||
@@ -189,4 +231,20 @@ const select = (a) => emit(props.multiSelect ? 'toggle' : 'select', a)
 .tier-moderate { background: #F4F4F4; color: #666; border: 1px solid #DDD; }
 .tier-loose { background: rgba(30,158,90,0.1); color: #1E9E5A; border: 1px solid rgba(30,158,90,0.4); }
 .ap-inst { background: #EEF; color: #557; border: 1px solid #CCD; }
+.ap-band {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: #F4F4F4;
+  color: #555;
+  border: 1px solid #E0E0E0;
+}
+.band-1 { background: #FDEDEB; color: #C0392B; border-color: #E6B0AA; }
+.band-2 { background: #FDF3E3; color: #9C6B1E; border-color: #EBD4A8; }
+.band-3 { background: #F1F5FB; color: #4A6B96; border-color: #C9D8EC; }
+.band-4 { background: rgba(30,158,90,0.1); color: #1E9E5A; border-color: rgba(30,158,90,0.4); }
 </style>
