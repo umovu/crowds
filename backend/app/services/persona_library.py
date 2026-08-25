@@ -21,6 +21,7 @@ import random
 from typing import Dict, List, Optional
 
 from ..utils.logger import get_logger
+from .lsm_proxy import score_persona
 
 logger = get_logger("fub.persona_library")
 
@@ -103,12 +104,24 @@ class PersonaLibrary:
                 with open(self.path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 self._personas = data.get("personas", []) if isinstance(data, dict) else list(data)
+                self._stamp_lsm()
                 logger.info(f"Loaded {len(self._personas)} personas from library.")
             except (OSError, json.JSONDecodeError) as e:
                 logger.error(f"Failed to read persona library: {e}")
                 self._personas = []
         self._loaded = True
         return self
+
+    def _stamp_lsm(self) -> None:
+        """Attach lsm_proxy {score, band, confidence} to every persona at load.
+
+        Always recomputed from the current rubric and written over any stamp that
+        arrived in the stored copy, so a rubric change takes effect on the next
+        load without touching the library file. Pure function per persona — no
+        LLM anywhere in this path (see lsm_proxy.py).
+        """
+        for persona in self._personas:
+            persona["lsm_proxy"] = score_persona(persona)
 
     def is_empty(self) -> bool:
         return len(self.all()) == 0
