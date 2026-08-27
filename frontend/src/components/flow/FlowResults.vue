@@ -31,6 +31,10 @@
             <span class="flow-back-arrow">←</span>
             <span>Back</span>
           </button>
+          <button v-if="!isFitView" class="flow-back" title="Go back and pick a different crowd" @click="emit('rerun')">
+            <span class="flow-back-arrow">↺</span>
+            <span>Different crowd</span>
+          </button>
           <div class="brand">
             <span class="brand-mark">c</span>
             <span class="brand-word"><span class="brand-strong">crowds</span></span>
@@ -438,7 +442,7 @@ const props = defineProps({
   // so the results and chat screens can be looked at without running a sim.
   demo: { type: Boolean, default: false }
 })
-const emit = defineEmits(['back'])
+const emit = defineEmits(['back', 'rerun'])
 const toast = useToast()
 
 const isPanel = computed(() => props.mode === 'panel')

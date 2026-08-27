@@ -2,7 +2,12 @@
   <div class="flow-shell">
     <!-- Base layer: home, always present on the same page. Overlays appear on
          top of it — nothing navigates away. -->
-    <FlowHome :class="{ 'base-dimmed': state !== 'home' }" @submit="onSubmit" @open="onOpen" />
+    <FlowHome
+      :class="{ 'base-dimmed': state !== 'home' }"
+      :open-picker-signal="openPickerSignal"
+      @submit="onSubmit"
+      @open="onOpen"
+    />
 
     <!-- Overlay: the build box pops up over the dimmed home (sim only). -->
     <Transition name="popup">
@@ -23,6 +28,7 @@
         :simulation-id="simulationId"
         :session-id="sessionId"
         @back="goBack"
+        @rerun="onRerun"
       />
     </Transition>
   </div>
@@ -38,6 +44,11 @@ import FlowResults from '../components/flow/FlowResults.vue'
 const state = ref('home')       // 'home' | 'building' | 'results'
 const query = ref('')
 const mode = ref('sim')         // 'sim' | 'panel'
+
+// Bumped to ask FlowHome — which is always mounted underneath — to reopen its
+// crowd picker. A counter, not a boolean: every bump is a fresh request, so
+// two rerun clicks in a row both land.
+const openPickerSignal = ref(0)
 
 // The open results view lives only in memory, so a browser refresh would drop
 // you back to home and the reactions would vanish. Persist the open sim/panel
@@ -94,6 +105,14 @@ watch(state, (val, old) => {
 const goBack = () => {
   if (overlayDepth > 0) window.history.back()   // → popstate → goHome
   else goHome()
+}
+// "Different crowd" from the results overlay: collapse to home the normal way
+// (so browser history stays consistent), then ask FlowHome to open its picker.
+// FlowHome was never unmounted, so the user's typed prompt is still in place —
+// nothing is restored or prefilled here.
+const onRerun = () => {
+  goBack()
+  openPickerSignal.value++
 }
 const onPopState = () => {
   if (state.value !== 'home') {
