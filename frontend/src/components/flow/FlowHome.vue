@@ -432,6 +432,11 @@ import { useToast } from '../../composables/useToast'
 import ProfileModal from './ProfileModal.vue'
 import LensIcon from './LensIcon.vue'
 
+const props = defineProps({
+  // Bumped by FlowView when the user clicks "Different crowd" on the results
+  // overlay. Any change reopens the crowd picker.
+  openPickerSignal: { type: Number, default: 0 }
+})
 const emit = defineEmits(['submit', 'open'])
 
 const route = useRoute()
@@ -794,6 +799,14 @@ function applyAudience() {
   }
   crowdPickerOpen.value = false
 }
+
+// Reopen the picker on request from FlowView (the "Different crowd" button on
+// the results overlay). openAudiencePicker seeds selectedSegments from the
+// study's current audience, so the previous choice is preselected and the user
+// edits it rather than starting over.
+watch(() => props.openPickerSignal, (n, old) => {
+  if (n > old) openAudiencePicker()
+})
 
 function segmentsText(ids) {
   return (ids || []).map(id => segments.value.find(s => s.id === id)?.label || id).join(' + ')
