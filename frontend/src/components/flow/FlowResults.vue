@@ -31,6 +31,14 @@
             <span class="flow-back-arrow">←</span>
             <span>Back</span>
           </button>
+          <button
+            v-if="isPanel && sessionId"
+            class="add-seat-btn"
+            title="Add a new group to this room"
+            @click="openPicker"
+          >
+            + Add new personas
+          </button>
           <div class="brand">
             <span class="brand-mark">c</span>
             <span class="brand-word"><span class="brand-strong">crowds</span></span>
@@ -260,12 +268,13 @@
                     :key="a.id"
                     class="pp-av-btn"
                     :class="{ active: popAgentId === a.id }"
-                    :title="a.name"
+                    :title="a.segmentLabel ? a.name + ' · ' + a.segmentLabel : a.name"
                     @mouseenter="showReactionPop(a, $event)"
                     @mouseleave="scheduleClosePop"
                     @click="interviewFromAvatar(a)"
                   >
                     <img :src="a.avatarUrl" :alt="a.name" />
+                    <span v-if="a.segmentLabel" class="pp-av-seg">{{ a.segmentLabel }}</span>
                   </button>
                 </div>
               </div>
@@ -408,6 +417,45 @@
       </section>
     </main>
   </div>
+
+  <!-- Add new personas to a live panel room -->
+  <div v-if="pickerOpen" class="seg-picker-overlay" @click.self="pickerOpen = false">
+    <div class="seg-picker">
+      <div class="seg-picker-head">
+        <div class="seg-picker-title">Add a new group</div>
+        <button class="seg-picker-close" @click="pickerOpen = false">×</button>
+      </div>
+      <p class="seg-picker-sub">Pick a group to bring into this room. They hear the same pitch — nothing is re-written.</p>
+      <div class="seg-options">
+        <button
+          v-for="s in segChoices"
+          :key="s.id"
+          class="seg-option"
+          :class="{ active: pickedSeg === s.id }"
+          @click="pickedSeg = s.id"
+        >
+          <span class="seg-option-label">{{ s.label }}</span>
+          <span class="seg-option-desc">{{ s.description }}</span>
+        </button>
+        <div v-if="!segChoices.length" class="seg-options-empty">Every group is already in this room.</div>
+      </div>
+      <div class="seg-picker-row">
+        <label class="seg-picker-label">How many to add</label>
+        <div class="seg-stepper">
+          <button class="seg-step" @click="seats = Math.max(1, seats - 1)">−</button>
+          <span class="seg-step-val">{{ seats }}</span>
+          <button class="seg-step" @click="seats = Math.min(25, seats + 1)">+</button>
+        </div>
+      </div>
+      <div v-if="segMsg" class="seg-picker-msg">{{ segMsg }}</div>
+      <div class="seg-picker-foot">
+        <button class="seg-cancel" @click="pickerOpen = false">Cancel</button>
+        <button class="seg-confirm" :disabled="busySeg || !pickedSeg" @click="addSeats">
+          {{ busySeg ? 'Adding…' : 'Add to room' }}
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -425,7 +473,7 @@ import {
   resumeSimulation,
   stopSimulation
 } from '../../api/simulation'
-import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
+import { getSession, pitchSession, askAgent, listRounds, listSegments, addSegment } from '../../api/panel'
 import { useToast } from '../../composables/useToast'
 import { generateReport, getReportStatus, getReport } from '../../api/report'
 
@@ -455,6 +503,54 @@ const abMoved = ref([])
 const isFitView = computed(() => isPanel.value && panelPointer.value === 'fit')
 const isAbView = computed(() => isPanel.value && panelPointer.value === 'ab')
 const isPointerView = computed(() => isFitView.value || isAbView.value)
+
+// ── Add new personas to a live room (panel mode) ──────────────────────────
+// The room's CURRENT segments come from the session detail (roomSegments);
+// the picker offers every named segment that isn't already in the room.
+// No re-pitch — the server reuses the session's own pitch for the new group.
+const roomSegments = ref([])
+const pickerOpen = ref(false)
+const segChoices = ref([])
+const pickedSeg = ref(null)
+const seats = ref(5)
+const busySeg = ref(false)
+const segMsg = ref('')
+
+const openPicker = async () => {
+  if (!isPanel.value || !props.sessionId) return
+  try {
+    const res = await listSegments()
+    const all = res.data?.segments || []
+    const taken = new Set(['everyone', ...roomSegments.value])
+    segChoices.value = all.filter(s => !taken.has(s.id))
+  } catch (e) {
+    segChoices.value = []
+  }
+  pickedSeg.value = segChoices.value[0]?.id || null
+  seats.value = 5
+  segMsg.value = ''
+  pickerOpen.value = true
+}
+
+const addSeats = async () => {
+  if (busySeg.value || !pickedSeg.value || !props.sessionId) return
+  busySeg.value = true
+  segMsg.value = ''
+  try {
+    const res = await addSegment(props.sessionId, { segment_id: pickedSeg.value, seats: seats.value })
+    const d = res?.data || res
+    const added = d?.added_count ?? d?.cast_size ?? 0
+    segMsg.value = `Added ${added} ${added === 1 ? 'persona' : 'personas'} to the room`
+    toast.show({ type: 'success', message: segMsg.value })
+    pickerOpen.value = false
+    await loadPanel()  // reload cast + overview with the new members
+  } catch (e) {
+    segMsg.value = e?.response?.data?.error || e?.message || 'Could not add personas'
+    toast.show({ type: 'error', message: segMsg.value })
+  } finally {
+    busySeg.value = false
+  }
+}
 
 // ── Report download (sim mode) ──────────────────────────────────────────────
 // Generate the full insight report on the backend, poll until it's written,
@@ -548,7 +644,8 @@ const normalizeAgent = (a) => ({
   stance_after: a.stance || a.stance_after || 'neutral',
   stance_before: a.stance || a.stance_before || 'neutral',
   stance_changed: false,
-  currentReaction: a.currentReaction || ''
+  currentReaction: a.currentReaction || '',
+  segmentLabel: a.segment_label || ''
 })
 
 // ── Stance spectrum definitions ─────────────────────────────────────────────
@@ -1060,6 +1157,7 @@ const loadPanel = async () => {
   feedLive.value = true
   try {
     const detail = await getSession(props.sessionId)
+    roomSegments.value = detail.data?.segments || []
     if (detail.data?.agents) {
       agents.value = detail.data.agents.map(normalizeAgent)
       // Restore any saved follow-up interviews (persisted on disk per agent), so
@@ -1817,6 +1915,73 @@ onUnmounted(() => {
   margin: 3px 0 0; font-size: 0.78rem; line-height: 1.5; color: #4B5563;
   white-space: pre-wrap;
 }
+
+/* Add-new-personas button + picker */
+.add-seat-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-left: 12px; padding: 7px 13px; border-radius: 999px;
+  border: 1px solid var(--accent-text, #178048);
+  background: var(--accent-soft, rgba(30,158,90,0.10));
+  color: var(--accent-text, #178048);
+  font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  font-family: var(--font-body, inherit);
+}
+.add-seat-btn:hover { background: rgba(30,158,90,0.16); }
+.pp-av-btn { position: relative; }
+.pp-av-seg {
+  position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%);
+  white-space: nowrap; padding: 0 4px; border-radius: 999px;
+  background: var(--accent-pill, #eff8f3); color: var(--accent-text, #178048);
+  font-size: 9px; font-weight: 700; line-height: 1.4;
+  border: 1px solid rgba(30,158,90,0.25); pointer-events: none;
+}
+.seg-picker-overlay {
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(17,24,39,0.42); padding: 20px;
+}
+.seg-picker {
+  width: min(460px, 100%); max-height: 86vh; overflow: auto;
+  background: var(--card, #fff); border: 1px solid var(--hairline, #E5E7EB);
+  border-radius: 16px; padding: 18px 18px 16px;
+  box-shadow: 0 18px 50px rgba(17,24,39,0.22);
+}
+.seg-picker-head { display: flex; align-items: center; }
+.seg-picker-title { font-size: 1rem; font-weight: 700; color: var(--ink, #111827); }
+.seg-picker-close { margin-left: auto; border: none; background: none; font-size: 1.3rem; line-height: 1; color: var(--muted, #6B7280); cursor: pointer; }
+.seg-picker-sub { margin: 6px 0 14px; font-size: 0.8rem; line-height: 1.5; color: var(--muted, #6B7280); }
+.seg-options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.seg-option {
+  text-align: left; padding: 10px 12px; border-radius: 11px; cursor: pointer;
+  border: 1px solid var(--hairline, #E5E7EB); background: #fff;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.seg-option.active { border-color: var(--accent-text, #178048); background: var(--accent-soft, rgba(30,158,90,0.10)); }
+.seg-option-label { font-size: 0.82rem; font-weight: 700; color: var(--ink, #111827); }
+.seg-option-desc { font-size: 0.72rem; line-height: 1.4; color: var(--muted, #6B7280); }
+.seg-options-empty { grid-column: 1 / -1; font-size: 0.8rem; color: var(--muted, #6B7280); padding: 8px 2px; }
+.seg-picker-row { display: flex; align-items: center; justify-content: space-between; margin: 14px 2px 4px; }
+.seg-picker-label { font-size: 0.8rem; color: var(--ink, #111827); }
+.seg-stepper { display: flex; align-items: center; gap: 10px; }
+.seg-step {
+  width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
+  border: 1px solid var(--hairline, #E5E7EB); background: #fff; font-size: 1rem;
+  color: var(--ink, #111827);
+}
+.seg-step-val { min-width: 20px; text-align: center; font-weight: 700; font-size: 0.9rem; }
+.seg-picker-msg { margin: 10px 2px 0; font-size: 0.78rem; color: var(--accent-text, #178048); }
+.seg-picker-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+.seg-cancel {
+  padding: 9px 16px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--hairline, #E5E7EB); background: #fff; color: var(--ink, #111827);
+  font-size: 0.84rem; font-weight: 600;
+}
+.seg-confirm {
+  padding: 9px 16px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--accent-text, #178048); background: var(--accent-text, #178048); color: #fff;
+  font-size: 0.84rem; font-weight: 700;
+}
+.seg-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
 
 @media (max-width: 720px) { .ab-columns { grid-template-columns: 1fr; } }
 </style>
