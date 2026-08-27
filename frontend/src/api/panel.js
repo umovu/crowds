@@ -28,6 +28,11 @@ export const deleteSession = (sessionId) =>
 export const pitchSession = (sessionId, payload = {}) =>
   service.post(`/api/panel/sessions/${sessionId}/pitch`, payload)
 
+// Take the SAME pitch to another group and append them to the live room.
+// The pitch is never re-sent — the server reuses the session's own.
+export const addSegment = (sessionId, payload) =>
+  service.post(`/api/panel/sessions/${sessionId}/segments`, payload)
+
 export const listRounds = (sessionId, full = false) =>
   service.get(`/api/panel/sessions/${sessionId}/rounds`, { params: { full: full ? 1 : 0 } })
 

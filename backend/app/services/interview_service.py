@@ -118,7 +118,8 @@ class InterviewService:
             # Library-cast provenance/economic fields (present on panel sessions).
             for key in ("library_id", "province", "age", "gender", "persona",
                         "budget_tier", "is_grant_dependent", "grant_type",
-                        "monthly_income_rand", "income_provenance"):
+                        "monthly_income_rand", "income_provenance",
+                        "segment_id", "segment_label"):
                 if p.get(key) is not None:
                     entry[key] = p[key]
             # Persisted follow-up chat memory, so the client can restore prior

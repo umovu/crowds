@@ -382,7 +382,7 @@ def _economic_fields(persona: Dict[str, Any]) -> Dict[str, Any]:
     return fields
 
 
-def _build_profile(persona: Dict[str, Any], agent_id: int, mode: str) -> Dict[str, Any]:
+def _build_profile(persona: Dict[str, Any], agent_id: int, mode: str, segment_id=None) -> Dict[str, Any]:
     """Turn a library persona into an interview-ready agent profile.
 
     Pure function. Keeps every library field (attitudes, beliefs, voice_guide …)
@@ -399,6 +399,10 @@ def _build_profile(persona: Dict[str, Any], agent_id: int, mode: str) -> Dict[st
     # Stamp library provenance so the leak guard can tell a curated persona from a
     # graph/research-authored one (library build sets this; older entries may lack it).
     profile.setdefault("source_entity_type", LIBRARY_PROVENANCE)
+
+    if segment_id and segment_id != "everyone":
+        profile["segment_id"] = segment_id
+        profile["segment_label"] = SEGMENTS[segment_id]["label"]
 
     if mode == "product":
         profile.update(_economic_fields(profile))
@@ -463,6 +467,14 @@ def _mixed_cast(
                 candidate = pool.pop()
                 if candidate.get("id") not in seated_ids:
                     seated_ids.add(candidate.get("id"))
+                    # Copy before stamping: library.all() hands back the SAME dicts
+                    # every call, so writing the seat's segment onto the candidate
+                    # would brand the shared in-memory library for the life of the
+                    # process — and a later "everyone" room (which reads
+                    # p.get("segment_id") straight into _build_profile) would then
+                    # show group tags nobody was drawn under.
+                    candidate = dict(candidate)
+                    candidate["segment_id"] = seg_id
                     cast.append(candidate)
                     allocation[seg_id] += 1
                     progressed = True
@@ -566,7 +578,7 @@ def create_session(
         allocation = {"everyone": len(cast)}
     else:
         cast, allocation = _mixed_cast(seg_list, n, seed, province, library)
-    profiles = [_build_profile(p, i, mode) for i, p in enumerate(cast)]
+    profiles = [_build_profile(p, i, mode, p.get("segment_id")) for i, p in enumerate(cast)]
     # Research grounding (Phase 5): same card binding as the sim cast path in
     # simulation_manager — deterministic, LLM-free, no-op per persona when no
     # card matches or RESEARCH_CONTEXT_ENABLED=0.
@@ -668,7 +680,7 @@ def add_segment(session_id: str, segment_id: str,
 
     mode = meta.get("mode", "product")
     start = max((p.get("id") or 0) for p in profiles) + 1 if profiles else 0
-    new_profiles = [_build_profile(p, start + i, mode)
+    new_profiles = [_build_profile(p, start + i, mode, segment_id)
                     for i, p in enumerate(pool[:max(1, seats)])]
     for p in new_profiles:
         mechanism_card_service.attach_research_context(p)
