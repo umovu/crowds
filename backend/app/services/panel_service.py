@@ -467,6 +467,13 @@ def _mixed_cast(
                 candidate = pool.pop()
                 if candidate.get("id") not in seated_ids:
                     seated_ids.add(candidate.get("id"))
+                    # Copy before stamping: library.all() hands back the SAME dicts
+                    # every call, so writing the seat's segment onto the candidate
+                    # would brand the shared in-memory library for the life of the
+                    # process — and a later "everyone" room (which reads
+                    # p.get("segment_id") straight into _build_profile) would then
+                    # show group tags nobody was drawn under.
+                    candidate = dict(candidate)
                     candidate["segment_id"] = seg_id
                     cast.append(candidate)
                     allocation[seg_id] += 1

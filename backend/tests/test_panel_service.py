@@ -140,3 +140,37 @@ def test_assert_library_cast_accepts_segmented_profiles():
     ]
     # Must not raise — segmented cast is still 100% library-sourced.
     panel.assert_library_cast(profiles)
+
+
+# ── _mixed_cast must not brand the shared library ───────────────────────────
+
+class _StubLibrary:
+    """Mirrors the real PersonaLibrary: all() returns a NEW list holding the
+    SAME dicts, so a caller that writes on a persona writes on the library."""
+
+    def __init__(self, personas):
+        self._personas = personas
+
+    def all(self):
+        return list(self._personas)
+
+
+def test_mixed_cast_does_not_stamp_the_shared_library():
+    people = [
+        {"id": "p1", "name": "A", "actor_archetype": "informal_trader"},
+        {"id": "p2", "name": "B", "actor_archetype": "informal_trader"},
+        {"id": "p3", "name": "C", "actor_archetype": "small_business_owner"},
+        {"id": "p4", "name": "D", "actor_archetype": "small_business_owner"},
+    ]
+    cast, allocation = panel._mixed_cast(
+        ["informal_traders", "small_business"], 4, 7, None, _StubLibrary(people))
+
+    # The seats carry their segment...
+    assert {c["segment_id"] for c in cast} == {"informal_traders", "small_business"}
+    assert allocation == {"informal_traders": 2, "small_business": 2}
+
+    # ...and the library personas behind them do NOT. Otherwise the stamp
+    # survives the session, and the next "everyone" room — which reads
+    # p.get("segment_id") straight into _build_profile — labels people with a
+    # group they were never drawn under.
+    assert all("segment_id" not in p for p in people)
