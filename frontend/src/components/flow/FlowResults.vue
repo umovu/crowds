@@ -281,6 +281,44 @@
             </div>
           </div>
 
+          <!-- ── Room vs room — the payoff of "Add new personas" ───────────── -->
+          <!-- Same pitch, two crowds, side by side. Every number here is real:
+               stance counts are what people said, budget tiers are computed
+               from each persona's actual income, objections come from the
+               deterministic keyword classifier. No score, no "% who would buy". -->
+          <div v-if="showCompare" class="sim-feed">
+            <div class="sim-feed-head">
+              <span>What each group said</span>
+              <span class="sim-feed-count">same question, {{ segmentCompare.length }} groups</span>
+            </div>
+            <!-- Same card language as the ranked-fit list: one .fit-card per
+                 group, .fit-member rows carrying each person's own words. No
+                 new visual style — this is the existing reader, grouped. -->
+            <div class="fit-ranking">
+              <div v-for="seg in segmentCompare" :key="seg.segment_id" class="fit-card">
+                <div class="fit-card-head">
+                  <span class="fit-card-label">{{ seg.label }}</span>
+                  <div class="fit-card-split">
+                    <span class="fit-stance stance-neutral">{{ seg.heard_count }} of {{ seg.seats }} answered</span>
+                  </div>
+                </div>
+                <div v-for="m in seg.members" :key="m.agent_id" class="fit-member" @click="openChat(m.agent_id)">
+                  <img :src="getAvatarUrl(m.agent_name)" :alt="m.agent_name" class="fit-member-avatar" />
+                  <div class="fit-member-body">
+                    <span class="fit-member-name">
+                      {{ m.agent_name }}
+                      <span class="fit-member-stance" :class="`stance-${m.stance_after}`">{{ stanceLabel(m.stance_after) }}</span>
+                    </span>
+                    <p class="fit-member-text">{{ m.response }}</p>
+                  </div>
+                </div>
+                <div v-if="!seg.members || !seg.members.length" class="cmp-row">
+                  <span class="cmp-row-label">No one from this group answered.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Opinion popover — appears on hover; click the avatar to interview -->
           <div
             v-if="popAgent"
@@ -498,6 +536,21 @@ const isPanel = computed(() => props.mode === 'panel')
 const panelPointer = ref(null)
 const panelSlots = reactive({})
 const fitRanking = ref([])
+// Per-segment breakdown of the WHOLE session, computed by the backend
+// (`rank_by_segment`) whenever the room holds two or more named groups — which
+// is exactly what "Add new personas" produces. Deterministic and LLM-free:
+// stance counts from what people said, budget tiers from real income, top
+// objections from the keyword classifier. The `fit` view renders this its own
+// way; everywhere else it powers the room-vs-room comparison block.
+const segmentCompare = ref([])
+
+// The comparison block. `fit` already renders this data as its ranked list and
+// `ab` compares two messages rather than two crowds, so both keep their own
+// view. Two groups is the minimum for a comparison — the backend only computes
+// by_segment at that point anyway.
+const showCompare = computed(() =>
+  isPanel.value && !isPointerView.value && segmentCompare.value.length >= 2)
+
 const abVersions = ref([])
 const abMoved = ref([])
 const isFitView = computed(() => isPanel.value && panelPointer.value === 'fit')
@@ -1193,13 +1246,15 @@ const loadPanel = async () => {
       if (last) {
         results = (last.result || {}).results || []
         llmSummary.value = (last.result || {}).summary_narrative || ''
-        if (panelPointer.value === 'fit') fitRanking.value = (last.result || {}).by_segment || []
+        segmentCompare.value = (last.result || {}).by_segment || []
+        if (panelPointer.value === 'fit') fitRanking.value = segmentCompare.value
       }
       if (!results) {
         const res = await pitchSession(props.sessionId, { concurrency: 6 })
         results = res.data?.results || []
         llmSummary.value = res.data?.summary_narrative || ''
-        if (panelPointer.value === 'fit') fitRanking.value = res.data?.by_segment || []
+        segmentCompare.value = res.data?.by_segment || []
+        if (panelPointer.value === 'fit') fitRanking.value = segmentCompare.value
       }
       applyRound(results)
     }
@@ -1826,6 +1881,15 @@ onUnmounted(() => {
 .stance-neutral { background: #F3F4F6; color: #6B7280; }
 .stance-concerned { background: #FFF4E5; color: #C2700A; }
 .stance-oppose, .stance-resist { background: #FDEDEB; color: #C0392B; }
+
+/* ── Room vs room — rows inside the shared .fit-card, no new card style ───── */
+.cmp-rows { display: flex; flex-direction: column; gap: 7px; }
+.cmp-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.cmp-row-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.4px; text-transform: uppercase; color: #9CA3AF;
+  min-width: 74px;
+}
 
 /* ── fit: ranked segment list ─────────────────────────────────────────────── */
 .fit-ranking { display: flex; flex-direction: column; gap: 14px; }
