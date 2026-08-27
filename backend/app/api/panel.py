@@ -345,7 +345,8 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
         if carried_probe:
             probes = probes + [carried_probe]
         framed = panel_service.frame_pitch(
-            pitch_text, meta.get('mode', 'product'), probes=probes)
+            pitch_text, meta.get('mode', 'product'), probes=probes,
+            operator_context=meta.get('operator_context') or "")
         result = _run_async(service.batch_impact_interview(
             question=framed,
             agent_ids=agent_ids,

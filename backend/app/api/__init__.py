@@ -12,6 +12,7 @@ panel_bp = Blueprint('panel', __name__)
 billing_bp = Blueprint('billing', __name__)
 account_bp = Blueprint('account', __name__)
 waitlist_bp = Blueprint('waitlist', __name__)
+context_bp = Blueprint('context', __name__)
 
 from .research import research_bp
 from . import graph  # noqa: E402, F401
@@ -22,4 +23,5 @@ from . import panel  # noqa: E402, F401
 from . import billing  # noqa: E402, F401
 from . import account  # noqa: E402, F401
 from . import waitlist  # noqa: E402, F401
+from . import context  # noqa: E402, F401
 

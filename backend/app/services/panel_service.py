@@ -580,18 +580,32 @@ def create_session(
     sdir = session_dir(session_id)
     os.makedirs(os.path.join(sdir, ROUNDS_DIR), exist_ok=True)
 
+    # Operator context: one saved "about my business" block per user, fetched
+    # at session creation and stored with the session so the announcement
+    # is stable for its lifetime. Fail-open: empty string on any error.
+    operator_context = ""
+    try:
+        from .operator_context import get_operator_context as _get_oc
+        operator_context = (_get_oc(user_id) or "").strip()[:1500]
+    except Exception:
+        operator_context = ""
+
     _write_json(os.path.join(sdir, PROFILES_FILE), profiles)
     # Same shape InterviewService._load_mode expects from a sim dir.
-    _write_json(os.path.join(sdir, CONTEXT_FILE), {
+    ctx_payload = {
         "mode": mode,
         "panel_session": True,
         "pitch": pitch,
-    })
+    }
+    if operator_context:
+        ctx_payload["operator_context"] = operator_context
+    _write_json(os.path.join(sdir, CONTEXT_FILE), ctx_payload)
 
     meta = {
         "session_id": session_id,
         "user_id": user_id,  # owner; scopes the session to its creator
         "pitch": pitch,
+        "operator_context": operator_context if operator_context else None,
         "mode": mode,
         "segments": seg_list,
         "segment": seg_list[0],  # back-compat for single-group consumers
@@ -1075,7 +1089,7 @@ def latest_round_exchange(session_id: str, agent_id: int) -> Optional[Dict[str, 
     return None
 
 
-def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> str:
+def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None, operator_context: str = "") -> str:
     """Wrap the raw pitch text the way it reaches agents.
 
     Product mode uses founder framing — describing the product, asking for an
@@ -1084,6 +1098,9 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> st
     `probes` are the confirmed sub-questions from the study chips — each adds a
     line the persona still has to address. The base reaction is always invited;
     probes only narrow or widen what the panel is additionally asked.
+
+    `operator_context` is the user's saved "about my business" text. When
+    present it is appended as labelled background about the OFFER.
     """
     text = (pitch or "").strip()
     if mode != "product":
@@ -1096,6 +1113,15 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> st
     active = [p for p in (probes or []) if (p or "").strip()]
     if active:
         framed += "\n\nAlso address these specifically:\n" + "\n".join("- " + p for p in active)
+    ctx = (operator_context or "").strip()
+    if ctx:
+        if len(ctx) > 1500:
+            ctx = ctx[:1500]
+        framed += (
+            "\n\n=== BACKGROUND ON WHAT IS BEING PROPOSED (from the person running this study) ===\n"
+            f"{ctx}\n"
+            "This is context about the offer. It is NOT information about you, your income, or what you believe."
+        )
     return framed
 
 

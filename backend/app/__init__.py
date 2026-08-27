@@ -260,7 +260,7 @@ def create_app(config_class=Config):
 
     # Register blueprints
     from .api import (graph_bp, simulation_bp, report_bp, config_bp, research_bp,
-                      panel_bp, billing_bp, account_bp, waitlist_bp)
+                      panel_bp, billing_bp, account_bp, waitlist_bp, context_bp)
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
@@ -270,6 +270,7 @@ def create_app(config_class=Config):
     app.register_blueprint(billing_bp, url_prefix='/api/billing')
     app.register_blueprint(account_bp, url_prefix='/api/account')
     app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
+    app.register_blueprint(context_bp, url_prefix='/api/context')
     # Non-/api on purpose: tapped from a Telegram link with no session, and
     # authenticated by ADMIN_APPROVE_TOKEN in the URL instead of a JWT.
     from .admin import admin_bp

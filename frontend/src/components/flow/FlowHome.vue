@@ -277,6 +277,12 @@
                     <span>All six buyer groups</span>
                   </button>
 
+                  <button class="crowd-btn" @click="openContextModal" title="What my business is — added to every pitch as background">
+                    <span class="crowd-btn-icon">◈</span>
+                    <span>Your context</span>
+                    <span class="crowd-btn-summary">{{ contextSummary }}</span>
+                  </button>
+
                   <!-- Run speed — collapsible dropdown (sim depth/rounds) -->
                   <div ref="speedDdEl" class="speed-dd">
                     <button class="crowd-btn" @click="speedMenuOpen = !speedMenuOpen">
@@ -417,6 +423,36 @@
       </div>
     </main>
   </div>
+
+  <!-- Operator context: "about my business" — one block per user, added to every pitch -->
+  <div v-if="contextModalOpen" class="crowd-backdrop" @click.self="closeContextModal">
+    <div class="crowd-modal" style="max-width: 520px">
+      <div class="crowd-modal-head">
+        <div>
+          <div class="crowd-modal-title">Your context</div>
+          <div class="crowd-modal-sub">Saved once, added to every pitch as background. Not shown to personas as fact about them.</div>
+        </div>
+        <button class="crowd-modal-close" @click="closeContextModal">✕</button>
+      </div>
+      <textarea
+        v-model="operatorContextDraft"
+        class="pp-input"
+        rows="6"
+        maxlength="1500"
+        placeholder="What you are putting in front of people — e.g. Biodigesters that turn food waste into gas. R17k upfront, with SASSA-linked financing…"
+        style="margin-top: 12px"
+      ></textarea>
+      <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 8px">
+        <span class="crowd-btn-summary">{{ (operatorContextDraft || '').length }} / 1500</span>
+        <div style="display:flex; gap: 8px">
+          <button class="crowd-btn" @click="closeContextModal">Cancel</button>
+          <button class="pp-assemble-btn" :disabled="contextSaving" @click="saveOperatorContext">
+            {{ contextSaving ? 'Saving…' : 'Save' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -424,6 +460,7 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
 import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster } from '../../api/panel'
+import { getContext, saveContext as saveContextApi } from '../../api/context'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
@@ -1026,6 +1063,45 @@ const promptPlaceholder = computed(() => posterBrief.value
 // Crowd picker (segments + size live behind a modal, off the home view). The
 // summary reads the confirmed study spec once the chips are up, else the raw
 // picker selection — never both, so they can't drift.
+// ── Operator context: one saved "about my business" block per user ──────────
+const operatorContext = ref('')
+const operatorContextDraft = ref('')
+const contextModalOpen = ref(false)
+const contextSaving = ref(false)
+const contextSummary = computed(() => {
+  const t = (operatorContext.value || '').trim()
+  if (!t) return 'Add context'
+  return t.slice(0, 28) + (t.length > 28 ? '…' : '')
+})
+const openContextModal = () => {
+  operatorContextDraft.value = operatorContext.value
+  contextModalOpen.value = true
+}
+const closeContextModal = () => { contextModalOpen.value = false }
+const saveOperatorContext = async () => {
+  if (contextSaving.value) return
+  contextSaving.value = true
+  try {
+    const body = (operatorContextDraft.value || '').trim().slice(0, 1500)
+    await saveContextApi(body)
+    operatorContext.value = body
+    contextModalOpen.value = false
+    toast.show({ type: 'success', message: body ? 'Context saved' : 'Context cleared' })
+  } catch (e) {
+    toast.show({ type: 'error', message: e?.response?.data?.error || e.message || 'Could not save context' })
+  } finally {
+    contextSaving.value = false
+  }
+}
+const loadOperatorContext = async () => {
+  try {
+    const res = await getContext()
+    operatorContext.value = (res.data?.data?.body || res.data?.body || '').trim()
+  } catch (e) {
+    // fail-open: empty context is fine
+  }
+}
+
 const crowdPickerOpen = ref(false)
 const crowdSummary = computed(() => {
   if (isFit.value) return 'All six buyer groups'
@@ -1189,6 +1265,7 @@ onMounted(() => {
   loadSegments()
   loadSims()
   loadPanels()
+  loadOperatorContext()
   document.addEventListener('mousedown', onSpeedOutside)
 })
 

@@ -21,6 +21,7 @@ from ..services.interview_service import InterviewService
 from ..services.custom_agent_parser import CustomAgentParser
 from ..services.agent_enricher import AgentContextEnricher
 from ..services import mode_detector
+from ..services import operator_context as oc_service
 from ..services.sim_presets import SIM_PRESETS, apply_preset
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
@@ -717,6 +718,14 @@ def prepare_simulation():
                         progress_detail=progress_detail_data
                     )
                 
+                # Operator context: fetch the user's saved business description
+                # (fail-open: empty string if Supabase not configured)
+                try:
+                    _uid = state.user_id or billing.current_user_id()
+                    _oc = oc_service.get_operator_context(_uid) if _uid else ""
+                except Exception:
+                    _oc = ""
+
                 result_state = manager.prepare_simulation(
                     simulation_id=simulation_id,
                     simulation_requirement=simulation_requirement,
@@ -730,6 +739,7 @@ def prepare_simulation():
                     mode=mode,
                     detection=detection,
                     mode_is_manual=mode_is_manual,
+                    operator_context=_oc,
                 )
 
                 # prepare_simulation returns a FAILED state (instead of raising)

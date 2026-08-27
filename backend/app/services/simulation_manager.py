@@ -256,6 +256,7 @@ class SimulationManager:
         mode: str = 'policy',
         detection: Optional[Dict[str, Any]] = None,
         mode_is_manual: bool = False,
+        operator_context: str = "",
     ) -> SimulationState:
         """
         Prepare simulation environment (fully automated)
@@ -561,6 +562,9 @@ class SimulationManager:
                     except Exception as e:
                         logger.warning(f"LLM extraction skipped: {e}")
 
+                # Operator context: briefing about the offer, stored alongside the
+                # document context so the sim announcement can include it.
+                oc = (operator_context or "").strip()[:1500]
                 doc_context = {
                     "mode": mode,  # PRIMARY mode — authoritative for runtime + rules
                     "converged": converged,
@@ -578,6 +582,7 @@ class SimulationManager:
                     "dynamic_rules": ctx_engine.get_dynamic_rules(),
                     "facts": facts,
                     "competitive_landscape": competitive_landscape,
+                    "operator_context": oc if oc else None,
                 }
 
                 ctx_path = os.path.join(sim_dir, "document_context.json")

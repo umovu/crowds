@@ -353,7 +353,7 @@ PRODUCT_PITCH_EXTRACTION_SYSTEM = (
 )
 
 
-def build_pitch_announcement(pitch: Dict[str, Any], short: bool = False) -> str:
+def build_pitch_announcement(pitch: Dict[str, Any], short: bool = False, operator_context: str = "") -> str:
     """Build the founder's spoken announcement of the pitch, for posting into the room.
 
     Product mode: posted as a founder message at round 0 (and as a shorter reminder
@@ -362,6 +362,11 @@ def build_pitch_announcement(pitch: Dict[str, Any], short: bool = False) -> str:
 
     This is the founder DESCRIBING their product — never a buy solicitation. It must
     not ask "would you buy this?" or imply a purchase verdict (product honesty rule).
+
+    `operator_context` is the user's saved "about my business" text. When provided
+    it is appended as labelled background about the OFFER, not about the personas —
+    so the room is briefed once without retyping. It is never injected into
+    character_context (that is the reasoning overlay's job).
     """
     what = (pitch.get("what_it_is") or "").strip()
     pricing = (pitch.get("pricing") or "").strip()
@@ -385,7 +390,17 @@ def build_pitch_announcement(pitch: Dict[str, Any], short: bool = False) -> str:
     if pricing and pricing.lower() not in ("not stated", "pricing is unclear / not stated"):
         parts.append(f"Pricing: {pricing}.")
     parts.append("I want your honest reaction — what works, what doesn't, what would put you off.")
-    return " ".join(parts)
+    base = " ".join(parts)
+    ctx = (operator_context or "").strip()
+    if ctx:
+        if len(ctx) > 1500:
+            ctx = ctx[:1500]
+        base += (
+            "\n\n=== BACKGROUND ON WHAT IS BEING PROPOSED (from the person running this study) ===\n"
+            f"{ctx}\n"
+            "This is context about the offer. It is NOT information about you, your income, or what you believe."
+        )
+    return base
 
 
 def build_pitch_extraction_prompt(document_context: str, requirement: str) -> str:
