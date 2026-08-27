@@ -29,7 +29,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from ..config import Config
 from ..utils.logger import get_logger
 from .income_seeder import detect_grant, GRANT_PROVENANCE
-from .mode_specs import budget_tier
+from .mode_specs import budget_tier, build_operator_context_block
 from . import mechanism_card_service
 from . import objections
 from .persona_library import get_library
@@ -1099,8 +1099,11 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None, opera
     line the persona still has to address. The base reaction is always invited;
     probes only narrow or widen what the panel is additionally asked.
 
-    `operator_context` is the user's saved "about my business" text. When
-    present it is appended as labelled background about the OFFER.
+    `operator_context` is the user's saved "about my business" text, wrapped by
+    the shared fence in `mode_specs.build_operator_context_block` — same wording
+    as the sim path, by construction. It is BRIEFING, so it goes first: the room
+    hears what the offer is, then the question, then the probes. Appending it
+    last put the briefing after the follow-ups, which reads backwards.
     """
     text = (pitch or "").strip()
     if mode != "product":
@@ -1110,18 +1113,14 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None, opera
             f"I'm putting this in front of you: {text}\n"
             "I want your honest reaction — what works, what doesn't, what would put you off."
         )
+    # The block already opens with its own blank lines; lstrip so it doesn't
+    # start the prompt with them.
+    block = build_operator_context_block(operator_context)
+    if block:
+        framed = block.lstrip("\n") + "\n\n" + framed
     active = [p for p in (probes or []) if (p or "").strip()]
     if active:
         framed += "\n\nAlso address these specifically:\n" + "\n".join("- " + p for p in active)
-    ctx = (operator_context or "").strip()
-    if ctx:
-        if len(ctx) > 1500:
-            ctx = ctx[:1500]
-        framed += (
-            "\n\n=== BACKGROUND ON WHAT IS BEING PROPOSED (from the person running this study) ===\n"
-            f"{ctx}\n"
-            "This is context about the offer. It is NOT information about you, your income, or what you believe."
-        )
     return framed
 
 

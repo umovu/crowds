@@ -430,7 +430,7 @@
       <div class="crowd-modal-head">
         <div>
           <div class="crowd-modal-title">Your context</div>
-          <div class="crowd-modal-sub">Saved once, added to every pitch as background. Not shown to personas as fact about them.</div>
+          <div class="crowd-modal-sub">Describe what you sell, once. It gets added to every run so you stop retyping it.</div>
         </div>
         <button class="crowd-modal-close" @click="closeContextModal">✕</button>
       </div>
@@ -439,9 +439,18 @@
         class="pp-input"
         rows="6"
         maxlength="1500"
-        placeholder="What you are putting in front of people — e.g. Biodigesters that turn food waste into gas. R17k upfront, with SASSA-linked financing…"
+        placeholder="e.g. We install home biodigesters in South Africa. R17,000 fitted. Food and garden waste in, cooking gas and fertiliser out. We also sell the stove. Bigger units go to schools, usually paid for by a company's CSI budget. Most of our buyers already compost."
         style="margin-top: 12px"
       ></textarea>
+      <!-- The one thing worth saying out loud: this describes the offer, not
+           the room. Personas are real surveyed people with measured incomes and
+           attitudes — writing claims about them here turns the answers into
+           your own assumptions read back. -->
+      <div class="ctx-hint">
+        Write about your offer: what it is, what it costs, who buys it today.
+        Not about the people answering — their income and views are real data,
+        and anything you write about them here is ignored.
+      </div>
       <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 8px">
         <span class="crowd-btn-summary">{{ (operatorContextDraft || '').length }} / 1500</span>
         <div style="display:flex; gap: 8px">
@@ -1553,6 +1562,19 @@ onUnmounted(() => {
   padding: 18px 22px; border-bottom: 1px solid var(--hairline-soft);
 }
 .crowd-modal-title { font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+.crowd-modal-sub {
+  margin-top: 4px; max-width: 46ch;
+  font-family: var(--font-body); font-size: var(--fs-xs);
+  line-height: var(--lh-snug); color: var(--muted);
+}
+/* Says which half of the run this text belongs to: the offer, not the room. */
+.ctx-hint {
+  margin-top: 10px; padding: 9px 12px;
+  border-left: 2px solid var(--accent); border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--accent-pill);
+  font-family: var(--font-body); font-size: var(--fs-2xs);
+  line-height: var(--lh-snug); color: var(--ink-soft);
+}
 .crowd-modal-close {
   border: none; background: transparent; cursor: pointer;
   font-size: 1rem; color: var(--muted); line-height: 1; padding: 4px;
