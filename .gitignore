@@ -96,3 +96,7 @@ PILOT_README.md
 docs/CONTEXT_GROUNDING_PILOT_REPORT.md
 docs/PANEL_ANALYSIS_*.md
 docs/INVISIBLE_NUMBERS_*.md
+
+# learning worktree
+learn/output/
+learn/**/.ipynb_checkpoints/
