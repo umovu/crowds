@@ -48,6 +48,11 @@ import attitude_donor_adapter as ada   # the real one, from main
 This is the whole point of the worktree: your experiments sit next to the
 production implementation, not in place of it.
 
+## Read these two first
+
+- `GUIDE.md` — how to run a study session, and what to optimise for.
+- `PROGRESS.md` — your log and scoreboard. The real output of all this.
+
 ## The curriculum
 
 `D:/Fub-agentsociety/local-plans/learn/curriculum.html` — seven topics, each
