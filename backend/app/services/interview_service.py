@@ -116,9 +116,13 @@ class InterviewService:
                 "opinions": opinions.get(agent_id, []),
             }
             # Library-cast provenance/economic fields (present on panel sessions).
+            # `background_story` and `attitudes` ride along for the receipt the
+            # results page shows under a persona's answer: stored fields only, so
+            # what the reader sees is what the room was actually built from.
             for key in ("library_id", "province", "age", "gender", "persona",
                         "budget_tier", "is_grant_dependent", "grant_type",
-                        "monthly_income_rand", "income_provenance"):
+                        "monthly_income_rand", "income_provenance",
+                        "background_story", "attitudes"):
                 if p.get(key) is not None:
                     entry[key] = p[key]
             # Persisted follow-up chat memory, so the client can restore prior

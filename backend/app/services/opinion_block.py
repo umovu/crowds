@@ -22,7 +22,8 @@ from .agentsociety_opinion_block import (
     OpinionEnvironment,
     build_sa_context,
 )
-from .mode_specs import build_economic_lens, seed_willingness_band, budget_tier, disposition
+from .mode_specs import (build_economic_lens, seed_willingness_band, budget_tier,
+                         disposition, build_health_block)
 from .document_context_engine import sanitize_language_drift
 from ..utils.logger import get_logger
 from ..utils.token_counter import TokenCounter
@@ -613,6 +614,17 @@ class OpinionCaptureSkill:
         identity_anchor = _build_identity_anchor(archetype, agent)
         char_ctx = await agent.character_context(detail="full")
 
+        # Conditional health block: the persona's real GHS health facts enter the
+        # prompt only when the seed is health-adjacent (mode_specs.build_health_block
+        # returns "" otherwise, so unrelated sims pay zero extra tokens). Empty in
+        # fast mode's abbreviated round 2+ prompts like every other context block.
+        health_section = build_health_block(
+            agent.init_state if hasattr(agent, "init_state") else {},
+            initial_prompt,
+            self._document_context,
+            (self._pitch.get("what_it_is") or "") if isinstance(self._pitch, dict) else "",
+        )
+
         recent_feed = feed[-5:]
         feed_preview = "\n".join(
             f"- [{o['agent_name']}] {o['content'][:100]}" for o in recent_feed
@@ -729,7 +741,7 @@ class OpinionCaptureSkill:
                 )
             else:
                 context_section = f"{sa_context}\n\n"
-            context_section += f"You are {agent.name}.\n{char_ctx}\n\n"
+            context_section += f"You are {agent.name}.\n{char_ctx}{health_section}\n\n"
 
         # Persistent topic banner — kept in EVERY prompt (not just round 0 / the
         # re-anchor rounds) so the subject is always in front of the agent, right

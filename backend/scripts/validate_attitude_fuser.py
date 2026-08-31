@@ -155,6 +155,72 @@ def main() -> int:
     skeletons, src = _skeletons_for_test(SAMPLE_N, SEED)
     print(f"Skeleton source: {src} (n={len(skeletons)}), donors={len(donors)}")
 
+    # ── Health-dimension proof (LLM OFF) ────────────────────────────────────
+    # 1. Hand-built rows: non-answer codes (-1 missing / 8 refused / 9 DK / 99 not
+    #    asked) decode to ABSENT, never to a middle band. Positive controls pin scale
+    #    handling: Q46G 1..4, Q37O_SAF 0..3, Q6C 0..4.
+    _missing_row = {"Q46G": -1.0, "Q37O_SAF": 8.0, "Q6C": 99.0,
+                    "Q46H": 9.0, "Q37A": 8.0, "Q37D": 9.0,
+                    "Q4A": 8.0, "Q4B": 9.0, "Q46I": 8.0, "Q46L": 9.0,
+                    "Q7A": 8.0, "Q7B": 9.0}
+    _atts_missing = ada._decode_ab_attitudes(_missing_row) or {}
+    assert "health_service_satisfaction" not in _atts_missing, \
+        f"non-answer Q46G banded anyway: {_atts_missing.get('health_service_satisfaction')}"
+    assert "health_authority_trust" not in _atts_missing, \
+        f"non-answer Q37O_SAF banded anyway: {_atts_missing.get('health_authority_trust')}"
+    _circ_missing = ada._decode_ab_circumstances(_missing_row)
+    assert "went_without_care" not in _circ_missing, \
+        f"non-answer Q6C banded anyway: {_circ_missing.get('went_without_care')}"
+    _pos = ada._decode_ab_attitudes({"Q46G": 4.0, "Q37O_SAF": 3.0})
+    assert _pos["health_service_satisfaction"] == "satisfied", _pos
+    assert _pos["health_authority_trust"] == "high", _pos
+    assert ada._decode_ab_circumstances({"Q6C": 0.0})["went_without_care"] == "never"
+    assert ada._decode_ab_circumstances({"Q6C": 4.0})["went_without_care"] == "often"
+    print("OK - health non-answer codes drop out; scale handling pinned by hand-built rows.")
+
+    # 2. Donor coverage >= 95% per new field, and no single band above 85%
+    #    (a collapsed band would mean the dimension carries no information).
+    from texture_generator import _STANCE_GLOSS, _CIRCUMSTANCE_GLOSS
+    from attitude_fuser import _BELIEF_PHRASING
+    for kind, fields, gloss_map in (
+        ("attitude", ("health_service_satisfaction", "health_authority_trust"), _STANCE_GLOSS),
+        ("circumstance", ("went_without_care",), _CIRCUMSTANCE_GLOSS),
+    ):
+        for field in fields:
+            block = "attitudes" if kind == "attitude" else "circumstances"
+            vals = [d[block].get(field) for d in donors]
+            usable = [(d, v) for d, v in zip(donors, vals) if v]
+            coverage = len(usable) / len(donors) * 100
+            assert coverage >= 95.0, f"{field} donor coverage {coverage:.1f}% < 95%"
+            weighted = defaultdict(float)
+            total_w = 0.0
+            for d, v in usable:
+                w = float(d.get("weight", 1.0))
+                weighted[v] += w
+                total_w += w
+            top_band, top_share = max(
+                ((v, s / total_w * 100) for v, s in weighted.items()),
+                key=lambda kv: kv[1])
+            assert top_share <= 85.0, \
+                f"{field} collapses: band '{top_band}' holds {top_share:.1f}% of weight"
+            print(f"OK - {field}: {coverage:.1f}% coverage, top band '{top_band}' "
+                  f"{top_share:.1f}% (<= 85%).")
+
+    # 3. No silent skips: every ATTITUDE_VOCAB dim has a full _STANCE_GLOSS, and any
+    #    dim carried in _BELIEF_PHRASING phrases ALL of its non-neutral bands.
+    for dim, bands in ada.ATTITUDE_VOCAB.items():
+        gloss_bands = set(_STANCE_GLOSS.get(dim, {}))
+        assert gloss_bands == set(bands), \
+            f"_STANCE_GLOSS['{dim}'] covers {sorted(gloss_bands)}, vocab needs {sorted(bands)}"
+    for dim, phrasing in _BELIEF_PHRASING.items():
+        bands = set(ada.ATTITUDE_VOCAB[dim])
+        neutral = bands & {"mid", "mixed", "neutral"}
+        required = bands - neutral
+        assert set(phrasing) == required, \
+            f"_BELIEF_PHRASING['{dim}'] has {sorted(phrasing)}, needs exactly {sorted(required)}"
+    print("OK - texture glosses cover every dim x band; belief phrasing is complete "
+          "where carried.")
+
     fused = fuse_attitudes(skeletons, seed=SEED, donors=donors)
 
     # ── Hard contract asserts (no tolerance) ────────────────────────────────

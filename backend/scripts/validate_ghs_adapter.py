@@ -104,6 +104,44 @@ def main():
     check("learner province marginals within 12pp of pool (n=120)", worst <= 12.0,
           f"worst gap {worst:.1f}pp")
 
+    # ── health circumstances ──────────────────────────────────────────────
+    _hp = [s for s in skeletons if s.get("medical_aid") is not None]
+    check("medical aid answered for nearly everyone", len(_hp) >= len(skeletons) * 0.95,
+          f"{len(_hp)}/{len(skeletons)}")
+    check("self-rated health in vocab", all(
+        s["self_rated_health"] in (None, "Excellent", "Very good", "Good", "Fair", "Poor")
+        for s in skeletons))
+    _rated = [s for s in skeletons if s["self_rated_health"] is not None]
+    check("self-rated health answered for nearly everyone",
+          len(_rated) >= len(skeletons) * 0.95, f"{len(_rated)}/{len(skeletons)}")
+    check("disability is a real boolean or absent",
+          all(s["has_disability"] in (None, True, False) for s in skeletons))
+    check("health facility decoded to labels", all(
+        s["usual_health_facility"] is None or not s["usual_health_facility"][0].isdigit()
+        for s in skeletons))
+    check("facility sector agrees with the facility label", all(
+        (s["health_facility_sector"] is None and s["usual_health_facility"] is None) or
+        s["usual_health_facility"].startswith(
+            "Public" if s["health_facility_sector"] == "public" else "Private")
+        for s in skeletons))
+    _fac = [s for s in skeletons if s["usual_health_facility"]]
+    check("facility answered for most households", len(_fac) >= len(skeletons) * 0.9,
+          f"{len(_fac)}/{len(skeletons)}")
+    _non_answers = ("DO NOT KNOW", "NOT SURE", "Unspecified")
+    check("health non-answers never leak into a field", all(
+        str(s.get(f) or "") not in _non_answers
+        for s in skeletons
+        for f in ("self_rated_health", "usual_health_facility",
+                  "transport_to_health_facility", "time_to_health_facility")))
+    check("health provenance stamped",
+          all(s["health_provenance"] == "ghs_2025_reported" for s in skeletons))
+
+    # Marginal: the sample's medical-aid share must track the GHS pool, not drift.
+    pool_medi = marg["medical_aid_pct"]
+    got_medi = sum(1 for s in _hp if s["medical_aid"]) / len(_hp) * 100
+    check("medical aid share within 10pp of pool", abs(got_medi - pool_medi) <= 10.0,
+          f"sample {got_medi:.1f}% vs pool {pool_medi:.1f}%")
+
     # ── the gogo fact stays visible ───────────────────────────────────────
     split = marg["guardian_household_split"]
     check("gogo households are a major share (data sanity)",

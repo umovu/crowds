@@ -46,21 +46,6 @@
       <rect x="15" y="9" width="6" height="6" rx="1" />
     </template>
 
-    <!-- Test a poster before you print it — the picture frame -->
-    <template v-else-if="name === 'poster'">
-      <rect x="3" y="4" width="18" height="16" rx="2" />
-      <circle cx="8.5" cy="9" r="1.3" />
-      <path d="M4.5 17l4.5-4.5 3.5 3.5 3-3 4 4" />
-    </template>
-
-    <!-- Test a page on your website — the browser chrome -->
-    <template v-else-if="name === 'website'">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="M3 9h18" />
-      <circle cx="9.5" cy="14" r="2.1" />
-      <path d="M11.2 15.7L13 17.5" />
-    </template>
-
     <!-- Sub-question — a plain speech bubble, one level quieter -->
     <template v-else>
       <path d="M4 5.5h16v10H9.5L6 19v-3.5H4z" />

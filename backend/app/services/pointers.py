@@ -137,52 +137,6 @@ POINTERS = {
         ),
         "auto_route": True,
     },
-    "poster": {
-        "label": "Test a poster before you print it",
-        "blurb": "The words off your poster, put in front of the room.",
-        "slots": [
-            {"key": "poster", "label": "What does the poster say?",
-             "hint": "Upload it above and we read the words out into text.",
-             "required": True},
-            {"key": "audience", "label": "Who is it for?",
-             "hint": "Leave blank for a general South African mix.",
-             "required": False},
-            {"key": "worry", "label": "What are you worried about?",
-             "hint": "One line. This shapes what we probe.",
-             "required": False},
-        ],
-        "seed_slots": ["poster", "audience"],
-        "summary_contract": (
-            "Report what people took the poster to mean before what they "
-            "thought of it. Separate misreadings from disagreements: a person "
-            "who read it wrong is a different problem from one who read it "
-            "right and said no. Quote the wording that did the damage."
-        ),
-        "auto_route": True,
-    },
-    "website": {
-        "label": "Test a page on your website",
-        "blurb": "We read the page, the room reacts to what it actually says.",
-        "slots": [
-            {"key": "url", "label": "What's the address?",
-             "hint": "We read the page and put its words in front of the room.",
-             "required": True},
-            {"key": "goal", "label": "What should the page get them to do?",
-             "hint": "Sign up, buy, book a call. Leave blank if you're just looking.",
-             "required": False},
-            {"key": "audience", "label": "Who is it for?",
-             "hint": "Leave blank for a general South African mix.",
-             "required": False},
-        ],
-        "seed_slots": ["url", "goal", "audience"],
-        "summary_contract": (
-            "Answer what the page made people think it offers before whether "
-            "they liked it. Name what stopped them, and what they went looking "
-            "for and could not find. If a goal is given below, say plainly "
-            "whether the page moved them towards it."
-        ),
-        "auto_route": True,
-    },
 }
 
 
@@ -205,18 +159,6 @@ def assemble_seed(pointer: str, slots: Dict[str, str]) -> str:
             parts.append(f"It is aimed at {values['audience']}.")
         if values.get("change"):
             parts.append(f"For them, this means {values['change']}.")
-    elif pointer == "poster":
-        # `poster` holds the text the vision read pulled off the image, so the
-        # room only ever sees words — same rule as every other pointer.
-        if values.get("audience"):
-            parts.append(f"It is aimed at {values['audience']}.")
-    elif pointer == "website":
-        # `url` is replaced upstream with the page's readable text before the
-        # seed is assembled; a bare address means nothing to a person.
-        if values.get("goal"):
-            parts.append(f"The page is trying to get them to {values['goal']}.")
-        if values.get("audience"):
-            parts.append(f"It is aimed at {values['audience']}.")
     else:  # fit
         if values.get("price"):
             parts.append(f"It costs {values['price']}.")

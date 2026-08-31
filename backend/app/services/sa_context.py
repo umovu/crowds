@@ -67,6 +67,9 @@ def _gather_snippets() -> List[str]:
         f"most pressing issues facing ordinary South Africans {when}",
         f"is load shedding still a problem in South Africa {when}",
         f"South Africa cost of living unemployment crime {when}",
+        # Health salience (clinic stock-outs, NHI moves) — one more cached query,
+        # same daily batch; _distil still only summarises what comes back.
+        f"South African public health clinics medicine shortages {when}",
     ]
     snippets: List[str] = []
     for q in queries:

@@ -238,6 +238,14 @@ class OpinionCitizenAgent(PersonAgent):
         for _k in ("fees_band", "learner_fee_bands", "province"):
             if profile.get(_k) is not None:
                 skill_state.setdefault(_k, profile.get(_k))
+        # GHS health facts ride into init_state for the conditional health block
+        # (health-adjacent seeds only — see mode_specs.build_health_block).
+        # Displayed anchors only; never authored or changed by the LLM.
+        for _k in ("medical_aid", "self_rated_health", "has_disability",
+                   "usual_health_facility", "health_facility_sector",
+                   "transport_to_health_facility", "time_to_health_facility"):
+            if profile.get(_k) is not None:
+                skill_state.setdefault(_k, profile.get(_k))
 
         # Grant beneficiary detection — deterministic, from existing signals only.
         # SASSA amounts are published policy → a real KNOWN income for this cohort.
@@ -617,10 +625,13 @@ class OpinionCitizenAgent(PersonAgent):
             # texture generator already honours at build time.
             belief_lines = [b for b in (profile.get("beliefs") or []) if isinstance(b, str)]
             if belief_lines:
+                # Cap raised 6 -> 8 when the health belief phrasings landed: beliefs
+                # render in ATTITUDE_VOCAB order and the health dims sit last, so the
+                # old cap silently dropped exactly the newest (health) beliefs.
                 lines.append(
                     "\nWHAT YOU HOLD TO BE TRUE — measured survey data about people like "
                     "you, not opinions to be argued out of:\n"
-                    + "\n".join(f"- {b}" for b in belief_lines[:6])
+                    + "\n".join(f"- {b}" for b in belief_lines[:8])
                 )
             if voice_guide:
                 lines.append(f"\nVOICE INSTRUCTIONS — follow exactly:\n{voice_guide}")

@@ -93,6 +93,24 @@ _BELIEF_PHRASING: Dict[str, Dict[str, str]] = {
         "high": "Crime is a constant threat that shapes my daily decisions.",
         "low": "Safety isn't a major day-to-day worry where I live.",
     },
+    "health_service_satisfaction": {
+        "dissatisfied": "Public health services fail people like me — you can't count on a clinic.",
+        "satisfied": "Public health services mostly work when people like me need them.",
+    },
+    "health_authority_trust": {
+        "low": "The health department does not look after patients like me.",
+        "high": "The health department can generally be trusted to do its job.",
+    },
+    # Salience, not virtue. "low" is not "I don't care about the planet" — it is
+    # "this has never been near my life", which is why the sentence describes
+    # attention rather than values. Getting this wrong would make every low
+    # persona answer like a caricature.
+    "environment_priority": {
+        "low": "Pollution and climate aren't things I think about — they're not "
+               "what's pressing where I live.",
+        "high": "Waste and pollution are a real problem here, and it's on ordinary "
+                "people to do something about it.",
+    },
 }
 
 
@@ -271,10 +289,11 @@ def fuse_attitudes(
     """Attach a measured-attitude vector to each skeleton via demographic donor matching.
 
     Returns NEW dicts (originals untouched), each with `attitudes`, `beliefs`, and
-    `attitude_match_quality` added. Every persona gets a COMPLETE vector: any dimension the
-    matched donor lacked (survey refusal) is filled from the population modal stance and
-    flagged match_quality="population_modal". Deterministic for (skeletons, seed, donors).
-    LLM-free.
+    `attitude_match_quality` added. Every persona gets a COMPLETE vector: any dimension
+    the matched donor lacked (survey refusal) is filled with a seed-deterministic
+    WEIGHTED DRAW from the population's stance distribution (mode as fallback) and
+    flagged match_quality="population_draw", so the fill is honest provenance, never a
+    demographic match. Deterministic for (skeletons, seed, donors). LLM-free.
     """
     pool = donors if donors is not None else ada.load_donors()
     if not pool:

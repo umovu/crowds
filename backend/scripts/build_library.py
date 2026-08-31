@@ -34,7 +34,7 @@ from persona_sampler import (
 )
 from archetype_mapper import map_skeletons
 from attitude_fuser import fuse_attitudes
-from ghs_adapter import sample_education_skeletons
+from ghs_adapter import sample_education_skeletons, sample_affluent_skeletons
 import attitude_donor_adapter as ada
 import texture_generator as tg
 
@@ -81,6 +81,10 @@ def build(
     communal_farmers: int = 0,
     smallholder_farmers: int = 0,
     professionals: int = 0,
+    affluent_agri: int = 0,
+    affluent_urban: int = 0,
+    comfortable: int = 0,
+    rural_landholding: int = 0,
     append: bool = False,
     llm_api_key: Optional[str] = None,
     llm_base_url: Optional[str] = None,
@@ -167,6 +171,20 @@ def build(
             sk["actor_archetype"] = "urban_professional"
         mapped.extend(fuse_attitudes(prof_skeletons, seed=seed))
 
+    # Households that can authorise a large purchase (GHS, REAL reported income).
+    # Their archetype comes from the income band and settlement type — surveyed
+    # facts — so the demographic archetype mapper is bypassed, same as the farmer
+    # and professional roles above. General attitude donor pool.
+    #
+    # These exist because the main QLFS sample is population-representative, and
+    # most South African households cannot find R17,000. That shape is correct and
+    # stays; these are ADDITIONAL named groups, never folded into "everyone".
+    if affluent_agri or affluent_urban or comfortable or rural_landholding:
+        aff_skeletons = sample_affluent_skeletons(
+            n_agri=affluent_agri, n_urban=affluent_urban,
+            n_comfortable=comfortable, n_rural=rural_landholding, seed=seed)
+        mapped.extend(fuse_attitudes(aff_skeletons, seed=seed))
+
     print(f"Generating English-only texture for {len(mapped)} personas (LLM, offline)...")
     client = tg.LLMClient(api_key=llm_api_key, base_url=llm_base_url, model=llm_model)
     # Shared name state: names come from a curated pool (not the LLM) and must be
@@ -241,6 +259,17 @@ def main() -> int:
     ap.add_argument("--professionals", type=int, default=0,
                     help="QLFS formally-employed professional/managerial personas "
                          "(urban_professional archetype)")
+    ap.add_argument("--affluent-agri", type=int, default=0,
+                    help="GHS households above R12k that also farm — land, a daily "
+                         "organic waste stream and money (real reported income)")
+    ap.add_argument("--affluent-urban", type=int, default=0,
+                    help="GHS urban-formal households above R20k — can pay, small yard")
+    ap.add_argument("--comfortable", type=int, default=0,
+                    help="GHS households R12k-R20k — a large purchase is a financing "
+                         "conversation, not a cash one")
+    ap.add_argument("--rural-landholding", type=int, default=0,
+                    help="GHS traditional/farm households above R12k — small-scale "
+                         "owners doing well")
     ap.add_argument("--append", action="store_true",
                     help="merge into the existing library instead of overwriting it")
     ap.add_argument("--allow-synthetic-attitudes", action="store_true",
@@ -267,6 +296,10 @@ def main() -> int:
                communal_farmers=args.communal_farmers,
                smallholder_farmers=args.smallholder_farmers,
                professionals=args.professionals,
+               affluent_agri=args.affluent_agri,
+               affluent_urban=args.affluent_urban,
+               comfortable=args.comfortable,
+               rural_landholding=args.rural_landholding,
                append=args.append,
                llm_api_key=args.llm_api_key,
                llm_base_url=args.llm_base_url,

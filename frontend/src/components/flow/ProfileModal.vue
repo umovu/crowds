@@ -98,6 +98,44 @@
           </div>
         </div>
 
+        <!-- Your context — the saved "about my business" block. Lives on the
+             account, not on the prompt bar: it is written once and reused by
+             every run, so it belongs with the other things you set and forget. -->
+        <div v-if="activeTab === 'context' && !showMobileMenu" class="tab-panel">
+          <div class="field-group">
+            <div class="field">
+              <label class="field-label">About your offer</label>
+              <textarea
+                class="field-input ctx-textarea"
+                rows="7"
+                maxlength="1500"
+                v-model="ctxBody"
+                placeholder="e.g. We install home biodigesters in South Africa. R17,000 fitted. Food and garden waste in, cooking gas and fertiliser out. We also sell the stove. Bigger units go to schools, usually paid for by a company's CSI budget. Most of our buyers already compost."
+              ></textarea>
+              <span class="field-help">
+                Saved once and added to every run as background, so you stop
+                retyping your business into each prompt.
+              </span>
+            </div>
+            <!-- The boundary, said plainly. Personas are real surveyed people
+                 with measured incomes and attitudes; claims written about them
+                 here are ignored by design. -->
+            <div class="ctx-hint">
+              Write about your offer: what it is, what it costs, who buys it
+              today. Not about the people answering — their income and views are
+              real data, and anything you write about them here is ignored.
+            </div>
+          </div>
+          <div class="modal-actions">
+            <span class="ctx-count">{{ (ctxBody || '').length }} / 1500</span>
+            <span v-if="ctxMsg" class="save-msg" :class="ctxMsg.type">{{ ctxMsg.text }}</span>
+            <button class="btn" @click="closeFullpage">Cancel</button>
+            <button class="btn primary" :disabled="savingCtx" @click="saveCtx">
+              {{ savingCtx ? 'Saving…' : 'Save context' }}
+            </button>
+          </div>
+        </div>
+
         <!-- Security panel — set / change the account password -->
         <div v-if="activeTab === 'security' && !showMobileMenu" class="tab-panel">
           <div class="field-group">
@@ -135,8 +173,8 @@
             <span class="cpb-right">
               {{ isCancelled
                 ? 'Access continues until the end of your paid month'
-                : (isPaid ? 'unlimited panels + simulations'
-                          : `${status?.panel_used ?? 0} / ${status?.panel_limit ?? 3} panels · ${status?.sim_used ?? 0} / ${status?.sim_limit ?? 1} trial sims used`) }}
+                : (isPaid ? (SIM_ENABLED ? 'unlimited panels + simulations' : 'unlimited panels')
+                          : `${status?.panel_used ?? 0} / ${status?.panel_limit ?? 3} panels used` + (SIM_ENABLED ? ` · ${status?.sim_used ?? 0} / ${status?.sim_limit ?? 1} trial sims used` : '')) }}
             </span>
           </div>
           <div class="plan-grid">
@@ -145,7 +183,7 @@
               <ul class="pco-features">
                 <li>4 panels (focus groups)</li>
                 <li>Full reaction report</li>
-                <li>2 trial simulations</li>
+                <li v-if="SIM_ENABLED">2 trial simulations</li>
               </ul>
               <button class="pco-btn disabled" disabled>{{ isPaid ? 'Downgraded tier' : 'Current plan' }}</button>
             </div>
@@ -153,7 +191,7 @@
               <div class="pco-head"><span class="pco-name">Pro <em class="pco-beta">Beta</em></span><span class="pco-price">R80/mo</span></div>
               <ul class="pco-features">
                 <li>Unlimited panels</li>
-                <li>Full simulations</li>
+                <li v-if="SIM_ENABLED">Full simulations</li>
                 <li>Every report &amp; interview</li>
               </ul>
               <button v-if="!isPaid" class="pco-btn disabled" disabled>Paid — coming soon</button>
@@ -219,9 +257,11 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import DashboardPanel from './DashboardPanel.vue'
+import { SIM_ENABLED } from '../../features'
 import { useBilling } from '../../composables/useBilling'
 import { useAuth } from '../../composables/useAuth'
 import { supabase } from '../../lib/supabase'
+import { getContext, saveContext } from '../../api/context'
 
 const emit = defineEmits(['close', 'open-sim'])
 
@@ -237,6 +277,41 @@ const cancelling = ref(false)
 const form = ref({ first_name: '', surname: '', email: '', display_name: '' })
 const savingProfile = ref(false)
 const profileMsg = ref(null)  // { type: 'ok' | 'err', text }
+
+// ── Your context ────────────────────────────────────────────────────────────
+// The saved "about my business" block. Loaded lazily when the tab is opened
+// (most visits here are for billing or the password), and re-loaded each time
+// so a second device's edit doesn't get silently overwritten by a stale draft.
+const ctxBody = ref('')
+const savingCtx = ref(false)
+const ctxLoaded = ref(false)
+const ctxMsg = ref(null)
+
+async function loadCtx() {
+  try {
+    const res = await getContext()
+    ctxBody.value = (res.data?.data?.body || res.data?.body || '')
+    ctxLoaded.value = true
+  } catch (_) {
+    // Fail quiet: an empty box is the honest state, and the run works without it.
+    ctxLoaded.value = true
+  }
+}
+
+async function saveCtx() {
+  savingCtx.value = true
+  ctxMsg.value = null
+  try {
+    const body = (ctxBody.value || '').trim().slice(0, 1500)
+    await saveContext(body)
+    ctxBody.value = body
+    ctxMsg.value = { type: 'ok', text: 'Saved' }
+  } catch (e) {
+    ctxMsg.value = { type: 'err', text: e?.response?.data?.error || 'Could not save' }
+  } finally {
+    savingCtx.value = false
+  }
+}
 
 function hydrateForm() {
   const u = user.value
@@ -362,6 +437,7 @@ const showMobileMenu = computed(() => isMobile && mobileMenu.value)
 
 const tabs = [
   { id: 'profile', label: 'Profile' },
+  { id: 'context', label: 'Your context' },
   { id: 'security', label: 'Security' },
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'billing', label: 'Billing' },
@@ -384,6 +460,12 @@ function openFullpage(tabName) {
   mobileMenu.value = false
   modalOpen.value = true
 }
+
+// One place, so the context loads however the tab was reached — the pop-out
+// menu, the desktop tab rail, or the mobile list.
+watch(activeTab, (tab) => {
+  if (tab === 'context') { ctxMsg.value = null; loadCtx() }
+})
 
 function closeFullpage() {
   modalOpen.value = false
@@ -585,6 +667,21 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1.4;
   max-width: 60%;
 }
+/* Your context — same field vocabulary, just taller and with the boundary note */
+.ctx-textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
+.ctx-hint {
+  padding: 10px 12px;
+  border-left: 2px solid #1E9E5A; border-radius: 0 8px 8px 0;
+  background: #F0FAF4;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  line-height: 1.5; color: #555;
+}
+.ctx-count {
+  margin-right: auto; align-self: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; color: #bbb;
+}
+.ctx-count + .save-msg { margin-right: 12px; }
+
 .save-msg.ok { color: #1E9E5A; }
 .save-msg.err { color: #C0392B; }
 

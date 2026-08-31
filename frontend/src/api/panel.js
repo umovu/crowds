@@ -52,3 +52,13 @@ export const getPoster = (posterId) =>
 // can't drift from the ones the seed is assembled from.
 export const listPointers = () =>
   service.get('/api/panel/pointers')
+
+// Live counts per stance for one measured attitude dimension, crossed with
+// budget tier — so the picker can show how thin a room gets before a run.
+export const attitudeOptions = (dim) =>
+  service.get(`/api/panel/attitudes/${dim}`)
+
+// The affordability lens the pitch's own price implies. Null when no price is
+// stated, in which case nothing is filtered.
+export const previewAffordability = (pitch) =>
+  service.post('/api/panel/affordability', { pitch })

@@ -2,19 +2,56 @@
 Operator context — one saved free-text block per user describing their business/offer.
 
 Stored in Supabase table `operator_context` (user_id PK, body, updated_at).
-Fail-open: if Supabase not configured or lookup fails, returns "" and the
-simulation/panel runs without it. The text is injected as BACKGROUND about
-the offer, never as persona material.
+When Supabase isn't configured — local dev — it falls back to a JSON file under
+DATA_ROOT, the same place sims and panels already live. Without that fallback a
+local save reported success and stored nothing, so the feature could not be
+looked at without a hosted database.
+
+Reads still fail open: any error returns "" and the run proceeds unbriefed.
+
+The text is injected as BACKGROUND about the offer, never as persona material.
+The prompt wording lives in `mode_specs.build_operator_context_block` — one
+copy, shared by the panel and sim paths. This module stores and returns the raw
+body only; it must not grow its own copy of that block.
 """
+import json
 import logging
 import os
 
 import requests
 
+from ..config import Config
+
 logger = logging.getLogger("fub.operator_context")
 
 MAX_LEN = 1500
 TABLE = "operator_context"
+
+
+def _local_path() -> str:
+    return os.path.join(Config.DATA_ROOT, "operator_context.json")
+
+
+def _local_all() -> dict:
+    try:
+        with open(_local_path(), encoding="utf-8") as fh:
+            data = json.load(fh)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _local_get(user_id: str) -> str:
+    return (_local_all().get(user_id) or "").strip()[:MAX_LEN]
+
+
+def _local_save(user_id: str, body: str) -> None:
+    data = _local_all()
+    data[user_id] = body
+    path = _local_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
 
 
 def _supabase_url() -> str:
@@ -34,24 +71,12 @@ def _headers() -> dict:
     return {"apikey": k, "Authorization": f"Bearer {k}", "Content-Type": "application/json"}
 
 
-def _format_block(body: str) -> str:
-    body = (body or "").strip()
-    if not body:
-        return ""
-    # Cap is enforced on write; double-guard on read
-    if len(body) > MAX_LEN:
-        body = body[:MAX_LEN]
-    return (
-        "\n=== BACKGROUND ON WHAT IS BEING PROPOSED (from the person running this study) ===\n"
-        f"{body}\n"
-        "This is context about the offer. It is NOT information about you, your income, or what you believe.\n"
-    )
-
-
 def get_operator_context(user_id: str) -> str:
-    """Return the raw body for a user, or "" if none / not configured / error."""
-    if not _enabled() or not user_id:
+    """Return the raw body for a user, or "" if none / error."""
+    if not user_id:
         return ""
+    if not _enabled():
+        return _local_get(user_id)
     url = f"{_supabase_url()}/rest/v1/{TABLE}"
     try:
         resp = requests.get(
@@ -70,20 +95,14 @@ def get_operator_context(user_id: str) -> str:
         return ""
 
 
-def get_operator_context_block(user_id: str) -> str:
-    """Return the formatted block to append to a pitch/seed, or ""."""
-    body = get_operator_context(user_id)
-    return _format_block(body) if body else ""
-
-
 def save_operator_context(user_id: str, body: str) -> dict:
     """Upsert the operator context for a user. Returns the saved row."""
     if not user_id:
         raise ValueError("user_id is required")
     cleaned = (body or "").strip()[:MAX_LEN]
     if not _enabled():
-        # Dev without Supabase: pretend it saved (fail-open, no persistence)
-        logger.info("operator_context save skipped (Supabase not configured)")
+        # Local dev: persist to DATA_ROOT so a save actually survives a reload.
+        _local_save(user_id, cleaned)
         return {"user_id": user_id, "body": cleaned, "updated_at": None}
     url = f"{_supabase_url()}/rest/v1/{TABLE}"
     payload = {"user_id": user_id, "body": cleaned}

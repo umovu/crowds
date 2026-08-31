@@ -72,9 +72,44 @@ def list_segments():
     counts — deterministic predicates over real persona fields, for the UI's
     group picker."""
     try:
-        return jsonify({"success": True, "data": {"segments": panel_service.list_segments()}})
+        return jsonify({"success": True, "data": {
+            "segments": panel_service.list_segments(),
+            # The topic groups the picker files those cards under, in order.
+            "topics": panel_service.SEGMENT_TOPICS,
+        }})
     except Exception as e:
         logger.error(f"Failed to list segments: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@panel_bp.route('/attitudes/<dim>', methods=['GET'])
+def attitude_options(dim: str):
+    """Live counts per stance for one measured attitude dimension, crossed with
+    budget tier — so the picker can show how many real people are left before a
+    run is paid for. Deterministic read over the library; no LLM."""
+    try:
+        return jsonify({"success": True, "data": {
+            "dimension": dim,
+            "options": panel_service.attitude_options(dim),
+        }})
+    except Exception as e:
+        logger.error(f"Failed to read attitude options for {dim}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@panel_bp.route('/affordability', methods=['POST'])
+def affordability_preview():
+    """The affordability lens the pitch implies, before a run is paid for.
+
+    Deterministic read of the operator's own words — see panel_service.parse_price.
+    Returns null when no price is stated, in which case no filter runs."""
+    try:
+        data = request.get_json() or {}
+        return jsonify({"success": True, "data": {
+            "affordability": panel_service.derive_budget_tiers(data.get('pitch') or ''),
+        }})
+    except Exception as e:
+        logger.error(f"Failed to derive affordability: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
@@ -133,25 +168,6 @@ def read_study():
         return _server_error(e, "Could not read that sentence. Try again.")
 
 
-def _read_page_text(url: str, limit: int = 6000) -> str:
-    """A web page -> the readable words on it, or "" if it can't be read.
-
-    Thin wrapper over the existing Jina reader. Trimmed to `limit` characters:
-    the room reacts to the page's message, and a whole site's markdown would
-    bury it. No LLM here — this is a fetch, not a summary.
-    """
-    try:
-        from ..services.jina_service import JinaService
-        res = JinaService().scrape(url)
-        if not res.get('success'):
-            return ""
-        text = (res.get('content') or res.get('text') or '').strip()
-        return text[:limit]
-    except Exception as e:
-        logger.warning(f"Page read failed for {url}: {e}")
-        return ""
-
-
 @panel_bp.route('/sessions', methods=['POST'])
 def create_session():
     """Create a panel session.
@@ -167,10 +183,16 @@ def create_session():
             "segment": "unemployed",    // Optional: single-group shorthand
             "province": "Gauteng",      // Optional: province focus
             "seed": 7,                  // Optional: deterministic cast selection
-            "budget_tiers": ["moderate", "loose"]
+            "budget_tiers": ["moderate", "loose"],
                                         // Optional affordability lens: only
                                         // personas whose deterministic budget
                                         // tier (real income data) is in the set
+            "attitudes": {"environment_priority": ["low"]}
+                                        // Optional attitude lens: only personas
+                                        // who ALREADY hold one of these measured
+                                        // stances (Afrobarometer, fused at
+                                        // library build). Selects people who
+                                        // hold a view; never assigns one.
         }
 
     Session creation is LLM-free: cast selection, grant detection and budget
@@ -195,18 +217,6 @@ def create_session():
         # An assembled seed stands in for the pitch when none sent. An explicit
         # pitch always wins.
         pitched = (data.get('pitch') or '').strip()
-        # The website pointer takes an address, but a person can't react to a
-        # URL. Read the page into text first and let that stand in as the slot
-        # value, so the cast only ever sees words — the same rule the poster
-        # path follows with its vision read.
-        if pointer == 'website' and (slots.get('url') or '').strip():
-            page = _read_page_text(slots['url'].strip())
-            if not page:
-                return jsonify({
-                    "success": False,
-                    "error": "Couldn't read that page. Check the address, or paste the text instead.",
-                }), 400
-            slots = {**slots, 'url': page}
         if pointer and not pitched:
             pitched = pointers.assemble_seed(pointer, slots)
         # Mode is inferred from the (possibly assembled) pitch unless the caller
@@ -240,6 +250,7 @@ def create_session():
             segment=routed_segments[0] if len(routed_segments or []) == 1 else None,
             segments=routed_segments,
             budget_tiers=data.get('budget_tiers'),
+            attitudes=data.get('attitudes'),
             user_id=billing.current_user_id(),
             pointer=pointer,
             slots=slots if pointer else None,

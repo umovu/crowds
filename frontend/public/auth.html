@@ -513,6 +513,33 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
   }
   function clearMsg() { msg.className = 'msg'; msg.textContent = ''; }
 
+  // Supabase leaks raw Postgres/GoTrue wording into the UI ("Database error
+  // querying schema", "unexpected_failure"). Those mean nothing to a user and
+  // read like the site is broken, so translate the known ones and keep the
+  // original on the console for us.
+  function friendlyError(e, fallback) {
+    var raw = (e && e.message) || '';
+    if (raw) console.error('[auth]', raw);
+    var probe = raw.toLowerCase();
+    if (probe.indexOf('database error') !== -1 ||
+        probe.indexOf('querying schema') !== -1 ||
+        probe.indexOf('unexpected_failure') !== -1 ||
+        probe.indexOf('internal server error') !== -1) {
+      return 'Something is wrong on our side, not yours. We\'ve been alerted — ' +
+             'please try again in a few minutes or email jabu@crowds.co.za.';
+    }
+    if (probe.indexOf('invalid login credentials') !== -1) {
+      return 'That email and password don\'t match. Check them, or use "Forgot your password?" below.';
+    }
+    if (probe.indexOf('email not confirmed') !== -1) {
+      return 'Your email isn\'t confirmed yet. Open the confirmation link we sent you first.';
+    }
+    if (probe.indexOf('rate limit') !== -1 || probe.indexOf('too many') !== -1) {
+      return 'Too many tries. Wait a few minutes and try again.';
+    }
+    return raw || fallback;
+  }
+
   function validEmail(v) { return /\S+@\S+\.\S+/.test(v); }
 
   // Password strength: returns { score 0-4, met: {len,upper,lower,num,special} }
@@ -694,7 +721,7 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
       showMsg((body.data && body.data.message) ||
               'If that email belongs to an approved account, a reset link is on its way.', 'ok');
     } catch (e) {
-      showMsg(e.message || 'Could not send the reset link. Please try again.', 'err');
+      showMsg(friendlyError(e, 'Could not send the reset link. Please try again.'), 'err');
     } finally {
       forgotToggle.disabled = false;
       forgotToggle.textContent = 'Forgot your password?';
@@ -829,7 +856,7 @@ import { supabase, callbackUrl, API_BASE_URL } from './supabase-client.js';
         window.location.href = nextUrl;
       }
     } catch (e) {
-      showMsg(e?.message || 'Something went wrong. Please try again.', 'err');
+      showMsg(friendlyError(e, 'Something went wrong. Please try again.'), 'err');
       btnSubmit.disabled = false;
       updateSubmitLabel();
     }

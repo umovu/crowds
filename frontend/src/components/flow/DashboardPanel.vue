@@ -11,7 +11,7 @@
     <template v-else>
       <!-- Row 1: at-a-glance tiles -->
       <div class="tile-row">
-        <div class="tile">
+        <div v-if="SIM_ENABLED" class="tile">
           <div class="tile-label">Sims run</div>
           <div class="tile-value">{{ sims.length }}</div>
           <div class="tile-delta">{{ simsThisMonth }} this month</div>
@@ -22,14 +22,14 @@
           <div class="tile-delta">{{ panelsThisMonth }} this month</div>
         </div>
         <div class="tile">
-          <div class="tile-label">Agents simulated</div>
+          <div class="tile-label">{{ SIM_ENABLED ? 'Agents simulated' : 'People in rooms' }}</div>
           <div class="tile-value">{{ totalAgents }}</div>
-          <div class="tile-delta flat">across {{ sims.length }} sims</div>
+          <div class="tile-delta flat">across {{ activity.length }} {{ unitPlural }}</div>
         </div>
         <div class="tile">
-          <div class="tile-label">Rounds simulated</div>
+          <div class="tile-label">{{ SIM_ENABLED ? 'Rounds simulated' : 'Rounds run' }}</div>
           <div class="tile-value">{{ totalRounds.toLocaleString() }}</div>
-          <div class="tile-delta flat">avg {{ avgRounds }} / sim</div>
+          <div class="tile-delta flat">avg {{ avgRounds }} / {{ unitSingular }}</div>
         </div>
       </div>
 
@@ -45,8 +45,8 @@
         </div>
         <div class="quota-card">
           <div class="quota-head">
-            <span class="quota-label">Sims this month</span>
-            <span class="quota-count">{{ simsThisMonth }} / ∞</span>
+            <span class="quota-label">{{ SIM_ENABLED ? 'Sims' : 'Panels' }} this month</span>
+            <span class="quota-count">{{ SIM_ENABLED ? simsThisMonth : panelsThisMonth }} / ∞</span>
           </div>
           <div class="quota-bar"><div class="quota-fill" :style="{ width: '20%' }"></div></div>
           <div class="quota-foot">No monthly cap · local mode</div>
@@ -56,7 +56,7 @@
       <!-- Row 3: charts -->
       <div class="chart-row">
         <div class="chart-card">
-          <div class="chart-title">Sims per week · last 8 weeks</div>
+          <div class="chart-title">{{ unitPluralCap }} per week · last 8 weeks</div>
           <div class="chart-body">
             <div class="bar-chart">
               <div v-for="w in weeklyData" :key="w.label" class="bar-col">
@@ -75,8 +75,8 @@
             <div class="donut-wrap">
               <div class="donut" :style="donutStyle">
                 <div class="donut-center">
-                  <div class="donut-num">{{ sims.length }}</div>
-                  <div class="donut-lbl">sims</div>
+                  <div class="donut-num">{{ activity.length }}</div>
+                  <div class="donut-lbl">{{ unitPlural }}</div>
                 </div>
               </div>
               <div class="donut-legend">
@@ -94,7 +94,7 @@
         </div>
 
         <div class="chart-card">
-          <div class="chart-title">Agent count</div>
+          <div class="chart-title">{{ SIM_ENABLED ? 'Agent count' : 'Room size' }}</div>
           <div class="chart-body">
             <div class="hbar-list">
               <div class="hbar-row">
@@ -124,23 +124,23 @@
             <tr>
               <th>Title</th>
               <th>Mode</th>
-              <th class="right">Agents</th>
+              <th class="right">{{ SIM_ENABLED ? 'Agents' : 'People' }}</th>
               <th class="right">Rounds</th>
               <th>Status</th>
               <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="sim in recentSims" :key="sim.simulation_id" @click="openSim(sim)">
-              <td class="title">{{ sim.simulation_requirement || 'Untitled simulation' }}</td>
-              <td><span class="mode-pill" :class="simMode(sim)">{{ simModeLabel(sim) }}</span></td>
-              <td class="num">{{ sim.profiles_count || sim.entities_count || 0 }}</td>
-              <td class="num">{{ sim.total_rounds || 0 }}</td>
-              <td><span class="status-dot" :class="simStatusClass(sim)">{{ simStatusLabel(sim) }}</span></td>
-              <td class="num">{{ sim.created_date || '—' }}</td>
+            <tr v-for="row in recentActivity" :key="row.id" @click="openRow(row)">
+              <td class="title">{{ row.title }}</td>
+              <td><span class="mode-pill" :class="row.mode">{{ row.modeLabel }}</span></td>
+              <td class="num">{{ row.people }}</td>
+              <td class="num">{{ row.rounds }}</td>
+              <td><span class="status-dot" :class="row.statusClass">{{ row.statusLabel }}</span></td>
+              <td class="num">{{ row.date }}</td>
             </tr>
-            <tr v-if="!recentSims.length">
-              <td colspan="6" class="empty-row">No simulations yet.</td>
+            <tr v-if="!recentActivity.length">
+              <td colspan="6" class="empty-row">No {{ unitPlural }} yet.</td>
             </tr>
           </tbody>
         </table>
@@ -153,6 +153,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { getSimulationHistory } from '../../api/simulation'
 import { listSessions } from '../../api/panel'
+import { SIM_ENABLED } from '../../features'
 
 const emit = defineEmits(['open-sim'])
 
@@ -184,33 +185,62 @@ const panelsThisMonth = computed(() =>
   }).length
 )
 
+// While the sim tier is hidden the dashboard counts panels instead, so every
+// tile, chart and row reads off ONE normalised list rather than two parallel
+// sets of computeds that could disagree with each other.
+const _normSim = (s) => ({
+  id: s.simulation_id,
+  title: s.simulation_requirement || 'Untitled simulation',
+  mode: (s.mode === 'product') ? 'product' : 'policy',
+  modeLabel: (s.mode === 'product') ? 'Product' : 'Policy',
+  people: s.profiles_count || s.entities_count || 0,
+  rounds: s.total_rounds || 0,
+  statusClass: simStatusClass(s),
+  statusLabel: simStatusLabel(s),
+  date: s.created_date || '—',
+  at: s.created_at || s.created_date || '',
+  raw: s,
+})
+const _normPanel = (p) => ({
+  id: p.session_id,
+  title: p.pitch || '(no pitch)',
+  mode: (p.mode === 'policy') ? 'policy' : 'product',
+  modeLabel: (p.mode === 'policy') ? 'Policy' : 'Product',
+  people: p.cast_size || 0,
+  rounds: p.rounds_run || 0,
+  statusClass: '',
+  statusLabel: (p.rounds_run || 0) > 0 ? 'run' : 'not run',
+  date: (p.created_at || '').slice(0, 10) || '—',
+  at: p.created_at || '',
+  raw: p,
+})
+
+const activity = computed(() =>
+  SIM_ENABLED ? sims.value.map(_normSim) : panels.value.map(_normPanel)
+)
+
+const unitSingular = computed(() => (SIM_ENABLED ? 'sim' : 'panel'))
+const unitPlural = computed(() => (SIM_ENABLED ? 'sims' : 'panels'))
+const unitPluralCap = computed(() => (SIM_ENABLED ? 'Sims' : 'Panels'))
+
 const totalAgents = computed(() =>
-  sims.value.reduce((sum, s) => sum + (s.profiles_count || s.entities_count || 0), 0)
+  activity.value.reduce((sum, a) => sum + a.people, 0)
 )
 
 const totalRounds = computed(() =>
-  sims.value.reduce((sum, s) => sum + (s.total_rounds || 0), 0)
+  activity.value.reduce((sum, a) => sum + a.rounds, 0)
 )
 
 const avgRounds = computed(() => {
-  if (!sims.value.length) return 0
-  return Math.round(totalRounds.value / sims.value.length)
+  if (!activity.value.length) return 0
+  return Math.round(totalRounds.value / activity.value.length)
 })
 
-const recentSims = computed(() =>
-  [...sims.value]
-    .sort((a, b) => new Date(b.created_at || b.created_date || 0) - new Date(a.created_at || a.created_date || 0))
+const recentActivity = computed(() =>
+  [...activity.value]
+    .sort((a, b) => new Date(b.at || 0) - new Date(a.at || 0))
     .slice(0, 8)
 )
-
-function simMode(sim) {
-  const config = sim.mode || ''
-  return config === 'product' ? 'product' : 'policy'
-}
-
-function simModeLabel(sim) {
-  return simMode(sim) === 'product' ? 'Product' : 'Policy'
-}
 
 function simStatusClass(sim) {
   const st = sim.runner_status || sim.status || 'idle'
@@ -226,11 +256,11 @@ function simStatusLabel(sim) {
   return st
 }
 
-const policyCount = computed(() => sims.value.filter(s => simMode(s) === 'policy').length)
-const productCount = computed(() => sims.value.filter(s => simMode(s) === 'product').length)
+const policyCount = computed(() => activity.value.filter(a => a.mode === 'policy').length)
+const productCount = computed(() => activity.value.filter(a => a.mode === 'product').length)
 
 const donutStyle = computed(() => {
-  const total = sims.value.length || 1
+  const total = activity.value.length || 1
   const policyDeg = Math.round((policyCount.value / total) * 360)
   return {
     background: `conic-gradient(#1E9E5A 0deg ${policyDeg}deg, #B8E6CC ${policyDeg}deg 360deg)`
@@ -239,8 +269,8 @@ const donutStyle = computed(() => {
 
 const agentBuckets = computed(() => {
   const buckets = { small: 0, medium: 0, large: 0 }
-  for (const s of sims.value) {
-    const n = s.profiles_count || s.entities_count || 0
+  for (const a of activity.value) {
+    const n = a.people
     if (n <= 20) buckets.small++
     else if (n <= 40) buckets.medium++
     else buckets.large++
@@ -261,22 +291,24 @@ const weeklyData = computed(() => {
     weekStart.setDate(today.getDate() - i * 7 - today.getDay())
     const weekEnd = new Date(weekStart)
     weekEnd.setDate(weekStart.getDate() + 7)
-    const count = sims.value.filter(s => {
-      const d = new Date(s.created_at || s.created_date || '')
+    const count = activity.value.filter(a => {
+      const d = new Date(a.at || '')
       return d >= weekStart && d < weekEnd
     }).length
     weeks.push({
       label: i === 0 ? 'now' : `w-${i}`,
       count,
-      height: count > 0 ? Math.max(13, Math.round((count / Math.max(...sims.value.map(s => 1), 8)) * 100)) : 4
+      height: count > 0 ? Math.max(13, Math.round((count / Math.max(activity.value.length, 8)) * 100)) : 4
     })
   }
   const maxCount = Math.max(...weeks.map(w => w.count), 1)
   return weeks.map(w => ({ ...w, height: w.count > 0 ? Math.max(13, (w.count / maxCount) * 100) : 4 }))
 })
 
-function openSim(sim) {
-  emit('open-sim', sim)
+function openRow(row) {
+  // Only a sim has a view to open from here. Panel rows stay inert while the
+  // sim tier is hidden — the sidebar is where panels are reopened.
+  if (SIM_ENABLED) emit('open-sim', row.raw)
 }
 
 onMounted(async () => {
@@ -284,7 +316,7 @@ onMounted(async () => {
   error.value = ''
   try {
     const [histRes, panRes] = await Promise.all([
-      getSimulationHistory(50),
+      SIM_ENABLED ? getSimulationHistory(50) : Promise.resolve({ data: [] }),
       listSessions()
     ])
     sims.value = histRes.data || []
