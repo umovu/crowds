@@ -73,7 +73,8 @@
     <!-- Profile modal (small menu + full-page expand) -->
     <ProfileModal
       v-if="profileModalOpen"
-      @close="profileModalOpen = false"
+      :initial-tab="profileModalTab"
+      @close="closeProfileModal"
       @open-sim="onModalOpenSim"
     />
 
@@ -321,7 +322,14 @@
 
                   <!-- "Your context" is written once and reused by every run,
                        so it lives on the account (ProfileModal → Your context),
-                       not on the prompt bar next to the per-run controls. -->
+                       not on the prompt bar next to the per-run controls. This
+                       button is only a door to it — plus the one nudge people
+                       need to know the thing exists at all. -->
+                  <button class="crowd-btn" @click="openContextTab">
+                    <span class="crowd-btn-icon">✎</span>
+                    <span>{{ hasContext ? 'Your context' : 'Add your context' }}</span>
+                    <span class="crowd-btn-summary">{{ hasContext ? 'saved' : 'tell them what you sell' }}</span>
+                  </button>
 
                   <!-- Run speed — collapsible dropdown (sim depth/rounds).
                        Hidden while the sim tier is off: depth only means
@@ -480,6 +488,7 @@ import { useBilling } from '../../composables/useBilling'
 import { useAuth } from '../../composables/useAuth'
 import { useToast } from '../../composables/useToast'
 import ProfileModal from './ProfileModal.vue'
+import { getContext } from '../../api/context'
 import LensIcon from './LensIcon.vue'
 import { SIM_ENABLED } from '../../features'
 
@@ -515,6 +524,29 @@ const avatarInitials = computed(() => {
 
 // ── Profile modal ──────────────────────────────────────────────────────────
 const profileModalOpen = ref(false)
+const profileModalTab = ref('')
+
+// Saved "about my business" block. Checked once on load so the button can say
+// whether there is anything in it; the editing lives in the account modal.
+const hasContext = ref(false)
+function refreshHasContext() {
+  getContext()
+    .then(res => { hasContext.value = !!(res.data?.data?.body || res.data?.body || '').trim() })
+    .catch(() => {})
+}
+refreshHasContext()
+
+function closeProfileModal() {
+  profileModalOpen.value = false
+  profileModalTab.value = ''
+  refreshHasContext()  // the button label follows what was just saved
+}
+
+function openContextTab() {
+  profileModalTab.value = 'context'
+  profileModalOpen.value = true
+  sidebarOpen.value = false
+}
 
 // Real plan for the sidebar profile badge.
 const { isPaid, refresh: refreshBilling } = useBilling()
