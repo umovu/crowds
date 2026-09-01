@@ -82,3 +82,22 @@ def test_list_segments_carries_the_map_to_the_ui():
     for row in rows:
         assert row["topics"], f"{row['id']} reached the UI with no topic"
         assert row["kind"] in ("who", "thinks")
+
+
+def test_a_single_tier_string_is_not_read_letter_by_letter():
+    """`budget_tiers="loose"` is a plausible caller shape. Iterating the string
+    would validate 'l', 'o', 'o'… and fail the whole session."""
+    meta = panel_service.create_session(
+        pitch="A home biodigester, R40 000 fitted",
+        n=2, budget_tiers="loose", seed=1,
+    )
+    assert meta["budget_tier_filter"] == ["loose"]
+
+
+def test_all_switches_the_affordability_lens_off():
+    """The picker's "show everyone instead" — the operator's only say in it."""
+    meta = panel_service.create_session(
+        pitch="A home biodigester, R40 000 fitted",
+        n=2, budget_tiers="all", seed=1,
+    )
+    assert "budget_tier_filter" not in meta

@@ -74,3 +74,17 @@ def test_tiers_are_always_a_contiguous_top_slice():
         for monthly in (False, True):
             tiers = price_to_tiers(amount, monthly)
             assert tiers == list(BUDGET_TIERS[len(BUDGET_TIERS) - len(tiers):])
+
+
+@pytest.mark.parametrize("pitch, amount", [
+    ("R2 500 a month, cancel anytime", 2500),
+    ("R2,500 monthly", 2500),
+    ("R900 every month", 900),
+])
+def test_a_month_and_monthly_read_as_recurring(pitch, amount):
+    """"R2 500 a month" is as common as "/month" in a real pitch. Reading it as a
+    once-off prices a subscription far too cheaply and widens the room."""
+    price = parse_price(pitch)
+    assert price == {"amount": float(amount), "monthly": True}
+    # 2500/month clears the monthly loose cut; as a once-off it would not.
+    assert derive_budget_tiers(pitch)["tiers"] == ["loose"]

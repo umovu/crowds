@@ -415,8 +415,9 @@ def list_segments() -> List[Dict[str, Any]]:
     so the Cast picker can bulk-pick without re-implementing the predicates
     on the frontend.
 
-    Each row also carries its `family`, so the picker can group the cards
-    instead of showing a flat list of thirty-three.
+    Each row also carries its `topics` (which headings the picker files the card
+    under — they overlap, so it is a list) and its `kind` ("who" they are vs what
+    they already "thinks"), instead of a flat list of thirty-three.
     """
     personas = get_library().all()
     out = []
@@ -662,10 +663,14 @@ _MONTHLY_CUTS = ((800, "loose"), (150, "moderate"))
 # ("/month", "per month", "pm", "p.m."). Only the operator's own digits are read.
 _PRICE_RE = re.compile(
     r"R\s?(\d{1,3}(?:[\s,\u00a0]\d{3})+|\d+(?:\.\d{2})?)"
-    r"(\s*(?:/|\bper\b|\bp\.?m\.?\b)\s*(?:month|mo\b|year|yr\b|annum)?)?",
+    # The recurrence tail. "R2 500 a month" and "R2 500 monthly" are as common in
+    # a pitch as "/month"; without them a subscription priced as a once-off, and
+    # the derived room came out wider than the stated price allows.
+    r"(\s*(?:/|\bper\b|\ba\b|\bevery\b|\bp\.?m\.?\b)\s*(?:month|mo\b|year|yr\b|annum)?"
+    r"|\s*\bmonthly\b)?",
     re.IGNORECASE,
 )
-_MONTHLY_RE = re.compile(r"month|/\s*mo\b|\bp\.?m\.?\b", re.IGNORECASE)
+_MONTHLY_RE = re.compile(r"month|monthly|/\s*mo\b|\bp\.?m\.?\b", re.IGNORECASE)
 
 
 def parse_price(pitch: str) -> Optional[Dict[str, Any]]:
@@ -839,10 +844,18 @@ def create_session(
     # would let them stack the room with people who can obviously pay and read
     # the result as validation.
     derived_price = None
-    if isinstance(budget_tiers, str) and budget_tiers.strip().lower() == "all":
+    # A bare string is accepted as one tier ("loose") or the escape hatch
+    # ("all"). Falling through to the list branch would iterate it letter by
+    # letter and fail with "unknown budget tier 'l'".
+    if isinstance(budget_tiers, str):
+        raw_tiers = [] if budget_tiers.strip().lower() == "all" else [budget_tiers]
+    else:
+        raw_tiers = list(budget_tiers or [])
+
+    if isinstance(budget_tiers, str) and not raw_tiers:
         tier_list: List[str] = []
-    elif budget_tiers:
-        tier_list = [t.strip().lower() for t in budget_tiers if t and t.strip()]
+    elif raw_tiers:
+        tier_list = [t.strip().lower() for t in raw_tiers if t and t.strip()]
         tier_list = list(dict.fromkeys(tier_list))
         for t in tier_list:
             if t not in BUDGET_TIERS:
