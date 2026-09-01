@@ -152,12 +152,24 @@ def _load() -> Tuple["pandas.DataFrame", Dict[str, Dict]]:
             )
 
     person, pmeta = pyreadstat.read_dta(_PERSON_DTA, encoding=_ENCODING)
-    household, _ = pyreadstat.read_dta(_HOUSEHOLD_DTA, encoding=_ENCODING)
+    household, hmeta = pyreadstat.read_dta(_HOUSEHOLD_DTA, encoding=_ENCODING)
 
-    hh_cols = ["uqnr", "fin_reqinc", "com_int_fixed", "com_int_mobile", "hwl_assets_comp"]
+    hh_cols = ["uqnr", "fin_reqinc", "com_int_fixed", "com_int_mobile", "hwl_assets_comp",
+               "hhw_hltfac", "hhw_transp", "hhw_time",
+               # Does the household run any agriculture. Needed by the affluent
+               # sampler: land plus a daily organic waste stream is what makes a
+               # household a candidate for on-site processing, and it is a
+               # surveyed fact rather than an inference from occupation.
+               "agr_agri"]
     merged = person.merge(household[hh_cols], on="uqnr", how="left", suffixes=("", "_hh"))
 
-    result = (merged, pmeta.variable_value_labels)
+    # Household-only variables (the hhw_* health-access answers) carry their value
+    # labels in the household metadata, so the skeleton builders would decode them to
+    # None off the person labels alone. Person labels win on any name collision.
+    labels = dict(hmeta.variable_value_labels)
+    labels.update(pmeta.variable_value_labels)
+
+    result = (merged, labels)
     _load._cache = result
     return result
 
@@ -192,6 +204,57 @@ def _yes(code) -> Optional[bool]:
     if code != code or code in _SENTINELS:
         return None
     return code == 1.0
+
+
+# ── Health circumstances ─────────────────────────────────────────────────────
+# Real reported healthcare access, so personas can react to health messaging from
+# their own circumstances instead of the model's assumptions. Decoded by explicit
+# code table, NOT through _SENTINELS/_yes: hhw_hltfac uses 7/8/9 for traditional
+# healer / spiritual healer / pharmacy — real answers the shared sentinel set
+# would silently discard — and hlt_medi uses 3 for "do not know", which _yes
+# would read as "no".
+
+_HLT_MEDI = {1.0: True, 2.0: False}                     # 3 = DK, 9 = unspecified → None
+_HEALTH_STATUS = {1.0: "Excellent", 2.0: "Very good", 3.0: "Good",
+                  4.0: "Fair", 5.0: "Poor"}             # 6 = not sure, 9 = unspecified
+_DISAB = {0.0: False, 1.0: True}                        # 9 = unspecified → None
+_FACILITY_NON_ANSWERS = {13.0, 99.0}                    # DK / unspecified
+_PUBLIC_FACILITY_CODES = {1.0, 2.0, 3.0}                # 4..12 are private sector
+_TRANSPORT_NON_ANSWERS = {9.0}                          # 7 = "other means" is an answer
+_TIME_NON_ANSWERS = {5.0, 9.0}                          # DK / unspecified
+
+
+def _health_block(row, value_labels) -> Dict[str, Any]:
+    """Healthcare access + self-rated health for one person, from the GHS person
+    file plus the household's usual-facility answers. Every field is nullable and
+    carries no imputation: a missing answer stays missing."""
+    facility_code = row.get("hhw_hltfac")
+    facility = None
+    sector = None
+    if facility_code == facility_code and facility_code not in _FACILITY_NON_ANSWERS:
+        facility = _label(value_labels, "hhw_hltfac", facility_code)
+        sector = "public" if facility_code in _PUBLIC_FACILITY_CODES else "private"
+
+    transport_code = row.get("hhw_transp")
+    transport = (_label(value_labels, "hhw_transp", transport_code)
+                 if transport_code == transport_code
+                 and transport_code not in _TRANSPORT_NON_ANSWERS else None)
+
+    time_code = row.get("hhw_time")
+    travel_time = (_label(value_labels, "hhw_time", time_code)
+                   if time_code == time_code
+                   and time_code not in _TIME_NON_ANSWERS else None)
+
+    return {
+        "medical_aid": _HLT_MEDI.get(row.get("hlt_medi")),
+        "self_rated_health": _HEALTH_STATUS.get(row.get("hlt_genhealth")),
+        "has_disability": _DISAB.get(row.get("disab")),
+        "usual_health_facility": facility,
+        "health_facility_sector": sector,
+        "transport_to_health_facility": transport,
+        "time_to_health_facility": travel_time,
+        "health_provenance": "ghs_2025_reported",
+    }
 
 
 # ── Household education context ──────────────────────────────────────────────
@@ -269,6 +332,7 @@ def _base_skeleton(row, value_labels) -> Dict[str, Any]:
         "internet_at_home": _yes(row.get("com_int_fixed")) or _yes(row.get("com_int_mobile")),
         "computer_in_home": _yes(row.get("hwl_assets_comp")),
         "receives_grant": _yes(row.get("soc_grant")),
+        **_health_block(row, value_labels),
         "source_survey": "ghs_2025",
     }
 
@@ -360,6 +424,106 @@ def sample_education_skeletons(
     return out
 
 
+# ── Affluent households ─────────────────────────────────────────────────────
+# The library samples to look like South Africa, where most households cannot
+# find R17,000. That is honest and stays that way — the "everyone" room must keep
+# its population shape. But it leaves almost nobody to answer a product question
+# aimed at people who CAN pay: 16 of 297 personas reach the "loose" budget tier,
+# and only 11 personas are both able to pay and low on environment_priority.
+#
+# These samplers draw from the same GHS households, restricted by REAL reported
+# income (fin_reqinc), so every persona carries a surveyed rand figure rather
+# than a tier inferred from a job title. They are meant to be added as their OWN
+# named segments, never folded into "everyone".
+#
+# Bands match mode_specs.budget_tier so the sampler and the tier agree by
+# construction: "loose" is above R20,000, "moderate" is R4,500–R20,000.
+AFFLUENT_INCOME_FLOOR = 20_000.0     # budget_tier -> "loose"
+COMFORTABLE_INCOME_FLOOR = 12_000.0  # upper half of "moderate"; R17k is ~a month
+
+
+def _affluent_pool(df, floor: float):
+    """Household heads and spouses whose household reports income above `floor`.
+
+    Head/spouse only: the money question is asked of the household, so a
+    17-year-old in a high-earning home is not someone who can authorise a
+    R17,000 purchase. That was the bug in the first filtered room — it came back
+    full of learners who had passed an affordability test on their parents'
+    income.
+    """
+    income = df["fin_reqinc"]
+    return df[
+        (df["hhc_relationship"].isin([_REL_HEAD, _REL_SPOUSE]))
+        & (df["age"] >= GUARDIAN_MIN_AGE)
+        & income.notna() & (income > floor) & (income < _INCOME_SENTINEL)
+        & df["person_wgt"].notna() & (df["person_wgt"] > 0)
+    ]
+
+
+def _affluent_skeleton(row, value_labels, archetype: str) -> Dict[str, Any]:
+    sk = _base_skeleton(row, value_labels)
+    sk["actor_archetype"] = archetype
+    sk["occupation"] = _label(value_labels, "employ_Status1", row.get("employ_Status1")) \
+        or sk.get("employment_status")
+    # A surveyed fact, not an inference: does this household farm at all. It is
+    # what separates "has a waste stream and land" from "has money and a flat".
+    agri = row.get("agr_agri")
+    sk["household_farms"] = bool(agri == 1.0) if agri == agri else None
+    return sk
+
+
+def sample_affluent_skeletons(
+    n_agri: int = 0,
+    n_urban: int = 0,
+    n_comfortable: int = 0,
+    n_rural: int = 0,
+    seed: int = 0,
+) -> List[Dict[str, Any]]:
+    """Draw weighted skeletons of people who can actually authorise a large
+    purchase, split into four groups with different reasons to care.
+
+      n_agri        income > R12k AND the household farms — land, a daily organic
+                    waste stream, and money. Pool ~660 households.
+      n_urban       income > R20k, urban formal — can pay, small yard. The
+                    "where would it even go" objection lives here. Pool ~2,276.
+      n_comfortable R12k–R20k — R17,000 is about a month's income, so this is the
+                    financing conversation rather than the cash one. Pool ~2,256.
+      n_rural       income > R12k, traditional or farm settlement — the
+                    small-scale-but-doing-well owner. Pool ~470.
+
+    Whole-row weighted sampling with replacement, deterministic for (counts, seed),
+    same discipline as sample_education_skeletons. LLM-free.
+    """
+    df, value_labels = _load()
+    out: List[Dict[str, Any]] = []
+
+    def draw(pool, n, archetype, offset):
+        if n <= 0 or len(pool) == 0:
+            return
+        drawn = pool.sample(n=n, replace=True, weights=pool["person_wgt"],
+                            random_state=seed + offset)
+        out.extend(_affluent_skeleton(row, value_labels, archetype)
+                   for _, row in drawn.iterrows())
+
+    comfortable = _affluent_pool(df, COMFORTABLE_INCOME_FLOOR)
+    affluent = _affluent_pool(df, AFFLUENT_INCOME_FLOOR)
+
+    draw(comfortable[comfortable["agr_agri"] == 1.0], n_agri,
+         "affluent_agricultural_household", 10)
+    # geotype arrives as a STRING code ('1' urban formal, '2' traditional,
+    # '3' farms) in this release, so compare as text — a numeric comparison
+    # silently matched nothing and drew empty groups.
+    geo = df["geotype"].astype(str)
+    draw(affluent[geo.loc[affluent.index] == "1"], n_urban,
+         "affluent_urban_household", 11)
+    # Comfortable band only — above R20k is the "affluent" groups' territory.
+    draw(comfortable[comfortable["fin_reqinc"] <= AFFLUENT_INCOME_FLOOR], n_comfortable,
+         "comfortable_household", 12)
+    draw(comfortable[geo.loc[comfortable.index].isin(["2", "3"])], n_rural,
+         "rural_landholding_household", 13)
+    return out
+
+
 def education_marginals() -> Dict[str, Dict[str, float]]:
     """Weighted ground truth for the validator: province mix of the learner pool and
     the parent/gogo split among guardian households (percent)."""
@@ -379,8 +543,17 @@ def education_marginals() -> Dict[str, Dict[str, float]]:
     }
 
     gogo_hh = sum(1 for c in ctx.values() if c["any_grandchild_of_head"])
+
+    # Weighted medical-aid share over the persona-age population — the ground truth
+    # the sampled skeletons must track, so health access can never drift upmarket.
+    medi = df[df["age"] >= MIN_PERSONA_AGE]
+    medi = medi[medi["hlt_medi"].isin([1.0, 2.0])
+                & medi["person_wgt"].notna() & (medi["person_wgt"] > 0)]
+    covered = medi.loc[medi["hlt_medi"] == 1.0, "person_wgt"].sum()
+
     return {
         "learner_province_pct": prov_pct,
+        "medical_aid_pct": round(covered / medi["person_wgt"].sum() * 100, 2),
         "guardian_household_split": {
             "gogo_pct": round(gogo_hh / max(len(ctx), 1) * 100, 2),
             "households_with_learners": len(ctx),

@@ -905,7 +905,18 @@ class AgentSocietyRunner:
         if sim_mode == "product" and pitch:
             try:
                 from app.services.mode_specs import build_pitch_announcement
-                announcement = build_pitch_announcement(pitch, short=False)
+                # Operator context: briefing about the offer, appended as background
+                _op_ctx = ""
+                try:
+                    import json as _js
+                    from app.config import Config as _Cfg
+                    _oc_path = os.path.join(_Cfg.OASIS_SIMULATION_DATA_DIR, sim_id, "document_context.json")
+                    if os.path.exists(_oc_path):
+                        with open(_oc_path, "r", encoding="utf-8") as _of:
+                            _op_ctx = (_js.load(_of).get("operator_context") or "").strip()[:1500]
+                except Exception:
+                    _op_ctx = ""
+                announcement = build_pitch_announcement(pitch, short=False, operator_context=_op_ctx)
                 self._pitch_event = {
                     "rule_id": "founder_pitch_round0",
                     "source": FOUNDER_LABEL,
@@ -954,11 +965,21 @@ class AgentSocietyRunner:
                     and round_num > 0 and round_num % pitch_reanchor_every == 0):
                 try:
                     from app.services.mode_specs import build_pitch_announcement
+                    _op2 = ""
+                    try:
+                        import json as _js2
+                        from app.config import Config as _Cfg2
+                        _oc_path2 = os.path.join(_Cfg2.OASIS_SIMULATION_DATA_DIR, sim_id, "document_context.json")
+                        if os.path.exists(_oc_path2):
+                            with open(_oc_path2, "r", encoding="utf-8") as _of2:
+                                _op2 = (_js2.load(_of2).get("operator_context") or "").strip()[:1500]
+                    except Exception:
+                        _op2 = ""
                     self._pending_events.append({
                         "rule_id": f"founder_pitch_reanchor_r{round_num}",
                         "source": FOUNDER_LABEL,
                         "title": f"{FOUNDER_LABEL} follows up",
-                        "content": build_pitch_announcement(pitch, short=True),
+                        "content": build_pitch_announcement(pitch, short=True, operator_context=_op2),
                         "category": "founder_announcement",
                     })
                 except Exception as e:

@@ -75,6 +75,11 @@ def _store(email: str, name: str, note: str) -> tuple[bool, bool]:
             },
             timeout=10,
         )
+        # A repeat is not a failure. PostgREST can't always infer the conflict
+        # target for ignore-duplicates, and answers 409 instead of swallowing
+        # it — same meaning as the empty list below: already queued.
+        if resp.status_code == 409:
+            return True, False
         resp.raise_for_status()
         # Empty list = the email was already queued; that's still a success.
         return True, bool(resp.json())

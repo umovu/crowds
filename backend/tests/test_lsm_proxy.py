@@ -55,11 +55,15 @@ for pkg_name, pkg_path in [
 lsm = _load("app.services.lsm_proxy", "lsm_proxy.py", package="app.services")
 
 
+# Updated 2026-08-28 for the 297 -> 375 library (78 GHS affluent personas added
+# so the attitude/affordability filter had a pool to draw from; see
+# ghs_adapter.sample_affluent_skeletons). The rubric did NOT change — the library
+# grew, and it grew at the top, which is why Band 4 moved most.
 EXPECTED_COUNTS = {
-    "Band 1 — Going without": 59,
-    "Band 2 — Getting by": 90,
-    "Band 3 — Steady": 79,
-    "Band 4 — Comfortable": 69,
+    "Band 1 — Going without": 73,
+    "Band 2 — Getting by": 109,
+    "Band 3 — Steady": 99,
+    "Band 4 — Comfortable": 94,
 }
 TOLERANCE = 15
 

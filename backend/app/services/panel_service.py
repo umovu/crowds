@@ -29,7 +29,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from ..config import Config
 from ..utils.logger import get_logger
 from .income_seeder import detect_grant, GRANT_PROVENANCE
-from .mode_specs import budget_tier
+from .mode_specs import budget_tier, build_operator_context_block
 from . import mechanism_card_service
 from . import objections
 from .persona_library import get_library
@@ -55,43 +55,59 @@ DEFAULT_CAST_SIZE = 12
 # representative + tilt path from persona_retrieval.
 SEGMENTS = {
     "everyone": {
+        "topics": ['everyone'],
+        "kind": "who",
         "label": "Everyone (representative SA)",
         "description": "The real SA mix — grant and informal voices dominate, as in the population",
         "predicate": None,
     },
     "unemployed": {
+        "topics": ['money'],
+        "kind": "who",
         "label": "Unemployed",
         "description": "Unemployed and discouraged job seekers",
         "predicate": lambda p: p.get("employment_status") in ("Unemployed", "Discouraged job seeker"),
     },
     "grant_recipients": {
+        "topics": ['money'],
+        "kind": "who",
         "label": "Grant recipients",
         "description": "Households living on SASSA grants",
         "predicate": lambda p: p.get("actor_archetype") == "grant_dependent_survivor",
     },
     "informal_traders": {
+        "topics": ['money'],
+        "kind": "who",
         "label": "Informal traders",
         "description": "Spaza and street traders",
         "predicate": lambda p: p.get("actor_archetype") == "informal_trader",
     },
     "small_business": {
+        "topics": ['money'],
+        "kind": "who",
         "label": "Small business owners",
         "description": "Formal small-business owners",
         "predicate": lambda p: p.get("actor_archetype") == "small_business_owner",
     },
     "youth": {
+        "topics": ['money', 'education'],
+        "kind": "who",
         "label": "Youth (under 35)",
         "description": "Ages 18–34, all employment statuses",
         "predicate": lambda p: isinstance(p.get("age"), int) and p["age"] < 35,
     },
     # Farmers (QLFS 2026Q1 farm-role build) — the agritech customer base.
     "farmers": {
+        "topics": ['food', 'environment'],
+        "kind": "who",
         "label": "Farmers & agri",
         "description": "Subsistence and smallholder farmers — agri products, rural policy",
         "predicate": lambda p: p.get("actor_archetype") in (
             "communal_farmer", "smallholder_emerging_farmer"),
     },
     "smallholder_owners": {
+        "topics": ['food', 'environment'],
+        "kind": "who",
         "label": "Smallholder farm owners",
         "description": "Farm owners who sell for income and control farm spend",
         "predicate": lambda p: p.get("actor_archetype") == "smallholder_emerging_farmer",
@@ -100,11 +116,15 @@ SEGMENTS = {
     # segment that can afford recurring-cost products; answers "tune the message
     # for people who can pay" without guessing from broader employment status.
     "professionals": {
+        "topics": ['money'],
+        "kind": "who",
         "label": "Salaried professionals",
         "description": "Salaried professionals and managers — likely paying customers",
         "predicate": lambda p: p.get("actor_archetype") == "urban_professional",
     },
     "employed": {
+        "topics": ['money'],
+        "kind": "who",
         "label": "Employed",
         "description": "In formal employment",
         "predicate": lambda p: p.get("employment_status") == "Employed",
@@ -112,21 +132,29 @@ SEGMENTS = {
     # Education roles (GHS 2025 library build) — counts stay 0 until the
     # education personas are built into the library.
     "learners": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Learners",
         "description": "High-school learners, ages 15–18",
         "predicate": lambda p: p.get("actor_archetype") == "learner",
     },
     "guardians": {
+        "topics": ['education', 'health'],
+        "kind": "who",
         "label": "Parents & guardians",
         "description": "Household heads with school-age children",
         "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian"),
     },
     "gogo_guardians": {
+        "topics": ['education', 'health'],
+        "kind": "who",
         "label": "Gogo guardians",
         "description": "Grandparents raising learners (~39% of SA)",
         "predicate": lambda p: p.get("actor_archetype") == "gogo_guardian",
     },
     "educators": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Educators",
         "description": "Teachers from the QLFS professional pool",
         "predicate": lambda p: p.get("actor_archetype") == "educator",
@@ -135,11 +163,15 @@ SEGMENTS = {
     # households. Works across learners (fees_band) and guardians (learner_fee_bands),
     # so a paid-product pitch can target families with proven education spend.
     "fee_paying": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Fee-paying households",
         "description": "Families already paying school fees",
         "predicate": lambda p: _pays_school_fees(p),
     },
     "no_fee_school": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "No-fee-school households",
         "description": "No-fee schools — toughest affordability test",
         "predicate": lambda p: _no_fee_only(p),
@@ -150,38 +182,138 @@ SEGMENTS = {
     # and the R4k+ cluster; tracks the no-fee/former-Model-C divide). Guardians
     # are the PAYER panel for a priced pitch; learners are the USER panel.
     "guardians_low_fee": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Guardians — low-fee schools",
         "description": "Parents paying up to R4,000/yr fees — tight budgets",
         "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
         and _fee_tier(p) == "low_fee",
     },
     "guardians_high_fee": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Guardians — high-fee schools",
         "description": "Parents paying over R4,000/yr fees — spend headroom",
         "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
         and _fee_tier(p) == "high_fee",
     },
     "learners_no_fee": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Learners — no-fee schools",
         "description": "Learners at no-fee schools",
         "predicate": lambda p: p.get("actor_archetype") == "learner" and _fee_tier(p) == "no_fee",
     },
     "learners_low_fee": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Learners — low-fee schools",
         "description": "Learners at low-fee schools (to R4,000/yr)",
         "predicate": lambda p: p.get("actor_archetype") == "learner" and _fee_tier(p) == "low_fee",
     },
     "learners_high_fee": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Learners — high-fee schools",
         "description": "Learners at high-fee schools (over R4,000/yr)",
         "predicate": lambda p: p.get("actor_archetype") == "learner" and _fee_tier(p) == "high_fee",
     },
     "guardians_no_fee": {
+        "topics": ['education'],
+        "kind": "who",
         "label": "Guardians — no-fee schools",
         "description": "Parents at no-fee schools — no current fee spend",
         "predicate": lambda p: p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
         and _fee_tier(p) == "no_fee",
     },
+
+    # ── Groups defined by a MEASURED attitude, not a demographic ─────────────
+    # Same shape as every other segment — a pure predicate over a real library
+    # field — but the field is a survey-decoded stance rather than a job or an
+    # age. They SELECT people who already hold a view; nothing is written, so a
+    # room built this way is still 100% real respondents.
+    #
+    # Each one names a commercial question a founder actually asks ("who hasn't
+    # thought about this yet?"), and the counts in the picker say up front how
+    # thin each group is.
+    "green_already": {
+        "topics": ['environment'],
+        "kind": "thinks",
+        "label": "Environment already matters to them",
+        "description": "Pollution and climate are live concerns in their daily life",
+        "predicate": lambda p: persona_attitude(p, "environment_priority") == "high",
+    },
+    "green_blind_spot": {
+        "topics": ['environment'],
+        "kind": "thinks",
+        "label": "Environment not on their radar",
+        "description": "The growth audience — not yet thinking about it",
+        "predicate": lambda p: persona_attitude(p, "environment_priority") == "low",
+    },
+    "pays_for_quality": {
+        "topics": ['money'],
+        "kind": "thinks",
+        "label": "Will pay more for better",
+        "description": "Say they would rather pay than accept the cheap version",
+        "predicate": lambda p: persona_attitude(p, "pays_for_quality") == "yes",
+    },
+    "price_first": {
+        "topics": ['money'],
+        "kind": "thinks",
+        "label": "Price comes first",
+        "description": "Would not pay extra for quality — the hardest sell",
+        "predicate": lambda p: persona_attitude(p, "pays_for_quality") == "no",
+    },
+    "health_trusting": {
+        "topics": ['health'],
+        "kind": "thinks",
+        "label": "Trusts health authorities",
+        "description": "Takes official health guidance seriously",
+        "predicate": lambda p: persona_attitude(p, "health_authority_trust") == "high",
+    },
+    "clinic_frustrated": {
+        "topics": ['health'],
+        "kind": "thinks",
+        "label": "Unhappy with their clinic",
+        "description": "Dissatisfied with the health service they actually get",
+        "predicate": lambda p: persona_attitude(p, "health_service_satisfaction") == "dissatisfied",
+    },
+    "school_frustrated": {
+        "topics": ['education'],
+        "kind": "thinks",
+        "label": "Unhappy with their schools",
+        "description": "Dissatisfied with the education on offer where they live",
+        "predicate": lambda p: persona_attitude(p, "education_satisfaction") == "dissatisfied",
+    },
+    "distrusts_government": {
+        "topics": ['government'],
+        "kind": "thinks",
+        "label": "Doesn't trust government",
+        "description": "Low trust — a hard room for anything official",
+        "predicate": lambda p: persona_attitude(p, "gov_trust") == "low",
+    },
+    "service_frustrated": {
+        "topics": ['government', 'environment'],
+        "kind": "thinks",
+        "label": "Failed by basic services",
+        "description": "Dissatisfied with water, power and refuse where they live",
+        "predicate": lambda p: persona_attitude(p, "service_satisfaction") == "dissatisfied",
+    },
+    "pessimistic": {
+        "topics": ['money'],
+        "kind": "thinks",
+        "label": "Expect things to get worse",
+        "description": "Pessimistic about the economy and their own prospects",
+        "predicate": lambda p: persona_attitude(p, "economic_optimism") == "pessimistic",
+    },
+    "crime_worried": {
+        "topics": ['safety'],
+        "kind": "thinks",
+        "label": "Afraid of crime",
+        "description": "Fear of crime shapes what they do and where they go",
+        "predicate": lambda p: persona_attitude(p, "crime_fear") == "high",
+    },
+
 }
 
 _LOW_FEE_CEILING = 4000  # R/yr — see segment comments above
@@ -281,7 +413,12 @@ def list_segments() -> List[Dict[str, Any]]:
     as group chips. `members` is the list of library persona IDs (the same
     IDs `/api/research/personas` exposes) that match the segment predicate,
     so the Cast picker can bulk-pick without re-implementing the predicates
-    on the frontend."""
+    on the frontend.
+
+    Each row also carries its `topics` (which headings the picker files the card
+    under — they overlap, so it is a list) and its `kind` ("who" they are vs what
+    they already "thinks"), instead of a flat list of thirty-three.
+    """
     personas = get_library().all()
     out = []
     for seg_id, seg in SEGMENTS.items():
@@ -292,6 +429,10 @@ def list_segments() -> List[Dict[str, Any]]:
             "id": seg_id,
             "label": seg["label"],
             "description": seg["description"],
+            # Which topic groups the picker files this card under, and whether
+            # it describes who they ARE or what they already THINK.
+            "topics": list(seg.get("topics") or ["money"]),
+            "kind": seg.get("kind", "who"),
             "count": len(members),
             "members": members,
         })
@@ -349,6 +490,30 @@ def assert_library_cast(profiles: List[Dict[str, Any]]) -> None:
         )
 
 
+# Household income is reported for the HOUSEHOLD, not the person. A 16-year-old
+# in a R50,000 home did not earn it and cannot authorise spending it — treating
+# that income as theirs made learners pass an affordability filter aimed at
+# people who could buy a R17,000 product, and the first filtered room came back
+# full of schoolchildren.
+#
+# So household income only counts as a persona's own spending power when they
+# are plausibly the one who decides: an adult, and not a dependent role. Both
+# inputs are surveyed facts (GHS age, GHS/QLFS role) — no LLM, no inference.
+# Everyone else falls through to the archetype path, which is what happened
+# before GHS income existed.
+SPENDING_ADULT_AGE = 25
+_DEPENDENT_ARCHETYPES = {"learner"}
+
+
+def _controls_household_income(persona: Dict[str, Any]) -> bool:
+    age = persona.get("age")
+    if isinstance(age, (int, float)) and age < SPENDING_ADULT_AGE:
+        return False
+    if (persona.get("actor_archetype") or "").strip().lower() in _DEPENDENT_ARCHETYPES:
+        return False
+    return True
+
+
 def _economic_fields(persona: Dict[str, Any]) -> Dict[str, Any]:
     """Deterministic economic fields (grant cohort + budget tier) from REAL
     persona data only. Pure function; the single source of truth shared by
@@ -376,8 +541,12 @@ def _economic_fields(persona: Dict[str, Any]) -> Dict[str, Any]:
         group_affiliation=persona.get("group_affiliation"),
         grant_income=grant_amount if is_grant else None,
         # GHS personas carry surveyed household income — the strongest real
-        # signal; overrides grant/archetype inference inside budget_tier.
-        household_income_rand=persona.get("monthly_household_income_rand"),
+        # signal; overrides grant/archetype inference inside budget_tier. Only
+        # counted for someone who could actually authorise the spend (see
+        # _controls_household_income); a dependant falls back to the archetype
+        # path rather than inheriting the household's headroom.
+        household_income_rand=(persona.get("monthly_household_income_rand")
+                               if _controls_household_income(persona) else None),
     )
     return fields
 
@@ -475,6 +644,154 @@ def _mixed_cast(
 BUDGET_TIERS = ("tight", "moderate", "loose")
 
 
+# ── Price → affordability, deterministic ──────────────────────────────────────
+# The affordability lens is NOT a user control: hand-picking who can pay lets an
+# operator stack the room and call the result evidence. Instead the price stated
+# in the operator's own pitch decides it, and the picker shows what was done so
+# it can be switched off. Both functions below are pure — same pitch, same
+# number, every time — and are asserted with the model switched off. The LLM
+# `pricing` field in mode_specs is deliberately NOT used here: an economic
+# filter must not depend on a model's re-reading of the text.
+
+# Once-off rand thresholds. A price at or above the cut needs at least that tier.
+_ONCE_OFF_CUTS = ((15000, "loose"), (2000, "moderate"))
+# Monthly commitments bite harder per rand — a R900/month subscription is a
+# bigger ask than a R900 once-off, because it recurs.
+_MONTHLY_CUTS = ((800, "loose"), (150, "moderate"))
+
+# R40 000 / R40,000 / R40000 / R199.99, optionally followed by a recurrence
+# ("/month", "per month", "pm", "p.m."). Only the operator's own digits are read.
+_PRICE_RE = re.compile(
+    r"R\s?(\d{1,3}(?:[\s,\u00a0]\d{3})+|\d+(?:\.\d{2})?)"
+    # The recurrence tail. "R2 500 a month" and "R2 500 monthly" are as common in
+    # a pitch as "/month"; without them a subscription priced as a once-off, and
+    # the derived room came out wider than the stated price allows.
+    r"(\s*(?:/|\bper\b|\ba\b|\bevery\b|\bp\.?m\.?\b)\s*(?:month|mo\b|year|yr\b|annum)?"
+    r"|\s*\bmonthly\b)?",
+    re.IGNORECASE,
+)
+_MONTHLY_RE = re.compile(r"month|monthly|/\s*mo\b|\bp\.?m\.?\b", re.IGNORECASE)
+
+
+def parse_price(pitch: str) -> Optional[Dict[str, Any]]:
+    """The largest rand figure stated in the pitch, and whether it recurs.
+
+    Pure text match over the operator's OWN words — it cannot invent a number,
+    only find one. Returns None when the pitch states no price, in which case no
+    affordability filter runs at all.
+    """
+    best: Optional[Dict[str, Any]] = None
+    for m in _PRICE_RE.finditer(pitch or ""):
+        amount = float(re.sub(r"[\s,\u00a0]", "", m.group(1)))
+        monthly = bool(_MONTHLY_RE.search(m.group(2) or ""))
+        if best is None or amount > best["amount"]:
+            best = {"amount": amount, "monthly": monthly}
+    return best
+
+
+def price_to_tiers(amount: float, monthly: bool = False) -> List[str]:
+    """Budget tiers whose income could absorb this price, cheapest tier first.
+
+    Says who COULD pay, never who would — wanting it stays a separate,
+    qualitative question the interview answers.
+    """
+    cuts = _MONTHLY_CUTS if monthly else _ONCE_OFF_CUTS
+    for cut, floor in cuts:
+        if amount >= cut:
+            return list(BUDGET_TIERS[BUDGET_TIERS.index(floor):])
+    return list(BUDGET_TIERS)
+
+
+def derive_budget_tiers(pitch: str) -> Optional[Dict[str, Any]]:
+    """Affordability lens read off the pitch, or None when no price is stated."""
+    price = parse_price(pitch)
+    if not price:
+        return None
+    tiers = price_to_tiers(price["amount"], price["monthly"])
+    if set(tiers) == set(BUDGET_TIERS):
+        return None  # everyone qualifies — no filter, nothing to explain
+    return {"amount": price["amount"], "monthly": price["monthly"], "tiers": tiers}
+
+
+
+# ── Topics: how the picker groups the cards ───────────────────────────
+# Named for the ROOM SOMEONE IS BUILDING, not for what the personas are. A user
+# arrives with a use case — a clinic app, a school-fee product, a biodigester —
+# and needs to find the groups that matter to it; "Work & money" answered a
+# question nobody asked.
+#
+# Topics deliberately overlap (guardians matter for education AND health), so a
+# segment carries a list. Presentation only — no predicate changes.
+SEGMENT_TOPICS = [
+    {"id": "everyone", "label": "Everyone",
+     "description": "The real SA mix, no filter"},
+    {"id": "health", "label": "Health & care",
+     "description": "Clinics, medicine, health products"},
+    {"id": "education", "label": "Schools & learning",
+     "description": "Learners, guardians, fees, teaching"},
+    {"id": "money", "label": "Money & work",
+     "description": "Income, jobs, anything with a price"},
+    {"id": "environment", "label": "Environment & energy",
+     "description": "Waste, water, power, green products"},
+    {"id": "food", "label": "Food & farming",
+     "description": "Growing, selling and buying food"},
+    {"id": "government", "label": "Government & services",
+     "description": "Anything official, or delivered by the state"},
+    {"id": "safety", "label": "Crime & safety",
+     "description": "Security products, policing, safety policy"},
+]
+
+
+def persona_attitude(persona: Dict[str, Any], dim: str) -> Optional[str]:
+    """The persona's measured stance on one attitude dimension, or None.
+
+    The library ships attitudes as a LIST of {topic, stance, source,
+    match_quality} rows (not a dict), so callers that assume a mapping silently
+    read nothing — that exact bug once dropped the whole survey-grounded layer
+    out of the sim prompt. Read them through here.
+    """
+    for row in persona.get("attitudes") or []:
+        if isinstance(row, dict) and row.get("topic") == dim:
+            return row.get("stance")
+    return None
+
+
+def _persona_matches_attitudes(persona: Dict[str, Any],
+                               wanted: Dict[str, set]) -> bool:
+    """True when the persona holds one of the wanted stances on EVERY dimension
+    asked for. A persona missing the dimension never matches: absence is not
+    evidence, and quietly counting them in would pad the room with people whose
+    view was never measured. Pure — assertable with the model off."""
+    for dim, allowed in wanted.items():
+        if persona_attitude(persona, dim) not in allowed:
+            return False
+    return True
+
+
+def attitude_options(dim: str) -> List[Dict[str, Any]]:
+    """Live counts per stance for one attitude dimension, plus the count crossed
+    with each budget tier.
+
+    The picker needs this BEFORE a run: stacking an attitude on top of an
+    affordability filter shrinks the pool fast (measured: only 18 personas are
+    both able to pay and low on environment_priority), and a user should see a
+    room is too thin to draw rather than discover it after paying for a run.
+
+    Deterministic read over the library. No LLM.
+    """
+    buckets: Dict[str, Dict[str, Any]] = {}
+    for persona in get_library().all():
+        stance = persona_attitude(persona, dim)
+        if not stance:
+            continue
+        entry = buckets.setdefault(stance, {"stance": stance, "count": 0, "by_tier": {}})
+        entry["count"] += 1
+        tier = _economic_fields(persona).get("budget_tier")
+        if tier:
+            entry["by_tier"][tier] = entry["by_tier"].get(tier, 0) + 1
+    return [buckets[k] for k in sorted(buckets)]
+
+
 class _FilteredLibrary:
     """Minimal PersonaLibrary-shaped view over a pre-filtered persona list, so
     the affordability lens can reuse select_for_query/_mixed_cast unchanged."""
@@ -495,6 +812,7 @@ def create_session(
     segment: Optional[str] = None,
     segments: Optional[List[str]] = None,
     budget_tiers: Optional[List[str]] = None,
+    attitudes: Optional[Dict[str, List[str]]] = None,
     user_id: Optional[str] = None,
     pointer: Optional[str] = None,
     slots: Optional[Dict[str, Any]] = None,
@@ -520,13 +838,33 @@ def create_session(
     if mode not in ("policy", "product"):
         raise ValueError(f"mode must be 'policy' or 'product', got '{mode}'")
 
-    tier_list = [t.strip().lower() for t in (budget_tiers or []) if t and t.strip()]
-    tier_list = list(dict.fromkeys(tier_list))
-    for t in tier_list:
-        if t not in BUDGET_TIERS:
-            raise ValueError(f"unknown budget tier '{t}' — one of {list(BUDGET_TIERS)}")
-    if set(tier_list) == set(BUDGET_TIERS):
-        tier_list = []  # all tiers = no filter
+    # Affordability is DERIVED, not chosen: "all" is the operator's only say in
+    # it (the picker's "show everyone instead"), and anything else falls through
+    # to the price stated in their own pitch. Letting them hand-pick the tiers
+    # would let them stack the room with people who can obviously pay and read
+    # the result as validation.
+    derived_price = None
+    # A bare string is accepted as one tier ("loose") or the escape hatch
+    # ("all"). Falling through to the list branch would iterate it letter by
+    # letter and fail with "unknown budget tier 'l'".
+    if isinstance(budget_tiers, str):
+        raw_tiers = [] if budget_tiers.strip().lower() == "all" else [budget_tiers]
+    else:
+        raw_tiers = list(budget_tiers or [])
+
+    if isinstance(budget_tiers, str) and not raw_tiers:
+        tier_list: List[str] = []
+    elif raw_tiers:
+        tier_list = [t.strip().lower() for t in raw_tiers if t and t.strip()]
+        tier_list = list(dict.fromkeys(tier_list))
+        for t in tier_list:
+            if t not in BUDGET_TIERS:
+                raise ValueError(f"unknown budget tier '{t}' — one of {list(BUDGET_TIERS)}")
+        if set(tier_list) == set(BUDGET_TIERS):
+            tier_list = []  # all tiers = no filter
+    else:
+        derived_price = derive_budget_tiers(pitch)
+        tier_list = list(derived_price["tiers"]) if derived_price else []
 
     seg_list = [s.strip().lower() for s in (segments or ([segment] if segment else ["everyone"])) if s and s.strip()]
     seg_list = list(dict.fromkeys(seg_list)) or ["everyone"]  # dedupe, keep order
@@ -561,6 +899,31 @@ def create_session(
         affordability_pool_size = len(qualified)
         library = _FilteredLibrary(qualified)
 
+    # Attitude lens: restrict candidates by a MEASURED attitude the persona
+    # already carries (Afrobarometer, fused at library build). Same shape and
+    # same _FilteredLibrary reuse as the affordability lens above.
+    #
+    # This selects people who already hold a view; it never assigns one. That is
+    # the whole difference between narrowing a real population and authoring an
+    # opinion, and it is why this filter is safe where a free-text "how my
+    # buyers think" box would not be.
+    attitude_pool_size = None
+    if attitudes:
+        wanted = {dim: set(vals) for dim, vals in attitudes.items() if vals}
+        if wanted:
+            qualified = [p for p in library.all()
+                         if _persona_matches_attitudes(p, wanted)]
+            if not qualified:
+                raise ValueError(
+                    "No personas match "
+                    + ", ".join(f"{d} in {sorted(v)}" for d, v in wanted.items())
+                    + (f" in {province}" if province else "")
+                    + (f" within budget tier(s) {tier_list}" if tier_list else "")
+                    + " — widen the filter."
+                )
+            attitude_pool_size = len(qualified)
+            library = _FilteredLibrary(qualified)
+
     if seg_list == ["everyone"]:
         cast = select_for_query(n, pitch, province=province, seed=seed, library=library)
         allocation = {"everyone": len(cast)}
@@ -580,18 +943,32 @@ def create_session(
     sdir = session_dir(session_id)
     os.makedirs(os.path.join(sdir, ROUNDS_DIR), exist_ok=True)
 
+    # Operator context: one saved "about my business" block per user, fetched
+    # at session creation and stored with the session so the announcement
+    # is stable for its lifetime. Fail-open: empty string on any error.
+    operator_context = ""
+    try:
+        from .operator_context import get_operator_context as _get_oc
+        operator_context = (_get_oc(user_id) or "").strip()[:1500]
+    except Exception:
+        operator_context = ""
+
     _write_json(os.path.join(sdir, PROFILES_FILE), profiles)
     # Same shape InterviewService._load_mode expects from a sim dir.
-    _write_json(os.path.join(sdir, CONTEXT_FILE), {
+    ctx_payload = {
         "mode": mode,
         "panel_session": True,
         "pitch": pitch,
-    })
+    }
+    if operator_context:
+        ctx_payload["operator_context"] = operator_context
+    _write_json(os.path.join(sdir, CONTEXT_FILE), ctx_payload)
 
     meta = {
         "session_id": session_id,
         "user_id": user_id,  # owner; scopes the session to its creator
         "pitch": pitch,
+        "operator_context": operator_context if operator_context else None,
         "mode": mode,
         "segments": seg_list,
         "segment": seg_list[0],  # back-compat for single-group consumers
@@ -616,6 +993,15 @@ def create_session(
         # Affordability share from real data (sanctioned): how many of the whole
         # library qualified — NOT a purchase probability (banned).
         meta["affordability_pool_size"] = affordability_pool_size
+        if derived_price:
+            # Why the room narrowed, in the operator's own numbers — the picker
+            # shows this line so a derived filter is never a silent one.
+            meta["affordability_from_price"] = derived_price
+    if attitudes:
+        # How many real people held this view, so the room's size is readable as
+        # "18 of the library", not just "12 seats".
+        meta["attitude_filter"] = {d: sorted(v) for d, v in attitudes.items() if v}
+        meta["attitude_pool_size"] = attitude_pool_size
     _write_json(os.path.join(sdir, META_FILE), meta)
 
     logger.info(f"Created panel session {session_id}: {len(profiles)} personas, mode={mode}, seed={seed}")
@@ -1075,7 +1461,7 @@ def latest_round_exchange(session_id: str, agent_id: int) -> Optional[Dict[str, 
     return None
 
 
-def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> str:
+def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None, operator_context: str = "") -> str:
     """Wrap the raw pitch text the way it reaches agents.
 
     Product mode uses founder framing — describing the product, asking for an
@@ -1084,6 +1470,12 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> st
     `probes` are the confirmed sub-questions from the study chips — each adds a
     line the persona still has to address. The base reaction is always invited;
     probes only narrow or widen what the panel is additionally asked.
+
+    `operator_context` is the user's saved "about my business" text, wrapped by
+    the shared fence in `mode_specs.build_operator_context_block` — same wording
+    as the sim path, by construction. It is BRIEFING, so it goes first: the room
+    hears what the offer is, then the question, then the probes. Appending it
+    last put the briefing after the follow-ups, which reads backwards.
     """
     text = (pitch or "").strip()
     if mode != "product":
@@ -1093,6 +1485,11 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None) -> st
             f"I'm putting this in front of you: {text}\n"
             "I want your honest reaction — what works, what doesn't, what would put you off."
         )
+    # The block already opens with its own blank lines; lstrip so it doesn't
+    # start the prompt with them.
+    block = build_operator_context_block(operator_context)
+    if block:
+        framed = block.lstrip("\n") + "\n\n" + framed
     active = [p for p in (probes or []) if (p or "").strip()]
     if active:
         framed += "\n\nAlso address these specifically:\n" + "\n".join("- " + p for p in active)

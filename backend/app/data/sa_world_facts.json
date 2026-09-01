@@ -92,6 +92,24 @@
       "source": "SASSA SRD schedule",
       "as_of": "2026-06",
       "provenance": "curated"
+    },
+    {
+      "item": "medical_aid_coverage_share",
+      "value": 16.54,
+      "unit": "% of persons covered",
+      "derived": "Only about 1 in 6 people has medical aid — the rest rely on the public system or pay cash.",
+      "source": "GHS 2025 (weighted, persona-age population; matches the library pool truth in validate_ghs_adapter.py)",
+      "as_of": "2025",
+      "provenance": "curated"
+    },
+    {
+      "item": "public_health_facility_dependence_share",
+      "value": 73.29,
+      "unit": "% of households",
+      "derived": "About 3 in 4 households name a public clinic/hospital as their usual health facility.",
+      "source": "GHS 2025 household file (weighted share naming a public-sector usual facility)",
+      "as_of": "2025",
+      "provenance": "curated"
     }
   ]
 }

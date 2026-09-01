@@ -8,6 +8,13 @@
     "                    attitude_donor_adapter). These are the defensible ones.",
     "  'external'      — a documented real-world outcome. Approximate, must carry a",
     "                    source and an honest confidence note.",
+    "  'outcome'       — a real SA case study whose ground truth is a DIRECTION, not",
+    "                    a distribution ('it was adopted', 'it failed', 'it split by",
+    "                    income'). Scored on direction / discrimination / segmentation,",
+    "                    never on a gap number, because no share was ever measured.",
+    "",
+    "pair: two scenarios that must be read together. A panel that answers a pair the",
+    "  same way has failed, however well each half scores alone.",
     "",
     "contamination: how likely the LLM already knows the answer from training data.",
     "  Framing deliberately avoids naming the event, date, or place where possible.",
@@ -27,6 +34,19 @@
       },
       "contamination": "low",
       "notes": "Q80A is HELD OUT (we fused Q80C only). Every persona has lived electricity_reliability, so this tests whether a measured circumstance drives a policy view."
+    },
+    {
+      "id": "eskom-ownership-neutral",
+      "event": "Support for private ownership of the state power utility (neutral wording)",
+      "framing": "Some people say the state power utility would keep the lights on better if companies outside government owned and ran it. Others say it should stay in government hands. Where do you stand?",
+      "answers": ["agree", "disagree", "neither"],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q80A_SAF",
+        "map": {"1": "disagree", "2": "disagree", "3": "neither", "4": "agree", "5": "agree"}
+      },
+      "contamination": "low",
+      "notes": "WORDING PAIR with eskom-privatisation: same question, same ground truth, with 'sold', 'private' and 'chasing profit' removed. If the panel's answer moves between the two, the failure is trigger-word pattern matching, not the persona data. Must be run on the SAME seeds as its pair."
     },
     {
       "id": "electricity-competition",
@@ -74,7 +94,7 @@
       "answers": ["pay", "not_pay", "unsure"],
       "ground_truth": {
         "kind": "external",
-        "distribution": {"not_pay": 0.75},
+        "distribution": {"not_pay": 0.75, "pay": 0.25},
         "source": "SANRAL reported e-toll compliance collapsing to roughly 20-25% of billed amounts before the scheme was scrapped in 2022; non-payment is therefore ~75-80%.",
         "confidence": "approximate — compliance figures were reported as a range and varied by year. Treat +/-10pp as within tolerance."
       },
@@ -90,11 +110,118 @@
       "ground_truth": {
         "kind": "external",
         "distribution": {"oppose": 0.70},
+        "partial": true,
         "source": "The 2025 Budget VAT increase was withdrawn after broad public and coalition opposition — a revealed-preference outcome rather than a single poll.",
         "confidence": "low precision — no single authoritative poll figure. The testable claim is DIRECTION AND INTENSITY (strong majority opposition), not the exact share."
       },
       "contamination": "medium",
       "notes": "Tests intensity, not direction: everyone dislikes a tax rise, so the signal is whether tight-budget and grant-dependent personas object strongly enough to imply a reversal."
+    },
+
+    {
+      "id": "case-mobile-money",
+      "event": "Mobile money without a bank account (M-Pesa SA, 2010/2014, shut 2016) — FAILED",
+      "framing": "We're launching a way to send and store money using just your cellphone number — you don't need a bank account at all. You load cash at any spaza shop or our agent in the mall, then send it to anyone by SMS, and they collect cash from another agent near them. Sending R100 costs about R7. It works on any phone, even a feature phone. Would you use this instead of the way you move money now?",
+      "answers": ["would_use", "would_not_use", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_not_use",
+        "source": "M-Pesa South Africa reached roughly 76,000 active users against a 10-million target and was shut down in 2016.",
+        "confidence": "HIGH on the failure and its cause; MEDIUM on the exact user count."
+      },
+      "pair": "case-branchless-bank",
+      "contamination": "medium",
+      "notes": "The sharpest data-beats-prior test in the set. 88.7% of donors own a bank account, so the 'bank the unbanked' proposition addresses a gap most personas do not have. A panel that likes this fails."
+    },
+    {
+      "id": "case-branchless-bank",
+      "event": "Branchless bank with in-store sign-up (TymeBank, from 2019) — SUCCEEDED",
+      "framing": "We're opening a new bank with no branches at all. You sign up in under five minutes at a kiosk inside the Pick n Pay or Boxer where you already shop — just your ID and your fingerprint. No monthly fees, no minimum balance. Savings earn up to 10%. You send money, buy airtime and buy electricity from your phone. Card swipes at the till are free. Would you open an account?",
+      "answers": ["would_open", "would_not_open", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_open",
+        "source": "TymeBank reached roughly 10 million customers by 2025, deliberately strongest in low-income segments.",
+        "confidence": "HIGH."
+      },
+      "pair": "case-mobile-money",
+      "contamination": "medium",
+      "notes": "Pairs with case-mobile-money. Same market, opposite outcomes. Reacting the same way to both is a hard failure regardless of either score."
+    },
+    {
+      "id": "case-till-remittance",
+      "event": "Cash money transfer at a supermarket till (Shoprite, from ~2015) — SUCCEEDED",
+      "framing": "You're standing at the Shoprite till. Along with your groceries you can send money to anyone in the country for R10 flat — they collect the cash at any Shoprite, no bank account, no card, they just need their ID and a code you SMS them. Would you use this to send money home?",
+      "answers": ["would_use", "would_not_use", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_use",
+        "source": "Supermarket money transfer became a default remittance channel for low-income South Africans; very high volumes.",
+        "confidence": "HIGH on success, LOW on any precise share."
+      },
+      "pair": "case-mobile-money",
+      "contamination": "low",
+      "notes": "Also cash-in/cash-out, but riding a retail footprint the persona already stands in weekly. Read against case-mobile-money: the difference is trust in an existing place, not the mechanism."
+    },
+    {
+      "id": "case-ride-hailing",
+      "event": "Ride-hailing in a protected taxi market (Uber SA, from 2013) — SUCCEEDED, sharply segmented",
+      "framing": "We've built an app where you press a button and a car comes to fetch you. You see the driver's name and the price before you get in, and you pay by card in the app so no cash changes hands. It's roughly 30% cheaper than a metered taxi. Would you use it instead of a metered taxi or a minibus?",
+      "answers": ["would_use", "would_not_use", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_use",
+        "expected_split": "Strong uptake among urban professionals and higher earners; near-zero relevance to rural, grant-dependent and minibus-commuter personas.",
+        "source": "Rapid urban middle-class adoption from 2013, with sustained metered-taxi conflict and no penetration of the minibus commuter market.",
+        "confidence": "HIGH on direction and on the segment split."
+      },
+      "contamination": "medium",
+      "notes": "The clearest segmentation case. One verdict for the whole room is a failure by construction, even if that verdict is 'would_use'."
+    },
+    {
+      "id": "case-unemployment-grant",
+      "event": "Unconditional cash grant for unemployed adults (SRD R350, from 2020) — huge uptake",
+      "framing": "Government is considering a R350 a month payment for unemployed adults who don't receive any other grant. You'd apply on your phone by SMS or WhatsApp, and it pays into your bank account or you collect at the Post Office. Would you apply?",
+      "answers": ["would_apply", "would_not_apply", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_apply",
+        "expected_split": "Willingness was near-universal among eligible personas; the real constraint was application friction, payment failure and verification — so objections should be about GETTING it, not about WANTING it.",
+        "source": "Roughly 8-9 million recipients, far above initial projections.",
+        "confidence": "HIGH on uptake, MEDIUM on precise numbers."
+      },
+      "contamination": "medium",
+      "notes": "The want-versus-access test. Personas carry measured internet_use and owns_bank_account, so the friction should surface from data rather than from the model's imagination."
+    },
+    {
+      "id": "case-minimum-wage",
+      "event": "National minimum wage (R20/hour, effective 2019) — implemented, contested",
+      "framing": "Government is setting a national minimum wage of R20 an hour, covering domestic workers and farm workers too, though at a slightly lower starting rate. Employers who pay less will face penalties. Do you support this?",
+      "answers": ["support", "oppose", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "support",
+        "expected_split": "Low-wage workers support; small and informal employers (informal_trader, small_business_owner, smallholder_emerging_farmer) resist. Both sides agreeing is a hard failure.",
+        "source": "Broadly supported by workers, resisted by small and informal employers, with significant non-compliance in domestic and agricultural work.",
+        "confidence": "MEDIUM. Direction clear, magnitudes disputed."
+      },
+      "contamination": "low",
+      "notes": "Opposite sides of one transaction. Scored on whether the employer archetypes diverge from the worker archetypes, not on the room total."
+    },
+    {
+      "id": "case-national-health-insurance",
+      "event": "Universal health fund replacing private cover (NHI Bill, signed 2024) — polarised",
+      "framing": "Government is introducing a single national health fund. Everyone contributes through tax, and everyone gets treated at any accredited hospital or clinic, free at the point of care. Private medical schemes would no longer cover services the fund provides. Do you support this?",
+      "answers": ["support", "oppose", "unsure"],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "support",
+        "expected_split": "Strong support among the uninsured majority; strong opposition among higher earners and medical-aid holders. The correct answer is a SPLIT, not a consensus.",
+        "source": "Signed May 2024 amid sharp division along medical-aid ownership and income lines, followed by litigation.",
+        "confidence": "MEDIUM on the split; HIGH that it divides on income/insurance lines."
+      },
+      "contamination": "medium",
+      "notes": "The best available test of whether the panel can disagree at all. Every run so far has converged, so consensus here — in either direction — is the failure."
     }
   ]
 }

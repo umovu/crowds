@@ -145,7 +145,7 @@
                 v-for="action in feed"
                 :key="action.uid"
                 class="reaction-card"
-                @click="openChat(action.agent_id)"
+                @click="openPersona(action.agent_id)"
               >
                 <img :src="avatarFor(action.agent_id, action.agent_name)" :alt="action.agent_name" class="reaction-avatar" />
                 <div class="reaction-body">
@@ -184,7 +184,7 @@
                     </span>
                   </div>
                 </div>
-                <div v-for="m in seg.members" :key="m.agent_id" class="fit-member" @click="openChat(m.agent_id)">
+                <div v-for="m in seg.members" :key="m.agent_id" class="fit-member" @click="openPersona(m.agent_id)">
                   <img :src="getAvatarUrl(m.agent_name)" :alt="m.agent_name" class="fit-member-avatar" />
                   <div class="fit-member-body">
                     <span class="fit-member-name">
@@ -204,11 +204,19 @@
               <span>A/B comparison</span>
               <span class="sim-feed-count">one room, two versions</span>
             </div>
+            <!-- The per-person diff IS the finding, so it sits above the
+                 columns as its own block: a label line, then one pill per
+                 person who changed their mind between the two versions. -->
             <div v-if="abMoved.length" class="ab-moved">
-              <span class="ab-moved-label">Who moved between versions:</span>
-              <span v-for="m in abMoved" :key="m.id" class="ab-moved-item">
-                {{ m.name }} — <span :class="`stance-${m.from}`">{{ stanceLabel(m.from) }}</span> → <span :class="`stance-${m.to}`">{{ stanceLabel(m.to) }}</span>
-              </span>
+              <div class="ab-moved-head">
+                <span class="ab-moved-label">Who moved between versions</span>
+                <span class="ab-moved-n">{{ abMoved.length }} of {{ panelAgents.length }}</span>
+              </div>
+              <div class="ab-moved-list">
+                <span v-for="m in abMoved" :key="m.id" class="ab-moved-item">
+                  {{ m.name }} — <span :class="`stance-${m.from}`">{{ stanceLabel(m.from) }}</span> → <span :class="`stance-${m.to}`">{{ stanceLabel(m.to) }}</span>
+                </span>
+              </div>
             </div>
             <div class="ab-columns">
               <div v-for="v in abVersions" :key="v.key" class="ab-column" :class="`ab-${v.key}`">
@@ -222,12 +230,31 @@
                 </div>
                 <p class="ab-col-summary">{{ v.summary || 'No summary for this version.' }}</p>
                 <div class="ab-col-pitch">{{ v.pitch }}</div>
-                <div v-for="a in v.agents" :key="a.id" class="ab-person" @click="openChat(a.id)">
-                  <img :src="a.avatarUrl" :alt="a.name" class="ab-person-avatar" />
-                  <div class="ab-person-body">
-                    <span class="ab-person-name">{{ a.name }}</span>
-                    <span class="ab-person-stance" :class="`stance-${a.stance_after}`">{{ stanceLabel(a.stance_after) }}</span>
-                    <p class="ab-person-text">{{ a.currentReaction }}</p>
+                <!-- Read exactly like a normal panel: faces clustered by stance,
+                     hover for the reaction, click for the drawer. Two columns of
+                     full replies was 24 paragraphs on one page; the same room in
+                     faces fits in a glance, and comparing the two columns is
+                     what this pointer is for. -->
+                <div class="pp-clusters">
+                  <div v-for="c in clusterByStance(v.agents)" :key="v.key + c.key" class="pp-cluster">
+                    <div class="pp-cluster-head">
+                      <span class="pp-cluster-name">{{ c.label }}</span>
+                      <span class="pp-cluster-count">{{ c.members.length }}</span>
+                    </div>
+                    <div class="pp-cluster-avatars">
+                      <button
+                        v-for="a in c.members"
+                        :key="v.key + a.id"
+                        class="pp-av-btn"
+                        :class="{ active: popAgentId === a.id }"
+                        :title="a.name"
+                        @mouseenter="showReactionPop(a, $event)"
+                        @mouseleave="scheduleClosePop"
+                        @click="openPersona(a.id)"
+                      >
+                        <img :src="a.avatarUrl" :alt="a.name" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -301,7 +328,7 @@
               v-for="r in roomReplies"
               :key="r.id"
               class="room-reply"
-              @click="openChat(r.agentId)"
+              @click="openPersona(r.agentId)"
             >
               <img :src="r.avatarUrl" :alt="r.name" class="room-reply-avatar" />
               <div class="room-reply-body">
@@ -407,6 +434,87 @@
         </div>
       </section>
     </main>
+
+    <!-- ── Persona side panel — the first thing a click on a person opens ──
+         Who they are, what they said, and the receipt behind it. Chat is a
+         deliberate second step from here, not the default: most of the time the
+         question is "why did she say that", and that is answered without
+         spending a model call. -->
+    <Transition name="persona-slide">
+      <div v-if="personaOpen" class="persona-scrim" @click="closePersona"></div>
+    </Transition>
+    <Transition name="persona-slide">
+      <aside v-if="personaOpen && selectedAgent" class="persona-drawer">
+        <div class="persona-drawer-head">
+          <span class="persona-drawer-title">The person</span>
+          <button class="persona-drawer-close" @click="closePersona">×</button>
+        </div>
+
+        <div class="persona-drawer-body">
+          <div class="persona-id">
+            <img :src="selectedAgent.avatarUrl" :alt="selectedAgent.name" class="persona-id-avatar" />
+            <div class="persona-id-meta">
+              <span class="persona-id-name">{{ selectedAgent.name }}</span>
+              <span class="persona-id-sub">{{ personaSubtitle }}</span>
+            </div>
+          </div>
+          <span v-if="selectedAgent.stance_after" class="persona-stance">
+            {{ stanceLabel(selectedAgent.stance_after) }}
+          </span>
+
+          <div v-if="selectedAgent.currentReaction" class="persona-said">
+            <span class="persona-said-label">What they said</span>
+            <p class="persona-said-text">{{ selectedAgent.currentReaction }}</p>
+          </div>
+
+          <!-- Why they reacted that way. Every line is a stored field with its
+               source named — their story, their real income, their measured
+               views. Not a model explaining itself after the fact. -->
+          <div v-if="receipt" class="receipt">
+            <button class="receipt-toggle" @click="receiptOpen = !receiptOpen">
+              <span class="receipt-label">Why they reacted this way</span>
+              <span class="receipt-caret" :class="{ open: receiptOpen }">&#9662;</span>
+            </button>
+            <div v-if="receiptOpen" class="receipt-rows">
+              <div v-if="receipt.story" class="receipt-row">
+                <span class="receipt-key">Their story</span>
+                <span class="receipt-val">
+                  <p class="receipt-story">{{ receipt.story }}</p>
+                  <span class="receipt-src">Library persona &middot; survey-grounded</span>
+                </span>
+              </div>
+              <div v-if="receipt.income || receipt.tier" class="receipt-row">
+                <span class="receipt-key">Money</span>
+                <span class="receipt-val">
+                  <span class="receipt-line">
+                    <b v-if="receipt.income">{{ receipt.income }}</b>
+                    <span v-if="receipt.tier" class="receipt-band">{{ receipt.tier }}</span>
+                  </span>
+                  <span class="receipt-src">Computed from real household income, never estimated</span>
+                </span>
+              </div>
+              <div v-if="receipt.attitudes.length" class="receipt-row">
+                <span class="receipt-key">On this issue</span>
+                <span class="receipt-val">
+                  <span class="receipt-line">
+                    <span v-for="att in receipt.attitudes" :key="att.topic" class="receipt-band soft">
+                      {{ att.label }}: {{ att.stance }}
+                    </span>
+                  </span>
+                  <span class="receipt-src">Afrobarometer Round 9 South Africa</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="persona-drawer-foot">
+          <button class="persona-chat-btn" @click="chatFromDrawer">
+            Chat with {{ selectedAgent.name.split(' ')[0] }}
+          </button>
+        </div>
+      </aside>
+    </Transition>
   </div>
 </template>
 
@@ -548,7 +656,18 @@ const normalizeAgent = (a) => ({
   stance_after: a.stance || a.stance_after || 'neutral',
   stance_before: a.stance || a.stance_before || 'neutral',
   stance_changed: false,
-  currentReaction: a.currentReaction || ''
+  currentReaction: a.currentReaction || '',
+  // Receipt fields — what was behind the answer. All stored persona data:
+  // the story as written in the library, income/tier computed from real
+  // survey figures, attitudes decoded from Afrobarometer. Nothing here is
+  // generated at display time, so the receipt can't drift from the room.
+  province: a.province || '',
+  occupation: a.occupation || '',
+  background_story: a.background_story || '',
+  monthly_income_rand: a.monthly_income_rand ?? a.monthly_household_income_rand ?? null,
+  income_provenance: a.income_provenance || '',
+  budget_tier: a.budget_tier || '',
+  attitudes: Array.isArray(a.attitudes) ? a.attitudes : []
 })
 
 // ── Stance spectrum definitions ─────────────────────────────────────────────
@@ -595,9 +714,9 @@ const llmSummary = ref('')
 // ── Reaction map: cluster personas into stance columns (deterministic) ───────
 // Buckets follow the STANCES spread (won over → resistant); any stray stance
 // falls into its own column. No LLM, no scoring — holds with the model off.
-const reactionClusters = computed(() => {
+const clusterByStance = (people) => {
   const byStance = {}
-  for (const a of panelReactions.value) {
+  for (const a of people) {
     const key = a.stance_after || 'neutral'
     ;(byStance[key] || (byStance[key] = [])).push(a)
   }
@@ -607,7 +726,9 @@ const reactionClusters = computed(() => {
     ...extra.map(k => ({ key: k, label: stanceLabel(k) })),
   ]
   return ordered.filter(o => byStance[o.key]?.length).map(o => ({ ...o, members: byStance[o.key] }))
-})
+}
+
+const reactionClusters = computed(() => clusterByStance(panelReactions.value))
 
 // Opinion popover: appears on hover (read-only); clicking the avatar opens the
 // interview side panel instead. A short close delay lets the cursor travel from
@@ -616,10 +737,17 @@ const popAgentId = ref(null)
 const popStyle = ref({})
 const popEl = ref(null)
 let _popCloseTimer = null
-const popAgent = computed(() => agents.value.find(a => a.id === popAgentId.value) || null)
+// The hovered person as the CALLER holds them, not as the base roster does. In
+// A/B the same person appears once per version carrying that version's reply —
+// looking them up by id would show whichever round loaded last.
+const popAgentRef = ref(null)
+const popAgent = computed(() =>
+  popAgentId.value === null ? null
+    : (popAgentRef.value || agents.value.find(a => a.id === popAgentId.value) || null))
 const showReactionPop = (a, ev) => {
   if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null }
   popAgentId.value = a.id
+  popAgentRef.value = a
   const rect = ev.currentTarget.getBoundingClientRect()
   const W = 500, GAP = 10, MARGIN = 12
   const container = scrollContainer.value
@@ -655,8 +783,10 @@ const showReactionPop = (a, ev) => {
   })
 }
 const cancelClosePop = () => { if (_popCloseTimer) { clearTimeout(_popCloseTimer); _popCloseTimer = null } }
-const scheduleClosePop = () => { _popCloseTimer = setTimeout(() => { popAgentId.value = null }, 140) }
-const interviewFromAvatar = (a) => { cancelClosePop(); popAgentId.value = null; openChat(a.id) }
+const scheduleClosePop = () => {
+  _popCloseTimer = setTimeout(() => { popAgentId.value = null; popAgentRef.value = null }, 140)
+}
+const interviewFromAvatar = (a) => { cancelClosePop(); popAgentId.value = null; openPersona(a.id) }
 
 // Summary text — a short summary report of where the room sits, grounded in the
 // live roster: the prevailing mood, the actual breakdown, and how many have
@@ -1139,6 +1269,69 @@ const selectedAgentArchetype = computed(() => {
   return a ? a.replace(/_/g, ' ') : ''
 })
 
+// ── The receipt behind one persona's answer ─────────────────────────────────
+// Assembled purely from stored fields. The dimensions shown are the ones a
+// reader can act on; the rest of the fourteen stay out of the way.
+const receiptOpen = ref(false)
+const RECEIPT_ATTITUDES = {
+  environment_priority: 'Environment',
+  government_trust: 'Trust in government',
+  economic_outlook: 'Economic outlook',
+}
+const TIER_LABEL = { tight: 'tight budget', moderate: 'moderate budget', loose: 'more headroom' }
+
+const receipt = computed(() => {
+  const a = selectedAgent.value
+  if (!a) return null
+  const income = a.monthly_income_rand
+    ? `R${Math.round(a.monthly_income_rand).toLocaleString('en-ZA')} / month`
+    : ''
+  const attitudes = (a.attitudes || [])
+    .filter(r => r && RECEIPT_ATTITUDES[r.topic] && r.stance)
+    .map(r => ({ topic: r.topic, label: RECEIPT_ATTITUDES[r.topic], stance: r.stance }))
+  const out = {
+    story: a.background_story || '',
+    income,
+    tier: TIER_LABEL[a.budget_tier] || '',
+    attitudes,
+  }
+  return (out.story || out.income || out.tier || attitudes.length) ? out : null
+})
+
+// Clicking a person opens the drawer first. Chat is a second, deliberate step —
+// reading why they answered that way costs nothing; a follow-up costs a call.
+const personaOpen = ref(false)
+
+const personaSubtitle = computed(() => {
+  const a = selectedAgent.value
+  if (!a) return ''
+  return [a.occupation || (a.archetype || '').replace(/_/g, ' '), a.province]
+    .filter(Boolean).join(' · ')
+})
+
+const openPersona = (agentId) => {
+  chatAgentId.value = agentId
+  // Sim timeline: surface this agent's latest opinion as "what they said", so
+  // the drawer reads the same in both modes.
+  if (!isPanel.value) {
+    const a = agents.value.find(x => x.id === agentId)
+    const last = [...feed.value].reverse().find(f => f.agent_id === agentId)
+    if (a && last) a.currentReaction = last.content
+  }
+  receiptOpen.value = false
+  personaOpen.value = true
+}
+
+const closePersona = () => {
+  personaOpen.value = false
+  if (!showChat.value) chatAgentId.value = null
+}
+
+const chatFromDrawer = () => {
+  personaOpen.value = false
+  openChat(chatAgentId.value)
+}
+
 const openChat = (agentId) => {
   chatAgentId.value = agentId
   // Sim timeline: surface this agent's latest opinion as "their reaction" so the
@@ -1232,7 +1425,11 @@ const broadcast = async () => {
 }
 
 // Escape closes chat
-const onKeydown = (e) => { if (e.key === 'Escape' && showChat.value) closeChat() }
+const onKeydown = (e) => {
+  if (e.key !== 'Escape') return
+  if (personaOpen.value) closePersona()
+  else if (showChat.value) closeChat()
+}
 
 // ── Demo fixtures (preview only) ────────────────────────────────────────────
 const DEMO_AGENTS = [
@@ -1478,6 +1675,120 @@ onUnmounted(() => {
 .chat-agent-reaction-caret { font-size: 11px; color: #9CA3AF; transition: transform 0.15s ease; }
 .chat-agent-reaction-caret.open { transform: rotate(180deg); }
 .chat-agent-reaction-text { margin: 6px 0 0; font-size: 14px; line-height: 1.55; color: #374151; }
+
+/* ── Persona drawer ─ opens from the right on a click, chat is a step on ─ */
+.persona-scrim {
+  position: fixed; inset: 0; background: rgba(51, 49, 46, 0.28);
+  z-index: 90;
+}
+.persona-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 91;
+  width: min(560px, 94vw);
+  display: flex; flex-direction: column;
+  background: #FFFFFF; border-left: 1px solid #E6E4DF;
+  box-shadow: -8px 0 32px rgba(51, 49, 46, 0.12);
+}
+.persona-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid #EFEDE9; flex: none;
+}
+.persona-drawer-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF;
+}
+.persona-drawer-close {
+  border: none; background: none; cursor: pointer;
+  font-size: 22px; line-height: 1; color: #9CA3AF; padding: 0 2px;
+}
+.persona-drawer-close:hover { color: #33312E; }
+.persona-drawer-body {
+  flex: 1; overflow-y: auto; padding: 18px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.persona-id { display: flex; align-items: center; gap: 12px; }
+.persona-id-avatar {
+  width: 46px; height: 46px; border-radius: 999px; flex: none;
+  background: #F3F2EF;
+}
+.persona-id-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.persona-id-name { font-size: 16px; font-weight: 600; color: #33312E; }
+.persona-id-sub { font-size: 12px; color: #9A9791; }
+.persona-stance {
+  align-self: flex-start; font-size: 11px; font-weight: 600;
+  border-radius: 999px; padding: 3px 10px;
+  background: #F3F2EF; color: #5C5954;
+}
+.persona-said { display: flex; flex-direction: column; gap: 5px; }
+.persona-said-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF;
+}
+.persona-said-text { margin: 0; font-size: 14px; line-height: 1.6; color: #374151; }
+.persona-drawer-foot {
+  flex: none; padding: 14px 18px; border-top: 1px solid #EFEDE9; background: #FBFAF8;
+}
+.persona-chat-btn {
+  width: 100%; border: none; border-radius: 999px; cursor: pointer;
+  background: #1E9E5A; color: #FFFFFF;
+  font-family: inherit; font-size: 13px; font-weight: 600; padding: 10px 18px;
+}
+.persona-chat-btn:hover { background: #178048; }
+
+.persona-slide-enter-active, .persona-slide-leave-active { transition: opacity 0.18s ease; }
+.persona-slide-enter-from, .persona-slide-leave-to { opacity: 0; }
+.persona-drawer.persona-slide-enter-active,
+.persona-drawer.persona-slide-leave-active { transition: transform 0.2s ease, opacity 0.18s ease; }
+.persona-drawer.persona-slide-enter-from,
+.persona-drawer.persona-slide-leave-to { transform: translateX(100%); }
+@media (prefers-reduced-motion: reduce) {
+  .persona-slide-enter-active, .persona-slide-leave-active,
+  .persona-drawer.persona-slide-enter-active,
+  .persona-drawer.persona-slide-leave-active { transition: none; }
+}
+
+/* ── Receipt: why this persona reacted this way ───────────────────────────── */
+.receipt {
+  border: 1px solid #E6E4DF; border-left: 3px solid #1E9E5A;
+  border-radius: 10px; background: #FBFAF8; padding: 10px 14px; margin-bottom: 12px;
+}
+.receipt-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; padding: 0; background: none; border: none; cursor: pointer; text-align: left;
+}
+.receipt-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF;
+}
+.receipt-caret { font-size: 11px; color: #9CA3AF; transition: transform 0.15s ease; }
+.receipt-caret.open { transform: rotate(180deg); }
+.receipt-rows { display: flex; flex-direction: column; margin-top: 4px; }
+.receipt-row {
+  display: grid; grid-template-columns: 110px 1fr; gap: 14px;
+  padding: 10px 0; border-top: 1px solid #EFEDE9;
+}
+.receipt-key {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF; padding-top: 3px;
+}
+.receipt-val { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.receipt-story {
+  margin: 0; font-size: 13px; line-height: 1.7; color: #374151;
+  max-width: 62ch; text-wrap: pretty;
+}
+/* The story is a paragraph, not a table cell — it drops the key column and
+   takes the drawer's full measure, with the label sitting above it. */
+.receipt-row.wide { grid-template-columns: 1fr; gap: 6px; }
+.receipt-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: #374151; }
+.receipt-line b { font-variant-numeric: tabular-nums; }
+.receipt-band {
+  font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 9px;
+  background: #EFF8F3; color: #178048;
+}
+.receipt-band.soft { background: #F3F2EF; color: #5C5954; }
+.receipt-src { font-size: 10px; color: #A4A19B; letter-spacing: 0.2px; }
+@media (max-width: 620px) {
+  .receipt-row { grid-template-columns: 1fr; gap: 4px; }
+}
 
 .chat-messages-container { flex: 1; overflow-y: auto; background: #F9F9F9; border-radius: 0; padding: 16px; }
 .chat-messages-list { display: flex; flex-direction: column; gap: 10px; }
@@ -1773,16 +2084,28 @@ onUnmounted(() => {
 
 /* ── ab: two versions of one room, side by side ───────────────────────────── */
 .ab-moved {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  padding: 10px 14px; border: 1px solid #E5E7EB; border-radius: 12px;
-  background: #FBFDFC; margin-bottom: 14px;
+  display: flex; flex-direction: column; gap: 9px;
+  padding: 14px 16px; border: 1px solid #E6E4DF; border-radius: 13px;
+  background: #FFFFFF; margin-bottom: 14px;
 }
+.ab-moved-head { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
 .ab-moved-label {
   font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700;
   color: #9AA0A6; text-transform: uppercase; letter-spacing: 0.4px;
 }
-.ab-moved-item { font-size: 0.78rem; color: #374151; }
-.ab-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ab-moved-n { font-size: 0.75rem; color: #5C5954; font-variant-numeric: tabular-nums; }
+.ab-moved-list { display: flex; flex-wrap: wrap; gap: 8px; }
+/* One pill per person, so a long list wraps into a readable block instead of a
+   run-on line. */
+.ab-moved-item {
+  font-size: 0.75rem; color: #33312E;
+  background: #FBFAF8; border: 1px solid #ECEBE7; border-radius: 999px;
+  padding: 4px 11px;
+}
+/* Stacked, not side by side: a version gets the full width, so its clusters
+   spread the way they do on a normal run instead of being squeezed into half a
+   page. Reading down also matches the order they were actually run in. */
+.ab-columns { display: flex; flex-direction: column; gap: 14px; }
 .ab-column {
   border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px 16px;
   background: #FFF;
@@ -1801,22 +2124,8 @@ onUnmounted(() => {
   border-bottom: 1px dashed #E5E7EB; padding-bottom: 8px; margin-bottom: 8px;
   white-space: pre-wrap;
 }
-.ab-person {
-  display: flex; gap: 9px; padding: 7px 4px; border-radius: 9px; cursor: pointer;
-  transition: background 0.12s;
-}
-.ab-person:hover { background: #F5F8FB; }
-.ab-person-avatar { width: 30px; height: 30px; border-radius: 50%; flex: none; }
-.ab-person-body { min-width: 0; }
-.ab-person-name { font-size: 0.78rem; font-weight: 600; color: #333; }
-.ab-person-stance {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 700;
-  border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: middle;
-}
-.ab-person-text {
-  margin: 3px 0 0; font-size: 0.78rem; line-height: 1.5; color: #4B5563;
-  white-space: pre-wrap;
-}
-
-@media (max-width: 720px) { .ab-columns { grid-template-columns: 1fr; } }
+/* Each version's room renders through the panel's own cluster styles
+   (.pp-clusters / .pp-cluster / .pp-av-btn), so a version reads exactly like a
+   normal run. Only the outer padding differs — the card already has its own. */
+.ab-column .pp-clusters { padding: 4px 0 0; }
 </style>

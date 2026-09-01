@@ -53,9 +53,11 @@ _ORDINAL: Dict[str, int] = {
     "dissatisfied": 0, "mixed": 1, "satisfied": 2,
 }
 
-# The four dimensions every donor carries. education_satisfaction is excluded: it is
-# only populated for the education sub-pool, so scoring it here would compare ladders
-# on a different, smaller population.
+# The scored core dimensions. education_satisfaction and the health dims decode for
+# near-full donor coverage, but they are excluded so this match-quality number stays
+# comparable across library rebuilds — adding dims mid-stream would confound a
+# pre/post-rebuild score change with the rebuild itself. Grow DIMS only in a deliberate
+# follow-up that re-baselines the score.
 DIMS = ["gov_trust", "economic_optimism", "service_satisfaction", "crime_fear"]
 
 _G = ["gender", "province", "education_band", "employment_status"]

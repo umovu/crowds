@@ -45,11 +45,11 @@
           @click="openPanel(p)"
         >{{ (p.pitch || '(no pitch)').slice(0, 46) }}</button>
 
-        <div class="side-recents-head" style="margin-top: 10px">Previous sims</div>
-        <div v-if="simsLoading" class="side-recents-empty">Loading…</div>
-        <div v-else-if="!sims.length" class="side-recents-empty">No previous sims yet.</div>
+        <div v-if="SIM_ENABLED" class="side-recents-head" style="margin-top: 10px">Previous sims</div>
+        <div v-if="SIM_ENABLED && simsLoading" class="side-recents-empty">Loading…</div>
+        <div v-else-if="SIM_ENABLED && !sims.length" class="side-recents-empty">No previous sims yet.</div>
         <button
-          v-for="s in sims"
+          v-for="s in (SIM_ENABLED ? sims : [])"
           :key="s.simulation_id"
           class="flow-recent"
           :title="s.simulation_requirement || 'Untitled simulation'"
@@ -126,23 +126,60 @@
           <template v-else>
             <div class="pp-field-label">Who's in the room?</div>
             <input v-model="crowdSearch" class="crowd-search" type="text" placeholder="Search groups…">
-            <div class="pp-segments">
-              <button
-                v-for="seg in filteredSegments"
-                :key="seg.id"
-                class="pp-segment"
-                :class="{ selected: selectedSegments.includes(seg.id) }"
-                :title="seg.label + ' — ' + seg.description"
-                @click="toggleSegment(seg.id)"
-              >
-                <span class="pp-segment-top">
-                  <span class="pp-segment-label">{{ seg.label }}</span>
-                  <span class="pp-segment-count">{{ seg.count }}</span>
-                </span>
-                <span class="pp-segment-desc">{{ seg.description }}</span>
+            <!-- Grouped by what the ROOM IS FOR, not by what the personas are:
+                 someone arrives with a clinic app or a biodigester and needs to
+                 find their groups. Topics overlap, so a card can appear twice.
+                 The topic matching the pitch opens first. -->
+            <div v-for="fam in groupedSegments" :key="fam.id" class="pp-family">
+              <button class="pp-family-head" @click="toggleTopic(fam.id)">
+                <span class="pp-family-caret" :class="{ open: fam.open }">&#9656;</span>
+                <span class="pp-family-label">{{ fam.label }}</span>
+                <span class="pp-family-desc">{{ fam.description }}</span>
+                <span v-if="fam.id === suggestedTopic" class="pp-family-match">matches your pitch</span>
+                <span class="pp-family-n">{{ fam.segments.length }}</span>
               </button>
+              <div v-if="fam.open" class="pp-segments">
+                <button
+                  v-for="seg in fam.segments"
+                  :key="fam.id + seg.id"
+                  class="pp-segment"
+                  :class="{ selected: selectedSegments.includes(seg.id) }"
+                  :title="seg.label + ' - ' + seg.description"
+                  @click="toggleSegment(seg.id)"
+                >
+                  <span class="pp-segment-top">
+                    <span class="pp-segment-label">{{ seg.label }}</span>
+                    <span class="pp-segment-count">{{ seg.count }}</span>
+                  </span>
+                  <span class="pp-segment-desc">{{ seg.description }}</span>
+                  <!-- The same people sit in several groups, so once something is
+                       picked every other card says how much of it you already
+                       have. Overlap shown, not implied. -->
+                  <span v-if="selectedSegments.includes(seg.id)" class="pp-segment-overlap picked">✓ picked</span>
+                  <span v-else-if="overlapWith(seg)" class="pp-segment-overlap">
+                    {{ overlapWith(seg) }} of your {{ pickedLabel }}
+                  </span>
+                </button>
+              </div>
             </div>
+            <p v-if="!groupedSegments.length" class="pp-fit-note">
+              No groups match "{{ crowdSearch }}".
+            </p>
           </template>
+
+          <!-- Affordability is DERIVED from the price in the pitch, never picked
+               — hand-picking who can pay lets the room be stacked. Shown so the
+               filter is never silent, with one switch to drop it. -->
+          <div v-if="affordability" class="pp-derived">
+            <div class="pp-derived-body">
+              <strong>Filtered to people whose income covers {{ affordabilityAmount }}.</strong>
+              <span class="pp-derived-sub">Read off the price in your pitch. You
+                didn't pick this, and you can switch it off.</span>
+            </div>
+            <button class="pp-derived-off" @click="affordabilityOff = !affordabilityOff">
+              {{ affordabilityOff ? 'Apply it again' : 'Show everyone instead' }}
+            </button>
+          </div>
 
           <div class="pp-control-row">
             <span class="pp-control-label">Panel size</span>
@@ -159,8 +196,13 @@
           </div>
         </div>
         <div class="crowd-modal-foot">
-          <span class="crowd-foot-summary">{{ crowdSummary }} · {{ effectiveSize }} people</span>
-          <button class="crowd-done-btn" @click="applyAudience">Done</button>
+          <span v-if="roomTooThin" class="crowd-foot-warn">
+            Only {{ matchCount }} people match. Drop a filter, or pick a smaller room.
+          </span>
+          <span v-else class="crowd-foot-summary">
+            <template v-if="matchCount !== null"><b>{{ matchCount }}</b> people match · </template>{{ crowdSummary }} · {{ effectiveSize }} in the room
+          </span>
+          <button class="crowd-done-btn" :disabled="roomTooThin" @click="applyAudience">Done</button>
         </div>
       </div>
     </div>
@@ -277,8 +319,14 @@
                     <span>All six buyer groups</span>
                   </button>
 
-                  <!-- Run speed — collapsible dropdown (sim depth/rounds) -->
-                  <div ref="speedDdEl" class="speed-dd">
+                  <!-- "Your context" is written once and reused by every run,
+                       so it lives on the account (ProfileModal → Your context),
+                       not on the prompt bar next to the per-run controls. -->
+
+                  <!-- Run speed — collapsible dropdown (sim depth/rounds).
+                       Hidden while the sim tier is off: depth only means
+                       anything to a simulation, and a panel is one round. -->
+                  <div v-if="SIM_ENABLED" ref="speedDdEl" class="speed-dd">
                     <button class="crowd-btn" @click="speedMenuOpen = !speedMenuOpen">
                       <span class="crowd-btn-icon">⚡</span>
                       <span>{{ currentPreset.label }}</span>
@@ -389,6 +437,7 @@
               <div class="pp-controls">
                 <div class="pp-actions">
                   <button
+                    v-if="SIM_ENABLED"
                     ref="tourSim"
                     class="pp-sim-btn"
                     :disabled="!canSubmit || panelSubmitting"
@@ -417,13 +466,14 @@
       </div>
     </main>
   </div>
+
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
-import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster } from '../../api/panel'
+import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster, previewAffordability } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
@@ -431,6 +481,7 @@ import { useAuth } from '../../composables/useAuth'
 import { useToast } from '../../composables/useToast'
 import ProfileModal from './ProfileModal.vue'
 import LensIcon from './LensIcon.vue'
+import { SIM_ENABLED } from '../../features'
 
 const emit = defineEmits(['submit', 'open'])
 
@@ -535,6 +586,8 @@ const panels = ref([])
 const panelsLoading = ref(false)
 
 const loadSims = async () => {
+  // Sim tier hidden: don't spend a request on a list nothing renders.
+  if (!SIM_ENABLED) return
   simsLoading.value = true
   try { sims.value = (await getSimulationHistory(20)).data || [] }
   catch (e) { console.error('Failed to load previous sims:', e) }
@@ -547,7 +600,8 @@ const loadPanels = async () => {
   finally { panelsLoading.value = false }
 }
 
-const openSim = (s) =>
+const openSim = (s) => {
+  if (!SIM_ENABLED) return
   emit('open', {
     mode: 'sim',
     simulationId: s.simulation_id,
@@ -558,6 +612,7 @@ const openSim = (s) =>
     projectId: s.project_id,
     graphId: s.graph_id,
   })
+}
 const openPanel = (p) =>
   emit('open', { mode: 'panel', sessionId: p.session_id, query: p.pitch || '' })
 
@@ -603,17 +658,6 @@ const LENS_CARDS = [
     'Which version makes it clearer what I am selling?',
     'Why would someone pick A over B?',
   ], exampleA: 'Start investing from R50 a month — no monthly fees.', exampleB: 'R50 puts you in the market. Stop watching from the side.' },
-  { id: 'poster', label: 'Test a poster before you print it', prompts: [
-    'What do people think this poster is offering?',
-    'Does the price on this poster read as cheap or as a catch?',
-    'What would make someone walk past this?',
-  ] },
-  { id: 'website', label: 'Test a page on your website', prompts: [
-    'Does this page work on a cheap phone and slow data?',
-    'What do people think this page offers?',
-    'Do people trust this page enough to put their money in?',
-    'Does my data consent message reassure or scare people off?',
-  ] },
 ]
 
 const lens = ref(null)
@@ -768,6 +812,56 @@ ${question}` : question
 }
 
 // ── Audience picker: the audience chip's editor ────────────────────────────
+// The cards, filed under their families and in the server's family order. A
+// family with nothing left after the search drops out rather than showing an
+// empty heading.
+// Which topic the pitch is about, from the words the operator used. It only
+// OPENS a group - it never picks anyone, so a wrong guess costs one click.
+const TOPIC_WORDS = {
+  health: ['clinic', 'health', 'medicine', 'medical', 'nurse', 'doctor', 'hospital', 'patient', 'pharmacy'],
+  education: ['school', 'learner', 'pupil', 'teacher', 'tutor', 'matric', 'homework', 'classroom', 'fees', 'study'],
+  environment: ['environment', 'waste', 'recycl', 'biodigester', 'compost', 'solar', 'water', 'pollution', 'energy', 'green', 'climate'],
+  food: ['farm', 'crop', 'livestock', 'maize', 'harvest', 'garden', 'food', 'agri'],
+  safety: ['crime', 'safety', 'security', 'theft', 'police', 'alarm'],
+  government: ['municipal', 'government', 'policy', 'sassa', 'department', 'permit', 'licence', 'grant'],
+  money: ['loan', 'savings', 'bank', 'insurance', 'salary', 'price', 'subscription', 'payment'],
+}
+
+const suggestedTopic = computed(() => {
+  const blob = (composedPitch() || '').toLowerCase()
+  if (!blob.trim()) return null
+  let best = null
+  let bestHits = 0
+  for (const [topic, words] of Object.entries(TOPIC_WORDS)) {
+    const hits = words.filter(w => blob.includes(w)).length
+    if (hits > bestHits) { best = topic; bestHits = hits }
+  }
+  return best
+})
+
+// Which topics are expanded. Everything starts collapsed so the picker opens as
+// eight readable rows instead of thirty-three cards.
+const openTopics = ref(new Set())
+const toggleTopic = (id) => {
+  const next = new Set(openTopics.value)
+  if (next.has(id)) next.delete(id)
+  else next.add(id)
+  openTopics.value = next
+}
+
+const groupedSegments = computed(() => {
+  const searching = !!crowdSearch.value.trim()
+  return topics.value
+    .map(fam => ({
+      ...fam,
+      segments: filteredSegments.value.filter(s => (s.topics || []).includes(fam.id)),
+      // A search opens everything it matched; otherwise the pitch's own topic,
+      // plus anything the user opened by hand.
+      open: searching || openTopics.value.has(fam.id) || fam.id === suggestedTopic.value,
+    }))
+    .filter(fam => fam.segments.length)
+})
+
 const filteredSegments = computed(() => {
   const q = crowdSearch.value.trim().toLowerCase()
   if (!q) return segments.value
@@ -782,6 +876,9 @@ function openAudiencePicker() {
   selectedSegments.value = cur.length ? [...cur] : ['everyone']
   crowdSearch.value = ''
   crowdPickerOpen.value = true
+  // Counts and the derived affordability lens are read fresh each open, so the
+  // number in the footer belongs to the pitch that's actually on screen.
+  loadAffordability(composedPitch())
 }
 
 function applyAudience() {
@@ -834,10 +931,9 @@ function tryExample() {
 const tourSteps = computed(() => [
   { el: tourPrompt, title: 'Describe what to test', body: 'Type a policy, an announcement, or a product and its price — the way you’d explain it to a person.' },
   { el: tourCrowd,  title: 'Pick your crowd',       body: 'Choose who’s in the room, or leave the default South African mix.' },
-  { el: speedDdEl,  title: 'Set the depth',         body: 'Panel is the fast read; higher depth runs more rounds for a richer result.' },
+  SIM_ENABLED && { el: speedDdEl, title: 'Set the depth', body: 'Panel is the fast read; higher depth runs more rounds for a richer result.' },
   { el: tourRun,    title: 'Run it',                body: 'Assemble the panel to get each person’s honest reaction — then hover to read, click to interview, and ask the room follow-ups.' },
-  { el: tourSim,    title: 'Go deeper: full simulation', body: 'The panel is one honest read. A full simulation runs a larger crowd over several rounds, so reactions spread and shift — you see how opinion moves, not just first impressions. Slower, and uses a trial run.' },
-])
+].filter(Boolean))
 const currentTourStep = computed(() => tourSteps.value[tourStep.value - 1] || {})
 
 function updateTourRect() {
@@ -1039,6 +1135,90 @@ const crowdSummary = computed(() => {
   return `${sel.length} groups`
 })
 
+// ── Affordability lens ─────────────────────────────────────────
+// Derived from the price in the operator's own pitch, never hand-picked —
+// choosing who can pay is how a room gets stacked. Their only say in it is off.
+const affordability = ref(null)    // {amount, monthly, tiers} or null
+const affordabilityOff = ref(false)
+
+const affordabilityAmount = computed(() => {
+  const a = affordability.value
+  if (!a) return ''
+  const rands = 'R' + Math.round(a.amount).toLocaleString('en-ZA')
+  return a.monthly ? `${rands} a month` : rands
+})
+
+// The real people behind the current picks. /api/panel/segments already ships
+// each group's member ids, so the union is a set operation over data we hold —
+// no extra request, and no re-implementing a predicate on the client.
+const pickedMemberIds = computed(() => {
+  const picked = selectedSegments.value.filter(id => id !== 'everyone')
+  if (!picked.length) return null
+  const byId = new Map(segments.value.map(s => [s.id, s]))
+  const ids = new Set()
+  for (const id of picked) {
+    const seg = byId.get(id)
+    if (!seg || !Array.isArray(seg.members)) return null  // older payload: no counting
+    for (const m of seg.members) ids.add(m)
+  }
+  return ids
+})
+
+// How many real people the picks leave. Segments are alternatives — picking two
+// widens the pool, matching how _mixed_cast fills the seats — but they OVERLAP,
+// so this is the union, not the sum. Adding the counts double-counts anyone in
+// both groups and reports a room bigger than the library can draw.
+const matchCount = computed(() => pickedMemberIds.value?.size ?? null)
+
+// How much of a group you already have, given what's picked. Null when nothing
+// is picked, so an untouched picker stays quiet.
+const overlapWith = (seg) => {
+  const picked = pickedMemberIds.value
+  if (!picked || !Array.isArray(seg.members)) return null
+  let n = 0
+  for (const m of seg.members) if (picked.has(m)) n += 1
+  return n
+}
+
+// "31 parents" / "42 people in 3 groups" — the picked crowd in the user's own
+// words, so the overlap line reads as a sentence.
+const pickedLabel = computed(() => {
+  const picked = selectedSegments.value.filter(id => id !== 'everyone')
+  const total = matchCount.value
+  if (!picked.length || total === null) return ''
+  if (picked.length === 1) {
+    const seg = segments.value.find(s => s.id === picked[0])
+    return `${total} ${(seg?.label || 'people').toLowerCase()}`
+  }
+  return `${total} picked`
+})
+
+const roomTooThin = computed(() =>
+  matchCount.value !== null && matchCount.value < effectiveSize.value)
+
+const loadAffordability = async (pitch) => {
+  if (!pitch) { affordability.value = null; return }
+  try {
+    const res = await previewAffordability(pitch)
+    affordability.value = res.data?.affordability || null
+  } catch (e) {
+    affordability.value = null
+  }
+}
+
+// The topic groups, in the server's order. Seeded so the picker groups
+// sensibly before the fetch lands; the real list replaces this on mount.
+const topics = ref([
+  { id: 'everyone', label: 'Everyone', description: 'The real SA mix, no filter' },
+  { id: 'health', label: 'Health & care', description: 'Clinics, medicine, health products' },
+  { id: 'education', label: 'Schools & learning', description: 'Learners, guardians, fees, teaching' },
+  { id: 'money', label: 'Money & work', description: 'Income, jobs, anything with a price' },
+  { id: 'environment', label: 'Environment & energy', description: 'Waste, water, power, green products' },
+  { id: 'food', label: 'Food & farming', description: 'Growing, selling and buying food' },
+  { id: 'government', label: 'Government & services', description: 'Anything official, or delivered by the state' },
+  { id: 'safety', label: 'Crime & safety', description: 'Security products, policing, safety policy' },
+])
+
 // Real library segments with live counts come from /api/panel/segments on mount.
 // Seeded with a fallback list (ids match backend SEGMENTS) so the picker isn't
 // empty before the fetch resolves or if it fails.
@@ -1062,6 +1242,8 @@ const loadSegments = async () => {
     if (Array.isArray(real) && real.length) {
       segments.value = real.filter(s => s.id === 'everyone' || s.count > 0)
     }
+    const tops = res.data?.topics
+    if (Array.isArray(tops) && tops.length) topics.value = tops
   } catch (e) {
     console.error('Failed to load segments (using fallback):', e)
   }
@@ -1104,6 +1286,11 @@ const submitPanel = async () => {
       const segs = spec.audience.segments || []
       if (segs.length) body.segments = segs
     }
+    // Attitudes now ride in as ordinary segments (the "What they already think"
+    // family), so nothing extra is sent for them. Affordability is derived
+    // server-side from the price in the pitch — "all" is the only value we ever
+    // send, and only when the operator switched it off.
+    if (affordabilityOff.value) body.budget_tiers = 'all'
     const res = await createSession(body)
     const sessionId = res.data?.session_id
     if (!sessionId) throw new Error('No session id returned')
@@ -1152,7 +1339,7 @@ const onSpeedOutside = (e) => {
 // mode toggle — modeIsManual stays false so the backend auto-detects
 // policy/product at /prepare (the detected mode is preserved by the prompt).
 const submitDirectSim = async () => {
-  if (panelSubmitting.value) return
+  if (!SIM_ENABLED || panelSubmitting.value) return
   const spec = await ensureStudy()
   const q = spec ? (spec.what || composedPitch()) : composedPitch()
   if (!q || panelSubmitting.value) return
@@ -1487,7 +1674,12 @@ onUnmounted(() => {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 14px 22px; border-top: 1px solid var(--hairline-soft);
 }
-.crowd-foot-summary { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); }
+.crowd-foot-summary {
+  font-family: var(--font-body); font-size: 0.81rem; color: var(--ink-soft);
+}
+.crowd-foot-summary b {
+  color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums;
+}
 .crowd-done-btn {
   background: var(--accent); color: var(--card); border: none; border-radius: 999px;
   padding: 9px 24px; font-family: var(--font-body);
@@ -1503,13 +1695,54 @@ onUnmounted(() => {
   font-size: 0.72rem; font-weight: 700;
   letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted);
 }
+/* ── Topic rows: eight headings that file thirty-three cards ─────────────────
+   Values match the Crowd Room Screens canvas 1:1 — the rows read as a quiet
+   index, so the cards inside are the only thing with weight. */
+.pp-family { display: flex; flex-direction: column; margin-bottom: 2px; }
+.pp-family-head {
+  display: flex; align-items: baseline; gap: 9px; width: 100%;
+  padding: 9px 2px; border: 0; border-bottom: 1px solid var(--hairline-soft);
+  background: none; cursor: pointer; text-align: left;
+  font-family: var(--font-body);
+}
+.pp-family-head:hover .pp-family-label { color: var(--accent-text); }
+.pp-family-caret {
+  flex: none; font-size: 0.63rem; color: var(--muted);
+  transition: transform 0.15s ease, color 0.15s; align-self: center;
+}
+.pp-family-caret.open { transform: rotate(90deg); color: var(--accent-text); }
+.pp-family-label {
+  font-size: 0.81rem; font-weight: 600; color: var(--ink); white-space: nowrap;
+}
+.pp-family-desc {
+  flex: 1; font-size: 0.69rem; color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pp-family-match {
+  flex: none; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.3px;
+  color: var(--accent-text); background: var(--accent-pill);
+  border-radius: var(--r-pill); padding: 2px 8px;
+}
+.pp-family-n {
+  flex: none; font-size: 0.69rem; color: var(--muted-soft);
+  font-variant-numeric: tabular-nums;
+}
+/* How much of this group the current picks already contain. Pinned to the foot
+   of the card so every card in a row lines up whatever its description length. */
+.pp-segment-overlap {
+  margin-top: auto; align-self: flex-start; padding-top: 2px;
+  font-size: 0.69rem; letter-spacing: 0.2px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pp-segment-overlap.picked { color: var(--accent-text); font-weight: 600; }
+
 .pp-segments {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  grid-auto-rows: 1fr; gap: 10px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  grid-auto-rows: 1fr; gap: 10px; padding: 12px 0 4px;
 }
 .pp-segment {
   display: flex; flex-direction: column; gap: 4px;
-  height: 100%; min-height: 118px;
+  height: 100%; min-height: 104px;
   padding: 12px 14px; border: 1px solid var(--hairline); border-radius: 12px;
   background: var(--card); cursor: pointer; text-align: left;
   transition: border-color 0.15s, background 0.15s;
@@ -1518,17 +1751,19 @@ onUnmounted(() => {
 .pp-segment.selected { border-color: var(--accent); background: var(--accent-pill); }
 .pp-segment-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .pp-segment-label {
-  font-weight: 600; font-size: 0.88rem; color: var(--ink);
+  font-weight: 600; font-size: 0.81rem; color: var(--ink);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+/* Plain figure, not a pill: the count is reference, not a badge competing with
+   the label. It picks up the accent only when the card is picked. */
 .pp-segment-count {
-  font-family: var(--font-body); font-size: 0.7rem; font-weight: 700;
-  color: var(--accent); background: var(--accent-soft);
-  padding: 1px 7px; border-radius: 8px;
+  font-family: var(--font-body); font-size: 0.75rem; color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
+.pp-segment.selected .pp-segment-count { color: var(--accent-text); }
 .pp-segment-desc {
-  font-size: 0.73rem; color: var(--muted); line-height: 1.4;
-  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  font-size: 0.75rem; color: var(--ink-soft); line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
@@ -1551,6 +1786,45 @@ onUnmounted(() => {
 .pp-size-btn:disabled:hover { border-color: var(--hairline); color: var(--muted); }
 .pp-size-btn.active { background: var(--accent); border-color: var(--accent); color: var(--card); }
 .pp-fit-note { margin: 0 0 14px; font-size: 0.78rem; line-height: 1.5; color: var(--ink-soft); }
+
+/* ── Attitude lens chips ──────────────────────────────────────────────────── */
+.pp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.pp-chip {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  border: 1px solid var(--hairline); background: var(--card);
+  border-radius: var(--r-pill); padding: 5px 13px;
+  font-family: var(--font-body); font-size: 0.75rem; color: var(--ink-soft);
+  cursor: pointer;
+}
+.pp-chip:hover { border-color: var(--accent); color: var(--accent-text); }
+.pp-chip.active {
+  border-color: var(--accent); background: var(--accent-pill);
+  color: var(--accent-text); font-weight: 600;
+}
+.pp-chip-count { font-size: 0.68rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pp-chip.active .pp-chip-count { color: var(--accent-text); }
+
+/* ── Derived affordability line (shown, not chosen) ───────────────────────── */
+.pp-derived {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  border: 1px solid var(--hairline); border-left: 3px solid var(--accent);
+  background: var(--card-sunk); border-radius: var(--r-md);
+  padding: 10px 12px; margin-bottom: 14px;
+}
+.pp-derived-body { display: flex; flex-direction: column; gap: 2px; }
+.pp-derived-body strong { font-size: 0.78rem; font-weight: 600; color: var(--ink); }
+.pp-derived-sub { font-size: 0.72rem; color: var(--muted); line-height: 1.45; }
+.pp-derived-off {
+  flex: none; border: 0; background: none; padding: 0;
+  font-family: var(--font-body); font-size: 0.72rem; color: var(--accent-text);
+  text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+
+.crowd-foot-warn { font-family: var(--font-body); font-size: 0.72rem; color: var(--danger); }
+.crowd-done-btn:disabled {
+  background: var(--hairline); color: var(--muted-soft); cursor: not-allowed;
+}
+.crowd-done-btn:disabled:hover { background: var(--hairline); }
 /* Run-speed dropdown — lives in the seed-box bar next to Select crowds */
 .speed-dd { position: relative; }
 .speed-caret { font-size: 0.6rem; color: var(--muted); transition: transform 0.15s; }

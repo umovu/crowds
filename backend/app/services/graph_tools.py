@@ -14,6 +14,7 @@ import json
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
 
+from ..config import Config
 from ..utils.logger import get_logger
 from ..utils.llm_client import LLMClient
 from ..storage import GraphStorage
@@ -1284,8 +1285,8 @@ Return the sub-questions as a JSON list."""
         import csv
 
         sim_dir = os.path.join(
-            os.path.dirname(__file__),
-            f'../../uploads/simulations/{simulation_id}'
+            Config.OASIS_SIMULATION_DATA_DIR,
+            simulation_id
         )
 
         profiles = []

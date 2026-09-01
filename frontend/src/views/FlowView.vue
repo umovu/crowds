@@ -9,6 +9,10 @@
       <FlowBuilding
         v-if="state === 'building'"
         :query="query"
+        :initial-project-id="buildProjectId"
+        :initial-graph-id="buildGraphId"
+        :initial-simulation-id="buildSimulationId"
+        @created="onBuildCreated"
         @view-reactions="goResults"
         @back="goBack"
       />
@@ -33,6 +37,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import FlowHome from '../components/flow/FlowHome.vue'
 import FlowBuilding from '../components/flow/FlowBuilding.vue'
 import FlowResults from '../components/flow/FlowResults.vue'
+import { SIM_ENABLED } from '../features'
 
 // One app shell, one state machine. `state` is the only thing that changes.
 const state = ref('home')       // 'home' | 'building' | 'results'
@@ -50,8 +55,20 @@ const FLOW_VIEW_KEY = 'flow.activeView'
 const simulationId = ref(null)
 const sessionId = ref(null)
 
+// Handles for an in-progress build. FlowBuilding hands them up as soon as the
+// sim is created (not just at completion) and they are persisted to localStorage
+// so a refresh — or re-opening a half-built sim from the sidebar — lands back in
+// the build box on the same sim instead of losing it.
+const buildProjectId = ref(null)
+const buildGraphId = ref(null)
+const buildSimulationId = ref(null)
+
 // ── Real flow ───────────────────────────────────────────────────────────────
 const onSubmit = (payload) => {
+  // Sim tier hidden: the home screen offers no sim entry point, so anything
+  // still asking for one is stale state — ignore it rather than open a build
+  // box the user can't get back to.
+  if (payload.mode === 'sim' && !SIM_ENABLED) return
   query.value = payload.query
   mode.value = payload.mode
   if (payload.mode === 'panel') {
@@ -61,8 +78,19 @@ const onSubmit = (payload) => {
     state.value = 'results'
   } else {
     simulationId.value = null
+    buildProjectId.value = null
+    buildGraphId.value = null
+    buildSimulationId.value = null
     state.value = 'building'
   }
+}
+
+// FlowBuilding emits `created` the moment createSimulation returns, so the
+// build is restorable even if it never finishes.
+const onBuildCreated = ({ simulationId: simId, projectId: projId, graphId: gId }) => {
+  buildProjectId.value = projId || null
+  buildGraphId.value = gId || null
+  buildSimulationId.value = simId || null
 }
 
 // The build overlay hands back the live simulation id once the pipeline has
@@ -102,9 +130,9 @@ const onPopState = () => {
   }
   if (overlayDepth > 0) overlayDepth--
 }
-// Persist the open results view (panel/sim) so a refresh restores it; clear it
-// once collapsed back home so a refresh at home stays at home.
-watch([state, sessionId, simulationId, query, mode], () => {
+// Persist the open view (results view or in-progress build) so a refresh
+// restores it; clear it once collapsed back home so a refresh at home stays home.
+watch([state, sessionId, simulationId, query, mode, buildProjectId, buildGraphId, buildSimulationId], () => {
   if (state.value === 'results' && (sessionId.value || simulationId.value)) {
     localStorage.setItem(FLOW_VIEW_KEY, JSON.stringify({
       mode: mode.value,
@@ -112,6 +140,19 @@ watch([state, sessionId, simulationId, query, mode], () => {
       sessionId: sessionId.value,
       simulationId: simulationId.value,
     }))
+  } else if (state.value === 'building') {
+    // Persist the in-progress build under a state marker so a refresh lands back
+    // in the build box on the same sim (resumed), not at results.
+    if (buildSimulationId.value || buildProjectId.value) {
+      localStorage.setItem(FLOW_VIEW_KEY, JSON.stringify({
+        state: 'building',
+        mode: 'sim',
+        query: query.value,
+        projectId: buildProjectId.value,
+        graphId: buildGraphId.value,
+        simulationId: buildSimulationId.value,
+      }))
+    }
   } else if (state.value === 'home') {
     localStorage.removeItem(FLOW_VIEW_KEY)
   }
@@ -119,10 +160,23 @@ watch([state, sessionId, simulationId, query, mode], () => {
 
 onMounted(() => {
   window.addEventListener('popstate', onPopState)
-  // Restore the last open results view after a refresh.
+  // Restore the last open view after a refresh.
   try {
     const saved = JSON.parse(localStorage.getItem(FLOW_VIEW_KEY) || 'null')
-    if (saved && (saved.sessionId || saved.simulationId)) {
+    // A sim saved before the tier was hidden must not reopen — drop it so a
+    // refresh lands on home instead of a view with no way back into it.
+    if (saved && saved.mode !== 'panel' && !SIM_ENABLED) {
+      localStorage.removeItem(FLOW_VIEW_KEY)
+    } else if (saved && saved.state === 'building') {
+      // Restore the in-progress build and resume it from where it stopped.
+      query.value = saved.query || ''
+      mode.value = 'sim'
+      sessionId.value = null
+      buildProjectId.value = saved.projectId || null
+      buildGraphId.value = saved.graphId || null
+      buildSimulationId.value = saved.simulationId || null
+      state.value = 'building'
+    } else if (saved && (saved.sessionId || saved.simulationId)) {
       query.value = saved.query || ''
       mode.value = saved.mode || 'sim'
       sessionId.value = saved.sessionId || null
@@ -133,19 +187,32 @@ onMounted(() => {
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
-// Revisit a saved sim/panel from the sidebar — straight to results, no rebuild
-// (sim) and no re-pitch (panel; FlowResults loads the saved round).
+// Revisit a saved sim/panel from the sidebar. A sim that never actually ran must
+// not open a blank results room — route half-built sims back into the build box
+// (and resume), never into a silent empty room.
 const onOpen = (payload) => {
+  if (payload.mode === 'sim' && !SIM_ENABLED) return
   query.value = payload.query || ''
   mode.value = payload.mode
   if (payload.mode === 'panel') {
     sessionId.value = payload.sessionId || null
     simulationId.value = null
-  } else {
-    simulationId.value = payload.simulationId || null
-    sessionId.value = null
+    state.value = 'results'
+    return
   }
-  state.value = 'results'
+  simulationId.value = payload.simulationId || null
+  sessionId.value = null
+  const status = payload.status || ''
+  // These statuses mean the sim actually ran and has a room to show. Anything
+  // else (created/preparing/ready/failed) is a half-built sim: resume the build.
+  if (['running', 'paused', 'stopped', 'completed'].includes(status)) {
+    state.value = 'results'
+  } else {
+    buildProjectId.value = payload.projectId || null
+    buildGraphId.value = payload.graphId || null
+    buildSimulationId.value = payload.simulationId || null
+    state.value = 'building'
+  }
 }
 </script>
 

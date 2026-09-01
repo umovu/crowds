@@ -93,6 +93,12 @@ FROZEN_FIELDS = [
     "ghs_role", "edu_institution", "current_grade", "fees_band",
     "time_to_school", "guardian_type", "learners_in_household",
     "learner_fee_bands", "guards_grandchildren", "occupation_provenance",
+    # GHS health-build facts (absent where unasked — None is skipped). REAL reported
+    # health circumstances the texture must write around, never contradict.
+    "medical_aid", "self_rated_health", "has_disability",
+    "usual_health_facility", "health_facility_sector",
+    "transport_to_health_facility", "time_to_health_facility",
+    "health_provenance",
     # Farmer-role facts (absent on non-farmer personas — None is skipped).
     "farm_market_orientation", "farm_products", "source_survey",
 ]
@@ -138,6 +144,17 @@ _STANCE_GLOSS = {
         "dissatisfied": "feels the education system is failing their community's children",
         "mixed": "sees both real effort and real failure in how local schools are run",
         "satisfied": "feels schools and education services are broadly doing their job",
+    },
+    # Health dimensions (Afrobarometer Q46G handling / Q37O_SAF trust).
+    "health_service_satisfaction": {
+        "dissatisfied": "feels public health services are failing people like them",
+        "mixed": "sees public health care as patchy — some clinics deliver, some don't",
+        "satisfied": "feels public health services broadly do their job",
+    },
+    "health_authority_trust": {
+        "low": "does not trust the health department to look after patients",
+        "mid": "is unsure whether the health department can be trusted",
+        "high": "trusts the health department to do its job",
     },
     # Policy-mode dimensions (added with the WP2 attitude expansion).
     "councillor_responsiveness": {
@@ -188,6 +205,12 @@ _CIRCUMSTANCE_GLOSS = {
         "low": "has occasionally gone without a basic necessity this year",
         "moderate": "has several times gone without food, water, or cash this year",
         "high": "frequently goes without basic necessities like food, water, or cash",
+    },
+    "went_without_care": {
+        "never": "has not gone without needed medical care this year",
+        "rarely": "has gone without needed medical care once or twice this year",
+        "sometimes": "has several times gone without needed medical care this year",
+        "often": "often goes without needed medical care because of cost, distance, or queues",
     },
     "owns_vehicle": {
         "none": "has no car or vehicle in the household",
@@ -277,8 +300,11 @@ keep them annual — never restate a fee band as a monthly figure.
 Produce a JSON object with ONLY these fields:
 - persona: 1-2 sentences on who they are and their situation. Reference a real local
   setting consistent with the province. English only.
-- background_story: ~120 words of life history consistent with the fixed facts
-  (their work, household, pressures). Specific, not generic. English only.
+- background_story: ONE tight paragraph, 45-60 words, in FIRST PERSON ("I ..."), of life
+  history consistent with the fixed facts. Pick the two or three facts that most shape
+  this person's life and write those; do NOT inventory every fact you were given. No
+  list of possessions, no sentence that only restates a survey field. Specific, not
+  generic. English only.
 - voice_guide: 2-3 sentences on HOW they speak IN ENGLISH — vocabulary, formality,
   what they reference (money in rands, load-shedding, transport, work), tone, and
   what they would never say. Their tone must be consistent with the measured attitudes

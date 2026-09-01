@@ -47,6 +47,13 @@ ATTITUDE_VOCAB: Dict[str, List[str]] = {
     "service_satisfaction": ["dissatisfied", "mixed", "satisfied"],
     "crime_fear": ["low", "mid", "high"],
     "education_satisfaction": ["dissatisfied", "mixed", "satisfied"],
+    # ── health ────────────────────────────────────────────────────────────────
+    # Government handling of basic health services (Q46G), 1..4. Single item by
+    # design, same rule as education_satisfaction: Q61C measures satisfaction with
+    # resourcing on a different 0..3 scale, so averaging the two would mix scales.
+    "health_service_satisfaction": ["dissatisfied", "mixed", "satisfied"],
+    # Trust in the department of health (Q37O_SAF), 0..3 — same battery as gov_trust.
+    "health_authority_trust": ["low", "mid", "high"],
     # ── policy-mode ────────────────────────────────────────────────────────────
     # Political efficacy: does engaging with the state achieve anything. Predicts
     # whether a persona petitions, protests, or disengages — the mechanism policy
@@ -65,6 +72,12 @@ ATTITUDE_VOCAB: Dict[str, List[str]] = {
     "business_trust": ["low", "mid", "high"],
     # Governs whether word-of-mouth / referral adoption is plausible for a segment.
     "social_trust": ["low", "mid", "high"],
+    # How present environmental harm already is in this person's life — awareness,
+    # local salience, and whether they see it as something ordinary people act on.
+    # Deliberately "priority", not "consciousness": it measures how near the issue
+    # sits, never how virtuous anyone is. Governs whether a green pitch can lead on
+    # the environmental benefit at all, or has to lead on money.
+    "environment_priority": ["low", "mid", "high"],
 }
 
 # Material circumstances the donor also reports. Deliberately NOT part of ATTITUDE_VOCAB:
@@ -78,6 +91,11 @@ ATTITUDE_VOCAB: Dict[str, List[str]] = {
 CIRCUMSTANCE_VOCAB: Dict[str, List[str]] = {
     # Afrobarometer Lived Poverty Index: mean of the five Q6 "gone without" items.
     "lived_poverty": ["none", "low", "moderate", "high"],
+    # Gone without medical care (Q6C), 0 never … 4 always. A FACT about access to
+    # care, deliberately not an attitude: it rides the same donor vector as
+    # lived_poverty (which averages it with the other four Q6 items), so a persona's
+    # deprivation and its healthcare-specific slice stay coherent.
+    "went_without_care": ["never", "rarely", "sometimes", "often"],
     "owns_vehicle": ["none", "household", "own"],
     "owns_computer": ["none", "household", "own"],
     "owns_bank_account": ["none", "household", "own"],
@@ -419,6 +437,58 @@ _AB_HANDLING = {1.0: "dissatisfied", 2.0: "mixed", 3.0: "satisfied", 4.0: "satis
 # South Africans). 3 = "neither" is the genuine middle.
 _AB_AGREE_PAY = {1.0: "no", 2.0: "no", 3.0: "mixed", 4.0: "yes", 5.0: "yes"}
 _AB_AGREE_3 = {1.0: "low", 2.0: "low", 3.0: "mid", 4.0: "high", 5.0: "high"}
+# Q6c gone without medical care: 0 never … 4 always. "Many times" and "always" both
+# read as "often" so the field stays 4 bands wide like the rest of CIRCUMSTANCE_VOCAB.
+_AB_WENT_WITHOUT_CARE = {
+    0.0: "never", 1.0: "rarely", 2.0: "sometimes", 3.0: "often", 4.0: "often",
+}
+
+
+# ── environment_priority ────────────────────────────────────────────────────
+# Three items, three different scales, so they are normalised to 0..1 each and
+# averaged rather than fed to _ab_mean (which assumes one shared scale).
+#
+#   Q67A  heard about climate change      — awareness
+#   Q72A  pollution a problem here        — local salience (INVERTED: 1 = very serious)
+#   Q72D  who is primarily responsible    — personal agency (citizens = yes)
+#
+# Q68A/Q69/Q70A/Q70B are deliberately EXCLUDED: they were only put to respondents
+# who had heard of climate change (916 "not applicable"), so a scale using them
+# would be built over the already-aware — precisely the group this dimension
+# exists to distinguish from everyone else.
+#
+# Q72E ("should government do more about pollution") is excluded too: 1097 of
+# ~1200 answered "more". A near-unanimous item carries almost no information and
+# flattened the banding to 136/514/868 in testing. Without it: 238/596/699.
+_AB_ENV_HEARD = {0.0: 0.0, 1.0: 1.0}
+_AB_ENV_POLLUTION = {1.0: 1.0, 2.0: 2 / 3, 3.0: 1 / 3, 4.0: 0.0}
+# Q72D is a "who" question, not a scale: only "ordinary citizens" signals that the
+# respondent sees this as something people themselves act on. Every other named
+# actor (business, government, traditional leaders) reads as someone else's job.
+_AB_ENV_AGENCY = {
+    0.0: 0.0, 1.0: 1.0, 2.0: 0.0, 3.0: 0.0, 4.0: 0.0, 5.0: 0.0, 6.0: 0.0,
+}
+
+
+def _ab_environment_priority(row) -> Optional[str]:
+    """Band one respondent's environmental priority. Needs 2 of the 3 items —
+    one lone answer is too thin to call, and the fuser fills a None from the
+    population mode and flags it rather than guessing here."""
+    parts = []
+    for col, table in (("Q67A", _AB_ENV_HEARD),
+                       ("Q72A", _AB_ENV_POLLUTION),
+                       ("Q72D", _AB_ENV_AGENCY)):
+        v = row.get(col)
+        if v is None or v != v or v in _AB_MISSING:
+            continue
+        mapped = table.get(float(v))
+        if mapped is not None:
+            parts.append(mapped)
+    if len(parts) < 2:
+        return None
+    # Equal thirds of [0, 1] — the same banding rule every other dimension uses
+    # via _ab_band_3, so this one stays directly comparable to them.
+    return _ab_band_3(sum(parts) / len(parts), 0.0, 1.0)
 
 
 def _decode_ab_circumstances(row) -> Dict[str, str]:
@@ -442,6 +512,10 @@ def _decode_ab_circumstances(row) -> Dict[str, str]:
             out["lived_poverty"] = "moderate"
         else:
             out["lived_poverty"] = "high"
+
+    woc = _ab_code(row, "Q6C", _AB_WENT_WITHOUT_CARE)
+    if woc:
+        out["went_without_care"] = woc
 
     for field, col in (("owns_vehicle", "Q90C"), ("owns_computer", "Q90D"),
                        ("owns_bank_account", "Q90E"), ("owns_television", "Q90B")):
@@ -472,7 +546,7 @@ def _decode_ab_circumstances(row) -> Dict[str, str]:
 
 def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
     """Decode one Afrobarometer row into the ATTITUDE_VOCAB dict. Returns None if the
-    respondent lacks usable answers across all four dimensions (a donor with no attitude
+    respondent lacks usable answers across every dimension (a donor with no attitude
     is no donor)."""
     # gov_trust: trust in president (Q37A) + local council (Q37D), scale 0..3.
     trust = _ab_band_3(_ab_mean(row, ["Q37A", "Q37D"]), 0.0, 3.0)
@@ -489,6 +563,14 @@ def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
     # different 0..3 scale and Q40B/Q40D are experience, not evaluation. 1542/1580 usable.
     edu = _ab_band_3(_ab_mean(row, ["Q46H"]), 1.0, 4.0,
                      labels=("dissatisfied", "mixed", "satisfied"))
+    # health_service_satisfaction: government handling of basic health services
+    # (Q46G), 1..4 — same battery/scale as education_satisfaction. Single item by the
+    # same rule: Q61C is a different construct on a 0..3 scale, so it stays out.
+    health_svc = _ab_band_3(_ab_mean(row, ["Q46G"]), 1.0, 4.0,
+                            labels=("dissatisfied", "mixed", "satisfied"))
+    # health_authority_trust: trust in the department of health (Q37O_SAF), 0..3 —
+    # same battery as gov_trust.
+    health_trust = _ab_band_3(_ab_mean(row, ["Q37O_SAF"]), 0.0, 3.0)
 
     out = {}
     if trust: out["gov_trust"] = trust
@@ -496,6 +578,8 @@ def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
     if svc:   out["service_satisfaction"] = svc
     if crime: out["crime_fear"] = crime
     if edu:   out["education_satisfaction"] = edu
+    if health_svc:   out["health_service_satisfaction"] = health_svc
+    if health_trust: out["health_authority_trust"] = health_trust
 
     # Policy-mode and product-mode dimensions. Decoded by explicit code table (see the
     # tables above) because several carry out-of-scale codes a banded mean would absorb.
@@ -511,6 +595,12 @@ def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
         value = _ab_code(row, col, table)
         if value:
             out[dim] = value
+
+    # environment_priority: three items on three scales, normalised and averaged
+    # in its own decoder rather than through _ab_code / _ab_mean.
+    env = _ab_environment_priority(row)
+    if env:
+        out["environment_priority"] = env
     return out or None
 
 
