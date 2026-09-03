@@ -316,6 +316,26 @@ SEGMENTS = {
 
 }
 
+# Which measured dimension each kind=="thinks" segment reads, and the stance it
+# accepts. Held beside SEGMENTS rather than inside the lambdas so a picked
+# attitude group can be turned back into the {dim: stances} shape the
+# intersection filter already speaks (see create_session). A test asserts every
+# "thinks" segment appears here and that the pair reproduces its own predicate,
+# so the two can never drift apart.
+ATTITUDE_SEGMENT_DIMS: Dict[str, Tuple[str, str]] = {
+    "green_already": ("environment_priority", "high"),
+    "green_blind_spot": ("environment_priority", "low"),
+    "pays_for_quality": ("pays_for_quality", "yes"),
+    "price_first": ("pays_for_quality", "no"),
+    "health_trusting": ("health_authority_trust", "high"),
+    "clinic_frustrated": ("health_service_satisfaction", "dissatisfied"),
+    "school_frustrated": ("education_satisfaction", "dissatisfied"),
+    "distrusts_government": ("gov_trust", "low"),
+    "service_frustrated": ("service_satisfaction", "dissatisfied"),
+    "pessimistic": ("economic_optimism", "pessimistic"),
+    "crime_worried": ("crime_fear", "high"),
+}
+
 _LOW_FEE_CEILING = 4000  # R/yr — see segment comments above
 
 
@@ -433,6 +453,10 @@ def list_segments() -> List[Dict[str, Any]]:
             # it describes who they ARE or what they already THINK.
             "topics": list(seg.get("topics") or ["money"]),
             "kind": seg.get("kind", "who"),
+            # For "thinks" cards: which measured dimension it reads. The picker
+            # needs it to count two picks on the SAME dimension as "either"
+            # rather than stacking them into an empty room.
+            "attitude_dim": (ATTITUDE_SEGMENT_DIMS.get(seg_id) or (None,))[0],
             "count": len(members),
             "members": members,
         })
@@ -874,6 +898,31 @@ def create_session(
     if "everyone" in seg_list and len(seg_list) > 1:
         raise ValueError("'everyone' is already the full mix — pick it alone or pick specific groups")
 
+    # "Guardians" AND "will pay more for better" is one room of 17, not 6 parents
+    # plus 6 unrelated quality-payers. Segments of kind "who" allocate seats
+    # (a union, via _mixed_cast); segments of kind "thinks" NARROW whoever is in
+    # those seats. Picking both used to union them, which quietly answered a
+    # different question than the one asked — and is what put a R100/month
+    # parent product in front of a representative national room.
+    #
+    # A "thinks" pick is folded into the `attitudes` intersection below rather
+    # than reimplemented: same {dim: stances} shape, same filter, one code path.
+    # Same dimension picked twice reads as OR ("high or low"); different
+    # dimensions read as AND — matching _persona_matches_attitudes exactly.
+    picked_seg_list = list(seg_list)  # what the operator actually clicked
+    who_segments = [s for s in seg_list if SEGMENTS[s]["kind"] != "thinks"]
+    thinks_segments = [s for s in seg_list if SEGMENTS[s]["kind"] == "thinks"]
+    if who_segments and thinks_segments:
+        folded: Dict[str, List[str]] = {}
+        for s in thinks_segments:
+            dim, stance = ATTITUDE_SEGMENT_DIMS[s]
+            folded.setdefault(dim, []).append(stance)
+        merged = dict(attitudes or {})
+        for dim, stances in folded.items():
+            merged[dim] = list(dict.fromkeys(list(merged.get(dim, [])) + stances))
+        attitudes = merged
+        seg_list = who_segments
+
     n = max(1, min(int(n or DEFAULT_CAST_SIZE), MAX_CAST_SIZE))
     if seed is None:
         seed = int(time.time()) % 1_000_000
@@ -972,7 +1021,11 @@ def create_session(
         "mode": mode,
         "segments": seg_list,
         "segment": seg_list[0],  # back-compat for single-group consumers
-        "segment_label": " + ".join(SEGMENTS[s]["label"] for s in seg_list),
+        # Everything clicked, including any "thinks" group folded into the
+        # attitude filter above — the label must name the room the operator
+        # asked for, not the seat-allocating half of it.
+        "picked_segments": picked_seg_list,
+        "segment_label": " + ".join(SEGMENTS[s]["label"] for s in picked_seg_list),
         "segment_allocation": {SEGMENTS[s]["label"]: c for s, c in allocation.items() if c},
         "cast_size": len(profiles),
         "requested_size": n,

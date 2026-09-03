@@ -168,6 +168,22 @@
             </p>
           </template>
 
+          <!-- Picking a "what they think" group alongside a "who" group NARROWS
+               the room rather than widening it. Said out loud, with the number,
+               because the two combine differently and a silent intersection is
+               how someone ends up paying for a three-person room. -->
+          <div v-if="narrowedBy" class="pp-derived">
+            <div class="pp-derived-body">
+              <strong>{{ narrowedBy }}</strong>
+              <span class="pp-derived-sub">
+                This narrows the room to <b>{{ matchCount }}</b> people.
+                <template v-if="matchCount !== null && matchCount < 20">
+                  Small group — read it as a focus group, not a survey.
+                </template>
+              </span>
+            </div>
+          </div>
+
           <!-- Affordability is DERIVED from the price in the pitch, never picked
                — hand-picking who can pay lets the room be stacked. Shown so the
                filter is never silent, with one switch to drop it. -->
@@ -1181,17 +1197,46 @@ const affordabilityAmount = computed(() => {
 })
 
 // The real people behind the current picks. /api/panel/segments already ships
-// each group's member ids, so the union is a set operation over data we hold —
-// no extra request, and no re-implementing a predicate on the client.
+// each group's member ids, so this is a set operation over data we hold — no
+// extra request, and no re-implementing a predicate on the client.
+//
+// The two kinds of group combine differently, and must match what
+// panel_service.create_session does with them:
+//   "who"    groups ALLOCATE seats — union (a room of parents AND traders)
+//   "thinks" groups NARROW whoever is in those seats — intersection
+// So "Guardians" + "will pay more for better" is 18 people, not 227. Counting
+// it as a union showed a room ten times bigger than the one that would be
+// drawn, which is how a R100/month parent product ended up in a national room.
 const pickedMemberIds = computed(() => {
   const picked = selectedSegments.value.filter(id => id !== 'everyone')
   if (!picked.length) return null
   const byId = new Map(segments.value.map(s => [s.id, s]))
-  const ids = new Set()
-  for (const id of picked) {
-    const seg = byId.get(id)
-    if (!seg || !Array.isArray(seg.members)) return null  // older payload: no counting
+  const rows = picked.map(id => byId.get(id))
+  if (rows.some(s => !s || !Array.isArray(s.members))) return null  // older payload: no counting
+
+  const who = rows.filter(s => s.kind !== 'thinks')
+  const thinks = rows.filter(s => s.kind === 'thinks')
+
+  // Seats first: the union of the "who" groups, or everyone the attitudes
+  // leave when the operator picked attitudes alone (then they ARE the room).
+  let ids = new Set()
+  for (const seg of (who.length ? who : thinks.slice(0, 1))) {
     for (const m of seg.members) ids.add(m)
+  }
+  if (!who.length) return ids
+
+  // Then narrow. Same dimension picked twice widens (OR); different dimensions
+  // stack (AND) — the same rule _persona_matches_attitudes applies server-side.
+  if (thinks.length) {
+    const byDim = new Map()
+    for (const seg of thinks) {
+      const dim = seg.attitude_dim || seg.id  // ungrouped falls back to its own id
+      if (!byDim.has(dim)) byDim.set(dim, new Set())
+      for (const m of seg.members) byDim.get(dim).add(m)
+    }
+    for (const allowed of byDim.values()) {
+      ids = new Set([...ids].filter(m => allowed.has(m)))
+    }
   }
   return ids
 })
@@ -1227,6 +1272,19 @@ const pickedLabel = computed(() => {
 
 const roomTooThin = computed(() =>
   matchCount.value !== null && matchCount.value < effectiveSize.value)
+
+// "Parents & guardians, but only those who will pay more for better" — the
+// narrowing spelled out, so an intersection is never silent.
+const narrowedBy = computed(() => {
+  const byId = new Map(segments.value.map(s => [s.id, s]))
+  const rows = selectedSegments.value.filter(id => id !== 'everyone').map(id => byId.get(id))
+  const who = rows.filter(s => s && s.kind !== 'thinks')
+  const thinks = rows.filter(s => s && s.kind === 'thinks')
+  if (!who.length || !thinks.length) return ''
+  const whoLabel = who.map(s => s.label).join(' + ')
+  const thinkLabel = thinks.map(s => s.label.toLowerCase()).join(', or ')
+  return `${whoLabel}, but only those who ${thinkLabel}.`
+})
 
 const loadAffordability = async (pitch) => {
   if (!pitch) { affordability.value = null; return }
