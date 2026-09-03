@@ -119,7 +119,7 @@ SEGMENTS = {
         "topics": ['money'],
         "kind": "who",
         "label": "Salaried professionals",
-        "description": "Salaried professionals and managers — likely paying customers",
+        "description": "Salaried professionals and managers — moderate budgets in this sample, not proven high spend",
         "predicate": lambda p: p.get("actor_archetype") == "urban_professional",
     },
     "employed": {
@@ -506,21 +506,22 @@ def list_segments() -> List[Dict[str, Any]]:
     for seg_id, seg in SEGMENTS.items():
         pred = seg["predicate"]
         members = [p.get("id") for p in personas if pred is None or pred(p)]
-        members = [m for m in members if m]  # drop personas missing a stable id
+        members = [m for m in members if m]
+        count = len(members)
+        if count == 0:
+            continue
+        is_thin = 5 <= count <= 8
         out.append({
             "id": seg_id,
             "label": seg["label"],
             "description": seg["description"],
-            # Which topic groups the picker files this card under, and whether
-            # it describes who they ARE or what they already THINK.
             "topics": list(seg.get("topics") or ["money"]),
             "kind": seg.get("kind", "who"),
-            # For "thinks" cards: which measured dimension it reads. The picker
-            # needs it to count two picks on the SAME dimension as "either"
-            # rather than stacking them into an empty room.
             "attitude_dim": (ATTITUDE_SEGMENT_DIMS.get(seg_id) or (None,))[0],
-            "count": len(members),
+            "count": count,
             "members": members,
+            "is_thin": is_thin,
+            "note": "Small group — read as directional, like a focus group" if is_thin else "",
         })
     return out
 
@@ -1317,17 +1318,27 @@ def rank_by_segment(session_id: str, meta: Dict[str, Any],
                 "response": r.get("response"),
             } for r in members],
         })
-    # Rank deterministically: support desc, then fewer oppose/concerned, then
-    # label asc (stable sort keeps the label tie-break in order). Rows with no
-    # members at all carry no signal, so they always sink to the bottom in
-    # label order rather than ranking by an empty stance dict.
+    def _mean_impulse(seg: Dict[str, Any]) -> float:
+        mems = [m for m in groups[seg["segment_id"]] if m]
+        if not mems:
+            return -1.0
+        vals = []
+        for r in mems:
+            imp = r.get("impulse")
+            if imp is None:
+                econ = r.get("economic") or {}
+                imp = econ.get("impulse") if isinstance(econ, dict) else None
+            try:
+                vals.append(float(imp) if imp is not None else 0.5)
+            except (TypeError, ValueError):
+                vals.append(0.5)
+        return sum(vals) / len(vals) if vals else 0.5
+
     empty = [e for e in out if not e["members"]]
     empty.sort(key=lambda s: s["label"].lower())
     ranked = [e for e in out if e["members"]]
     ranked.sort(key=lambda s: s["label"].lower())
-    ranked.sort(key=lambda s: (s["stance_split"].get("support", 0),
-                               -s["stance_split"].get("oppose", 0),
-                               -s["stance_split"].get("concerned", 0)),
+    ranked.sort(key=lambda s: (_mean_impulse(s), -s["stance_split"].get("oppose", 0)),
                 reverse=True)
     return ranked + empty
 
