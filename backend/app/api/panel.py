@@ -8,6 +8,7 @@ No simulation build pipeline involved.
 """
 
 import asyncio
+import time
 import traceback
 import uuid
 
@@ -20,6 +21,7 @@ from ..services import panel_service
 from ..services import mode_detector
 from ..services import poster_service
 from ..services import pointers
+from ..services import run_events
 from ..services import study_reader
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger
@@ -59,8 +61,12 @@ def suggest_segments():
     no LLM. Returns {"suggested": ["farmers"]} — empty list when no match."""
     try:
         pitch = request.args.get('pitch', '')
-        return jsonify({"success": True,
-                        "data": {"suggested": panel_service.suggest_segments(pitch)}})
+        return jsonify({"success": True, "data": {
+            "suggested": panel_service.suggest_segments(pitch),
+            # Attitude groups worth offering as a narrowing on top of those —
+            # a different question ("who cares enough"), so a separate field.
+            "narrowing": panel_service.suggest_narrowing(pitch),
+        }})
     except Exception as e:
         logger.error(f"Segment suggestion failed: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
@@ -345,6 +351,14 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
     paths here would drift, and the whole point of the compare strip is that the
     rooms are comparable.
     """
+    started = time.time()
+    run_events.record_start(
+        run_id=session_id,
+        user_id=billing.current_user_id(),
+        run_type="panel",
+        mode=meta.get("mode"),
+        crowd_size=len(agent_ids) if agent_ids else len(meta.get("agents") or []),
+    )
     try:
         service = _interview_service(session_id)
         # The confirmed probes from the study chips become explicit follow-ups
@@ -376,6 +390,12 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
                 result.get("total_interviewed", 0), result.get("failure_reason", "unknown"),
             )
             answered = result.get("successful", 0)
+            run_events.record_end(
+                run_id=session_id, user_id=billing.current_user_id(),
+                run_type="panel", mode=meta.get("mode"), status="failed",
+                error_code="round_failed",
+                duration_seconds=round(time.time() - started, 2),
+            )
             return jsonify({
                 "success": False,
                 "code": "round_failed",
@@ -439,11 +459,25 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
         }
         if meta.get('mode') == 'product':
             payload["budget_tier_distribution"] = meta.get("budget_tier_distribution", {})
+        run_events.record_end(
+            run_id=session_id, user_id=billing.current_user_id(),
+            run_type="panel", mode=meta.get("mode"), status="ok",
+            crowd_size=result.get("successful"),
+            duration_seconds=round(time.time() - started, 2),
+        )
         return jsonify({"success": True, "data": payload})
 
     except FileNotFoundError as e:
+        run_events.record_end(
+            run_id=session_id, user_id=billing.current_user_id(), run_type="panel",
+            status="failed", error_code="not_found",
+            duration_seconds=round(time.time() - started, 2))
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
+        run_events.record_end(
+            run_id=session_id, user_id=billing.current_user_id(), run_type="panel",
+            status="failed", error_code="server_error",
+            duration_seconds=round(time.time() - started, 2))
         return _server_error(e, "The room could not be reached. Nothing was counted — try again.")
 
 

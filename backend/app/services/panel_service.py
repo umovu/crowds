@@ -406,15 +406,43 @@ _SEGMENT_KEYWORDS: Dict[str, Tuple[str, ...]] = {
                        "merchant", "point of sale"),
     "unemployed": ("unemployed", "job seeker", "jobless", "work seeker"),
     "grant_recipients": ("grant", "sassa", "pension", "social relief"),
+    # Fee tiers (GHS). "Parents" alone mixes no-fee and R80k/yr households —
+    # different in kind for anything priced.
+    "guardians_high_fee": ("private school", "independent school", "former model c",
+                           "fee-paying", "tuition", "school fees"),
+    "guardians_no_fee": ("no-fee school", "township school", "quintile"),
+    "fee_paying": ("school fees", "paying fees"),
+    "educators": ("teacher", "educator", "classroom", "lesson plan", "staff room"),
+    # Measured attitudes. These were the widest gap: pays_for_quality is 214 real
+    # people and no pitch on earth could reach it, which is how a R100/month
+    # parent product ended up in a representative national room.
+    "pays_for_quality": ("premium", "worth paying more", "quality over price",
+                         "better version", "pay a bit more"),
+    "price_first": ("cheapest", "low cost", "budget option", "most affordable"),
+    "school_frustrated": ("failing school", "school results", "falling behind",
+                          "poor marks", "unhappy with school"),
+    "clinic_frustrated": ("clinic queue", "waiting at the clinic", "public health"),
+    "distrusts_government": ("government app", "department of", "official channel"),
+    "crime_worried": ("crime", "safety", "security", "theft", "burglary"),
+    "green_already": ("recycling", "climate", "carbon", "solar", "eco"),
 }
 
 
-def suggest_segments(pitch: str, cap: int = 2) -> List[str]:
+def suggest_segments(pitch: str, cap: int = 3) -> List[str]:
     """Suggest library segments for a pitch — deterministic keyword scoring.
 
-    Returns up to `cap` segment ids ordered by keyword-hit count (ties broken
-    alphabetically for determinism). Empty list when nothing matches — the
-    caller falls back to 'everyone', which is the honest default.
+    Ranked by keyword-hit count, then by how SPECIFIC the group is. Raw hit
+    count alone always handed back the broadest match: "parents" scores on four
+    of the `guardians` keywords and one of `guardians_high_fee`'s, so the
+    precise group could never surface even when the pitch named it. A narrower
+    group with the same evidence is the more useful answer, so ties break toward
+    the smaller one — and both are returned, so the operator sees the choice
+    rather than having it made for them.
+
+    Ties break alphabetically last, so the result is deterministic. Empty list
+    when nothing matches — the caller falls back to 'everyone', the honest
+    default. The UI must SHOW these for the user to apply; a wrong silent
+    default is worse than no default.
     """
     blob = (pitch or "").lower()
     if not blob.strip():
@@ -424,8 +452,42 @@ def suggest_segments(pitch: str, cap: int = 2) -> List[str]:
         hits = sum(1 for kw in keywords if kw in blob)
         if hits:
             scores[seg_id] = hits
-    ranked = sorted(scores, key=lambda s: (-scores[s], s))
+    if not scores:
+        return []
+    sizes = segment_sizes()
+    # Unknown size sorts last rather than first: a group we cannot count is not
+    # evidence of specificity.
+    ranked = sorted(scores, key=lambda s: (-scores[s], sizes.get(s, 10**6), s))
     return ranked[:cap]
+
+
+def suggest_narrowing(pitch: str) -> List[str]:
+    """Attitude groups worth OFFERING as a narrowing on top of a "who" pick.
+
+    A priced pitch has a second question hiding in it that keyword matching can
+    never see: not "who are they" but "who cares enough to bother". At R100/month
+    almost everyone in the library CAN pay, so affordability tells the operator
+    nothing and the room stays representative — which is exactly how a parent
+    product ended up in a national room. The measured willingness dimension is
+    the axis that actually separates buyers, and until now no pitch could reach
+    it.
+
+    Offered only, never applied, and only when the operator's own pitch states a
+    price — so this stays a suggestion drawn from what they wrote.
+    """
+    if not parse_price(pitch or ""):
+        return []
+    return ["pays_for_quality"]
+
+
+def segment_sizes() -> Dict[str, int]:
+    """How many library personas each segment holds. Deterministic, no LLM."""
+    personas = get_library().all()
+    out = {}
+    for seg_id, seg in SEGMENTS.items():
+        pred = seg["predicate"]
+        out[seg_id] = len(personas) if pred is None else sum(1 for p in personas if pred(p))
+    return out
 
 
 def list_segments() -> List[Dict[str, Any]]:

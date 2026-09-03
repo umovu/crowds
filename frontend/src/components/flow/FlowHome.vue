@@ -126,6 +126,26 @@
           </template>
           <template v-else>
             <div class="pp-field-label">Who's in the room?</div>
+            <!-- Groups the pitch itself names, with the real library count.
+                 Suggested, never applied — clicking is the operator's call. -->
+            <div v-if="suggestionChips.length" class="pp-suggest">
+              <div class="pp-suggest-head">
+                <span class="pp-suggest-title">Groups that match your pitch</span>
+                <button class="pp-suggest-dismiss" @click="suggestionDismissed = true">×</button>
+              </div>
+              <div class="pp-suggest-chips">
+                <button
+                  v-for="chip in suggestionChips"
+                  :key="chip.ids.join('+')"
+                  class="pp-suggest-chip"
+                  @click="applySuggestion(chip)"
+                >
+                  <span class="pp-suggest-chip-label">{{ chip.label }}</span>
+                  <span class="pp-suggest-chip-count">{{ chip.count }}</span>
+                </button>
+              </div>
+              <span class="pp-suggest-note">Nothing is picked yet — tap one to use it.</span>
+            </div>
             <input v-model="crowdSearch" class="crowd-search" type="text" placeholder="Search groups…">
             <!-- Grouped by what the ROOM IS FOR, not by what the personas are:
                  someone arrives with a clinic app or a biodigester and needs to
@@ -497,7 +517,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setPendingUpload, setSimPreset } from '../../store/pendingUpload'
-import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster, previewAffordability } from '../../api/panel'
+import { createSession, listSessions, listSegments, listPointers, readStudy, uploadPoster, previewAffordability, suggestSegments } from '../../api/panel'
 import { getSimulationHistory } from '../../api/simulation'
 import { listPersonas } from '../../api/research'
 import { useBilling } from '../../composables/useBilling'
@@ -1273,6 +1293,68 @@ const pickedLabel = computed(() => {
 const roomTooThin = computed(() =>
   matchCount.value !== null && matchCount.value < effectiveSize.value)
 
+// ── Suggested groups ───────────────────────────────────────────────────────
+// Deterministic keyword match on the backend, shown as dismissible chips with
+// live counts. The picker previously had only a topic-level hint that opened an
+// accordion, so the real suggester — the one that knows the precise groups —
+// never reached this screen at all. Nothing is auto-applied: a wrong silent
+// default is worse than no default.
+const suggested = ref([])          // "who" groups the pitch names
+const suggestedNarrowing = ref([]) // attitude groups worth offering on top
+const suggestionDismissed = ref(false)
+let suggestTimer = null
+
+watch(() => composedPitch(), (text) => {
+  suggestionDismissed.value = false
+  clearTimeout(suggestTimer)
+  if (!text || !text.trim()) { suggested.value = []; suggestedNarrowing.value = []; return }
+  suggestTimer = setTimeout(async () => {
+    try {
+      const res = await suggestSegments(text.trim())
+      suggested.value = res.data?.suggested || []
+      suggestedNarrowing.value = res.data?.narrowing || []
+    } catch { suggested.value = []; suggestedNarrowing.value = [] }
+  }, 600)
+})
+
+// One chip per suggestion. A narrowing chip pairs with the top "who" group, so
+// clicking it picks BOTH and the count shown is the intersection — the number
+// the room will actually be drawn from, not the number of people in either
+// group. Already-picked suggestions drop out rather than sitting there inert.
+const suggestionChips = computed(() => {
+  if (suggestionDismissed.value) return []
+  const byId = new Map(segments.value.map(s => [s.id, s]))
+  const chips = []
+  for (const id of suggested.value) {
+    const seg = byId.get(id)
+    if (!seg || seg.count === 0) continue
+    chips.push({ ids: [id], label: seg.label, count: seg.count })
+  }
+  const anchor = suggested.value.map(id => byId.get(id)).find(s => s && s.kind !== 'thinks')
+  if (anchor) {
+    for (const id of suggestedNarrowing.value) {
+      const seg = byId.get(id)
+      if (!seg || !Array.isArray(seg.members) || !Array.isArray(anchor.members)) continue
+      const allowed = new Set(seg.members)
+      const n = anchor.members.filter(m => allowed.has(m)).length
+      if (!n) continue
+      chips.push({
+        ids: [anchor.id, id],
+        label: `${anchor.label} who ${seg.label.toLowerCase()}`,
+        count: n,
+      })
+    }
+  }
+  const picked = new Set(selectedSegments.value)
+  return chips.filter(c => !c.ids.every(id => picked.has(id)))
+})
+
+const applySuggestion = (chip) => {
+  const next = selectedSegments.value.filter(s => s !== 'everyone')
+  for (const id of chip.ids) if (!next.includes(id)) next.push(id)
+  selectedSegments.value = next
+}
+
 // "Parents & guardians, but only those who will pay more for better" — the
 // narrowing spelled out, so an intersection is never silent.
 const narrowedBy = computed(() => {
@@ -1909,6 +1991,37 @@ onUnmounted(() => {
   font-family: var(--font-body); font-size: 0.72rem; color: var(--accent-text);
   text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
 }
+
+/* Suggested groups — the pitch's own words turned into pickable groups, with
+   the real library count on each. Same sunk card as the derived-affordability
+   note, because both are "here is what we read off your pitch". */
+.pp-suggest {
+  border: 1px solid var(--hairline); border-left: 3px solid var(--accent);
+  background: var(--card-sunk); border-radius: var(--r-md);
+  padding: 10px 12px; margin-bottom: 12px;
+}
+.pp-suggest-head { display: flex; align-items: center; justify-content: space-between; }
+.pp-suggest-title { font-size: 0.78rem; font-weight: 600; color: var(--ink); }
+.pp-suggest-dismiss {
+  border: 0; background: none; padding: 0 2px; cursor: pointer;
+  font-size: 0.95rem; line-height: 1; color: var(--muted-soft);
+}
+.pp-suggest-dismiss:hover { color: var(--ink); }
+.pp-suggest-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 6px; }
+.pp-suggest-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--hairline); background: var(--card);
+  border-radius: 999px; padding: 5px 10px 5px 12px; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.74rem; color: var(--ink);
+  transition: border-color 0.12s, background 0.12s;
+}
+.pp-suggest-chip:hover { border-color: var(--accent); background: var(--card-hover, var(--card)); }
+.pp-suggest-chip-count {
+  font-size: 0.68rem; font-weight: 600; color: var(--accent-text);
+  background: var(--accent-soft, transparent);
+  border: 1px solid var(--hairline); border-radius: 999px; padding: 1px 6px;
+}
+.pp-suggest-note { font-size: 0.7rem; color: var(--muted); }
 
 .crowd-foot-warn { font-family: var(--font-body); font-size: 0.72rem; color: var(--danger); }
 .crowd-done-btn:disabled {
