@@ -467,41 +467,57 @@
             <p class="persona-said-text">{{ selectedAgent.currentReaction }}</p>
           </div>
 
-          <!-- Why they reacted that way. Every line is a stored field with its
-               source named — their story, their real income, their measured
-               views. Not a model explaining itself after the fact. -->
           <div v-if="receipt" class="receipt">
             <button class="receipt-toggle" @click="receiptOpen = !receiptOpen">
               <span class="receipt-label">Why they reacted this way</span>
               <span class="receipt-caret" :class="{ open: receiptOpen }">&#9662;</span>
             </button>
             <div v-if="receiptOpen" class="receipt-rows">
-              <div v-if="receipt.story" class="receipt-row">
-                <span class="receipt-key">Their story</span>
+              <div class="receipt-row">
+                <span class="receipt-key">Body</span>
                 <span class="receipt-val">
-                  <p class="receipt-story">{{ receipt.story }}</p>
-                  <span class="receipt-src">Library persona &middot; survey-grounded</span>
+                  <span class="receipt-line">{{ receipt.body || '—' }}</span>
+                  <p v-if="receipt.story" class="receipt-story">{{ receipt.story }}</p>
+                  <span class="receipt-src">Library persona · survey-grounded</span>
                 </span>
               </div>
-              <div v-if="receipt.income || receipt.tier" class="receipt-row">
+              <div class="receipt-row">
                 <span class="receipt-key">Money</span>
                 <span class="receipt-val">
                   <span class="receipt-line">
-                    <b v-if="receipt.income">{{ receipt.income }}</b>
+                    <b v-if="receipt.hasIncome">{{ receipt.income }}</b>
+                    <span v-else class="receipt-absent">No income figure on record</span>
                     <span v-if="receipt.tier" class="receipt-band">{{ receipt.tier }}</span>
+                    <span v-if="!receipt.hasIncome && receipt.tier" class="receipt-band soft">inferred</span>
                   </span>
-                  <span class="receipt-src">Computed from real household income, never estimated</span>
+                  <span class="receipt-src">Computed from real household income, never estimated · {{ receipt.provenance || 'archetype-inferred' }}</span>
                 </span>
               </div>
-              <div v-if="receipt.attitudes.length" class="receipt-row">
-                <span class="receipt-key">On this issue</span>
+              <div class="receipt-row">
+                <span class="receipt-key">Views</span>
                 <span class="receipt-val">
-                  <span class="receipt-line">
-                    <span v-for="att in receipt.attitudes" :key="att.topic" class="receipt-band soft">
-                      {{ att.label }}: {{ att.stance }}
+                  <span v-if="receipt.attitudes.length" class="receipt-line" style="flex-direction:column;align-items:flex-start;">
+                    <span v-for="att in receipt.attitudes" :key="att.topic" class="receipt-att">
+                      <span class="receipt-band soft">{{ att.label }}: {{ att.stance }}</span>
+                      <span class="receipt-src" style="margin-left:6px;">{{ att.matchLabel }}<span v-if="!att.isExact"> — weaker</span></span>
                     </span>
                   </span>
-                  <span class="receipt-src">Afrobarometer Round 9 South Africa</span>
+                  <span v-else class="receipt-absent">No measured view on this issue</span>
+                  <span class="receipt-src">Afrobarometer Round 9 South Africa · 15 topics available</span>
+                </span>
+              </div>
+              <div class="receipt-row">
+                <span class="receipt-key">Reasoning</span>
+                <span class="receipt-val">
+                  <template v-if="receipt.research">
+                    <span v-for="(m,i) in receipt.research.mechanisms" :key="i" class="receipt-mech">· {{ m }}</span>
+                    <span v-for="c in receipt.research.citations" :key="c.id" class="receipt-cite">
+                      <b>{{ c.id }}</b><span v-for="t in c.titles" :key="t" class="receipt-cite-title"> — {{ t }}</span>
+                      <span v-if="c.confidence" class="receipt-confidence">Limits: {{ c.confidence }}</span>
+                    </span>
+                  </template>
+                  <span v-else class="receipt-absent">No mechanism card bound for this persona</span>
+                  <span class="receipt-src">Mechanism cards · reasoning context only, not identity</span>
                 </span>
               </div>
             </div>
@@ -657,17 +673,19 @@ const normalizeAgent = (a) => ({
   stance_before: a.stance || a.stance_before || 'neutral',
   stance_changed: false,
   currentReaction: a.currentReaction || '',
-  // Receipt fields — what was behind the answer. All stored persona data:
-  // the story as written in the library, income/tier computed from real
-  // survey figures, attitudes decoded from Afrobarometer. Nothing here is
-  // generated at display time, so the receipt can't drift from the room.
   province: a.province || '',
   occupation: a.occupation || '',
+  age: a.age ?? null,
+  education: a.education || a.education_level || '',
+  employment_status: a.employment_status || '',
   background_story: a.background_story || '',
-  monthly_income_rand: a.monthly_income_rand ?? a.monthly_household_income_rand ?? null,
+  monthly_income_rand: a.monthly_income_rand ?? a.monthly_household_income_rand ?? a.circumstances?.monthly_household_income_rand ?? null,
+  monthly_household_income_rand: a.monthly_household_income_rand ?? a.circumstances?.monthly_household_income_rand ?? null,
   income_provenance: a.income_provenance || '',
   budget_tier: a.budget_tier || '',
-  attitudes: Array.isArray(a.attitudes) ? a.attitudes : []
+  attitudes: Array.isArray(a.attitudes) ? a.attitudes : [],
+  research_context: a.research_context || '',
+  research_citations: Array.isArray(a.research_citations) ? a.research_citations : []
 })
 
 // ── Stance spectrum definitions ─────────────────────────────────────────────
@@ -1269,33 +1287,105 @@ const selectedAgentArchetype = computed(() => {
   return a ? a.replace(/_/g, ' ') : ''
 })
 
-// ── The receipt behind one persona's answer ─────────────────────────────────
-// Assembled purely from stored fields. The dimensions shown are the ones a
-// reader can act on; the rest of the fourteen stay out of the way.
 const receiptOpen = ref(false)
 const RECEIPT_ATTITUDES = {
-  environment_priority: 'Environment',
-  government_trust: 'Trust in government',
-  economic_outlook: 'Economic outlook',
+  gov_trust: 'Trust in government',
+  economic_optimism: 'Economic outlook',
+  service_satisfaction: 'Service satisfaction',
+  crime_fear: 'Fear of crime',
+  education_satisfaction: 'Satisfaction with education',
+  health_service_satisfaction: 'Satisfaction with health services',
+  health_authority_trust: 'Trust in health authorities',
+  councillor_responsiveness: 'Councillor responsiveness',
+  official_responsiveness: 'Official responsiveness',
+  crime_handling: 'Handling of crime',
+  immigration_priority: 'Immigration priority',
+  pays_for_quality: 'Will pay more for better',
+  social_trust: 'Social trust',
+  environment_priority: 'Environment priority',
+  business_trust: 'Trust in business',
 }
 const TIER_LABEL = { tight: 'tight budget', moderate: 'moderate budget', loose: 'more headroom' }
+const MATCH_QUALITY_LABEL = {
+  exact: 'Matched on every demographic',
+  age_backoff: 'Age band widened to find a match',
+  race_only: 'Matched on race alone — weak',
+  education_backoff: 'Education level widened',
+  population_draw: 'No match found — drawn from the population',
+  province_backoff: 'Province widened',
+}
+const ATTITUDE_PITCH_KEYS = {
+  gov_trust: ['government','trust','state','official'],
+  economic_optimism: ['economy','economic','jobs','income','cost','price','afford'],
+  service_satisfaction: ['service','delivery','municipal','water','electricity'],
+  crime_fear: ['crime','safety','security','theft','burglary'],
+  education_satisfaction: ['school','education','teacher','learner','class','fees'],
+  health_service_satisfaction: ['clinic','health','hospital','care'],
+  health_authority_trust: ['health','trust','authorities'],
+  councillor_responsiveness: ['councillor','municipal','local'],
+  official_responsiveness: ['official','government','response'],
+  crime_handling: ['crime','police','handling'],
+  immigration_priority: ['immigration','foreigner','border'],
+  pays_for_quality: ['quality','premium','pay more','worth paying','better version'],
+  social_trust: ['trust','community','people'],
+  environment_priority: ['environment','climate','green','recycling','solar','carbon'],
+  business_trust: ['business','company','private sector'],
+}
 
 const receipt = computed(() => {
   const a = selectedAgent.value
   if (!a) return null
-  const income = a.monthly_income_rand
+  const hasIncome = a.monthly_income_rand != null && Number(a.monthly_income_rand) > 0
+  const income = hasIncome
     ? `R${Math.round(a.monthly_income_rand).toLocaleString('en-ZA')} / month`
     : ''
+  const tierLabel = TIER_LABEL[a.budget_tier] || ''
+  const bodyParts = [
+    a.age ? `${a.age} years` : '',
+    a.province || '',
+    a.occupation || (a.archetype || '').replace(/_/g, ' '),
+    a.employment_status || '',
+    a.education || '',
+  ].filter(Boolean).join(' · ')
+  const blob = (props.query || '').toLowerCase()
   const attitudes = (a.attitudes || [])
     .filter(r => r && RECEIPT_ATTITUDES[r.topic] && r.stance)
-    .map(r => ({ topic: r.topic, label: RECEIPT_ATTITUDES[r.topic], stance: r.stance }))
+    .map(r => {
+      const keys = ATTITUDE_PITCH_KEYS[r.topic] || []
+      const relevance = keys.some(k => blob.includes(k)) ? 1 : 0
+      const q = MATCH_QUALITY_LABEL[r.match_quality] || r.match_quality || ''
+      const isExact = r.match_quality === 'exact'
+      return { topic: r.topic, label: RECEIPT_ATTITUDES[r.topic], stance: r.stance, source: r.source || 'Afrobarometer Round 9', match_quality: r.match_quality || '', matchLabel: q, isExact, relevance }
+    })
+    .sort((x, y) => (y.relevance - x.relevance) || (y.isExact - x.isExact) || x.label.localeCompare(y.label))
+    .slice(0, 6)
+  const research = (() => {
+    const ctx = a.research_context || ''
+    const cites = a.research_citations || []
+    if (!ctx && !cites.length) return null
+    const mechs = []
+    if (ctx) {
+      const lines = ctx.split('\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^-\s*/, '').trim()).slice(0, 5)
+      mechs.push(...lines)
+    }
+    return {
+      mechanisms: mechs,
+      citations: cites.map(c => ({ id: c.card_id || '', titles: c.citation || [], confidence: c.confidence || '' })),
+      rawContext: ctx,
+    }
+  })()
   const out = {
     story: a.background_story || '',
+    body: bodyParts,
     income,
-    tier: TIER_LABEL[a.budget_tier] || '',
+    hasIncome,
+    tier: tierLabel,
+    tierRaw: a.budget_tier || '',
+    provenance: a.income_provenance || '',
     attitudes,
+    research,
   }
-  return (out.story || out.income || out.tier || attitudes.length) ? out : null
+  return (out.story || out.body || out.income || out.tier || attitudes.length || research) ? out : null
 })
 
 // Clicking a person opens the drawer first. Chat is a second, deliberate step —
@@ -1786,6 +1876,12 @@ onUnmounted(() => {
 }
 .receipt-band.soft { background: #F3F2EF; color: #5C5954; }
 .receipt-src { font-size: 10px; color: #A4A19B; letter-spacing: 0.2px; }
+.receipt-absent { font-size: 12px; color: #9A9791; font-style: italic; }
+.receipt-att { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.receipt-mech { font-size: 12.5px; line-height: 1.5; color: #374151; display: block; }
+.receipt-cite { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; font-size: 11.5px; color: #5C5954; }
+.receipt-cite-title { font-style: italic; color: #374151; }
+.receipt-confidence { font-size: 10.5px; color: #9A9791; border-left: 2px solid #E6E4DF; padding-left: 8px; margin-top: 2px; }
 @media (max-width: 620px) {
   .receipt-row { grid-template-columns: 1fr; gap: 4px; }
 }
