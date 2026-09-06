@@ -233,6 +233,41 @@ def score(counts: Counter, truth: Dict[str, float],
     return tvd / 2 * 100, rows
 
 
+
+# Predeclared before any R10 model calls. All diagnostics use percentage points.
+SPREAD_THRESHOLDS = {"tail_mass_abs_gap_pp": 10.0, "modal_excess_pp": 15.0}
+
+
+def spread(counts: Counter, truth: Dict[str, float], extremes: List[str]) -> Dict[str, Any]:
+    """Full-option TVD, extreme-option mass, and largest single-option share.
+
+    Explicit extremes prevent treating don't-know/refusal as an ordinal endpoint.
+    An empty or invalid room is not a measurement and must never pass.
+    """
+    import math
+    if (not counts or sum(counts.values()) <= 0
+            or any(not math.isfinite(v) or v < 0 for v in counts.values())):
+        raise ValueError("spread needs nonnegative finite counts and at least one answer")
+    if (not truth or any(not math.isfinite(v) or v < 0 for v in truth.values())
+            or not math.isclose(sum(truth.values()), 1.0, abs_tol=1e-6)):
+        raise ValueError("truth must be a probability distribution summing to one")
+    if len(extremes) != 2 or len(set(extremes)) != 2 or not set(extremes) <= set(truth):
+        raise ValueError("declare exactly two distinct substantive extreme options")
+    if not set(counts) <= set(truth):
+        raise ValueError("unrecognised answers must be reported separately")
+    gap, rows = score(counts, truth)
+    ours_tail = sum(rows[k][0] for k in extremes) * 100
+    real_tail = sum(truth[k] for k in extremes) * 100
+    ours_modal = max(v[0] for v in rows.values()) * 100
+    real_modal = max(truth.values()) * 100
+    return {"tvd_pp": gap, "tail_mass_ours_pct": ours_tail,
+            "tail_mass_real_pct": real_tail, "tail_gap_pp": ours_tail - real_tail,
+            "modal_ours_pct": ours_modal, "modal_real_pct": real_modal,
+            "modal_excess_pp": ours_modal - real_modal,
+            "pass": abs(ours_tail - real_tail) <= SPREAD_THRESHOLDS["tail_mass_abs_gap_pp"]
+            and ours_modal - real_modal <= SPREAD_THRESHOLDS["modal_excess_pp"]}
+
+
 def _segment_table(by_group: Dict[str, Counter], answers: List[str],
                    min_n: int = 3) -> List[Tuple[str, int, Dict[str, float]]]:
     """Per-archetype answer shares, for archetypes with enough people to mean
