@@ -1,0 +1,563 @@
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_education_decode.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+........FF....                                                           [100%]
+================================== FAILURES ===================================
+____________________ test_q94_education_codes[8-tertiary] _____________________
+
+code = 8, want = 'tertiary'
+
+    @pytest.mark.parametrize("code,want",[(0,"none"),(1,"none"),(2,"primary"),(3,"primary"),
+     (4,"secondary"),(5,"secondary"),(6,"tertiary"),(7,"tertiary"),(8,"tertiary"),(9,"tertiary"),
+     (-1,None),(98,None),(99,None)])
+    def test_q94_education_codes(code,want):
+>       assert ada._ab_education_band(code)==want
+E       AssertionError: assert None == 'tertiary'
+E        +  where None = <function _ab_education_band at 0x0000014084885BC0>(8)
+E        +    where <function _ab_education_band at 0x0000014084885BC0> = ada._ab_education_band
+
+backend\tests\test_education_decode.py:12: AssertionError
+____________________ test_q94_education_codes[9-tertiary] _____________________
+
+code = 9, want = 'tertiary'
+
+    @pytest.mark.parametrize("code,want",[(0,"none"),(1,"none"),(2,"primary"),(3,"primary"),
+     (4,"secondary"),(5,"secondary"),(6,"tertiary"),(7,"tertiary"),(8,"tertiary"),(9,"tertiary"),
+     (-1,None),(98,None),(99,None)])
+    def test_q94_education_codes(code,want):
+>       assert ada._ab_education_band(code)==want
+E       AssertionError: assert None == 'tertiary'
+E        +  where None = <function _ab_education_band at 0x0000014084885BC0>(9)
+E        +    where <function _ab_education_band at 0x0000014084885BC0> = ada._ab_education_band
+
+backend\tests\test_education_decode.py:12: AssertionError
+=========================== short test summary info ===========================
+FAILED backend\tests\test_education_decode.py::test_q94_education_codes[8-tertiary]
+FAILED backend\tests\test_education_decode.py::test_q94_education_codes[9-tertiary]
+2 failed, 12 passed in 0.15s
+
+exit_code=1
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/refresh_education_attitudes.py --phase before
+LLM_API_KEY and SIM_LLM_API_KEY unset
+{
+  "pool": {
+    "survey_rows": 1580,
+    "donors": 1384,
+    "skipped": 196,
+    "education_band_counts": {
+      "secondary": 914,
+      "primary": 181,
+      "tertiary": 239,
+      "none": 50
+    },
+    "education_audit": {
+      "rows": [
+        {
+          "code": -1.0,
+          "label": "Missing",
+          "n": 0,
+          "decoded": null,
+          "valid_education_rejected": false
+        },
+        {
+          "code": 0.0,
+          "label": "No formal schooling",
+          "n": 43,
+          "decoded": "none",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 1.0,
+          "label": "Informal schooling only (including Koranic schooling)",
+          "n": 7,
+          "decoded": "none",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 2.0,
+          "label": "Some primary schooling",
+          "n": 55,
+          "decoded": "primary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 3.0,
+          "label": "Primary school completed",
+          "n": 126,
+          "decoded": "primary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 4.0,
+          "label": "Intermediate school or Some secondary school / high school",
+          "n": 360,
+          "decoded": "secondary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 5.0,
+          "label": "Secondary school / high school completed",
+          "n": 555,
+          "decoded": "secondary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 6.0,
+          "label": "Post-secondary qualifications, other than university e.g. a diploma or degree from a polytechnic or college",
+          "n": 184,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 7.0,
+          "label": "Some university",
+          "n": 58,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 8.0,
+          "label": "University completed",
+          "n": 141,
+          "decoded": null,
+          "valid_education_rejected": true
+        },
+        {
+          "code": 9.0,
+          "label": "Post-graduate",
+          "n": 36,
+          "decoded": null,
+          "valid_education_rejected": true
+        },
+        {
+          "code": 98.0,
+          "label": "Refused",
+          "n": 11,
+          "decoded": null,
+          "valid_education_rejected": false
+        },
+        {
+          "code": 99.0,
+          "label": "Don\u2019t know",
+          "n": 4,
+          "decoded": null,
+          "valid_education_rejected": false
+        }
+      ],
+      "valid_education_rejected_n": 177
+    }
+  },
+  "library_sha256": "71ac42b1ad09c33059b31b10155d4b88596f26b27d21006e91c2dbe980766326",
+  "backup_sha256": "71ac42b1ad09c33059b31b10155d4b88596f26b27d21006e91c2dbe980766326",
+  "non_attitude_sha256": "374345f7285b5883e9d44c9107f04f03e7694e3e260ba3662577db0d700f4a3b",
+  "protected_sha256": {
+    "REALISM_REPAIR_METHOD.json": "9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21",
+    "r10_item_list.json": "d8aa93d6c8ca2028bd99d234a7b2f49fc1b8e13f10d0377460dc350df5267898",
+    "r10_item_lock.json": "c238879e07515624515892e6157860683fa146488b9eaf88e1e2044ed3c80841",
+    "r10_ask_scenarios.json": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20",
+    "realism_repair_results.json": "423ffd67d9926e55a915b643e7faf9d1fc5393b735853639654b56a5d2401ee5",
+    "REALISM_REPAIR_POW.md": "52f80ebf49914d38b95d5c5fee97bec09d92f042b0fc7aabb6a9f27445cc6439",
+    "realism_repair_terminal.txt": "6f25dc1d8cd5cb029d15375024c563874a54ffbd591b94766b1340cc9be09519",
+    "r10_identical_people.json": "ab320316e999f4b66301b24ff7badbe0f84e500a7b5814607d0bf27e1ac25058",
+    "r10_identical_people.md": "27669d4212082d3598140c3b9e071f356031e6cdedfcfc4ae93c3e8daa13bd2b"
+  },
+  "seed": 1,
+  "personas": 375,
+  "tags": {
+    "exact": 3510,
+    "population_draw": 163,
+    "age_backoff": 1010,
+    "race_only": 683,
+    "education_backoff": 214,
+    "province_backoff": 45
+  },
+  "sources": {
+    "afrobarometer_r9_sa": 5625
+  },
+  "pre_fix_replay_vs_stored": {
+    "personas_with_stance_change": 16,
+    "stance_values_changed": 143
+  },
+  "model_calls": 0
+}
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_education_decode.py backend/tests/test_realism_repair.py backend/tests/test_r10_validation.py backend/tests/test_attitude_ladder.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+.........................................                                [100%]
+============================== warnings summary ===============================
+tests/test_attitude_ladder.py::test_every_skeleton_source_supplies_the_join_keys
+  D:\Fub-agentsociety\backend\scripts\persona_sampler.py:83: UnicodeWarning: 
+  One or more strings in the dta file could not be decoded using utf-8, and
+  so the fallback encoding of latin-1 is being used.  This can happen when a file
+  has been incorrectly encoded by Stata or some other software. You should verify
+  the string values returned are correct.
+    lab = pd.read_stata(dta_path, columns=_LABELLED_COLS, convert_categoricals=True)
+
+tests/test_attitude_ladder.py::test_every_skeleton_source_supplies_the_join_keys
+  D:\Fub-agentsociety\backend\scripts\persona_sampler.py:233: UnicodeWarning: 
+  One or more strings in the dta file could not be decoded using utf-8, and
+  so the fallback encoding of latin-1 is being used.  This can happen when a file
+  has been incorrectly encoded by Stata or some other software. You should verify
+  the string values returned are correct.
+    lab = pd.read_stata(dta_path, columns=_FARM_LABELLED_COLS, convert_categoricals=True)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+41 passed, 2 warnings in 7.05s
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/refresh_education_attitudes.py --phase apply
+LLM_API_KEY and SIM_LLM_API_KEY unset
+{
+  "pool": {
+    "survey_rows": 1580,
+    "donors": 1555,
+    "skipped": 25,
+    "education_band_counts": {
+      "secondary": 914,
+      "primary": 181,
+      "tertiary": 410,
+      "none": 50
+    },
+    "education_audit": {
+      "rows": [
+        {
+          "code": -1.0,
+          "label": "Missing",
+          "n": 0,
+          "decoded": null,
+          "valid_education_rejected": false
+        },
+        {
+          "code": 0.0,
+          "label": "No formal schooling",
+          "n": 43,
+          "decoded": "none",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 1.0,
+          "label": "Informal schooling only (including Koranic schooling)",
+          "n": 7,
+          "decoded": "none",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 2.0,
+          "label": "Some primary schooling",
+          "n": 55,
+          "decoded": "primary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 3.0,
+          "label": "Primary school completed",
+          "n": 126,
+          "decoded": "primary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 4.0,
+          "label": "Intermediate school or Some secondary school / high school",
+          "n": 360,
+          "decoded": "secondary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 5.0,
+          "label": "Secondary school / high school completed",
+          "n": 555,
+          "decoded": "secondary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 6.0,
+          "label": "Post-secondary qualifications, other than university e.g. a diploma or degree from a polytechnic or college",
+          "n": 184,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 7.0,
+          "label": "Some university",
+          "n": 58,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 8.0,
+          "label": "University completed",
+          "n": 141,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 9.0,
+          "label": "Post-graduate",
+          "n": 36,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 98.0,
+          "label": "Refused",
+          "n": 11,
+          "decoded": null,
+          "valid_education_rejected": false
+        },
+        {
+          "code": 99.0,
+          "label": "Don\u2019t know",
+          "n": 4,
+          "decoded": null,
+          "valid_education_rejected": false
+        }
+      ],
+      "valid_education_rejected_n": 0
+    }
+  },
+  "seed": 1,
+  "personas": 375,
+  "tags_before": {
+    "exact": 3510,
+    "population_draw": 163,
+    "age_backoff": 1010,
+    "race_only": 683,
+    "education_backoff": 214,
+    "province_backoff": 45
+  },
+  "tags_after": {
+    "exact": 3872,
+    "population_draw": 158,
+    "age_backoff": 964,
+    "education_backoff": 174,
+    "race_only": 457
+  },
+  "stored_to_refreshed": {
+    "personas_with_stance_change": 87,
+    "stance_values_changed": 745
+  },
+  "decoder_only_replay_difference": {
+    "personas_with_stance_change": 72,
+    "stance_values_changed": 607
+  },
+  "pre_fix_replay_vs_stored": {
+    "personas_with_stance_change": 16,
+    "stance_values_changed": 143
+  },
+  "non_attitude_fields_changed": 0,
+  "non_attitude_sha256_before": "374345f7285b5883e9d44c9107f04f03e7694e3e260ba3662577db0d700f4a3b",
+  "non_attitude_sha256_after": "374345f7285b5883e9d44c9107f04f03e7694e3e260ba3662577db0d700f4a3b",
+  "library_sha256_before": "71ac42b1ad09c33059b31b10155d4b88596f26b27d21006e91c2dbe980766326",
+  "protected_sha256": {
+    "REALISM_REPAIR_METHOD.json": "9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21",
+    "r10_item_list.json": "d8aa93d6c8ca2028bd99d234a7b2f49fc1b8e13f10d0377460dc350df5267898",
+    "r10_item_lock.json": "c238879e07515624515892e6157860683fa146488b9eaf88e1e2044ed3c80841",
+    "r10_ask_scenarios.json": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20",
+    "realism_repair_results.json": "423ffd67d9926e55a915b643e7faf9d1fc5393b735853639654b56a5d2401ee5",
+    "REALISM_REPAIR_POW.md": "52f80ebf49914d38b95d5c5fee97bec09d92f042b0fc7aabb6a9f27445cc6439",
+    "realism_repair_terminal.txt": "6f25dc1d8cd5cb029d15375024c563874a54ffbd591b94766b1340cc9be09519",
+    "r10_identical_people.json": "ab320316e999f4b66301b24ff7badbe0f84e500a7b5814607d0bf27e1ac25058",
+    "r10_identical_people.md": "27669d4212082d3598140c3b9e071f356031e6cdedfcfc4ae93c3e8daa13bd2b"
+  },
+  "derived_beliefs_would_differ_n": 86,
+  "note": "Only attitudes and attitude_match_quality copied. Beliefs, prose, circumstances, identity and finances preserved. Derived belief differences are a follow-up limitation, not modified here.",
+  "model_calls": 0,
+  "library_sha256_after": "f84f8bed261255529703708e318b25267ac0be36a1a3adca267300d8eef9aa25"
+}
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/check_r10_realism.py --repaired --output-tag q94_fixed
+LLM_API_KEY and SIM_LLM_API_KEY unset
+## Results
+
+| Attitude | Real full % | Real same-size median % | Real subset 5th-95th % | Library raw % | Library balanced % | Warning |
+|---|---:|---:|---:|---:|---:|---|
+| gov_trust | -9.98 | -12.69 | -16.88 to -5.76 | 2.27 | -3.87 | below warning rule |
+| economic_optimism | -11.38 | -10.43 | -15.45 to -4.96 | -3.75 | -5.51 | below warning rule |
+| service_satisfaction | -11.53 | -10.65 | -18.10 to -3.03 | 1.70 | -1.93 | below warning rule |
+| crime_fear | -7.84 | -7.75 | -15.73 to -2.42 | 4.31 | 0.62 | below warning rule |
+| education_satisfaction | -12.30 | -12.93 | -19.77 to -4.13 | -1.56 | -5.07 | below warning rule |
+| health_service_satisfaction | -11.94 | -14.36 | -18.63 to -9.18 | -2.44 | -2.46 | investigate |
+| health_authority_trust | -14.14 | -13.98 | -19.31 to -6.68 | -2.84 | -6.76 | below warning rule |
+| councillor_responsiveness | -14.33 | -12.15 | -18.20 to -6.50 | -4.97 | -8.23 | below warning rule |
+| official_responsiveness | -10.04 | -10.45 | -17.96 to -6.42 | 4.39 | -6.67 | below warning rule |
+| crime_handling | -12.62 | -13.19 | -19.22 to -7.44 | -3.33 | -4.08 | below warning rule |
+| immigration_priority | -13.68 | -14.28 | -23.03 to -6.87 | 1.17 | -5.03 | below warning rule |
+| pays_for_quality | -12.28 | -14.20 | -21.44 to -5.91 | -6.04 | -12.08 | below warning rule |
+| business_trust | -11.10 | -12.06 | -21.20 to -7.20 | 5.25 | -3.91 | below warning rule |
+| social_trust | -12.79 | -12.60 | -17.17 to -6.27 | -0.90 | -6.10 | below warning rule |
+| environment_priority | -7.30 | -11.94 | -18.68 to -6.16 | 0.04 | -5.45 | below warning rule |
+
+**1 of 15 dimensions met the warning rule; 0 were inconclusive.**
+
+Below the warning rule is not proof of realism. A warning does not identify which mechanism caused the pattern.
+Method SHA256: 9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21
+Usable rows: real=1551/1580, library=344/375; balance=converged
+Input hashes unchanged; model calls=0
+POW: backend/scripts/out/REALISM_REPAIR_POW_q94_fixed.md
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/refresh_education_attitudes.py --phase report
+LLM_API_KEY and SIM_LLM_API_KEY unset
+{
+  "direction_old": 15,
+  "direction_new": 15,
+  "direction_full_old": 15,
+  "direction_full_new": 15,
+  "warnings_old": 5,
+  "warnings_new": 1,
+  "graduate_other_exclusion_reasons": {
+    "employment_status": 6
+  },
+  "comparison": [
+    {
+      "dimension": "gov_trust",
+      "old_library_balanced_pct": -2.4458574570943137,
+      "new_library_balanced_pct": -3.871247228910213,
+      "old_real_matched_pct": -12.615843221140056,
+      "new_real_matched_pct": -12.691657325878436,
+      "old_warning": true,
+      "new_warning": false
+    },
+    {
+      "dimension": "economic_optimism",
+      "old_library_balanced_pct": -8.050377110129748,
+      "new_library_balanced_pct": -5.513920081412316,
+      "old_real_matched_pct": -11.906023298990343,
+      "new_real_matched_pct": -10.431171470733569,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "service_satisfaction",
+      "old_library_balanced_pct": 1.5256411241685641,
+      "new_library_balanced_pct": -1.9297921843329346,
+      "old_real_matched_pct": -10.387166298732764,
+      "new_real_matched_pct": -10.652278651356706,
+      "old_warning": true,
+      "new_warning": false
+    },
+    {
+      "dimension": "crime_fear",
+      "old_library_balanced_pct": 1.3546821067157322,
+      "new_library_balanced_pct": 0.6243372132611835,
+      "old_real_matched_pct": -10.457898627911533,
+      "new_real_matched_pct": -7.746591960467953,
+      "old_warning": true,
+      "new_warning": false
+    },
+    {
+      "dimension": "education_satisfaction",
+      "old_library_balanced_pct": -6.386333990242132,
+      "new_library_balanced_pct": -5.0706903943869674,
+      "old_real_matched_pct": -14.156164366552337,
+      "new_real_matched_pct": -12.925683733514926,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "health_service_satisfaction",
+      "old_library_balanced_pct": -3.319380441538189,
+      "new_library_balanced_pct": -2.462353236568582,
+      "old_real_matched_pct": -14.634757843284941,
+      "new_real_matched_pct": -14.360213341931505,
+      "old_warning": true,
+      "new_warning": true
+    },
+    {
+      "dimension": "health_authority_trust",
+      "old_library_balanced_pct": -5.298607200415106,
+      "new_library_balanced_pct": -6.758189044798746,
+      "old_real_matched_pct": -14.110389321919392,
+      "new_real_matched_pct": -13.984578634675348,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "councillor_responsiveness",
+      "old_library_balanced_pct": -6.920272500001379,
+      "new_library_balanced_pct": -8.232052359112242,
+      "old_real_matched_pct": -11.502054761719627,
+      "new_real_matched_pct": -12.147133026003443,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "official_responsiveness",
+      "old_library_balanced_pct": -3.4643796544962635,
+      "new_library_balanced_pct": -6.671392574656454,
+      "old_real_matched_pct": -9.998842174752443,
+      "new_real_matched_pct": -10.448205276940026,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "crime_handling",
+      "old_library_balanced_pct": -7.111726483636693,
+      "new_library_balanced_pct": -4.079280929440476,
+      "old_real_matched_pct": -14.514010427440871,
+      "new_real_matched_pct": -13.188787515256307,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "immigration_priority",
+      "old_library_balanced_pct": -2.1994067157857566,
+      "new_library_balanced_pct": -5.029339821339507,
+      "old_real_matched_pct": -13.578729074249507,
+      "new_real_matched_pct": -14.275442094327605,
+      "old_warning": true,
+      "new_warning": false
+    },
+    {
+      "dimension": "pays_for_quality",
+      "old_library_balanced_pct": -9.846524468135565,
+      "new_library_balanced_pct": -12.077455213531852,
+      "old_real_matched_pct": -12.671409479552898,
+      "new_real_matched_pct": -14.19923989119477,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "business_trust",
+      "old_library_balanced_pct": -5.011171214270438,
+      "new_library_balanced_pct": -3.9106068227769297,
+      "old_real_matched_pct": -11.517184679836767,
+      "new_real_matched_pct": -12.056667865889747,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "social_trust",
+      "old_library_balanced_pct": -8.286192273921156,
+      "new_library_balanced_pct": -6.0990922047927665,
+      "old_real_matched_pct": -12.696761153526726,
+      "new_real_matched_pct": -12.599620720946758,
+      "old_warning": false,
+      "new_warning": false
+    },
+    {
+      "dimension": "environment_priority",
+      "old_library_balanced_pct": -7.187342719330436,
+      "new_library_balanced_pct": -5.45352886078776,
+      "old_real_matched_pct": -12.669688746561524,
+      "new_real_matched_pct": -11.944911685875315,
+      "old_warning": false,
+      "new_warning": false
+    }
+  ],
+  "all_old_outputs_and_locks_unchanged": true,
+  "non_attitude_fields_changed": 0,
+  "method_sha256": "9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21",
+  "model_calls": 0
+}
+All protected hashes unchanged; non-attitude field differences=0; model calls=0
+POW: backend/scripts/out/EDUCATION_FIX_POW.md
+
+exit_code=0

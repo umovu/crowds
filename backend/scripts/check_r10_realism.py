@@ -270,7 +270,15 @@ def education_decode_audit(frame, meta):
     return {"rows": rows, "valid_education_rejected_n": sum(x["n"] for x in rows if x["valid_education_rejected"])}
 
 
-def repaired_main():
+def repaired_main(output_tag=None):
+    import re
+    if output_tag is not None and not re.fullmatch(r"[a-z][a-z0-9_]*", output_tag):
+        raise ValueError("Output tag must be a lowercase filename label")
+    suffix = "_" + output_tag if output_tag else ""
+    result_path = OUT / f"realism_repair_results{suffix}.json"
+    report_path = OUT / f"REALISM_REPAIR_POW{suffix}.md"
+    if output_tag and (result_path.exists() or report_path.exists()):
+        raise FileExistsError("Tagged results already exist; preserve prior evidence")
     import hashlib
     import sys
     from attitude_fuser import _BACKOFF_LADDER
@@ -373,13 +381,13 @@ def repaired_main():
               "warning_count":sum(x.get("investigate") is True for x in rows),
               "inconclusive_count":sum(x.get("investigate") is None for x in rows),
               "interpretation":"Exploratory demographic-predictability warning, not accuracy or proof of stereotyping. No paid-run gate granted."}
-    (OUT / "realism_repair_results.json").write_text(json.dumps(result, indent=2),encoding="utf-8")
+    result_path.write_text(json.dumps(result, indent=2),encoding="utf-8")
     def pp(value):
         return "n/a" if value is None else f"{100*value:.2f}"
     lines = ["# Realism test repair: proof of work", "",
              "## Data-reader limitation", "",
              f"The existing education reader rejects {result['education_decode_audit']['valid_education_rejected_n']} respondents with valid Q94 education codes. See education_decode_audit in the JSON.",
-             "These results apply only to the reader-selected sample. Repair the education reader and rerun the unchanged method before using flags to justify persona changes.", "",
+             ("These results apply only to the reader-selected sample. Repair the education reader before acting on flags." if result["education_decode_audit"]["valid_education_rejected_n"] else "No valid education qualifications rejected. Remaining demographic exclusions and diagnostic limitations still apply."), "",
              "## What changed", "",
              "The repaired test hides each person's answer and predicts its category using other people only.",
              "It compares the same stored attitude bands on both sides. A tiny group cannot predict itself.",
@@ -430,21 +438,24 @@ def repaired_main():
               "Investigate flagged dimensions and stored matching provenance before changing donor assignments. No automatic fixes were applied.",
               "No paid model call is authorised by this diagnostic; the frozen R10 questions remain a separate, unrun answer test.", "",
               "## Evidence", "",
-              "[Full machine-readable results](realism_repair_results.json), including input hashes, coverage, missingness and sample weights.",
-              "[Exact commands and terminal output](realism_repair_terminal.txt). Tests and source line references are appended after verification.",
+              f"[Full machine-readable results]({result_path.name}), including input hashes, coverage, missingness and sample weights.",
+              f"[Exact commands and terminal output](realism_repair_terminal{suffix}.txt). Tests and source line references are appended after verification.",
               "Input hashes were compared before/after: persona library, survey file, frozen question files and method were unchanged.",
-              "Old r10_identical_people outputs were preserved. Model calls: **0**. No personas generated, edited, or re-fused."]
-    (OUT / "REALISM_REPAIR_POW.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
+              "Old r10_identical_people outputs were preserved. Model calls during this diagnostic: **0**. No input files changed during this invocation."]
+    report_path.write_text("\n".join(lines)+"\n",encoding="utf-8")
     print("\n".join(lines[lines.index("## Results"):lines.index("## Missing opinions")]))
     print(f"Method SHA256: {result['method_sha256']}")
     print(f"Usable rows: real={len(real)}/{len(df)}, library={len(library)}/{len(people)}; balance={balance['status']}")
     print("Input hashes unchanged; model calls=0")
-    print("POW: backend/scripts/out/REALISM_REPAIR_POW.md")
+    print(f"POW: {report_path.relative_to(ROOT.parent).as_posix()}")
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repaired", action="store_true", help="Run the predeclared held-out-band diagnostic; preserve original outputs")
+    parser.add_argument("--output-tag", help="Write new named results beside the old outputs; never overwrite an existing tagged run")
     args = parser.parse_args()
-    repaired_main() if args.repaired else main()
+    if args.output_tag and not args.repaired:
+        parser.error("--output-tag requires --repaired")
+    repaired_main(args.output_tag) if args.repaired else main()
