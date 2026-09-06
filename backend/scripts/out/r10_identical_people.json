@@ -1,0 +1,688 @@
+{
+  "r9_total": 1580,
+  "r9_demographic_excluded": 198,
+  "library_total": 375,
+  "library_demographic_excluded": 31,
+  "keys": [
+    "race",
+    "gender",
+    "province",
+    "education_band",
+    "employment_status",
+    "age_band"
+  ],
+  "items": [
+    {
+      "r9": "Q38E",
+      "bucket": "held_out",
+      "real": {
+        "n": 1340,
+        "groups": 529,
+        "singleton_people": 271,
+        "explained_variance": 0.4864946345641929,
+        "permuted_mean": 0.445784660874094,
+        "permuted_p95": 0.4787744502884506,
+        "repeated_cell_n": 1069,
+        "repeated_cell_explained_variance": 0.3736976992645096
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 3.0487748427715546,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q38F",
+      "bucket": "held_out",
+      "real": {
+        "n": 1265,
+        "groups": 512,
+        "singleton_people": 265,
+        "explained_variance": 0.4520452377616865,
+        "permuted_mean": 0.44759629139179635,
+        "permuted_p95": 0.4751836861607293,
+        "repeated_cell_n": 1000,
+        "repeated_cell_explained_variance": 0.3057455855452076
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 8.634584583999747,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q38G",
+      "bucket": "held_out",
+      "real": {
+        "n": 1214,
+        "groups": 508,
+        "singleton_people": 268,
+        "explained_variance": 0.4541332557658358,
+        "permuted_mean": 0.4594862004731354,
+        "permuted_p95": 0.49406810592022893,
+        "repeated_cell_n": 946,
+        "repeated_cell_explained_variance": 0.30395432633677866
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 11.786246480992487,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q37F",
+      "bucket": "held_out",
+      "real": {
+        "n": 1309,
+        "groups": 526,
+        "singleton_people": 271,
+        "explained_variance": 0.48850679013419707,
+        "permuted_mean": 0.4492438455880673,
+        "permuted_p95": 0.4822551627901176,
+        "repeated_cell_n": 1038,
+        "repeated_cell_explained_variance": 0.3778303310558285
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 4.818590202606389,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q37I",
+      "bucket": "held_out",
+      "real": {
+        "n": 1337,
+        "groups": 530,
+        "singleton_people": 270,
+        "explained_variance": 0.46617783298629983,
+        "permuted_mean": 0.444591531438456,
+        "permuted_p95": 0.47414117198429895,
+        "repeated_cell_n": 1067,
+        "repeated_cell_explained_variance": 0.3368145464869938
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 2.9236692552354,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q37B",
+      "bucket": "held_out",
+      "real": {
+        "n": 1333,
+        "groups": 524,
+        "singleton_people": 265,
+        "explained_variance": 0.45901516262973713,
+        "permuted_mean": 0.43618381996160194,
+        "permuted_p95": 0.4694216982022908,
+        "repeated_cell_n": 1068,
+        "repeated_cell_explained_variance": 0.3467585922008171
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 3.3783704844593023,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q46E",
+      "bucket": "held_out",
+      "real": {
+        "n": 1343,
+        "groups": 535,
+        "singleton_people": 275,
+        "explained_variance": 0.519194579158777,
+        "permuted_mean": 0.4449631753959275,
+        "permuted_p95": 0.48913960737989753,
+        "repeated_cell_n": 1068,
+        "repeated_cell_explained_variance": 0.4147369674945654
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 3.5924822819040574,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q46B",
+      "bucket": "held_out",
+      "real": {
+        "n": 1352,
+        "groups": 539,
+        "singleton_people": 278,
+        "explained_variance": 0.46464717172519326,
+        "permuted_mean": 0.44460628600238167,
+        "permuted_p95": 0.4864708508499058,
+        "repeated_cell_n": 1074,
+        "repeated_cell_explained_variance": 0.3581171252217328
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 2.9924341927121167,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q9A",
+      "bucket": "held_out",
+      "real": {
+        "n": 1361,
+        "groups": 538,
+        "singleton_people": 278,
+        "explained_variance": 0.4795082956133596,
+        "permuted_mean": 0.44310237912092876,
+        "permuted_p95": 0.48012407107748317,
+        "repeated_cell_n": 1083,
+        "repeated_cell_explained_variance": 0.3308512852638592
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 1.1634979260211342,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q5A",
+      "bucket": "held_out",
+      "real": {
+        "n": 1365,
+        "groups": 540,
+        "singleton_people": 279,
+        "explained_variance": 0.46165220756754355,
+        "permuted_mean": 0.44282376612078544,
+        "permuted_p95": 0.4763218338890078,
+        "repeated_cell_n": 1086,
+        "repeated_cell_explained_variance": 0.32196624205245156
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 0.819553050909571,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q47A",
+      "bucket": "held_out",
+      "real": {
+        "n": 1281,
+        "groups": 519,
+        "singleton_people": 266,
+        "explained_variance": 0.4883643128312369,
+        "permuted_mean": 0.45142144521660366,
+        "permuted_p95": 0.4875648555946354,
+        "repeated_cell_n": 1015,
+        "repeated_cell_explained_variance": 0.3777580071956634
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 6.398104774212908,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q37G",
+      "bucket": "held_out",
+      "real": {
+        "n": 1370,
+        "groups": 540,
+        "singleton_people": 278,
+        "explained_variance": 0.4750585538294686,
+        "permuted_mean": 0.4378704707353506,
+        "permuted_p95": 0.4699901067564803,
+        "repeated_cell_n": 1092,
+        "repeated_cell_explained_variance": 0.3383108507645011
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 1.4721741412294305,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q37A",
+      "bucket": "seen",
+      "real": {
+        "n": 1339,
+        "groups": 528,
+        "singleton_people": 270,
+        "explained_variance": 0.4911706122742665,
+        "permuted_mean": 0.44569615605492297,
+        "permuted_p95": 0.4866338998302861,
+        "repeated_cell_n": 1069,
+        "repeated_cell_explained_variance": 0.38859857621330995
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 2.5430836877535707,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q4A",
+      "bucket": "seen",
+      "real": {
+        "n": 1367,
+        "groups": 538,
+        "singleton_people": 274,
+        "explained_variance": 0.48366075050957513,
+        "permuted_mean": 0.4409651735881752,
+        "permuted_p95": 0.47931886883473196,
+        "repeated_cell_n": 1093,
+        "repeated_cell_explained_variance": 0.3626193470481503
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 0.9940611860849636,
+      "r9_other_missing_pct": 0.0
+    },
+    {
+      "r9": "Q46F",
+      "bucket": "seen",
+      "real": {
+        "n": 1374,
+        "groups": 542,
+        "singleton_people": 280,
+        "explained_variance": 0.4538388159028633,
+        "permuted_mean": 0.4441874606499362,
+        "permuted_p95": 0.4913600375486419,
+        "repeated_cell_n": 1094,
+        "repeated_cell_explained_variance": 0.33424159301535866
+      },
+      "library": null,
+      "gap": null,
+      "library_reason": "Raw survey item not stored; fused bands/composites cannot reconstruct it.",
+      "r9_dont_know_refusal_pct": 0.5123852038951876,
+      "r9_other_missing_pct": 0.0
+    }
+  ],
+  "shared_dimensions": [
+    {
+      "dimension": "gov_trust",
+      "real": {
+        "n": 1361,
+        "groups": 534,
+        "singleton_people": 272,
+        "explained_variance": 0.48054301867798915,
+        "permuted_mean": 0.4410102626247592,
+        "permuted_p95": 0.47178716982812724,
+        "repeated_cell_n": 1089,
+        "repeated_cell_explained_variance": 0.3650167898279874
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.818114638047682,
+        "permuted_mean": 0.6344206466290538,
+        "permuted_p95": 0.6837297624451493,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.6583903949739083
+      },
+      "gap": 0.3375716193696929,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "economic_optimism",
+      "real": {
+        "n": 1380,
+        "groups": 542,
+        "singleton_people": 278,
+        "explained_variance": 0.48110134948241273,
+        "permuted_mean": 0.442072458353517,
+        "permuted_p95": 0.47279612950251465,
+        "repeated_cell_n": 1102,
+        "repeated_cell_explained_variance": 0.36029730649993
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.783896492728829,
+        "permuted_mean": 0.633214664826193,
+        "permuted_p95": 0.6849800237187973,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5836964759378552
+      },
+      "gap": 0.30279514324641627,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "service_satisfaction",
+      "real": {
+        "n": 1378,
+        "groups": 542,
+        "singleton_people": 277,
+        "explained_variance": 0.4705346975163109,
+        "permuted_mean": 0.4391304793312814,
+        "permuted_p95": 0.47325246101076407,
+        "repeated_cell_n": 1101,
+        "repeated_cell_explained_variance": 0.3447447024790706
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7894458411732925,
+        "permuted_mean": 0.6408002095625684,
+        "permuted_p95": 0.6939244744164336,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5897357211560482
+      },
+      "gap": 0.31891114365698164,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "crime_fear",
+      "real": {
+        "n": 1379,
+        "groups": 542,
+        "singleton_people": 277,
+        "explained_variance": 0.46648894595884866,
+        "permuted_mean": 0.4388520394419214,
+        "permuted_p95": 0.4612869748354367,
+        "repeated_cell_n": 1102,
+        "repeated_cell_explained_variance": 0.3346278572219254
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7578274725465811,
+        "permuted_mean": 0.6329079924787205,
+        "permuted_p95": 0.678633074261473,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5726739554609519
+      },
+      "gap": 0.29133852658773246,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "education_satisfaction",
+      "real": {
+        "n": 1346,
+        "groups": 532,
+        "singleton_people": 271,
+        "explained_variance": 0.46495726469408644,
+        "permuted_mean": 0.44289975090576605,
+        "permuted_p95": 0.4720376665927404,
+        "repeated_cell_n": 1075,
+        "repeated_cell_explained_variance": 0.3198652212527855
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7601444167251137,
+        "permuted_mean": 0.634572215760954,
+        "permuted_p95": 0.683571532148997,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5328945248060933
+      },
+      "gap": 0.29518715203102724,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "health_service_satisfaction",
+      "real": {
+        "n": 1353,
+        "groups": 533,
+        "singleton_people": 274,
+        "explained_variance": 0.45762289552934254,
+        "permuted_mean": 0.43987705388389836,
+        "permuted_p95": 0.4636401768617171,
+        "repeated_cell_n": 1079,
+        "repeated_cell_explained_variance": 0.3187045506605859
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7991596464817512,
+        "permuted_mean": 0.6347387368218227,
+        "permuted_p95": 0.6798514693774534,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.6126761862825271
+      },
+      "gap": 0.34153675095240865,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "health_authority_trust",
+      "real": {
+        "n": 1342,
+        "groups": 532,
+        "singleton_people": 273,
+        "explained_variance": 0.452645110906816,
+        "permuted_mean": 0.4417765378827181,
+        "permuted_p95": 0.47847715402514707,
+        "repeated_cell_n": 1069,
+        "repeated_cell_explained_variance": 0.303058398030905
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7670626502289141,
+        "permuted_mean": 0.6309583727581811,
+        "permuted_p95": 0.6912406276821421,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5814990671927087
+      },
+      "gap": 0.3144175393220981,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "councillor_responsiveness",
+      "real": {
+        "n": 1343,
+        "groups": 533,
+        "singleton_people": 273,
+        "explained_variance": 0.4272806995967797,
+        "permuted_mean": 0.4438953526204426,
+        "permuted_p95": 0.47560479273458783,
+        "repeated_cell_n": 1070,
+        "repeated_cell_explained_variance": 0.30274439500714395
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.735304037933805,
+        "permuted_mean": 0.6383929884527432,
+        "permuted_p95": 0.6957882199187444,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.48394300658922634
+      },
+      "gap": 0.30802333833702533,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "official_responsiveness",
+      "real": {
+        "n": 1286,
+        "groups": 521,
+        "singleton_people": 276,
+        "explained_variance": 0.5290069398074994,
+        "permuted_mean": 0.4522579297984893,
+        "permuted_p95": 0.4788986275095216,
+        "repeated_cell_n": 1010,
+        "repeated_cell_explained_variance": 0.40470534911990824
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7812072376555931,
+        "permuted_mean": 0.635466504547578,
+        "permuted_p95": 0.6850018318541112,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5991233503125725
+      },
+      "gap": 0.2522002978480937,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "crime_handling",
+      "real": {
+        "n": 1374,
+        "groups": 542,
+        "singleton_people": 280,
+        "explained_variance": 0.4531825925727268,
+        "permuted_mean": 0.44449530923604136,
+        "permuted_p95": 0.48641909517872245,
+        "repeated_cell_n": 1094,
+        "repeated_cell_explained_variance": 0.3258897602075628
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7689071500024335,
+        "permuted_mean": 0.6321732118385522,
+        "permuted_p95": 0.6912598103234199,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.579258795082058
+      },
+      "gap": 0.3157245574297067,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "immigration_priority",
+      "real": {
+        "n": 1347,
+        "groups": 536,
+        "singleton_people": 278,
+        "explained_variance": 0.4199672137457697,
+        "permuted_mean": 0.4439356177424633,
+        "permuted_p95": 0.47768591928872767,
+        "repeated_cell_n": 1069,
+        "repeated_cell_explained_variance": 0.27012120658314565
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7379797033567524,
+        "permuted_mean": 0.6373564402810303,
+        "permuted_p95": 0.6884677595628415,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5584245101217488
+      },
+      "gap": 0.3180124896109828,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "pays_for_quality",
+      "real": {
+        "n": 1308,
+        "groups": 530,
+        "singleton_people": 279,
+        "explained_variance": 0.45483020069694025,
+        "permuted_mean": 0.4483445753978134,
+        "permuted_p95": 0.4746606763493638,
+        "repeated_cell_n": 1029,
+        "repeated_cell_explained_variance": 0.3272528443184275
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7447613796502025,
+        "permuted_mean": 0.636069763108983,
+        "permuted_p95": 0.687838130279201,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5323249600054456
+      },
+      "gap": 0.28993117895326226,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "business_trust",
+      "real": {
+        "n": 1230,
+        "groups": 509,
+        "singleton_people": 271,
+        "explained_variance": 0.4697757646453394,
+        "permuted_mean": 0.45654123627038656,
+        "permuted_p95": 0.5005052054091392,
+        "repeated_cell_n": 959,
+        "repeated_cell_explained_variance": 0.33372567707241807
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.7605404395383275,
+        "permuted_mean": 0.6384178766667153,
+        "permuted_p95": 0.687835645053877,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5690871112633704
+      },
+      "gap": 0.29076467489298813,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "social_trust",
+      "real": {
+        "n": 1365,
+        "groups": 535,
+        "singleton_people": 272,
+        "explained_variance": 0.43535081827252325,
+        "permuted_mean": 0.4412592731386686,
+        "permuted_p95": 0.47594937875693255,
+        "repeated_cell_n": 1093,
+        "repeated_cell_explained_variance": 0.28742524381518125
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.8007834232011639,
+        "permuted_mean": 0.6323534624813486,
+        "permuted_p95": 0.6780140143975426,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.5872584024883951
+      },
+      "gap": 0.36543260492864066,
+      "library_missing_pct": 0.0
+    },
+    {
+      "dimension": "environment_priority",
+      "real": {
+        "n": 1337,
+        "groups": 529,
+        "singleton_people": 273,
+        "explained_variance": 0.5030789408814197,
+        "permuted_mean": 0.44577630357031256,
+        "permuted_p95": 0.4812701916745355,
+        "repeated_cell_n": 1064,
+        "repeated_cell_explained_variance": 0.3797761203101606
+      },
+      "library": {
+        "n": 344,
+        "groups": 219,
+        "singleton_people": 157,
+        "explained_variance": 0.8017300741472464,
+        "permuted_mean": 0.6327557231372164,
+        "permuted_p95": 0.6731626172951402,
+        "repeated_cell_n": 187,
+        "repeated_cell_explained_variance": 0.6090206201435837
+      },
+      "gap": 0.2986511332658267,
+      "library_missing_pct": 0.0
+    }
+  ],
+  "status": "INCONCLUSIVE: held-out library answers absent; raw group statistic is inflated by sparse cells",
+  "paid_run_ready": false,
+  "notes": [
+    "Shared dimensions compare the same decoded bands; not held-out-item results.",
+    "R9 uses withinwt_hh; stored library uses equal weights for this descriptive diagnostic.",
+    "Missing fused attitudes are not a measured refusal rate; fusion fills missing donor answers.",
+    "Existing _footer forces closest option and old scenarios omit opt-outs. It has not been changed.",
+    "R10 frozen scenarios preserve all published options including opt-outs; this differs from the older scenarios.",
+    "Permutation sensitivity is not cross-validation or a survey-design significance test."
+  ]
+}

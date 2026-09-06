@@ -122,7 +122,7 @@ def _skeleton_join_view(skeleton: Dict) -> Dict[str, Optional[str]]:
         "gender": skeleton.get("gender"),
         "province": skeleton.get("province"),
         "education_band": ada.education_to_band(skeleton.get("education")),
-        "employment_status": skeleton.get("employment_status"),
+        "employment_status": ada.employment_to_canonical(skeleton.get("employment_status")),
         "age_band": ada.age_to_band(int(age)) if age is not None else None,
         # Already canonicalised by persona_sampler via the adapter, so no banding needed.
         "race": skeleton.get("race"),

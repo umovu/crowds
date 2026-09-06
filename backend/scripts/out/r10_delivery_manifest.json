@@ -1,0 +1,29 @@
+{
+  "hash_normalization": "LF-normalised text; raw bytes for PDF",
+  "files": {
+    "backend/scripts/build_r10_crosswalk.py": "5e19a48614f3db0b623b834ed09fd01986714e752f26791b0fe66b0bdf069177",
+    "backend/scripts/shortlist_r10_items.py": "8391d80ecc80cb7f9b1b34d611f6ab2394ec28802b15f06ddf329b2d13bafe75",
+    "backend/scripts/parse_r10_toplines.py": "f3649b99c187934a85197a3d252c58d2d3e98374ad621de82f86b42e600ccd45",
+    "backend/scripts/audit_persona_library.py": "b649e0eb1190f1d6246a1183dddd863a10ad8035260b15cded38d0139108b09e",
+    "backend/scripts/check_r10_realism.py": "62e05efe76cc5451664b31f7e56fe4456a16e3e7c91926b6086d42b0a9bdca5e",
+    "backend/scripts/backtest_panel.py": "c7e926cbba5e705dda7cc1c52a30a0ba408c5c2df45dbf0671b39d09de2d8690",
+    "backend/scripts/attitude_donor_adapter.py": "3bf622f5fcbb736d1491c2860a3ba62f0f46bac3677c7b9588d9f0b5c95815ad",
+    "backend/scripts/attitude_fuser.py": "5795f10e03edaccf008a11209f5f4ec9f7fd6d8dc5c77bb6dc83088c1e13d1e6",
+    "backend/tests/test_r10_validation.py": "e737c2ab219c54822a0aaf82712ac845b4e0cce925428186c3a9c7ab8f738b7e",
+    "backend/scripts/out/r10_item_list.json": "db99ee9f660797a6bc4904f6cf4bedf01ab94f211622a34332008b5ce469b62e",
+    "backend/scripts/out/r10_ask_scenarios.json": "cece658616c9e0940e195cc7b72a32e1d3f1d9052d6fc2f9cb18198c81c74912",
+    "backend/scripts/out/r10_item_lock.json": "6f6b43c290f6d98d676d88b55e91254ce7401cdf620c358ab3b575f606573cd4",
+    "backend/scripts/out/r10_crosswalk_changes.json": "94b036545a3afdbc015ac1c7cb8d3f938dbcb8dbc7e59cc645d59263a1778e4a",
+    "backend/scripts/out/r10_shortlist.json": "a3830e4688f6a855cc782a2a96ff4e0a8d8942c609497ac8bd55527dd9c60ba6",
+    "backend/scripts/out/persona_library_audit.md": "e73a59293b3ba7fa596b927c4c749888dc5a1ad95339e3ef39795366c16014a9",
+    "backend/scripts/out/r10_identical_people.json": "e5a986b4869cfadac18a9caadd51c79483f70a7c7bb043211f7bac0560d97eb4",
+    "backend/scripts/out/r10_identical_people.md": "565acf88c6eb52add9bbd57ce2db70f198082cf5dfd3e238b6b8f3e58a471906",
+    "backend/scripts/out/r10_proof_of_work.txt": "3b1b1769bd39f487f9b1f33d735fffc95490af266644178ea12c3f91bdea0779",
+    "backend/scripts/out/r10_file_references.json": "5152a330e3464f4c929c996b93fd8f3ccf5337b18b0f58ba48a97cdb347af4e1",
+    "backend/scripts/out/R10_BACKTEST_RESULTS.md": "87b34bbb72088b8adf365ddd5be63cc142c9adbcdddd7c5d585beeace73c50c1",
+    "backend/data/microdata/attitudes/afrobarometer_r10_sa_summary.pdf": "6042d49a030d1cdfeca80116ce65a3468b26b29896b5bcacfeb8b25a9b28b441",
+    "backend/data/microdata/attitudes/afrobarometer_r10_sa_toplines.json": "01e8dce637ae098f99c1e3e790ccec360b8715442c69d87a4781c4c6c65de55e",
+    "backend/data/microdata/attitudes/r9_r10_crosswalk.json": "185ff8df1633993e30db7657356d13187c5a9046e36cad9a9dda4ef9c9cc2b54",
+    ".gitattributes": "e1b245b9eb468633c1c4292824b73b7ff7dcbf76bab12b6a08d2b82bf9c0e0f2"
+  }
+}

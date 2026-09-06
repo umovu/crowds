@@ -1,0 +1,4913 @@
+{
+  "note": "R9 .sav variables mapped to R10 summary-of-results codes. Review non-confident rows by hand.",
+  "mappings": [
+    {
+      "r9": "URBRUR",
+      "r9_label": "Urban or Rural Primary Sampling Unit",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "REGION",
+      "r9_label": "Province or region",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SVC_A",
+      "r9_label": "EA-SVC-A. Electricity grid in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SVC_B",
+      "r9_label": "EA-SVC-B. Piped water system in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SVC_C",
+      "r9_label": "EA-SVC-C. Sewage system in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SVC_D",
+      "r9_label": "EA-SVC-D. Mobile phone service in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SVC_E",
+      "r9_label": "EA-SVC-E.  Borehole or tubewell in PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_A",
+      "r9_label": "EA-FAC-A. Post office in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_B",
+      "r9_label": "EA-FAC-B. School in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_C",
+      "r9_label": "EA-FAC-C. Police station in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_D",
+      "r9_label": "EA-FAC-D. Health Clinic in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_E",
+      "r9_label": "EA-FAC-E. Market stalls in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_F",
+      "r9_label": "EA-FAC-F. Bank or money services in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_F2",
+      "r9_label": "EA-FAC-F2. Social/govt center/office in PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_FAC_G",
+      "r9_label": "EA-FAC-G. Paid transport in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SEC_A",
+      "r9_label": "EA-SEC-A. Police in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SEC_B",
+      "r9_label": "EA-SEC-B. Soldiers/army in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SEC_C",
+      "r9_label": "EA-SEC-C. Roadblocks by police/army in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SEC_D",
+      "r9_label": "EA-SEC-D. Customs checkpoints in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_SEC_E",
+      "r9_label": "EA-SEC-E. Roadblocks by private security/local community in the PSU/EA",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_ROAD_A",
+      "r9_label": "EA-ROAD-A. Road surface at start point",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_ROAD_B",
+      "r9_label": "EA-ROAD-B. Road surface last 5 km",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "EA_ROAD_C",
+      "r9_label": "EA-ROAD-C. Road condition last 5 km",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_1",
+      "r9_label": "Reason for Unsuccessful Call Household 1",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_2",
+      "r9_label": "Reason for Unsuccessful Call Household 2",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_3",
+      "r9_label": "Reason for Unsuccessful Call Household 3",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_4",
+      "r9_label": "Reason for Unsuccessful Call Household 4",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_5",
+      "r9_label": "Reason for Unsuccessful Call Household 5",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_6",
+      "r9_label": "Reason for Unsuccessful Call Household 6",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_7",
+      "r9_label": "Reason for Unsuccessful Call Household 7",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_8",
+      "r9_label": "Reason for Unsuccessful Call Household 8",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_9",
+      "r9_label": "Reason for Unsuccessful Call Household 9",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_10",
+      "r9_label": "Reason for Unsuccessful Call Household 10",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_11",
+      "r9_label": "Reason for Unsuccessful Call Household 11",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "NOCALL_12",
+      "r9_label": "Reason for Unsuccessful Call Household 12",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "THISINT",
+      "r9_label": "This interview, gender",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q2",
+      "r9_label": "Q2. Language spoken in home",
+      "r10": "Q2",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q3",
+      "r9_label": "Q3. Overall direction of the country",
+      "r10": "Q3",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q4A",
+      "r9_label": "Q4a. Country’s present economic condition",
+      "r10": "Q4A",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q73A",
+        "Q4B"
+      ]
+    },
+    {
+      "r9": "Q4B",
+      "r9_label": "Q4b. Your present living conditions",
+      "r10": "Q4B",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q4A",
+        "Q73A"
+      ]
+    },
+    {
+      "r9": "Q5A",
+      "r9_label": "Q5a. Country’s economic condition compared to 12 months ago",
+      "r10": "Q5A",
+      "score": 0.833,
+      "wording_overlap": 0.833,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q5B",
+        "Q6"
+      ]
+    },
+    {
+      "r9": "Q5B",
+      "r9_label": "Q5b. Country’s economic condition in 12 months’ time",
+      "r10": "Q6",
+      "score": 0.6,
+      "wording_overlap": 0.6,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q5A",
+        "Q5B"
+      ]
+    },
+    {
+      "r9": "Q6A",
+      "r9_label": "Q6a. How often gone without food",
+      "r10": "Q7D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q7A",
+        "Q7E",
+        "Q7C",
+        "Q7B",
+        "Q9"
+      ]
+    },
+    {
+      "r9": "Q6B",
+      "r9_label": "Q6b. How often gone without water",
+      "r10": "Q7B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": true,
+      "alternates": [
+        "Q7E",
+        "Q7D",
+        "Q7C",
+        "Q7A",
+        "Q9"
+      ]
+    },
+    {
+      "r9": "Q6C",
+      "r9_label": "Q6c. How often gone without medical care",
+      "r10": "Q7C",
+      "score": 0.8,
+      "wording_overlap": 0.8,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q7E",
+        "Q7D",
+        "Q7B",
+        "Q7A",
+        "Q9"
+      ]
+    },
+    {
+      "r9": "Q6D",
+      "r9_label": "Q6d. How often gone without cooking fuel",
+      "r10": "Q7D",
+      "score": 0.8,
+      "wording_overlap": 0.8,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q7E",
+        "Q7C",
+        "Q7B",
+        "Q7A",
+        "Q9"
+      ]
+    },
+    {
+      "r9": "Q6E",
+      "r9_label": "Q6e. How often gone without cash income",
+      "r10": "Q7E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": true,
+      "alternates": [
+        "Q7D",
+        "Q7C",
+        "Q7B",
+        "Q7A",
+        "Q9"
+      ]
+    },
+    {
+      "r9": "Q7A",
+      "r9_label": "Q7a. How often felt unsafe walking in neighbourhood",
+      "r10": "Q9",
+      "score": 0.8,
+      "wording_overlap": 0.8,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": true,
+      "alternates": [
+        "Q7E",
+        "Q7D",
+        "Q7C",
+        "Q7B",
+        "Q7A"
+      ]
+    },
+    {
+      "r9": "Q7B",
+      "r9_label": "Q7b. How often feared crime in home",
+      "r10": "Q9",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q7B",
+        "Q7E",
+        "Q7D",
+        "Q7C",
+        "Q7A"
+      ]
+    },
+    {
+      "r9": "Q8",
+      "r9_label": "Q8. Discuss politics",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q9A",
+      "r9_label": "Q9a. Freedom to say what you think",
+      "r10": "Q10A",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 4,
+      "confident": true,
+      "alternates": [
+        "Q35",
+        "Q10C",
+        "Q10B"
+      ]
+    },
+    {
+      "r9": "Q9B",
+      "r9_label": "Q9b. Freedom to join any political organization",
+      "r10": "Q10B",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 4,
+      "confident": true,
+      "alternates": [
+        "Q35",
+        "Q10C",
+        "Q10A"
+      ]
+    },
+    {
+      "r9": "Q9C",
+      "r9_label": "Q9c. Freedom to choose who to vote for",
+      "r10": "Q10C",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 4,
+      "confident": true,
+      "alternates": [
+        "Q35",
+        "Q10B",
+        "Q10A"
+      ]
+    },
+    {
+      "r9": "Q10A",
+      "r9_label": "Q10a. Attend a community meeting",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q10B",
+      "r9_label": "Q10b. Join others to raise an issue",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q10C",
+      "r9_label": "Q10c. Attend a demonstration or protest march",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q11A",
+      "r9_label": "Q11a. Make local government councillors listen",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q11B",
+      "r9_label": "Q11b. Contact local government councillor",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q11C",
+      "r9_label": "Q11c. Contact MP",
+      "r10": "Q12C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q12B",
+        "Q12A"
+      ]
+    },
+    {
+      "r9": "Q11D",
+      "r9_label": "Q11d. Contact political party official",
+      "r10": "Q12B",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q12C",
+        "Q12A"
+      ]
+    },
+    {
+      "r9": "Q11E",
+      "r9_label": "Q11e. Contact traditional leader",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q12A",
+      "r9_label": "Q12a. Elections ensure MPs reflect views of voters",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q12B",
+      "r9_label": "Q12b. Elections ensure voters remove unrepresentative leaders",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q13",
+      "r9_label": "Q13. Voting in the most recent national election",
+      "r10": "Q13A",
+      "score": 0.6,
+      "wording_overlap": 0.6,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q14A",
+      "r9_label": "Q14a. Freeness and fairness of the last national election",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q14B",
+      "r9_label": "Q14b. How likely powerful find out your vote",
+      "r10": "Q16A",
+      "score": 0.8,
+      "wording_overlap": 0.8,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q55A",
+        "Q55E",
+        "Q55D",
+        "Q55C",
+        "Q55B"
+      ]
+    },
+    {
+      "r9": "Q14C",
+      "r9_label": "Q14c. Last national election: fear political intimidation or violence",
+      "r10": "Q16B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 2,
+      "confident": true,
+      "alternates": [
+        "Q71A"
+      ]
+    },
+    {
+      "r9": "Q15",
+      "r9_label": "Q15. Government bans organizations vs join any",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q16",
+      "r9_label": "Q16. Media free to publish vs government control",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q17",
+      "r9_label": "Q17. Media checks government vs avoid negative reporting",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q18",
+      "r9_label": "Q18. Govt gets things done vs govt accountable to citizens",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q19A",
+      "r9_label": "Q19A. Government like a boss vs like an employee",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q19B",
+      "r9_label": "Q19b. Elected officials follow voter demands vs follow own ideas",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q20",
+      "r9_label": "Q20. Men only as leaders vs women leaders",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q21A",
+      "r9_label": "Q21a. Men have more right to job",
+      "r10": "Q80C-SAF",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63D",
+        "Q63C",
+        "Q63B",
+        "Q63A",
+        "Q49A"
+      ]
+    },
+    {
+      "r9": "Q21B",
+      "r9_label": "Q21b. Women have equal right to land",
+      "r10": "Q86F",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q22A",
+      "r9_label": "Q22a. Reject one-party rule",
+      "r10": "Q21A",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q21C",
+        "Q21B"
+      ]
+    },
+    {
+      "r9": "Q22B",
+      "r9_label": "Q22b. Reject military rule",
+      "r10": "Q21C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q21B",
+        "Q21A"
+      ]
+    },
+    {
+      "r9": "Q22C",
+      "r9_label": "Q22c. Reject one-man rule",
+      "r10": "Q21A",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q21C",
+        "Q21B"
+      ]
+    },
+    {
+      "r9": "Q23",
+      "r9_label": "Q23. Support for democracy",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q23B_SAF",
+      "r9_label": "Q23b-saf. Willing to give up regular elections",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q24",
+      "r9_label": "Q24. Choose leaders through elections vs other methods",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q25",
+      "r9_label": "Q25. Political parties divisive vs many parties needed",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q26",
+      "r9_label": "Q26. Democracy needs political party turnover vs ok if one party always wins",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q27A",
+      "r9_label": "Q27a. Parliament makes laws vs president does",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q27B",
+      "r9_label": "Q27b. President monitored by parliament vs free to act on own",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q27C",
+      "r9_label": "Q27c. Opposition parties examine government vs cooperate",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q28",
+      "r9_label": "Q28. President free to act vs obey the laws and courts",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q29A",
+      "r9_label": "Q29a. Presidential two term limit vs no term limits",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q29B",
+      "r9_label": "Q29b. Armed forces never intervene vs when leaders abuse power",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q30",
+      "r9_label": "Q30. Extent of democracy",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q31",
+      "r9_label": "Q31. Satisfaction with democracy",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q32A",
+      "r9_label": "Q32a. Level of democracy compared to five years ago",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q32B",
+      "r9_label": "Q32b. Level of democracy in five years' time",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q33A",
+      "r9_label": "Q33a. How often party competition leads to conflict",
+      "r10": "Q34F",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": false,
+      "alternates": [
+        "Q34E",
+        "Q34D",
+        "Q34C",
+        "Q34B",
+        "Q34A"
+      ]
+    },
+    {
+      "r9": "Q33B",
+      "r9_label": "Q33b. How often president ignores laws",
+      "r10": "Q34A",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": true,
+      "alternates": [
+        "Q34B",
+        "Q34F",
+        "Q34E",
+        "Q34D",
+        "Q34C"
+      ]
+    },
+    {
+      "r9": "Q33C",
+      "r9_label": "Q33c. How often president ignores parliament",
+      "r10": "Q34B",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": true,
+      "alternates": [
+        "Q34A",
+        "Q34F",
+        "Q34E",
+        "Q34D",
+        "Q34C"
+      ]
+    },
+    {
+      "r9": "Q33D",
+      "r9_label": "Q33d. How often careful what you say",
+      "r10": "Q34F",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": false,
+      "alternates": [
+        "Q34E",
+        "Q34D",
+        "Q34C",
+        "Q34B",
+        "Q34A"
+      ]
+    },
+    {
+      "r9": "Q33E",
+      "r9_label": "Q33e. How often people treated unequally under law",
+      "r10": "Q34D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": true,
+      "alternates": [
+        "Q34F",
+        "Q34C",
+        "Q34E",
+        "Q34B",
+        "Q34A"
+      ]
+    },
+    {
+      "r9": "Q33F",
+      "r9_label": "Q33f. How often officials unpunished",
+      "r10": "Q34E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": true,
+      "alternates": [
+        "Q34F",
+        "Q34C",
+        "Q34D",
+        "Q34B",
+        "Q34A"
+      ]
+    },
+    {
+      "r9": "Q33G",
+      "r9_label": "Q33g. How often ordinary people unpunished",
+      "r10": "Q34F",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 10,
+      "confident": true,
+      "alternates": [
+        "Q34E",
+        "Q34D",
+        "Q34C",
+        "Q34B",
+        "Q34A"
+      ]
+    },
+    {
+      "r9": "Q33H",
+      "r9_label": "Q33h. How free is news media",
+      "r10": "Q35",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 4,
+      "confident": true,
+      "alternates": [
+        "Q10C",
+        "Q10B",
+        "Q10A"
+      ]
+    },
+    {
+      "r9": "Q33I",
+      "r9_label": "Q33i. Treated unfairly by government based on economic status",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q34A",
+      "r9_label": "Q34a. MPs listen",
+      "r10": "Q36B",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 2,
+      "confident": false,
+      "alternates": [
+        "Q36A"
+      ]
+    },
+    {
+      "r9": "Q34B",
+      "r9_label": "Q34b. Local government councillors listen",
+      "r10": "Q36B",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 2,
+      "confident": true,
+      "alternates": [
+        "Q36A"
+      ]
+    },
+    {
+      "r9": "Q35A",
+      "r9_label": "Q35a. Access to information: school budget",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q35B",
+      "r9_label": "Q35b. Access to information: local government development plan and budget",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q35C",
+      "r9_label": "Q35c. Access to information: local government contracts",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q36A",
+      "r9_label": "Q36a. Likelihood of response: request assistance",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q36B",
+      "r9_label": "Q36b. Likelihood of response: reporting teacher misconduct",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q36C",
+      "r9_label": "Q36c. Likelihood of response: reporting corruption",
+      "r10": "Q55E",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q55D",
+        "Q55C",
+        "Q55B",
+        "Q55A",
+        "Q53B"
+      ]
+    },
+    {
+      "r9": "Q37A",
+      "r9_label": "Q37a. Trust president",
+      "r10": "Q37A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37B",
+      "r9_label": "Q37b. Trust parliament/national assembly",
+      "r10": "Q37B",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37C",
+      "r9_label": "Q37c. Trust national electoral commission",
+      "r10": "Q37C",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37D",
+      "r9_label": "Q37d. Trust your elected local government council",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q37D1_SAF",
+      "r9_label": "Q37d1-saf. Trust your premier",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q37E",
+      "r9_label": "Q37e. Trust the ruling party",
+      "r10": "Q37E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37F",
+      "r9_label": "Q37f. Trust opposition political parties",
+      "r10": "Q37F",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37G",
+      "r9_label": "Q37g. Trust police",
+      "r10": "Q37G",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37H",
+      "r9_label": "Q37h. Trust army",
+      "r10": "Q87E",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": false,
+      "alternates": [
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q37I",
+      "r9_label": "Q37i. Trust courts of law",
+      "r10": "Q37I",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A"
+      ]
+    },
+    {
+      "r9": "Q37J",
+      "r9_label": "Q37j. Trust traditional leaders",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q37K",
+      "r9_label": "Q37k. Trust religious leaders",
+      "r10": "Q37L",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q37K",
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B"
+      ]
+    },
+    {
+      "r9": "Q37L_SAF",
+      "r9_label": "Q37l-saf. Trust public protector",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q37M_SAF",
+      "r9_label": "Q37m-saf. Trust government broadcasting service",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q37N_SAF",
+      "r9_label": "Q37n-saf. Trust independent broadcasting services",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q37O_SAF",
+      "r9_label": "Q37o-saf. Trust department of health",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q38A",
+      "r9_label": "Q38a. Corruption: office of the Presidency",
+      "r10": "Q38A",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38K",
+        "Q38J",
+        "Q38I",
+        "Q38H",
+        "Q38G"
+      ]
+    },
+    {
+      "r9": "Q38B",
+      "r9_label": "Q38b. Corruption: Members of Parliament",
+      "r10": "Q38B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38K",
+        "Q38J",
+        "Q38I",
+        "Q38H",
+        "Q38G"
+      ]
+    },
+    {
+      "r9": "Q38C",
+      "r9_label": "Q38c. Corruption: Civil servants",
+      "r10": "Q38K",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38J",
+        "Q38I",
+        "Q38H",
+        "Q38G",
+        "Q38F"
+      ]
+    },
+    {
+      "r9": "Q38D",
+      "r9_label": "Q38d. Corruption: local government councillors",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q38E",
+      "r9_label": "Q38e. Corruption: Police",
+      "r10": "Q38E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38K",
+        "Q38J",
+        "Q38I",
+        "Q38H",
+        "Q38G"
+      ]
+    },
+    {
+      "r9": "Q38F",
+      "r9_label": "Q38f. Corruption: Judges and Magistrates",
+      "r10": "Q38F",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38K",
+        "Q38J",
+        "Q38I",
+        "Q38H",
+        "Q38G"
+      ]
+    },
+    {
+      "r9": "Q38G",
+      "r9_label": "Q38g. Corruption: Tax officials",
+      "r10": "Q38G",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38A",
+        "Q38K",
+        "Q38J",
+        "Q38I",
+        "Q38H"
+      ]
+    },
+    {
+      "r9": "Q38H",
+      "r9_label": "Q38h. Corruption: traditional leaders",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q38I",
+      "r9_label": "Q38i. Corruption: religious leaders",
+      "r10": "Q38I",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38H",
+        "Q38K",
+        "Q38J",
+        "Q38G",
+        "Q38F"
+      ]
+    },
+    {
+      "r9": "Q38J",
+      "r9_label": "Q38j. Corruption: business executives",
+      "r10": "Q38J",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38K",
+        "Q38I",
+        "Q38H",
+        "Q38G",
+        "Q38F"
+      ]
+    },
+    {
+      "r9": "Q38K",
+      "r9_label": "Q38k. Corruption: non-governmental organizations",
+      "r10": "Q38K",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 9,
+      "confident": true,
+      "alternates": [
+        "Q38J",
+        "Q38I",
+        "Q38H",
+        "Q38G",
+        "Q38F"
+      ]
+    },
+    {
+      "r9": "Q39A",
+      "r9_label": "Q39a. Level of corruption",
+      "r10": "Q39A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q39B",
+      "r9_label": "Q39b. Ordinary people can report corruption without fear",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q40A",
+      "r9_label": "Q40a. Contact with public school",
+      "r10": "Q40A",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q81A-SAF",
+        "Q93C",
+        "Q93A",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q40B",
+      "r9_label": "Q40b. Difficulty to obtain public school services",
+      "r10": "Q45B",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q44B",
+        "Q40B"
+      ]
+    },
+    {
+      "r9": "Q40C",
+      "r9_label": "Q40c. Pay bribe for public school services",
+      "r10": "Q45E",
+      "score": 0.4,
+      "wording_overlap": 0.4,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q45C",
+        "Q44C",
+        "Q40C",
+        "Q40H",
+        "Q40F"
+      ]
+    },
+    {
+      "r9": "Q40D",
+      "r9_label": "Q40d. Felt respected by teachers, school officials",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q41A",
+      "r9_label": "Q41a. Contact with public clinic or hospital",
+      "r10": "Q40A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q81A-SAF",
+        "Q93C",
+        "Q93A",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q41B",
+      "r9_label": "Q41b. Difficulty to obtain medical care",
+      "r10": "Q40B",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q45B",
+        "Q44B"
+      ]
+    },
+    {
+      "r9": "Q41C",
+      "r9_label": "Q41c. Pay bribe for medical care",
+      "r10": "Q40C",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q45E",
+        "Q45C",
+        "Q44C",
+        "Q40H",
+        "Q40F"
+      ]
+    },
+    {
+      "r9": "Q41D",
+      "r9_label": "Q41d. Felt respected by clinic/hospital staff",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q41E",
+      "r9_label": "Q41e. Problems with public clinic: lack of medicine/supplies",
+      "r10": "Q40D",
+      "score": 0.833,
+      "wording_overlap": 0.833,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q40H",
+        "Q40F",
+        "Q40C",
+        "Q45E",
+        "Q45C"
+      ]
+    },
+    {
+      "r9": "Q41F",
+      "r9_label": "Q41f. Problems with public clinic: medical personnel",
+      "r10": "Q40H",
+      "score": 0.6,
+      "wording_overlap": 0.6,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q40F",
+        "Q40D",
+        "Q40C",
+        "Q45E",
+        "Q45C"
+      ]
+    },
+    {
+      "r9": "Q41G",
+      "r9_label": "Q41g. Problems with public clinic: long waiting time",
+      "r10": "Q40F",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q40H",
+        "Q40D",
+        "Q40C",
+        "Q45E",
+        "Q45C"
+      ]
+    },
+    {
+      "r9": "Q41H",
+      "r9_label": "Q41h. Problems with public clinic: poor condition of facilities",
+      "r10": "Q40H",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q40F",
+        "Q40D",
+        "Q40C",
+        "Q45E",
+        "Q45C"
+      ]
+    },
+    {
+      "r9": "Q42A",
+      "r9_label": "Q42a. Tried to obtain identity document",
+      "r10": "Q44A",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q93C",
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q42B",
+      "r9_label": "Q42b. Difficulty to obtain identity document",
+      "r10": "Q44B",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q45B",
+        "Q40B"
+      ]
+    },
+    {
+      "r9": "Q42C",
+      "r9_label": "Q42c. Pay bribe for identity document",
+      "r10": "Q44C",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q45E",
+        "Q45C",
+        "Q40C",
+        "Q40H",
+        "Q40F"
+      ]
+    },
+    {
+      "r9": "Q42D",
+      "r9_label": "Q42d. Felt respected by govt officials when obtaining documents",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q43A",
+      "r9_label": "Q43a. Requested assistance from the police",
+      "r10": "Q45A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q93C",
+        "Q93A",
+        "Q44A",
+        "Q81A-SAF",
+        "Q74"
+      ]
+    },
+    {
+      "r9": "Q43B",
+      "r9_label": "Q43b. Difficulty to obtain police assistance",
+      "r10": "Q45B",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q44B",
+        "Q40B"
+      ]
+    },
+    {
+      "r9": "Q43C",
+      "r9_label": "Q43c. Pay bribe to receive police assistance",
+      "r10": "Q45C",
+      "score": 0.8,
+      "wording_overlap": 0.8,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q45E",
+        "Q44C",
+        "Q40C",
+        "Q40H",
+        "Q40F"
+      ]
+    },
+    {
+      "r9": "Q43D",
+      "r9_label": "Q43d. Contact with police in other situations",
+      "r10": "Q45D",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q43E",
+      "r9_label": "Q43e. Pay bribe to avoid problem with police",
+      "r10": "Q45E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q45C",
+        "Q44C",
+        "Q40C",
+        "Q40H",
+        "Q40F"
+      ]
+    },
+    {
+      "r9": "Q44A",
+      "r9_label": "Q44a: How often: police professional and respect rights",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q44B",
+      "r9_label": "Q44b: How often: police unnecessarily stop drivers",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q44C",
+      "r9_label": "Q44c: How often: police use excessive force during protests",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q44D",
+      "r9_label": "Q44d: How often: police use excessive force with criminals",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q44E",
+      "r9_label": "Q44e: How often: police engage in criminal activities",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q45PT1",
+      "r9_label": "Q45pt1. Most important problems - 1st response",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q45PT2",
+      "r9_label": "Q45pt2. Most important problems - 2nd response",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q45PT3",
+      "r9_label": "Q45pt3. Most important problems - 3rd response",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q46A",
+      "r9_label": "Q46a. Handling managing the economy",
+      "r10": "Q47A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46B",
+      "r9_label": "Q46b. Handling improving living standards of the poor",
+      "r10": "Q47B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47G",
+        "Q47E",
+        "Q47M",
+        "Q47L",
+        "Q47K"
+      ]
+    },
+    {
+      "r9": "Q46C",
+      "r9_label": "Q46c. Handling creating jobs",
+      "r10": "Q47C",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46D",
+      "r9_label": "Q46d. Handling keeping prices stable",
+      "r10": "Q47D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46E",
+      "r9_label": "Q46e. Handling narrowing income gaps",
+      "r10": "Q47E",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46F",
+      "r9_label": "Q46f. Handling reducing crime",
+      "r10": "Q47F",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46G",
+      "r9_label": "Q46g. Handling improving basic health services",
+      "r10": "Q47G",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47I",
+        "Q47B",
+        "Q47M",
+        "Q47L",
+        "Q47K"
+      ]
+    },
+    {
+      "r9": "Q46H",
+      "r9_label": "Q46h. Handling addressing educational needs",
+      "r10": "Q47H",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46I",
+      "r9_label": "Q46i. Handling providing water and sanitation services",
+      "r10": "Q47I",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47L",
+        "Q47G",
+        "Q47M",
+        "Q47K",
+        "Q47J"
+      ]
+    },
+    {
+      "r9": "Q46J",
+      "r9_label": "Q46j. Handling fighting corruption",
+      "r10": "Q47J",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47I",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46K",
+      "r9_label": "Q46k. Handling maintaining roads and bridges",
+      "r10": "Q47K",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47J",
+        "Q47I",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46L",
+      "r9_label": "Q46l. Handling providing a reliable supply of electricity",
+      "r10": "Q47L",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47I",
+        "Q47M",
+        "Q47K",
+        "Q47J",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46M",
+      "r9_label": "Q46m. Handling preventing or resolving violent conflict",
+      "r10": "Q47M",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46N",
+      "r9_label": "Q46n. Handling promoting equal rights/opportunities for women",
+      "r10": "Q47M",
+      "score": 0.167,
+      "wording_overlap": 0.167,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46O",
+      "r9_label": "Q46o. Handling protecting vulnerable children",
+      "r10": "Q47M",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46P",
+      "r9_label": "Q46p. Handling addressing climate change",
+      "r10": "Q47H",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q46Q",
+      "r9_label": "Q46q. Handling protecting environment",
+      "r10": "Q47M",
+      "score": 0.333,
+      "wording_overlap": 0.333,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I",
+        "Q47H"
+      ]
+    },
+    {
+      "r9": "Q46R_SAF",
+      "r9_label": "Q46r-saf. Handling managing immigration",
+      "r10": "Q47A",
+      "score": 0.4,
+      "wording_overlap": 0.4,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q47M",
+        "Q47L",
+        "Q47K",
+        "Q47J",
+        "Q47I"
+      ]
+    },
+    {
+      "r9": "Q47A",
+      "r9_label": "Q47a. Performance: President",
+      "r10": "Q48A",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q48C",
+        "Q48B"
+      ]
+    },
+    {
+      "r9": "Q47B",
+      "r9_label": "Q47b. Performance: MP/National Assembly rep",
+      "r10": "Q48C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q48B",
+        "Q48A"
+      ]
+    },
+    {
+      "r9": "Q47B1_SAF",
+      "r9_label": "Q47b1-saf. Performance: Premier",
+      "r10": "Q48C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": false,
+      "alternates": [
+        "Q48B",
+        "Q48A"
+      ]
+    },
+    {
+      "r9": "Q47C",
+      "r9_label": "Q47c. Performance: local government councillor",
+      "r10": "Q48C",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 3,
+      "confident": true,
+      "alternates": [
+        "Q48B",
+        "Q48A"
+      ]
+    },
+    {
+      "r9": "Q48A",
+      "r9_label": "Q48a. Who responsible: MPs do jobs",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q48B",
+      "r9_label": "Q48b. Who responsible: president does job",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q49A",
+      "r9_label": "Q49a. Women and men have equal chance of paying job",
+      "r10": "Q86F",
+      "score": 0.167,
+      "wording_overlap": 0.167,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q49A",
+        "Q86D",
+        "Q86C",
+        "Q86B"
+      ]
+    },
+    {
+      "r9": "Q49B",
+      "r9_label": "Q49b. Women and men have equal chance to own/inherit land",
+      "r10": "Q86F",
+      "score": 0.143,
+      "wording_overlap": 0.143,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q50A",
+      "r9_label": "Q50a. Women who run for office: gain standing",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q50B",
+      "r9_label": "Q50b. Women who run for office: criticized or harrassed",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q50C",
+      "r9_label": "Q50c. Women who run for office: face family problems",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q51A",
+      "r9_label": "Q51a. Government do more or less for women's rights/equality",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q51B",
+      "r9_label": "Q51b. Most important women's rights issue",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q52A",
+      "r9_label": "Q52a. Justified for parents to physically discipline children",
+      "r10": "Q85D",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 4,
+      "confident": false,
+      "alternates": [
+        "Q85C",
+        "Q85B",
+        "Q85A"
+      ]
+    },
+    {
+      "r9": "Q52B",
+      "r9_label": "Q52b. Justified for man to use physical discipline on wife",
+      "r10": "Q85D",
+      "score": 0.167,
+      "wording_overlap": 0.167,
+      "wording_floor": 0.3,
+      "candidates": 4,
+      "confident": false,
+      "alternates": [
+        "Q85C",
+        "Q85B",
+        "Q85A"
+      ]
+    },
+    {
+      "r9": "Q53A",
+      "r9_label": "Q53a. How common is violence against women",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q53B",
+      "r9_label": "Q53b. Women who report GBV: taken seriously by police",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q53C",
+      "r9_label": "Q53c. Women who report GBV: criticized or harassed",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q54",
+      "r9_label": "Q54. Domestic violence a private matter vs criminal matter",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q55A",
+      "r9_label": "Q55a. How often: adults use physical discipline with children",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q55B",
+      "r9_label": "Q55b. How often: children abused, neglected",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q55C",
+      "r9_label": "Q55c. How often: children not in school",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q56A",
+      "r9_label": "Q56a. Help available for abused or neglected children",
+      "r10": "Q86F",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A",
+        "Q63D"
+      ]
+    },
+    {
+      "r9": "Q56B",
+      "r9_label": "Q56b. Help available for disabled children",
+      "r10": "Q86F",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A",
+        "Q63D"
+      ]
+    },
+    {
+      "r9": "Q56C",
+      "r9_label": "Q56c. Help available for children/adults with mental/emotional problems",
+      "r10": "Q86F",
+      "score": 0.143,
+      "wording_overlap": 0.143,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A",
+        "Q63D"
+      ]
+    },
+    {
+      "r9": "Q57A",
+      "r9_label": "Q57a. Became ill or tested positive with COVID-19",
+      "r10": "Q93C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A",
+        "Q64E"
+      ]
+    },
+    {
+      "r9": "Q57B",
+      "r9_label": "Q57b. Lost income because of COVID-19",
+      "r10": "Q64E",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q64C",
+        "Q64B",
+        "Q64A",
+        "Q93C",
+        "Q93A"
+      ]
+    },
+    {
+      "r9": "Q58A",
+      "r9_label": "Q58a. Received COVID-19 vaccination",
+      "r10": "Q93C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A",
+        "Q64E"
+      ]
+    },
+    {
+      "r9": "Q58B",
+      "r9_label": "Q58b. Likelihood of getting COVID-19 vaccination",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q58C",
+      "r9_label": "Q58c. Main reason unlikely to vaccinate",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q59",
+      "r9_label": "Q59. Trust govt to ensure safety of COVID-19 vaccine",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q60",
+      "r9_label": "Q60. Handling managing COVID-19 response",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q61A",
+      "r9_label": "Q61a. Satisfaction with government: provision of relief",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q61B",
+      "r9_label": "Q61b.Satisfaction with government: minimizing education disruptions",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q61C",
+      "r9_label": "Q61c. Satisfaction with government: resourcing health facilities",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q62",
+      "r9_label": "Q62. Level of COVID-19 corruption",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q63A",
+      "r9_label": "Q63a. Censor media during pandemic",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q63B",
+      "r9_label": "Q63b. Armed forces/police enforce public health mandates",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q63C",
+      "r9_label": "Q63c. Postpone elections during pandemic",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q64A",
+      "r9_label": "Q64a. Government preparedness for future health emergencies",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q64B",
+      "r9_label": "Q64b. More investment for health emergencies",
+      "r10": "Q80C-SAF",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63D",
+        "Q63C",
+        "Q63B",
+        "Q63A",
+        "Q86F"
+      ]
+    },
+    {
+      "r9": "Q65A",
+      "r9_label": "Q65a. Received COVID-19 relief assistance",
+      "r10": "Q64D",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 2,
+      "confident": false,
+      "alternates": [
+        "Q13B"
+      ]
+    },
+    {
+      "r9": "Q65B",
+      "r9_label": "Q65b. COVID-19 relief assistance fairly distributed",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q66A",
+      "r9_label": "Q66a. Severity of droughts",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q66B",
+      "r9_label": "Q66b. Severity of flooding",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q67A",
+      "r9_label": "Q67a. Heard about climate change",
+      "r10": "Q60A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q64E",
+        "Q64A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q67B",
+      "r9_label": "Q67b. Climate change: affecting country",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q68A",
+      "r9_label": "Q68a. Citizens can help limit climate change",
+      "r10": "Q62C",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q62B",
+        "Q62A",
+        "Q81D-SAF",
+        "Q81E-SAF",
+        "Q81C-SAF"
+      ]
+    },
+    {
+      "r9": "Q68B",
+      "r9_label": "Q68b. Government must act now to limit climate change",
+      "r10": "Q62A",
+      "score": 0.714,
+      "wording_overlap": 0.714,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q62B",
+        "Q62C",
+        "Q81E-SAF",
+        "Q81D-SAF",
+        "Q81C-SAF"
+      ]
+    },
+    {
+      "r9": "Q69",
+      "r9_label": "Q69. Who primarily responsible for limiting climate change",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q70A",
+      "r9_label": "Q70a. Do more to fight climate change: ordinary citizens",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q70B",
+      "r9_label": "Q70b. Do more to fight climate change: business and industry",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q70C",
+      "r9_label": "Q70c. Do more to fight climate change: government",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q70D",
+      "r9_label": "Q70d. Do more to fight climate change: developed countries",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q71",
+      "r9_label": "Q71. Government create jobs vs protect environment",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q72A",
+      "r9_label": "Q72a. Pollution a problem in community",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q72B",
+      "r9_label": "Q72b. Most important environmental issue in community",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q72C",
+      "r9_label": "Q72c. Plastic bags major source of pollution",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q72D",
+      "r9_label": "Q72d. Primary responsibility for reducing pollution",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q72E",
+      "r9_label": "Q72e. Government do more or less to limit pollution",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q73A",
+      "r9_label": "Q73a. Natural resource extraction: needs more regulation",
+      "r10": "Q80C-SAF",
+      "score": 0.167,
+      "wording_overlap": 0.167,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q70B",
+        "Q70A",
+        "Q63D",
+        "Q63C",
+        "Q63B"
+      ]
+    },
+    {
+      "r9": "Q73B",
+      "r9_label": "Q73b. Natural resource extraction: citizens have voice",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q73C",
+      "r9_label": "Q73c. Natural resource extraction: community receives fair share",
+      "r10": "Q49A",
+      "score": 0.143,
+      "wording_overlap": 0.143,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86F",
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B"
+      ]
+    },
+    {
+      "r9": "Q73D",
+      "r9_label": "Q73d. Natural resource extraction: benefits outweigh costs",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q74A",
+      "r9_label": "Q74a. Radio news",
+      "r10": "Q65A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q65E",
+        "Q65D",
+        "Q65C",
+        "Q65B",
+        "Q90J"
+      ]
+    },
+    {
+      "r9": "Q74B",
+      "r9_label": "Q74b. Television news",
+      "r10": "Q65B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q65E",
+        "Q65D",
+        "Q65C",
+        "Q65A",
+        "Q90J"
+      ]
+    },
+    {
+      "r9": "Q74C",
+      "r9_label": "Q74c. Newspaper news",
+      "r10": "Q65E",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": false,
+      "alternates": [
+        "Q65D",
+        "Q65C",
+        "Q65B",
+        "Q65A",
+        "Q90J"
+      ]
+    },
+    {
+      "r9": "Q74D",
+      "r9_label": "Q74d. Internet news",
+      "r10": "Q65E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90J",
+        "Q65D",
+        "Q65C",
+        "Q65B",
+        "Q65A"
+      ]
+    },
+    {
+      "r9": "Q74E",
+      "r9_label": "Q74e. Social media news",
+      "r10": "Q65D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q65E",
+        "Q65C",
+        "Q65B",
+        "Q65A",
+        "Q90J"
+      ]
+    },
+    {
+      "r9": "Q75",
+      "r9_label": "Q75. Government information for official use only",
+      "r10": "Q63E-SAF",
+      "score": 0.4,
+      "wording_overlap": 0.4,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63B",
+        "Q80C-SAF",
+        "Q80B-SAF",
+        "Q80A-SAF",
+        "Q63F-SAF"
+      ]
+    },
+    {
+      "r9": "Q76A",
+      "r9_label": "Q76a. Make local government budgets public",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q76B",
+      "r9_label": "Q76b. Make local government bids and contracts public",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q76C",
+      "r9_label": "Q76c. Make salaries of local government officials and teachers public",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q77",
+      "r9_label": "Q77. China's influence on economy",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q78A",
+      "r9_label": "Q78a. Influence of country: China",
+      "r10": "Q67B",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 8,
+      "confident": true,
+      "alternates": [
+        "Q67H",
+        "Q67G",
+        "Q67F",
+        "Q67E",
+        "Q67D"
+      ]
+    },
+    {
+      "r9": "Q78B",
+      "r9_label": "Q78b. Influence of country: United States",
+      "r10": "Q67C",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 8,
+      "confident": true,
+      "alternates": [
+        "Q67H",
+        "Q67G",
+        "Q67F",
+        "Q67E",
+        "Q67D"
+      ]
+    },
+    {
+      "r9": "Q78C",
+      "r9_label": "Q78c. Influence of country: Japan",
+      "r10": "Q67H",
+      "score": 0.333,
+      "wording_overlap": 0.333,
+      "wording_floor": 0.3,
+      "candidates": 8,
+      "confident": false,
+      "alternates": [
+        "Q67G",
+        "Q67F",
+        "Q67E",
+        "Q67D",
+        "Q67C"
+      ]
+    },
+    {
+      "r9": "Q78C1",
+      "r9_label": "Q78c1. Influence of country: Russia",
+      "r10": "Q67D",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 8,
+      "confident": true,
+      "alternates": [
+        "Q67H",
+        "Q67G",
+        "Q67F",
+        "Q67E",
+        "Q67C"
+      ]
+    },
+    {
+      "r9": "Q78D",
+      "r9_label": "Q78d. Know if country receives assistance from Japan",
+      "r10": "Q45A",
+      "score": 0.333,
+      "wording_overlap": 0.333,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93C",
+        "Q93A",
+        "Q44A",
+        "Q81A-SAF",
+        "Q74"
+      ]
+    },
+    {
+      "r9": "Q78E",
+      "r9_label": "Q78e. Japan puts more or less conditions on assistance",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q78F",
+      "r9_label": "Q78f. Influence of the EU",
+      "r10": "Q67H",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 8,
+      "confident": false,
+      "alternates": [
+        "Q67G",
+        "Q67F",
+        "Q67E",
+        "Q67D",
+        "Q67C"
+      ]
+    },
+    {
+      "r9": "Q79A_SAF",
+      "r9_label": "Q79a_saf. Govt committed to fighting corruption",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q79B_SAF",
+      "r9_label": "Q79b_saf. Govt can fight corruption effectively",
+      "r10": "Q63C",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86F",
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B"
+      ]
+    },
+    {
+      "r9": "Q79C_SAF",
+      "r9_label": "Q79c_saf. Ban businesses involved in corruption from govt business",
+      "r10": "Q14",
+      "score": 0.143,
+      "wording_overlap": 0.143,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86F",
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B"
+      ]
+    },
+    {
+      "r9": "Q79D_SAF",
+      "r9_label": "Q79d_saf. Corrupt officials should step down",
+      "r10": "Q86F",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q80A_SAF",
+      "r9_label": "Q80a_saf. Privatize Eskom for efficient electricity",
+      "r10": "Q63F-SAF",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63E-SAF",
+        "Q63B",
+        "Q86F",
+        "Q86E",
+        "Q86D"
+      ]
+    },
+    {
+      "r9": "Q80B_SAF",
+      "r9_label": "Q80b_saf. Allow competition in electricity market",
+      "r10": "Q63F-SAF",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63E-SAF",
+        "Q63B",
+        "Q86F",
+        "Q86E",
+        "Q86D"
+      ]
+    },
+    {
+      "r9": "Q80C_SAF",
+      "r9_label": "Q80c_saf. Better services worth higher cost",
+      "r10": "Q63E-SAF",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86F",
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B"
+      ]
+    },
+    {
+      "r9": "Q81A_SAF",
+      "r9_label": "Q81a_saf. Considering moving abroad",
+      "r10": "Q71A",
+      "score": 0.333,
+      "wording_overlap": 0.333,
+      "wording_floor": 0.3,
+      "candidates": 2,
+      "confident": true,
+      "alternates": [
+        "Q16B"
+      ]
+    },
+    {
+      "r9": "Q81B_SAF",
+      "r9_label": "Q81b_saf. Planning for moving abroad",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q81C_SAF",
+      "r9_label": "Q81c_saf. Country to move to abroad",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q82A_SAF",
+      "r9_label": "Q82a_saf. Welcome foreign migrants for jobs",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q82B_SAF",
+      "r9_label": "Q82b_saf. Favour skilled foreigners, investors for economic growth",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q82C_SAF",
+      "r9_label": "Q82c_saf. Prioritise South Africans over immigrants",
+      "r10": "Q80C-SAF",
+      "score": 0.4,
+      "wording_overlap": 0.4,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63D",
+        "Q70B",
+        "Q70A",
+        "Q86F",
+        "Q86E"
+      ]
+    },
+    {
+      "r9": "Q82D_SAF",
+      "r9_label": "Q82d_saf. Protect political refugees in SA",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q82E_SAF",
+      "r9_label": "Q82e_saf. Govt prioritising citizens for jobs",
+      "r10": "Q86F",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B",
+        "Q86A"
+      ]
+    },
+    {
+      "r9": "Q83_SAF",
+      "r9_label": "Q83_saf. Elect president directly vs chosen by parliament",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q84A",
+      "r9_label": "Q84a. Ethnic community, cultural group or tribe",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q84B",
+      "r9_label": "Q84b. Ethnic group treated unfairly by government",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q84C",
+      "r9_label": "Q84c. Ethnic or national identity",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q84D",
+      "r9_label": "Q84d. Same ethnic group as mother",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q84E",
+      "r9_label": "Q84e. Same ethnic group as father",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q85A",
+      "r9_label": "Q85a. Strong ties with other citizens",
+      "r10": "Q63A",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q86F",
+        "Q86E",
+        "Q86D",
+        "Q86C",
+        "Q86B"
+      ]
+    },
+    {
+      "r9": "Q85B",
+      "r9_label": "Q85b. Children belong more to mother's or father's side",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q86A",
+      "r9_label": "Q86a. Trust other citizens",
+      "r10": "Q87E",
+      "score": 0.667,
+      "wording_overlap": 0.667,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": false,
+      "alternates": [
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q86B",
+      "r9_label": "Q86b. Trust relatives",
+      "r10": "Q87A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q86C",
+      "r9_label": "Q86c. Trust neighbours",
+      "r10": "Q87B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87E",
+        "Q87D",
+        "Q87C",
+        "Q87A",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q86D",
+      "r9_label": "Q86d. Trust other people you know",
+      "r10": "Q87E",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": false,
+      "alternates": [
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q86E",
+      "r9_label": "Q86e. Trust people from other religions",
+      "r10": "Q87D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": false,
+      "alternates": [
+        "Q87E",
+        "Q87C",
+        "Q87B",
+        "Q87A",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q86F",
+      "r9_label": "Q86f. Trust people from other ethnic groups",
+      "r10": "Q87E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 22,
+      "confident": true,
+      "alternates": [
+        "Q87D",
+        "Q87C",
+        "Q87B",
+        "Q87A",
+        "Q37P-SAF"
+      ]
+    },
+    {
+      "r9": "Q87A",
+      "r9_label": "Q87a. Neighbours: people of different religion",
+      "r10": "Q88A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": true,
+      "alternates": [
+        "Q88E",
+        "Q88F",
+        "Q88D",
+        "Q88C",
+        "Q88B"
+      ]
+    },
+    {
+      "r9": "Q87B",
+      "r9_label": "Q87b. Neighbours: people of different ethnicity",
+      "r10": "Q88E",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q88A",
+        "Q88F",
+        "Q88D",
+        "Q88C",
+        "Q88B"
+      ]
+    },
+    {
+      "r9": "Q87C",
+      "r9_label": "Q87c. Neighbours: homosexuals",
+      "r10": "Q88C",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": true,
+      "alternates": [
+        "Q88F",
+        "Q88E",
+        "Q88D",
+        "Q88B",
+        "Q88A"
+      ]
+    },
+    {
+      "r9": "Q87D",
+      "r9_label": "Q87d. Neighbours: immigrants and foreign workers",
+      "r10": "Q88D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": true,
+      "alternates": [
+        "Q88F",
+        "Q88E",
+        "Q88C",
+        "Q88B",
+        "Q88A"
+      ]
+    },
+    {
+      "r9": "Q87E",
+      "r9_label": "Q87e. Neighbours: people who support a different political party",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q88A",
+      "r9_label": "Q88a. Ok for family member to marry from different ethnic group",
+      "r10": "Q88E",
+      "score": 0.429,
+      "wording_overlap": 0.429,
+      "wording_floor": 0.3,
+      "candidates": 6,
+      "confident": false,
+      "alternates": [
+        "Q88B",
+        "Q88A",
+        "Q88F",
+        "Q88D",
+        "Q88C"
+      ]
+    },
+    {
+      "r9": "Q88B",
+      "r9_label": "Q88b. Others see respondent as citizen like them",
+      "r10": "Q70C",
+      "score": 0.2,
+      "wording_overlap": 0.2,
+      "wording_floor": 0.3,
+      "candidates": 20,
+      "confident": false,
+      "alternates": [
+        "Q63B",
+        "Q86F",
+        "Q86E",
+        "Q86D",
+        "Q86C"
+      ]
+    },
+    {
+      "r9": "Q89A",
+      "r9_label": "Q89a. Close to political party",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q89B",
+      "r9_label": "Q89b. Which party",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q90A",
+      "r9_label": "Q90a. Own radio",
+      "r10": "Q90A",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90G",
+        "Q90F",
+        "Q90E",
+        "Q90D",
+        "Q90C"
+      ]
+    },
+    {
+      "r9": "Q90B",
+      "r9_label": "Q90b. Own television",
+      "r10": "Q90B",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90G",
+        "Q90F",
+        "Q90E",
+        "Q90D",
+        "Q90C"
+      ]
+    },
+    {
+      "r9": "Q90C",
+      "r9_label": "Q90c. Own motor vehicle, car or motorcycle",
+      "r10": "Q90C",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90G",
+        "Q90F",
+        "Q90E",
+        "Q90D",
+        "Q90B"
+      ]
+    },
+    {
+      "r9": "Q90D",
+      "r9_label": "Q90d. Own computer",
+      "r10": "Q90D",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90G",
+        "Q90F",
+        "Q90E",
+        "Q90C",
+        "Q90B"
+      ]
+    },
+    {
+      "r9": "Q90E",
+      "r9_label": "Q90e. Own bank account",
+      "r10": "Q90E",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90G",
+        "Q90F",
+        "Q90D",
+        "Q90C",
+        "Q90B"
+      ]
+    },
+    {
+      "r9": "Q90F",
+      "r9_label": "Q90f. Own mobile phone",
+      "r10": "Q90F",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90G",
+        "Q90E",
+        "Q90D",
+        "Q90C",
+        "Q90B"
+      ]
+    },
+    {
+      "r9": "Q90G",
+      "r9_label": "Q90g. Mobile phone access to internet",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q90H",
+      "r9_label": "Q90h. How often use a mobile phone",
+      "r10": "Q90I",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90J",
+        "Q65E",
+        "Q65D",
+        "Q65C",
+        "Q65B"
+      ]
+    },
+    {
+      "r9": "Q90I",
+      "r9_label": "Q90i. How often use the internet",
+      "r10": "Q90J",
+      "score": 1.0,
+      "wording_overlap": 1.0,
+      "wording_floor": 0.3,
+      "candidates": 7,
+      "confident": true,
+      "alternates": [
+        "Q90I",
+        "Q65E",
+        "Q65D",
+        "Q65C",
+        "Q65B"
+      ]
+    },
+    {
+      "r9": "Q91A",
+      "r9_label": "Q91a. Source of water for household use",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q91B",
+      "r9_label": "Q91b. Location of main water source",
+      "r10": "Q91B",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q91C",
+      "r9_label": "Q91c. Location of toilet or latrine",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q92A",
+      "r9_label": "Q92a. Electric connection from mains",
+      "r10": "Q93A",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q93C",
+        "Q45A",
+        "Q44A",
+        "Q81A-SAF",
+        "Q74"
+      ]
+    },
+    {
+      "r9": "Q92B",
+      "r9_label": "Q92b. Electricity available from mains",
+      "r10": "Q93B",
+      "score": 0.75,
+      "wording_overlap": 0.75,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": true,
+      "alternates": []
+    },
+    {
+      "r9": "Q93A",
+      "r9_label": "Q93a. Employment status",
+      "r10": "Q94A",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 1,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q93B",
+      "r9_label": "Q93b. Occupation of respondent",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q93C",
+      "r9_label": "Q93c. Who decides how money is used",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q94",
+      "r9_label": "Q94. Education of respondent",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q95",
+      "r9_label": "Q95. Religion of respondent",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q96",
+      "r9_label": "Q96. Vote for which party",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q97",
+      "r9_label": "Q97. Perceived survey sponsor",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "LENGTH_INT",
+      "r9_label": "Interview length calculated excluding break",
+      "r10": "Q93C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A",
+        "Q64E"
+      ]
+    },
+    {
+      "r9": "Q100",
+      "r9_label": "Q100.  Gender of respondent",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q101",
+      "r9_label": "Q101.  Race of respondent",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q102",
+      "r9_label": "Q102. Language of interview",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q103",
+      "r9_label": "Q103. Type of shelter of respondent",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q104",
+      "r9_label": "Q104. Roof of respondent’s home",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q105",
+      "r9_label": "Q105. Others present",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q106A",
+      "r9_label": "Q106a. Check with others",
+      "r10": "Q56",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q93C",
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q106B",
+      "r9_label": "Q106b. Influence by others",
+      "r10": "Q56",
+      "score": 0.5,
+      "wording_overlap": 0.5,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": true,
+      "alternates": [
+        "Q93C",
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q106C",
+      "r9_label": "Q106c. Approached by community/party representatives",
+      "r10": "Q56",
+      "score": 0.25,
+      "wording_overlap": 0.25,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93C",
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A"
+      ]
+    },
+    {
+      "r9": "Q106D",
+      "r9_label": "Q106d. Feel threatened",
+      "r10": "Q93C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A",
+        "Q64E"
+      ]
+    },
+    {
+      "r9": "Q106E",
+      "r9_label": "Q106e. Physically threatened",
+      "r10": "Q93C",
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 14,
+      "confident": false,
+      "alternates": [
+        "Q93A",
+        "Q81A-SAF",
+        "Q74",
+        "Q69A",
+        "Q64E"
+      ]
+    },
+    {
+      "r9": "Q107",
+      "r9_label": "Q107. Proportion difficulty answering",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q109A",
+      "r9_label": "Q109a. Respondent friendly",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q109B",
+      "r9_label": "Q109b. Respondent interested",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q109C",
+      "r9_label": "Q109c. Respondent cooperative",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q109D",
+      "r9_label": "Q109d. Respondent patient",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q109E",
+      "r9_label": "Q109e. Respondent at ease",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q109F",
+      "r9_label": "Q109f. Respondent honest",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q113",
+      "r9_label": "Q113. Interviewer’s gender",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q114",
+      "r9_label": "Q114. Interviewer rural or urban",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q115",
+      "r9_label": "Q115. Interviewer's home language",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q116",
+      "r9_label": "Q116. Interviewer's ethnic group or tribe",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q117",
+      "r9_label": "Q117. Interviewer's education",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_1",
+      "r9_label": "Q118. Other spoken languages_first",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_2",
+      "r9_label": "Q118. Other spoken languages_second",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_3",
+      "r9_label": "Q118. Other spoken languages_third",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_4",
+      "r9_label": "Q118. Other spoken languages_fourth",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_5",
+      "r9_label": "Q118. Other spoken languages_fifth",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_6",
+      "r9_label": "Q118. Other spoken languages_sixth",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_7",
+      "r9_label": "Q118. Other spoken languages_seventh",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_8",
+      "r9_label": "Q118. Other spoken languages_eighth",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_9",
+      "r9_label": "Q118. Other spoken languages_ninth",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    },
+    {
+      "r9": "Q118_10",
+      "r9_label": "Q118. Other spoken languages_tenth",
+      "r10": null,
+      "score": 0.0,
+      "wording_overlap": 0.0,
+      "wording_floor": 0.3,
+      "candidates": 0,
+      "confident": false,
+      "alternates": []
+    }
+  ]
+}

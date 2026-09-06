@@ -223,6 +223,32 @@ def geotype_to_canonical(value: str | None, source: str = "qlfs") -> Optional[st
     return table.get(v)
 
 
+# The three buckets donors are keyed on, decoded from Afrobarometer Q93A.
+EMPLOYMENT_VOCAB = ["Employed", "Unemployed", "Other not economically active"]
+
+# QLFS Status → canonical. QLFS carries a fourth status Afrobarometer has no code
+# for: 'Discouraged job seeker' (3,642 of 62,819 QLFS rows) — someone who wants work
+# but has stopped looking. Stats SA counts them as NOT economically active, and
+# Afrobarometer's Q93A "No (not looking)" decodes to the same bucket, so that is
+# where they join. Left unmapped they matched no donor on this key and fell all the
+# way down the ladder to race alone.
+_QLFS_EMPLOYMENT = {
+    "Employed": "Employed",
+    "Unemployed": "Unemployed",
+    "Other not economically active": "Other not economically active",
+    "Discouraged job seeker": "Other not economically active",
+}
+
+
+def employment_to_canonical(value: str | None) -> Optional[str]:
+    """Normalise a QLFS employment status onto EMPLOYMENT_VOCAB.
+
+    Unknown / blank → None, which never matches on this key and backs off, rather
+    than being coerced into a status the data doesn't show.
+    """
+    return _QLFS_EMPLOYMENT.get((value or "").strip())
+
+
 def _validate_donor(d: Dict, idx: int) -> None:
     """Fail loud if a donor record is malformed — a bad donor silently skews every
     persona that matches it, so we reject rather than coerce."""

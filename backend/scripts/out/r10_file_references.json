@@ -1,0 +1,53 @@
+{
+  "backend/scripts/build_r10_crosswalk.py": {
+    "_WORDING_FLOOR =": 47,
+    "def build(": 74,
+    "before = json.loads": 128
+  },
+  "backend/scripts/backtest_panel.py": {
+    "SPREAD_THRESHOLDS =": 238,
+    "def spread(": 241
+  },
+  "backend/scripts/check_r10_realism.py": {
+    "def explained_variance(": 22,
+    "def describe(": 41,
+    "def main(": 70
+  },
+  "backend/scripts/attitude_donor_adapter.py": {
+    "def employment_to_canonical(": 243
+  },
+  "backend/scripts/attitude_fuser.py": {
+    "def _skeleton_join_view(": 117
+  },
+  "backend/tests/test_r10_validation.py": {
+    "def test_wording_floor": 12,
+    "def test_spread_exact": 24,
+    "def test_weighted_variance": 50,
+    "def test_frozen_list": 61,
+    "def test_employment_keys": 82
+  },
+  "backend/scripts/out/r10_item_list.json": {
+    "start": 1
+  },
+  "backend/scripts/out/r10_ask_scenarios.json": {
+    "start": 1
+  },
+  "backend/scripts/out/r10_item_lock.json": {
+    "start": 1
+  },
+  "backend/scripts/out/r10_crosswalk_changes.json": {
+    "start": 1
+  },
+  "backend/scripts/out/r10_identical_people.json": {
+    "start": 1
+  },
+  "backend/scripts/out/r10_identical_people.md": {
+    "start": 1
+  },
+  "backend/scripts/out/r10_proof_of_work.txt": {
+    "start": 1
+  },
+  "backend/scripts/out/R10_BACKTEST_RESULTS.md": {
+    "start": 1
+  }
+}

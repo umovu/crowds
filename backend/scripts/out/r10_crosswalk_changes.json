@@ -1,0 +1,38 @@
+{
+  "before_confident": 102,
+  "after_confident": 98,
+  "changed": [
+    {
+      "r9": "Q22C",
+      "r10": "Q21A",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.25,
+      "r9_label": "Q22c. Reject one-man rule"
+    },
+    {
+      "r9": "Q85A",
+      "r10": "Q63A",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.25,
+      "r9_label": "Q85a. Strong ties with other citizens"
+    },
+    {
+      "r9": "Q93A",
+      "r10": "Q94A",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.0,
+      "r9_label": "Q93a. Employment status"
+    },
+    {
+      "r9": "Q106C",
+      "r10": "Q56",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.25,
+      "r9_label": "Q106c. Approached by community/party representatives"
+    }
+  ]
+}

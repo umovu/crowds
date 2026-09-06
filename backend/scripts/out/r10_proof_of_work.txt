@@ -1,0 +1,170 @@
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/build_r10_crosswalk.py
+{
+  "before_confident": 102,
+  "after_confident": 98,
+  "changed": [
+    {
+      "r9": "Q22C",
+      "r10": "Q21A",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.25,
+      "r9_label": "Q22c. Reject one-man rule"
+    },
+    {
+      "r9": "Q85A",
+      "r10": "Q63A",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.25,
+      "r9_label": "Q85a. Strong ties with other citizens"
+    },
+    {
+      "r9": "Q93A",
+      "r10": "Q94A",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.0,
+      "r9_label": "Q93a. Employment status"
+    },
+    {
+      "r9": "Q106C",
+      "r10": "Q56",
+      "before": true,
+      "after": false,
+      "wording_overlap": 0.25,
+      "r9_label": "Q106c. Approached by community/party representatives"
+    }
+  ]
+}
+361 R9 variables | 178 matched | 98 confident -> D:\Fub-agentsociety\backend\data\microdata\attitudes\r9_r10_crosswalk.json
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/shortlist_r10_items.py --top 100
+dropping 4 ambiguous R10 codes claimed by several R9 variables: Q38K, Q40A, Q47H, Q56
+83 comparable questions (61 held_out, 22 seen) -> D:\Fub-agentsociety\backend\scripts\out\r10_shortlist.json
+   20.1        Q78A -> Q67B       Do you think that the economic and political influence of each of the 
+   16.9        Q22A -> Q21A       There are many ways to govern a country. Would you disapprove or appro
+   16.6        Q38E -> Q38E       How many of the following people do you think are involved in corrupti
+   14.9        Q91B -> Q91B       Please tell me whether each of the following is available inside your 
+   13.5        Q78B -> Q67C       Do you think that the economic and political influence of each of the 
+   13.1        Q92A -> Q93A       Do you have an electric connection to your home from Eskom?
+   12.6        Q37F -> Q37F       How much do you trust each of the following, or haven't you heard enou
+   12.4       Q78C1 -> Q67D       Do you think that the economic and political influence of each of the 
+   11.1        Q38F -> Q38F       How many of the following people do you think are involved in corrupti
+   10.6        Q38G -> Q38G       How many of the following people do you think are involved in corrupti
+   10.5        Q87C -> Q88C       For each of the following types of people, please tell me whether you 
+   10.4        Q90A -> Q90A       Which of these things do you personally own? [If “No”:] Does anyone el
+   10.1        Q37I -> Q37I       How much do you trust each of the following, or haven't you heard enou
+    9.2        Q37E -> Q37E       How much do you trust each of the following, or haven't you heard enou
+    9.1        Q37B -> Q37B       How much do you trust each of the following, or haven't you heard enou
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_r10_validation.py
+...                                                                      [100%]
+3 passed in 1.30s
+
+exit_code=0
+
+Item 2 reviewed fixed-list construction:
+Frozen 12 held-out items + 3 seen controls; 4 held-out substantive subgroup gaps >=5 pp.
+{
+  "files": {
+    "r10_item_list.json": "d8aa93d6c8ca2028bd99d234a7b2f49fc1b8e13f10d0377460dc350df5267898",
+    "r10_ask_scenarios.json": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20"
+  }
+}
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_r10_validation.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+.....                                                                    [100%]
+5 passed in 1.36s
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/check_r10_realism.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+# Identical-people diagnostic
+
+INCONCLUSIVE: held-out library answers absent; raw group statistic is inflated by sparse cells
+
+R9: 1580 respondents, 198 excluded for missing group keys/weight. Library: 375, 31 excluded.
+
+Raw group variance is descriptive. Sparse cells explain variation even after answers are shuffled.
+The shared dimensions below are a separate comparison; they cannot fill the absent held-out answers.
+
+| Shared dimension | R9 explained % | Library explained % | Gap pp | R9 shuffled % | Library shuffled % | R9 singleton people | Library singleton people |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| gov_trust | 48.05 | 81.81 | +33.76 | 44.10 | 63.44 | 272 | 157 |
+| economic_optimism | 48.11 | 78.39 | +30.28 | 44.21 | 63.32 | 278 | 157 |
+| service_satisfaction | 47.05 | 78.94 | +31.89 | 43.91 | 64.08 | 277 | 157 |
+| crime_fear | 46.65 | 75.78 | +29.13 | 43.89 | 63.29 | 277 | 157 |
+| education_satisfaction | 46.50 | 76.01 | +29.52 | 44.29 | 63.46 | 271 | 157 |
+| health_service_satisfaction | 45.76 | 79.92 | +34.15 | 43.99 | 63.47 | 274 | 157 |
+| health_authority_trust | 45.26 | 76.71 | +31.44 | 44.18 | 63.10 | 273 | 157 |
+| councillor_responsiveness | 42.73 | 73.53 | +30.80 | 44.39 | 63.84 | 273 | 157 |
+| official_responsiveness | 52.90 | 78.12 | +25.22 | 45.23 | 63.55 | 276 | 157 |
+| crime_handling | 45.32 | 76.89 | +31.57 | 44.45 | 63.22 | 280 | 157 |
+| immigration_priority | 42.00 | 73.80 | +31.80 | 44.39 | 63.74 | 278 | 157 |
+| pays_for_quality | 45.48 | 74.48 | +28.99 | 44.83 | 63.61 | 279 | 157 |
+| business_trust | 46.98 | 76.05 | +29.08 | 45.65 | 63.84 | 271 | 157 |
+| social_trust | 43.54 | 80.08 | +36.54 | 44.13 | 63.24 | 272 | 157 |
+| environment_priority | 50.31 | 80.17 | +29.87 | 44.58 | 63.28 | 273 | 157 |
+
+| Item | Set | R9 explained % | R9 don't-know/refusal % | Library / gap |
+|---|---|---:|---:|---|
+| Q38E | held_out | 48.65 | 3.05 | unavailable |
+| Q38F | held_out | 45.20 | 8.63 | unavailable |
+| Q38G | held_out | 45.41 | 11.79 | unavailable |
+| Q37F | held_out | 48.85 | 4.82 | unavailable |
+| Q37I | held_out | 46.62 | 2.92 | unavailable |
+| Q37B | held_out | 45.90 | 3.38 | unavailable |
+| Q46E | held_out | 51.92 | 3.59 | unavailable |
+| Q46B | held_out | 46.46 | 2.99 | unavailable |
+| Q9A | held_out | 47.95 | 1.16 | unavailable |
+| Q5A | held_out | 46.17 | 0.82 | unavailable |
+| Q47A | held_out | 48.84 | 6.40 | unavailable |
+| Q37G | held_out | 47.51 | 1.47 | unavailable |
+| Q37A | seen | 49.12 | 2.54 | unavailable |
+| Q4A | seen | 48.37 | 0.99 | unavailable |
+| Q46F | seen | 45.38 | 0.51 | unavailable |
+
+- Shared dimensions compare the same decoded bands; not held-out-item results.
+- R9 uses withinwt_hh; stored library uses equal weights for this descriptive diagnostic.
+- Missing fused attitudes are not a measured refusal rate; fusion fills missing donor answers.
+- Existing _footer forces closest option and old scenarios omit opt-outs. It has not been changed.
+- R10 frozen scenarios preserve all published options including opt-outs; this differs from the older scenarios.
+- Permutation sensitivity is not cross-validation or a survey-design significance test.
+
+Paid run held: this diagnostic cannot certify the plan's gate. No personas changed.
+
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_r10_validation.py backend/tests/test_attitude_ladder.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+...........                                                              [100%]
+============================== warnings summary ===============================
+tests/test_attitude_ladder.py::test_every_skeleton_source_supplies_the_join_keys
+  D:\Fub-agentsociety\backend\scripts\persona_sampler.py:83: UnicodeWarning: 
+  One or more strings in the dta file could not be decoded using utf-8, and
+  so the fallback encoding of latin-1 is being used.  This can happen when a file
+  has been incorrectly encoded by Stata or some other software. You should verify
+  the string values returned are correct.
+    lab = pd.read_stata(dta_path, columns=_LABELLED_COLS, convert_categoricals=True)
+
+tests/test_attitude_ladder.py::test_every_skeleton_source_supplies_the_join_keys
+  D:\Fub-agentsociety\backend\scripts\persona_sampler.py:233: UnicodeWarning: 
+  One or more strings in the dta file could not be decoded using utf-8, and
+  so the fallback encoding of latin-1 is being used.  This can happen when a file
+  has been incorrectly encoded by Stata or some other software. You should verify
+  the string values returned are correct.
+    lab = pd.read_stata(dta_path, columns=_FARM_LABELLED_COLS, convert_categoricals=True)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+11 passed, 2 warnings in 9.03s
+
+exit_code=0
