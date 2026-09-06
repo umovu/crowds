@@ -254,6 +254,22 @@ def balance_weights(library_views, real_views, real_weights, keys, tolerance=1e-
     return None, {"status": "did not converge", "iterations": iterations, "max_marginal_error": error}
 
 
+
+def education_decode_audit(frame, meta):
+    """Expose valid Q94 qualifications dropped by the shipping reader.
+
+    Q94 substantive values are 0..9; 98/99 denote refusal/don't-know.
+    Do not repair the production reader or change this diagnostic's sample here.
+    """
+    rows = []
+    for code, label in meta.variable_value_labels["Q94"].items():
+        decoded = ada._ab_education_band(code)
+        rows.append({"code": code, "label": label,
+                     "n": int((frame["Q94"] == code).sum()), "decoded": decoded,
+                     "valid_education_rejected": bool(0 <= code <= 9 and decoded is None)})
+    return {"rows": rows, "valid_education_rejected_n": sum(x["n"] for x in rows if x["valid_education_rejected"])}
+
+
 def repaired_main():
     import hashlib
     import sys
@@ -351,7 +367,8 @@ def repaired_main():
     result = {"method_sha256":before[str(method_path.relative_to(ROOT))], "input_sha256":before,
               "inputs_unchanged":True, "real_total":len(df), "library_total":len(people),
               "real_usable":len(real), "library_usable":len(library), "exclusions":exclusions,
-              "balance":balance, "stored_attitude_provenance_counts_all_personas":provenance,
+              "balance":balance, "education_decode_audit":education_decode_audit(df,meta),
+              "stored_attitude_provenance_counts_all_personas":provenance,
               "ladder":_BACKOFF_LADDER, "dimensions":rows, "model_calls":0,
               "warning_count":sum(x.get("investigate") is True for x in rows),
               "inconclusive_count":sum(x.get("investigate") is None for x in rows),
@@ -360,6 +377,9 @@ def repaired_main():
     def pp(value):
         return "n/a" if value is None else f"{100*value:.2f}"
     lines = ["# Realism test repair: proof of work", "",
+             "## Data-reader limitation", "",
+             f"The existing education reader rejects {result['education_decode_audit']['valid_education_rejected_n']} respondents with valid Q94 education codes. See education_decode_audit in the JSON.",
+             "These results apply only to the reader-selected sample. Repair the education reader and rerun the unchanged method before using flags to justify persona changes.", "",
              "## What changed", "",
              "The repaired test hides each person's answer and predicts its category using other people only.",
              "It compares the same stored attitude bands on both sides. A tiny group cannot predict itself.",

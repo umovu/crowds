@@ -1,5 +1,21 @@
 # Realism test repair: proof of work
 
+## Important data-reader finding
+
+A follow-up metadata check found a definite bug in the existing education reader.
+R9 code 8 means **University completed** (141 people), and code 9 means
+**Post-graduate** (36 people). The generic missing-value list contains 8 and 9,
+so `_ab_education_band` rejects all **177** valid qualifications. The evidence
+is now in `education_decode_audit` in the JSON and the terminal record below.
+
+The reported five warnings apply only to the sample the current reader kept.
+**Fix this education decoder and rerun the same fixed method before using those
+warnings to justify persona changes.** The test calculation is repaired, but
+its source reader still restricts the comparison. The decoder and existing
+persona data were left unchanged in this task; no results were quietly replaced
+with a different sample. The audit was added after the initial run, and the
+method, warning thresholds and all 15 calculated results remain unchanged.
+
 ## Findings in plain words
 
 The test is repaired and has run. **Five attitudes need closer review:** government
@@ -24,8 +40,8 @@ entries across the library (2.90%). The 344 included personas had no missing
 attitude bands, while real respondents did. The stored tags show recorded
 filling; they do not reveal exactly which original answers were refusals.
 
-**Next useful work:** inspect donor reuse and missing-answer filling in those
-five areas. Do not rebuild personas based on these flags alone. The paid R10
+**Next useful work:** repair the education decoder, rerun this same method,
+then inspect donor reuse and missing-answer filling where warnings persist. Do not rebuild personas based on these flags alone. The paid R10
 answer test remains unrun, and no overall accuracy claim is supported.
 
 ## What changed
@@ -112,7 +128,7 @@ Old r10_identical_people outputs were preserved. Model calls: **0**. No personas
 - `backend/scripts/check_r10_realism.py:154`: `prediction_weights`.
 - `backend/scripts/check_r10_realism.py:194`: `heldout_reduction`.
 - `backend/scripts/check_r10_realism.py:215`: `balance_weights`.
-- `backend/scripts/check_r10_realism.py:257`: `repaired_main`.
+- `backend/scripts/check_r10_realism.py:273`: `repaired_main`.
 - `backend/tests/test_realism_repair.py:11`: `test_singletons_`.
 - `backend/tests/test_realism_repair.py:20`: `test_own_answer_`.
 - `backend/tests/test_realism_repair.py:29`: `test_real_group_`.
@@ -120,12 +136,12 @@ Old r10_identical_people outputs were preserved. Model calls: **0**. No personas
 - `backend/tests/test_realism_repair.py:53`: `test_balance_matches_`.
 - `backend/tests/test_realism_repair.py:63`: `test_balance_does_not_`.
 
-The test script covers eight new invariants: singleton fallback, self-answer
+The test script covers nine new tests: singleton fallback, self-answer
 exclusion, recoverable true group signal, rejection of balanced noise, tiny and
 weight-dominated groups, undefined constant-answer results, demographic weight
 fitting, and unsupported categories. Bad input weights are also rejected.
 
-**14 tests passed**, including the six existing R10 regression tests. Both model
+**15 tests passed**, including the six existing R10 regression tests. Both model
 keys were unset. Method digest and unchanged input digests are recorded in the
 results JSON. The old report and frozen R10 question list were not regenerated.
 
@@ -179,6 +195,114 @@ Method SHA256: 9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21
 Usable rows: real=1382/1580, library=344/375; balance=converged
 Input hashes unchanged; model calls=0
 POW: backend/scripts/out/REALISM_REPAIR_POW.md
+
+exit_code=0
+
+Post-run education metadata audit:
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -c "import sys; sys.path.insert(0,'backend/scripts'); import pyreadstat,json; from check_r10_realism import education_decode_audit; df,meta=pyreadstat.read_sav('backend/data/microdata/attitudes/afrobarometer_r9_sa.sav',usecols=['Q94']); print(json.dumps(education_decode_audit(df,meta),indent=2))"
+{
+  "rows": [
+    {
+      "code": -1.0,
+      "label": "Missing",
+      "n": 0,
+      "decoded": null,
+      "valid_education_rejected": false
+    },
+    {
+      "code": 0.0,
+      "label": "No formal schooling",
+      "n": 43,
+      "decoded": "none",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 1.0,
+      "label": "Informal schooling only (including Koranic schooling)",
+      "n": 7,
+      "decoded": "none",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 2.0,
+      "label": "Some primary schooling",
+      "n": 55,
+      "decoded": "primary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 3.0,
+      "label": "Primary school completed",
+      "n": 126,
+      "decoded": "primary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 4.0,
+      "label": "Intermediate school or Some secondary school / high school",
+      "n": 360,
+      "decoded": "secondary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 5.0,
+      "label": "Secondary school / high school completed",
+      "n": 555,
+      "decoded": "secondary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 6.0,
+      "label": "Post-secondary qualifications, other than university e.g. a diploma or degree from a polytechnic or college",
+      "n": 184,
+      "decoded": "tertiary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 7.0,
+      "label": "Some university",
+      "n": 58,
+      "decoded": "tertiary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 8.0,
+      "label": "University completed",
+      "n": 141,
+      "decoded": null,
+      "valid_education_rejected": true
+    },
+    {
+      "code": 9.0,
+      "label": "Post-graduate",
+      "n": 36,
+      "decoded": null,
+      "valid_education_rejected": true
+    },
+    {
+      "code": 98.0,
+      "label": "Refused",
+      "n": 11,
+      "decoded": null,
+      "valid_education_rejected": false
+    },
+    {
+      "code": 99.0,
+      "label": "Don\u2019t know",
+      "n": 4,
+      "decoded": null,
+      "valid_education_rejected": false
+    }
+  ],
+  "valid_education_rejected_n": 177
+}
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_realism_repair.py backend/tests/test_r10_validation.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+...............                                                          [100%]
+15 passed in 1.65s
 
 exit_code=0
 

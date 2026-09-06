@@ -68,3 +68,14 @@ def test_balance_does_not_invent_absent_people():
 def test_bad_weights_rejected():
     with pytest.raises(ValueError):
         prediction_weights([{"g":"a"}]*2,[1,0],[["g"],[]])
+
+
+def test_education_audit_separates_valid_qualifications_from_refusals(monkeypatch):
+    from types import SimpleNamespace
+    import check_r10_realism as check
+    monkeypatch.setattr(check.ada,"_ab_education_band",lambda code: None)
+    frame={"Q94":np.array([8,8,9,98])}
+    meta=SimpleNamespace(variable_value_labels={"Q94":{8:"University completed",9:"Post-graduate",98:"Refused"}})
+    audit=check.education_decode_audit(frame,meta)
+    assert audit["valid_education_rejected_n"]==3
+    assert not audit["rows"][-1]["valid_education_rejected"]

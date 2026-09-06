@@ -37,3 +37,111 @@ Input hashes unchanged; model calls=0
 POW: backend/scripts/out/REALISM_REPAIR_POW.md
 
 exit_code=0
+
+Post-run education metadata audit:
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -c "import sys; sys.path.insert(0,'backend/scripts'); import pyreadstat,json; from check_r10_realism import education_decode_audit; df,meta=pyreadstat.read_sav('backend/data/microdata/attitudes/afrobarometer_r9_sa.sav',usecols=['Q94']); print(json.dumps(education_decode_audit(df,meta),indent=2))"
+{
+  "rows": [
+    {
+      "code": -1.0,
+      "label": "Missing",
+      "n": 0,
+      "decoded": null,
+      "valid_education_rejected": false
+    },
+    {
+      "code": 0.0,
+      "label": "No formal schooling",
+      "n": 43,
+      "decoded": "none",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 1.0,
+      "label": "Informal schooling only (including Koranic schooling)",
+      "n": 7,
+      "decoded": "none",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 2.0,
+      "label": "Some primary schooling",
+      "n": 55,
+      "decoded": "primary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 3.0,
+      "label": "Primary school completed",
+      "n": 126,
+      "decoded": "primary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 4.0,
+      "label": "Intermediate school or Some secondary school / high school",
+      "n": 360,
+      "decoded": "secondary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 5.0,
+      "label": "Secondary school / high school completed",
+      "n": 555,
+      "decoded": "secondary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 6.0,
+      "label": "Post-secondary qualifications, other than university e.g. a diploma or degree from a polytechnic or college",
+      "n": 184,
+      "decoded": "tertiary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 7.0,
+      "label": "Some university",
+      "n": 58,
+      "decoded": "tertiary",
+      "valid_education_rejected": false
+    },
+    {
+      "code": 8.0,
+      "label": "University completed",
+      "n": 141,
+      "decoded": null,
+      "valid_education_rejected": true
+    },
+    {
+      "code": 9.0,
+      "label": "Post-graduate",
+      "n": 36,
+      "decoded": null,
+      "valid_education_rejected": true
+    },
+    {
+      "code": 98.0,
+      "label": "Refused",
+      "n": 11,
+      "decoded": null,
+      "valid_education_rejected": false
+    },
+    {
+      "code": 99.0,
+      "label": "Don\u2019t know",
+      "n": 4,
+      "decoded": null,
+      "valid_education_rejected": false
+    }
+  ],
+  "valid_education_rejected_n": 177
+}
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_realism_repair.py backend/tests/test_r10_validation.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+...............                                                          [100%]
+15 passed in 1.65s
+
+exit_code=0
