@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "seed": 20260907,
+  "minimum_other_people": 5,
+  "minimum_training_effective_n": 3,
+  "size_matched_repeats": 50,
+  "shuffle_repeats": 100,
+  "diagnostic": "Leave-one-person-out Brier loss reduction versus leave-one-person-out population baseline. Negative values retained.",
+  "matching": "Shipping demographic backoff ladder; first rung with >=5 other observed people and effective training n>=3; otherwise population.",
+  "bands": "All 15 existing ATTITUDE_VOCAB dimensions. Same adapter decoding for real R9; stored library bands only.",
+  "balance": "Iterative proportional fitting of library weights to complete-key R9 weighted marginals on the six join keys. No outcome enters weights.",
+  "balance_max_iterations": 1000,
+  "balance_tolerance": 1e-07,
+  "warning_rule": {
+    "adjusted_excess_over_size_matched_real_median_pp": 10,
+    "above_size_matched_real_p95": true,
+    "above_library_shuffled_p95": true,
+    "minimum_nonpopulation_weighted_share": 0.5,
+    "minimum_adjusted_effective_n_share": 0.25
+  },
+  "interpretation": "Warning for investigation, not a statistical significance claim, calibrated safety threshold, overall validation score, or authorisation for paid calls. Below threshold does not prove realism.",
+  "size_matching": "Uniform R9 subsampling without replacement to the observed library dimension count, retaining R9 survey weights. 5th/95th percentiles describe resample sensitivity, not confidence intervals.",
+  "missingness": "Exclude unknown grouping keys; per-dimension missing bands excluded explicitly. Record population_draw/population_fallback tags; do not infer individual original refusals.",
+  "invariants": "No persona edits, donor refusion, model calls, or frozen R10 list changes. Preserve original diagnostic outputs."
+}
