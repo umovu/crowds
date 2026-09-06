@@ -1,3 +1,4 @@
 # Frozen validation inputs must retain their exact bytes on every platform.
 backend/scripts/out/r10_item_list.json -text
 backend/scripts/out/r10_ask_scenarios.json -text
+backend/scripts/out/REALISM_REPAIR_METHOD.json -text

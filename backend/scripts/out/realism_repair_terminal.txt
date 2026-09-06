@@ -1,0 +1,39 @@
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_realism_repair.py backend/tests/test_r10_validation.py
+LLM_API_KEY and SIM_LLM_API_KEY unset
+..............                                                           [100%]
+14 passed in 1.41s
+
+exit_code=0
+
+$ D:\Fub-agentsociety\backend\.venv\Scripts\python.exe -B backend/scripts/check_r10_realism.py --repaired
+LLM_API_KEY and SIM_LLM_API_KEY unset
+## Results
+
+| Attitude | Real full % | Real same-size median % | Real subset 5th-95th % | Library raw % | Library balanced % | Warning |
+|---|---:|---:|---:|---:|---:|---|
+| gov_trust | -10.92 | -12.62 | -18.37 to -8.23 | -0.23 | -2.45 | investigate |
+| economic_optimism | -13.57 | -11.91 | -16.71 to -6.95 | -1.84 | -8.05 | below warning rule |
+| service_satisfaction | -9.29 | -10.39 | -16.48 to -3.82 | 5.16 | 1.53 | investigate |
+| crime_fear | -8.88 | -10.46 | -17.55 to -4.64 | 2.97 | 1.35 | investigate |
+| education_satisfaction | -11.95 | -14.16 | -17.85 to -6.59 | 0.69 | -6.39 | below warning rule |
+| health_service_satisfaction | -12.28 | -14.63 | -18.94 to -9.46 | -0.29 | -3.32 | investigate |
+| health_authority_trust | -12.59 | -14.11 | -19.82 to -9.45 | -0.17 | -5.30 | below warning rule |
+| councillor_responsiveness | -15.06 | -11.50 | -17.54 to -6.41 | -6.76 | -6.92 | below warning rule |
+| official_responsiveness | -7.76 | -10.00 | -15.26 to -3.64 | 9.82 | -3.46 | below warning rule |
+| crime_handling | -13.93 | -14.51 | -19.16 to -7.61 | -4.17 | -7.11 | below warning rule |
+| immigration_priority | -13.28 | -13.58 | -21.30 to -7.04 | 1.69 | -2.20 | investigate |
+| pays_for_quality | -12.16 | -12.67 | -19.94 to -7.53 | -3.40 | -9.85 | below warning rule |
+| business_trust | -11.13 | -11.52 | -16.83 to -7.15 | -0.73 | -5.01 | below warning rule |
+| social_trust | -12.20 | -12.70 | -18.43 to -6.43 | -3.10 | -8.29 | below warning rule |
+| environment_priority | -8.30 | -12.67 | -17.17 to -8.15 | -2.83 | -7.19 | below warning rule |
+
+**5 of 15 dimensions met the warning rule; 0 were inconclusive.**
+
+Below the warning rule is not proof of realism. A warning does not identify which mechanism caused the pattern.
+Method SHA256: 9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21
+Usable rows: real=1382/1580, library=344/375; balance=converged
+Input hashes unchanged; model calls=0
+POW: backend/scripts/out/REALISM_REPAIR_POW.md
+
+exit_code=0
