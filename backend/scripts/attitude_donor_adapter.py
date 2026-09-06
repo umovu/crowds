@@ -376,8 +376,12 @@ def donor_pool_for_role(role: Optional[str], donors: Optional[List[Dict]] = None
 
 
 # Q94 education (0-9 ladder) → coarse band matching education_to_band's vocab.
+# Q94 codes 8/9 are graduate qualifications, not the missing codes used by attitudes.
+_AB_Q94_MISSING = {-1.0, 98.0, 99.0}
+
+
 def _ab_education_band(code: float) -> Optional[str]:
-    if code in _AB_MISSING:
+    if code is None or code in _AB_Q94_MISSING or not 0 <= code <= 9:
         return None
     if code <= 1:      # no schooling / informal only
         return "none"
