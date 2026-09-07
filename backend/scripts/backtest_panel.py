@@ -59,7 +59,62 @@ _SAV = os.path.join(_HERE, "..", "data", "microdata", "attitudes", "afrobaromete
 # Sentinels meaning "no usable answer" — same set the donor adapter drops.
 _MISSING = {-1.0, 7.0, 8.0, 9.0, 94.0, 98.0, 99.0}
 
-_ANSWER_RE = re.compile(r"ANSWER:\s*([A-Za-z_]+)", re.IGNORECASE)
+_ANSWER_RE = re.compile(r"ANSWER:[ \t]*(.+)", re.IGNORECASE)
+
+
+def parse_answer(text, answers):
+    """Accept one complete, final answer line; never match an option prefix."""
+    lines = text.strip().splitlines()
+    if not lines:
+        return None
+    matches = [_ANSWER_RE.fullmatch(line.strip()) for line in lines]
+    if sum(m is not None for m in matches) != 1 or matches[-1] is None:
+        return None
+    value = matches[-1].group(1).strip().casefold()
+    options = {answer.casefold(): answer for answer in answers}
+    if len(options) != len(answers):
+        raise ValueError("Ambiguous answer labels")
+    return options.get(value)
+
+
+def prepare_r10(n):
+    """Local, truth-free inventory. Does not load app config or create a client."""
+    import hashlib
+    from pathlib import Path
+    if n <= 0:
+        raise ValueError("Room size must be positive")
+    out = Path(_HERE) / "out"
+    lock = json.loads((out / "r10_item_lock.json").read_text(encoding="utf-8"))
+    raw = (out / "r10_ask_scenarios.json").read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != lock["files"]["r10_ask_scenarios.json"]:
+        raise ValueError("Frozen question file changed")
+    items = json.loads(raw)["items"]
+    expected = {"id", "r9", "r10", "bucket", "framing", "answers", "extremes"}
+    if any(set(item) != expected for item in items):
+        raise ValueError("Unexpected fields in blind questions")
+    if len({item["id"] for item in items}) != len(items):
+        raise ValueError("Duplicate question IDs")
+    for item in items:
+        for answer in item["answers"]:
+            if parse_answer("ANSWER: " + answer, item["answers"]) != answer:
+                raise ValueError("Unparseable frozen answer")
+    raw_library = (Path(_HERE).parent / "app/data/persona_library/personas.json").read_bytes()
+    people = json.loads(raw_library)["personas"]
+    buckets = dict(Counter(item["bucket"] for item in items))
+    return {"model_calls": 0, "questions_sha256": digest,
+            "library_sha256": hashlib.sha256(raw_library).hexdigest(),
+            "library_size": len(people), "requested_room": n,
+            "actual_room": min(n, len(people)), "question_buckets": buckets,
+            "planned_requests": min(n, len(people)) * len(items),
+            "full_library_requests": len(people) * len(items),
+            "paid_run_ready": False,
+            "remaining": ["Separate blind ask and reveal phases",
+                          "National weights and subgroup gap reporting",
+                          "Provider token accounting and approved spending limit",
+                          "Review narrative text against refreshed attitudes",
+                          "Verify the running service loads the repaired library"]}
+
 
 
 # ── ground truth ────────────────────────────────────────────────────────────
@@ -204,11 +259,7 @@ def ask(profile: Dict[str, Any], scenario: Dict[str, Any], client) -> Tuple[Opti
     except Exception as e:  # noqa: BLE001 — one failure must not kill the run
         return None, f"[error] {e}"
     text = raw if isinstance(raw, str) else str(raw)
-    m = _ANSWER_RE.search(text)
-    if not m:
-        return None, text
-    got = m.group(1).strip().lower()
-    return (got if got in scenario["answers"] else None), text
+    return parse_answer(text, scenario["answers"]), text
 
 
 # ── scoring ─────────────────────────────────────────────────────────────────
@@ -413,6 +464,7 @@ def run_scenario(scenario: Dict[str, Any], args, seed: int,
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--phase", choices=["prepare"], help="free R10 readiness inventory")
     ap.add_argument("--scenario", help="run one scenario by id")
     ap.add_argument("--n", type=int, default=30, help="cast size per scenario")
     ap.add_argument("--seed", type=int, default=1)
@@ -430,6 +482,9 @@ def main() -> int:
     ap.add_argument("--out-responses", metavar="PATH", default=None,
                     help="append each persona's full answer to a JSONL file")
     args = ap.parse_args()
+    if args.phase == "prepare":
+        print(json.dumps(prepare_r10(args.n), indent=2))
+        return 0
 
     try:
         from dotenv import load_dotenv
