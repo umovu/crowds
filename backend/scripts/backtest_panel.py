@@ -101,19 +101,18 @@ def prepare_r10(n):
                 raise ValueError("Unparseable frozen answer")
     raw_library = (Path(_HERE).parent / "app/data/persona_library/personas.json").read_bytes()
     people = json.loads(raw_library)["personas"]
+    adult_count = len(eligible_adults(people))
     buckets = dict(Counter(item["bucket"] for item in items))
     return {"model_calls": 0, "questions_sha256": digest,
             "library_sha256": hashlib.sha256(raw_library).hexdigest(),
             "library_size": len(people), "requested_room": n,
-            "actual_room": min(n, len(people)), "question_buckets": buckets,
-            "planned_requests": min(n, len(people)) * len(items),
-            "full_library_requests": len(people) * len(items),
+            "adult_pool_size": adult_count, "actual_room": min(n, adult_count), "question_buckets": buckets,
+            "planned_requests": min(n, adult_count) * len(items),
+            "full_library_requests": adult_count * len(items),
             "paid_run_ready": False,
-            "remaining": ["Separate blind ask and reveal phases",
-                          "National weights and subgroup gap reporting",
-                          "Provider token accounting and approved spending limit",
-                          "Review narrative text against refreshed attitudes",
-                          "Verify the running service loads the repaired library"]}
+            "remaining": ["Seal a new adult-only room before further paid calls",
+                          "Review narrative consistency and the existing trial failures",
+                          "Verify SIM model/provider settings and spending authorization"]}
 
 
 
@@ -533,6 +532,32 @@ def rake_library(rows, targets):
                      "method": "Full-library iterative proportional fitting on audit margins; retain fixed weights in random room."}
 
 
+
+def eligible_adults(people):
+    """R10 covers adults: exclude missing/invalid ages and everyone under 18."""
+    import math
+    return [p for p in people if isinstance(p.get("age"), (int, float))
+            and not isinstance(p.get("age"), bool) and math.isfinite(p["age"]) and p["age"] >= 18]
+
+
+def adult_subset_weights(participants):
+    """Refit audit margins on the complete adult library for sensitivity analysis."""
+    from pathlib import Path
+    from audit_persona_library import NATIONAL, _race_benchmark
+    library = json.loads((Path(_HERE).parent / "app/data/persona_library/personas.json").read_bytes())["personas"]
+    adults = eligible_adults(library)
+    weights, info = rake_library([_r10_demographics(p) for p in adults], {**NATIONAL, "race": _race_benchmark()})
+    by_id = {p["id"]: w for p,w in zip(adults, weights)}
+    if len(by_id) != len(adults):
+        raise ValueError("Duplicate library IDs")
+    info.update(adult_library_size=len(adults), total_library_size=len(library),
+                analysis="Post-hoc adult-only sensitivity; eligibility exclusion independent of answers")
+    selected = {}
+    for slot, participant in participants.items():
+        if eligible_adults([participant["profile"]]):
+            selected[slot] = {**participant, "weight": by_id[participant["profile"]["library_id"]]}
+    return selected, info
+
 def seal_r10(n, seed):
     import asyncio
     import random
@@ -562,6 +587,10 @@ def seal_r10(n, seed):
         before = library_path.read_bytes()
         with patch("app.services.persona_library._seed_from_storage", return_value=False):
             people = PersonaLibrary(str(library_path)).all()
+        library_total = len(people)
+        people = eligible_adults(people)
+        if not people:
+            raise ValueError("No adults available for the R10 survey")
         if any(sync_person(p).get("beliefs") != p.get("beliefs") for p in people):
             raise ValueError("Measured belief sentences are inconsistent")
         demographics = [_r10_demographics(p) for p in people]
@@ -580,7 +609,8 @@ def seal_r10(n, seed):
             raise ValueError("Library changed during seal")
     # The entire method is frozen before any responses exist. No R10 outcomes read.
     method = {"created_utc": datetime.now(timezone.utc).isoformat(), "seed": seed,
-              "room_size": len(participants), "items": len(items), "planned_requests": len(items)*len(participants),
+              "room_size": len(participants), "library_total": library_total, "adult_pool_size": len(people),
+              "eligibility": "Age 18 or older, checked before sampling and weighting", "items": len(items), "planned_requests": len(items)*len(participants),
               "model": "deepseek-v4-pro-0813", "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
               "temperature": 0.7, "max_tokens": 220, "enable_thinking": False,
               "concurrency": 4, "retries": 0, "timeout_seconds": 60,
@@ -735,7 +765,7 @@ def r10_gap(rows, people, item, axis, groups, answer, weighted=False):
             "absolute_error_pp":abs(predicted-actual),"sign_correct":sign(predicted)==sign(actual)}
 
 
-def reveal_r10(seed):
+def reveal_r10(seed, adults_only=False):
     import statistics
     out, manifest_path, run_path = _r10_paths(seed)
     receipt = json.loads((out / f"r10_receipt_{seed}.json").read_bytes())
@@ -753,6 +783,15 @@ def reveal_r10(seed):
     truth_items = json.loads(raw_truth)["items"]
     lookup = {f"{i['r9']}_{i['r10']}":i for i in truth_items}
     people = {p["slot"]:p for p in manifest["participants"]}
+    weighting = manifest["method"]["weighting"]
+    if adults_only:
+        from pathlib import Path
+        current = Path(_HERE).parent / "app/data/persona_library/personas.json"
+        if _sha(current.read_bytes()) != manifest["method"]["library_sha256"]:
+            raise ValueError("Library changed; cannot refit adult sensitivity weights")
+        people, weighting = adult_subset_weights(people)
+        rows = [r for r in rows if r["slot"] in people]
+    suffix = f"{seed}_adults" if adults_only else str(seed)
     results = []
     for blind in manifest["items"]:
         item = lookup[blind["id"]]
@@ -787,7 +826,9 @@ def reveal_r10(seed):
             "usage_missing_responses":sum(r.get("usage") is None for r in rows),
             "sample_weight_effective_n":sum(sw)**2/sum(w*w for w in sw),
             "results":results,"summary":{},"limitations":method["limitations"],
-            "weighting":method["weighting"]}
+            "weighting":weighting,
+            "analysis": "Post-hoc adult-only sensitivity" if adults_only else "Original frozen 40-person trial",
+            "analysis_completed":len(rows),"analysis_parsed":sum(r.get("answer") is not None for r in rows)}
     for bucket in ("held_out","seen"):
         selected=[r for r in results if r["bucket"]==bucket]
         report["summary"][bucket]={}
@@ -798,9 +839,10 @@ def reveal_r10(seed):
             report["summary"][bucket][mode]={"scorable_items":len(gaps),"mean_tvd_pp":statistics.mean(gaps) if gaps else None,
                 "median_tvd_pp":statistics.median(gaps) if gaps else None,
                 "urban_rural_focus_sign_correct":sum(g["sign_correct"] for g in eligible),"urban_rural_focus_scorable":len(eligible)}
-    _exclusive_json(out/f"r10_results_{seed}.json",report)
+    _exclusive_json(out/f"r10_results_{suffix}.json",report)
     lines=["# R10 paid smoke trial", "",f"Model: `{method['model']}` via DashScope. Room: {len(people)}. Seed: {seed}.","",
-           f"Completed calls: {receipt['completed']}/{method['planned_requests']}. Parsed answers: {receipt['parsed']}. Errors: {receipt['errors']}.",
+           f"Original run calls: {receipt['completed']}/{method['planned_requests']}. Original parsed answers: {receipt['parsed']}. Errors: {receipt['errors']}.",
+           f"Analysis: {report['analysis']}. Included replies: {report['analysis_completed']}; parsed: {report['analysis_parsed']}.",
            f"Provider-reported tokens: {usage}. Listed-rate upper estimate for reported usage: US${estimate:.4f}; not an invoice.",
            f"Responses without usage: {report['usage_missing_responses']}. Weighted effective sample size: {report['sample_weight_effective_n']:.1f}.","",
            "Distribution gap is total variation distance in percentage points. Lower is closer. No overall validation score.","",
@@ -823,6 +865,9 @@ def reveal_r10(seed):
         total=sum(r["weighted_counts"].values())
         for answer in lookup[r['id']]["answers"]:
             lines.append(f"| {answer} | {r['unweighted_counts'].get(answer,0)} | {fmt(100*r['weighted_counts'].get(answer,0)/total if total else None)} | {fmt(100*r['truth'][answer] if r['truth'] else None)} |")
+    if adults_only:
+        lines += ["", "## Eligibility correction", "",
+                  "The original 40-person room included eight minors. R10 covers adults. This is a post-hoc sensitivity analysis of the 32 adults already asked, with no new calls, no changed answers and no outcome-based exclusions. Weights were refitted on the full adult library. Original trial results remain separately preserved. This is not the originally planned 40-adult trial."]
     lines += ["","## Limitations","",*["- "+v for v in method["limitations"]],
               "- Missing R10 cells are not zero. Incomplete national tables are not scored.",
               "- Missing model answers are excluded from shares and counted separately; this may bias the result.",
@@ -831,15 +876,15 @@ def reveal_r10(seed):
               "- Previous identical-people diagnostic remains 15/15 directions, one health-service warning; this trial does not erase it.","",
               "## Blind record","",f"Manifest SHA256: `{receipt['manifest_sha256']}`",f"Saved run SHA256: `{receipt['run_sha256']}`",
               "Raw answers and prompts stay local. Ask wrote the receipt before reveal loaded the frozen outcome file."]
-    with (out/f"r10_results_{seed}.md").open("x",encoding="utf-8") as f:
+    with (out/f"r10_results_{suffix}.md").open("x",encoding="utf-8") as f:
         f.write("\n".join(lines)+"\n")
-    print(json.dumps({"summary":report["summary"],"usage":usage,"estimated_usd":estimate,"report":str(out/f'r10_results_{seed}.md')},indent=2))
+    print(json.dumps({"summary":report["summary"],"usage":usage,"estimated_usd":estimate,"report":str(out/f'r10_results_{suffix}.md')},indent=2))
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--phase", choices=["prepare", "seal", "ask", "reveal"], help="free R10 readiness inventory")
+    ap.add_argument("--phase", choices=["prepare", "seal", "ask", "reveal", "adult-reveal"], help="free R10 readiness inventory")
     ap.add_argument("--scenario", help="run one scenario by id")
     ap.add_argument("--n", type=int, default=30, help="cast size per scenario")
     ap.add_argument("--seed", type=int, default=1)
@@ -857,13 +902,13 @@ def main() -> int:
     ap.add_argument("--out-responses", metavar="PATH", default=None,
                     help="append each persona's full answer to a JSONL file")
     args = ap.parse_args()
-    if args.phase in {"seal", "ask", "reveal"}:
+    if args.phase in {"seal", "ask", "reveal", "adult-reveal"}:
         if args.phase == "seal":
             seal_r10(args.n, args.seed)
         elif args.phase == "ask":
             ask_r10(args.seed)
         else:
-            reveal_r10(args.seed)
+            reveal_r10(args.seed, adults_only=args.phase == "adult-reveal")
         return 0
     if args.phase == "prepare":
         print(json.dumps(prepare_r10(args.n), indent=2))

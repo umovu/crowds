@@ -46,7 +46,7 @@ def test_prepare_reads_no_truth_and_builds_no_client(tmp_path, monkeypatch):
     (out / "r10_item_lock.json").write_text(json.dumps({"files":{"r10_ask_scenarios.json":hashlib.sha256(raw).hexdigest()}}))
     library = tmp_path / "app/data/persona_library"
     library.mkdir(parents=True)
-    (library / "personas.json").write_text(json.dumps({"personas":[{},{}]}))
+    (library / "personas.json").write_text(json.dumps({"personas":[{"age":30},{"age":40}]}))
     monkeypatch.setattr(panel, "_HERE", str(scripts))
     def forbidden(*a, **kw):
         raise AssertionError("Truth/client forbidden during preparation")

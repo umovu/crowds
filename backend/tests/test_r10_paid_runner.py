@@ -95,3 +95,9 @@ def test_ask_without_truth_then_reveal_saved_answers(tmp_path,monkeypatch):
         f.write(" ")
     with pytest.raises(ValueError,match="changed"):
         panel.reveal_r10(1)
+
+
+def test_r10_excludes_minors_and_unknown_ages_before_sampling():
+    people = [{"age": a} for a in [15, 17, 18, 65, None, float("nan"), True]]
+    assert panel.eligible_adults(people) == [{"age":18},{"age":65}]
+    assert len(people) == 7
