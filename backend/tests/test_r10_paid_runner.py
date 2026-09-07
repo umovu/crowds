@@ -101,3 +101,42 @@ def test_r10_excludes_minors_and_unknown_ages_before_sampling():
     people = [{"age": a} for a in [15, 17, 18, 65, None, float("nan"), True]]
     assert panel.eligible_adults(people) == [{"age":18},{"age":65}]
     assert len(people) == 7
+
+
+
+def test_adult_sensitivity_excludes_minor_answers_without_new_calls(tmp_path, monkeypatch):
+    import requests
+    out, truth = fixture(tmp_path, monkeypatch)
+    manifest_path = out / "r10_manifest_1.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    library = tmp_path / "backend/app/data/persona_library/personas.json"
+    library.parent.mkdir(parents=True)
+    library.write_bytes(b"fixture-library")
+    manifest["method"]["library_sha256"] = panel._sha(library.read_bytes())
+    for person in manifest["participants"]:
+        person["profile"] = {"age":17 if person["slot"]<=2 else 30}
+        person["name"] = "Minor" if person["slot"]<=2 else "Adult"
+    manifest_path.write_bytes(panel._json_bytes(manifest))
+    (out/"r10_method_1.json").write_bytes(panel._json_bytes({"manifest_sha256":panel._sha(manifest_path.read_bytes())}))
+    class Reply:
+        status_code=200
+        def __init__(self, answer): self.answer=answer
+        def json(self):
+            return {"model":"test-model","choices":[{"message":{"content":"ANSWER: "+self.answer},"finish_reason":"stop"}],
+                    "usage":{"prompt_tokens":10,"completion_tokens":3,"total_tokens":13}}
+    calls=[]
+    def fake(*a,**kw):
+        calls.append(1)
+        return Reply("No" if "Minor" in kw["json"]["messages"][1]["content"] else "Yes")
+    monkeypatch.setattr(requests,"post",fake)
+    panel.ask_r10(1)
+    monkeypatch.setattr(panel,"adult_subset_weights",lambda participants:({k:p for k,p in participants.items() if p["profile"]["age"]>=18},{"fixture":True}))
+    panel._exclusive_json(out/"r10_item_list.json",{"items":[truth]})
+    panel._exclusive_json(out/"r10_item_lock.json",{"files":{"r10_item_list.json":panel._sha((out/"r10_item_list.json").read_bytes())}})
+    panel.reveal_r10(1,adults_only=True)
+    report=json.loads((out/"r10_results_1_adults.json").read_bytes())
+    assert report["room_size"]==8
+    assert report["analysis_completed"]==8
+    assert report["results"][0]["unweighted_counts"]=={"Yes":8}
+    assert report["summary"]["held_out"]["unweighted"]["mean_tvd_pp"]==50
+    assert len(calls)==10
