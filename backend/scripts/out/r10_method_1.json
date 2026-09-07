@@ -1,0 +1,95 @@
+{
+  "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+  "concurrency": 4,
+  "cost_ceiling_usd": 10.0,
+  "created_utc": "2026-09-07T13:45:55.257869+00:00",
+  "enable_thinking": false,
+  "estimate_input_usd_per_million": 1.32,
+  "estimate_output_usd_per_million": 3.96,
+  "items": 15,
+  "library_sha256": "c93b9daac1c2de86a201a6cdf72c676247f3e6407ce545773155e950694c9d58",
+  "limitations": [
+    "40-person single-seed smoke, not population accuracy proof",
+    "Full-library weights do not make the 40-person sample representative",
+    "Held-out from fused survey fields, not guaranteed absent from model training or narrative prose",
+    "Narrative prose retained without semantic validation; deterministic belief sentences checked",
+    "Local repaired library loaded fresh; deployed service not tested"
+  ],
+  "manifest_sha256": "c8b0436594630708ce19378335089f104753793011365094cfcf9a15f93304c5",
+  "max_tokens": 220,
+  "model": "deepseek-v4-pro-0813",
+  "planned_requests": 600,
+  "price_note": "Upper listed Singapore snapshot rates, estimate only; billing discounts/tier timing not verified.",
+  "price_source": "https://www.alibabacloud.com/help/en/model-studio/deepseek-v4-pro",
+  "questions_sha256": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20",
+  "retries": 0,
+  "room_size": 40,
+  "runner_sha256": "194bc3f47764982e510b7a7b3c6f5af1746c0852cbb3d202de60b65987d4e4ba",
+  "scoring": "Full-option TVD, normalize printed totals only when all cells known and sum within 0.5pp of 100; otherwise unavailable. Missing model answers excluded and counted separately.",
+  "seed": 1,
+  "spread_thresholds": {
+    "modal_excess_pp": 15.0,
+    "tail_mass_abs_gap_pp": 10.0
+  },
+  "subgroups": "Urban minus Rural and Men minus Women; preselected focus answer; raw published pp; minimum 5 parsed per group. All options also reported. Weighted and unweighted.",
+  "temperature": 0.7,
+  "timeout_seconds": 60,
+  "weighting": {
+    "excluded_library_records": 4,
+    "excluded_target_percent": {
+      "age": {},
+      "education": {},
+      "gender": {},
+      "location": {},
+      "province": {},
+      "race": {
+        "Don't know": 0.1,
+        "Other": 0.2
+      }
+    },
+    "iterations": 22,
+    "max_margin_error": 8.246646010512393e-08,
+    "method": "Full-library iterative proportional fitting on audit margins; retain fixed weights in random room.",
+    "supported_targets": {
+      "age": {
+        "18-25": 0.191,
+        "26-35": 0.239,
+        "36-45": 0.27,
+        "46-55": 0.155,
+        "56-65": 0.098,
+        "65+": 0.047
+      },
+      "education": {
+        "No formal education": 0.033066132264529056,
+        "Post-secondary": 0.3617234468937876,
+        "Primary": 0.0781563126252505,
+        "Secondary": 0.527054108216433
+      },
+      "gender": {
+        "Female": 0.515,
+        "Male": 0.485
+      },
+      "location": {
+        "Rural": 0.29,
+        "Urban": 0.71
+      },
+      "province": {
+        "Eastern Cape": 0.1051051051051051,
+        "Free State": 0.050050050050050046,
+        "Gauteng": 0.27527527527527523,
+        "KwaZulu-Natal": 0.18518518518518517,
+        "Limpopo": 0.09209209209209208,
+        "Mpumalanga": 0.08008008008008008,
+        "North West": 0.06206206206206206,
+        "Northern Cape": 0.02002002002002002,
+        "Western Cape": 0.1301301301301301
+      },
+      "race": {
+        "Black / African": 0.745235707121364,
+        "Coloured / Mixed race": 0.13440320962888666,
+        "South Asian (Indian, Pakistani, etc.)": 0.046138415245737203,
+        "White / European": 0.07422266800401203
+      }
+    }
+  }
+}

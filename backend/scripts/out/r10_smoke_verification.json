@@ -1,0 +1,26 @@
+{
+  "independent_distribution_recalculation": "all 15 items match, raw and weighted",
+  "http_200": 600,
+  "expected_model": 600,
+  "finish_stop": 600,
+  "provider_tokens": {
+    "prompt_tokens": 575145,
+    "completion_tokens": 33827,
+    "total_tokens": 608972
+  },
+  "library_and_frozen_questions_unchanged": true,
+  "sample_weighted_percent": {
+    "gender": {
+      "Female": 50.37,
+      "Male": 49.63
+    },
+    "location": {
+      "Rural": 49.04,
+      "Urban": 50.96
+    }
+  },
+  "unparsed_reasons": {
+    "missing_final_answer_line": 1,
+    "answer_embedded_in_prose": 1
+  }
+}

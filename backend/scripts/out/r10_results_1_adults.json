@@ -1,0 +1,4753 @@
+{
+  "analysis": "Post-hoc adult-only sensitivity",
+  "analysis_completed": 480,
+  "analysis_parsed": 478,
+  "limitations": [
+    "40-person single-seed smoke, not population accuracy proof",
+    "Full-library weights do not make the 40-person sample representative",
+    "Held-out from fused survey fields, not guaranteed absent from model training or narrative prose",
+    "Narrative prose retained without semantic validation; deterministic belief sentences checked",
+    "Local repaired library loaded fresh; deployed service not tested"
+  ],
+  "model": "deepseek-v4-pro-0813",
+  "receipt": {
+    "completed": 600,
+    "errors": 0,
+    "manifest_sha256": "c8b0436594630708ce19378335089f104753793011365094cfcf9a15f93304c5",
+    "parsed": 598,
+    "run_sha256": "ff419ec53aaf59b774b31f709f09d545d282dba96ca09109116d6500aeea5423",
+    "usage": {
+      "completion_tokens": 33827,
+      "prompt_tokens": 575145,
+      "total_tokens": 608972
+    }
+  },
+  "reported_token_cost_upper_estimate_usd": 0.89314632,
+  "results": [
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "All of them",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "All of them": {
+              "absolute_error_pp": 10.4,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -10.4,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 0.19999999999999996,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.19999999999999996,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 3.3549019607843142,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 2.745098039215687,
+              "real_pp": 6.100000000000001,
+              "sign_correct": true
+            },
+            "None": {
+              "absolute_error_pp": 1.0,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 9.745098039215677,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -2.7450980392156765,
+              "real_pp": 7.0,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "All of them": {
+              "absolute_error_pp": 10.4,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -10.4,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 0.19999999999999996,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.19999999999999996,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 13.929211608774096,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -7.829211608774095,
+              "real_pp": 6.100000000000001,
+              "sign_correct": false
+            },
+            "None": {
+              "absolute_error_pp": 1.0,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 0.829211608774088,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 7.829211608774088,
+              "real_pp": 7.0,
+              "sign_correct": true
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "All of them": {
+              "absolute_error_pp": 5.899999999999999,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 5.899999999999999,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 2.6999999999999997,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.6999999999999997,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 0.5063492063492134,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.7936507936507908,
+              "real_pp": 1.3000000000000043,
+              "sign_correct": true
+            },
+            "None": {
+              "absolute_error_pp": 2.0,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 4.206349206349216,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -0.7936507936507837,
+              "real_pp": -5.0,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "All of them": {
+              "absolute_error_pp": 5.899999999999999,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 5.899999999999999,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 2.6999999999999997,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.6999999999999997,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 6.1291457667899465,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -4.829145766789942,
+              "real_pp": 1.3000000000000043,
+              "sign_correct": false
+            },
+            "None": {
+              "absolute_error_pp": 2.0,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 9.829145766789942,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 4.829145766789942,
+              "real_pp": -5.0,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q38E_Q38E",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Police?",
+      "truth": {
+        "All of them": 0.195,
+        "Don't know/Haven't heard": 0.009000000000000001,
+        "Most of them": 0.489,
+        "None": 0.02,
+        "Refused": 0.017,
+        "Some of them": 0.27
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 22.975,
+        "modal_ours_pct": 71.875,
+        "modal_real_pct": 48.9,
+        "pass": false,
+        "tail_gap_pp": -21.5,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 21.5,
+        "tvd_pp": 44.875
+      },
+      "unweighted_counts": {
+        "Most of them": 9,
+        "Some of them": 23
+      },
+      "weighted": {
+        "modal_excess_pp": 14.850997415125825,
+        "modal_ours_pct": 63.75099741512582,
+        "modal_real_pct": 48.9,
+        "pass": false,
+        "tail_gap_pp": -21.5,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 21.5,
+        "tvd_pp": 36.75099741512582
+      },
+      "weighted_counts": {
+        "Most of them": 11.966330214631384,
+        "Some of them": 21.045144202114752
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "All of them",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "All of them": {
+              "absolute_error_pp": 8.7,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -8.7,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 14.30980392156862,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -14.509803921568619,
+              "real_pp": -0.20000000000000018,
+              "sign_correct": true
+            },
+            "Most of them": {
+              "absolute_error_pp": 4.800000000000001,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -4.800000000000001,
+              "sign_correct": false
+            },
+            "None": {
+              "absolute_error_pp": 1.4,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.4,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 0.5901960784313793,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 14.509803921568622,
+              "real_pp": 15.100000000000001,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "All of them": {
+              "absolute_error_pp": 8.7,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -8.7,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 15.622299962168736,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -15.822299962168735,
+              "real_pp": -0.20000000000000018,
+              "sign_correct": true
+            },
+            "Most of them": {
+              "absolute_error_pp": 4.800000000000001,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -4.800000000000001,
+              "sign_correct": false
+            },
+            "None": {
+              "absolute_error_pp": 1.4,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.4,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 0.7222999621687265,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 15.822299962168728,
+              "real_pp": 15.100000000000001,
+              "sign_correct": true
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "All of them": {
+              "absolute_error_pp": 6.0,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 6.0,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 4.819047619047635,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -2.3809523809523654,
+              "real_pp": -7.2,
+              "sign_correct": true
+            },
+            "Most of them": {
+              "absolute_error_pp": 3.8999999999999986,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.8999999999999986,
+              "sign_correct": false
+            },
+            "None": {
+              "absolute_error_pp": 0.2999999999999998,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.2999999999999998,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 5.480952380952381,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 2.3809523809523867,
+              "real_pp": -3.0999999999999943,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "All of them": {
+              "absolute_error_pp": 6.0,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 6.0,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 19.3904631597259,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 12.190463159725901,
+              "real_pp": -7.2,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 3.8999999999999986,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.8999999999999986,
+              "sign_correct": false
+            },
+            "None": {
+              "absolute_error_pp": 0.2999999999999998,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.2999999999999998,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Some of them": {
+              "absolute_error_pp": 9.09046315972591,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -12.190463159725905,
+              "real_pp": -3.0999999999999943,
+              "sign_correct": true
+            }
+          }
+        }
+      },
+      "id": "Q38F_Q38F",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Judges and magistrates?",
+      "truth": {
+        "All of them": 0.127,
+        "Don't know/Haven't heard": 0.034,
+        "Most of them": 0.337,
+        "None": 0.046,
+        "Refused": 0.0,
+        "Some of them": 0.456
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 20.025,
+        "modal_ours_pct": 65.625,
+        "modal_real_pct": 45.6,
+        "pass": false,
+        "tail_gap_pp": -17.299999999999997,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 17.299999999999997,
+        "tvd_pp": 62.224999999999994
+      },
+      "unweighted_counts": {
+        "Don't know/Haven't heard": 21,
+        "Some of them": 11
+      },
+      "weighted": {
+        "modal_excess_pp": 22.87641686476811,
+        "modal_ours_pct": 68.47641686476811,
+        "modal_real_pct": 45.6,
+        "pass": false,
+        "tail_gap_pp": -17.299999999999997,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 17.299999999999997,
+        "tvd_pp": 65.0764168647681
+      },
+      "weighted_counts": {
+        "Don't know/Haven't heard": 22.60507483481736,
+        "Some of them": 10.406399581928774
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Most of them",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "All of them": {
+              "absolute_error_pp": 7.0,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -7.0,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 3.7529411764705873,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -2.352941176470587,
+              "real_pp": 1.4000000000000004,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 14.562745098039215,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 16.862745098039213,
+              "real_pp": 2.299999999999997,
+              "sign_correct": true
+            },
+            "None": {
+              "absolute_error_pp": 1.2000000000000002,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.2000000000000002,
+              "sign_correct": false
+            },
+            "Some of them": {
+              "absolute_error_pp": 19.00980392156862,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -14.509803921568619,
+              "real_pp": 4.5,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "All of them": {
+              "absolute_error_pp": 7.0,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -7.0,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 11.773495201940962,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -10.373495201940962,
+              "real_pp": 1.4000000000000004,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 9.506193903294042,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 11.806193903294039,
+              "real_pp": 2.299999999999997,
+              "sign_correct": true
+            },
+            "None": {
+              "absolute_error_pp": 1.2000000000000002,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.2000000000000002,
+              "sign_correct": false
+            },
+            "Some of them": {
+              "absolute_error_pp": 5.93269870135309,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -1.4326987013530896,
+              "real_pp": 4.5,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "All of them": {
+              "absolute_error_pp": 4.800000000000001,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 4.800000000000001,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 11.761904761904763,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 4.761904761904763,
+              "real_pp": -7.0,
+              "sign_correct": false
+            },
+            "Most of them": {
+              "absolute_error_pp": 5.517460317460316,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 10.317460317460316,
+              "real_pp": 4.800000000000001,
+              "sign_correct": true
+            },
+            "None": {
+              "absolute_error_pp": 0.5,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.5,
+              "sign_correct": false
+            },
+            "Some of them": {
+              "absolute_error_pp": 12.979365079365081,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -15.079365079365076,
+              "real_pp": -2.0999999999999943,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "All of them": {
+              "absolute_error_pp": 4.800000000000001,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 4.800000000000001,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard": {
+              "absolute_error_pp": 0.7721647851440743,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -6.227835214855926,
+              "real_pp": -7.0,
+              "sign_correct": true
+            },
+            "Most of them": {
+              "absolute_error_pp": 0.03419596868966224,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 4.7658040313103385,
+              "real_pp": 4.800000000000001,
+              "sign_correct": true
+            },
+            "None": {
+              "absolute_error_pp": 0.5,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.5,
+              "sign_correct": false
+            },
+            "Some of them": {
+              "absolute_error_pp": 3.562031183545585,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 1.4620311835455908,
+              "real_pp": -2.0999999999999943,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q38G_Q38G",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Tax officials, like officials from the South African Revenue Service or SARS?",
+      "truth": {
+        "All of them": 0.161,
+        "Don't know/Haven't heard": 0.09699999999999999,
+        "Most of them": 0.316,
+        "None": 0.057999999999999996,
+        "Some of them": 0.368
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 28.825000000000003,
+        "modal_ours_pct": 65.625,
+        "modal_real_pct": 36.8,
+        "pass": false,
+        "tail_gap_pp": -21.9,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 21.9,
+        "tvd_pp": 37.875
+      },
+      "unweighted_counts": {
+        "Don't know/Haven't heard": 6,
+        "Most of them": 5,
+        "Some of them": 21
+      },
+      "weighted": {
+        "modal_excess_pp": 27.43929160569816,
+        "modal_ours_pct": 64.23929160569816,
+        "modal_real_pct": 36.8,
+        "pass": false,
+        "tail_gap_pp": -21.9,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 21.9,
+        "tvd_pp": 40.43530201386477
+      },
+      "weighted_counts": {
+        "Don't know/Haven't heard": 7.492287669513962,
+        "Most of them": 4.312849433318179,
+        "Some of them": 21.20633731391399
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Not at all",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 3.8,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.8,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 5.966666666666667,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -6.666666666666667,
+              "real_pp": -0.7000000000000001,
+              "sign_correct": true
+            },
+            "Just a little": {
+              "absolute_error_pp": 15.788235294117651,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 10.588235294117652,
+              "real_pp": -5.199999999999999,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 2.2784313725490293,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -3.9215686274509736,
+              "real_pp": -6.200000000000003,
+              "sign_correct": true
+            },
+            "Refused": {
+              "absolute_error_pp": 0.1,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.1,
+              "sign_correct": false
+            },
+            "Somewhat": {
+              "absolute_error_pp": 8.3,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 8.3,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 3.8,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.8,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.7000000000000001,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.7000000000000001,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 20.40615030251234,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 15.206150302512341,
+              "real_pp": -5.199999999999999,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 9.006150302512335,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -15.206150302512338,
+              "real_pp": -6.200000000000003,
+              "sign_correct": true
+            },
+            "Refused": {
+              "absolute_error_pp": 0.1,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.1,
+              "sign_correct": false
+            },
+            "Somewhat": {
+              "absolute_error_pp": 8.3,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 8.3,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 1.5999999999999996,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.5999999999999996,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 3.9555555555555553,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -5.555555555555555,
+              "real_pp": -1.6,
+              "sign_correct": true
+            },
+            "Just a little": {
+              "absolute_error_pp": 49.01269841269841,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 48.41269841269842,
+              "real_pp": -0.5999999999999943,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 47.05714285714286,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -42.85714285714286,
+              "real_pp": 4.199999999999996,
+              "sign_correct": false
+            },
+            "Refused": {
+              "absolute_error_pp": 0.1,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.1,
+              "sign_correct": false
+            },
+            "Somewhat": {
+              "absolute_error_pp": 0.3000000000000007,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.3000000000000007,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 1.5999999999999996,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.5999999999999996,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 1.6,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.6,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 53.37994683068678,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 52.77994683068678,
+              "real_pp": -0.5999999999999943,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 56.97994683068678,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -52.77994683068678,
+              "real_pp": 4.199999999999996,
+              "sign_correct": false
+            },
+            "Refused": {
+              "absolute_error_pp": 0.1,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.1,
+              "sign_correct": false
+            },
+            "Somewhat": {
+              "absolute_error_pp": 0.3000000000000007,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.3000000000000007,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q37F_Q37F",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Opposition political parties?",
+      "truth": {
+        "A lot": 0.06693306693306694,
+        "Don't know/Haven't heard enough to say": 0.00999000999000999,
+        "Just a little": 0.3236763236763237,
+        "Not at all": 0.3656343656343657,
+        "Refused": 0.0,
+        "Somewhat": 0.23376623376623376
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 29.061563436563432,
+        "modal_ours_pct": 65.625,
+        "modal_real_pct": 36.56343656343657,
+        "pass": false,
+        "tail_gap_pp": -12.006743256743263,
+        "tail_mass_ours_pct": 31.25,
+        "tail_mass_real_pct": 43.25674325674326,
+        "tvd_pp": 35.383366633366634
+      },
+      "unweighted_counts": {
+        "Don't know/Haven't heard enough to say": 1,
+        "Just a little": 21,
+        "Not at all": 10
+      },
+      "weighted": {
+        "modal_excess_pp": 29.77359294958501,
+        "modal_ours_pct": 66.33702951302158,
+        "modal_real_pct": 36.56343656343657,
+        "pass": false,
+        "tail_gap_pp": -9.593772769764847,
+        "tail_mass_ours_pct": 33.662970486978416,
+        "tail_mass_real_pct": 43.25674325674326,
+        "tvd_pp": 33.969397145389216
+      },
+      "weighted_counts": {
+        "Don't know/Haven't heard enough to say": 0.0,
+        "Just a little": 21.89883152652045,
+        "Not at all": 11.11264289022568
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Just a little",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 3.099999999999998,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.099999999999998,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 6.982352941176471,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 5.88235294117647,
+              "real_pp": -1.1,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 0.9450980392156723,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -2.7450980392156765,
+              "real_pp": -1.8000000000000043,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 0.25098039215686097,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -7.450980392156864,
+              "real_pp": -7.200000000000003,
+              "sign_correct": true
+            },
+            "Somewhat": {
+              "absolute_error_pp": 2.88627450980392,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 4.313725490196079,
+              "real_pp": 7.199999999999999,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 3.099999999999998,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.099999999999998,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 6.043527010097897,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 4.943527010097897,
+              "real_pp": -1.1,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 0.7085987938984104,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -2.5085987938984147,
+              "real_pp": -1.8000000000000043,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 8.976058745845673,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -16.176058745845676,
+              "real_pp": -7.200000000000003,
+              "sign_correct": true
+            },
+            "Somewhat": {
+              "absolute_error_pp": 6.5411305296461855,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 13.741130529646185,
+              "real_pp": 7.199999999999999,
+              "sign_correct": true
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 0.20000000000000107,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.20000000000000107,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 3.6555555555555554,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -5.555555555555555,
+              "real_pp": -1.9,
+              "sign_correct": true
+            },
+            "Just a little": {
+              "absolute_error_pp": 8.70476190476191,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 11.904761904761912,
+              "real_pp": 3.200000000000003,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 1.768253968253969,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -3.9682539682539684,
+              "real_pp": -2.1999999999999993,
+              "sign_correct": true
+            },
+            "Somewhat": {
+              "absolute_error_pp": 3.080952380952379,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -2.3809523809523796,
+              "real_pp": 0.6999999999999993,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 0.20000000000000107,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.20000000000000107,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 2.329138575100092,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -4.229138575100092,
+              "real_pp": -1.9,
+              "sign_correct": true
+            },
+            "Just a little": {
+              "absolute_error_pp": 12.927817750574043,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 16.127817750574046,
+              "real_pp": 3.200000000000003,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 11.97140158529266,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -14.17140158529266,
+              "real_pp": -2.1999999999999993,
+              "sign_correct": true
+            },
+            "Somewhat": {
+              "absolute_error_pp": 1.572722409818713,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 2.272722409818712,
+              "real_pp": 0.6999999999999993,
+              "sign_correct": true
+            }
+          }
+        }
+      },
+      "id": "Q37I_Q37I",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Courts of law?",
+      "truth": {
+        "A lot": 0.158,
+        "Don't know/Haven't heard enough to say": 0.017,
+        "Just a little": 0.33799999999999997,
+        "Not at all": 0.21100000000000002,
+        "Somewhat": 0.276
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 38.075,
+        "modal_ours_pct": 71.875,
+        "modal_real_pct": 33.8,
+        "pass": false,
+        "tail_gap_pp": -27.525,
+        "tail_mass_ours_pct": 9.375,
+        "tail_mass_real_pct": 36.9,
+        "tvd_pp": 39.5
+      },
+      "unweighted_counts": {
+        "Don't know/Haven't heard enough to say": 1,
+        "Just a little": 23,
+        "Not at all": 3,
+        "Somewhat": 5
+      },
+      "weighted": {
+        "modal_excess_pp": 36.543846042371584,
+        "modal_ours_pct": 70.34384604237158,
+        "modal_real_pct": 33.8,
+        "pass": false,
+        "tail_gap_pp": -25.015509183762195,
+        "tail_mass_ours_pct": 11.884490816237804,
+        "tail_mass_real_pct": 36.9,
+        "tvd_pp": 37.22943731231331
+      },
+      "weighted_counts": {
+        "Don't know/Haven't heard enough to say": 0.7875188517649412,
+        "Just a little": 23.221540740032783,
+        "Not at all": 3.9232456453628863,
+        "Somewhat": 5.079169179585525
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "A lot",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 1.5,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.5,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.9,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 17.705882352941174,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -14.705882352941174,
+              "real_pp": 3.0,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 23.709243697478996,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 23.109243697478995,
+              "real_pp": -0.6000000000000014,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 8.403361344537814,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -8.403361344537814,
+              "real_pp": 0.0,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 1.5,
+              "available": true,
+              "n": [
+                17,
+                13
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.5,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.9,
+              "available": true,
+              "n": [
+                17,
+                13
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 19.856592489676366,
+              "available": true,
+              "n": [
+                17,
+                13
+              ],
+              "predicted_pp": -16.856592489676366,
+              "real_pp": 3.0,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 21.94009102877928,
+              "available": true,
+              "n": [
+                17,
+                13
+              ],
+              "predicted_pp": 21.340091028779277,
+              "real_pp": -0.6000000000000014,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                13
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 4.48349853910291,
+              "available": true,
+              "n": [
+                17,
+                13
+              ],
+              "predicted_pp": -4.48349853910291,
+              "real_pp": 0.0,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 3.5,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -3.5,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 1.9,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.9,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 13.905882352941177,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 14.705882352941174,
+              "real_pp": 0.7999999999999972,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 12.18403361344538,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -10.084033613445385,
+              "real_pp": 2.0999999999999943,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 7.121848739495798,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -4.621848739495798,
+              "real_pp": 2.5,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 3.5,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -3.5,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 1.9,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.9,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 34.8903976213942,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 35.6903976213942,
+              "real_pp": 0.7999999999999972,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 34.63721062067122,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": -32.537210620671225,
+              "real_pp": 2.0999999999999943,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                16
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 5.653187000722963,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": -3.153187000722963,
+              "real_pp": 2.5,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q37B_Q37B",
+      "parsed": 31,
+      "planned": 32,
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Parliament?",
+      "truth": {
+        "A lot": 0.05,
+        "Don't know/Haven't heard enough to say": 0.011000000000000001,
+        "Just a little": 0.345,
+        "Not at all": 0.392,
+        "Refused": 0.0,
+        "Somewhat": 0.20199999999999999
+      },
+      "unparsed": 1,
+      "unweighted": {
+        "modal_excess_pp": 9.187096774193549,
+        "modal_ours_pct": 48.38709677419355,
+        "modal_real_pct": 39.2,
+        "pass": true,
+        "tail_gap_pp": 4.187096774193549,
+        "tail_mass_ours_pct": 48.38709677419355,
+        "tail_mass_real_pct": 44.2,
+        "tvd_pp": 16.622580645161293
+      },
+      "unweighted_counts": {
+        "Just a little": 13,
+        "Not at all": 15,
+        "Somewhat": 3
+      },
+      "weighted": {
+        "modal_excess_pp": 11.422177561593578,
+        "modal_ours_pct": 50.62217756159358,
+        "modal_real_pct": 39.2,
+        "pass": true,
+        "tail_gap_pp": 6.422177561593578,
+        "tail_mass_ours_pct": 50.62217756159358,
+        "tail_mass_real_pct": 44.2,
+        "tvd_pp": 19.224912200938796
+      },
+      "weighted_counts": {
+        "Just a little": 13.53606840902484,
+        "Not at all": 16.198131499759217,
+        "Somewhat": 2.2638931800611335
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Fairly badly",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.6000000000000001,
+              "available": true,
+              "n": [
+                16,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.6000000000000001,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 9.866666666666667,
+              "available": true,
+              "n": [
+                16,
+                15
+              ],
+              "predicted_pp": -9.166666666666664,
+              "real_pp": 0.7000000000000028,
+              "sign_correct": false
+            },
+            "Fairly well": {
+              "absolute_error_pp": 1.2999999999999998,
+              "available": true,
+              "n": [
+                16,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.2999999999999998,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                16,
+                15
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 10.566666666666656,
+              "available": true,
+              "n": [
+                16,
+                15
+              ],
+              "predicted_pp": 9.166666666666664,
+              "real_pp": -1.3999999999999915,
+              "sign_correct": false
+            },
+            "Very well": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                16,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.6000000000000001,
+              "available": true,
+              "n": [
+                16,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.6000000000000001,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 3.763972530029811,
+              "available": true,
+              "n": [
+                16,
+                14
+              ],
+              "predicted_pp": -3.063972530029808,
+              "real_pp": 0.7000000000000028,
+              "sign_correct": false
+            },
+            "Fairly well": {
+              "absolute_error_pp": 1.2999999999999998,
+              "available": true,
+              "n": [
+                16,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.2999999999999998,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                16,
+                14
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 4.463972530029814,
+              "available": true,
+              "n": [
+                16,
+                14
+              ],
+              "predicted_pp": 3.0639725300298224,
+              "real_pp": -1.3999999999999915,
+              "sign_correct": false
+            },
+            "Very well": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                16,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 1.0999999999999999,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.0999999999999999,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 0.2193277310924362,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 1.6806722689075642,
+              "real_pp": 1.9000000000000004,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 0.5,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.5,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 0.18067226890757127,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -1.6806722689075713,
+              "real_pp": -1.5,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 1.0999999999999999,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.0999999999999999,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 19.946390910070377,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 21.846390910070376,
+              "real_pp": 1.9000000000000004,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 0.5,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.5,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                16
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 20.34639091007036,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": -21.84639091007036,
+              "real_pp": -1.5,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                14,
+                16
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q46E_Q47E",
+      "parsed": 31,
+      "planned": 32,
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Narrowing gaps between rich and poor?",
+      "truth": {
+        "Don't know/Haven't heard enough to say": 0.015,
+        "Fairly badly": 0.16699999999999998,
+        "Fairly well": 0.049,
+        "Refused": 0.0,
+        "Very badly": 0.764,
+        "Very well": 0.005
+      },
+      "unparsed": 1,
+      "unweighted": {
+        "modal_excess_pp": -18.335483870967742,
+        "modal_ours_pct": 58.06451612903226,
+        "modal_real_pct": 76.4,
+        "pass": false,
+        "tail_gap_pp": -18.835483870967742,
+        "tail_mass_ours_pct": 58.06451612903226,
+        "tail_mass_real_pct": 76.9,
+        "tvd_pp": 25.23548387096774
+      },
+      "unweighted_counts": {
+        "Fairly badly": 13,
+        "Very badly": 18
+      },
+      "weighted": {
+        "modal_excess_pp": -19.085514855229427,
+        "modal_ours_pct": 57.31448514477058,
+        "modal_real_pct": 76.4,
+        "pass": false,
+        "tail_gap_pp": -19.585514855229427,
+        "tail_mass_ours_pct": 57.31448514477058,
+        "tail_mass_real_pct": 76.9,
+        "tvd_pp": 25.985514855229418
+      },
+      "weighted_counts": {
+        "Fairly badly": 13.741403160679475,
+        "Very badly": 18.45078945380415
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Fairly badly",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 2.407843137254904,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -0.39215686274509665,
+              "real_pp": -2.8000000000000007,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 8.666666666666668,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -6.666666666666667,
+              "real_pp": 2.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 6.058823529411761,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 7.058823529411761,
+              "real_pp": 1.0,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 0.19999999999999996,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.19999999999999996,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 2.795532171424181,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -0.00446782857581951,
+              "real_pp": -2.8000000000000007,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 2.0,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 2.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 0.9955321714242018,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.004467828575798194,
+              "real_pp": 1.0,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 0.19999999999999996,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.19999999999999996,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.19999999999999996,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.19999999999999996,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 13.541269841269848,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 19.84126984126985,
+              "real_pp": 6.300000000000001,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 2.655555555555556,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -5.555555555555555,
+              "real_pp": -2.8999999999999995,
+              "sign_correct": true
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 11.985714285714288,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -14.285714285714285,
+              "real_pp": -2.299999999999997,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 1.3,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.3,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.19999999999999996,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.19999999999999996,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 26.35347563091025,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 32.65347563091025,
+              "real_pp": 6.300000000000001,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 2.8999999999999995,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.8999999999999995,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Very badly": {
+              "absolute_error_pp": 30.35347563091026,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -32.65347563091026,
+              "real_pp": -2.299999999999997,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 1.3,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.3,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q46B_Q47B",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Improving the living standards of the poor?",
+      "truth": {
+        "Don't know/Haven't heard enough to say": 0.005005005005005005,
+        "Fairly badly": 0.20920920920920918,
+        "Fairly well": 0.07507507507507508,
+        "Refused": 0.0,
+        "Very badly": 0.6996996996996997,
+        "Very well": 0.011011011011011011
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": -16.844969969969966,
+        "modal_ours_pct": 53.125,
+        "modal_real_pct": 69.96996996996997,
+        "pass": false,
+        "tail_gap_pp": -27.321071071071074,
+        "tail_mass_ours_pct": 43.75,
+        "tail_mass_real_pct": 71.07107107107107,
+        "tvd_pp": 32.20407907907909
+      },
+      "unweighted_counts": {
+        "Fairly badly": 17,
+        "Fairly well": 1,
+        "Very badly": 14
+      },
+      "weighted": {
+        "modal_excess_pp": -19.604275317924575,
+        "modal_ours_pct": 50.36569465204539,
+        "modal_real_pct": 69.96996996996997,
+        "pass": false,
+        "tail_gap_pp": -21.43676572311646,
+        "tail_mass_ours_pct": 49.634305347954616,
+        "tail_mass_real_pct": 71.07107107107107,
+        "tvd_pp": 29.444773731124467
+      },
+      "weighted_counts": {
+        "Fairly badly": 16.626458404876438,
+        "Fairly well": 0.0,
+        "Very badly": 16.385016011869695
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Somewhat free",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Completely free": {
+              "absolute_error_pp": 6.199999999999996,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 6.199999999999996,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "absolute_error_pp": 0.0,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.0,
+              "sign_correct": true
+            },
+            "Not at all free": {
+              "absolute_error_pp": 3.299999999999999,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.299999999999999,
+              "sign_correct": false
+            },
+            "Not very free": {
+              "absolute_error_pp": 2.509803921568624,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -5.490196078431374,
+              "real_pp": -7.999999999999998,
+              "sign_correct": true
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Somewhat free": {
+              "absolute_error_pp": 7.8901960784313765,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 5.490196078431374,
+              "real_pp": -2.400000000000002,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Completely free": {
+              "absolute_error_pp": 6.199999999999996,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 6.199999999999996,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "absolute_error_pp": 0.0,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.0,
+              "sign_correct": true
+            },
+            "Not at all free": {
+              "absolute_error_pp": 3.299999999999999,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.299999999999999,
+              "sign_correct": false
+            },
+            "Not very free": {
+              "absolute_error_pp": 1.9556361220654548,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -6.044363877934543,
+              "real_pp": -7.999999999999998,
+              "sign_correct": true
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Somewhat free": {
+              "absolute_error_pp": 8.444363877934546,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 6.044363877934543,
+              "real_pp": -2.400000000000002,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Completely free": {
+              "absolute_error_pp": 1.2999999999999972,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.2999999999999972,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "absolute_error_pp": 0.7,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.7,
+              "sign_correct": false
+            },
+            "Not at all free": {
+              "absolute_error_pp": 1.4000000000000004,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.4000000000000004,
+              "sign_correct": false
+            },
+            "Not very free": {
+              "absolute_error_pp": 2.5873015873015888,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -1.5873015873015888,
+              "real_pp": 1.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Somewhat free": {
+              "absolute_error_pp": 0.21269841269841905,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 1.5873015873015817,
+              "real_pp": 1.8000000000000007,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "Completely free": {
+              "absolute_error_pp": 1.2999999999999972,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.2999999999999972,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "absolute_error_pp": 0.7,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.7,
+              "sign_correct": false
+            },
+            "Not at all free": {
+              "absolute_error_pp": 1.4000000000000004,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.4000000000000004,
+              "sign_correct": false
+            },
+            "Not very free": {
+              "absolute_error_pp": 17.413285613469043,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -16.413285613469043,
+              "real_pp": 1.0,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Somewhat free": {
+              "absolute_error_pp": 14.613285613469056,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 16.413285613469057,
+              "real_pp": 1.8000000000000007,
+              "sign_correct": true
+            }
+          }
+        }
+      },
+      "id": "Q9A_Q10A",
+      "parsed": 32,
+      "planned": 32,
+      "question": "In this country, how free are you to say what you think?",
+      "truth": {
+        "Completely free": 0.431,
+        "Don't know": 0.004,
+        "Not at all free": 0.15,
+        "Not very free": 0.18,
+        "Refused": 0.004,
+        "Somewhat free": 0.231
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 13.149999999999999,
+        "modal_ours_pct": 56.25,
+        "modal_real_pct": 43.1,
+        "pass": false,
+        "tail_gap_pp": -58.099999999999994,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 58.099999999999994,
+        "tvd_pp": 58.9
+      },
+      "unweighted_counts": {
+        "Not very free": 14,
+        "Somewhat free": 18
+      },
+      "weighted": {
+        "modal_excess_pp": 9.57181439176702,
+        "modal_ours_pct": 52.67181439176702,
+        "modal_real_pct": 43.1,
+        "pass": false,
+        "tail_gap_pp": -58.099999999999994,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 58.099999999999994,
+        "tvd_pp": 58.9
+      },
+      "weighted_counts": {
+        "Not very free": 15.623731883971955,
+        "Somewhat free": 17.387742532774183
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Much worse",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Better": {
+              "absolute_error_pp": 8.28235294117647,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 5.88235294117647,
+              "real_pp": -2.4000000000000004,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Much better": {
+              "absolute_error_pp": 0.8,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.8,
+              "sign_correct": false
+            },
+            "Much worse": {
+              "absolute_error_pp": 1.084313725490194,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -0.7843137254901968,
+              "real_pp": 0.29999999999999716,
+              "sign_correct": false
+            },
+            "Same": {
+              "absolute_error_pp": 2.11764705882353,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 5.88235294117647,
+              "real_pp": 8.0,
+              "sign_correct": true
+            },
+            "Worse": {
+              "absolute_error_pp": 4.480392156862749,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -10.980392156862749,
+              "real_pp": -6.5,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "Better": {
+              "absolute_error_pp": 9.822241123988169,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 7.422241123988169,
+              "real_pp": -2.4000000000000004,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Much better": {
+              "absolute_error_pp": 0.8,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.8,
+              "sign_correct": false
+            },
+            "Much worse": {
+              "absolute_error_pp": 0.9555809791328773,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -0.6555809791328802,
+              "real_pp": 0.29999999999999716,
+              "sign_correct": false
+            },
+            "Same": {
+              "absolute_error_pp": 1.2420750698761607,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 6.757924930123839,
+              "real_pp": 8.0,
+              "sign_correct": true
+            },
+            "Worse": {
+              "absolute_error_pp": 7.0245850749791146,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -13.524585074979115,
+              "real_pp": -6.5,
+              "sign_correct": true
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Better": {
+              "absolute_error_pp": 7.842857142857142,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 7.142857142857142,
+              "real_pp": -0.6999999999999993,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Much better": {
+              "absolute_error_pp": 1.3,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.3,
+              "sign_correct": false
+            },
+            "Much worse": {
+              "absolute_error_pp": 3.0126984126984144,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 1.587301587301587,
+              "real_pp": 4.600000000000001,
+              "sign_correct": true
+            },
+            "Same": {
+              "absolute_error_pp": 1.7555555555555546,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -5.555555555555555,
+              "real_pp": -3.8000000000000007,
+              "sign_correct": true
+            },
+            "Worse": {
+              "absolute_error_pp": 4.6746031746031775,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -3.1746031746031775,
+              "real_pp": 1.5,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Better": {
+              "absolute_error_pp": 8.916593738828416,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 8.216593738828417,
+              "real_pp": -0.6999999999999993,
+              "sign_correct": false
+            },
+            "Don't know": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Much better": {
+              "absolute_error_pp": 1.3,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.3,
+              "sign_correct": false
+            },
+            "Much worse": {
+              "absolute_error_pp": 4.0690246727727635,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.530975327227238,
+              "real_pp": 4.600000000000001,
+              "sign_correct": true
+            },
+            "Same": {
+              "absolute_error_pp": 1.981338091455342,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -5.781338091455343,
+              "real_pp": -3.8000000000000007,
+              "sign_correct": true
+            },
+            "Worse": {
+              "absolute_error_pp": 4.4662309746003075,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -2.9662309746003075,
+              "real_pp": 1.5,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q5A_Q5A",
+      "parsed": 32,
+      "planned": 32,
+      "question": "Looking back, how do you rate the following compared to 12 months ago: Economic condition of this country?",
+      "truth": {
+        "Better": 0.091,
+        "Don't know": 0.001,
+        "Much better": 0.011000000000000001,
+        "Much worse": 0.342,
+        "Same": 0.28800000000000003,
+        "Worse": 0.267
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 53.3,
+        "modal_ours_pct": 87.5,
+        "modal_real_pct": 34.2,
+        "pass": false,
+        "tail_gap_pp": -29.050000000000004,
+        "tail_mass_ours_pct": 6.25,
+        "tail_mass_real_pct": 35.300000000000004,
+        "tvd_pp": 60.8
+      },
+      "unweighted_counts": {
+        "Better": 1,
+        "Much worse": 2,
+        "Same": 1,
+        "Worse": 28
+      },
+      "weighted": {
+        "modal_excess_pp": 52.64970880869514,
+        "modal_ours_pct": 86.84970880869514,
+        "modal_real_pct": 34.2,
+        "pass": false,
+        "tail_gap_pp": -28.992612726467755,
+        "tail_mass_ours_pct": 6.30738727353225,
+        "tail_mass_real_pct": 35.300000000000004,
+        "tvd_pp": 60.149708808695145
+      },
+      "weighted_counts": {
+        "Better": 1.1823855307245377,
+        "Much worse": 2.0821615361671997,
+        "Same": 1.076557945453484,
+        "Worse": 28.670369404400905
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Strongly approve",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Approve": {
+              "absolute_error_pp": 16.750980392156865,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -7.450980392156864,
+              "real_pp": 9.3,
+              "sign_correct": false
+            },
+            "Disapprove": {
+              "absolute_error_pp": 15.21764705882352,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 14.117647058823522,
+              "real_pp": -1.0999999999999979,
+              "sign_correct": false
+            },
+            "Don't know or haven't heard enough to say": {
+              "absolute_error_pp": 3.666666666666667,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -6.666666666666667,
+              "real_pp": -3.0,
+              "sign_correct": true
+            },
+            "Refused": {
+              "absolute_error_pp": 0.3,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.3,
+              "sign_correct": false
+            },
+            "Strongly approve": {
+              "absolute_error_pp": 4.799999999999999,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -4.799999999999999,
+              "sign_correct": false
+            },
+            "Strongly disapprove": {
+              "absolute_error_pp": 0.7000000000000028,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.7000000000000028,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Approve": {
+              "absolute_error_pp": 7.822073695514858,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 1.477926304485143,
+              "real_pp": 9.3,
+              "sign_correct": true
+            },
+            "Disapprove": {
+              "absolute_error_pp": 6.24582381228932,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 5.145823812289322,
+              "real_pp": -1.0999999999999979,
+              "sign_correct": false
+            },
+            "Don't know or haven't heard enough to say": {
+              "absolute_error_pp": 3.6237501167744615,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -6.6237501167744615,
+              "real_pp": -3.0,
+              "sign_correct": true
+            },
+            "Refused": {
+              "absolute_error_pp": 0.3,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.3,
+              "sign_correct": false
+            },
+            "Strongly approve": {
+              "absolute_error_pp": 4.799999999999999,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -4.799999999999999,
+              "sign_correct": false
+            },
+            "Strongly disapprove": {
+              "absolute_error_pp": 0.7000000000000028,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.7000000000000028,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Approve": {
+              "absolute_error_pp": 0.23174603174603092,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -3.9682539682539684,
+              "real_pp": -4.199999999999999,
+              "sign_correct": true
+            },
+            "Disapprove": {
+              "absolute_error_pp": 9.423809523809524,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 9.523809523809518,
+              "real_pp": 0.09999999999999432,
+              "sign_correct": true
+            },
+            "Don't know or haven't heard enough to say": {
+              "absolute_error_pp": 4.355555555555556,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -5.555555555555555,
+              "real_pp": -1.1999999999999997,
+              "sign_correct": true
+            },
+            "Refused": {
+              "absolute_error_pp": 0.2,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.2,
+              "sign_correct": false
+            },
+            "Strongly approve": {
+              "absolute_error_pp": 5.000000000000001,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 5.000000000000001,
+              "sign_correct": false
+            },
+            "Strongly disapprove": {
+              "absolute_error_pp": 0.19999999999999574,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.19999999999999574,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Approve": {
+              "absolute_error_pp": 7.497184088977871,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 3.297184088977872,
+              "real_pp": -4.199999999999999,
+              "sign_correct": false
+            },
+            "Disapprove": {
+              "absolute_error_pp": 2.6787427780832473,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 2.7787427780832417,
+              "real_pp": 0.09999999999999432,
+              "sign_correct": true
+            },
+            "Don't know or haven't heard enough to say": {
+              "absolute_error_pp": 4.87592686706113,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -6.0759268670611295,
+              "real_pp": -1.1999999999999997,
+              "sign_correct": true
+            },
+            "Refused": {
+              "absolute_error_pp": 0.2,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.2,
+              "sign_correct": false
+            },
+            "Strongly approve": {
+              "absolute_error_pp": 5.000000000000001,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 5.000000000000001,
+              "sign_correct": false
+            },
+            "Strongly disapprove": {
+              "absolute_error_pp": 0.19999999999999574,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.19999999999999574,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q47A_Q48A",
+      "parsed": 32,
+      "planned": 32,
+      "question": "Do you approve or disapprove of the way that the following people have performed their jobs over the past 12 months, or haven't you heard enough about them to say: President Cyril Ramaphosa?",
+      "truth": {
+        "Approve": 0.233,
+        "Disapprove": 0.32299999999999995,
+        "Don't know or haven't heard enough to say": 0.025,
+        "Refused": 0.002,
+        "Strongly approve": 0.079,
+        "Strongly disapprove": 0.33799999999999997
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 53.7,
+        "modal_ours_pct": 87.5,
+        "modal_real_pct": 33.8,
+        "pass": false,
+        "tail_gap_pp": -41.699999999999996,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 41.699999999999996,
+        "tvd_pp": 55.825
+      },
+      "unweighted_counts": {
+        "Approve": 3,
+        "Disapprove": 28,
+        "Don't know or haven't heard enough to say": 1
+      },
+      "weighted": {
+        "modal_excess_pp": 53.3044305083999,
+        "modal_ours_pct": 87.1044305083999,
+        "modal_real_pct": 33.8,
+        "pass": false,
+        "tail_gap_pp": -41.699999999999996,
+        "tail_mass_ours_pct": 0.0,
+        "tail_mass_real_pct": 41.699999999999996,
+        "tvd_pp": 55.73176632004858
+      },
+      "weighted_counts": {
+        "Approve": 3.1256035389749055,
+        "Disapprove": 28.75445679313284,
+        "Don't know or haven't heard enough to say": 1.1314140846383811
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "held_out",
+      "focus_answer": "Somewhat",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 2.9000000000000004,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 2.9000000000000004,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.5,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.5,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 5.411764705882348,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -9.411764705882348,
+              "real_pp": -4.0,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 10.896078431372542,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 10.196078431372547,
+              "real_pp": -0.6999999999999957,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 2.984313725490196,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -0.7843137254901968,
+              "real_pp": 2.1999999999999993,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 2.9000000000000004,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 2.9000000000000004,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.5,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.5,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 0.8651889461446558,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -3.134811053855344,
+              "real_pp": -4.0,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 2.3568847493702023,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 1.6568847493702066,
+              "real_pp": -0.6999999999999957,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 0.7220736955148528,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 1.4779263044851465,
+              "real_pp": 2.1999999999999993,
+              "sign_correct": true
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 1.8000000000000007,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.8000000000000007,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Just a little": {
+              "absolute_error_pp": 6.149206349206356,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 6.349206349206355,
+              "real_pp": 0.1999999999999993,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 10.13650793650794,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -7.936507936507937,
+              "real_pp": 2.200000000000003,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 4.887301587301588,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 1.587301587301587,
+              "real_pp": -3.3000000000000007,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 1.8000000000000007,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.8000000000000007,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Just a little": {
+              "absolute_error_pp": 14.138544685041769,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 14.338544685041768,
+              "real_pp": 0.1999999999999993,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 19.835728774019653,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -17.63572877401965,
+              "real_pp": 2.200000000000003,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 6.597184088977873,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 3.297184088977872,
+              "real_pp": -3.3000000000000007,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q37G_Q37G",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: The police?",
+      "truth": {
+        "A lot": 0.11988011988011989,
+        "Don't know/Haven't heard enough to say": 0.002997002997002997,
+        "Just a little": 0.2937062937062937,
+        "Not at all": 0.4055944055944056,
+        "Refused": 0.0009990009990009992,
+        "Somewhat": 0.17682317682317683
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 34.44055944055944,
+        "modal_ours_pct": 75.0,
+        "modal_real_pct": 40.55944055944056,
+        "pass": false,
+        "tail_gap_pp": -33.79745254745256,
+        "tail_mass_ours_pct": 18.75,
+        "tail_mass_real_pct": 52.54745254745256,
+        "tvd_pp": 45.629370629370634
+      },
+      "unweighted_counts": {
+        "Just a little": 24,
+        "Not at all": 6,
+        "Somewhat": 2
+      },
+      "weighted": {
+        "modal_excess_pp": 30.916874524883283,
+        "modal_ours_pct": 71.47631508432384,
+        "modal_real_pct": 40.55944055944056,
+        "pass": false,
+        "tail_gap_pp": -33.49200131172782,
+        "tail_mass_ours_pct": 19.055451235724735,
+        "tail_mass_real_pct": 52.54745254745256,
+        "tvd_pp": 42.10568571369447
+      },
+      "weighted_counts": {
+        "Just a little": 23.59538546809442,
+        "Not at all": 6.290485409676806,
+        "Somewhat": 3.1256035389749055
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "seen",
+      "focus_answer": "A lot",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 2.200000000000001,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.200000000000001,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.9,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 16.258823529411764,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 27.05882352941176,
+              "real_pp": 10.799999999999997,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 22.092156862745085,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -20.39215686274509,
+              "real_pp": 1.6999999999999957,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 2.7333333333333316,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -6.666666666666667,
+              "real_pp": -9.399999999999999,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 2.200000000000001,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.200000000000001,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.9,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 19.92060407184762,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 30.720604071847617,
+              "real_pp": 10.799999999999997,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 32.42060407184763,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -30.72060407184763,
+              "real_pp": 1.6999999999999957,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 9.399999999999999,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -9.399999999999999,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "A lot": {
+              "absolute_error_pp": 3.7,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.7,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.8999999999999999,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.8999999999999999,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 2.7809523809523853,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 2.3809523809523867,
+              "real_pp": -0.3999999999999986,
+              "sign_correct": false
+            },
+            "Not at all": {
+              "absolute_error_pp": 3.474603174603182,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 3.1746031746031775,
+              "real_pp": -0.30000000000000426,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 3.355555555555556,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -5.555555555555555,
+              "real_pp": -2.1999999999999993,
+              "sign_correct": true
+            }
+          },
+          "weighted": {
+            "A lot": {
+              "absolute_error_pp": 3.7,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 3.7,
+              "sign_correct": false
+            },
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.8999999999999999,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.8999999999999999,
+              "sign_correct": false
+            },
+            "Just a little": {
+              "absolute_error_pp": 4.216481682008418,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -4.616481682008416,
+              "real_pp": -0.3999999999999986,
+              "sign_correct": true
+            },
+            "Not at all": {
+              "absolute_error_pp": 4.916481682008417,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 4.616481682008413,
+              "real_pp": -0.30000000000000426,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Somewhat": {
+              "absolute_error_pp": 2.1999999999999993,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -2.1999999999999993,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q37A_Q37A",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: The president?",
+      "truth": {
+        "A lot": 0.10300000000000001,
+        "Don't know/Haven't heard enough to say": 0.006,
+        "Just a little": 0.307,
+        "Not at all": 0.395,
+        "Refused": 0.0,
+        "Somewhat": 0.18899999999999997
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 23.0,
+        "modal_ours_pct": 62.5,
+        "modal_real_pct": 39.5,
+        "pass": false,
+        "tail_gap_pp": 12.700000000000003,
+        "tail_mass_ours_pct": 62.5,
+        "tail_mass_real_pct": 49.8,
+        "tvd_pp": 26.674999999999997
+      },
+      "unweighted_counts": {
+        "Just a little": 11,
+        "Not at all": 20,
+        "Somewhat": 1
+      },
+      "weighted": {
+        "modal_excess_pp": 26.70444730459397,
+        "modal_ours_pct": 66.20444730459397,
+        "modal_real_pct": 39.5,
+        "pass": false,
+        "tail_gap_pp": 16.404447304593972,
+        "tail_mass_ours_pct": 66.20444730459397,
+        "tail_mass_real_pct": 49.8,
+        "tvd_pp": 29.800000000000004
+      },
+      "weighted_counts": {
+        "Just a little": 11.156410232041921,
+        "Not at all": 21.855064184704208,
+        "Somewhat": 0.0
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "seen",
+      "focus_answer": "Very bad",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Don't know": {
+              "absolute_error_pp": 1.7999999999999998,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.7999999999999998,
+              "sign_correct": false
+            },
+            "Fairly bad": {
+              "absolute_error_pp": 9.97254901960784,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -11.372549019607838,
+              "real_pp": -1.3999999999999986,
+              "sign_correct": true
+            },
+            "Fairly good": {
+              "absolute_error_pp": 0.9000000000000004,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9000000000000004,
+              "sign_correct": false
+            },
+            "Neither good nor bad": {
+              "absolute_error_pp": 1.5,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.5,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                15
+              ]
+            },
+            "Very bad": {
+              "absolute_error_pp": 17.87254901960784,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 11.372549019607838,
+              "real_pp": -6.5,
+              "sign_correct": false
+            },
+            "Very good": {
+              "absolute_error_pp": 5.5,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 5.5,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know": {
+              "absolute_error_pp": 1.7999999999999998,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.7999999999999998,
+              "sign_correct": false
+            },
+            "Fairly bad": {
+              "absolute_error_pp": 2.1300766605463792,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -3.530076660546378,
+              "real_pp": -1.3999999999999986,
+              "sign_correct": true
+            },
+            "Fairly good": {
+              "absolute_error_pp": 0.9000000000000004,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9000000000000004,
+              "sign_correct": false
+            },
+            "Neither good nor bad": {
+              "absolute_error_pp": 1.5,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.5,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                17,
+                14
+              ]
+            },
+            "Very bad": {
+              "absolute_error_pp": 10.030076660546378,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 3.530076660546378,
+              "real_pp": -6.5,
+              "sign_correct": false
+            },
+            "Very good": {
+              "absolute_error_pp": 5.5,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 5.5,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Don't know": {
+              "absolute_error_pp": 0.7,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.7,
+              "sign_correct": false
+            },
+            "Fairly bad": {
+              "absolute_error_pp": 15.86666666666667,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 16.66666666666667,
+              "real_pp": 0.8000000000000007,
+              "sign_correct": true
+            },
+            "Fairly good": {
+              "absolute_error_pp": 1.0,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.0,
+              "sign_correct": false
+            },
+            "Neither good nor bad": {
+              "absolute_error_pp": 0.9000000000000004,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9000000000000004,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                18
+              ]
+            },
+            "Very bad": {
+              "absolute_error_pp": 19.066666666666656,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -16.666666666666657,
+              "real_pp": 2.3999999999999986,
+              "sign_correct": false
+            },
+            "Very good": {
+              "absolute_error_pp": 1.6000000000000005,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.6000000000000005,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know": {
+              "absolute_error_pp": 0.7,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.7,
+              "sign_correct": false
+            },
+            "Fairly bad": {
+              "absolute_error_pp": 34.479802903339674,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 35.27980290333968,
+              "real_pp": 0.8000000000000007,
+              "sign_correct": true
+            },
+            "Fairly good": {
+              "absolute_error_pp": 1.0,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.0,
+              "sign_correct": false
+            },
+            "Neither good nor bad": {
+              "absolute_error_pp": 0.9000000000000004,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.9000000000000004,
+              "sign_correct": false
+            },
+            "Refused": {
+              "available": false,
+              "n": [
+                14,
+                17
+              ]
+            },
+            "Very bad": {
+              "absolute_error_pp": 37.67980290333967,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -35.27980290333967,
+              "real_pp": 2.3999999999999986,
+              "sign_correct": false
+            },
+            "Very good": {
+              "absolute_error_pp": 1.6000000000000005,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.6000000000000005,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q4A_Q4A",
+      "parsed": 32,
+      "planned": 32,
+      "question": "In general, how would you describe the present economic condition of this country?",
+      "truth": {
+        "Don't know": 0.010010010010010012,
+        "Fairly bad": 0.21821821821821824,
+        "Fairly good": 0.12712712712712712,
+        "Neither good nor bad": 0.06306306306306307,
+        "Refused": 0.0010010010010010012,
+        "Very bad": 0.5185185185185185,
+        "Very good": 0.06206206206206207
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": 7.523148148148152,
+        "modal_ours_pct": 59.375,
+        "modal_real_pct": 51.85185185185185,
+        "pass": true,
+        "tail_gap_pp": 1.3169419419419413,
+        "tail_mass_ours_pct": 59.375,
+        "tail_mass_real_pct": 58.05805805805806,
+        "tvd_pp": 26.326326326326328
+      },
+      "unweighted_counts": {
+        "Fairly bad": 13,
+        "Very bad": 19
+      },
+      "weighted": {
+        "modal_excess_pp": 7.373472997555723,
+        "modal_ours_pct": 59.22532484940757,
+        "modal_real_pct": 51.85185185185185,
+        "pass": true,
+        "tail_gap_pp": 1.1672667913495118,
+        "tail_mass_ours_pct": 59.22532484940757,
+        "tail_mass_real_pct": 58.05805805805806,
+        "tvd_pp": 26.32632632632633
+      },
+      "weighted_counts": {
+        "Fairly bad": 13.460321455849167,
+        "Very bad": 19.551152960896967
+      }
+    },
+    {
+      "attempted": 32,
+      "bucket": "seen",
+      "focus_answer": "Very badly",
+      "gaps": {
+        "gender": {
+          "unweighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 11.425490196078417,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": -13.725490196078418,
+              "real_pp": -2.3000000000000007,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 1.4823529411764698,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 5.88235294117647,
+              "real_pp": 4.4,
+              "sign_correct": true
+            },
+            "Very badly": {
+              "absolute_error_pp": 11.143137254901973,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 7.843137254901961,
+              "real_pp": -3.3000000000000114,
+              "sign_correct": false
+            },
+            "Very well": {
+              "absolute_error_pp": 1.0999999999999999,
+              "available": true,
+              "n": [
+                17,
+                15
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.0999999999999999,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.09999999999999998,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 0.09999999999999998,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 6.373647662205844,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 4.073647662205843,
+              "real_pp": -2.3000000000000007,
+              "sign_correct": false
+            },
+            "Fairly well": {
+              "absolute_error_pp": 0.4237064007802047,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 4.823706400780205,
+              "real_pp": 4.4,
+              "sign_correct": true
+            },
+            "Very badly": {
+              "absolute_error_pp": 5.597354062986032,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": -8.897354062986043,
+              "real_pp": -3.3000000000000114,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 1.0999999999999999,
+              "available": true,
+              "n": [
+                17,
+                14
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": 1.0999999999999999,
+              "sign_correct": false
+            }
+          }
+        },
+        "location": {
+          "unweighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.30000000000000004,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.30000000000000004,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 9.766666666666659,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": -16.666666666666657,
+              "real_pp": -6.899999999999999,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 14.142857142857142,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 7.142857142857142,
+              "real_pp": -7.0,
+              "sign_correct": false
+            },
+            "Very badly": {
+              "absolute_error_pp": 5.676190476190477,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 9.523809523809526,
+              "real_pp": 15.200000000000003,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 1.1,
+              "available": true,
+              "n": [
+                14,
+                18
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.1,
+              "sign_correct": false
+            }
+          },
+          "weighted": {
+            "Don't know/Haven't heard enough to say": {
+              "absolute_error_pp": 0.30000000000000004,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -0.30000000000000004,
+              "sign_correct": false
+            },
+            "Fairly badly": {
+              "absolute_error_pp": 2.5776397998224994,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": -9.477639799822498,
+              "real_pp": -6.899999999999999,
+              "sign_correct": true
+            },
+            "Fairly well": {
+              "absolute_error_pp": 12.339955297666286,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 5.339955297666285,
+              "real_pp": -7.0,
+              "sign_correct": false
+            },
+            "Very badly": {
+              "absolute_error_pp": 11.06231549784377,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 4.137684502156233,
+              "real_pp": 15.200000000000003,
+              "sign_correct": true
+            },
+            "Very well": {
+              "absolute_error_pp": 1.1,
+              "available": true,
+              "n": [
+                14,
+                17
+              ],
+              "predicted_pp": 0.0,
+              "real_pp": -1.1,
+              "sign_correct": false
+            }
+          }
+        }
+      },
+      "id": "Q46F_Q47F",
+      "parsed": 32,
+      "planned": 32,
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Reducing crime?",
+      "truth": {
+        "Don't know/Haven't heard enough to say": 0.002,
+        "Fairly badly": 0.113,
+        "Fairly well": 0.065,
+        "Very badly": 0.7979999999999999,
+        "Very well": 0.022000000000000002
+      },
+      "unparsed": 0,
+      "unweighted": {
+        "modal_excess_pp": -20.424999999999997,
+        "modal_ours_pct": 59.375,
+        "modal_real_pct": 79.8,
+        "pass": false,
+        "tail_gap_pp": -44.5,
+        "tail_mass_ours_pct": 37.5,
+        "tail_mass_real_pct": 82.0,
+        "tvd_pp": 48.074999999999996
+      },
+      "unweighted_counts": {
+        "Fairly badly": 19,
+        "Fairly well": 1,
+        "Very badly": 12
+      },
+      "weighted": {
+        "modal_excess_pp": -17.863472711691678,
+        "modal_ours_pct": 61.93652728830832,
+        "modal_real_pct": 79.8,
+        "pass": false,
+        "tail_gap_pp": -46.26429688579564,
+        "tail_mass_ours_pct": 35.73570311420436,
+        "tail_mass_real_pct": 82.0,
+        "tvd_pp": 50.63652728830832
+      },
+      "weighted_counts": {
+        "Fairly badly": 20.446160860400887,
+        "Fairly well": 0.7684310651553206,
+        "Very badly": 11.796882491189924
+      }
+    }
+  ],
+  "room_size": 32,
+  "sample_weight_effective_n": 24.797775890614886,
+  "seed": 1,
+  "summary": {
+    "held_out": {
+      "unweighted": {
+        "mean_tvd_pp": 42.92290673816211,
+        "median_tvd_pp": 42.1875,
+        "scorable_items": 12,
+        "urban_rural_focus_scorable": 12,
+        "urban_rural_focus_sign_correct": 6
+      },
+      "weighted": {
+        "mean_tvd_pp": 42.083659365099344,
+        "median_tvd_pp": 38.83236966308904,
+        "scorable_items": 12,
+        "urban_rural_focus_scorable": 12,
+        "urban_rural_focus_sign_correct": 6
+      }
+    },
+    "seen": {
+      "unweighted": {
+        "mean_tvd_pp": 33.69210877544211,
+        "median_tvd_pp": 26.674999999999997,
+        "scorable_items": 3,
+        "urban_rural_focus_scorable": 3,
+        "urban_rural_focus_sign_correct": 1
+      },
+      "weighted": {
+        "mean_tvd_pp": 35.587617871544886,
+        "median_tvd_pp": 29.800000000000004,
+        "scorable_items": 3,
+        "urban_rural_focus_scorable": 3,
+        "urban_rural_focus_sign_correct": 1
+      }
+    }
+  },
+  "usage_missing_responses": 0,
+  "weighting": {
+    "adult_library_size": 330,
+    "analysis": "Post-hoc adult-only sensitivity; eligibility exclusion independent of answers",
+    "excluded_library_records": 4,
+    "excluded_target_percent": {
+      "age": {},
+      "education": {},
+      "gender": {},
+      "location": {},
+      "province": {},
+      "race": {
+        "Don't know": 0.1,
+        "Other": 0.2
+      }
+    },
+    "iterations": 20,
+    "max_margin_error": 6.039549188541216e-08,
+    "method": "Full-library iterative proportional fitting on audit margins; retain fixed weights in random room.",
+    "supported_targets": {
+      "age": {
+        "18-25": 0.191,
+        "26-35": 0.239,
+        "36-45": 0.27,
+        "46-55": 0.155,
+        "56-65": 0.098,
+        "65+": 0.047
+      },
+      "education": {
+        "No formal education": 0.033066132264529056,
+        "Post-secondary": 0.3617234468937876,
+        "Primary": 0.0781563126252505,
+        "Secondary": 0.527054108216433
+      },
+      "gender": {
+        "Female": 0.515,
+        "Male": 0.485
+      },
+      "location": {
+        "Rural": 0.29,
+        "Urban": 0.71
+      },
+      "province": {
+        "Eastern Cape": 0.1051051051051051,
+        "Free State": 0.050050050050050046,
+        "Gauteng": 0.27527527527527523,
+        "KwaZulu-Natal": 0.18518518518518517,
+        "Limpopo": 0.09209209209209208,
+        "Mpumalanga": 0.08008008008008008,
+        "North West": 0.06206206206206206,
+        "Northern Cape": 0.02002002002002002,
+        "Western Cape": 0.1301301301301301
+      },
+      "race": {
+        "Black / African": 0.745235707121364,
+        "Coloured / Mixed race": 0.13440320962888666,
+        "South Asian (Indian, Pakistani, etc.)": 0.046138415245737203,
+        "White / European": 0.07422266800401203
+      }
+    },
+    "total_library_size": 375
+  }
+}

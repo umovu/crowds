@@ -1,195 +1,104 @@
-# R10 realism validation: groundwork and failed readiness gate
+# Paid R10 trial: adult-only follow-up and proof of work
 
-## Outcome
+The paid model ran, but the original trial had an eligibility error: **8 of its 40 personas were under 18**, while Afrobarometer R10 covers adults. The original 40-person scores must not be treated as a clean adult-population test.
 
-Items 1-3 are implemented and verified. Item 4 was measured where the data exists,
-but cannot deliver its promised held-out library comparison. The requested raw
-group statistic is also inflated by small cells. It does not establish whether
-the library is a stereotype machine. The paid run is paused; no model calls,
-no token spend, no accuracy claim, and no persona changes.
+A separate, free analysis used only the **32 adults already asked**. Their answers still differed substantially from the survey: **42.9 percentage points on average across 12 held-out questions**, or **42.1 points after weighting**. This is a post-hoc sensitivity check, not the originally planned 40-adult trial. No extra model requests were made.
 
-The supplied path resolved to `local-plans/REALISM_VALIDATION_PLAN.md`.
-The review found issues that must be settled before spending on Item 5.
+## Adult-only results
+
+| Measure | Unweighted | Weighted |
+|---|---:|---:|
+| Mean gap, 12 held-out questions | 42.9 pp | 42.1 pp |
+| Mean gap, 3 seen controls | 33.7 pp | 35.6 pp |
+| Correct urban/rural direction, held-out | 6 of 12 | 6 of 12 |
+| Correct urban/rural direction, controls | 1 of 3 | 1 of 3 |
+
+Lower gaps mean a closer mix of answers. These are not percentages of correct people and not an overall validation score.
+
+![Adult-only per-question answer gaps](r10_gap_chart_adults.png)
+
+The 32 adults supplied 480 replies, of which 478 were readable. The same two responses remain unparsed: one omitted the answer line, one embedded it inside prose. No answers were repaired, replaced, or selected based on their values.
+
+## What failed and what was fixed
+
+- **Eligibility failed:** the original room was sampled from all 375 personas. Future R10 seal and preparation steps now exclude under-18s and invalid ages before sampling or fitting weights. There are 330 adults in the current library.
+- **The model answers still bunch together:** among adults, 71.9% chose Some of them for police corruption, versus 27.0% in the survey. For judges' corruption, 65.6% chose Don't know/Haven't heard, versus 3.4%.
+- **Subgroup predictions remain weak:** the adult-only analysis gets the urban/rural direction right on 6 of 12 held-out questions. Small real gaps and small groups make this count unstable.
+- **The sample is still skewed:** the adult subset has 14 urban and 18 rural people. Its weighted urban share is only 43.6%, versus the 71% target. Full-library weights do not make this small room representative.
+
+The original paid run and its scores are preserved, including the ineligible personas: [original report](r10_results_1.md), [original aggregates](r10_results_1.json), and [original chart](r10_gap_chart.png). Its held-out mean gaps were 43.6pp raw and 43.1pp weighted, with urban/rural direction 5/12 and 4/12. Those figures carry the age-eligibility defect and are not the headline adult results.
+
+This trial does not identify whether the model, persona text, stale measured attitudes, sampling, or their combination caused the misses. No comparison model was tested. The larger paid run was not started. A future confirmatory trial needs a newly sealed adult room and a declared sampling/weighting method, without tuning to this test's answers.
+
+## Usage and cost
+
+- Original paid trial: **600 requests**, all successful provider responses; **598 readable answers**.
+- Input: **575,145 tokens**. Output: **33,827 tokens**. Total: **608,972 tokens**.
+- Estimated cost at the upper listed Singapore snapshot rates: **US$0.8931**. This covers all 600 calls, including the minors; it is not an invoice.
+- Adult-only analysis and eligibility repair: **0 new paid requests**.
+- Rates used: US$1.32 per million input tokens and US$3.96 per million output tokens. [Provider price page](https://www.alibabacloud.com/help/en/model-studio/deepseek-v4-pro).
+- The earlier 9-token connection check is separate. Account discounts and actual billed charges were not verified.
 
 ## Method and limits
 
-- Real data: local R9 SAV, 1,580 respondents; `withinwt_hh` survey weights.
-- R10: existing parsed national and subgroup percentages, 266 questions; the
-  source PDF is 2,309,705 bytes. Its JSON and PDF are retained for inspection.
-- Library: 375 stored personas, read only. Missing grouping keys exclude 31;
-  missing R9 keys/weights exclude 198. These are not whole-population results.
-- Six grouping keys come from the shipping fuser: race, gender, province,
-  education band, employment status, age band. Existing employment
-  canonicalisation changes were included and tested; no fusion was run.
-- Weighted between-cell variance / total variance is reported exactly as asked.
-  Numeric survey codes retain the original ordinal order; don't-know/refusal
-  and other missing codes are excluded from that variance, and reported apart.
-- For like-for-like library comparisons, real R9 answers are decoded into the
-  same 15 stored attitude bands using the existing adapter. Library observations
-  have equal weight. These comparisons are separate from held-out-item accuracy.
-- A fixed-seed 100-permutation sensitivity check reveals how large the raw group
-  statistic can be with unrelated answers. It is not a survey-adjusted p-value
-  or a replacement for cross-validation. Repeated-cell results are in the JSON.
+The original room was sampled once with seed 1 from the local library. It used the real panel profile builder, library guard, mechanism-card attachment and full character-context renderer. The local repaired library loaded fresh with external storage resync disabled. Identities and stored attitudes were not regenerated. Deterministic belief sentences were checked; free-form narratives were retained without semantic validation. The deployed app was not tested.
 
-## Item 1: crosswalk
+The adult-only analysis excludes people solely by the survey's age boundary. Audit weights were refitted on all 330 eligible adults, then applied to the 32 adults already in the original sample. Four adult library records have unmapped weighting values. Unsupported R9 race categories (Other 0.2%, Don't know 0.1%) are excluded and supported targets renormalized. Weighted effective sample size is 24.8 people. The remaining demographic skew means neither the raw nor weighted result is a precise national estimate.
 
-The wording floor is 0.30, alongside the existing option-set/ranking rule.
-All candidate rows remain visible, with `wording_overlap` and `wording_floor`.
-A confident flag remains a heuristic; hand review is still required.
+All 12 held-out and 3 control questions remain unchanged. Full answer options include don't-know and refusal. Known national totals are normalized for rounding; missing cells are never zero. Subgroups compare Urban minus Rural and Men minus Women on the focus answer selected before calls, with all options reported separately. Missing model answers are counted and excluded from shares.
 
-Before: 102 confident rows. After: 98. Every changed row:
+Held-out means absent from fused survey fields, not proven absent from model training or persona prose. One model and one seed were tested, in non-thinking mode, temperature 0.7, output cap 220 tokens. The adult-only exclusion and weight refit happened after the original outcomes were visible and are explicitly labelled as such.
 
-| R9 | R10 | Overlap | Before | After |
-|---|---|---:|---|---|
-| Q22C | Q21A | 0.25 | confident | review |
-| Q85A | Q63A | 0.25 | confident | review |
-| Q93A | Q94A | 0.00 | confident | review |
-| Q106C | Q56 | 0.25 | confident | review |
+The earlier identical-people diagnostic remains: 15/15 dimensions had the library-more-predictable direction, with one health-service dimension crossing its warning rule after the education repair. The paid trial does not replace that diagnostic.
 
-The false Q85A/Q63A shift is removed from the shortlist. Known-good police trust,
-police corruption, China influence, and President performance pairs survive.
-Demotion does not mean all four are wrong: short labels can need manual review.
-The rebuilt shortlist has 83 comparable candidates: 61 held-out and 22 seen
-when `--top 100` is used. The old 40 held-out count was a display cap.
+## Blind ritual and evidence
 
-Full change evidence: [r10_crosswalk_changes.json](r10_crosswalk_changes.json).
+The existing `backtest_panel.py` was extended, not forked. Frozen questions had already been committed. New runner and trial settings were committed as `bd223ee` before calls. Seal assembled prompts with external network blocked and did not read the R10 outcome file. Ask read only the sealed prompts, method and SIM credentials. Every attempt and raw response was saved and flushed. The completion receipt was written before a separate reveal process loaded the frozen truth. Raw persona-linked answers and full prompts stay private in ignored files.
 
-## Item 2: frozen questions
-
-[r10_item_list.json](r10_item_list.json) contains 12 held-out items and 3 seen
-controls. Four held-out items have a substantive option with an urban/rural gap
-of at least 5 points. All held-out items have movement TVD >=5 points and are
-absent from `_IMPORTED`. No selected R10 question is flagged suspect.
-
-| Set | R9 codes |
-|---|---|
-| Held-out | Q38E, Q38F, Q38G, Q37F, Q37I, Q37B, Q46E, Q46B, Q9A, Q5A, Q47A, Q37G |
-| Seen controls | Q37A, Q4A, Q46F |
-
-Each row includes the R9 label, R10 full wording, every answer option, R9
-substantive codes, movement, national/subgroup truth, rationale, and one
-preselected substantive subgroup endpoint. The full R9 questionnaire wording
-was not independently verified; metadata labels and all coded options were.
-
-Git attributes preserve the exact bytes of the two frozen inputs across platforms.
-The immutable hashes are in [r10_item_lock.json](r10_item_lock.json).
-[r10_ask_scenarios.json](r10_ask_scenarios.json) carries the same questions and
-options without truth, movement, or rationales. No ask/reveal runner exists yet:
-this separation is groundwork, not a claim that a blind ritual was performed.
-
-## Item 3: spread
-
-`backtest_panel.spread` reuses `score` and keeps the full option distribution.
-It reports total variation distance, extreme-option mass, and maximum option
-share. Empty rooms and invalid options cannot pass.
-
-Frozen pass conditions: absolute tail-mass difference <=10 points, and modal
-pile-up <=15 points above truth. Synthetic exact, flat, and concentrated rooms
-have the expected error ranking for the explicitly fixed test distribution.
-No universal ranking exists independently of the truth distribution.
-
-## Item 4: findings
-
-Full figures: [r10_identical_people.md](r10_identical_people.md) and
-[r10_identical_people.json](r10_identical_people.json).
-
-Government trust gives R9 explained variance **48.05%**, library **81.81%**,
-a **+33.76-point** gap. Across all 15 shared bands, raw gaps range from
-**+25.22 to +36.54 points**. Those are warning signals, not a validated verdict.
-
-For government trust, shuffled answers still give **44.10%** in R9 and
-**63.44%** in the library. There are **157 singleton people** in the 344 usable
-library records. Grouping alone inflates the statistic. The plan's expectation
-that the real ceiling should be low is not supported by this estimator.
-
-All 12 held-out raw answers are absent from the library by design. Even the
-three seen controls are stored as bands or composites rather than original
-individual response codes. Item 4.2 cannot be computed for these raw items;
-the result records `null`, not an invented value. It does not copy donor
-answers onto personas or pretend a fused composite is the original answer.
-
-R9 don't-know/refusal rates for the frozen questions range from **0.51% to
-11.79%**, not a universal 5-20%. Stored missing attitude bands cannot establish
-a library refusal rate, because fusion fills missing donor answers.
-
-The existing `_footer` and old scenarios require a closest-option choice and
-usually omit opt-outs. They were not changed. R10 full-option scenarios do
-include the published opt-outs, as Item 3.1 requires; that is a different
-question format from the old benchmark and must be acknowledged in comparisons.
-
-## Why Item 5 is paused
-
-The plan says to measure before spending, and to stop if Item 4 exposes a
-realism problem. The measurements expose a risk, but also a problem in the
-proposed test. We cannot honestly mark the gate green or call it a definitive
-stereotype failure. The user chose to stop at these findings on 2026-09-06. No redesign or paid run
-is authorised as a continuation of this task. A possible future repair is to
-use shared stored bands for the data-layer check, choose a held-out or
-matched-cell comparison with a declared failure threshold, and reserve the
-raw held-out-item comparison for actual model answers.
-
-Other review limits to retain:
-
-- Held-out from the fused columns does not prove the model has never seen R10.
-  Model training contents and persona narrative leakage were not audited.
-- Selecting large historical shifts yields a stress test, not an unbiased
-  estimate of accuracy over all possible questions or commercial scenarios.
-- Seen items are banded/composite inputs and target a later survey; they are
-  useful controls but are not guaranteed to outperform every held-out item.
-- Separate ask/reveal invocations must use the truth-free file for ask.
-  Loading the full item list and then ignoring its truth would break Rule 3.
-- R10 `null` cells are preserved. Their meaning must be verified before grading;
-  the earlier shortlist normalises substantive responses only.
-- The existing answer parser accepts one-word/underscore labels. The future
-  R10 runner must explicitly support full printed answer labels and test them.
-- `backtest_panel` attaches existing research context; it does not demonstrate
-  a paired live-web grounding intervention. Movement cannot be attributed to
-  that layer without testing it.
-- Audit weights are marginal ratios, not one ready-to-use joint weight. National
-  reporting needs a declared weighting method and coverage check. The existing
-  audit also shows education/province gaps larger than those cited in the plan.
-
-No smoke/full answer files, reveal results, subgroup accuracy, weighted national
-accuracy, or answer-level variance exist. Tokens spent: **0**. Items 5 and 4.4
-remain unimplemented. No headline accuracy number can be written.
-
-## Honest outside paragraph
-
-We prepared 12 survey questions not imported into our persona attitudes and
-three controls, but have not yet measured their simulated answers against the
-national results. Our preliminary checks found that the proposed realism test
-is distorted by small demographic groups and cannot compare held-out answers
-that the library does not store. We paused before spending on model calls or
-claiming an accuracy figure.
-
-## Verification and proof
-
-Exact commands, terminal output, and exit codes are retained in
-[r10_proof_of_work.txt](r10_proof_of_work.txt). Tests run with `LLM_API_KEY` and
-`SIM_LLM_API_KEY` unset, without importing application config or calling models.
-Final local checks: **11 passed**; the six new tests also passed on the isolated
-branch from main. The whitespace check excludes only the verbatim terminal
-transcript, whose original trailing spaces are retained as evidence. Local checks had with two existing Stata text-encoding warnings
-from the donor-ladder fixture reads; their string decoding was not independently
-verified in this task. File/line references are in [r10_file_references.json](r10_file_references.json).
-The delivery manifest hashes use LF-normalised text (raw bytes for the PDF);
-frozen-list hashes retain exact bytes. The delivery files and hashes are in [r10_delivery_manifest.json](r10_delivery_manifest.json).
-
-Reproduce with the local survey files and Python packages `pyreadstat`, `numpy`,
-`pypdf`, and `pytest` available:
+Commands used:
 
 ```powershell
-& backend/.venv/Scripts/python.exe -B -m pytest -q -p no:cacheprovider backend/tests/test_r10_validation.py
-& backend/.venv/Scripts/python.exe -B backend/scripts/check_r10_realism.py
+python backend/scripts/backtest_panel.py --phase seal --n 40 --seed 1
+python backend/scripts/backtest_panel.py --phase ask --seed 1
+python backend/scripts/backtest_panel.py --phase reveal --seed 1
 ```
 
-Do not regenerate the frozen item list after any model answers exist. The SAV
-and private persona library stay uncommitted. Raw model outputs do not exist.
-The R10 PDF is modest (2.31 MB); only that public summary and derived aggregate
-JSON/crosswalk are included as survey assets, not respondent microdata.
+Final ask progress output:
 
-## Delivery
+```json
+{"completed": 600, "planned": 600, "parsed": 598, "errors": 0, "usage": {"prompt_tokens": 575145, "completion_tokens": 33827, "total_tokens": 608972}}
+```
 
-This is a partial implementation with an explicit failed readiness gate, not a
-completed validation. The user chose to stop at the findings. Any test-method repair and paid run
-are future work, not part of this delivery.
+- [Frozen trial method](r10_method_1.json)
+- [Saved completion receipt and raw-run hash](r10_receipt_1.json)
+- [Detailed question, subgroup and spread report](r10_results_1.md)
+- [Full aggregate results](r10_results_1.json)
+- [Independent recalculation and input checks](r10_smoke_verification.json)
+- [Real offline test output: 52 passed](r10_smoke_tests.txt)
+- [Previous identical-people results](REALISM_REPAIR_POW_q94_fixed.md)
+
+An independent recalculation from the saved raw answers reproduced all 15 raw and weighted distribution gaps. All 600 responses named the requested model, returned HTTP 200, and finished normally. Usage sums matched. The local persona file and frozen question files retained their hashes. The isolated checkout also passed 51 tests, with one private-survey test skipped.
+
+
+## Adult correction evidence
+
+Command:
+
+```powershell
+python backend/scripts/backtest_panel.py --phase adult-reveal --seed 1
+```
+
+The separate adult report already existed on a repeated invocation, so overwrite protection refused to replace it. Independent recomputation confirmed its contents against the original saved responses; no model calls or original result changes occurred.
+
+- [Detailed adult-only report](r10_results_1_adults.md)
+- [Adult-only aggregate results](r10_results_1_adults.json)
+- [Independent adult-only verification](r10_adult_verification.json)
+- [Final tests: 54 passed](r10_adult_tests.txt)
+
+Future eligibility filtering and the sensitivity path were added after the original run. The pre-call runner remains recorded in commit `bd223ee`; the sealed original method and receipt were not rewritten.
+
+## Honest outside-world paragraph
+
+A first paid trial included eight under-18 personas by mistake. A follow-up analysis of the remaining 32 adults, using only saved answers, differed from South Africa's Round 10 national answer distributions by 42.9 percentage points on average across 12 questions excluded from the personas' fused survey fields, or 42.1 after demographic weighting. It predicted the urban-rural direction correctly on 6 of 12 questions. This small, rural-heavy, post-hoc analysis does not support a claim that the system reliably reproduces public opinion.
+
+The previous pre-paid groundwork report is preserved unchanged in [R10_BACKTEST_GROUNDWORK.md](R10_BACKTEST_GROUNDWORK.md).
