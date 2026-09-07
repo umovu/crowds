@@ -1,0 +1,13 @@
+{
+  "applied": true,
+  "model_calls": 0,
+  "personas": 375,
+  "changed_personas": 86,
+  "before_sha256": "f84f8bed261255529703708e318b25267ac0be36a1a3adca267300d8eef9aa25",
+  "proposed_after_sha256": "c93b9daac1c2de86a201a6cdf72c676247f3e6407ce545773155e950694c9d58",
+  "non_belief_fields_sha256": "50583872e258f1acedc7e41292d8fea1fa22649af3e36367f6595fb42711dac9",
+  "all_other_fields_unchanged": true,
+  "remaining_known_sentence_conflicts": 0,
+  "limitation": "Custom beliefs and narrative prose are preserved, not semantically validated; live service not refreshed.",
+  "after_sha256": "c93b9daac1c2de86a201a6cdf72c676247f3e6407ce545773155e950694c9d58"
+}
