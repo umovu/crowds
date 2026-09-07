@@ -96,3 +96,7 @@ PILOT_README.md
 docs/CONTEXT_GROUNDING_PILOT_REPORT.md
 docs/PANEL_ANALYSIS_*.md
 docs/INVISIBLE_NUMBERS_*.md
+
+# Private R10 prompts and persona-linked raw responses
+backend/scripts/out/r10_manifest_*.json
+backend/scripts/out/r10_run_*.jsonl

@@ -152,6 +152,8 @@ def _truth_from_afrobarometer(spec: Dict[str, Any]) -> Optional[Dict[str, float]
 def ground_truth(scenario: Dict[str, Any]) -> Tuple[Optional[Dict[str, float]], str]:
     """(distribution, provenance-note). None when the source data is unavailable."""
     spec = scenario["ground_truth"]
+    if spec["kind"] == "afrobarometer_r10":
+        return r10_distribution(spec["item"]), "Afrobarometer R10, published Total; rounded shares normalized"
     if spec["kind"] == "afrobarometer":
         dist = _truth_from_afrobarometer(spec)
         note = f"Afrobarometer {spec['column']}, survey-weighted (exact)"
@@ -461,10 +463,383 @@ def run_scenario(scenario: Dict[str, Any], args, seed: int,
             "shares": {k: v[0] for k, v in rows.items()}}
 
 
+
+# R10 phases deliberately keep outcomes out of seal/ask. Raw records stay private.
+def _sha(raw):
+    import hashlib
+    return hashlib.sha256(raw).hexdigest()
+
+
+def _r10_paths(seed):
+    from pathlib import Path
+    out = Path(_HERE) / "out"
+    return out, out / f"r10_manifest_{seed}.json", out / f"r10_run_{seed}.jsonl"
+
+
+def _json_bytes(value):
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+
+
+def _exclusive_json(path, value):
+    with path.open("xb") as f:
+        f.write(_json_bytes(value))
+
+
+def _r10_demographics(p):
+    from audit_persona_library import LOCATION_MAP, EDUCATION_MAP, RACE_MAP, _age_band
+    return {"gender": p.get("gender"), "location": LOCATION_MAP.get(p.get("geotype")),
+            "province": p.get("province"), "education": EDUCATION_MAP.get(p.get("education")),
+            "age": _age_band(p.get("age")), "race": RACE_MAP.get(p.get("race"))}
+
+
+def rake_library(rows, targets):
+    """Fit full-library margins before drawing the room. Unknowns get zero weight.
+
+    Targets without any library support are explicitly excluded and renormalized.
+    Sampling a small room does not guarantee its margins match the full library.
+    """
+    import math
+    valid = [all(row.get(k) in target for k, target in targets.items()) for row in rows]
+    weights = [float(v) for v in valid]
+    if not any(valid):
+        raise ValueError("No complete demographic records for weighting")
+    supported, excluded = {}, {}
+    for axis, target in targets.items():
+        present = {row[axis] for row, ok in zip(rows, valid) if ok}
+        supported[axis] = {k: v for k, v in target.items() if k in present and v > 0}
+        excluded[axis] = {k: v for k, v in target.items() if k not in present and v > 0}
+        total = sum(supported[axis].values())
+        supported[axis] = {k: v / total for k, v in supported[axis].items()}
+    error = None
+    for iteration in range(2000):
+        for axis, target in supported.items():
+            total = sum(weights)
+            observed = Counter()
+            for row, w in zip(rows, weights):
+                observed[row[axis]] += w
+            for i, row in enumerate(rows):
+                if weights[i]:
+                    weights[i] *= target[row[axis]] * total / observed[row[axis]]
+        total = sum(weights)
+        error = max(abs(sum(w for row, w in zip(rows, weights) if row[axis] == cat) / total - v)
+                    for axis, target in supported.items() for cat, v in target.items())
+        if error < 1e-7:
+            break
+    if error >= 1e-7 or not all(math.isfinite(w) for w in weights):
+        raise ValueError("Weight fitting did not converge")
+    return weights, {"iterations": iteration + 1, "max_margin_error": error,
+                     "excluded_library_records": valid.count(False),
+                     "excluded_target_percent": excluded, "supported_targets": supported,
+                     "method": "Full-library iterative proportional fitting on audit margins; retain fixed weights in random room."}
+
+
+def seal_r10(n, seed):
+    import asyncio
+    import random
+    import socket
+    from pathlib import Path
+    from unittest.mock import patch
+    from datetime import datetime, timezone
+    inventory = prepare_r10(n)
+    out, manifest_path, run_path = _r10_paths(seed)
+    method_path = out / f"r10_method_{seed}.json"
+    if manifest_path.exists() or method_path.exists() or run_path.exists():
+        raise ValueError("Existing sealed run; refusing to overwrite")
+    items = json.loads((out / "r10_ask_scenarios.json").read_bytes())["items"]
+    original_connect = socket.socket.connect
+    def local_only(sock, address):
+        if isinstance(address, tuple) and address[0] in {"127.0.0.1", "::1"}:
+            return original_connect(sock, address)
+        raise RuntimeError("External network forbidden during seal")
+    with patch.object(socket.socket, "connect", local_only):
+        import app
+        app._setup_agentsociety2_env()
+        from app.services import panel_service, mechanism_card_service
+        from app.services.persona_library import PersonaLibrary
+        from sync_measured_beliefs import sync_person
+        from audit_persona_library import NATIONAL, _race_benchmark
+        library_path = Path(_HERE).parent / "app/data/persona_library/personas.json"
+        before = library_path.read_bytes()
+        with patch("app.services.persona_library._seed_from_storage", return_value=False):
+            people = PersonaLibrary(str(library_path)).all()
+        if any(sync_person(p).get("beliefs") != p.get("beliefs") for p in people):
+            raise ValueError("Measured belief sentences are inconsistent")
+        demographics = [_r10_demographics(p) for p in people]
+        weights, weighting = rake_library(demographics, {**NATIONAL, "race": _race_benchmark()})
+        indices = random.Random(seed).sample(range(len(people)), min(n, len(people)))
+        profiles = [panel_service._build_profile(people[index], i + 1, "policy") for i, index in enumerate(indices)]
+        panel_service.assert_library_cast(profiles)
+        participants = []
+        for index, profile in zip(indices, profiles):
+            mechanism_card_service.attach_research_context(profile)
+            context = asyncio.run(_character_context(profile))
+            participants.append({"slot": profile["id"], "name": profile.get("name"),
+                                 "context": context, "profile": profile,
+                                 "demographics": demographics[index], "weight": weights[index]})
+        if library_path.read_bytes() != before:
+            raise ValueError("Library changed during seal")
+    # The entire method is frozen before any responses exist. No R10 outcomes read.
+    method = {"created_utc": datetime.now(timezone.utc).isoformat(), "seed": seed,
+              "room_size": len(participants), "items": len(items), "planned_requests": len(items)*len(participants),
+              "model": "deepseek-v4-pro-0813", "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+              "temperature": 0.7, "max_tokens": 220, "enable_thinking": False,
+              "concurrency": 4, "retries": 0, "timeout_seconds": 60,
+              "cost_ceiling_usd": 10.0, "estimate_input_usd_per_million": 1.32,
+              "estimate_output_usd_per_million": 3.96,
+              "price_note": "Upper listed Singapore snapshot rates, estimate only; billing discounts/tier timing not verified.",
+              "price_source": "https://www.alibabacloud.com/help/en/model-studio/deepseek-v4-pro",
+              "library_sha256": _sha(before), "questions_sha256": inventory["questions_sha256"],
+              "runner_sha256": _sha(Path(__file__).read_bytes()), "weighting": weighting,
+              "scoring": "Full-option TVD, normalize printed totals only when all cells known and sum within 0.5pp of 100; otherwise unavailable. Missing model answers excluded and counted separately.",
+              "subgroups": "Urban minus Rural and Men minus Women; preselected focus answer; raw published pp; minimum 5 parsed per group. All options also reported. Weighted and unweighted.",
+              "spread_thresholds": SPREAD_THRESHOLDS,
+              "limitations": ["40-person single-seed smoke, not population accuracy proof",
+                              "Full-library weights do not make the 40-person sample representative",
+                              "Held-out from fused survey fields, not guaranteed absent from model training or narrative prose",
+                              "Narrative prose retained without semantic validation; deterministic belief sentences checked",
+                              "Local repaired library loaded fresh; deployed service not tested"]}
+    manifest = {"method": method, "items": items, "participants": participants,
+                "system": "You are this South African person. Answer as yourself, from your own circumstances and beliefs. Do not hedge into a survey voice."}
+    _exclusive_json(manifest_path, manifest)
+    _exclusive_json(method_path, {**method, "manifest_sha256": _sha(manifest_path.read_bytes())})
+    print(json.dumps({"sealed": str(manifest_path), "model_calls": 0,
+                      "room": len(participants), "requests": method["planned_requests"],
+                      "weighting_exclusions": weighting["excluded_library_records"],
+                      "gender": dict(Counter(p["demographics"]["gender"] for p in participants)),
+                      "location": dict(Counter(p["demographics"]["location"] for p in participants))}, indent=2))
+
+
+def _r10_messages(manifest, person, item):
+    prompt = (f"You are {person['name']}.\n{person['context']}\n\n"
+              f"Someone asks you:\n{item['framing']}{_footer(item['answers'])}")
+    return [{"role": "system", "content": manifest["system"]}, {"role": "user", "content": prompt}]
+
+
+def ask_r10(seed):
+    """Read only sealed prompts, method and credentials; persist every attempted call."""
+    import requests
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from pathlib import Path
+    from dotenv import dotenv_values
+    out, manifest_path, run_path = _r10_paths(seed)
+    raw = manifest_path.read_bytes()
+    seal = json.loads((out / f"r10_method_{seed}.json").read_bytes())
+    if _sha(raw) != seal["manifest_sha256"]:
+        raise ValueError("Manifest differs from pre-call seal")
+    manifest = json.loads(raw)
+    method = manifest["method"]
+    if _sha(Path(__file__).read_bytes()) != method["runner_sha256"]:
+        raise ValueError("Runner changed after seal")
+    env = dotenv_values(Path(_HERE).parents[1] / ".env")
+    if env.get("SIM_LLM_MODEL") != method["model"] or env.get("SIM_LLM_BASE_URL", "").rstrip("/") != method["base_url"]:
+        raise ValueError("SIM settings differ from sealed model/provider")
+    key = env.get("SIM_LLM_API_KEY")
+    if not key:
+        raise ValueError("SIM key missing")
+    tasks = [(p, i) for i in manifest["items"] for p in manifest["participants"]]
+    upper_input = sum(sum(len(m["content"].encode("utf-8")) + 64 for m in _r10_messages(manifest, p, i)) for p, i in tasks)
+    upper_cost = (upper_input * method["estimate_input_usd_per_million"] + len(tasks)*method["max_tokens"]*method["estimate_output_usd_per_million"])/1e6
+    if upper_cost > method["cost_ceiling_usd"]:
+        raise ValueError("Conservative text-size cost estimate exceeds sealed ceiling")
+    def one(person, item):
+        record = {"type": "response", "slot": person["slot"], "item_id": item["id"], "answer": None}
+        try:
+            response = requests.post(method["base_url"] + "/chat/completions",
+                headers={"Authorization": "Bearer " + key},
+                json={"model": method["model"], "messages": _r10_messages(manifest, person, item),
+                      "temperature": method["temperature"], "max_tokens": method["max_tokens"], "enable_thinking": False},
+                timeout=method["timeout_seconds"])
+            record["http_status"] = response.status_code
+            if response.status_code != 200:
+                record["error"] = "provider_http_error"
+                return record
+            data = response.json()
+            choice = data["choices"][0]
+            text = choice["message"].get("content") or ""
+            record.update(raw=text, usage=data.get("usage"), returned_model=data.get("model"),
+                          finish_reason=choice.get("finish_reason"), provider_id=data.get("id"))
+            if data.get("model") != method["model"]:
+                record["error"] = "unexpected_model"
+            elif choice.get("finish_reason") != "stop":
+                record["error"] = "incomplete_generation"
+            else:
+                record["answer"] = parse_answer(text, item["answers"])
+        except Exception as exc:
+            # Never save error strings that could include headers/keys.
+            record["error"] = type(exc).__name__
+        return record
+    with run_path.open("x", encoding="utf-8") as f:
+        def save(record):
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+        save({"type": "header", "manifest_sha256": _sha(raw), "method_sha256": _sha(_json_bytes(method)),
+              "planned_requests": len(tasks), "conservative_estimate_usd": upper_cost})
+        total_usage = Counter()
+        completed = parsed = errors = 0
+        # Batches cap outstanding work at four. No auto-retries after errors.
+        with ThreadPoolExecutor(max_workers=method["concurrency"]) as pool:
+            for start in range(0, len(tasks), method["concurrency"]):
+                futures = []
+                for person, item in tasks[start:start+method["concurrency"]]:
+                    save({"type":"attempt", "slot":person["slot"], "item_id":item["id"]})
+                    futures.append(pool.submit(one, person, item))
+                for future in as_completed(futures):
+                    record = future.result()
+                    save(record)
+                    completed += 1
+                    parsed += record["answer"] is not None
+                    errors += bool(record.get("error"))
+                    for k in ("prompt_tokens", "completion_tokens", "total_tokens"):
+                        total_usage[k] += (record.get("usage") or {}).get(k, 0)
+                if completed % 40 == 0:
+                    print(json.dumps({"completed":completed,"planned":len(tasks),"parsed":parsed,"errors":errors,"usage":dict(total_usage)}),flush=True)
+                if errors >= 8:
+                    print("Stopped after eight provider/incomplete-generation errors; no retries.",flush=True)
+                    break
+        save({"type":"end", "completed":completed,"planned":len(tasks),"parsed":parsed,"errors":errors,"usage":dict(total_usage)})
+    receipt = {"run_sha256": _sha(run_path.read_bytes()), "manifest_sha256": _sha(raw),
+               "completed": completed, "parsed": parsed, "errors": errors, "usage": dict(total_usage)}
+    _exclusive_json(out / f"r10_receipt_{seed}.json", receipt)
+    print(json.dumps(receipt,indent=2))
+
+
+def r10_distribution(item, group="Total"):
+    col = item["r10_columns"].index(group)
+    values = {a: item["r10_rows"][a][col] for a in item["answers"]}
+    if any(v is None for v in values.values()):
+        return None
+    total = sum(values.values())
+    if abs(total-100) > 0.5:
+        return None
+    return {a: v/total for a,v in values.items()}
+
+
+def r10_gap(rows, people, item, axis, groups, answer, weighted=False):
+    shares, sizes = [], []
+    for group in groups:
+        part = [r for r in rows if r.get("answer") and people[r["slot"]]["demographics"].get(axis) == group
+                and (not weighted or people[r["slot"]]["weight"] > 0)]
+        sizes.append(len(part))
+        counts = Counter()
+        for row in part:
+            counts[row["answer"]] += people[row["slot"]]["weight"] if weighted else 1
+        shares.append(counts.get(answer,0)/sum(counts.values())*100 if counts else None)
+    truth_groups = groups if axis == "location" else ("Men", "Women")
+    real = [item["r10_rows"][answer][item["r10_columns"].index(g)] for g in truth_groups]
+    if min(sizes) < 5 or any(v is None for v in real):
+        return {"n":sizes,"available":False}
+    predicted, actual = shares[0]-shares[1], real[0]-real[1]
+    sign = lambda v: 0 if abs(v)<1e-9 else (1 if v>0 else -1)
+    return {"n":sizes,"available":True,"predicted_pp":predicted,"real_pp":actual,
+            "absolute_error_pp":abs(predicted-actual),"sign_correct":sign(predicted)==sign(actual)}
+
+
+def reveal_r10(seed):
+    import statistics
+    out, manifest_path, run_path = _r10_paths(seed)
+    receipt = json.loads((out / f"r10_receipt_{seed}.json").read_bytes())
+    if _sha(run_path.read_bytes()) != receipt["run_sha256"] or _sha(manifest_path.read_bytes()) != receipt["manifest_sha256"]:
+        raise ValueError("Saved run/manifest changed after asking")
+    manifest = json.loads(manifest_path.read_bytes())
+    records = [json.loads(line) for line in run_path.read_text(encoding="utf-8").splitlines()]
+    rows = [r for r in records if r["type"] == "response"]
+    if len({(r["slot"],r["item_id"]) for r in rows}) != len(rows):
+        raise ValueError("Duplicate responses")
+    lock = json.loads((out / "r10_item_lock.json").read_bytes())
+    raw_truth = (out / "r10_item_list.json").read_bytes()
+    if _sha(raw_truth) != lock["files"]["r10_item_list.json"]:
+        raise ValueError("Frozen truth changed")
+    truth_items = json.loads(raw_truth)["items"]
+    lookup = {f"{i['r9']}_{i['r10']}":i for i in truth_items}
+    people = {p["slot"]:p for p in manifest["participants"]}
+    results = []
+    for blind in manifest["items"]:
+        item = lookup[blind["id"]]
+        local = [r for r in rows if r["item_id"] == blind["id"]]
+        counts, weighted = Counter(), Counter()
+        for r in local:
+            if r.get("answer"):
+                if r["answer"] not in blind["answers"]:
+                    raise ValueError("Unexpected parsed option")
+                counts[r["answer"]] += 1
+                weighted[r["answer"]] += people[r["slot"]]["weight"]
+        truth = r10_distribution(item)
+        result = {"id":blind["id"],"bucket":blind["bucket"],"question":blind["framing"],
+                  "attempted":len(local),"parsed":sum(counts.values()),"planned":len(people),
+                  "unparsed":len(local)-sum(counts.values()),"unweighted_counts":dict(counts),
+                  "weighted_counts":dict(weighted),"truth":truth,
+                  "unweighted":spread(counts,truth,item["extremes"]) if truth and counts else None,
+                  "weighted":spread(weighted,truth,item["extremes"]) if truth and sum(weighted.values()) else None,
+                  "focus_answer":item["subgroup_focus_answer"],"gaps":{}}
+        for axis,groups in [("location",("Urban","Rural")),("gender",("Male","Female"))]:
+            result["gaps"][axis] = {}
+            for w in [False,True]:
+                result["gaps"][axis]["weighted" if w else "unweighted"] = {
+                    answer:r10_gap(local,people,item,axis,groups,answer,w) for answer in item["answers"]}
+        results.append(result)
+    method=manifest["method"]
+    usage=receipt["usage"]
+    estimate=(usage.get("prompt_tokens",0)*method["estimate_input_usd_per_million"]+usage.get("completion_tokens",0)*method["estimate_output_usd_per_million"])/1e6
+    sw=[p["weight"] for p in people.values()]
+    report={"seed":seed,"model":method["model"],"room_size":len(people),"receipt":receipt,
+            "reported_token_cost_upper_estimate_usd":estimate,
+            "usage_missing_responses":sum(r.get("usage") is None for r in rows),
+            "sample_weight_effective_n":sum(sw)**2/sum(w*w for w in sw),
+            "results":results,"summary":{},"limitations":method["limitations"],
+            "weighting":method["weighting"]}
+    for bucket in ("held_out","seen"):
+        selected=[r for r in results if r["bucket"]==bucket]
+        report["summary"][bucket]={}
+        for mode in ("unweighted","weighted"):
+            gaps=[r[mode]["tvd_pp"] for r in selected if r[mode]]
+            focus=[r["gaps"]["location"][mode][r["focus_answer"]] for r in selected]
+            eligible=[g for g in focus if g["available"]]
+            report["summary"][bucket][mode]={"scorable_items":len(gaps),"mean_tvd_pp":statistics.mean(gaps) if gaps else None,
+                "median_tvd_pp":statistics.median(gaps) if gaps else None,
+                "urban_rural_focus_sign_correct":sum(g["sign_correct"] for g in eligible),"urban_rural_focus_scorable":len(eligible)}
+    _exclusive_json(out/f"r10_results_{seed}.json",report)
+    lines=["# R10 paid smoke trial", "",f"Model: `{method['model']}` via DashScope. Room: {len(people)}. Seed: {seed}.","",
+           f"Completed calls: {receipt['completed']}/{method['planned_requests']}. Parsed answers: {receipt['parsed']}. Errors: {receipt['errors']}.",
+           f"Provider-reported tokens: {usage}. Listed-rate upper estimate for reported usage: US${estimate:.4f}; not an invoice.",
+           f"Responses without usage: {report['usage_missing_responses']}. Weighted effective sample size: {report['sample_weight_effective_n']:.1f}.","",
+           "Distribution gap is total variation distance in percentage points. Lower is closer. No overall validation score.","",
+           "| Item | Group | Parsed | Raw gap (pp) | Weighted gap (pp) |", "|---|---|---:|---:|---:|"]
+    fmt=lambda v: f"{v:.2f}" if v is not None else "unavailable"
+    for r in results:
+        lines.append(f"| {r['id']} | {r['bucket']} | {r['parsed']}/{r['planned']} | {fmt(r['unweighted']['tvd_pp'] if r['unweighted'] else None)} | {fmt(r['weighted']['tvd_pp'] if r['weighted'] else None)} |")
+    lines += ["","## Held-out and control summaries","", "```json",json.dumps(report["summary"],indent=2),"```","", "## Primary subgroup gaps","",
+              "Positive means Urban exceeds Rural, or Men exceeds Women. These use the frozen focus answer, not a result-picked option.","",
+              "| Item | Comparison | Focus answer | Raw predicted | Weighted predicted | Real | Raw sign correct |", "|---|---|---|---:|---:|---:|---|"]
+    for r in results:
+        for axis in ("location","gender"):
+            a=r["gaps"][axis]["unweighted"][r["focus_answer"]]
+            b=r["gaps"][axis]["weighted"][r["focus_answer"]]
+            lines.append(f"| {r['id']} | {axis} | {r['focus_answer']} | {fmt(a.get('predicted_pp'))} | {fmt(b.get('predicted_pp'))} | {fmt(a.get('real_pp'))} | {a.get('sign_correct','unavailable')} |")
+    lines += ["","## Spread and full answer distributions","", "The JSON report includes every subgroup option, raw counts, weighted counts and spread measures."]
+    for r in results:
+        lines += ["",f"### {r['id']}","",r["question"],"",f"Spread, unweighted: `{json.dumps(r['unweighted'])}`",f"Spread, weighted: `{json.dumps(r['weighted'])}`","",
+                  "| Answer | Raw count | Weighted share | Real share |","|---|---:|---:|---:|"]
+        total=sum(r["weighted_counts"].values())
+        for answer in lookup[r['id']]["answers"]:
+            lines.append(f"| {answer} | {r['unweighted_counts'].get(answer,0)} | {fmt(100*r['weighted_counts'].get(answer,0)/total if total else None)} | {fmt(100*r['truth'][answer] if r['truth'] else None)} |")
+    lines += ["","## Limitations","",*["- "+v for v in method["limitations"]],
+              "- Missing R10 cells are not zero. Incomplete national tables are not scored.",
+              "- Missing model answers are excluded from shares and counted separately; this may bias the result.",
+              "- Published percentages are rounded. Full known national rows are normalized to sum to one.",
+              "- Weighting exclusions and unsupported target categories are recorded in the JSON; weighted results cover supported groups only.",
+              "- Previous identical-people diagnostic remains 15/15 directions, one health-service warning; this trial does not erase it.","",
+              "## Blind record","",f"Manifest SHA256: `{receipt['manifest_sha256']}`",f"Saved run SHA256: `{receipt['run_sha256']}`",
+              "Raw answers and prompts stay local. Ask wrote the receipt before reveal loaded the frozen outcome file."]
+    with (out/f"r10_results_{seed}.md").open("x",encoding="utf-8") as f:
+        f.write("\n".join(lines)+"\n")
+    print(json.dumps({"summary":report["summary"],"usage":usage,"estimated_usd":estimate,"report":str(out/f'r10_results_{seed}.md')},indent=2))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--phase", choices=["prepare"], help="free R10 readiness inventory")
+    ap.add_argument("--phase", choices=["prepare", "seal", "ask", "reveal"], help="free R10 readiness inventory")
     ap.add_argument("--scenario", help="run one scenario by id")
     ap.add_argument("--n", type=int, default=30, help="cast size per scenario")
     ap.add_argument("--seed", type=int, default=1)
@@ -482,6 +857,14 @@ def main() -> int:
     ap.add_argument("--out-responses", metavar="PATH", default=None,
                     help="append each persona's full answer to a JSONL file")
     args = ap.parse_args()
+    if args.phase in {"seal", "ask", "reveal"}:
+        if args.phase == "seal":
+            seal_r10(args.n, args.seed)
+        elif args.phase == "ask":
+            ask_r10(args.seed)
+        else:
+            reveal_r10(args.seed)
+        return 0
     if args.phase == "prepare":
         print(json.dumps(prepare_r10(args.n), indent=2))
         return 0
