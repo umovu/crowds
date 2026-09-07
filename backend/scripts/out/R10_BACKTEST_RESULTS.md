@@ -77,3 +77,5 @@ An independent recalculation from the saved raw answers reproduced all 15 raw an
 ## Honest outside-world paragraph
 
 On 12 questions excluded from the personas' fused survey fields, a 40-person trial differed from South Africa's Round 10 national answer distributions by 43.6 percentage points on average, or 43.1 after demographic weighting. It predicted the urban-rural direction correctly on 5 of 12 questions, or 4 after weighting. This small, single-seed trial does not support a claim that the system reliably reproduces public opinion.
+
+The previous pre-paid groundwork report is preserved unchanged in [R10_BACKTEST_GROUNDWORK.md](R10_BACKTEST_GROUNDWORK.md).
