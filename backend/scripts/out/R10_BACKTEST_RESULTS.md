@@ -25,6 +25,21 @@ All 600 requests returned successfully from `deepseek-v4-pro-0813` through DashS
 
 These findings do not establish whether the model, persona text, stale attitudes, question context, or their combination caused the misses. No comparison model was tested. The larger 375-person run was not started; first investigate the recorded failure patterns without changing this frozen test or claiming a pass.
 
+## Eligibility correction
+
+Eight of the 40 sampled personas were under 18. Afrobarometer R10 surveys adults only, so those eight should never have been asked. The original frozen results above are preserved unchanged; this is a post-hoc sensitivity analysis of the 32 adults already asked, with no new calls, no altered answers and no outcome-based exclusions. Weights were refitted on the full adult library.
+
+| Measure | Original 40 | Adults only, 32 |
+|---|---:|---:|
+| Mean gap, 12 held-out, unweighted | 43.6 pp | 42.9 pp |
+| Mean gap, 12 held-out, weighted | 43.1 pp | 42.1 pp |
+| Correct urban/rural direction, held-out | 5 of 12 | 6 of 12 |
+
+Removing the minors moves the gap by under a point. The failure is not explained by the age error. `backtest_panel.eligible_adults` now excludes under-18s and missing/invalid ages before sampling, so future rooms cannot repeat it.
+
+- [Adult-only report](r10_results_1_adults.md)
+- [Adult-only results](r10_results_1_adults.json)
+
 ## Usage and cost
 
 - Input: **575,145 tokens**.
