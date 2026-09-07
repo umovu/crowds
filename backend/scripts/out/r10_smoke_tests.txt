@@ -1,0 +1,3 @@
+COMMAND: python -m pytest backend/tests/test_r10_paid_runner.py backend/tests/test_blind_preparation.py backend/tests/test_r10_validation.py backend/tests/test_education_decode.py backend/tests/test_realism_repair.py -q
+....................................................                     [100%]
+52 passed in 2.25s
