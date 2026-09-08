@@ -17,6 +17,7 @@ from flask import jsonify, request
 from . import panel_bp
 from .. import billing
 from ..config import Config
+from ..services import hypothesis_report
 from ..services import panel_service
 from ..services import mode_detector
 from ..services import poster_service
@@ -655,3 +656,31 @@ def ask_agent(session_id: str, agent_id: int):
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
         return _server_error(e, "That question did not go through. Try again.")
+
+
+@panel_bp.route('/sessions/<session_id>/hypothesis', methods=['GET'])
+def hypothesis(session_id: str):
+    """The follow-up report for a finished session — what the room told you,
+    and what to run next.
+
+    Facts (who was in the room, where they landed, who moved, the wall they
+    kept hitting, what their real income supports) are computed. The
+    hypotheses are one cheap LLM pass, labelled as guesses and stripped of any
+    figure, so this can never become a "% who would buy".
+
+    Query:
+        format=md    render as forwardable Markdown instead of JSON
+        refresh=1    rebuild instead of serving the cached report
+    """
+    try:
+        report = hypothesis_report.build(
+            session_id, refresh=request.args.get('refresh') in ('1', 'true'))
+        if request.args.get('format') == 'md':
+            return (hypothesis_report.render_markdown(report), 200,
+                    {'Content-Type': 'text/markdown; charset=utf-8'})
+        return jsonify({"success": True, "data": report})
+
+    except FileNotFoundError:
+        return jsonify({"success": False, "error": f"Session {session_id} not found"}), 404
+    except Exception as e:
+        return _server_error(e, "The report could not be assembled. Try again.")

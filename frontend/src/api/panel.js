@@ -62,3 +62,11 @@ export const attitudeOptions = (dim) =>
 // stated, in which case nothing is filtered.
 export const previewAffordability = (pitch) =>
   service.post('/api/panel/affordability', { pitch })
+
+// The follow-up report for a session: what the room told you, who moved, and
+// two or three guesses to test next. Facts are computed server-side; the
+// hypotheses are a cheap LLM pass and are absent, never faked, when it fails.
+// Cached per round count, so opening it twice does not spend a second call.
+export const getHypothesis = (sessionId, refresh = false) =>
+  service.get(`/api/panel/sessions/${sessionId}/hypothesis`,
+    { params: refresh ? { refresh: 1 } : {} })

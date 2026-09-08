@@ -106,6 +106,17 @@
                 <span v-if="reportBusy" class="btn-spinner"></span>
                 {{ reportBusy ? (reportMsg || 'Generating…') : '⤓ Download report' }}
               </button>
+              <!-- Panel equivalent: the follow-up report. Opens in its own tab
+                   so the room stays where it is and the link can be kept. -->
+              <button
+                v-if="isPanel && sessionId"
+                class="report-dl-btn"
+                :disabled="!hasReactions || feedLive"
+                :title="hasReactions ? 'What this room told you, and what to test next' : 'Available once the room has answered'"
+                @click="openHypothesis"
+              >
+                ⤓ Follow-up report
+              </button>
             </div>
             <p v-if="!reportBusy && reportMsg" class="report-dl-msg">{{ reportMsg }}</p>
             <div v-if="showCoach && !isPanel && simulationId" class="coach-mark coach-mark--flush">
@@ -563,6 +574,13 @@ const props = defineProps({
   demo: { type: Boolean, default: false }
 })
 const emit = defineEmits(['back'])
+
+// The follow-up report lives on its own route so the link survives the session
+// being closed — it is the thing a user forwards to a colleague.
+const openHypothesis = () => {
+  if (!props.sessionId) return
+  window.open(`/hypothesis/${props.sessionId}`, '_blank', 'noopener')
+}
 const toast = useToast()
 
 const isPanel = computed(() => props.mode === 'panel')
