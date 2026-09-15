@@ -1,4 +1,4 @@
-"""Write app/data/model/<name>.json from the Python data models in app/model.
+"""Write app/data/model/<name>.json from the Python data models in app/models.
 
 The classes are the source of truth; the JSON is their reviewable, LLM-free-loadable
 form. Run after changing a class:
@@ -26,7 +26,7 @@ def rendered(data) -> str:
 
 
 def stale() -> list:
-    from app.model import EXPORTS
+    from app.models import EXPORTS
     out = []
     for name, export in EXPORTS.items():
         path = os.path.join(MODEL_DIR, f"{name}.json")
@@ -40,7 +40,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="report stale files instead of writing")
     args = ap.parse_args()
-    from app.model import EXPORTS
+    from app.models import EXPORTS
     names = stale()
     if args.check:
         for name in names:

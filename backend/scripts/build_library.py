@@ -244,14 +244,14 @@ def build(
 
     # A persona the data model does not describe matches no card rule or objection
     # ground that names it, and nothing downstream fails. Describe the new field in
-    # app/model/persona.py first; --allow-model-drift is for dev previews.
+    # app/models/persona.py first; --allow-model-drift is for dev previews.
     problems = _data_model().library_problems(unique)
     if problems:
         print(f"{len(problems)} persona(s) problem(s) against the data model:", file=sys.stderr)
         for line in problems[:20]:
             print(f"  {line}", file=sys.stderr)
         if not allow_model_drift:
-            print("Not writing the library. Update app/model/persona.py, or pass "
+            print("Not writing the library. Update app/models/persona.py, or pass "
                   "--allow-model-drift for a preview build.", file=sys.stderr)
             return 0
 
@@ -302,7 +302,7 @@ def main() -> int:
                          "(dev/preview only — do not ship).")
     ap.add_argument("--allow-model-drift", action="store_true",
                     help="Write the library even when personas do not fit "
-                         "app/model/persona.py (dev/preview only — do not ship).")
+                         "app/models/persona.py (dev/preview only — do not ship).")
     ap.add_argument("--llm-api-key", default=None,
                     help="override the texture-generation LLM key (falls back to "
                          "Config.LLM_API_KEY / .env if not passed)")

@@ -260,7 +260,7 @@ def cards_for_question(profile: Dict, question: str, cap: int = DEFAULT_CARD_CAP
 # Checked against the persona class at import when the app package is there: a
 # misspelt field fails loudly instead of quietly matching nobody.
 try:
-    from ..model.persona import FACT as _FACT
+    from ..models.persona import FACT as _FACT
 except ImportError:  # loaded by file path (sim subprocess, path-loaded tests)
     _FACT = None
 _SITUATION_FIELDS = tuple(getattr(_FACT, f) if _FACT is not None else f for f in (

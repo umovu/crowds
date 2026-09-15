@@ -27,9 +27,9 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from ..config import Config
-from ..model import DataModelError
-from ..model import strict_mode as model_strict_mode
-from ..model.persona import FACT, TOPICS as ATTITUDE_TOPICS, fact_value, persona_is
+from ..models import DataModelError
+from ..models import strict_mode as model_strict_mode
+from ..models.persona import FACT, TOPICS as ATTITUDE_TOPICS, fact_value, persona_is
 from ..utils.logger import get_logger
 from .income_seeder import detect_grant, GRANT_PROVENANCE
 from .mode_specs import (SHORT_ANSWER_SENTENCES, budget_tier, build_operator_context_block,

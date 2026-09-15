@@ -91,7 +91,7 @@ def test_a_daily_phone_user_with_a_data_phone_has_no_phone_grounds():
 # ── the model and the library ──────────────────────────────────────────────
 
 def test_phone_facts_are_optional_but_the_rest_are_not():
-    from app.model.persona import CIRCUMSTANCES, CircumstanceRow, _row_problems
+    from app.models.persona import CIRCUMSTANCES, CircumstanceRow, _row_problems
     rows = [{"field": f, "value": e["values"][0], "source": "afrobarometer_r9_sa", "match_quality": "exact"}
             for f, e in CIRCUMSTANCES.items() if not e.get("optional")]
     assert {f for f, e in CIRCUMSTANCES.items() if e.get("optional")} == set(PHONE)

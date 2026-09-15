@@ -160,11 +160,11 @@ class PersonaLibrary:
         return None
 
     def people(self) -> List["LibraryPersona"]:
-        """The library as typed objects (app.model.LibraryPersona): `person.medical_aid`,
+        """The library as typed objects (app.models.LibraryPersona): `person.medical_aid`,
         `person.fact("internet_use")`. A persona that does not fit the model is left out;
         the load warning already names it."""
         if self._people is None:
-            from ..model import LibraryPersona
+            from ..models import LibraryPersona
             people = []
             for p in self.all():
                 data = {k: v for k, v in p.items() if k != "lsm_proxy"}  # stamped at load, not stored

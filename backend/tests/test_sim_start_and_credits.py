@@ -75,7 +75,6 @@ for pkg_name, pkg_path in [
     ("app", APP),
     ("app.api", os.path.join(APP, "api")),
     ("app.services", SERVICES),
-    ("app.models", os.path.join(APP, "models")),
     ("app.utils", os.path.join(APP, "utils")),
     ("app.storage", os.path.join(APP, "storage")),
 ]:

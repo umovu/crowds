@@ -26,7 +26,7 @@ def _library():
 # ── names and answers are checked ───────────────────────────────────────────
 
 def test_a_misspelt_fact_fails_straight_away():
-    from app.model.persona import FACT
+    from app.models.persona import FACT
     assert FACT.medical_aid == "medical_aid"
     assert FACT.internet_use == "internet_use"      # a circumstance
     assert FACT.gov_trust == "gov_trust"            # an attitude topic
@@ -35,7 +35,7 @@ def test_a_misspelt_fact_fails_straight_away():
 
 
 def test_an_answer_no_persona_can_have_fails_straight_away():
-    from app.model.persona import FACT, persona_is
+    from app.models.persona import FACT, persona_is
     with pytest.raises(ValueError, match="Rural"):
         persona_is(FACT.geotype, "Rural")
     with pytest.raises(ValueError, match="sometimes"):
@@ -43,8 +43,8 @@ def test_an_answer_no_persona_can_have_fails_straight_away():
 
 
 def test_a_picker_reads_a_record_a_seat_and_an_object_the_same_way():
-    from app.model import LibraryPersona
-    from app.model.persona import FACT, persona_is
+    from app.models import LibraryPersona
+    from app.models.persona import FACT, persona_is
     persona = _library()[0]
     stance = next(r["stance"] for r in persona["attitudes"] if r["topic"] == "gov_trust")
     picker = persona_is(FACT.gov_trust, stance)
@@ -75,7 +75,7 @@ def test_groups_pick_the_people_the_facts_describe():
 
 
 def test_card_rule_fields_are_checked_against_the_model():
-    from app.model.persona import fact_names
+    from app.models.persona import fact_names
     from app.services import mechanism_card_service as mcs
     assert set(mcs._SITUATION_FIELDS) <= fact_names()
 
