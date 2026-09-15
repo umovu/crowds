@@ -3420,17 +3420,17 @@ def interview_single_agent(simulation_id: str, agent_id: int):
 
     Request (JSON):
         {
-            "question": "What is your biggest concern?",  // Required if question_type not set
-            "question_type": "biggest_concern",           // Optional: structured question type
-            "policy_context": "Fuel levy increase of 75c/L"  // Optional: for structured questions
+            "question": "What is your honest first reaction?",  // Required if question_type not set
+            "question_type": "first_reaction",                 // Optional: structured question type
+            "policy_context": "Fuel levy increase of 75c/L"     // Optional: for structured questions
         }
 
     Supported question_type values:
-        - "biggest_concern": What is your biggest concern?
-        - "what_would_change": What would change your position?
-        - "willing_to_negotiate": Are you willing to negotiate?
-        - "mobilization_intent": Are you planning to take action?
-        - "message_to_government": What message for policy makers?
+        - "first_reaction": What is your honest first reaction?
+        - "what_would_work": What would make this work for you?
+        - "what_puts_you_off": What, if anything, would put you off?
+        - "need_to_know": What would you need to know before deciding?
+        - "who_you_would_tell": Would you tell anyone about it?
 
     Returns:
         {
@@ -3500,7 +3500,7 @@ def batch_interview_agents(simulation_id: str):
     Request (JSON):
         {
             "question": "What is your biggest concern?",
-            "question_type": "biggest_concern",        // Optional
+            "question_type": "first_reaction",         // Optional
             "policy_context": "Fuel levy increase...", // Optional
             "agent_ids": [5, 12, 23]                   // Optional (default: all agents)
         }

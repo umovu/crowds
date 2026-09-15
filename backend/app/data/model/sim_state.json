@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "about": "A simulation's lifecycle state: status, cast size, config flag, prepare cost, and whether its credit was charged.",
+  "stored_in": "uploads/simulations/<simulation_id>/state.json",
+  "written_by": [
+    "simulation_manager._save_simulation_state (SimulationState.to_dict)",
+    "simulation_runner (sets status stopped on shutdown)"
+  ],
+  "read_by": [
+    "simulation_manager._load_simulation_state",
+    "api/simulation.py",
+    "billing check on /start"
+  ],
+  "rules": [
+    "credit_charged guards billing: a sim started twice is charged once, even across restarts.",
+    "Sims created before owner scoping have no user_id or credit_charged."
+  ],
+  "fields": {
+    "simulation_id": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "project_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "graph_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "created",
+        "preparing",
+        "ready",
+        "running",
+        "paused",
+        "stopped",
+        "completed",
+        "failed"
+      ],
+      "when": "always"
+    },
+    "entities_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "profiles_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "entity_types": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "always"
+    },
+    "config_generated": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "config_reasoning": {
+      "type": "string",
+      "when": "always"
+    },
+    "current_round": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "updated_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "error": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "user_id": {
+      "type": "string",
+      "nullable": true,
+      "when": "optional"
+    },
+    "prepare_prompt_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "prepare_completion_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "prepare_cost_usd": {
+      "type": "number",
+      "min": 0,
+      "when": "always"
+    },
+    "credit_charged": {
+      "type": "boolean",
+      "when": "optional"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "about": "An uploaded poster or advert, and the text brief the vision model read from it.",
+  "stored_in": "DATA_ROOT/posters/<poster_id>/poster.json (image beside it)",
+  "written_by": [
+    "poster_service.save_poster",
+    "poster_service.read_poster"
+  ],
+  "read_by": [
+    "poster_service.get_poster",
+    "api/research.py (poster routes)",
+    "PosterTestView.vue"
+  ],
+  "rules": [
+    "The brief describes the poster only: words, pictures, layout, claim. Never who it suits or how it would perform."
+  ],
+  "fields": {
+    "poster_id": {
+      "type": "string",
+      "pattern": "^poster_\\d{8}_\\d{6}_[0-9a-f]{6}$",
+      "when": "always"
+    },
+    "filename": {
+      "type": "string",
+      "when": "always"
+    },
+    "mime_type": {
+      "type": "string",
+      "allowed": [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/webp"
+      ],
+      "when": "always"
+    },
+    "bytes": {
+      "type": "integer",
+      "min": 1,
+      "max": 8388608,
+      "when": "always"
+    },
+    "image_path": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "brief": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "read_at": {
+      "type": "string",
+      "when": "optional",
+      "note": "Set when the brief is read; absent while brief is null."
+    }
+  }
+}

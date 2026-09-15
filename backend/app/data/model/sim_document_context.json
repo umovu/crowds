@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "about": "What a simulation knows about its scenario: the decided mode, the domain, facts pulled from the document, and the operator's business briefing.",
+  "stored_in": "uploads/simulations/<simulation_id>/document_context.json",
+  "written_by": [
+    "simulation_manager.prepare_simulation"
+  ],
+  "read_by": [
+    "interview_service._load_mode",
+    "scripts/run_simulation_as.py",
+    "opinion_block.py"
+  ],
+  "rules": [
+    "Facts are extracted from the user's own document; they describe the scenario, never who the agents are."
+  ],
+  "fields": {
+    "mode": {
+      "type": "string",
+      "allowed": [
+        "policy",
+        "product"
+      ],
+      "when": "always"
+    },
+    "converged": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "secondary_lens": {
+      "type": "string",
+      "allowed": [
+        "policy",
+        "product"
+      ],
+      "nullable": true,
+      "when": "always"
+    },
+    "mode_detection": {
+      "type": "object",
+      "fields": {
+        "scores": {
+          "type": "object",
+          "when": "always"
+        },
+        "decided_mode": {
+          "type": "string",
+          "nullable": true,
+          "when": "always"
+        },
+        "confidence": {
+          "type": "string",
+          "nullable": true,
+          "when": "always"
+        },
+        "used_llm_tiebreak": {
+          "type": "boolean",
+          "when": "always"
+        },
+        "manual_override": {
+          "type": "boolean",
+          "when": "always"
+        }
+      },
+      "when": "always"
+    },
+    "domain": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "domain_profile": {
+      "type": "object",
+      "nullable": true,
+      "when": "always"
+    },
+    "document_context_block": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "dynamic_rules": {
+      "type": "list",
+      "nullable": true,
+      "when": "always"
+    },
+    "facts": {
+      "type": "list",
+      "when": "always"
+    },
+    "competitive_landscape": {
+      "type": "list",
+      "when": "always"
+    },
+    "operator_context": {
+      "type": "string",
+      "max_length": 1500,
+      "nullable": true,
+      "when": "always"
+    }
+  }
+}

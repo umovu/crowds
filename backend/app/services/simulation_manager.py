@@ -26,6 +26,7 @@ from .persona_library import get_library
 from .persona_retrieval import select_for_query
 from .panel_service import _build_profile, assert_library_cast, MAX_CAST_SIZE
 from . import mechanism_card_service
+from . import data_model
 
 logger = get_logger('fub.simulation')
 
@@ -165,9 +166,11 @@ class SimulationManager:
         state_file = os.path.join(sim_dir, "state.json")
         
         state.updated_at = datetime.now().isoformat()
-        
+        data = state.to_dict()
+        data_model.warn_if_off_model(logger, f"Simulation state {state.simulation_id}", "sim_state", data)
+
         with open(state_file, 'w', encoding='utf-8') as f:
-            json.dump(state.to_dict(), f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         self._simulations[state.simulation_id] = state
     
@@ -352,6 +355,7 @@ class SimulationManager:
             # Persist whatever we ended up with to the simulation dir so the
             # generator and future runs see it.
             if enrichment_data:
+                data_model.warn_if_off_model(logger, "Simulation enrichment", "sim_enrichment", enrichment_data)
                 try:
                     with open(enrichment_file, 'w', encoding='utf-8') as f:
                         json.dump(enrichment_data, f, ensure_ascii=False, indent=2)
@@ -415,6 +419,7 @@ class SimulationManager:
                     if raw_research:
                         enrichment_data = AgentContextEnricher.enrich_from_web_research(raw_research, entity_types)
                         # Persist raw research so the API endpoint can serve it
+                        data_model.warn_if_off_model(logger, "Simulation enrichment", "sim_enrichment", raw_research)
                         with open(enrichment_file, 'w', encoding='utf-8') as f:
                             json.dump(raw_research, f, ensure_ascii=False, indent=2)
                         logger.info(f"Deep research complete: {len(enrichment_data)} archetypes enriched")
@@ -490,9 +495,11 @@ class SimulationManager:
                 # provenance + deterministic budget economics in product mode).
                 library_profiles = [_build_profile(p, i, mode) for i, p in enumerate(cast)]
                 # Research grounding (Phase 5): bind human-reviewed mechanism cards by
-                # archetype and attach reasoning context + citations. Deterministic,
-                # LLM-free; no-op per persona when no card matches (coverage honesty)
-                # or when RESEARCH_CONTEXT_ENABLED=0.
+                # each persona's measured situation (card applies_when), and attach
+                # reasoning context + citations. Deterministic, LLM-free; no-op per
+                # persona when no card fits (coverage honesty) or when
+                # RESEARCH_CONTEXT_ENABLED=0. Prompts then keep only the cards the
+                # scenario is about (mechanism_card_service.cards_for_question).
                 for p in library_profiles:
                     mechanism_card_service.attach_research_context(p)
                 # Leak guard — runs on the LIBRARY portion only, before any custom merge.
@@ -515,6 +522,9 @@ class SimulationManager:
 
             # Save the cast. No LLM ran on this path, so prepare token/cost stays zero —
             # which keeps "no model in the cast path" assertable.
+            data_model.warn_if_off_model(
+                logger, "Simulation cast", "room_seat", profiles,
+                check=lambda seats: [p for s in seats for p in data_model.room_seat_problems(s)])
             with open(os.path.join(sim_dir, "agentsociety_profiles.json"), 'w', encoding='utf-8') as f:
                 json.dump(profiles, f, ensure_ascii=False, indent=2)
             state.prepare_prompt_tokens = 0
@@ -585,6 +595,8 @@ class SimulationManager:
                     "operator_context": oc if oc else None,
                 }
 
+                data_model.warn_if_off_model(logger, "Simulation document context",
+                                             "sim_document_context", doc_context)
                 ctx_path = os.path.join(sim_dir, "document_context.json")
                 with open(ctx_path, 'w', encoding='utf-8') as f:
                     json.dump(doc_context, f, ensure_ascii=False, indent=2)
@@ -650,6 +662,7 @@ class SimulationManager:
             
             # Save config files
             config_path = os.path.join(sim_dir, "simulation_config.json")
+            data_model.warn_if_off_model(logger, "Simulation config", "sim_config", sim_params.to_dict())
             with open(config_path, 'w', encoding='utf-8') as f:
                 f.write(sim_params.to_json())
             

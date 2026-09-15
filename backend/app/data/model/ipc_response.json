@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "about": "The sim subprocess's answer to one command.",
+  "stored_in": "uploads/simulations/<simulation_id>/ipc_responses/<command_id>.json",
+  "written_by": [
+    "scripts/run_simulation_as.py (send_response)",
+    "simulation_ipc.SimulationIPCServer.send_response (IPCResponse.to_dict)"
+  ],
+  "read_by": [
+    "simulation_ipc.SimulationIPCClient.send_command"
+  ],
+  "fields": {
+    "command_id": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "pending",
+        "processing",
+        "completed",
+        "failed"
+      ],
+      "when": "always"
+    },
+    "result": {
+      "type": "object",
+      "nullable": true,
+      "when": "always"
+    },
+    "error": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "timestamp": {
+      "type": "string",
+      "when": "always"
+    }
+  }
+}

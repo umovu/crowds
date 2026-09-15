@@ -8,20 +8,32 @@
   "segment_tags": [
     "smallholder_emerging_farmer"
   ],
+  "topic_tags": [
+    "farming",
+    "farmer",
+    "farmers",
+    "agriculture",
+    "extension",
+    "crops",
+    "livestock",
+    "irrigation"
+  ],
+  "applies_when": [
+    {
+      "farm_market_orientation": [
+        "market",
+        "subsistence"
+      ]
+    }
+  ],
   "economic_tags": [
     "tight",
     "moderate"
   ],
-  "mechanisms": [
-    "Financial capacity and secure collateral determine feasibility, because low income and insecure land tenure make high-cost investments unattainable without subsidy.",
-    "Knowledge and openness to innovation shape evaluation, because higher education, youth, or awareness of benefits make new practices seem viable and attractive.",
-    "Perceived risk and incompatibility with traditional methods dominate, because poor connectivity, digital illiteracy, or mistrust make digital tools feel unreliable and alien.",
-    "Management complexity and uncertainty increase, because lack of access to training, extension, or timely inputs leaves farmers feeling incapable of implementing new practices.",
-    "Attachment to customary grazing and scepticism of external interventions prevail, because embeddedness in traditional cultural norms or social inequality makes unfamiliar practices suspect."
-  ],
-  "mechanism_provenance": [
+  "claims": [
     {
-      "mechanism_index": 0,
+      "text": "Financial capacity and secure collateral determine feasibility, because low income and insecure land tenure make high-cost investments unattainable without subsidy.",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P4",
@@ -32,20 +44,31 @@
         "P22",
         "P23",
         "P25"
+      ],
+      "objections": [
+        "Can I afford the upfront and running costs without a subsidy?"
+      ],
+      "vocabulary": [
+        "financial burden",
+        "affordability"
       ]
     },
     {
-      "mechanism_index": 1,
+      "text": "Knowledge and openness to innovation shape evaluation, because higher education, youth, or awareness of benefits make new practices seem viable and attractive.",
+      "needs": [],
       "chain_id": "C2",
       "passages": [
         "P2",
         "P3",
         "P6",
         "P28"
-      ]
+      ],
+      "objections": [],
+      "vocabulary": []
     },
     {
-      "mechanism_index": 2,
+      "text": "Perceived risk and incompatibility with traditional methods dominate, because poor connectivity, digital illiteracy, or mistrust make digital tools feel unreliable and alien.",
+      "needs": [],
       "chain_id": "C3",
       "passages": [
         "P12",
@@ -54,42 +77,49 @@
         "P18",
         "P20",
         "P21"
+      ],
+      "objections": [
+        "Will this work with my current farming methods and traditions?"
+      ],
+      "vocabulary": [
+        "digital illiteracy"
       ]
     },
     {
-      "mechanism_index": 3,
+      "text": "Management complexity and uncertainty increase, because lack of access to training, extension, or timely inputs leaves farmers feeling incapable of implementing new practices.",
+      "needs": [],
       "chain_id": "C4",
       "passages": [
         "P9",
         "P26",
         "P27",
         "P29"
+      ],
+      "objections": [
+        "Will I get the training and timely support needed to make this work?"
+      ],
+      "vocabulary": [
+        "uncoordinated extension services"
       ]
     },
     {
-      "mechanism_index": 4,
+      "text": "Attachment to customary grazing and scepticism of external interventions prevail, because embeddedness in traditional cultural norms or social inequality makes unfamiliar practices suspect.",
+      "needs": [],
       "chain_id": "C5",
       "passages": [
         "P10",
         "P17",
         "P19",
         "P30"
+      ],
+      "objections": [
+        "Do I trust the people and institutions behind this?"
+      ],
+      "vocabulary": [
+        "traditional grazing practices",
+        "trust"
       ]
     }
-  ],
-  "vocabulary": [
-    "financial burden",
-    "traditional grazing practices",
-    "digital illiteracy",
-    "uncoordinated extension services",
-    "trust",
-    "affordability"
-  ],
-  "objection_patterns": [
-    "Can I afford the upfront and running costs without a subsidy?",
-    "Will this work with my current farming methods and traditions?",
-    "Do I trust the people and institutions behind this?",
-    "Will I get the training and timely support needed to make this work?"
   ],
   "claim_type": "qualitative",
   "region": "Eastern Cape, Limpopo",

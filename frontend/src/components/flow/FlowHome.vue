@@ -974,12 +974,13 @@ function buildSlots(spec) {
   const l = spec.lens
   const segs = spec.audience.segments || []
   const slots = { probes: spec.probes }
+  // The room is asked the whole text; `what` is only the short chip label.
   if (l === 'land' || l === 'breaks') {
-    slots.announcement = spec.what || ''
+    slots.announcement = spec.text || spec.what || ''
     if (segs.length) slots.audience = segmentsText(segs)
     if (spec.worry) slots.worry = spec.worry
   } else if (l === 'fit') {
-    slots.offer = spec.what || ''
+    slots.offer = spec.text || spec.what || ''
     if (spec.price) slots.price = spec.price
   } else {
     slots.version_a = abA.value || ''
@@ -1468,7 +1469,7 @@ const submitPanel = async () => {
     if (!sessionId) throw new Error('No session id returned')
     // The assembled seed is what the room saw — take it back from the server,
     // never rebuild it here.
-    const q = res.data?.pitch || spec.what
+    const q = res.data?.pitch || spec.text || spec.what
     emit('submit', {
       query: q,
       mode: 'panel',
@@ -1513,7 +1514,7 @@ const onSpeedOutside = (e) => {
 const submitDirectSim = async () => {
   if (!SIM_ENABLED || panelSubmitting.value) return
   const spec = await ensureStudy()
-  const q = spec ? (spec.what || composedPitch()) : composedPitch()
+  const q = spec ? (spec.text || spec.what || composedPitch()) : composedPitch()
   if (!q || panelSubmitting.value) return
   setPendingUpload([], q, [], false, false)
   setSimPreset(simPreset.value)

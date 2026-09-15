@@ -111,5 +111,19 @@ class AgentSocietyOutputWriter:
     # ── Internal ──────────────────────────────────────────────
 
     def _append(self, record: Dict[str, Any]):
+        # Warn once per run (not per line) when a line breaks app/data/model/sim_action
+        # or sim_log_marker. The line is always written.
+        if not getattr(self, "_model_warned", False):
+            try:
+                from . import data_model
+                problems = data_model.action_line_problems(record)
+            except Exception:  # noqa: BLE001 — the sim subprocess must never stop over a check
+                problems = []
+            if problems:
+                self._model_warned = True
+                import logging
+                logging.getLogger("fub.agentsociety_output_writer").warning(
+                    "actions.jsonl line does not match its data model: %d problem(s). First: %s",
+                    len(problems), "; ".join(problems[:3]))
         with open(self.jsonl_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")

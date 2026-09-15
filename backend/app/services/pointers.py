@@ -10,7 +10,9 @@ A pointer carries:
   * `seed_slots`    — which slot values are allowed into the assembled seed
                       (`worry` is deliberately excluded: putting the worry in
                       the seed makes the room react to the worry instead of
-                      the thing).
+                      the thing). `audience` is excluded for the same reason:
+                      the picked groups decide who is in the room, and reading
+                      them out told everyone else the offer was not for them.
   * `summary_contract` — extra instruction appended to the panel summary
                       system prompt.
   * `auto_route`    — pick the segment from the seed text. `fit` refuses: the
@@ -54,7 +56,7 @@ POINTERS = {
              "hint": "One line. This shapes what we probe.",
              "required": False},
         ],
-        "seed_slots": ["announcement", "audience", "change"],
+        "seed_slots": ["announcement", "change"],
         "summary_contract": (
             "Spread the read across warm, flat and negative reactions. "
             "If a specific worry is given below, add one closing line on "
@@ -79,7 +81,7 @@ POINTERS = {
              "hint": "One line. This shapes what we probe.",
              "required": False},
         ],
-        "seed_slots": ["announcement", "audience", "change"],
+        "seed_slots": ["announcement", "change"],
         "summary_contract": (
             "Report blockers only. No praise, no balance. Group the objections "
             "by how often each theme recurred, keeping each person's own words. "
@@ -155,8 +157,6 @@ def assemble_seed(pointer: str, slots: Dict[str, str]) -> str:
         return ""  # versions are the pitches; nothing to scaffold
     parts = [values.get(conf["slots"][0]["key"]) or ""]
     if pointer in ("land", "breaks"):
-        if values.get("audience"):
-            parts.append(f"It is aimed at {values['audience']}.")
         if values.get("change"):
             parts.append(f"For them, this means {values['change']}.")
     else:  # fit

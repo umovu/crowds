@@ -7,23 +7,42 @@
   "segment_tags": [
     "communal_farmer",
     "smallholder_emerging_farmer",
-    "gogo_guardian",
-    "livestock_owner"
+    "gogo_guardian"
+  ],
+  "topic_tags": [
+    "livestock",
+    "cattle",
+    "stock theft",
+    "farm security",
+    "branding",
+    "herders"
+  ],
+  "applies_when": [
+    {
+      "farm_products": [
+        "Farming of animals",
+        "Growing of crops combined with farming of animals(mixed farming)"
+      ]
+    },
+    {
+      "farm_market_orientation": [
+        "subsistence",
+        "market"
+      ],
+      "geotype": [
+        "Traditional",
+        "Farms"
+      ]
+    }
   ],
   "economic_tags": [
     "tight",
     "moderate"
   ],
-  "mechanisms": [
-    "Livestock is a high-value, movable target that is easy to convert into cash or cultural goods, so theft becomes a rational choice whenever guardianship is absent.",
-    "When herding labour is unaffordable and grazing camps are distant, livestock left unguarded become an open invitation to theft.",
-    "Lenient sentences signal that the state does not take livestock theft seriously, so only the threat of lifetime imprisonment is seen as a real deterrent.",
-    "Cultural ceremonies create a steady, unregulated demand for livestock that does not require proof of ownership, so theft surges around traditional events.",
-    "Without widespread branding or tattooing, stolen livestock become anonymous goods, making detection and recovery nearly impossible."
-  ],
-  "mechanism_provenance": [
+  "claims": [
     {
-      "mechanism_index": 0,
+      "text": "Livestock is a high-value, movable target that is easy to convert into cash or cultural goods, so theft becomes a rational choice whenever guardianship is absent.",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P11",
@@ -35,63 +54,81 @@
         "P17",
         "P4",
         "P3"
-      ]
+      ],
+      "objections": [],
+      "vocabulary": []
     },
     {
-      "mechanism_index": 1,
+      "text": "When herding labour is unaffordable and grazing camps are distant, livestock left unguarded become an open invitation to theft.",
+      "needs": [],
       "chain_id": "C2",
       "passages": [
         "P9",
         "P10",
         "P14",
         "P3"
+      ],
+      "objections": [
+        "How will this policy help me afford a herder when I am already struggling to get by?"
+      ],
+      "vocabulary": [
+        "grazing camps",
+        "herders"
       ]
     },
     {
-      "mechanism_index": 2,
+      "text": "Lenient sentences signal that the state does not take livestock theft seriously, so only the threat of lifetime imprisonment is seen as a real deterrent.",
+      "needs": [],
       "chain_id": "C3",
       "passages": [
         "P5",
         "P6",
         "P7"
+      ],
+      "objections": [
+        "How will this policy make the punishment harsh enough that thieves actually fear it?"
+      ],
+      "vocabulary": [
+        "lifetime imprisonment"
       ]
     },
     {
-      "mechanism_index": 3,
+      "text": "Cultural ceremonies create a steady, unregulated demand for livestock that does not require proof of ownership, so theft surges around traditional events.",
+      "needs": [],
       "chain_id": "C4",
       "passages": [
         "P1",
         "P3",
         "P4",
         "P20"
+      ],
+      "objections": [
+        "How will this policy make it harder to sell stolen livestock at traditional events without a certificate of ownership?"
+      ],
+      "vocabulary": [
+        "lobola",
+        "imigdi"
       ]
     },
     {
-      "mechanism_index": 4,
+      "text": "Without widespread branding or tattooing, stolen livestock become anonymous goods, making detection and recovery nearly impossible.",
+      "needs": [],
       "chain_id": "C5",
       "passages": [
         "P8",
         "P2"
+      ],
+      "objections": [
+        "How will this policy help me identify my animals when they are taken far away in the dark?"
+      ],
+      "vocabulary": [
+        "branding and tattooing"
       ]
     }
   ],
-  "vocabulary": [
-    "grazing camps",
-    "herders",
-    "branding and tattooing",
-    "lobola",
-    "imigdi",
-    "lifetime imprisonment"
-  ],
-  "objection_patterns": [
-    "How will this policy make it harder to sell stolen livestock at traditional events without a certificate of ownership?",
-    "How will this policy help me afford a herder when I am already struggling to get by?",
-    "How will this policy make the punishment harsh enough that thieves actually fear it?",
-    "How will this policy help me identify my animals when they are taken far away in the dark?"
-  ],
   "claim_type": "qualitative",
   "region": "Eastern Cape, South Africa",
-  "year_range": "2024–2025",
+  "year_range": "2024-2025",
   "confidence": "Mixed-methods and review-based, two-study synthesis covering Eastern Cape communal areas — mechanisms are well-attested in participant perception, but magnitudes and causal weights are not quantified.",
   "comb_gaps": [
     "capability",

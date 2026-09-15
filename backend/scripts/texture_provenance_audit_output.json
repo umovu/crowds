@@ -1,40 +1,69 @@
 {
-  "personas": 299,
+  "personas": 375,
   "unlicensed": {
-    "load-shedding": 200,
-    "water-outage": 82,
-    "grant": 63,
-    "taxi": 57,
-    "crime": 101,
-    "data/airtime": 2
+    "load-shedding": 363,
+    "water-outage": 29,
+    "taxi": 58,
+    "grant": 79,
+    "crime": 103,
+    "data/airtime": 12,
+    "stokvel": 5
   },
   "licensed": {
-    "crime": 122,
-    "taxi": 28,
-    "grant": 35,
-    "data/airtime": 5
+    "taxi": 172,
+    "crime": 110,
+    "grant": 38,
+    "data/airtime": 8
   },
-  "personas_with_unlicensed": 270,
+  "personas_with_unlicensed": 370,
   "name_mismatches": [
     [
-      "Lwazi Nene",
+      "Zinhle Cele",
+      "Nolitha"
+    ],
+    [
+      "Thembeka Tshabalala",
+      "Thandiwe"
+    ],
+    [
+      "Anel Solomons",
+      "Nomvula"
+    ],
+    [
+      "Dimakatso Zwane",
+      "Naledi"
+    ],
+    [
+      "Andile Dlamini",
       "Sipho"
     ],
     [
-      "Bokang Molefe",
-      "Thabo"
+      "Nokwanda Ndlovu",
+      "Naledi"
     ],
     [
-      "Rorisang Radebe",
-      "Kagiso"
+      "Megan Cupido",
+      "Nolitha"
     ],
     [
-      "Mamello Phiri",
-      "Palesa"
+      "Lerato Nkoane",
+      "Nomsa"
     ],
     [
-      "Slindile Gumede",
-      "Zanele"
+      "Jessica Adams",
+      "Nandi"
+    ],
+    [
+      "Tshepang Zulu",
+      "Naledi"
+    ],
+    [
+      "Slindile Zungu",
+      "Luthando"
+    ],
+    [
+      "Nosipho Zungu",
+      "Noluthando"
     ]
   ]
 }

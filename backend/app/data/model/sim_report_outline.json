@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "about": "A simulation report's outline: title, summary and sections.",
+  "stored_in": "uploads/reports/<report_id>/outline.json (also inside meta.json)",
+  "written_by": [
+    "report_agent.ReportManager.save_outline (ReportOutline.to_dict)"
+  ],
+  "read_by": [
+    "report_agent.ReportManager",
+    "api/report.py"
+  ],
+  "fields": {
+    "title": {
+      "type": "string",
+      "when": "always"
+    },
+    "summary": {
+      "type": "string",
+      "when": "always"
+    },
+    "sections": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "title": {
+            "type": "string",
+            "when": "always"
+          },
+          "content": {
+            "type": "string",
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

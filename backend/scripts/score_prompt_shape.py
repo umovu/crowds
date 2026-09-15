@@ -81,9 +81,10 @@ def entropy(counter):
 
 def card_markers(card):
     """Cheap keyword markers per card: vocabulary + salient mechanism nouns."""
-    kws = set(w.lower() for w in (card.get("vocabulary") or []))
-    for m in card.get("mechanisms") or []:
-        for w in re.findall(r"[a-z\-]{6,}", m.lower()):
+    claims = card.get("claims") or []
+    kws = set(w.lower() for claim in claims for w in claim.get("vocabulary", []))
+    for claim in claims:
+        for w in re.findall(r"[a-z\-]{6,}", claim["text"].lower()):
             kws.add(w)
     return kws
 

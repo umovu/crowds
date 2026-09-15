@@ -118,9 +118,9 @@ def research_block(bound_cards):
         return ""
     parts = ["HOW PEOPLE IN YOUR SITUATION ARE DOCUMENTED TO DECIDE (research context):"]
     for c in bound_cards:
-        for m in (c.get("mechanisms") or [])[:3]:
-            parts.append(f"- {m}")
-        obj = c.get("objection_patterns") or []
+        for claim in (c.get("claims") or [])[:3]:
+            parts.append(f"- {claim['text']}")
+        obj = [q for claim in c.get("claims") or [] for q in claim.get("objections", [])]
         if obj:
             parts.append(f"- Questions people like you tend to ask: {'; '.join(obj[:2])}")
     parts.append(

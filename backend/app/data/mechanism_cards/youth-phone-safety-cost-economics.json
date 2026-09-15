@@ -7,30 +7,46 @@
     "learner",
     "guardian_parent"
   ],
+  "topic_tags": [
+    "phone",
+    "phones",
+    "cellphone",
+    "smartphone",
+    "data",
+    "data bundles",
+    "airtime",
+    "voice notes"
+  ],
+  "applies_when": [
+    {
+      "age_band": [
+        "15-24"
+      ]
+    }
+  ],
   "economic_tags": [
     "tight",
     "moderate"
   ],
-  "mechanisms": [
-    "Physical safety and economic survival bind device carriage decisions more tightly than institutional bans: theft risk and data unaffordability make leaving the phone at home a rational protection strategy",
-    "Peer connection and privacy from authorities outweigh instructional attention because constant communication sustains social bonds that classroom supervision cannot replicate",
-    "Communication mode selection is cost-driven, as the primary evaluation metric ahead of pedagogical preference: high voice tariffs push substitution toward text and voice notes",
-    "Mobile phones function as essential infrastructure substituting for computers because lower maintenance costs make them the only viable digital tool for daily routines and schoolwork",
-    "Security concerns legitimize device possession independent of educational utility because emergency risks in township environments render connectivity a safety necessity rather than a recreational luxury"
-  ],
-  "mechanism_provenance": [
+  "claims": [
     {
-      "mechanism_index": 0,
+      "text": "Physical safety and economic survival bind device carriage decisions more tightly than institutional bans: theft risk and data unaffordability make leaving the phone at home a rational protection strategy",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P2",
         "P13",
         "P16",
         "P17"
-      ]
+      ],
+      "objections": [
+        "Will I be robbed carrying this device to school?"
+      ],
+      "vocabulary": []
     },
     {
-      "mechanism_index": 1,
+      "text": "Peer connection and privacy from authorities outweigh instructional attention because constant communication sustains social bonds that classroom supervision cannot replicate",
+      "needs": [],
       "chain_id": "C2",
       "passages": [
         "P1",
@@ -39,49 +55,62 @@
         "P8",
         "P10",
         "P14"
+      ],
+      "objections": [],
+      "vocabulary": [
+        "under the desk"
       ]
     },
     {
-      "mechanism_index": 2,
+      "text": "Communication mode selection is cost-driven, as the primary evaluation metric ahead of pedagogical preference: high voice tariffs push substitution toward text and voice notes",
+      "needs": [],
       "chain_id": "C3",
       "passages": [
         "P7"
+      ],
+      "objections": [
+        "Can I afford the data bundles required to use this?"
+      ],
+      "vocabulary": [
+        "data bundles",
+        "voice notes"
       ]
     },
     {
-      "mechanism_index": 3,
+      "text": "Mobile phones function as essential infrastructure substituting for computers because lower maintenance costs make them the only viable digital tool for daily routines and schoolwork",
+      "needs": [],
       "chain_id": "C4",
       "passages": [
         "P9",
         "P11",
         "P12"
+      ],
+      "objections": [
+        "Does this help me search for answers when I have no computer?"
+      ],
+      "vocabulary": [
+        "searching for answers",
+        "maintenance cost"
       ]
     },
     {
-      "mechanism_index": 4,
+      "text": "Security concerns legitimize device possession independent of educational utility because emergency risks in township environments render connectivity a safety necessity rather than a recreational luxury",
+      "needs": [],
       "chain_id": "C5",
       "passages": [
         "P3"
+      ],
+      "objections": [
+        "Will this keep me safe during emergencies?"
+      ],
+      "vocabulary": [
+        "emergency situations"
       ]
     }
   ],
-  "vocabulary": [
-    "data bundles",
-    "voice notes",
-    "searching for answers",
-    "emergency situations",
-    "under the desk",
-    "maintenance cost"
-  ],
-  "objection_patterns": [
-    "Will I be robbed carrying this device to school?",
-    "Can I afford the data bundles required to use this?",
-    "Does this help me search for answers when I have no computer?",
-    "Will this keep me safe during emergencies?"
-  ],
   "claim_type": "qualitative",
   "region": "South Africa",
-  "year_range": "Not specified",
+  "year_range": null,
   "confidence": "Qualitative survey and interviews in township high schools; mechanisms reflect attested learner rationales, magnitudes and generalizability unknown. Note: this card was originally drafted alongside Goodman et al. (2011) as a second source, but that paper is quantitative/correlational and contributed no extractable passages — it is not a valid citation for this card and has been removed.",
   "comb_gaps": [
     "opportunity"

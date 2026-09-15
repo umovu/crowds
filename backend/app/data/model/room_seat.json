@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "about": "One seat in a panel or sim room: a person (library persona or custom agent) plus the fields the room adds when it is built. The person part is checked against model/persona.json or model/custom_agent.json; these are the room's own fields.",
+  "stored_in": "uploads/panel_sessions/<session_id>/agentsociety_profiles.json (list of seats)",
+  "written_by": [
+    "panel_service._build_profile",
+    "mechanism_card_service.attach_research_context",
+    "panel_service.add_segment",
+    "interview_service._persist_chat_state"
+  ],
+  "read_by": [
+    "interview_service.py",
+    "prompt_reframer.py",
+    "opinion_agent.py",
+    "panel_service.rank_by_segment",
+    "FlowResults.vue"
+  ],
+  "rules": [
+    "Money fields are computed from real persona data when the room is built, never by the model.",
+    "A grant detected at room build writes income_provenance 'grant_schedule' over the persona's own; that value is a room value, not a persona one."
+  ],
+  "room_income_provenance": [
+    "grant_schedule"
+  ],
+  "fields": {
+    "id": {
+      "type": "integer",
+      "min": 0,
+      "when": "always",
+      "note": "Seat number in this room. The library id is library_id."
+    },
+    "library_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$",
+      "nullable": true,
+      "when": "optional"
+    },
+    "stance": {
+      "type": "string",
+      "allowed": [
+        "support",
+        "neutral",
+        "concerned",
+        "oppose",
+        "resist"
+      ],
+      "nullable": true,
+      "when": "optional"
+    },
+    "is_institutional": {
+      "type": "boolean",
+      "when": "optional"
+    },
+    "country": {
+      "type": "string",
+      "nullable": true,
+      "when": "optional"
+    },
+    "budget_tier": {
+      "type": "string",
+      "allowed": [
+        "tight",
+        "moderate",
+        "loose"
+      ],
+      "nullable": true,
+      "when": "optional"
+    },
+    "is_grant_dependent": {
+      "type": "boolean",
+      "when": "optional"
+    },
+    "grant_type": {
+      "type": "string",
+      "nullable": true,
+      "when": "optional"
+    },
+    "monthly_income_rand": {
+      "type": "number",
+      "min": 0,
+      "when": "optional"
+    },
+    "research_context": {
+      "type": "string",
+      "when": "optional"
+    },
+    "research_citations": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "card_id": {
+            "type": "string",
+            "when": "always"
+          },
+          "citation": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "confidence": {
+            "type": "string",
+            "when": "always"
+          }
+        }
+      },
+      "when": "optional"
+    },
+    "lsm_proxy": {
+      "type": "object",
+      "fields": {
+        "score": {
+          "type": "number",
+          "when": "always"
+        },
+        "band": {
+          "type": "string",
+          "when": "always"
+        },
+        "band_meaning": {
+          "type": "string",
+          "when": "always"
+        },
+        "confidence": {
+          "type": "string",
+          "when": "always"
+        }
+      },
+      "when": "optional",
+      "note": "Copied from the library's in-memory load stamp. Not read from seats."
+    },
+    "segment_id": {
+      "type": "string",
+      "when": "optional",
+      "note": "Which picked group seated this person (panel_service.SEGMENTS)."
+    },
+    "segment_label": {
+      "type": "string",
+      "when": "optional"
+    },
+    "chat_state": {
+      "type": "object",
+      "fields": {
+        "interview_memory": {
+          "type": "list",
+          "when": "always"
+        },
+        "interview_count": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "stance": {
+          "type": "string",
+          "when": "always"
+        }
+      },
+      "when": "optional",
+      "note": "Follow-up chat memory, kept apart so the person stays as built."
+    }
+  },
+  "together": [
+    [
+      "is_grant_dependent",
+      "grant_type"
+    ],
+    [
+      "research_context",
+      "research_citations"
+    ],
+    [
+      "segment_id",
+      "segment_label"
+    ]
+  ]
+}

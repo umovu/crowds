@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "about": "The parts of life a pitch can touch. A persona fact tagged with a part (model/persona.json, prompt.about) reaches the prompt when the pitch mentions that part. Words are subject matter only, never good or bad. A word ending in * matches any ending (medic* = medicine, medical); otherwise the whole word, with or without a plural s.",
+  "parts": {
+    "health": {
+      "label": "Health and care",
+      "words": ["clinic", "hospital", "doctor", "nurse", "medic*", "health*", "treatment", "patient", "pharmac*", "chronic", "sick", "sickness", "ill", "illness", "prescription", "diabet*", "hiv", "dentist", "gp", "checkup", "check-up"]
+    },
+    "online": {
+      "label": "Phones and the internet",
+      "words": ["whatsapp", "app", "online", "internet", "website", "web", "digital*", "sms", "smartphone", "cellphone", "phone", "data", "email", "download", "wifi", "wi-fi", "ussd", "video call", "platform", "chatbot"]
+    },
+    "money": {
+      "label": "Money and paying",
+      "price": true,
+      "words": ["rand", "cost*", "price*", "pay*", "paid", "fee", "afford*", "free", "cheap*", "expensive", "subscription", "loan", "credit", "saving*", "budget*", "income", "grant", "discount*", "charge*", "cash", "money", "bank*", "wallet", "insurance", "stokvel"]
+    },
+    "getting_there": {
+      "label": "Getting there",
+      "words": ["near", "nearby", "close by", "close to", "distance", "travel*", "transport*", "taxi", "bus", "walk*", "drive", "driving", "deliver*", "collect", "pick up", "far", "mobile clinic", "come to you", "door to door", "on your doorstep"]
+    },
+    "schooling": {
+      "label": "School and study",
+      "words": ["school*", "learner", "pupil", "teacher", "matric*", "grade", "homework", "tutor*", "student", "college", "universit*", "bursar*", "education*", "class", "classes", "study", "studying"]
+    },
+    "work": {
+      "label": "Work and earning",
+      "words": ["job", "work", "working", "worker", "employ*", "unemploy*", "salar*", "wage", "career", "skill*", "training", "business*", "trader", "informal", "self-employed"]
+    },
+    "farming": {
+      "label": "Farming",
+      "words": ["farm*", "crop", "livestock", "cattle", "harvest*", "seed", "fertili*", "garden*", "agricultur*"]
+    },
+    "food": {
+      "label": "Food",
+      "words": ["food", "grocer*", "meal", "hunger", "hungry", "nutrition*", "vegetable"]
+    },
+    "services": {
+      "label": "Water, power and municipal services",
+      "words": ["water", "electricity", "power", "load shedding", "load-shedding", "sanitation", "refuse", "rubbish", "municipal*", "service delivery", "toilet", "sewage"]
+    },
+    "media": {
+      "label": "News, radio and adverts",
+      "words": ["radio", "tv", "television", "advert*", "billboard", "newspaper", "news", "social media", "facebook", "tiktok", "instagram", "twitter", "influencer", "marketing"]
+    },
+    "language": {
+      "label": "Language",
+      "words": ["language", "english", "isizulu", "zulu", "isixhosa", "xhosa", "afrikaans", "sesotho", "setswana", "sepedi", "tshivenda", "xitsonga", "siswati", "isindebele", "translat*"]
+    },
+    "government": {
+      "label": "Government",
+      "words": ["government", "sassa", "department", "municipal*", "minister", "policy", "policies", "state", "public", "councillor", "ward"]
+    }
+  }
+}

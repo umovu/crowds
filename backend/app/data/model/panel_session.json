@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "about": "A panel session: the pitch, the room that was picked, and how it was filtered. One panel_session.json per session folder.",
+  "stored_in": "uploads/panel_sessions/<session_id>/panel_session.json",
+  "written_by": [
+    "panel_service.create_session",
+    "panel_service.add_segment",
+    "panel_service.save_round"
+  ],
+  "read_by": [
+    "api/panel.py",
+    "panel_service.py",
+    "hypothesis_report.py",
+    "PanelPitchPanel.vue",
+    "FlowResults.vue"
+  ],
+  "rules": [
+    "A filter and its pool size are stored together.",
+    "mode 'product' and 'policy' are older sessions; new sessions are 'panel'."
+  ],
+  "fields": {
+    "session_id": {
+      "type": "string",
+      "pattern": "^panel_[0-9a-f]{12}$",
+      "when": "always"
+    },
+    "user_id": {
+      "type": "string",
+      "nullable": true,
+      "when": "optional"
+    },
+    "pitch": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "operator_context": {
+      "type": "string",
+      "nullable": true,
+      "when": "optional"
+    },
+    "mode": {
+      "type": "string",
+      "allowed": [
+        "panel",
+        "product",
+        "policy"
+      ],
+      "when": "always"
+    },
+    "segments": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "optional",
+      "note": "Segment ids that allocate seats (panel_service.SEGMENTS)."
+    },
+    "segment": {
+      "type": "string",
+      "when": "always"
+    },
+    "picked_segments": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "optional",
+      "note": "Everything the user clicked, including attitude groups folded into the filter."
+    },
+    "segment_label": {
+      "type": "string",
+      "when": "always"
+    },
+    "segment_allocation": {
+      "type": "object",
+      "values": {
+        "type": "integer",
+        "min": 0
+      },
+      "when": "optional"
+    },
+    "cast_size": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "requested_size": {
+      "type": "integer",
+      "min": 1,
+      "when": "always"
+    },
+    "seed": {
+      "type": "integer",
+      "when": "always"
+    },
+    "province": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "rounds_run": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "archetype_distribution": {
+      "type": "object",
+      "values": {
+        "type": "integer",
+        "min": 0
+      },
+      "when": "always"
+    },
+    "province_distribution": {
+      "type": "object",
+      "values": {
+        "type": "integer",
+        "min": 0
+      },
+      "when": "always"
+    },
+    "budget_tier_distribution": {
+      "type": "object",
+      "values": {
+        "type": "integer",
+        "min": 0
+      },
+      "when": "optional"
+    },
+    "budget_tier_filter": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "allowed": [
+          "tight",
+          "moderate",
+          "loose"
+        ]
+      },
+      "when": "optional"
+    },
+    "affordability_pool_size": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "affordability_from_price": {
+      "type": "object",
+      "fields": {
+        "amount": {
+          "type": "number",
+          "min": 0,
+          "when": "always"
+        },
+        "monthly": {
+          "type": "boolean",
+          "when": "always"
+        },
+        "tiers": {
+          "type": "list",
+          "items": {
+            "type": "string",
+            "allowed": [
+              "tight",
+              "moderate",
+              "loose"
+            ]
+          },
+          "when": "always"
+        }
+      },
+      "when": "optional"
+    },
+    "attitude_filter": {
+      "type": "object",
+      "values": {
+        "type": "list",
+        "items": {
+          "type": "string"
+        }
+      },
+      "when": "optional"
+    },
+    "attitude_pool_size": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "pointer": {
+      "type": "string",
+      "when": "optional",
+      "note": "Study pointer id (pointers.py), e.g. land, ab."
+    },
+    "slots": {
+      "type": "object",
+      "fields": {
+        "probes": {
+          "type": "list",
+          "items": {
+            "type": "object",
+            "fields": {
+              "id": {
+                "type": "string",
+                "when": "always"
+              },
+              "label": {
+                "type": "string",
+                "when": "always"
+              },
+              "question": {
+                "type": "string",
+                "when": "always"
+              },
+              "active": {
+                "type": "boolean",
+                "when": "always"
+              },
+              "base": {
+                "type": "boolean",
+                "when": "optional"
+              },
+              "confidence": {
+                "type": "string",
+                "allowed": [
+                  "strong-data",
+                  "thin-data"
+                ],
+                "when": "always"
+              }
+            }
+          },
+          "when": "optional"
+        },
+        "announcement": {
+          "type": "string",
+          "when": "optional"
+        },
+        "audience": {
+          "type": "string",
+          "when": "optional"
+        },
+        "version_a": {
+          "type": "string",
+          "when": "optional"
+        },
+        "version_b": {
+          "type": "string",
+          "when": "optional"
+        },
+        "worry": {
+          "type": "string",
+          "when": "optional"
+        }
+      },
+      "when": "optional"
+    }
+  },
+  "together": [
+    [
+      "budget_tier_filter",
+      "affordability_pool_size"
+    ],
+    [
+      "attitude_filter",
+      "attitude_pool_size"
+    ]
+  ]
+}

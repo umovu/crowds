@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "about": "The run configuration a simulation starts from: time pacing, one activity config per agent, and the opening events.",
+  "stored_in": "uploads/simulations/<simulation_id>/simulation_config.json",
+  "written_by": [
+    "simulation_manager.prepare_simulation (SimulationParameters.to_json)",
+    "api/simulation.py (/start presets)",
+    "scripts/run_simulation_as.py (updates on start)"
+  ],
+  "read_by": [
+    "scripts/run_simulation_as.py",
+    "simulation_runner.py",
+    "api/simulation.py"
+  ],
+  "rules": [
+    "No API keys are stored here: only the model name and base URL."
+  ],
+  "fields": {
+    "simulation_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "project_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "graph_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "simulation_requirement": {
+      "type": "string",
+      "when": "always"
+    },
+    "time_config": {
+      "type": "object",
+      "fields": {
+        "total_simulation_hours": {
+          "type": "number",
+          "min": 0,
+          "when": "always"
+        },
+        "minutes_per_round": {
+          "type": "number",
+          "min": 1,
+          "when": "always"
+        },
+        "agents_per_hour_min": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "agents_per_hour_max": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "peak_hours": {
+          "type": "list",
+          "items": {
+            "type": "integer",
+            "min": 0,
+            "max": 23
+          },
+          "when": "always"
+        },
+        "peak_activity_multiplier": {
+          "type": "number",
+          "min": 0,
+          "when": "always"
+        },
+        "off_peak_hours": {
+          "type": "list",
+          "items": {
+            "type": "integer",
+            "min": 0,
+            "max": 23
+          },
+          "when": "always"
+        },
+        "off_peak_activity_multiplier": {
+          "type": "number",
+          "min": 0,
+          "when": "always"
+        },
+        "morning_hours": {
+          "type": "list",
+          "items": {
+            "type": "integer",
+            "min": 0,
+            "max": 23
+          },
+          "when": "always"
+        },
+        "morning_activity_multiplier": {
+          "type": "number",
+          "min": 0,
+          "when": "always"
+        },
+        "work_hours": {
+          "type": "list",
+          "items": {
+            "type": "integer",
+            "min": 0,
+            "max": 23
+          },
+          "when": "always"
+        },
+        "work_activity_multiplier": {
+          "type": "number",
+          "min": 0,
+          "when": "always"
+        }
+      },
+      "when": "always"
+    },
+    "agent_configs": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "agent_id": {
+            "type": "integer",
+            "min": 0,
+            "when": "always"
+          },
+          "entity_uuid": {
+            "type": "string",
+            "when": "always"
+          },
+          "entity_name": {
+            "type": "string",
+            "when": "always"
+          },
+          "entity_type": {
+            "type": "string",
+            "when": "always"
+          },
+          "activity_level": {
+            "type": "number",
+            "min": 0,
+            "max": 1,
+            "when": "always"
+          },
+          "posts_per_hour": {
+            "type": "number",
+            "min": 0,
+            "when": "always"
+          },
+          "comments_per_hour": {
+            "type": "number",
+            "min": 0,
+            "when": "always"
+          },
+          "active_hours": {
+            "type": "list",
+            "items": {
+              "type": "integer",
+              "min": 0,
+              "max": 23
+            },
+            "when": "always"
+          },
+          "response_delay_min": {
+            "type": "integer",
+            "min": 0,
+            "when": "always"
+          },
+          "response_delay_max": {
+            "type": "integer",
+            "min": 0,
+            "when": "always"
+          },
+          "sentiment_bias": {
+            "type": "number",
+            "min": -1,
+            "max": 1,
+            "when": "always"
+          },
+          "stance": {
+            "type": "string",
+            "when": "always",
+            "note": "Config vocabulary (supportive/opposing/neutral/observer), not the interview stance ladder."
+          },
+          "influence_weight": {
+            "type": "number",
+            "min": 0,
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    },
+    "event_config": {
+      "type": "object",
+      "fields": {
+        "initial_posts": {
+          "type": "list",
+          "when": "always"
+        },
+        "scheduled_events": {
+          "type": "list",
+          "when": "always"
+        },
+        "hot_topics": {
+          "type": "list",
+          "items": {
+            "type": "string"
+          },
+          "when": "always"
+        },
+        "narrative_direction": {
+          "type": "string",
+          "when": "always"
+        }
+      },
+      "when": "always"
+    },
+    "llm_model": {
+      "type": "string",
+      "when": "always"
+    },
+    "llm_base_url": {
+      "type": "string",
+      "when": "always"
+    },
+    "generated_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "generation_reasoning": {
+      "type": "string",
+      "when": "always"
+    },
+    "max_agents_per_round": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional",
+      "note": "Set by the /start preset."
+    },
+    "min_agents_per_round": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    }
+  }
+}

@@ -65,19 +65,40 @@ def closed_vocabulary(extra: list[str]) -> set[str]:
     return vocab | set(extra)
 
 
+def thinking_off(model: str) -> dict:
+    """Provider-specific switch that turns reasoning ("thinking") mode off.
+
+    Reasoning models default it on. Qwen reads `enable_thinking`; DeepSeek reads
+    `thinking.type` and silently ignores the Qwen flag — it then returns the whole
+    answer in `reasoning_content` with an EMPTY `content`, which surfaced here as
+    "No JSON in model reply" on every Stage 1 call. Same shapes as
+    app/__init__._disable_thinking_on_litellm, which fixed this for the sim path.
+    """
+    name = (model or "").lower()
+    if "deepseek" in name:
+        return {"thinking": {"type": "disabled"}}
+    if "qwen" in name:
+        return {"enable_thinking": False}
+    return {}
+
+
 def chat(client, model, system: str, user: str, max_tokens: int = 8000) -> str:
     resp = client.chat.completions.create(
         model=model,
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
         temperature=0.2,
         max_tokens=max_tokens,
-        # DashScope reasoning models (e.g. deepseek-v4-pro) default to "thinking"
-        # mode and can burn the whole token budget on hidden reasoning before
-        # ever emitting the JSON answer. Harmless no-op on models that ignore it.
-        extra_body={"enable_thinking": False},
+        extra_body=thinking_off(model),
     )
-    content = resp.choices[0].message.content or ""
-    return content.strip()
+    content = (resp.choices[0].message.content or "").strip()
+    if not content:
+        # An empty answer is a transport/mode failure, not malformed JSON: a repair pass
+        # would hand the model an empty "previous reply" and accept whatever comes back.
+        raise RuntimeError(
+            f"Model {model} returned an empty answer (finish_reason="
+            f"{resp.choices[0].finish_reason}). Usually reasoning mode still on, or the "
+            "token budget spent before any output.")
+    return content
 
 
 def parse_json_block(text: str):
@@ -203,7 +224,9 @@ CHAINS:
 {chains}"""
 
 STAGE4_PROMPT = """STAGE 4 — FORMALIZE (draft card).
-Compress each chain into ONE mechanism sentence that preserves the "because".
+Compress each chain into ONE claim: a single mechanism sentence that preserves the
+"because", kept together with everything that belongs to it (its chain, passages,
+evaluative rule, objections and vocabulary).
 
 Write it as a general decision RULE, not a first-person adoption statement.
 Do NOT write "I would adopt a new product if..." or any variant — that is a
@@ -217,38 +240,37 @@ A good mechanism is a compact causal claim a persona could apply, unprompted,
 to a scenario the paper never discussed — it is not a hypothetical sentence
 about "a new product". Drop descriptive findings that aren't decision rules.
 
-Also extract, for each chain, its EVALUATIVE RULE as a standalone item:
-- evaluative_rules: the "therefore evaluative rule" link of each chain, restated
-  as a short imperative decision heuristic the segment applies when weighing a
+Inside each claim, also extract:
+- evaluative_rules: the chain's "therefore evaluative rule" link, restated as a
+  short imperative decision heuristic the segment applies when weighing a
   purchase/adoption (e.g. "Judge a school by academic outcomes, not proximity",
   "Trust people who know your circumstances over institutional guarantees").
-  Max 5, one per chain at most; drop chains whose rule is not a weighing/filtering
+  Usually one per claim; leave it out when the rule is not a weighing/filtering
   heuristic. These drive HOW a persona reasons about wanting something — they must
   be rules of evaluation, never statements of who the person is.
+- objections: the questions this segment actually asks of a new product/policy
+  BECAUSE of this claim, phrased first-person, 0-1 per claim (2-4 across the card)
+- vocabulary: terms the segment uses when reasoning this way, ATTESTED in the
+  passages (participant voice preferred), 1-2 per claim (3-6 across the card)
+- needs: always [] in a draft. The human reviewer writes who each claim is about
+  from persona facts; never guess it.
 
-Also extract:
-- vocabulary: terms the segment actually uses, ATTESTED in the passages
-  (participant voice preferred), 3-6 items
-- objection_patterns: the questions this segment actually asks of a new
-  product/policy, phrased first-person, 2-4 items
+For the card, also extract:
 - confidence: one line per the paper's method/scope (e.g. "ethnographic,
   single region, fieldwork 2008-2012 — mechanisms durable, magnitudes unknown")
 - comb_gaps: which of capability/opportunity/motivation the card does NOT
   cover (record, never invent coverage)
 
-HARD RULES: no digits or currency amounts anywhere in mechanisms/vocabulary/
-objection_patterns; claim_type is always "qualitative"; segment_tags come only
-from Stage 3 output.
+HARD RULES: no digits or currency amounts anywhere in claim text, objections,
+vocabulary or evaluative rules; claim_type is "qualitative" or "mixed_methods";
+segment_tags come only from Stage 3 output.
 
 Return ONE JSON object:
 {{"id": "{card_id}",
   "citation": {citations},
   "segment_tags": [...],
-  "mechanisms": [...],
-  "mechanism_provenance": [{{"mechanism_index": 0, "chain_id": "C1", "passages": ["P1"]}}],
-  "evaluative_rules": [...],
-  "evaluative_rule_provenance": [{{"rule_index": 0, "chain_id": "C1", "passages": ["P1"]}}],
-  "vocabulary": [...], "objection_patterns": [...],
+  "claims": [{{"text": "...", "needs": [], "chain_id": "C1", "passages": ["P1"],
+              "evaluative_rules": ["..."], "objections": ["..."], "vocabulary": ["..."]}}],
   "claim_type": "qualitative", "region": "...", "year_range": "...",
   "confidence": "...", "comb_gaps": [...]}}
 
@@ -265,39 +287,31 @@ PASSAGES (for vocabulary attestation):
 def lint_card(card: dict, vocab: set[str]) -> list[str]:
     """Deterministic Stage-5 contamination checks. Returns list of violations."""
     errs = []
-    for field in ("mechanisms", "vocabulary", "objection_patterns", "evaluative_rules"):
-        for item in card.get(field, []):
+    claims = card.get("claims", [])
+    for i, claim in enumerate(claims):
+        words = [claim.get("text", ""), *claim.get("objections", []),
+                 *claim.get("vocabulary", []), *claim.get("evaluative_rules", [])]
+        for item in words:
             if re.search(r"\d", item):
-                errs.append(f"NUMBER in {field}: {item!r}")
+                errs.append(f"NUMBER in claim {i}: {item!r}")
             if re.search(r"\bR\s?\d|percent|%", item, re.I):
-                errs.append(f"CURRENCY/PERCENT in {field}: {item!r}")
+                errs.append(f"CURRENCY/PERCENT in claim {i}: {item!r}")
+        if not claim.get("chain_id") or not claim.get("passages"):
+            errs.append(f"Claim {i} has no provenance (chain/passages)")
+        if "needs" not in claim:
+            errs.append(f"Claim {i} has no needs rule (a draft uses [])")
     bad_tags = [t for t in card.get("segment_tags", []) if t not in vocab]
     if bad_tags:
         errs.append(f"TAGS outside closed vocabulary: {bad_tags} (allowed: {sorted(vocab)})")
-    if card.get("claim_type") != "qualitative":
-        errs.append(f"claim_type must be 'qualitative', got {card.get('claim_type')!r}")
-    for field in ("id", "citation", "segment_tags", "mechanisms", "confidence"):
+    if card.get("claim_type") not in ("qualitative", "mixed_methods"):
+        errs.append(f"claim_type must be 'qualitative' or 'mixed_methods', got {card.get('claim_type')!r}")
+    for field in ("id", "citation", "segment_tags", "claims", "confidence"):
         if not card.get(field):
             errs.append(f"MISSING field: {field}")
-    prov = card.get("mechanism_provenance", [])
-    covered = {p.get("mechanism_index") for p in prov}
-    for i in range(len(card.get("mechanisms", []))):
-        if i not in covered:
-            errs.append(f"Mechanism {i} has no provenance (chain/passages)")
-    if not card.get("mechanisms"):
-        errs.append("No mechanisms survived — paper may fail Stage 0 eligibility")
-    if len(card.get("mechanisms", [])) > 5:
-        errs.append("More than 5 mechanisms — merge or cut (findings, not mechanisms?)")
-    # evaluative_rules are OPTIONAL (legacy cards predate them) but linted when present.
-    rules = card.get("evaluative_rules", [])
-    if rules:
-        if len(rules) > 5:
-            errs.append("More than 5 evaluative_rules — one per chain at most")
-        rule_prov = card.get("evaluative_rule_provenance", [])
-        covered_rules = {p.get("rule_index") for p in rule_prov}
-        for i in range(len(rules)):
-            if i not in covered_rules:
-                errs.append(f"Evaluative rule {i} has no provenance (chain/passages)")
+    if not claims:
+        errs.append("No claims survived — paper may fail Stage 0 eligibility")
+    if len(claims) > 5:
+        errs.append("More than 5 claims — merge or cut (findings, not mechanisms?)")
     return errs
 
 
@@ -391,6 +405,10 @@ def main():
         print(f"Stage 1: harvesting {path_str} ({len(text)} chars)...")
         items = chat_json(client, model, SYSTEM,
                           STAGE1_PROMPT.format(segments=segments, source=cite, text=text))
+        if not isinstance(items, list) or not all(isinstance(it, dict) for it in items):
+            sys.exit(f"Stage 1: {path_str} came back as {type(items).__name__} of "
+                     f"{sorted({type(i).__name__ for i in items}) if isinstance(items, list) else '-'}"
+                     " — expected a list of passage objects. Nothing written.")
         for it in items:
             it["id"] = f"P{pid}"; it["source"] = cite; pid += 1
         passages += items

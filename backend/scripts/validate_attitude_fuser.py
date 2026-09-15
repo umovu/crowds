@@ -218,6 +218,15 @@ def main() -> int:
         required = bands - neutral
         assert set(phrasing) == required, \
             f"_BELIEF_PHRASING['{dim}'] has {sorted(phrasing)}, needs exactly {sorted(required)}"
+    # Reactions are stricter than beliefs: EVERY vocab dim must be present, not just the
+    # ones someone remembered to add. "Present only where carried" is exactly the rule
+    # that let eight belief dimensions sit mute for months.
+    from attitude_fuser import _REACTION_PHRASING
+    for dim, bands in ada.ATTITUDE_VOCAB.items():
+        required = set(bands) - {"mid", "mixed", "neutral"}
+        have = set(_REACTION_PHRASING.get(dim, {}))
+        assert have == required, \
+            f"_REACTION_PHRASING['{dim}'] has {sorted(have)}, needs exactly {sorted(required)}"
     print("OK - texture glosses cover every dim x band; belief phrasing is complete "
           "where carried.")
 

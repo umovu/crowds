@@ -86,10 +86,11 @@ class LiteratureSearchService:
         metadata_file = papers_dir / "papers.json"
 
         try:
+            data = {"papers": [asdict(p) for p in self._local_papers]}
+            from . import data_model
+            data_model.warn_if_off_model(logger, "Local papers", "local_papers", data)
             with open(metadata_file, 'w', encoding='utf-8') as f:
-                json.dump({
-                    "papers": [asdict(p) for p in self._local_papers]
-                }, f, indent=2, ensure_ascii=False)
+                json.dump(data, f, indent=2, ensure_ascii=False)
         except Exception as e:
             logger.error(f"Failed to save local papers metadata: {e}")
 

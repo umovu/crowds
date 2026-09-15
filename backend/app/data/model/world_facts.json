@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "about": "Curated South African everyday costs (fuel, data, taxi, grants) agents reason against so they never invent a magnitude.",
+  "stored_in": "backend/app/data/sa_world_facts.json",
+  "written_by": [
+    "hand-curated",
+    "world_facts.promote_fact"
+  ],
+  "read_by": [
+    "world_facts.load_facts",
+    "world_facts.render_block"
+  ],
+  "rules": [
+    "Every fact has a numeric value and a unit, so it can be checked with the model off.",
+    "Each item appears once; provenance decides which wins if two sources disagree (curated > discovered > web)."
+  ],
+  "fields": {
+    "_README": {
+      "type": "string",
+      "when": "optional"
+    },
+    "version": {
+      "type": "integer",
+      "min": 1,
+      "when": "always"
+    },
+    "currency": {
+      "type": "string",
+      "allowed": [
+        "ZAR"
+      ],
+      "when": "always"
+    },
+    "facts": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "item": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "value": {
+            "type": "number",
+            "min": 0,
+            "when": "always"
+          },
+          "unit": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "derived": {
+            "type": "string",
+            "when": "optional"
+          },
+          "source": {
+            "type": "string",
+            "when": "always"
+          },
+          "as_of": {
+            "type": "string",
+            "pattern": "^(\\d{4}(-\\d{2})?)?$",
+            "when": "always"
+          },
+          "provenance": {
+            "type": "string",
+            "allowed": [
+              "curated",
+              "discovered",
+              "web"
+            ],
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

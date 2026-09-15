@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "about": "One advisory quality judgement (LLM-as-judge) appended so scores survive the request that produced them.",
+  "stored_in": "DATA_ROOT/judge_log.jsonl",
+  "written_by": [
+    "judge_service.record_judgement"
+  ],
+  "read_by": [
+    "operator inspection"
+  ],
+  "rules": [
+    "Advisory only: a judgement never blocks or changes a run."
+  ],
+  "fields": {
+    "ts": {
+      "type": "string",
+      "when": "always"
+    },
+    "kind": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "run_id": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "regenerated": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "score": {
+      "type": "integer",
+      "min": 0,
+      "max": 10,
+      "when": "always"
+    },
+    "pass": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "reasoning": {
+      "type": "string",
+      "when": "always"
+    },
+    "evidence": {
+      "type": "string",
+      "when": "always"
+    }
+  }
+}

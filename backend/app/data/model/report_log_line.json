@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "about": "One step the report agent took: a line in the report's agent_log.jsonl.",
+  "stored_in": "uploads/reports/<report_id>/agent_log.jsonl",
+  "written_by": [
+    "report_agent.ReportLogger.log"
+  ],
+  "read_by": [
+    "report_agent.ReportManager.get_agent_log",
+    "api/report.py"
+  ],
+  "fields": {
+    "timestamp": {
+      "type": "string",
+      "when": "always"
+    },
+    "elapsed_seconds": {
+      "type": "number",
+      "min": 0,
+      "when": "always"
+    },
+    "report_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "action": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "stage": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "section_title": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "section_index": {
+      "type": "integer",
+      "min": 0,
+      "nullable": true,
+      "when": "always"
+    },
+    "details": {
+      "type": "object",
+      "when": "always"
+    }
+  }
+}

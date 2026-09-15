@@ -21,6 +21,7 @@ import os
 from typing import Any, Dict, Optional, Tuple
 
 from ..utils.logger import get_logger
+from . import data_model
 
 logger = get_logger("fub.income_seeder")
 
@@ -44,6 +45,8 @@ def _load_grants() -> Dict[str, Any]:
         try:
             with open(_DATA_PATH, "r", encoding="utf-8") as f:
                 _GRANTS_CACHE = json.load(f)
+            # These amounts become known income and budget tiers; say if the file drifted.
+            data_model.warn_if_off_model(logger, "Grant schedule", "grant_schedule", _GRANTS_CACHE)
         except Exception as e:
             logger.warning(f"Grant amounts table unavailable ({e}); grant tracking inert.")
             _GRANTS_CACHE = {"grants": {}, "effective_date": None}

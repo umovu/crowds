@@ -84,6 +84,11 @@ def load_source_corpus() -> dict[str, dict]:
         for w in entry["words"]:
             doc_freq[w] = doc_freq.get(w, 0) + 1
     n_docs = len(corpus)
+    if n_docs == 0:
+        # Every passage would score against nothing and the IDF maths divides by an
+        # empty corpus (a bare "math domain error"). Say what is actually missing.
+        sys.exit(f"No source texts in {SOURCES_DIR} — put each paper's plain text there "
+                 "(one .txt per paper) before validating.")
     corpus["_doc_freq"] = doc_freq
     corpus["_n_docs"] = n_docs
     return corpus
@@ -176,11 +181,10 @@ JUDGE_PROMPT = """Review this mechanism card draft against its own chains and pa
 
 Check each of these, one by one:
 
-1. MECHANISM-CHAIN FIT: for each mechanism in the card, does it actually
-   follow from the chain and passages cited as its provenance? Flag any
-   mechanism that overstates, contradicts, or drifts from what its cited
-   chain/passages support.
-2. IDENTITY CLAIMS: does any mechanism, vocabulary term, or objection pattern
+1. MECHANISM-CHAIN FIT: for each claim in the card, does its text actually
+   follow from the chain_id and passages the claim cites? Flag any claim that
+   overstates, contradicts, or drifts from what its cited chain/passages support.
+2. IDENTITY CLAIMS: does any claim text, vocabulary term, or objection
    assert who a person IS (their identity, character, worth) rather than a
    reasoning pattern they use? Papers should shape reasoning, never author
    identity. Flag violations.
@@ -201,7 +205,7 @@ INFERRED LINKS FLAGGED BY EXTRACTOR:
 {inferred}
 
 Return ONE JSON object:
-{{"mechanism_chain_fit": [{{"mechanism_index": 0, "verdict": "OK"|"CONCERN", "note": "..."}}],
+{{"mechanism_chain_fit": [{{"claim_index": 0, "verdict": "OK"|"CONCERN", "note": "..."}}],
   "identity_claim_violations": ["<quote the violating text, or empty list>"],
   "inferred_link_verdicts": [{{"link": "...", "verdict": "APPROVE"|"REJECT", "note": "..."}}],
   "confidence_honesty": {{"verdict": "OK"|"CONCERN", "note": "..."}},
@@ -231,7 +235,7 @@ def validate_one(card_id: str, client, model) -> dict:
                                   "best_match": fname, "score": score})
 
     vocab_flags = []
-    for term in card.get("vocabulary", []):
+    for term in (t for claim in card.get("claims", []) for t in claim.get("vocabulary", [])):
         if not any(normalize(term) in entry["text"]
                   for fname, entry in corpus.items() if not fname.startswith("_")):
             vocab_flags.append(term)

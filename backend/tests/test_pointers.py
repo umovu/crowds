@@ -96,8 +96,20 @@ def test_land_seed_all_slots_filled():
         "worry": "people cancel",
     })
     assert "We're moving to R99/month." in seed
-    assert "It is aimed at working South Africans." in seed
     assert "For them, this means existing users pay the new rate." in seed
+
+
+def test_the_audience_is_never_read_out_to_the_room():
+    # The picked groups decide who sits in the room. Reading them out ("It is aimed
+    # at Unhappy with their clinic") told people who were not in that group the
+    # offer was not for them, and they said so.
+    for pointer, first in (("land", "announcement"), ("breaks", "announcement")):
+        seed = pointers.assemble_seed(pointer, {
+            first: "A R150 same-day nurse visit.",
+            "audience": "Trusts health authorities + Unhappy with their clinic",
+        })
+        assert seed == "A R150 same-day nurse visit."
+        assert "aimed at" not in seed and "Unhappy" not in seed
 
 
 def test_land_seed_only_required_slot():

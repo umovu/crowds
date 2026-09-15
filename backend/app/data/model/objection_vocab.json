@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "about": "What a panel answer pushes against (walls) or leans toward (pulls), the words that signal each, and the persona facts that entitle someone to raise it.",
+  "stored_in": "backend/app/data/objection_vocab.json",
+  "written_by": [
+    "hand-authored (walls from the TymeBank segment benchmark; pulls authored, unvalidated)"
+  ],
+  "read_by": [
+    "objections.py",
+    "hypothesis_report.py",
+    "panel_service.rank_by_segment"
+  ],
+  "rules": [
+    "Grounds name persona facts and answers (checked against model/persona.json in test_persona_data_model).",
+    "A wall marked reading_only is read from sentences but never counted in the benchmark mention layer."
+  ],
+  "fields": {
+    "version": {
+      "type": "integer",
+      "min": 1,
+      "when": "always"
+    },
+    "about": {
+      "type": "string",
+      "when": "always"
+    },
+    "walls": {
+      "type": "object",
+      "values": {
+        "type": "object",
+        "fields": {
+          "label": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "source": {
+            "type": "string",
+            "when": "always"
+          },
+          "cues": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "min_length": 1
+            },
+            "min_items": 1,
+            "when": "always"
+          },
+          "grounds": {
+            "type": "list",
+            "items": {
+              "type": "object",
+              "values": {
+                "type": "list",
+                "min_items": 1
+              }
+            },
+            "when": "always"
+          },
+          "reading_only": {
+            "type": "boolean",
+            "when": "optional"
+          }
+        }
+      },
+      "when": "always"
+    },
+    "pulls": {
+      "type": "object",
+      "values": {
+        "type": "object",
+        "fields": {
+          "label": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "source": {
+            "type": "string",
+            "when": "always"
+          },
+          "cues": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "min_length": 1
+            },
+            "min_items": 1,
+            "when": "always"
+          },
+          "grounds": {
+            "type": "list",
+            "items": {
+              "type": "object",
+              "values": {
+                "type": "list",
+                "min_items": 1
+              }
+            },
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    },
+    "markers": {
+      "type": "object",
+      "fields": {
+        "condition": {
+          "type": "list",
+          "items": {
+            "type": "string"
+          },
+          "min_items": 1,
+          "when": "always"
+        },
+        "wall_strong": {
+          "type": "list",
+          "items": {
+            "type": "string"
+          },
+          "min_items": 1,
+          "when": "always"
+        },
+        "pull": {
+          "type": "list",
+          "items": {
+            "type": "string"
+          },
+          "min_items": 1,
+          "when": "always"
+        },
+        "wall_weak": {
+          "type": "list",
+          "items": {
+            "type": "string"
+          },
+          "min_items": 1,
+          "when": "always"
+        }
+      },
+      "when": "always"
+    }
+  }
+}

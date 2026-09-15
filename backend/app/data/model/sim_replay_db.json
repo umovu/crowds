@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "kind": "sqlite",
+  "about": "The replay database of a simulation: metadata, every action, injected events, per-round sentiment and the cast.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/replay.db",
+  "written_by": [
+    "replay_storage.ReplayStorage"
+  ],
+  "read_by": [
+    "replay_storage.ReplayStorage",
+    "api/simulation.py (replay)"
+  ],
+  "tables": {
+    "simulation_meta": [
+      "simulation_id",
+      "project_id",
+      "started_at",
+      "completed_at",
+      "total_rounds",
+      "total_agents",
+      "llm_model",
+      "config_json"
+    ],
+    "opinion_actions": [
+      "id",
+      "simulation_id",
+      "round_num",
+      "agent_id",
+      "agent_name",
+      "archetype",
+      "action_type",
+      "content",
+      "topics_json",
+      "impact_score",
+      "internal_thought",
+      "reason",
+      "opinion_id",
+      "target_opinion_id",
+      "target_agent_name",
+      "economic_reasoning",
+      "created_at"
+    ],
+    "injected_events": [
+      "id",
+      "simulation_id",
+      "event_id",
+      "rule_id",
+      "round_injected",
+      "event_type",
+      "category",
+      "source",
+      "title",
+      "content",
+      "affected_archetypes_json",
+      "severity",
+      "persist_rounds",
+      "trigger_metrics_json",
+      "created_at"
+    ],
+    "sentiment_snapshots": [
+      "id",
+      "simulation_id",
+      "round_num",
+      "total_actions",
+      "avg_impact_score",
+      "pct_high_impact",
+      "avg_radicalism",
+      "non_participation_count",
+      "non_participation_pct",
+      "top_topics_json",
+      "active_archetypes_json",
+      "events_injected_count",
+      "distinct_positions",
+      "new_positions",
+      "position_spread",
+      "created_at"
+    ],
+    "agent_profiles": [
+      "simulation_id",
+      "agent_id",
+      "name",
+      "archetype",
+      "persona",
+      "province",
+      "age",
+      "gender",
+      "occupation",
+      "education",
+      "stance",
+      "base_radicalism",
+      "interested_topics_json",
+      "group_affiliation",
+      "background_story"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "about": "Live progress of report generation, polled by the screen.",
+  "stored_in": "uploads/reports/<report_id>/progress.json",
+  "written_by": [
+    "report_agent.ReportManager.update_progress"
+  ],
+  "read_by": [
+    "report_agent.ReportManager.get_progress",
+    "api/report.py"
+  ],
+  "fields": {
+    "status": {
+      "type": "string",
+      "allowed": [
+        "pending",
+        "planning",
+        "generating",
+        "completed",
+        "failed"
+      ],
+      "when": "always"
+    },
+    "progress": {
+      "type": "integer",
+      "min": -1,
+      "max": 100,
+      "when": "always",
+      "note": "-1 marks a failed report."
+    },
+    "message": {
+      "type": "string",
+      "when": "always"
+    },
+    "current_section": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "completed_sections": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "always"
+    },
+    "updated_at": {
+      "type": "string",
+      "when": "always"
+    }
+  }
+}

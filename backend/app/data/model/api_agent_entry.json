@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "about": "One person in a room as the results screen receives it (GET agents for a panel or sim). Carries only stored fields, so the receipt shows what the room was built from.",
+  "stored_in": "API response only (interview_service.list_agents)",
+  "written_by": [
+    "interview_service.list_agents"
+  ],
+  "read_by": [
+    "FlowResults.vue (normalizeAgent, receipt)",
+    "AgentInterviewPanel.vue",
+    "Step5Interaction.vue"
+  ],
+  "rules": [
+    "Income arrives as monthly_income_rand (room copy) or monthly_household_income_rand (library); the screen reads both."
+  ],
+  "fields": {
+    "id": {
+      "type": "integer",
+      "when": "always"
+    },
+    "name": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "occupation": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "actor_archetype": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "group_affiliation": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "is_institutional": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "stance": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "base_radicalism": {
+      "type": "integer",
+      "when": "always"
+    },
+    "interested_topics": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "always"
+    },
+    "opinions": {
+      "type": "list",
+      "when": "always"
+    },
+    "library_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$",
+      "when": "optional"
+    },
+    "province": {
+      "type": "string",
+      "when": "optional"
+    },
+    "age": {
+      "type": "integer",
+      "when": "optional"
+    },
+    "gender": {
+      "type": "string",
+      "when": "optional"
+    },
+    "persona": {
+      "type": "string",
+      "when": "optional"
+    },
+    "budget_tier": {
+      "type": "string",
+      "allowed": [
+        "tight",
+        "moderate",
+        "loose"
+      ],
+      "when": "optional"
+    },
+    "is_grant_dependent": {
+      "type": "boolean",
+      "when": "optional"
+    },
+    "grant_type": {
+      "type": "string",
+      "when": "optional"
+    },
+    "monthly_income_rand": {
+      "type": "number",
+      "min": 0,
+      "when": "optional"
+    },
+    "monthly_household_income_rand": {
+      "type": "number",
+      "min": 0,
+      "when": "optional"
+    },
+    "income_provenance": {
+      "type": "string",
+      "when": "optional"
+    },
+    "background_story": {
+      "type": "string",
+      "when": "optional"
+    },
+    "attitudes": {
+      "type": "list",
+      "when": "optional"
+    },
+    "research_context": {
+      "type": "string",
+      "when": "optional"
+    },
+    "research_citations": {
+      "type": "list",
+      "when": "optional"
+    },
+    "chat_state": {
+      "type": "object",
+      "when": "optional"
+    }
+  }
+}

@@ -25,6 +25,7 @@ import os
 from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
+from . import data_model
 
 logger = get_logger("fub.world_facts")
 
@@ -72,6 +73,8 @@ def load_facts(path: Optional[str] = None) -> List[Dict[str, Any]]:
         logger.warning(f"world-facts: could not load {p}: {e}")
         return []
 
+    if isinstance(data, dict):
+        data_model.warn_if_off_model(logger, f"World facts {p}", "world_facts", data)
     raw = data.get("facts", []) if isinstance(data, dict) else (data if isinstance(data, list) else [])
     best: Dict[str, Dict[str, Any]] = {}
     dropped = 0

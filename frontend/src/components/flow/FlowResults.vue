@@ -521,6 +521,9 @@
                 <span class="receipt-key">Reasoning</span>
                 <span class="receipt-val">
                   <template v-if="receipt.research">
+                    <span v-if="receipt.research.notRelevant" class="receipt-absent">
+                      {{ receipt.research.boundCount }} research card{{ receipt.research.boundCount === 1 ? '' : 's' }} fit this persona, but none is about this question — so none was used
+                    </span>
                     <span v-for="(m,i) in receipt.research.mechanisms" :key="i" class="receipt-mech">· {{ m }}</span>
                     <span v-for="c in receipt.research.citations" :key="c.id" class="receipt-cite">
                       <b>{{ c.id }}</b><span v-for="t in c.titles" :key="t" class="receipt-cite-title"> — {{ t }}</span>
@@ -1153,7 +1156,9 @@ const applyRound = (results) => {
       stance_before: r.stance_before || a.stance_before,
       stance_after: r.stance_after || r.stance_before || a.stance_after,
       stance_changed: !!r.stance_changed,
-      currentReaction: r.response || a.currentReaction
+      currentReaction: r.response || a.currentReaction,
+      // Which bound cards reached this round's prompt (absent on older rounds).
+      research_cards_used: Array.isArray(r.research_cards_used) ? r.research_cards_used : a.research_cards_used
     }
   })
 }
@@ -1379,15 +1384,25 @@ const receipt = computed(() => {
     .slice(0, 6)
   const research = (() => {
     const ctx = a.research_context || ''
-    const cites = a.research_citations || []
-    if (!ctx && !cites.length) return null
+    const allCites = a.research_citations || []
+    if (!ctx && !allCites.length) return null
+    // A card is bound by who the persona is, but only reaches the prompt when the
+    // question is about its subject. Older rounds carry no usage list: show all.
+    const used = Array.isArray(a.research_cards_used) ? new Set(a.research_cards_used) : null
+    const cites = used ? allCites.filter(c => used.has(c.card_id)) : allCites
+    if (used && !cites.length) {
+      return { mechanisms: [], citations: [], rawContext: ctx, notRelevant: true, boundCount: allCites.length }
+    }
+    // Mechanism lines, taken only from the sections of the cards that applied.
+    const usedTitles = cites.map(c => (c.citation || [])[0]).filter(Boolean)
     const mechs = []
-    if (ctx) {
-      const lines = ctx.split('\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^-\s*/, '').trim()).slice(0, 5)
-      mechs.push(...lines)
+    let inUsed = !used
+    for (const l of ctx.split('\n')) {
+      if (l.startsWith('From ')) inUsed = !used || usedTitles.some(t => l.includes(t))
+      else if (inUsed && l.trim().startsWith('- ')) mechs.push(l.replace(/^\s*-\s*/, '').trim())
     }
     return {
-      mechanisms: mechs,
+      mechanisms: mechs.slice(0, 5),
       citations: cites.map(c => ({ id: c.card_id || '', titles: c.citation || [], confidence: c.confidence || '' })),
       rawContext: ctx,
     }

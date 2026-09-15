@@ -132,6 +132,27 @@ def _status_from_label(label: Optional[str]) -> Optional[str]:
     return None
 
 
+def _employment_status(row, value_labels) -> Optional[str]:
+    """Employment status, reading BOTH status columns the GHS publishes.
+
+    employ_Status1 only distinguishes Employed / Unemployed; everyone else is
+    "Unspecified" (20 877 adults) or "Not applicable" (18 514, all aged under 15).
+    Reading it alone left every non-worker blank — and because employment is one of
+    the six attitude-match keys, a blank failed the match all the way down to
+    race-only. employ_Status2 covers the same rows with the fuller vocabulary and
+    classes all 20 877 as "Not economically active", so it is the authority here.
+
+    Note this is Stats SA's own classification, not ours: 264 of those adults say
+    they are looking for work yet are still classed inactive (they fail the
+    availability test). We do not second-guess the survey.
+    """
+    for col in ("employ_Status2", "employ_Status1"):
+        status = _status_from_label(_label(value_labels, col, row.get(col)))
+        if status:
+            return status
+    return None
+
+
 # ── Loading ──────────────────────────────────────────────────────────────────
 
 def _load() -> Tuple["pandas.DataFrame", Dict[str, Dict]]:
@@ -311,8 +332,7 @@ def _base_skeleton(row, value_labels) -> Dict[str, Any]:
         "province": _label(value_labels, "prov", row.get("prov")),
         "education": _education_group(row.get("education")),
         "occupation": None,            # set per role below
-        "employment_status": _status_from_label(
-            _label(value_labels, "employ_Status1", row.get("employ_Status1"))),
+        "employment_status": _employment_status(row, value_labels),
         "informal": None,              # GHS has no formality coding
         "industry": None,
         "marriage_status": _label(value_labels, "hhc_marital", row.get("hhc_marital")),

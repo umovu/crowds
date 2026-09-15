@@ -70,6 +70,17 @@ def _stable_id(persona: dict, seed: int) -> str:
     return hashlib.sha256(blob).hexdigest()[:16]
 
 
+def _data_model():
+    """app/services/data_model.py by file path: importing app.services would pull in
+    the whole sim stack just to check a list of dicts."""
+    import importlib.util
+    path = os.path.join(os.path.dirname(__file__), "..", "app", "services", "data_model.py")
+    spec = importlib.util.spec_from_file_location("data_model", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def build(
     n: int,
     seed: int,
@@ -89,6 +100,7 @@ def build(
     llm_api_key: Optional[str] = None,
     llm_base_url: Optional[str] = None,
     llm_model: Optional[str] = None,
+    allow_model_drift: bool = False,
 ) -> int:
     print(f"Building persona library: n={n}, learners={learners}, guardians={guardians}, "
           f"teachers={teachers}, communal_farmers={communal_farmers}, "
@@ -230,6 +242,19 @@ def build(
     else:
         unique = list(by_id.values())
 
+    # A persona the data model does not describe matches no card rule or objection
+    # ground that names it, and nothing downstream fails. Describe the new field in
+    # app/model/persona.py first; --allow-model-drift is for dev previews.
+    problems = _data_model().library_problems(unique)
+    if problems:
+        print(f"{len(problems)} persona(s) problem(s) against the data model:", file=sys.stderr)
+        for line in problems[:20]:
+            print(f"  {line}", file=sys.stderr)
+        if not allow_model_drift:
+            print("Not writing the library. Update app/model/persona.py, or pass "
+                  "--allow-model-drift for a preview build.", file=sys.stderr)
+            return 0
+
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump({"version": 1, "seed": seed, "count": len(unique), "personas": unique},
@@ -275,6 +300,9 @@ def main() -> int:
     ap.add_argument("--allow-synthetic-attitudes", action="store_true",
                     help="Build even though attitudes come from the synthetic fixture "
                          "(dev/preview only — do not ship).")
+    ap.add_argument("--allow-model-drift", action="store_true",
+                    help="Write the library even when personas do not fit "
+                         "app/model/persona.py (dev/preview only — do not ship).")
     ap.add_argument("--llm-api-key", default=None,
                     help="override the texture-generation LLM key (falls back to "
                          "Config.LLM_API_KEY / .env if not passed)")
@@ -301,6 +329,7 @@ def main() -> int:
                comfortable=args.comfortable,
                rural_landholding=args.rural_landholding,
                append=args.append,
+               allow_model_drift=args.allow_model_drift,
                llm_api_key=args.llm_api_key,
                llm_base_url=args.llm_base_url,
                llm_model=args.llm_model)

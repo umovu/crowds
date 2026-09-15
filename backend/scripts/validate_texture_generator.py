@@ -109,7 +109,7 @@ def live_checks() -> bool:
             if f in sk and persona.get(f) != sk.get(f):
                 print(f"FAIL: live run changed frozen field '{f}'")
                 ok = False
-        for field in ("name", "persona", "background_story", "voice_guide"):
+        for field in ("name", "persona", "background_story"):
             text = str(persona.get(field, ""))
             if _NON_LATIN.search(text):
                 print(f"FAIL: non-English text in '{field}': {text!r}")
@@ -121,7 +121,7 @@ def live_checks() -> bool:
         import json
         print(json.dumps({k: persona.get(k) for k in
                           ["name", "age", "province", "occupation", "actor_archetype",
-                           "persona", "voice_guide", "interested_topics"]},
+                           "persona", "background_story", "interested_topics"]},
                          ensure_ascii=False, indent=2))
         print("-" * 60)
 

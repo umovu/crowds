@@ -24,6 +24,19 @@ from .agentsociety_opinion_block import (
 )
 from .mode_specs import (build_economic_lens, seed_willingness_band, budget_tier,
                          disposition, build_health_block)
+
+_CURRENT_HEADER = "CURRENT SOUTH AFRICAN CONTEXT"
+
+
+def _current_conditions_only(sa_context: str) -> str:
+    """Just the dated current-conditions block out of a full SA context string.
+
+    Fast mode drops the static grounding after round 1 (the agent has seen it),
+    but the dated conditions must survive: they are the only part that can have
+    changed since the persona's measured outlook was recorded.
+    """
+    idx = sa_context.find(_CURRENT_HEADER)
+    return sa_context[idx:].strip() if idx >= 0 else ""
 from .document_context_engine import sanitize_language_drift
 from ..utils.logger import get_logger
 from ..utils.token_counter import TokenCounter
@@ -412,7 +425,8 @@ class OpinionCaptureSkill:
     )
 
     def __init__(self, env: OpinionEnvironment, document_context: str = "", fast_mode: bool = False,
-                 model_name: str = "", mode: str = "policy", pitch: Optional[Dict[str, Any]] = None):
+                 model_name: str = "", mode: str = "policy", pitch: Optional[Dict[str, Any]] = None,
+                 current_snapshot: Optional[Dict[str, Any]] = None, historical: bool = False):
         self._env = env
         self._document_context = document_context
         self._fast_mode = fast_mode
@@ -422,6 +436,8 @@ class OpinionCaptureSkill:
         # In policy mode these stay inert and the prompt is byte-identical.
         self._mode = mode
         self._pitch = pitch or {}
+        self._current_snapshot = current_snapshot
+        self._historical = historical
         self._token_counter = TokenCounter(model_name) if model_name else TokenCounter()
         self._total_prompt_tokens = 0
         self._total_completion_tokens = 0
@@ -612,7 +628,7 @@ class OpinionCaptureSkill:
         """One LLM call per agent per round."""
         archetype = agent.init_state.get("actor_archetype", "civic_moderate") if hasattr(agent, 'init_state') else "civic_moderate"
         identity_anchor = _build_identity_anchor(archetype, agent)
-        char_ctx = await agent.character_context(detail="full")
+        char_ctx = await agent.character_context(detail="full", question=initial_prompt or "")
 
         # Conditional health block: the persona's real GHS health facts enter the
         # prompt only when the seed is health-adjacent (mode_specs.build_health_block
@@ -723,16 +739,26 @@ class OpinionCaptureSkill:
         is_first_encounter = agent.id not in self._seen_agents
         self._seen_agents.add(agent.id)
         
+        # SA context is mode-aware: policy mode gets the full unrest priming;
+        # product / custom casts get core grounding only (no riot nudge). The
+        # snapshot pins one dated context for the whole run, so a cache refresh
+        # cannot change the facts halfway through.
+        sa_context = build_sa_context(
+            self._mode, snapshot=self._current_snapshot, historical=self._historical
+        )
+
         if self._fast_mode and not is_first_encounter:
-            # Abbreviated prompt for speed (round 2+)
+            # Abbreviated prompt for speed (round 2+). The dated current
+            # conditions still ride along: dropping them entirely was why later
+            # rounds reasoned from staler facts than round 1.
             context_section = (
                 f"[CONTINUING SIMULATION — you know the context]\n\n"
                 f"You are {agent.name}. {char_ctx.split(chr(10))[0]}\n"  # Only first line of persona
             )
+            current_only = _current_conditions_only(sa_context)
+            if current_only:
+                context_section += f"\n{current_only}\n"
         else:
-            # SA context is mode-aware: policy mode gets the full unrest priming;
-            # product / custom casts get core grounding only (no riot nudge).
-            sa_context = build_sa_context(self._mode)
             if self._document_context:
                 context_section = (
                     f"{self._document_context}\n\n"

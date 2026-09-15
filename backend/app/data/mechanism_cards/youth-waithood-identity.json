@@ -8,19 +8,46 @@
   "segment_tags": [
     "unemployed_youth"
   ],
+  "topic_tags": [
+    "job",
+    "jobs",
+    "unemployment",
+    "work",
+    "employment",
+    "youth",
+    "internship",
+    "learnership",
+    "career"
+  ],
+  "applies_when": [
+    {
+      "age_band": [
+        "15-24",
+        "25-34"
+      ],
+      "employment_status": [
+        "Unemployed",
+        "Discouraged job seeker"
+      ]
+    },
+    {
+      "age_band": [
+        "15-24",
+        "25-34"
+      ],
+      "is_neet": [
+        "True"
+      ]
+    }
+  ],
   "economic_tags": [
     "tight",
     "moderate"
   ],
-  "mechanisms": [
-    "Perceived government betrayal and systemic poverty breed nihilism, making education seem useless and future planning impossible",
-    "Inability to provide for oneself or family erodes self-worth, triggering social isolation and substance use as a coping response — with stigma experienced as a separate, compounding perception rather than the direct cause",
-    "Deferred education dreams create a sense of being left out and worthless compared to peers, turning job-seeking into a desperate, fearful act where requirements feel unattainable and rejection feels personal",
-    "Family hardship and caregiving burdens force a survival lens where any opportunity is judged solely by whether it puts food on the table"
-  ],
-  "mechanism_provenance": [
+  "claims": [
     {
-      "mechanism_index": 0,
+      "text": "Perceived government betrayal and systemic poverty breed nihilism, making education seem useless and future planning impossible",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P1",
@@ -32,10 +59,19 @@
         "P7",
         "P8",
         "P9"
+      ],
+      "objections": [
+        "Will this actually change my life, or is it just another empty promise from those who forgot us?"
+      ],
+      "vocabulary": [
+        "alienation",
+        "betrayal",
+        "nihilism"
       ]
     },
     {
-      "mechanism_index": 1,
+      "text": "Inability to provide for oneself or family erodes self-worth, triggering social isolation and substance use as a coping response — with stigma experienced as a separate, compounding perception rather than the direct cause",
+      "needs": [],
       "chain_id": "C2",
       "passages": [
         "P10",
@@ -60,10 +96,15 @@
         "P29",
         "P30",
         "P31"
-      ]
+      ],
+      "objections": [
+        "Will this make me feel like even more of a burden, or prove I'm good for nothing?"
+      ],
+      "vocabulary": []
     },
     {
-      "mechanism_index": 2,
+      "text": "Deferred education dreams create a sense of being left out and worthless compared to peers, turning job-seeking into a desperate, fearful act where requirements feel unattainable and rejection feels personal",
+      "needs": [],
       "chain_id": "C3",
       "passages": [
         "P32",
@@ -84,10 +125,18 @@
         "P47",
         "P48",
         "P49"
+      ],
+      "objections": [
+        "What if I try and they reject me because I don't have what they want?"
+      ],
+      "vocabulary": [
+        "worthless",
+        "caged"
       ]
     },
     {
-      "mechanism_index": 3,
+      "text": "Family hardship and caregiving burdens force a survival lens where any opportunity is judged solely by whether it puts food on the table",
+      "needs": [],
       "chain_id": "C4",
       "passages": [
         "P50",
@@ -95,26 +144,18 @@
         "P34",
         "P44",
         "P45"
+      ],
+      "objections": [
+        "How can I think about the future when I need to put food on the table today?"
+      ],
+      "vocabulary": [
+        "survival"
       ]
     }
   ],
-  "vocabulary": [
-    "alienation",
-    "betrayal",
-    "nihilism",
-    "worthless",
-    "caged",
-    "survival"
-  ],
-  "objection_patterns": [
-    "Will this actually change my life, or is it just another empty promise from those who forgot us?",
-    "What if I try and they reject me because I don't have what they want?",
-    "How can I think about the future when I need to put food on the table today?",
-    "Will this make me feel like even more of a burden, or prove I'm good for nothing?"
-  ],
   "claim_type": "qualitative",
   "region": "South Africa (Mdantsane, unspecified urban areas)",
-  "year_range": "not specified",
+  "year_range": null,
   "confidence": "Multi-source qualitative synthesis drawing on theological reflection, psychiatric self-reports, and career-development interviews — mechanisms are robust across contexts, but magnitudes and precise regional boundaries are unknown.",
   "comb_gaps": [
     "opportunity",

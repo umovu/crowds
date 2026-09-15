@@ -78,6 +78,16 @@ ATTITUDE_VOCAB: Dict[str, List[str]] = {
     # sits, never how virtuous anyone is. Governs whether a green pitch can lead on
     # the environmental benefit at all, or has to lead on money.
     "environment_priority": ["low", "mid", "high"],
+    # ── word of mouth ──────────────────────────────────────────────────────────
+    # Whether this person talks things over with others and acts with them (Q8 discuss
+    # politics + Q10B joined others to raise an issue). A stand-in for word of mouth,
+    # labelled as such: Q8 is about public matters, not products. It backs a
+    # "would tell others" count, and reads directly on service-delivery questions.
+    "social_voice": ["low", "mid", "high"],
+    # Whether a neighbour's word counts (Q86C). Separate from social_trust (Q86A, most
+    # people): the two correlate only 0.10 with Q8, so sending and receiving word of
+    # mouth are measured as different things.
+    "neighbour_trust": ["low", "mid", "high"],
 }
 
 # Material circumstances the donor also reports. Deliberately NOT part of ATTITUDE_VOCAB:
@@ -101,6 +111,12 @@ CIRCUMSTANCE_VOCAB: Dict[str, List[str]] = {
     "owns_bank_account": ["none", "household", "own"],
     "owns_television": ["none", "household", "own"],
     "internet_use": ["never", "rarely", "monthly", "weekly", "daily"],
+    # The phone itself (Q90f/g/h). "The internet" in Q90i is what people call the
+    # internet: in R9 SA, 240 of the 360 who said they never use it own a mobile phone
+    # and 206 use one every day. Without these, "never online" read as "no WhatsApp".
+    "owns_phone": ["none", "household", "own"],
+    "phone_internet": ["no", "yes"],
+    "phone_use": ["never", "rarely", "monthly", "weekly", "daily"],
     "electricity_reliability": ["never", "occasional", "half", "most", "always"],
     # Household spending authority — whether this person can decide a purchase at all,
     # or has to consult. The closest thing to a purchase-capability variable that exists
@@ -221,6 +237,32 @@ def geotype_to_canonical(value: str | None, source: str = "qlfs") -> Optional[st
         return None
     table = _QLFS_GEOTYPE if source == "qlfs" else _AB_GEOTYPE
     return table.get(v)
+
+
+# The three buckets donors are keyed on, decoded from Afrobarometer Q93A.
+EMPLOYMENT_VOCAB = ["Employed", "Unemployed", "Other not economically active"]
+
+# QLFS Status → canonical. QLFS carries a fourth status Afrobarometer has no code
+# for: 'Discouraged job seeker' (3,642 of 62,819 QLFS rows) — someone who wants work
+# but has stopped looking. Stats SA counts them as NOT economically active, and
+# Afrobarometer's Q93A "No (not looking)" decodes to the same bucket, so that is
+# where they join. Left unmapped they matched no donor on this key and fell all the
+# way down the ladder to race alone.
+_QLFS_EMPLOYMENT = {
+    "Employed": "Employed",
+    "Unemployed": "Unemployed",
+    "Other not economically active": "Other not economically active",
+    "Discouraged job seeker": "Other not economically active",
+}
+
+
+def employment_to_canonical(value: str | None) -> Optional[str]:
+    """Normalise a QLFS employment status onto EMPLOYMENT_VOCAB.
+
+    Unknown / blank → None, which never matches on this key and backs off, rather
+    than being coerced into a status the data doesn't show.
+    """
+    return _QLFS_EMPLOYMENT.get((value or "").strip())
 
 
 def _validate_donor(d: Dict, idx: int) -> None:
@@ -350,8 +392,12 @@ def donor_pool_for_role(role: Optional[str], donors: Optional[List[Dict]] = None
 
 
 # Q94 education (0-9 ladder) → coarse band matching education_to_band's vocab.
+# Q94 codes 8/9 are graduate qualifications, not the missing codes used by attitudes.
+_AB_Q94_MISSING = {-1.0, 98.0, 99.0}
+
+
 def _ab_education_band(code: float) -> Optional[str]:
-    if code in _AB_MISSING:
+    if code is None or code in _AB_Q94_MISSING or not 0 <= code <= 9:
         return None
     if code <= 1:      # no schooling / informal only
         return "none"
@@ -372,6 +418,33 @@ def _ab_band_3(value: float, lo: float, hi: float, labels=("low", "mid", "high")
     if value < lo + 2 * span:
         return labels[1]
     return labels[2]
+
+
+# Q8 discuss politics: 0 never, 1 occasionally, 2 frequently.
+# Q10B join others to raise an issue: 0 would never, 1 would if I had the chance,
+# 2 once or twice, 3 several times, 4 often.
+_AB_SOCIAL_VOICE_SCALES = {"Q8": 2.0, "Q10B": 4.0}
+
+
+def _ab_social_voice(row) -> Optional[str]:
+    """Band talking-with-others and acting-with-others into one measure.
+
+    Both items are normalised to 0..1 and averaged, then split into thirds. Both are
+    required: one item alone would silently turn a political talker who never joins
+    anything (or the reverse) into a full reading.
+    """
+    parts = []
+    for col, top in _AB_SOCIAL_VOICE_SCALES.items():
+        v = row.get(col) if hasattr(row, "get") else None
+        if v is None or v != v or v in _AB_MISSING or not (0.0 <= float(v) <= top):
+            return None
+        parts.append(float(v) / top)
+    score = sum(parts) / len(parts)
+    if score < 1 / 3:
+        return "low"
+    if score < 2 / 3:
+        return "mid"
+    return "high"
 
 
 def _ab_mean(row, cols) -> Optional[float]:
@@ -402,6 +475,8 @@ def _ab_code(row, col, table: Dict[float, str]) -> Optional[str]:
 _AB_ASSET = {0.0: "none", 1.0: "household", 2.0: "own"}
 # Q90i internet frequency: 0 never … 4 every day.
 _AB_INTERNET = {0.0: "never", 1.0: "rarely", 2.0: "monthly", 3.0: "weekly", 4.0: "daily"}
+# Q90g mobile phone has internet access: 0 no, 1 yes. 7 (no phone of their own) → None.
+_AB_PHONE_INTERNET = {0.0: "no", 1.0: "yes"}
 # Q92b mains electricity availability: 1 never … 5 all of the time.
 _AB_ELECTRICITY = {1.0: "never", 2.0: "occasional", 3.0: "half", 4.0: "most", 5.0: "always"}
 # Q74 news-channel frequency: same 0..4 shape as Q90i.
@@ -527,6 +602,15 @@ def _decode_ab_circumstances(row) -> Dict[str, str]:
     if net:
         out["internet_use"] = net
 
+    # The phone, asked separately from "the internet". Q90g is only put to people who
+    # own a phone themselves; its "not applicable" (7) falls through to None.
+    for field, col, table in (("owns_phone", "Q90F", _AB_ASSET),
+                              ("phone_internet", "Q90G", _AB_PHONE_INTERNET),
+                              ("phone_use", "Q90H", _AB_INTERNET)):
+        val = _ab_code(row, col, table)
+        if val:
+            out[field] = val
+
     elec = _ab_code(row, "Q92B", _AB_ELECTRICITY)
     if elec:
         out["electricity_reliability"] = elec
@@ -541,6 +625,104 @@ def _decode_ab_circumstances(row) -> Dict[str, str]:
         if val:
             out[field] = val
 
+    return out
+
+
+# The single question that BEST represents each dimension, with the wording a
+# person would recognise. Several dimensions average two items; the band keeps
+# the average, but the persona carries the answer to the primary question, because
+# "Fairly bad" is a thing a real respondent said and "2.5" is not.
+#
+# NONE of these questions may be a held-out backtest item — carrying the answer
+# would hand the persona the test. Verified against the sealed R10 item lock:
+# the held-out set is Q38E/F/G, Q37B/F/G/I, Q46B, Q46E, Q47A, Q9A, Q5A, and none
+# appear below. Q4A and Q37A do appear, and are correctly classed as "seen".
+_DIM_PRIMARY_ITEM: Dict[str, Tuple[str, str]] = {
+    "gov_trust": ("Q37A", "how much you trust the President"),
+    "economic_optimism": ("Q4A", "the present economic condition of the country"),
+    "service_satisfaction": ("Q46I", "how government is handling water and sanitation"),
+    "crime_fear": ("Q7A", "how often you felt unsafe walking in your neighbourhood"),
+    "education_satisfaction": ("Q46H", "how government is handling educational needs"),
+    "health_service_satisfaction": ("Q46G", "how government is handling basic health services"),
+    "health_authority_trust": ("Q37O_SAF", "how much you trust the Department of Health"),
+    "councillor_responsiveness": ("Q34B", "how much your local councillor listens"),
+    "official_responsiveness": ("Q36A", "how much government officials listen"),
+    "crime_handling": ("Q46F", "how government is handling crime"),
+    "immigration_priority": ("Q82C_SAF", "whether foreign nationals take jobs from locals"),
+    "pays_for_quality": ("Q80C_SAF", "paying more for a better service"),
+    "business_trust": ("Q38J", "how much you trust private businesses"),
+    "social_trust": ("Q86A", "whether most people can be trusted"),
+    "social_voice": ("Q10B", "whether you have joined others to raise an issue"),
+    "neighbour_trust": ("Q86C", "how much you trust your neighbours"),
+}
+
+
+# Scale of the primary item, for the dimensions whose band comes from more than
+# one question. Single-item dimensions are omitted: their band IS their answer,
+# so they cannot disagree with themselves. Bands here use the generic
+# ("low","mid","high") labels — only the ends are compared, never the words.
+_DIM_PRIMARY_SCALE: Dict[str, Tuple[float, float]] = {
+    "gov_trust": (0.0, 3.0),            # Q37A, mean with Q37D
+    "economic_optimism": (1.0, 5.0),    # Q4A,  mean with Q4B
+    "service_satisfaction": (1.0, 4.0), # Q46I, mean with Q46L
+    "crime_fear": (0.0, 4.0),           # Q7A,  MAX with Q7B
+    "social_voice": (0.0, 4.0),         # Q10B, averaged with Q8
+}
+
+# Which end of each dimension's own vocabulary is the "low" end, so a contradiction
+# can be spotted without hard-coding every label pair.
+_DIM_LOW_END: Dict[str, str] = {
+    "gov_trust": "low", "economic_optimism": "pessimistic",
+    "service_satisfaction": "dissatisfied", "crime_fear": "low",
+    "social_voice": "low",
+}
+_DIM_HIGH_END: Dict[str, str] = {
+    "gov_trust": "high", "economic_optimism": "optimistic",
+    "service_satisfaction": "satisfied", "crime_fear": "high",
+    "social_voice": "high",
+}
+
+
+def answer_contradicts_band(dim: str, stance: str, answer_band: Optional[str]) -> bool:
+    """True when the primary item's own band sits at the OPPOSITE end to the
+    dimension's band. Middles never contradict — a mid band next to a strong
+    single answer is ordinary human inconsistency, and worth keeping."""
+    if not answer_band or dim not in _DIM_PRIMARY_SCALE:
+        return False
+    low, high = _DIM_LOW_END[dim], _DIM_HIGH_END[dim]
+    return ((stance == low and answer_band == "high")
+            or (stance == high and answer_band == "low"))
+
+
+def _raw_answers(row, value_labels: Optional[Dict[str, Dict]]) -> Dict[str, Dict[str, str]]:
+    """The respondent's LITERAL answer to each dimension's primary question.
+
+    This is what the 3-band label throws away: "Very bad" and "Fairly bad" both
+    band to 'pessimistic', so two people who answered differently become one
+    person. Returns {} when the .sav value labels are unavailable (the synthetic
+    dev fixture), and skips any question this respondent did not usably answer.
+    """
+    if not value_labels:
+        return {}
+    out: Dict[str, Dict[str, str]] = {}
+    for dim, (col, wording) in _DIM_PRIMARY_ITEM.items():
+        if col not in row:
+            continue
+        code = row[col]
+        if code is None or code != code or code in _AB_MISSING:
+            continue
+        label = (value_labels.get(col) or {}).get(code)
+        if not label:
+            continue
+        entry = {"question": col, "asked": wording, "answer": str(label).strip()}
+        # Four dimensions band an AVERAGE (or a max) of two items, so the primary
+        # item alone can point the other way — a person can fear crime at home
+        # (Q7B) yet have felt safe walking (Q7A). Band the single item too, so the
+        # caller can refuse an answer that flatly contradicts the dimension.
+        scale = _DIM_PRIMARY_SCALE.get(dim)
+        if scale:
+            entry["answer_band"] = _ab_band_3(float(code), *scale)
+        out[dim] = entry
     return out
 
 
@@ -601,7 +783,20 @@ def _decode_ab_attitudes(row) -> Optional[Dict[str, str]]:
     env = _ab_environment_priority(row)
     if env:
         out["environment_priority"] = env
-    return out or None
+
+    # Word-of-mouth measures are added AFTER eligibility is settled. Q8/Q10B/Q86C are
+    # answered by nearly everyone, so letting them count toward "has any attitude"
+    # would admit respondents who answered none of the original fifteen — changing
+    # the donor pool, and with it every existing persona's match.
+    if not out:
+        return None
+    voice = _ab_social_voice(row)
+    if voice:
+        out["social_voice"] = voice
+    neighbours = _ab_code(row, "Q86C", _AB_SOCIAL_TRUST)
+    if neighbours:
+        out["neighbour_trust"] = neighbours
+    return out
 
 
 def load_afrobarometer(sav_path: str) -> List[Dict]:
@@ -651,6 +846,10 @@ def load_afrobarometer(sav_path: str) -> List[Dict]:
             "age_band": age_to_band(int(age)),
             "weight": float(weight),
             "attitudes": attitudes,
+            # The literal survey answers behind those bands. Kept alongside, not
+            # instead: the band still drives matching and reporting, the answer
+            # is what the persona gets told.
+            "attitude_answers": _raw_answers(row, _meta.variable_value_labels),
             # Material facts from the SAME respondent, so the persona stays coherent.
             "circumstances": _decode_ab_circumstances(row),
             # Carried but NOT yet join keys — promoting them to the backoff ladder is a
@@ -660,6 +859,10 @@ def load_afrobarometer(sav_path: str) -> List[Dict]:
             "geotype": geotype_to_canonical(_geo_labels.get(row.get("URBRUR")), "ab"),
             # Not a join key — drives role-aware pooling (donor_pool_for_role).
             "occupation_class": _AB_Q93B_CLASS.get(row.get("Q93B"), "general"),
+            # Which real respondent this is. Not a join key. Kept so a persona can be
+            # traced back to its exact survey row — the library never recorded it,
+            # which is why adding a measure later needed a replay to find the donor.
+            "respondent": str(row.get("RESPNO") or ""),
         })
 
     for i, d in enumerate(donors):

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "kind": "table",
+  "table": "public.operator_context",
+  "sql": "backend/supabase/operator_context.sql",
+  "about": "One saved 'about my business' block per user. In local dev the same bodies live in DATA_ROOT/operator_context.json as {user_id: body}.",
+  "written_by": [
+    "services/operator_context.py (save_operator_context)"
+  ],
+  "read_by": [
+    "services/operator_context.py (get_operator_context)",
+    "panel_service.create_session",
+    "mode_specs.build_operator_context_block"
+  ],
+  "rules": [
+    "Not yet created on the hosted project (2026-09-14): hosted saves fail and reads return empty."
+  ],
+  "local_file": {
+    "path": "DATA_ROOT/operator_context.json",
+    "values": {
+      "type": "string",
+      "max_length": 1500
+    }
+  },
+  "fields": {
+    "user_id": {
+      "type": "string",
+      "db": "uuid",
+      "when": "always"
+    },
+    "body": {
+      "type": "string",
+      "max_length": 1500,
+      "db": "text",
+      "when": "always"
+    },
+    "updated_at": {
+      "type": "string",
+      "nullable": true,
+      "db": "timestamptz",
+      "when": "always"
+    }
+  }
+}

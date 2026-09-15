@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "about": "The heartbeat the sim subprocess writes so the app can tell it is alive, running, paused or gone.",
+  "stored_in": "uploads/simulations/<simulation_id>/env_status.json",
+  "written_by": [
+    "scripts/run_simulation_as.py (SimulationIPC.update_status)",
+    "simulation_ipc.SimulationIPCServer._update_env_status"
+  ],
+  "read_by": [
+    "simulation_runner.py",
+    "simulation_ipc.SimulationIPCClient"
+  ],
+  "rules": [
+    "status is deliberately not restricted: readers accept alive, running and paused, and must not be tightened (CLAUDE.md). Values written today: running, paused, alive, error, stopped."
+  ],
+  "fields": {
+    "status": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "timestamp": {
+      "type": "string",
+      "when": "always"
+    },
+    "total_agents": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "agents_expressed_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "agents_expressed": {
+      "type": "list",
+      "when": "optional"
+    },
+    "current_round": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "total_rounds": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "simulation_actions_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "events_injected_this_round": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "total_events_injected": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "error": {
+      "type": "string",
+      "when": "optional"
+    },
+    "message": {
+      "type": "string",
+      "when": "optional"
+    }
+  }
+}

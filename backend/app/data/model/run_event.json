@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "kind": "table",
+  "table": "public.run_events",
+  "sql": "backend/supabase/run_events.sql",
+  "about": "Run metadata, never run content: one row when a panel or sim starts, one when it ends. Written to DATA_ROOT/run_events.jsonl always, and mirrored to Supabase when configured.",
+  "written_by": [
+    "services/run_events.py (record, record_start, record_end)"
+  ],
+  "read_by": [
+    "services/run_events.py (totals)",
+    "run_events_by_user view"
+  ],
+  "rules": [
+    "Only the allow-listed scalar fields in run_events.ALLOWED_FIELDS, plus ts; no free text ever.",
+    "Strings are capped at 64 characters.",
+    "Not yet created on the hosted project (2026-09-14): only the local file is written there."
+  ],
+  "fields": {
+    "id": {
+      "type": "integer",
+      "db": "bigint identity",
+      "when": "optional",
+      "note": "Database only; local lines have none."
+    },
+    "ts": {
+      "type": "string",
+      "db": "timestamptz",
+      "when": "always"
+    },
+    "event": {
+      "type": "string",
+      "allowed": [
+        "start",
+        "end"
+      ],
+      "db": "text",
+      "when": "always"
+    },
+    "run_id": {
+      "type": "string",
+      "max_length": 64,
+      "db": "text",
+      "when": "optional"
+    },
+    "user_id": {
+      "type": "string",
+      "max_length": 64,
+      "db": "uuid",
+      "when": "optional",
+      "note": "A uuid when hosted; 'dev' locally with auth off."
+    },
+    "run_type": {
+      "type": "string",
+      "allowed": [
+        "panel",
+        "simulation"
+      ],
+      "db": "text",
+      "when": "optional"
+    },
+    "mode": {
+      "type": "string",
+      "allowed": [
+        "panel",
+        "product",
+        "policy"
+      ],
+      "db": "text",
+      "when": "optional"
+    },
+    "crowd_size": {
+      "type": "integer",
+      "min": 0,
+      "db": "int",
+      "when": "optional"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "min": 0,
+      "db": "numeric",
+      "when": "optional"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "started",
+        "ok",
+        "failed"
+      ],
+      "db": "text",
+      "when": "optional"
+    },
+    "error_code": {
+      "type": "string",
+      "max_length": 64,
+      "db": "text",
+      "when": "optional"
+    },
+    "model": {
+      "type": "string",
+      "max_length": 64,
+      "db": "text",
+      "when": "optional"
+    },
+    "prompt_tokens": {
+      "type": "integer",
+      "min": 0,
+      "db": "int",
+      "when": "optional"
+    },
+    "completion_tokens": {
+      "type": "integer",
+      "min": 0,
+      "db": "int",
+      "when": "optional"
+    },
+    "total_tokens": {
+      "type": "integer",
+      "min": 0,
+      "db": "int",
+      "when": "optional"
+    },
+    "cost_usd": {
+      "type": "number",
+      "min": 0,
+      "db": "numeric",
+      "when": "optional"
+    }
+  }
+}

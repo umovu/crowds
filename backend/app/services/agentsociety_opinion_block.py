@@ -24,6 +24,7 @@ from openai import AsyncOpenAI
 
 from ..config import Config
 from ..utils.logger import get_logger
+from .context_assembly import historical_mode
 
 logger = get_logger("fub.opinion_block")
 
@@ -91,25 +92,33 @@ Additional SA realities relevant to policy stress-testing:
 """.strip()
 
 
-def build_sa_context(mode: str = "policy") -> str:
+def build_sa_context(mode: str = "policy", snapshot: Optional[Dict] = None, historical: bool = False) -> str:
     """Assemble the SA context block for a given mode.
 
     Core grounding is always included. The unrest/edge-case priming is appended
     ONLY for policy mode, so product / custom casts stay grounded without being
     nudged toward riot framing.
+
+    `historical=True` (or HISTORICAL_BACKTEST=1) omits present-day conditions
+    entirely, so a backtest against a past survey date never sees facts that
+    postdate it. `snapshot` pins one dated context for a whole run, so a cache
+    refresh cannot change the facts halfway through.
     """
     base = SA_CORE_CONTEXT
+    if historical or historical_mode():
+        return base + "\n\n" + SA_UNREST_CONTEXT if mode == "policy" else base
     # Append a live "current realities" block when available so agents reason
     # about what is salient NOW (not the stale hardcoded narrative). Grounded in
     # real web search, cached ~daily, fails safe to the static block above.
     try:
-        from .sa_context import current_sa_realities
-        live = current_sa_realities()
+        from .sa_context import current_sa_realities, detect_conflicts
+        live = current_sa_realities(snapshot=snapshot)
         if live:
+            for note in detect_conflicts(live, SA_CORE_CONTEXT):
+                logger.info("SA context conflict: %s", note)
             base = base + "\n\n" + live
     except Exception as e:  # never let context-refresh break a run
         logger.warning("Live SA context unavailable, using static: %s", e)
-
     if mode == "policy":
         return base + "\n\n" + SA_UNREST_CONTEXT
     return base

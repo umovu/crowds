@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "about": "The published SASSA grant schedule: the monthly amount per grant type, used as known income for grant-dependent personas.",
+  "stored_in": "backend/data/sa_grant_amounts.json",
+  "written_by": [
+    "hand-maintained from the SASSA / DSD schedule"
+  ],
+  "read_by": [
+    "income_seeder.detect_grant",
+    "income_seeder.grant_label",
+    "panel_service._economic_fields"
+  ],
+  "rules": [
+    "Amounts are real published policy, never estimates. They feed budget tiers.",
+    "A 'generic' grant must exist: it is the fallback when a persona is grant-dependent but the type is unknown.",
+    "Update effective_date and amounts together when SASSA publishes a new schedule."
+  ],
+  "fields": {
+    "source": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "effective_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "when": "always"
+    },
+    "currency": {
+      "type": "string",
+      "allowed": [
+        "ZAR"
+      ],
+      "when": "always"
+    },
+    "note": {
+      "type": "string",
+      "when": "optional"
+    },
+    "grants": {
+      "type": "object",
+      "values": {
+        "type": "object",
+        "fields": {
+          "label": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "monthly_amount": {
+            "type": "integer",
+            "min": 1,
+            "when": "always"
+          },
+          "older_than_75_amount": {
+            "type": "integer",
+            "min": 1,
+            "when": "optional"
+          },
+          "keywords": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "min_length": 1
+            },
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

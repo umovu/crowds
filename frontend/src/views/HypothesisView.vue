@@ -82,6 +82,28 @@
         <p v-else class="hyp-none">No recurring objection stood out.</p>
       </section>
 
+      <section v-if="report.pulls?.length">
+        <h2>What drew them in</h2>
+        <ul class="hyp-list">
+          <li v-for="p in report.pulls" :key="p.id">
+            <span class="hyp-key">{{ p.label }}</span>
+            <span class="hyp-num">{{ p.count }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <section v-if="report.word_of_mouth?.heard">
+        <h2>Would they pass it on</h2>
+        <p>
+          {{ report.word_of_mouth.would_tell }} of {{ report.word_of_mouth.heard }} said they'd
+          tell someone about it; {{ report.word_of_mouth.would_warn }} said they'd warn people off.
+        </p>
+        <p class="hyp-fine">
+          Counted only where the person's own survey record shows they talk things over
+          with others. A count of what people said, not a forecast.
+        </p>
+      </section>
+
       <section v-if="report.conditions?.length">
         <h2>What they said would change their mind</h2>
         <blockquote v-for="(c, i) in report.conditions" :key="i">

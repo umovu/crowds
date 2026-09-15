@@ -33,6 +33,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
+from . import data_model
 from . import objections
 from . import panel_service
 
@@ -135,6 +136,12 @@ def facts(session_id: str) -> Dict[str, Any]:
         os.path.join(panel_service.session_dir(session_id),
                      panel_service.PROFILES_FILE)) or []
     results = [r for r in panel_service.latest_results(session_id) if "error" not in r]
+    # Walls and pulls are read per person, so each response is paired with the
+    # profile it came from — that is what lets a wall the person has no grounds
+    # for drop out.
+    by_id = {p.get("id"): p for p in profiles if isinstance(p, dict)}
+    responses = [r.get("response") or "" for r in results]
+    aligned = [by_id.get(r.get("agent_id")) for r in results]
 
     stance_split: Dict[str, int] = {}
     for r in results:
@@ -159,8 +166,9 @@ def facts(session_id: str) -> Dict[str, Any]:
         },
         "stance_split": stance_split,
         "movement": _movement(session_id),
-        "walls": objections.top([r.get("response") or "" for r in results],
-                                limit=MAX_WALLS),
+        "walls": objections.top_walls(responses, aligned, limit=MAX_WALLS),
+        "pulls": objections.top_pulls(responses, aligned, limit=MAX_WALLS),
+        "word_of_mouth": objections.word_of_mouth(responses, aligned),
         "conditions": _conditions(results),
         "by_segment": last.get("by_segment") or [],
         "room_read": last.get("summary_narrative") or "",
@@ -213,11 +221,13 @@ def hypotheses(report_facts: Dict[str, Any],
         f"{(r.get('response') or '').strip()[:280]}"
         for r in reactions[:24])
     walls = ", ".join(w["label"] for w in report_facts.get("walls", [])) or "none recorded"
+    pulls = ", ".join(p["label"] for p in report_facts.get("pulls", [])) or "none recorded"
     mv = report_facts.get("movement", {})
     movement = (f"{mv.get('warmer', 0)} people warmed, {mv.get('cooler', 0)} cooled"
                 if mv.get("moved_count") else "nobody changed position")
 
-    subject = "pitch" if report_facts.get("mode") == "product" else "announcement"
+    subject = {"product": "pitch", "policy": "announcement"}.get(
+        report_facts.get("mode"), "proposal")
     system = (
         "You help someone plan their NEXT round of research after a panel of real "
         f"people reacted to their {subject}. Propose two or three hypotheses: a "
@@ -231,6 +241,7 @@ def hypotheses(report_facts: Dict[str, Any],
     )
     user = (f"The {subject}:\n{report_facts.get('pitch', '')}\n\n"
             f"The room: {report_facts.get('segment_label')}\n"
+            f"What drew them in: {pulls}\n"
             f"Walls they kept hitting: {walls}\n"
             f"Movement: {movement}\n\n"
             f"The reactions:\n{roster}\n\nThe hypotheses:")
@@ -316,6 +327,7 @@ def build(session_id: str, refresh: bool = False) -> Dict[str, Any]:
     else:
         report["hypotheses"] = []
     report["generated_at"] = datetime.now().isoformat(timespec="seconds")
+    data_model.warn_if_off_model(logger, f"Hypothesis report {session_id}", "hypothesis_report", report)
 
     try:
         panel_service._write_json(path, report)
@@ -372,6 +384,19 @@ def render_markdown(report: Dict[str, Any]) -> str:
     lines += ([f"- {w['label']} — raised by {w['count']}" for w in walls]
               or ["- No recurring objection stood out."])
     lines.append("")
+
+    lines += ["## What drew them in", ""]
+    pulls = report.get("pulls") or []
+    lines += ([f"- {p['label']} — raised by {p['count']}" for p in pulls]
+              or ["- Nothing drew them in consistently."])
+    lines.append("")
+
+    wom = report.get("word_of_mouth") or {}
+    if wom.get("heard"):
+        lines += ["## Would they pass it on", "",
+                  f"{wom.get('would_tell', 0)} of {wom['heard']} said they'd tell someone about it; "
+                  f"{wom.get('would_warn', 0)} said they'd warn people off. Counted only where the "
+                  "person's own survey record shows they talk things over with others.", ""]
 
     if report.get("conditions"):
         lines += ["## What they said would change their mind", ""]

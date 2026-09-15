@@ -8,26 +8,62 @@
     "learner",
     "guardian_parent"
   ],
-  "mechanisms": [
-    "Socioeconomic distress renders standard incentives ineffective because family hardship and broader socioeconomic distress override external rewards as drivers of classroom behaviour",
-    "External controls spoil internal motivation because compliance becomes contingent on appreciation rather than intrinsic change",
-    "Negative reinforcement increases disruption because hostility triggers aggression as a coping technique for classroom activities",
-    "Parental care drives academic engagement because learners are motivated to reciprocate love and make caregivers proud through achievement",
-    "Acknowledgement validates effort because visible recognition satisfies the craving for respect and status within the home environment"
+  "topic_tags": [
+    "reward",
+    "rewards",
+    "incentive",
+    "incentives",
+    "coins",
+    "points",
+    "motivation",
+    "learning",
+    "school"
   ],
-  "mechanism_provenance": [
+  "applies_when": [
     {
-      "mechanism_index": 0,
+      "ghs_role": [
+        "learner"
+      ]
+    },
+    {
+      "ghs_role": [
+        "guardian_parent"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "text": "Family hardship can outweigh standard incentives as a driver of classroom behaviour.",
+      "needs": [
+        {
+          "ghs_role": [
+            "learner"
+          ]
+        }
+      ],
       "chain_id": "C1",
       "passages": [
         "P6",
         "P7",
         "P8",
         "P9"
+      ],
+      "objections": [
+        "How does this help when I come to school hungry?"
+      ],
+      "vocabulary": [
+        "broken families"
       ]
     },
     {
-      "mechanism_index": 1,
+      "text": "External controls can weaken internal motivation when learning becomes dependent on receiving a reward.",
+      "needs": [
+        {
+          "ghs_role": [
+            "learner"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P4",
@@ -35,50 +71,74 @@
         "P8",
         "P10",
         "P11"
+      ],
+      "objections": [
+        "Will this reward spoil my need to learn for myself?"
+      ],
+      "vocabulary": [
+        "intrinsic motivation"
       ]
     },
     {
-      "mechanism_index": 2,
+      "text": "Hostile punishment can increase disruption when learners respond with anger or aggression.",
+      "needs": [
+        {
+          "ghs_role": [
+            "learner"
+          ]
+        }
+      ],
       "chain_id": "C3",
       "passages": [
         "P12"
+      ],
+      "objections": [
+        "Does this punishment just make me angry instead of better?"
+      ],
+      "vocabulary": [
+        "hostility"
       ]
     },
     {
-      "mechanism_index": 3,
+      "text": "Parental care can support academic engagement when learners want to make their caregivers proud.",
+      "needs": [],
       "chain_id": "C4",
       "passages": [
         "P19",
         "P20",
         "P31"
+      ],
+      "objections": [],
+      "vocabulary": [
+        "return the love"
       ]
     },
     {
-      "mechanism_index": 4,
+      "text": "Visible acknowledgement can validate effort by giving learners a sense of respect at home.",
+      "needs": [
+        {
+          "ghs_role": [
+            "learner"
+          ]
+        }
+      ],
       "chain_id": "C5",
       "passages": [
         "P22",
         "P32"
+      ],
+      "objections": [
+        "Can I show this acknowledgement to my family at home?"
+      ],
+      "vocabulary": [
+        "certificate",
+        "crave recognition"
       ]
     }
   ],
-  "vocabulary": [
-    "broken families",
-    "intrinsic motivation",
-    "hostility",
-    "return the love",
-    "certificate",
-    "crave recognition"
-  ],
-  "objection_patterns": [
-    "Will this reward spoil my need to learn for myself?",
-    "Does this punishment just make me angry instead of better?",
-    "Can I show this acknowledgement to my family at home?",
-    "How does this help when I come to school hungry?"
-  ],
   "claim_type": "qualitative",
   "region": "South Africa",
-  "year_range": "Not specified in provided text",
+  "year_range": null,
   "confidence": "Qualitative studies in South African secondary schools; mechanisms derived from learner and educator voices, magnitudes and generalizability unknown",
   "comb_gaps": [
     "opportunity"

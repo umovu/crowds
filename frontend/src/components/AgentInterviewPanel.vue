@@ -288,11 +288,11 @@ const formatTime = (timestamp) => {
 
 // Structured question definitions
 const structuredQuestions = [
-  { type: 'biggest_concern', label: 'Biggest Concern?' },
-  { type: 'what_would_change', label: 'What Would Change Your Mind?' },
-  { type: 'willing_to_negotiate', label: 'Willing to Negotiate?' },
-  { type: 'mobilization_intent', label: 'Planning Action?' },
-  { type: 'message_to_government', label: 'Message to Government?' },
+  { type: 'first_reaction', label: 'First Reaction?' },
+  { type: 'what_would_work', label: 'What Would Make It Work?' },
+  { type: 'what_puts_you_off', label: 'What Would Put You Off?' },
+  { type: 'need_to_know', label: 'What Do You Need to Know?' },
+  { type: 'who_you_would_tell', label: 'Who Would You Tell?' },
 ]
 
 // Load agents on mount
@@ -357,7 +357,7 @@ const askStructured = async (questionType) => {
   try {
     const res = await interviewAgent(props.simulationId, selectedAgent.value.id, {
       question_type: questionType,
-      policy_context: policyContext.value || 'recent government policy announcement'
+      policy_context: policyContext.value || 'the proposal being discussed'
     })
     if (res.success) {
       currentResponse.value = res.data
@@ -391,7 +391,7 @@ const askCustom = async () => {
   try {
     const res = await interviewAgent(props.simulationId, selectedAgent.value.id, {
       question: customQuestion.value.trim(),
-      policy_context: policyContext.value || 'recent government policy announcement'
+      policy_context: policyContext.value || 'the proposal being discussed'
     })
     if (res.success) {
       currentResponse.value = res.data

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "kind": "table",
+  "table": "public.waitlist_requests",
+  "sql": "backend/supabase/waitlist_requests.sql",
+  "about": "A stranger asking for access. The operator marks it invited; sign-up triggers then let that email in.",
+  "written_by": [
+    "api/waitlist.py (_store)",
+    "operator in the dashboard",
+    "trigger enforce_invite_only",
+    "trigger waitlist_requests_stamp_invited"
+  ],
+  "read_by": [
+    "triggers handle_new_user and enforce_invite_only"
+  ],
+  "fields": {
+    "id": {
+      "type": "string",
+      "db": "uuid",
+      "when": "always"
+    },
+    "email": {
+      "type": "string",
+      "pattern": "^[^@\\sA-Z]+@[^@\\s.A-Z]+\\.[^@\\sA-Z]{2,}$",
+      "db": "text",
+      "when": "always",
+      "note": "Lower-case, validated by the route; unique."
+    },
+    "full_name": {
+      "type": "string",
+      "max_length": 120,
+      "nullable": true,
+      "db": "text",
+      "when": "always"
+    },
+    "note": {
+      "type": "string",
+      "max_length": 1000,
+      "nullable": true,
+      "db": "text",
+      "when": "always"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "pending",
+        "invited"
+      ],
+      "db": "text",
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "db": "timestamptz",
+      "when": "always"
+    },
+    "invited_at": {
+      "type": "string",
+      "nullable": true,
+      "db": "timestamptz",
+      "when": "always"
+    }
+  }
+}

@@ -19,7 +19,6 @@ from .. import billing
 from ..config import Config
 from ..services import hypothesis_report
 from ..services import panel_service
-from ..services import mode_detector
 from ..services import poster_service
 from ..services import pointers
 from ..services import run_events
@@ -182,7 +181,7 @@ def create_session():
     Request (JSON):
         {
             "pitch": "R99/month solar subscription for townships",  // Required
-            "mode": "product",          // Optional: "product" (default) | "policy"
+            "mode": "product",          // Ignored: panels have one path (see below)
             "n": 12,                    // Optional: cast size (1-50)
             "segments": ["unemployed", "informal_traders"],
                                         // Optional: groups to mix (seats split
@@ -228,9 +227,11 @@ def create_session():
             pitched = pointers.assemble_seed(pointer, slots)
         # Mode is inferred from the (possibly assembled) pitch unless the caller
         # pins one explicitly. Keyword-only detection — pure, deterministic, cheap.
-        mode = data.get('mode')
-        if not mode:
-            mode = mode_detector.detect(pitched or '').get('mode', 'product')
+        # One panel path. The pitch itself decides what applies (a stated price turns
+        # on affordability) — there is no policy/product guess to get wrong. A 50/50
+        # keyword tie used to run a priced clinic offer as "policy" and silently drop
+        # every income band. Old sessions keep their stored mode and render as before.
+        mode = "panel"
         # Free tier: cap the panel cast at 12 (paid may go up to MAX_CAST_SIZE).
         n = data.get('n', panel_service.DEFAULT_CAST_SIZE)
         ent = billing.get_entitlement(billing.current_user_id())
@@ -458,7 +459,7 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
             "pitch": pitch_text,
             **result,
         }
-        if meta.get('mode') == 'product':
+        if meta.get('mode') in ('product', 'panel'):
             payload["budget_tier_distribution"] = meta.get("budget_tier_distribution", {})
         run_events.record_end(
             run_id=session_id, user_id=billing.current_user_id(),

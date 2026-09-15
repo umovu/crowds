@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "about": "Live progress of a running simulation, polled by the screen.",
+  "stored_in": "uploads/simulations/<simulation_id>/run_state.json",
+  "written_by": [
+    "simulation_runner._save_run_state (SimulationRunState.to_detail_dict)"
+  ],
+  "read_by": [
+    "simulation_runner.get_run_state",
+    "api/simulation.py (status, actions)"
+  ],
+  "fields": {
+    "simulation_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "runner_status": {
+      "type": "string",
+      "allowed": [
+        "idle",
+        "starting",
+        "running",
+        "paused",
+        "stopping",
+        "stopped",
+        "completed",
+        "failed"
+      ],
+      "when": "always"
+    },
+    "current_round": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "total_rounds": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "simulated_hours": {
+      "type": "number",
+      "min": 0,
+      "when": "always"
+    },
+    "total_simulation_hours": {
+      "type": "number",
+      "min": 0,
+      "when": "always"
+    },
+    "progress_percent": {
+      "type": "number",
+      "min": 0,
+      "when": "always"
+    },
+    "simulation_running": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "simulation_completed": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "simulation_actions_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "total_actions_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "started_at": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "updated_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "completed_at": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "error": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "process_pid": {
+      "type": "integer",
+      "nullable": true,
+      "when": "always"
+    },
+    "recent_actions": {
+      "type": "list",
+      "items": {
+        "type": "model:sim_action"
+      },
+      "max_items": 50,
+      "when": "always"
+    },
+    "rounds_count": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    }
+  }
+}

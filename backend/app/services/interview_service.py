@@ -19,6 +19,8 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 
 from .opinion_agent import OpinionCitizenAgent
+from . import mechanism_card_service
+from . import persona_facts
 from .prompt_reframer import ImpactReframer
 from .data_exporter import SimulationDataExporter
 from ..config import Config
@@ -77,7 +79,7 @@ class InterviewService:
         except (FileNotFoundError, json.JSONDecodeError, OSError):
             return
         mode = (ctx.get("mode") or "policy").strip().lower()
-        self.mode = mode if mode in ("policy", "product") else "policy"
+        self.mode = mode if mode in ("policy", "product", "panel") else "policy"
         self.converged = bool(ctx.get("converged"))
         lens = ctx.get("secondary_lens")
         self.secondary_lens = lens if lens in ("policy", "product") else None
@@ -119,10 +121,15 @@ class InterviewService:
             # `background_story` and `attitudes` ride along for the receipt the
             # results page shows under a persona's answer: stored fields only, so
             # what the reader sees is what the room was actually built from.
+            # research_context / research_citations are the mechanism cards bound at
+            # cast build. The receipt renders them, but they were never passed through,
+            # so every panel persona showed "No mechanism card bound" while carrying two.
             for key in ("library_id", "province", "age", "gender", "persona",
                         "budget_tier", "is_grant_dependent", "grant_type",
-                        "monthly_income_rand", "income_provenance",
-                        "background_story", "attitudes"):
+                        "monthly_income_rand", "monthly_household_income_rand",
+                        "income_provenance",
+                        "background_story", "attitudes",
+                        "research_context", "research_citations"):
                 if p.get(key) is not None:
                     entry[key] = p[key]
             # Persisted follow-up chat memory, so the client can restore prior
@@ -317,7 +324,7 @@ class InterviewService:
         if question_type:
             result = await agent.do_structured_interview(
                 question_type=question_type,
-                policy_context=policy_context or "a recent government policy announcement",
+                policy_context=policy_context or "the proposal being discussed",
                 t=t,
             )
         else:
@@ -506,6 +513,14 @@ class InterviewService:
                                 "grant_type", "monthly_income_rand"):
                         if profile.get(key) is not None:
                             result[key] = profile[key]
+                    # Which bound cards actually reached this prompt, so the receipt
+                    # can tell "applied to this question" from "bound, not relevant".
+                    used_cards = mechanism_card_service.cards_for_question(profile, question)
+                    if used_cards is not None:
+                        result["research_cards_used"] = [c.get("id") for c in used_cards]
+                    # Which measured facts replaced the story in this prompt.
+                    if persona_facts.uses_facts(profile):
+                        result["facts_used"] = persona_facts.fields_used(profile, question)
                     return result
 
                 except Exception as e:
