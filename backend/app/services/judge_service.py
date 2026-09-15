@@ -259,6 +259,8 @@ def record_judgement(kind: str, result: JudgeResult, *, run_id: Optional[str] = 
             "regenerated": regenerated,
             **result.to_dict(),
         }
+        from . import data_model
+        data_model.warn_if_off_model(logger, f"Judge log line ({kind})", "judge_log_line", line)
         with open(path, "a", encoding="utf-8") as f:
             f.write(json.dumps(line, ensure_ascii=False) + "\n")
     except Exception as e:

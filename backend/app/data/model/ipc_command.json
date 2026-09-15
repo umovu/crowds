@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "about": "A command the app drops for the sim subprocess (interview, pause, intervention).",
+  "stored_in": "uploads/simulations/<simulation_id>/ipc_commands/<command_id>.json",
+  "written_by": [
+    "simulation_ipc.SimulationIPCClient.send_command (IPCCommand.to_dict)"
+  ],
+  "read_by": [
+    "scripts/run_simulation_as.py (poll_command)",
+    "simulation_ipc.SimulationIPCServer.poll_commands"
+  ],
+  "fields": {
+    "command_id": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "command_type": {
+      "type": "string",
+      "allowed": [
+        "interview",
+        "batch_interview",
+        "close_env",
+        "pause",
+        "resume",
+        "apply_intervention",
+        "broadcast_intervention"
+      ],
+      "when": "always"
+    },
+    "args": {
+      "type": "object",
+      "when": "always"
+    },
+    "timestamp": {
+      "type": "string",
+      "when": "always"
+    }
+  }
+}

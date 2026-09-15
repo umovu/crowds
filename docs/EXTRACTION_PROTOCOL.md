@@ -72,11 +72,13 @@ For each chain, complete the sentence:
 
 ## Stage 4 — Formalize (card schema; COM-B as checklist)
 
-1. Compress each chain into one card `mechanism` sentence that **preserves
-   the "because"**.
+1. Compress each chain into one card **claim**: a `text` sentence that
+   **preserves the "because"**, stored together with its `chain_id`,
+   `passages`, `objections`, `vocabulary` and `evaluative_rules`. A draft's
+   `needs` is `[]`; the reviewer writes who the claim is about from persona facts.
    - **Affective/attitude material is welcome ONLY in conditional form.**
      Papers often document emotional or attitudinal patterns (nihilism,
-     status insecurity, shame around debt). These may enter `mechanisms`
+     status insecurity, shame around debt). These may enter claim text
      only as circumstance-triggered responses — "X breeds/erodes/triggers
      Y" — never as dispositional traits ("people like this ARE Y"). The
      conditional form describes documented reasoning a persona can apply;
@@ -90,19 +92,19 @@ For each chain, complete the sentence:
 2. **Runnability test (hard gate):** could a persona apply this rule to a
    scenario the paper never discussed? Descriptive statements ("cattle are
    important") fail and die here.
-3. `vocabulary`: attested terms only, participant-voice preferred.
-   `objection_patterns`: the questions the segment actually asks.
-   `evaluative_rules` (optional, max 5): the "therefore evaluative rule" link
-   of each chain restated as a standalone decision heuristic — how the segment
-   weighs/filters a purchase or adoption ("judge by X, not Y"). Must be a rule
-   of evaluation, never identity; each rule carries chain + passage provenance
-   (`evaluative_rule_provenance`). These feed the need-vs-want elicitation at
-   runtime, so only include rules that genuinely gate wanting/choosing.
+3. Inside each claim: `vocabulary`: attested terms only, participant-voice
+   preferred. `objections`: the questions the segment actually asks because
+   of this claim. `evaluative_rules` (optional): the chain's "therefore
+   evaluative rule" link restated as a standalone decision heuristic — how the
+   segment weighs/filters a purchase or adoption ("judge by X, not Y"). Must be
+   a rule of evaluation, never identity; it shares the claim's chain + passage
+   provenance. These feed the need-vs-want elicitation at runtime, so only
+   include rules that genuinely gate wanting/choosing.
 4. **COM-B pass (coverage check only, never a generator):** does the card
    cover capability, opportunity and motivation mechanisms? Record gaps in
    the worksheet as gaps — never fill one by invention.
 
-Output: draft card JSON; each mechanism annotated with its chain + passage IDs.
+Output: draft card JSON; each claim carries its chain + passage IDs.
 
 ## Stage 5 — Gate (contamination checklist + confidence)
 
@@ -113,7 +115,8 @@ Contamination checklist — all must pass:
 - [ ] All `segment_tags` in the closed vocabulary, 1:1 with persona fields
 - [ ] `economic_tags` reflect the paper's actual sample (omitted when class-blind, never guessed)
 - [ ] Vocabulary items attested in the paper
-- [ ] Every mechanism traceable to passage IDs
+- [ ] Every claim traceable to passage IDs
+- [ ] Every claim's `needs` names only facts personas carry (a draft uses `[]`)
 
 Confidence grading — per **mechanism**, not per paper, CERQual components:
 methodological limitations · relevance to the SA segment · coherence ·

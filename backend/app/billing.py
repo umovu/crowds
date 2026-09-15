@@ -158,6 +158,15 @@ def increment_sim_used(user_id) -> None:
 def set_plan(user_id, plan: str, **extra) -> None:
     """Upsert a user's plan. Used by the Paystack webhook."""
     body = {"user_id": user_id, "plan": plan, **extra}
+    # Callers pass free-form keyword columns. A misspelt one fails at the database; a
+    # plan or status the app does not know saves and silently changes who can do what.
+    try:
+        from .services import data_model
+        problems = data_model.row_problems("subscription", body)
+    except Exception as e:  # noqa: BLE001 — a check must never block a payment update
+        problems = [f"could not check: {e}"]
+    if problems:
+        logger.warning("Subscription write does not match its data model: %s", "; ".join(problems[:3]))
     resp = requests.post(
         f"{_supabase_url()}/rest/v1/subscriptions",
         json=body,

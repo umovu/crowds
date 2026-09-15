@@ -13,19 +13,59 @@
     "small_business_owner",
     "informal_trader"
   ],
+  "topic_tags": [
+    "status",
+    "luxury",
+    "brand",
+    "brands",
+    "lifestyle",
+    "black tax",
+    "conspicuous",
+    "aspirational",
+    "middle class",
+    "prestige"
+  ],
+  "applies_when": [
+    {
+      "race": [
+        "African/Black"
+      ],
+      "lived_poverty": [
+        "none",
+        "low"
+      ],
+      "employment_status": [
+        "Employed"
+      ],
+      "owns_vehicle": [
+        "own",
+        "household"
+      ]
+    },
+    {
+      "race": [
+        "African/Black"
+      ],
+      "lived_poverty": [
+        "none",
+        "low"
+      ],
+      "employment_status": [
+        "Employed"
+      ],
+      "owns_computer": [
+        "own"
+      ]
+    }
+  ],
   "economic_tags": [
     "moderate",
     "loose"
   ],
-  "mechanisms": [
-    "Visible consumption signals unobserved wealth relative to a reference group, so the urge to set oneself apart intensifies when intra-group inequality is high and mean income is low.",
-    "Asset accumulation anchors new middle-class entrants, reducing vulnerability and the need to signal — conversely, conspicuous consumption is heightened precisely while status remains new or tenuous, before assets have accumulated enough to stabilize it.",
-    "Black Tax is a social and moral obligation rooted in African communalism, so financial products are evaluated by their capacity to help manage extended-family duties without undermining personal financial health.",
-    "Affordability, convenience, and accessibility are paramount for the income-insecure, so mobile-phone-based services that are trusted via word-of-mouth are adopted while formal products requiring payslips or collateral are avoided."
-  ],
-  "mechanism_provenance": [
+  "claims": [
     {
-      "mechanism_index": 0,
+      "text": "Visible consumption signals unobserved wealth relative to a reference group, so the urge to set oneself apart intensifies when intra-group inequality is high and mean income is low.",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P1",
@@ -36,10 +76,18 @@
         "P40",
         "P41",
         "P45"
+      ],
+      "objections": [
+        "Does this product visibly signal my middle-class status to my reference group?"
+      ],
+      "vocabulary": [
+        "conspicuous consumption",
+        "signalling wealth"
       ]
     },
     {
-      "mechanism_index": 1,
+      "text": "Asset accumulation anchors new middle-class entrants, reducing vulnerability and the need to signal — conversely, conspicuous consumption is heightened precisely while status remains new or tenuous, before assets have accumulated enough to stabilize it.",
+      "needs": [],
       "chain_id": "C2",
       "passages": [
         "P4",
@@ -50,10 +98,17 @@
         "P32",
         "P34",
         "P38"
+      ],
+      "objections": [
+        "Will this product help me accumulate assets that anchor my position in the middle class?"
+      ],
+      "vocabulary": [
+        "asset deficit"
       ]
     },
     {
-      "mechanism_index": 2,
+      "text": "Black Tax is a social and moral obligation rooted in African communalism, so financial products are evaluated by their capacity to help manage extended-family duties without undermining personal financial health.",
+      "needs": [],
       "chain_id": "C3",
       "passages": [
         "P12",
@@ -67,42 +122,18 @@
         "P24",
         "P25",
         "P26"
-      ]
-    },
-    {
-      "mechanism_index": 3,
-      "chain_id": "C4",
-      "passages": [
-        "P28",
-        "P29",
-        "P30",
-        "P33",
-        "P35",
-        "P36",
-        "P38",
-        "P42",
-        "P43",
-        "P44"
+      ],
+      "objections": [
+        "Can I use this product to budget for my extended-family obligations without sacrificing my own financial health?"
+      ],
+      "vocabulary": [
+        "Black Tax"
       ]
     }
   ],
-  "vocabulary": [
-    "conspicuous consumption",
-    "signalling wealth",
-    "asset deficit",
-    "Black Tax",
-    "inherited poverty",
-    "mobile-payment services"
-  ],
-  "objection_patterns": [
-    "Does this product visibly signal my middle-class status to my reference group?",
-    "Will this product help me accumulate assets that anchor my position in the middle class?",
-    "Can I use this product to budget for my extended-family obligations without sacrificing my own financial health?",
-    "Is this product affordable, accessible via my mobile phone, and trusted by people in my social network?"
-  ],
   "claim_type": "qualitative",
   "region": "South Africa",
-  "year_range": "not specified",
+  "year_range": null,
   "confidence": "multi-source synthesis combining quantitative survey analysis, qualitative media framing analysis, and ethnographic fieldwork; mechanisms are robust across contexts but magnitudes are unknown.",
   "comb_gaps": [
     "capability"

@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "about": "A marker line in actions.jsonl: the end of a round, or the end of the simulation with its token and cost totals.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/actions.jsonl",
+  "written_by": [
+    "agentsociety_output_writer.write_round_end",
+    "agentsociety_output_writer.write_simulation_end"
+  ],
+  "read_by": [
+    "simulation_runner.py"
+  ],
+  "fields": {
+    "event_type": {
+      "type": "string",
+      "allowed": [
+        "round_end",
+        "simulation_end"
+      ],
+      "when": "always"
+    },
+    "round": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "simulated_hours": {
+      "type": "number",
+      "min": 0,
+      "when": "optional"
+    },
+    "total_rounds": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "total_actions": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "model": {
+      "type": "string",
+      "when": "optional"
+    },
+    "pricing": {
+      "type": "object",
+      "when": "optional"
+    },
+    "total_prompt_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "total_completion_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "total_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
+    "estimated_cost_usd": {
+      "type": "number",
+      "min": 0,
+      "when": "optional"
+    }
+  }
+}

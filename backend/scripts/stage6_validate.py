@@ -172,9 +172,10 @@ def mechanism_block(cards: list[dict]) -> str:
     for c in cards:
         cite = c["citation"][0] if isinstance(c["citation"], list) else c["citation"]
         lines.append(f"\nFrom {cite} [{c['claim_type']}]:")
-        lines.extend(f"  - {m}" for m in c["mechanisms"])
-        if c.get("vocabulary"):
-            lines.append(f"  Vocabulary people like you use: {', '.join(c['vocabulary'])}")
+        lines.extend(f"  - {claim['text']}" for claim in c["claims"])
+        vocabulary = [v for claim in c["claims"] for v in claim.get("vocabulary", [])]
+        if vocabulary:
+            lines.append(f"  Vocabulary people like you use: {', '.join(vocabulary)}")
     return "\n".join(lines)
 
 

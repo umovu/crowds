@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "about": "The planned B2B layer (functions half): the sector-agnostic decision seats a B2B persona can occupy — mandate, criteria, objections, budget authority.",
+  "stored_in": "backend/app/data/persona_library/b2b_functions.json",
+  "written_by": [
+    "hand-authored from the DHET OFO register and standard buying-committee roles"
+  ],
+  "read_by": [
+    "scripts/preview_b2b_persona.py"
+  ],
+  "rules": [
+    "Not wired into rooms yet (b2b-persona-layer plan)."
+  ],
+  "fields": {
+    "_README": {
+      "type": "string",
+      "when": "optional"
+    },
+    "_provenance": {
+      "type": "string",
+      "when": "always"
+    },
+    "version": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "functions": {
+      "type": "object",
+      "values": {
+        "type": "object",
+        "fields": {
+          "label": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "ofo_family": {
+            "type": "string",
+            "when": "always"
+          },
+          "mandate": {
+            "type": "string",
+            "when": "always"
+          },
+          "decision_criteria": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "typical_objections": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "budget_authority_band": {
+            "type": "string",
+            "when": "always"
+          },
+          "what_wins_them": {
+            "type": "string",
+            "when": "always"
+          },
+          "dmu_role": {
+            "type": "string",
+            "when": "optional"
+          },
+          "dmu_mandate": {
+            "type": "string",
+            "when": "optional"
+          },
+          "consensus_behaviour": {
+            "type": "string",
+            "when": "optional"
+          },
+          "stalls_deal_when": {
+            "type": "list",
+            "when": "optional"
+          },
+          "decision_provenance": {
+            "type": "string",
+            "when": "optional"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

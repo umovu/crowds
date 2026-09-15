@@ -10,6 +10,23 @@ import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
+from ..utils.logger import get_logger
+from . import belief_relevance, mechanism_card_service, persona_facts
+from .context_assembly import historical_mode
+from .mode_specs import SHORT_ANSWER_SENTENCES, decision_question_on
+
+logger = get_logger("fub.prompt_reframer")
+
+
+def _evidence_aware() -> bool:
+    """Feature flag: evidence-aware wording (a persona may revise a view when the
+    evidence supports it, and must say why) instead of the older "stay consistent"
+    instruction. Default OFF — the old wording stays the baseline until the paid
+    old-vs-new comparison validates the change."""
+    return os.environ.get("EVIDENCE_AWARE_PROMPTS", "0").strip().lower() in (
+        "1", "true", "on", "yes",
+    )
+
 
 def _render_research_layer() -> bool:
     """Feature flag: render the persona's research_context as an explicit
@@ -84,11 +101,14 @@ class ImpactReframer:
         layers = []
 
         # Layer 1: Identity Lock
-        layers.append(self._build_identity_lock(agent_profile))
+        layers.append(self._build_identity_lock(agent_profile, user_question))
 
-        # Layer 2: Memory Tether (recent post)
+        # Layer 2: Memory Tether (recent post) — evidence-aware: continuity of reasoning, not forced consistency
         if recent_post:
-            layers.append(f"\nYou recently said: '{recent_post}'\nStay consistent with that position.")
+            if _evidence_aware():
+                layers.append(f"\nYou recently said: '{recent_post}'\nConsider this alongside any new evidence; you may keep or change your view, but explain why.")
+            else:
+                layers.append(f"\nYou recently said: '{recent_post}'\nStay consistent with that position.")
 
         # Layer 3: Seed Anchor (personal stake)
         if stake:
@@ -97,7 +117,11 @@ class ImpactReframer:
         # Layer 3b: fixed budget reality, computed from real persona data. Shown when
         # the product lens is in play — either as the primary mode, or as a secondary
         # lens layered onto a policy-primary converged run.
-        if mode == "product" or secondary_lens == "product":
+        # A unified panel shows the budget reality only when the question states a
+        # price: affordability is a real constraint on a priced offer, and noise on
+        # an announcement that costs the listener nothing.
+        priced = mode == "panel" and re.search(r"\bR\s?\d", user_question or "")
+        if mode == "product" or secondary_lens == "product" or priced:
             budget_layer = self._build_budget_reality(agent_profile)
             if budget_layer:
                 layers.append(f"\n{budget_layer}")
@@ -105,10 +129,26 @@ class ImpactReframer:
         # Layer 3c (flagged): research grounding rendered as an explicit layer.
         # The block is pre-rendered at cast build (mechanism_card_service) —
         # this only gives it prompt prominence instead of profile-JSON burial.
-        if _render_research_layer():
-            research = agent_profile.get("research_context")
-            if research:
-                layers.append(f"\n{research}")
+        # Only cards whose subject this question touches (mechanism_card_service
+        # .cards_for_question). A legacy cast without citations keeps its stored block.
+        if _render_research_layer() and agent_profile.get("research_context"):
+            used = mechanism_card_service.cards_for_question(agent_profile, user_question)
+            if used is None:
+                layers.append(f"\n{agent_profile['research_context']}")
+            elif used:
+                layers.append(f"\n{mechanism_card_service.render_research_context(used)}")
+
+        # Dated current conditions — same source as sim path, omitted in historical mode
+        if not historical_mode():
+            try:
+                from .sa_context import current_sa_realities, relevant_realities
+                current = relevant_realities(
+                    current_sa_realities(snapshot=agent_profile.get("_current_snapshot")),
+                    user_question)
+                if current:
+                    layers.append(f"\n{current}")
+            except Exception as e:  # never let context-refresh break an interview
+                logger.warning("Current context unavailable for reframe: %s", e)
 
         # Layer 4: Impact Question (reframed), plus any additive secondary lens.
         impact_question = self._build_impact_question(
@@ -117,7 +157,7 @@ class ImpactReframer:
         layers.append(f"\n{impact_question}")
 
         # Layer 5: Output constraints
-        layers.append(self._build_constraints())
+        layers.append(self._build_constraints(mode))
 
         return "\n".join(layers)
 
@@ -175,15 +215,21 @@ class ImpactReframer:
         """
         profile_text = self._profile_to_text(agent_profile)
 
-        # Layer 1: interested_topics direct match
-        topics = agent_profile.get("interested_topics", [])
+        # Layer 1: interested_topics direct match — custom agents only. On a library
+        # persona the topics were written by the texture model, not measured (249 of 375
+        # carried a "basic services" topic), and injected as "You care deeply about: …"
+        # they steered every answer toward failing services whatever was asked. Library
+        # personas already bring question-relevant beliefs and reactions from real data.
+        topics = ([] if agent_profile.get("source_entity_type") == "library_persona"
+                  else agent_profile.get("interested_topics", []))
         if topics:
             match = self._find_topic_match(question, topics)
             if match:
                 return f"You care deeply about: {match}."
 
-        # Layer 2: background_story keyword match
-        bg = agent_profile.get("background_story", "")
+        # Layer 2: background_story keyword match. Not on a fact prompt: a story sentence
+        # here would bring back the text the facts replaced.
+        bg = "" if persona_facts.uses_facts(agent_profile) else agent_profile.get("background_story", "")
         if bg:
             anchor = self._extract_story_anchor(bg, domain)
             if anchor:
@@ -283,7 +329,7 @@ class ImpactReframer:
             return content
         return None
 
-    def _build_identity_lock(self, profile: Dict[str, Any]) -> str:
+    def _build_identity_lock(self, profile: Dict[str, Any], question: str = "") -> str:
         """Layer 1: render the FULL identity, not a one-sentence stub.
 
         The model reasons from whatever dominates its context. When identity is
@@ -293,16 +339,38 @@ class ImpactReframer:
         voice guide and beliefs makes each persona's own material the dominant
         content, so differentiation comes from data instead of sampling luck."""
         name = profile.get("name", "This person")
-        parts = [f"You are {name}. {profile.get('persona', '').strip()}"]
-        story = (profile.get("background_story") or "").strip()
-        if story:
-            parts.append(f"YOUR STORY: {story}")
-        voice = (profile.get("voice_guide") or "").strip()
-        if voice:
-            parts.append(f"HOW YOU SPEAK: {voice}")
-        beliefs = profile.get("beliefs") or []
+        if persona_facts.uses_facts(profile):
+            # Survey answers picked by what the question touches, in place of the
+            # model-written summary and story (see persona_facts).
+            parts = [f"You are {name}."]
+            facts = persona_facts.render(profile, question)
+            if facts:
+                parts.append(facts)
+        else:
+            parts = [f"You are {name}. {profile.get('persona', '').strip()}"]
+            story = (profile.get("background_story") or "").strip()
+            if story:
+                parts.append(f"YOUR STORY: {story}")
+        # How this person reacts, from their measured attitudes, chosen by the question.
+        # Replaces the model-written voice_guide for library personas; custom agents
+        # derive no reactions and keep the voice their author wrote.
+        reaction_lines = belief_relevance.reactions_for(profile.get("attitudes"), question, 3)
+        if reaction_lines:
+            parts.append("HOW YOU REACT:\n" + "\n".join(f"- {r}" for r in reaction_lines))
+        elif not belief_relevance.reactions(profile.get("attitudes")):
+            # Custom agents only. A library persona whose reactions don't touch this
+            # question gets nothing, never the retired voice guide.
+            voice = (profile.get("voice_guide") or "").strip()
+            if voice:
+                parts.append(f"HOW YOU SPEAK: {voice}")
+        # Chosen by what the question is ABOUT, not by position in the stored list.
+        # Stored order is ATTITUDE_VOCAB order, whose first three entries are
+        # gov_trust / economic_optimism / service_satisfaction — so the old `[:3]`
+        # handed every persona their three biggest grievances and nothing else,
+        # whatever was being asked.
+        beliefs = belief_relevance.select(profile.get("beliefs") or [], question, 3)
         if beliefs:
-            parts.append("WHAT YOU BELIEVE:\n" + "\n".join(f"- {b}" for b in beliefs[:3]))
+            parts.append("WHAT YOU BELIEVE:\n" + "\n".join(f"- {b}" for b in beliefs))
         parts.append(
             "Respond in character. Do not speak as an analyst or observer. "
             "Use 'I', 'my', 'my family'. Never speak in generalities about 'the government should'."
@@ -324,16 +392,14 @@ class ImpactReframer:
         """
         name = profile.get("name", "You")
 
-        # Extract core event from user question
-        event = self._extract_event(user_question)
-
-        # Construct impact question
+        # Construct impact question. The persona always sees the user's FULL question.
+        # This used to be replaced by the first "if ..." clause found anywhere in the
+        # framed pitch — including its probes — so a whole pitch could be swapped for a
+        # fragment: "Would you tell anyone about this? If so, who, and what would you
+        # say?" turned an entire clinic pitch into the question "so, who, and what would
+        # you say", and a panel of twelve answered a question nobody asked.
         lines = ["QUESTION:", ""]
-
-        if event:
-            lines.append(f"{event}")
-        else:
-            lines.append(f"{user_question}")
+        lines.append(f"{user_question}")
 
         lines.append("")
         if mode == "product":
@@ -347,11 +413,16 @@ class ImpactReframer:
                 "need to cover everything, and you should not structure your answer the "
                 "way anyone else would."
             )
-        else:
+        elif not (mode == "panel" and decision_question_on()):
+            # (The decision question already asks what they would do; repeating it here
+            # only lengthened the answer.)
+            # Neutral on purpose. The old ending asked "What are you afraid of?" — a room
+            # asked to name a fear finds one — and "Reference real people, real places,
+            # real moments from your life", which invited invented relatives and suburbs
+            # ("my sister in Tembisa") against the hard rule to speak only from the briefing.
             lines.append(
-                f"What does this mean for YOU, {name}? "
-                "Be specific. Reference real people, real places, real moments from your life. "
-                "What changes in your daily routine? What are you afraid of? What do you plan to do?"
+                f"What does this mean for you, {name}, in your own life? "
+                "What, if anything, would you do about it?"
             )
 
         # Additive secondary lens for converged runs (never replaces the above).
@@ -372,24 +443,6 @@ class ImpactReframer:
 
         return "\n".join(lines)
 
-    def _extract_event(self, question: str) -> Optional[str]:
-        """Extract the hypothetical/counterfactual event from the question."""
-        # Look for conditional phrasing
-        patterns = [
-            r"if\s+(.+?)(?:\?|$)",
-            r"what\s+if\s+(.+?)(?:\?|$)",
-            r"what\s+happens\s+if\s+(.+?)(?:\?|$)",
-            r"how\s+does\s+(.+?)\s+affect",
-            r"what\s+is\s+the\s+impact\s+of\s+(.+?)(?:\?|$)",
-        ]
-        for pat in patterns:
-            m = re.search(pat, question, re.IGNORECASE)
-            if m:
-                event = m.group(1).strip()
-                if event:
-                    return event
-        return None
-
     def _extract_proper_noun(self, text: str) -> Optional[str]:
         """Extract a capitalized proper noun from text."""
         if not text:
@@ -402,12 +455,14 @@ class ImpactReframer:
                 return m
         return None
 
-    def _build_constraints(self) -> str:
+    def _build_constraints(self, mode: str = "policy") -> str:
         """Layer 5: Force specific, first-person output."""
+        length = (f"at most {SHORT_ANSWER_SENTENCES} short sentences, under 60 words"
+                  if mode == "panel" and decision_question_on() else "2-5 sentences")
         return (
             "\nHARD RULES (facts, not style):\n"
             "1. Answer in first person ('I', 'my family', 'my street').\n"
-            "2. Speak from YOUR experience, in YOUR voice — 2-5 sentences.\n"
+            f"2. Speak from YOUR experience, in YOUR voice — {length}.\n"
             "3. Never state a rand amount that is not in YOUR REAL NUMBERS or the "
             "question itself.\n"
             "4. Wanting something and affording it are different things — never merge them.\n"

@@ -22,6 +22,7 @@ from ..config import Config
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from .document_context_engine import sanitize_language_drift
+from . import data_model
 from .graph_tools import (
     GraphToolsService,
     SearchResult,
@@ -2098,8 +2099,10 @@ class ReportManager:
         """
         cls._ensure_report_folder(report_id)
         
+        data = outline.to_dict()
+        data_model.warn_if_off_model(logger, f"Report outline {report_id}", "sim_report_outline", data)
         with open(cls._get_outline_path(report_id), 'w', encoding='utf-8') as f:
-            json.dump(outline.to_dict(), f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         logger.info(f"outlinesaved: {report_id}")
     
@@ -2235,6 +2238,7 @@ class ReportManager:
             "updated_at": datetime.now().isoformat()
         }
         
+        data_model.warn_if_off_model(logger, f"Report progress {report_id}", "sim_report_progress", progress_data)
         with open(cls._get_progress_path(report_id), 'w', encoding='utf-8') as f:
             json.dump(progress_data, f, ensure_ascii=False, indent=2)
     
@@ -2442,8 +2446,10 @@ class ReportManager:
         cls._ensure_report_folder(report.report_id)
         
         # savemetainformationJSON
+        data = report.to_dict()
+        data_model.warn_if_off_model(logger, f"Report {report.report_id}", "sim_report", data)
         with open(cls._get_report_path(report.report_id), 'w', encoding='utf-8') as f:
-            json.dump(report.to_dict(), f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         # saveoutline
         if report.outline:

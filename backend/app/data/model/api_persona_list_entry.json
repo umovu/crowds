@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "about": "One row of the persona picker list (GET /api/research/personas): library personas only.",
+  "stored_in": "API response only (api/research.py list_personas)",
+  "written_by": [
+    "api/research.py list_personas"
+  ],
+  "read_by": [
+    "Home.vue",
+    "FlowHome.vue (cast picker)"
+  ],
+  "rules": [
+    "Only survey-grounded library personas are listed. The legacy model-generated cache (persona_cache_entry) stopped being served on 2026-09-14."
+  ],
+  "fields": {
+    "id": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "name": {
+      "type": "string",
+      "when": "always"
+    },
+    "archetype": {
+      "type": "string",
+      "when": "always"
+    },
+    "age": {
+      "type": "integer",
+      "nullable": true,
+      "when": "always"
+    },
+    "gender": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "occupation": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "province": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "fees_band": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "learner_fee_bands": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "always"
+    },
+    "lsm_proxy": {
+      "type": "object",
+      "nullable": true,
+      "when": "always"
+    },
+    "level": {
+      "type": "string",
+      "allowed": [
+        "library"
+      ],
+      "when": "always"
+    }
+  }
+}

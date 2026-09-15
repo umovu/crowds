@@ -10,6 +10,7 @@ import AuthCallbackView from '../views/AuthCallbackView.vue'
 import PasswordResetView from '../views/PasswordResetView.vue'
 import PosterTestView from '../views/PosterTestView.vue'
 import ChatDemoView from '../views/ChatDemoView.vue'
+import HypothesisView from '../views/HypothesisView.vue'
 import { useAuth } from '../composables/useAuth'
 
 const routes = [
@@ -81,6 +82,14 @@ const routes = [
     path: '/report/:reportId',
     name: 'Report',
     component: ReportView,
+    props: true
+  },
+  {
+    // The follow-up report for a panel session — its own page so the user can
+    // keep the link, print it, or send it on after the session is closed.
+    path: '/hypothesis/:sessionId',
+    name: 'Hypothesis',
+    component: HypothesisView,
     props: true
   },
   {

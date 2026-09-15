@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "about": "A research mechanism card: how people in a situation reason, distilled from South African qualitative research. Stored one per file in app/data/mechanism_cards/<id>.json. Written by scripts/extract_card.py (draft) and a human reviewer; read by mechanism_card_service (binding, prompt block, citations). Checked by data_model.mechanism_card_problems.",
+  "stored_in": "app/data/mechanism_cards/<id>.json",
+  "written_by": [
+    "scripts/extract_card.py",
+    "human review"
+  ],
+  "read_by": [
+    "mechanism_card_service.py",
+    "prompt_reframer.py",
+    "opinion_agent.py",
+    "FlowResults.vue (citations)"
+  ],
+  "rules": [
+    "The file name is the card id plus .json.",
+    "Cards give reasoning, never figures: claim text, objections, vocabulary and evaluative rules carry no digits.",
+    "Everything about a claim sits inside that claim: its rule (needs), its chain and passages, its objections and its vocabulary. Nothing is linked by position.",
+    "segment_tags name real persona types (actor_archetype in model/persona.json).",
+    "applies_when and every claim needs name facts and answers a persona can have (model/persona.json).",
+    "year_range is YYYY or YYYY-YYYY with a plain hyphen, or null when the source gives no dates. Extra wording goes in year_note.",
+    "A draft card must pass this model before it is copied into app/data/mechanism_cards."
+  ],
+  "fields": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "when": "always"
+    },
+    "claim_type": {
+      "type": "string",
+      "allowed": [
+        "qualitative",
+        "mixed_methods"
+      ],
+      "when": "always"
+    },
+    "claims": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "text": {
+            "type": "string",
+            "min_length": 1,
+            "max_length": 600,
+            "when": "always",
+            "note": "The reasoning pattern itself, as the prompt shows it."
+          },
+          "needs": {
+            "type": "list",
+            "items": {
+              "type": "object",
+              "values": {
+                "type": "list",
+                "min_items": 1
+              }
+            },
+            "when": "always",
+            "note": "Who this claim is about, on top of the card applies_when: clauses of persona facts, all facts in a clause must hold, any clause is enough. [] means everyone the card fits. Facts and answers checked against model/persona.json."
+          },
+          "chain_id": {
+            "type": "string",
+            "when": "always"
+          },
+          "passages": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "min_items": 1,
+            "when": "always",
+            "note": "The source passages this claim came from."
+          },
+          "evaluative_rules": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "min_length": 1
+            },
+            "when": "optional",
+            "note": "Decision heuristics from the same chain as this claim."
+          },
+          "objections": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "min_length": 1
+            },
+            "when": "always",
+            "note": "Questions people raise because of this claim."
+          },
+          "vocabulary": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "min_length": 1
+            },
+            "when": "always",
+            "note": "Words people use when reasoning this way. Reaches a prompt only with its claim."
+          }
+        }
+      },
+      "min_items": 1,
+      "max_items": 5,
+      "when": "always",
+      "note": "The findings, one self-contained claim each. A claim reaches a persona only when the card applies_when AND its own needs fit."
+    },
+    "citation": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "min_length": 1
+      },
+      "min_items": 1,
+      "when": "always"
+    },
+    "year_range": {
+      "type": "string",
+      "pattern": "^\\d{4}(-\\d{4})?$",
+      "nullable": true,
+      "when": "always"
+    },
+    "year_note": {
+      "type": "string",
+      "when": "optional"
+    },
+    "region": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "confidence": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always",
+      "note": "Plain-language strength of the evidence. Shown in the prompt block and receipts."
+    },
+    "segment_tags": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "min_items": 1,
+      "when": "always",
+      "note": "Real persona types only (checked in code against model/persona.json). Used as a fallback binding when a card has no applies_when."
+    },
+    "economic_tags": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "allowed": [
+          "tight",
+          "moderate",
+          "loose"
+        ]
+      },
+      "when": "optional",
+      "note": "Budget tiers the studied population maps to. Absent means class-blind."
+    },
+    "topic_tags": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z -]*$"
+      },
+      "min_items": 1,
+      "when": "always",
+      "note": "Subject words a question must mention for the card to reach the prompt (whole-word match)."
+    },
+    "comb_gaps": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "allowed": [
+          "capability",
+          "opportunity",
+          "motivation"
+        ]
+      },
+      "when": "always"
+    },
+    "applies_when": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "values": {
+          "type": "list",
+          "min_items": 1
+        }
+      },
+      "when": "always",
+      "note": "Who the card is for: clauses of persona facts; all facts in a clause must hold, any clause is enough. Facts and answers checked against model/persona.json."
+    }
+  }
+}

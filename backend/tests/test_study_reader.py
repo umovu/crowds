@@ -197,8 +197,27 @@ def test_read_study_default_lens_accepts_unknown_lens():
 
 def test_read_study_has_all_chip_fields():
     spec = reader.read_study("an app that costs R30/month", lens="fit")
-    for key in ("lens", "what", "mode", "mode_confidence", "price",
+    for key in ("lens", "text", "what", "mode", "mode_confidence", "price",
                 "worry", "audience", "probes"):
         assert key in spec
     assert "segments" in spec["audience"]
     assert "confidence" in spec["audience"]
+
+
+def test_a_long_pitch_reaches_the_room_whole():
+    # The chip label is cut at 140 characters; running the label as the pitch
+    # once asked a room "...with no que…" and lost the operator's two questions.
+    pitch = ("A private clinic chain wants to launch a R150 pay-per-visit nurse service. "
+             "You book on WhatsApp and see a nurse the same day, with no queue and no "
+             "medical aid needed. Would you use it instead of your public clinic? "
+             "What would stop you?")
+    spec = reader.read_study(pitch, lens="land")
+    assert spec["text"] == pitch
+    assert spec["what"].endswith("…") and len(spec["what"]) <= 140
+
+
+def test_a_poster_pitch_keeps_every_line():
+    pitch = "THE POSTER\n\nFree eye tests this Saturday.\n\nWHAT THE FOUNDER WANTS TO KNOW\n\nWould you come?"
+    spec = reader.read_study(pitch, lens="land")
+    assert spec["text"] == pitch
+    assert spec["what"] == "THE POSTER"

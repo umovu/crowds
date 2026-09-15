@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "about": "One group card the room picker shows (GET panel segments): its label, live library count and member ids.",
+  "stored_in": "API response only (panel_service.list_segments)",
+  "written_by": [
+    "panel_service.list_segments"
+  ],
+  "read_by": [
+    "FlowHome.vue",
+    "PanelPitchPanel.vue",
+    "Home.vue"
+  ],
+  "fields": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z_]+$",
+      "when": "always"
+    },
+    "label": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "description": {
+      "type": "string",
+      "when": "always"
+    },
+    "topics": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "allowed": [
+          "everyone",
+          "health",
+          "education",
+          "money",
+          "environment",
+          "food",
+          "government",
+          "safety"
+        ]
+      },
+      "min_items": 1,
+      "when": "always"
+    },
+    "kind": {
+      "type": "string",
+      "allowed": [
+        "who",
+        "thinks"
+      ],
+      "when": "always"
+    },
+    "attitude_dim": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "count": {
+      "type": "integer",
+      "min": 1,
+      "when": "always"
+    },
+    "members": {
+      "type": "list",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{16}$"
+      },
+      "min_items": 1,
+      "when": "always"
+    },
+    "is_thin": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "note": {
+      "type": "string",
+      "when": "always"
+    }
+  }
+}

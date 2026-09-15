@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "about": "The daily cache of current South African context from live web search: either a rendered block with its time, or a claims snapshot.",
+  "stored_in": "DATA_ROOT/cache/sa_context.json",
+  "written_by": [
+    "sa_context._write_cache"
+  ],
+  "read_by": [
+    "sa_context._read_cache",
+    "sa_context.current_sa_realities"
+  ],
+  "rules": [
+    "The model only summarises real search snippets; it never authors a claim (sa-context-freshness)."
+  ],
+  "fields": {
+    "ts": {
+      "type": "number",
+      "min": 0,
+      "when": "optional",
+      "note": "Unix time the block was fetched."
+    },
+    "block": {
+      "type": "string",
+      "when": "optional"
+    },
+    "claims": {
+      "type": "list",
+      "items": {
+        "type": "model:sa_context_claim"
+      },
+      "when": "optional"
+    },
+    "fetched_at": {
+      "type": "number",
+      "min": 0,
+      "when": "optional"
+    },
+    "as_of": {
+      "type": "string",
+      "when": "optional"
+    }
+  },
+  "together": [
+    [
+      "ts",
+      "block"
+    ]
+  ]
+}

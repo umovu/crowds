@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "kind": "sqlite",
+  "about": "The live opinion space of a running simulation: opinions, responses and per-round activity.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/opinion_simulation.db",
+  "written_by": [
+    "agentsociety_opinion_block.py"
+  ],
+  "read_by": [
+    "agentsociety_opinion_block.py",
+    "api/simulation.py"
+  ],
+  "tables": {
+    "opinion": [
+      "id",
+      "agent_id",
+      "agent_name",
+      "content",
+      "topics",
+      "round_num",
+      "created_at",
+      "reason",
+      "internal_thought",
+      "impact_score",
+      "economic_reasoning"
+    ],
+    "opinion_response": [
+      "id",
+      "agent_id",
+      "agent_name",
+      "opinion_id",
+      "content",
+      "round_num",
+      "created_at",
+      "reason",
+      "internal_thought",
+      "impact_score"
+    ],
+    "agent_round_activity": [
+      "id",
+      "agent_id",
+      "agent_name",
+      "action_type",
+      "round_num",
+      "created_at",
+      "reason",
+      "internal_thought",
+      "impact_score",
+      "content",
+      "topics"
+    ]
+  }
+}

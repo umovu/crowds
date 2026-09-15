@@ -43,8 +43,8 @@ def test_cards_load_and_have_schema():
     cards = mcs.load_cards()
     assert len(cards) >= 10, "expected the shipped card set"
     for c in cards:
-        assert c["id"] and c["mechanisms"] and c["segment_tags"]
-        assert c.get("claim_type") == "qualitative"
+        assert c["id"] and c["claims"] and c["segment_tags"]
+        assert c.get("claim_type") in ("qualitative", "mixed_methods")
 
 
 def test_binding_is_deterministic_and_specific_first():
@@ -109,24 +109,44 @@ def test_no_tier_means_no_economic_filtering():
     assert "youth-mobile-airtime-economy" in untiered
 
 
-def test_attach_respects_profile_tier():
-    p_loose = {"actor_archetype": "learner", "budget_tier": "loose"}
-    out = mcs.attach_research_context(p_loose, cap=99)
+def _learner(age, poverty):
+    return {"actor_archetype": "learner", "ghs_role": "learner", "age": age,
+            "circumstances": [{"field": "lived_poverty", "value": poverty}]}
+
+
+def test_attach_follows_the_persona_record_not_the_tier_label():
+    # Cards now bind by situation (applies_when on the persona's own record). The
+    # township airtime card describes young people who go short: a comfortable
+    # sixteen-year-old does not get it, one whose record says they go short does.
+    out = mcs.attach_research_context(_learner(16, "none"), cap=99)
     assert all(c["card_id"] != "youth-mobile-airtime-economy"
                for c in out.get("research_citations", []))
-    p_tight = {"actor_archetype": "learner", "budget_tier": "tight"}
-    out = mcs.attach_research_context(p_tight, cap=99)
+    out = mcs.attach_research_context(_learner(16, "high"), cap=99)
     assert any(c["card_id"] == "youth-mobile-airtime-economy"
                for c in out["research_citations"])
 
 
 def test_attach_adds_both_keys_when_bound():
-    profile = {"actor_archetype": "communal_farmer", "name": "Test"}
+    profile = {"actor_archetype": "communal_farmer", "name": "Test",
+               "farm_market_orientation": "subsistence", "geotype": "Traditional"}
     out = mcs.attach_research_context(profile)
     assert out["research_context"]
     assert out["research_citations"]
     for cit in out["research_citations"]:
         assert cit["card_id"] and isinstance(cit["citation"], list)
+
+
+def test_fintech_card_requires_bank_access_and_regular_internet_use():
+    def profile(bank, internet):
+        return {"circumstances": [
+            {"field": "owns_bank_account", "value": bank},
+            {"field": "internet_use", "value": internet},
+        ]}
+
+    no_bank = [c["id"] for c in mcs.cards_for_persona(profile("none", "daily"))]
+    banked = [c["id"] for c in mcs.cards_for_persona(profile("own", "daily"))]
+    assert "fintech-adoption-trust" not in no_bank
+    assert "fintech-adoption-trust" in banked
 
 
 if __name__ == "__main__":

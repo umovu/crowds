@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "about": "One agent action in a simulation: a line in actions.jsonl, and an entry in run_state recent_actions.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/actions.jsonl (one per line); run_state.json recent_actions[]",
+  "written_by": [
+    "agentsociety_output_writer.write_action",
+    "simulation_runner.AgentAction.to_dict"
+  ],
+  "read_by": [
+    "simulation_runner.py",
+    "graph_memory_updater.py",
+    "report_agent.py",
+    "api/simulation.py"
+  ],
+  "rules": [
+    "Token and cost fields are counts from the model call, never estimates by the model."
+  ],
+  "fields": {
+    "round_num": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "timestamp": {
+      "type": "string",
+      "when": "always"
+    },
+    "platform": {
+      "type": "string",
+      "allowed": [
+        "opinion_space"
+      ],
+      "when": "always"
+    },
+    "agent_id": {
+      "type": "integer",
+      "when": "always"
+    },
+    "agent_name": {
+      "type": "string",
+      "when": "always"
+    },
+    "action_type": {
+      "type": "string",
+      "allowed": [
+        "EXPRESS_OPINION",
+        "RESPOND_TO_OPINION",
+        "SEARCH_TOPIC",
+        "OBSERVE",
+        "DO_NOTHING",
+        "NON_PARTICIPATION",
+        "SYSTEM_EVENT"
+      ],
+      "when": "always"
+    },
+    "action_args": {
+      "type": "object",
+      "when": "always",
+      "note": "Shape depends on action_type (content, topics, opinion ids, target, feed_size, event)."
+    },
+    "result": {
+      "type": "any",
+      "nullable": true,
+      "when": "always"
+    },
+    "success": {
+      "type": "boolean",
+      "when": "always"
+    },
+    "reason": {
+      "type": "string",
+      "when": "always"
+    },
+    "internal_thought": {
+      "type": "string",
+      "when": "always"
+    },
+    "impact_score": {
+      "type": "number",
+      "when": "always"
+    },
+    "economic_reasoning": {
+      "type": "any",
+      "nullable": true,
+      "when": "optional",
+      "note": "Product mode only."
+    },
+    "prompt_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "completion_tokens": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "estimated_cost_usd": {
+      "type": "number",
+      "min": 0,
+      "when": "always"
+    }
+  }
+}

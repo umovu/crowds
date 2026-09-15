@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "about": "A project: the uploaded documents, ontology and graph behind a simulation, plus custom agents and saved papers. One project.json per project folder.",
+  "stored_in": "uploads/projects/<project_id>/project.json",
+  "written_by": [
+    "models/project.py (ProjectManager.save_project)",
+    "api/graph.py",
+    "api/research.py"
+  ],
+  "read_by": [
+    "api/graph.py",
+    "api/simulation.py",
+    "api/research.py",
+    "simulation_manager.py"
+  ],
+  "rules": [
+    "Fields added after the first projects (custom agents, saved papers, enrichment) are optional because older projects never had them."
+  ],
+  "fields": {
+    "project_id": {
+      "type": "string",
+      "pattern": "^proj_[0-9a-f]{12}$",
+      "when": "always"
+    },
+    "name": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "created",
+        "ontology_generated",
+        "graph_building",
+        "graph_completed",
+        "failed"
+      ],
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "updated_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "files": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "filename": {
+            "type": "string",
+            "when": "always"
+          },
+          "size": {
+            "type": "integer",
+            "min": 0,
+            "when": "always"
+          },
+          "path": {
+            "type": "string",
+            "when": "optional"
+          },
+          "synthetic": {
+            "type": "boolean",
+            "when": "optional",
+            "note": "True when the simulation requirement stood in for an uploaded document."
+          }
+        }
+      },
+      "when": "always"
+    },
+    "total_text_length": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "ontology": {
+      "type": "object",
+      "fields": {
+        "entity_types": {
+          "type": "list",
+          "when": "always"
+        },
+        "edge_types": {
+          "type": "list",
+          "when": "always"
+        }
+      },
+      "nullable": true,
+      "when": "always"
+    },
+    "analysis_summary": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "graph_id": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "graph_build_task_id": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "custom_agents": {
+      "type": "list",
+      "items": {
+        "type": "model:custom_agent"
+      },
+      "when": "optional"
+    },
+    "custom_agents_enabled": {
+      "type": "boolean",
+      "when": "optional"
+    },
+    "enrichment_data": {
+      "type": "object",
+      "values": {
+        "type": "string"
+      },
+      "when": "optional",
+      "note": "Archetype -> web research text."
+    },
+    "saved_papers": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "title": {
+            "type": "string",
+            "when": "always"
+          },
+          "authors": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "year": {
+            "type": "any",
+            "nullable": true,
+            "when": "always"
+          },
+          "source": {
+            "type": "string",
+            "when": "always"
+          },
+          "abstract": {
+            "type": "string",
+            "when": "always"
+          },
+          "url": {
+            "type": "string",
+            "when": "always"
+          }
+        }
+      },
+      "when": "optional"
+    },
+    "simulation_requirement": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "chunk_size": {
+      "type": "integer",
+      "min": 1,
+      "when": "always"
+    },
+    "chunk_overlap": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "error": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    }
+  }
+}

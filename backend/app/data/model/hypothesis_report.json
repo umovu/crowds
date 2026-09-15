@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "about": "The follow-up report for a panel session: computed facts about how the room reacted, plus two or three testable guesses about why.",
+  "stored_in": "uploads/panel_sessions/<session_id>/hypothesis_report.json",
+  "written_by": [
+    "hypothesis_report.build"
+  ],
+  "read_by": [
+    "api/panel.py (report route)",
+    "HypothesisView.vue",
+    "hypothesis_report.render_markdown"
+  ],
+  "rules": [
+    "Everything except hypotheses is computed with no model.",
+    "Hypotheses carry no numbers, percentages or rand amounts, never a '% who would buy' (checked by _clean_hypotheses and the tests).",
+    "Cached on the round count: a new round rebuilds it."
+  ],
+  "fields": {
+    "session_id": {
+      "type": "string",
+      "pattern": "^panel_[0-9a-f]{12}$",
+      "when": "always"
+    },
+    "pitch": {
+      "type": "string",
+      "when": "always"
+    },
+    "mode": {
+      "type": "string",
+      "allowed": [
+        "panel",
+        "product",
+        "policy"
+      ],
+      "when": "always"
+    },
+    "segment_label": {
+      "type": "string",
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    },
+    "rounds": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "room": {
+      "type": "object",
+      "fields": {
+        "seats": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "heard": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "budget_tiers": {
+          "type": "object",
+          "values": {
+            "type": "integer",
+            "min": 0
+          },
+          "when": "always"
+        },
+        "coverage": {
+          "type": "object",
+          "fields": {
+            "segments_compared": {
+              "type": "integer",
+              "min": 0,
+              "when": "always"
+            },
+            "segments_available": {
+              "type": "integer",
+              "min": 0,
+              "when": "always"
+            }
+          },
+          "when": "always"
+        }
+      },
+      "when": "always"
+    },
+    "stance_split": {
+      "type": "object",
+      "values": {
+        "type": "integer",
+        "min": 0
+      },
+      "when": "always"
+    },
+    "movement": {
+      "type": "object",
+      "fields": {
+        "people": {
+          "type": "list",
+          "items": {
+            "type": "object",
+            "fields": {
+              "agent_id": {
+                "type": "any",
+                "when": "always"
+              },
+              "name": {
+                "type": "string",
+                "when": "always"
+              },
+              "from": {
+                "type": "string",
+                "when": "always"
+              },
+              "to": {
+                "type": "string",
+                "when": "always"
+              },
+              "direction": {
+                "type": "string",
+                "allowed": [
+                  "warmer",
+                  "cooler",
+                  "sideways"
+                ],
+                "when": "always"
+              },
+              "round": {
+                "type": "integer",
+                "nullable": true,
+                "when": "always"
+              }
+            }
+          },
+          "when": "always"
+        },
+        "moved_count": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "warmer": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "cooler": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "answers_considered": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        }
+      },
+      "when": "always"
+    },
+    "walls": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "string",
+            "when": "always"
+          },
+          "label": {
+            "type": "string",
+            "when": "always"
+          },
+          "count": {
+            "type": "integer",
+            "min": 1,
+            "when": "always"
+          }
+        }
+      },
+      "max_items": 4,
+      "when": "always"
+    },
+    "pulls": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "string",
+            "when": "always"
+          },
+          "label": {
+            "type": "string",
+            "when": "always"
+          },
+          "count": {
+            "type": "integer",
+            "min": 1,
+            "when": "always"
+          }
+        }
+      },
+      "max_items": 4,
+      "when": "always"
+    },
+    "word_of_mouth": {
+      "type": "object",
+      "fields": {
+        "would_tell": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "would_warn": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "heard": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        }
+      },
+      "when": "always"
+    },
+    "conditions": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "name": {
+            "type": "string",
+            "when": "always"
+          },
+          "stance": {
+            "type": "string",
+            "when": "always"
+          },
+          "quote": {
+            "type": "string",
+            "max_length": 401,
+            "when": "always"
+          }
+        }
+      },
+      "max_items": 5,
+      "when": "always"
+    },
+    "by_segment": {
+      "type": "list",
+      "when": "always",
+      "note": "rank_by_segment output from the latest round."
+    },
+    "room_read": {
+      "type": "string",
+      "when": "always"
+    },
+    "hypotheses": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "claim": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "test": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          }
+        }
+      },
+      "max_items": 3,
+      "when": "always"
+    },
+    "generated_at": {
+      "type": "string",
+      "when": "always"
+    }
+  }
+}

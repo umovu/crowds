@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "about": "What a panel response pushes against (walls) or leans toward (pulls), as data. Loaded by app/services/objections.py. Keyed to a person's SITUATION, never a sector: 'costs something just to reach it' is a no-car, far-from-town objection whether the pitch is a clinic, a bank or a school. Fieldwork-collected types slot in here as new rows; no code change.",
+  "walls": {
+    "no_human_support": {
+      "label": "No one to talk to when it goes wrong",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["branch", "teller", "real person", "real people", "human", "staff", "speak to", "talk to", "someone", "office", "face-to-face", "face to face", "counter", "point of contact", "recourse", "recover", "gladly pay extra"],
+      "grounds": [{"internet_use": ["never", "rarely", "monthly"]}, {"owns_computer": ["none"]}]
+    },
+    "digital_capability": {
+      "label": "Phone, data or power gets in the way",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["internet", "data", "smartphone", "screen", "network", "airtime", "bundle", "battery", "buttons", "computer", "load-shedding", "load shedding", "offline", "power", "glitch", "never used the internet"],
+      "grounds": [{"internet_use": ["never", "rarely", "monthly"]}, {"owns_phone": ["none", "household"]}, {"phone_internet": ["no"]}, {"phone_use": ["never", "rarely", "monthly"]}, {"owns_computer": ["none"]}, {"electricity_reliability": ["never", "half", "occasional"]}]
+    },
+    "identity_biometric": {
+      "label": "Uneasy about ID and fingerprints",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["fingerprint", "biometric", "thumbprint", "finger print", "scanned", "scanning", "scan", "my finger", "identity document", "id card"],
+      "grounds": [{"gov_trust": ["low"]}, {"business_trust": ["low"]}]
+    },
+    "fee_sensitivity": {
+      "label": "Watching the fees and charges",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["fee", "fees", "charge", "charges", "hidden", "admin", "monthly fee", "free", "no monthly", "cost", "bank charges", "rand"],
+      "grounds": [{"lived_poverty": ["high", "moderate"]}, {"pays_for_quality": ["no"]}, {"economic_optimism": ["pessimistic"]}]
+    },
+    "cost_of_access": {
+      "label": "Costs something just to reach it",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["transport", "taxi", "fare", "fares", "trip", "travel", "travelling", "walk", "walking", "distance", "commute"],
+      "grounds": [{"owns_vehicle": ["none"]}, {"geotype": ["Traditional", "Farms"]}, {"went_without_care": ["often", "sometimes"]}]
+    },
+    "trust_social_proof": {
+      "label": "Wants proof before believing it",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["trust", "proof", "promise", "promises", "promising", "wary", "scam", "too good", "heard", "neighbour", "neighbor", "reliab", "proven", "waiting to see", "show me", "convince", "reputation"],
+      "grounds": [{"social_trust": ["low", "mid"]}, {"business_trust": ["low"]}]
+    },
+    "interest_scepticism": {
+      "label": "The returns sound too good",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["interest", "return", "yield", "rate", "10%", "ten per cent", "ten percent", "too good to be true", "lure", "payout", "lucrative"],
+      "grounds": [{"business_trust": ["low", "mid"]}]
+    },
+    "trust_authority": {
+      "label": "Doesn't trust who's behind it",
+      "source": "tymebank_segment_benchmark_2026",
+      "cues": ["government", "minister", "corruption", "corrupt", "stole", "stolen", "official", "officials", "municipal", "parliament", "legislature", "politician", "public money", "state", "authority", "councillor"],
+      "grounds": [{"gov_trust": ["low"]}, {"official_responsiveness": ["low"]}, {"councillor_responsiveness": ["low"]}]
+    },
+    "would_warn_others": {
+      "label": "Would warn others off it",
+      "source": "authored_2026_09_unvalidated",
+      "reading_only": true,
+      "cues": ["stay away", "steer clear", "warn", "tell people not to", "tell them not to", "tell my family not to", "avoid it", "don't go near"],
+      "grounds": [{"social_voice": ["mid", "high"]}]
+    }
+  },
+  "pulls": {
+    "low_cost": {
+      "label": "Costs little or nothing",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["free", "cheap", "affordable", "low cost", "no monthly fee", "no fees", "no charges", "doesn't cost", "does not cost"],
+      "grounds": []
+    },
+    "close_to_home": {
+      "label": "Close by and easy to reach",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["close", "near", "nearby", "down the road", "around the corner", "walking distance", "on my doorstep", "no taxi", "no transport"],
+      "grounds": []
+    },
+    "saves_hassle": {
+      "label": "Saves time or hassle",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["save time", "saves time", "quicker", "faster", "no queue", "no queues", "no waiting", "less hassle", "convenient", "easier"],
+      "grounds": []
+    },
+    "privacy": {
+      "label": "Keeps things private",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["privacy", "confidential", "kept private", "stays private", "nobody would know", "no one would know", "nobody knows", "no one knows", "discreet", "keep it to myself"],
+      "grounds": []
+    },
+    "human_help": {
+      "label": "Someone real to help",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["real person", "a person to help", "someone to help", "speak to a person", "talk to a person", "someone i can talk to", "face to face", "face-to-face"],
+      "grounds": []
+    },
+    "worth_paying_for": {
+      "label": "Would pay if it's genuinely better",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["worth it", "worth paying", "worth the money", "pay extra", "i'd pay", "i would pay", "happy to pay", "value for money", "fair price"],
+      "grounds": [{"pays_for_quality": ["yes", "mixed"]}, {"lived_poverty": ["none", "low"]}]
+    },
+    "trusted_source": {
+      "label": "Trusts who's behind it",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["i trust", "trustworthy", "reputable", "known name", "neighbour used it", "neighbours use it", "people i know use", "recommended by"],
+      "grounds": [{"social_trust": ["high", "mid"]}, {"business_trust": ["high", "mid"]}, {"gov_trust": ["high", "mid"]}]
+    },
+    "would_recommend": {
+      "label": "Would tell others about it",
+      "source": "authored_2026_09_unvalidated",
+      "cues": ["i'd tell", "i would tell", "tell my", "tell our", "tell a colleague", "tell a friend", "tell a neighbour", "tell the neighbours", "recommend it", "i'd recommend", "i would recommend", "share it with", "word of mouth", "tell others", "tell people", "spread the word", "mention it", "mention this", "i'd mention", "i would mention", "let them know", "let people know", "pass it on", "pass the word"],
+      "grounds": [{"social_voice": ["mid", "high"]}]
+    }
+  },
+  "markers": {
+    "condition": ["only if", "unless", "if you can", "if the", "if there", "if that", "if it", "provided", "as long as", "so long as", "once", "until", "if you prove", "if you show", "when the", "if i", "if my"],
+    "wall_strong": ["only if", "unless", "if you can", "if the", "if there", "if that", "if it", "provided", "as long as", "so long as", "if you prove", "if you show", "can't", "cannot", "won't", "will not", "wouldn't", "would not", "too much", "too expensive", "too far", "too risky", "worr", "problem", "concern", "scared", "afraid", "suspicio", "doubt", "scam", "catch", "expensive", "don't trust", "do not trust", "not sure", "hard to", "struggl", "risk", "breaks", "goes wrong", "what if", "not worth", "isn't worth", "don't like", "do not like", "adds up", "add up", "stay away", "steer clear", "warn", "avoid it", "don't go near"],
+    "pull": ["worth", "i'd use", "i would use", "i'll use", "i like", "i love", "love that", "great", "glad", "happy to", "at least", "finally", "sells it", "good thing", "convenient", "easier", "i'd pay", "i would pay", "gladly", "exactly why", "worked well", "it works", "helps me", "no one would know", "nobody would know", "no queue", "no waiting", "no monthly fee", "no fees", "no charges", "no taxi", "no need", "don't need", "do not need", "doesn't cost", "does not cost"],
+    "wall_weak": ["no", "not", "don't", "do not", "never", "without", "need", "want", "must", "have to", "but"]
+  }
+}

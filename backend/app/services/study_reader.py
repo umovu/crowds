@@ -209,6 +209,10 @@ def read_study(text: str, lens: str = "land") -> dict:
     probes = infer_probes(text, lens)
     return {
         "lens": lens,
+        # `what` is the short chip label only. `text` is what the room is asked:
+        # the label is cut at 140 characters and is just the first line, so running
+        # it as the pitch dropped the rest of a long pitch (and a poster's brief).
+        "text": text,
         "what": _lead_line(text),
         "mode": mode,
         "mode_confidence": mode_info.get("confidence", "thin"),

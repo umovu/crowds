@@ -21,6 +21,7 @@ import random
 from typing import Dict, List, Optional
 
 from ..utils.logger import get_logger
+from . import data_model
 from .lsm_proxy import score_persona
 
 logger = get_logger("fub.persona_library")
@@ -82,6 +83,7 @@ class PersonaLibrary:
     def __init__(self, path: Optional[str] = None):
         self.path = path or _default_library_path()
         self._personas: List[Dict] = []
+        self._people = None
         self._loaded = False
 
     # ── loading ──────────────────────────────────────────────────────────
@@ -104,6 +106,7 @@ class PersonaLibrary:
                 with open(self.path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 self._personas = data.get("personas", []) if isinstance(data, dict) else list(data)
+                self._report_model_drift()
                 self._stamp_lsm()
                 logger.info(f"Loaded {len(self._personas)} personas from library.")
             except (OSError, json.JSONDecodeError) as e:
@@ -111,6 +114,24 @@ class PersonaLibrary:
                 self._personas = []
         self._loaded = True
         return self
+
+    def _report_model_drift(self) -> None:
+        """Warn when stored personas no longer match app/data/model/persona.json.
+
+        Never blocks a load: a drifted hosted library still serves rooms, but the log
+        says so instead of card rules and grounds quietly matching nobody. Runs before
+        lsm_proxy is stamped, since that stamp lives in memory only.
+        """
+        try:
+            problems = data_model.library_problems(self._personas)
+        except Exception as e:  # noqa: BLE001 — a broken model file must not empty the library
+            logger.warning(f"Could not check persona library against its data model: {e}")
+            return
+        if problems:
+            logger.warning(
+                f"Persona library does not match its data model: {len(problems)} problem(s). "
+                f"First: {'; '.join(problems[:3])}"
+            )
 
     def _stamp_lsm(self) -> None:
         """Attach lsm_proxy {score, band, confidence} to every persona at load.
@@ -137,6 +158,25 @@ class PersonaLibrary:
             if p.get("id") == persona_id:
                 return p
         return None
+
+    def people(self) -> List["LibraryPersona"]:
+        """The library as typed objects (app.model.LibraryPersona): `person.medical_aid`,
+        `person.fact("internet_use")`. A persona that does not fit the model is left out;
+        the load warning already names it."""
+        if self._people is None:
+            from ..model import LibraryPersona
+            people = []
+            for p in self.all():
+                data = {k: v for k, v in p.items() if k != "lsm_proxy"}  # stamped at load, not stored
+                try:
+                    people.append(LibraryPersona.model_validate(data))
+                except Exception:  # noqa: BLE001 — reported by _report_model_drift
+                    continue
+            self._people = people
+        return list(self._people)
+
+    def person(self, persona_id: str) -> Optional["LibraryPersona"]:
+        return next((p for p in self.people() if p.id == persona_id), None)
 
     def filter(
         self,

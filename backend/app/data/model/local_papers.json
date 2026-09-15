@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "about": "Papers a user uploaded or kept locally for literature search. Papers saved onto a project use the slimmer project saved_papers shape (model/project.json).",
+  "stored_in": "UPLOAD_DIR/research/papers/papers.json",
+  "written_by": [
+    "literature_service.LiteratureSearchService._save_local_papers_metadata"
+  ],
+  "read_by": [
+    "literature_service.LiteratureSearchService._load_local_papers"
+  ],
+  "fields": {
+    "papers": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "title": {
+            "type": "string",
+            "when": "always"
+          },
+          "authors": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "year": {
+            "type": "integer",
+            "nullable": true,
+            "when": "always"
+          },
+          "abstract": {
+            "type": "string",
+            "when": "always"
+          },
+          "source": {
+            "type": "string",
+            "allowed": [
+              "arxiv",
+              "openalex",
+              "crossref",
+              "local"
+            ],
+            "when": "always"
+          },
+          "url": {
+            "type": "string",
+            "when": "always"
+          },
+          "citations": {
+            "type": "integer",
+            "min": 0,
+            "nullable": true,
+            "when": "always"
+          },
+          "doi": {
+            "type": "string",
+            "nullable": true,
+            "when": "always"
+          },
+          "local_path": {
+            "type": "string",
+            "nullable": true,
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

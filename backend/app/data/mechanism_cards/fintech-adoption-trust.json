@@ -16,16 +16,39 @@
     "guardian_parent",
     "disillusioned_dropout"
   ],
-  "mechanisms": [
-    "Cost is a binding constraint: adoption favors a service when it is cheaper than the traditional method it replaces.",
-    "Convenience is a binding constraint: adoption favors a service when it provides anytime-anywhere access that saves time and fits existing digital habits.",
-    "Trust is a binding constraint: adoption favors a service when security measures are visible and the institution is known and trusted; when trust is absent, human interaction is preferred.",
-    "Self-efficacy is a binding constraint: adoption favors a service when the user already possesses the skills and the device-and-data infrastructure to use it.",
-    "Social proof is a contributing factor: adoption is more likely when peers already use a service and the user identifies with a youth-oriented, socially-driven innovation."
+  "topic_tags": [
+    "bank",
+    "banking",
+    "payment",
+    "payments",
+    "mobile money",
+    "send money",
+    "wallet",
+    "e-wallet",
+    "fintech",
+    "loan",
+    "credit",
+    "insurance",
+    "account",
+    "digital bank"
   ],
-  "mechanism_provenance": [
+  "applies_when": [
     {
-      "mechanism_index": 0,
+      "owns_bank_account": [
+        "own",
+        "household"
+      ],
+      "internet_use": [
+        "daily",
+        "weekly",
+        "monthly"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "text": "Cost can discourage adoption when a digital financial service is more expensive than the option it replaces.",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P5",
@@ -34,10 +57,17 @@
         "P20",
         "P32",
         "P36"
+      ],
+      "objections": [
+        "Is this cheaper than what I already use?"
+      ],
+      "vocabulary": [
+        "cheaper"
       ]
     },
     {
-      "mechanism_index": 1,
+      "text": "Convenience can encourage adoption when a service saves time and fits a person's existing digital habits.",
+      "needs": [],
       "chain_id": "C2",
       "passages": [
         "P1",
@@ -48,10 +78,17 @@
         "P28",
         "P33",
         "P37"
+      ],
+      "objections": [
+        "Can I access it anytime, anywhere, without extra effort?"
+      ],
+      "vocabulary": [
+        "convenience"
       ]
     },
     {
-      "mechanism_index": 2,
+      "text": "Trust can encourage adoption when security is clear and the provider is known; some people may prefer human help when trust is low.",
+      "needs": [],
       "chain_id": "C3",
       "passages": [
         "P3",
@@ -71,10 +108,18 @@
         "P43",
         "P44",
         "P45"
+      ],
+      "objections": [
+        "Do I trust this institution, and can I see the security measures?"
+      ],
+      "vocabulary": [
+        "trust",
+        "human interaction"
       ]
     },
     {
-      "mechanism_index": 3,
+      "text": "Adoption is easier when a person has the skills, device, data, and network access needed to use the service.",
+      "needs": [],
       "chain_id": "C4",
       "passages": [
         "P8",
@@ -84,36 +129,19 @@
         "P26",
         "P27",
         "P29"
-      ]
-    },
-    {
-      "mechanism_index": 4,
-      "chain_id": "C5",
-      "passages": [
-        "P6",
-        "P11",
-        "P13"
+      ],
+      "objections": [
+        "Do I have the skills and the data to use this without help?"
+      ],
+      "vocabulary": [
+        "cost of data"
       ]
     }
   ],
-  "vocabulary": [
-    "convenience",
-    "cheaper",
-    "trust",
-    "human interaction",
-    "cost of data",
-    "youth"
-  ],
-  "objection_patterns": [
-    "Is this cheaper than what I already use?",
-    "Can I access it anytime, anywhere, without extra effort?",
-    "Do I trust this institution, and can I see the security measures?",
-    "Do I have the skills and the data to use this without help?"
-  ],
-  "claim_type": "qualitative",
+  "claim_type": "mixed_methods",
   "region": "South Africa",
-  "year_range": "not specified",
-  "confidence": "multi-source qualitative synthesis with participant voice and author interpretation; single country, no year range specified — mechanisms durable, magnitudes unknown Note: originally drafted as 'middle-class-fintech-trust' but the source samples cover broad SA banking/fintech consumers, not the middle class specifically — renamed to match the evidence.",
+  "year_range": "2019-2025",
+  "confidence": "Mixed-method evidence from selected bank and fintech users in South Africa and a four-country African study. The findings describe factors linked to adoption, not how common they are in the wider population.",
   "comb_gaps": [
     "capability",
     "opportunity",

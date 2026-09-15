@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "about": "The context file a panel session carries so the interview service knows it is a panel and what was pitched.",
+  "stored_in": "uploads/panel_sessions/<session_id>/document_context.json",
+  "written_by": [
+    "panel_service.create_session"
+  ],
+  "read_by": [
+    "interview_service._load_mode"
+  ],
+  "fields": {
+    "mode": {
+      "type": "string",
+      "allowed": [
+        "panel",
+        "product",
+        "policy"
+      ],
+      "when": "always"
+    },
+    "panel_session": {
+      "type": "boolean",
+      "allowed": [
+        true
+      ],
+      "when": "always"
+    },
+    "pitch": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "operator_context": {
+      "type": "string",
+      "when": "optional"
+    }
+  }
+}

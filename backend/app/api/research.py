@@ -1156,20 +1156,12 @@ No explanation, no extra text."""
 
 
 # ============================================================================
-# Persona Library — browse cached/generated personas in the UI side panel
+# Persona Library — browse the curated library personas in the UI side panel
 # ============================================================================
-
-_PERSONA_CACHE_DIR = os.path.join(Config.UPLOAD_FOLDER, "persona_cache")
-
-
-def _persona_cache_dir() -> str:
-    os.makedirs(_PERSONA_CACHE_DIR, exist_ok=True)
-    return _PERSONA_CACHE_DIR
-
 
 @research_bp.route("/personas", methods=["GET"])
 def list_personas():
-    """List every cached persona — metadata only, for the side-panel list.
+    """List every library persona — metadata only, for the side-panel list.
 
     Response:
     {
@@ -1177,114 +1169,34 @@ def list_personas():
         "count": 42,
         "personas": [
             { "id": "<hash>", "name": "...", "archetype": "...", "age": 52,
-              "occupation": "...", "province": "...", "level": "exact|archetype" },
+              "occupation": "...", "province": "...", "level": "library" },
             ...
         ]
     }
     """
-    import json as _json
-    d = _persona_cache_dir()
-    personas = []
+    # Library personas only. The old runtime cache (uploads/persona_cache/) held
+    # model-generated personas and is no longer served: no persona in a room may be
+    # model-authored (CLAUDE.md). The library ids are the same ids the panel
+    # segments' `members` lists use, so picks line up on the frontend.
     try:
-        # Two persona sources feed this endpoint:
-        #   1. The runtime cache (uploads/persona_cache/) — LLM-generated,
-        #      no fee-band data, level "exact"/"archetype"
-        #   2. The offline library (backend/app/data/persona_library/personas.json)
-        #      — survey-grounded, GHS-attached fee-band data, level "library"
-        # The Cast picker needs BOTH: cache personas for free-form picks,
-        # library personas for the fee-status groups. Merge them with the
-        # cache winning on (name, archetype) so a user-edited cache entry
-        # overrides the library version. Library fills fee data onto cache
-        # entries that lack it.
-        lib_index: Dict[Tuple[str, str], Dict] = {}
-        try:
-            # Source the library via the shared loader so it uses the seeded
-            # volume copy on hosts (PERSONA_LIBRARY_PATH), not a baked-in path.
-            from ..services.persona_library import get_library
-            for lp in get_library().all():
-                name = (lp.get("name") or "").strip()
-                arch = (lp.get("actor_archetype") or "").strip()
-                if name and arch:
-                    lib_index[(name, arch)] = lp
-        except Exception as e:
-            logger.warning(f"Persona library load failed: {e}")
-
-        # 1) Read every library persona — they're real, selectable personas
-        #    and the only source of fee-band data. Use the library's stable
-        #    `id` directly so the panel segments' `members` list (which uses
-        #    the same IDs) lines up with `pickedIds` on the frontend.
-        for lp in lib_index.values():
-            personas.append({
-                "id":         lp.get("id") or (lp.get("name") or "")[:32],
-                "name":       lp.get("name") or "Unknown",
-                "archetype":  lp.get("actor_archetype") or "",
-                "age":        lp.get("age"),
-                "gender":     lp.get("gender"),
-                "occupation": lp.get("occupation"),
-                "province":   lp.get("province"),
-                "fees_band":         lp.get("fees_band"),
-                "learner_fee_bands": lp.get("learner_fee_bands") or [],
-                # Living-standard proxy band, stamped at library load
-                # (services/lsm_proxy.py). Pure asset score, no LLM.
-                "lsm_proxy":  lp.get("lsm_proxy"),
-                "level":      "library",
-            })
-
-        for fn in sorted(os.listdir(d)):
-            if not fn.endswith(".json"):
-                continue
-            try:
-                with open(os.path.join(d, fn), "r", encoding="utf-8") as f:
-                    data = _json.load(f)
-            except Exception:
-                continue
-            profile = data.get("profile") if isinstance(data, dict) else None
-            if not isinstance(profile, dict):
-                continue
-            meta = data.get("meta", {}) if isinstance(data, dict) else {}
-            name = profile.get("name") or meta.get("entity") or "Unknown"
-            archetype = profile.get("actor_archetype") or meta.get("type") or ""
-
-            # Fee-band enrichment from the offline library. Cache wins if it
-            # already has data; library fills the gap.
-            fees_band = profile.get("fees_band")
-            learner_fee_bands = profile.get("learner_fee_bands") or []
-            if (fees_band is None and not learner_fee_bands):
-                lib_match = lib_index.get((name.strip(), archetype.strip()))
-                if lib_match:
-                    fees_band = lib_match.get("fees_band")
-                    learner_fee_bands = lib_match.get("learner_fee_bands") or []
-
-            personas.append({
-                "id":         fn[:-5],  # drop .json
-                "name":       name,
-                "archetype":  archetype,
-                "age":        profile.get("age"),
-                "gender":     profile.get("gender"),
-                "occupation": profile.get("occupation"),
-                "province":   profile.get("province"),
-                # Fee-band data is the signal the Cast picker needs to drive the
-                # "Fee-paying" / "No-fee-school" quick-select groups. Surfaced
-                # here (not on the full-profile fetch) so the picker can match
-                # personas without an N-call waterfall.
-                "fees_band":         fees_band,
-                "learner_fee_bands": learner_fee_bands,
-                # Only library personas carry a band; cache entries stay None
-                # unless the library matched them above.
-                "lsm_proxy":  (lib_index.get((name.strip(), archetype.strip())) or {}).get("lsm_proxy"),
-                "level":      meta.get("level", "exact"),
-            })
-        # De-dupe: each persona is stored under two keys (exact + archetype) so
-        # the same agent appears twice. Collapse by (name, archetype, occupation)
-        # and keep the 'exact' entry when both exist.
-        seen = {}
-        for p in personas:
-            key = (p["name"], p["archetype"], p["occupation"])
-            if key not in seen or seen[key]["level"] == "archetype":
-                seen[key] = p
-        unique = list(seen.values())
-        unique.sort(key=lambda x: (x["archetype"] or "", x["name"] or ""))
-        return jsonify({"success": True, "count": len(unique), "personas": unique})
+        from ..services.persona_library import get_library
+        personas = [{
+            "id":         lp.get("id") or (lp.get("name") or "")[:32],
+            "name":       lp.get("name") or "Unknown",
+            "archetype":  lp.get("actor_archetype") or "",
+            "age":        lp.get("age"),
+            "gender":     lp.get("gender"),
+            "occupation": lp.get("occupation"),
+            "province":   lp.get("province"),
+            "fees_band":         lp.get("fees_band"),
+            "learner_fee_bands": lp.get("learner_fee_bands") or [],
+            # Living-standard proxy band, stamped at library load
+            # (services/lsm_proxy.py). Pure asset score, no LLM.
+            "lsm_proxy":  lp.get("lsm_proxy"),
+            "level":      "library",
+        } for lp in get_library().all()]
+        personas.sort(key=lambda x: (x["archetype"] or "", x["name"] or ""))
+        return jsonify({"success": True, "count": len(personas), "personas": personas})
     except Exception as e:
         logger.error(f"List personas failed: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
@@ -1302,41 +1214,15 @@ def get_persona(persona_id: str):
         "meta":     {...}
     }
 
-    Resolves both:
-    - cache personas (`uploads/persona_cache/<hex>.json`)
-    - library personas (`backend/app/data/persona_library/personas.json`)
-      by their stable library id (same id the list endpoint and the
-      panel segment members list expose).
+    Resolves library personas (`backend/app/data/persona_library/personas.json`)
+    by their stable library id (same id the list endpoint and the panel
+    segment members list expose).
     """
-    import json as _json
-    # Guard against path traversal — only allow hex hash filenames
     if not persona_id or any(c not in "0123456789abcdef" for c in persona_id.lower()):
         return jsonify({"success": False, "error": "Invalid persona id"}), 400
 
-    # 1) Cache first (faster, has rendered markdown sidecar).
-    d = _persona_cache_dir()
-    json_path = os.path.join(d, f"{persona_id}.json")
-    md_path = os.path.join(d, f"{persona_id}.md")
-    if os.path.exists(json_path):
-        try:
-            with open(json_path, "r", encoding="utf-8") as f:
-                data = _json.load(f)
-            markdown = ""
-            if os.path.exists(md_path):
-                with open(md_path, "r", encoding="utf-8") as f:
-                    markdown = f.read()
-            return jsonify({
-                "success":  True,
-                "profile":  data.get("profile", data) if isinstance(data, dict) else {},
-                "meta":     data.get("meta", {}) if isinstance(data, dict) else {},
-                "markdown": markdown,
-            })
-        except Exception as e:
-            logger.error(f"Get persona {persona_id[:12]} failed: {e}")
-            return jsonify({"success": False, "error": str(e)}), 500
-
-    # 2) Library fallback — survey-grounded personas. Wrap in the cache
-    #    shape so the frontend's getPersona() consumer doesn't branch.
+    # Library personas only (the model-generated cache is no longer served). The
+    # response keeps its old shape so the frontend's getPersona() consumer doesn't branch.
     try:
         from ..services.persona_library import get_library
         lp = get_library().get(persona_id)

@@ -8,7 +8,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
-from attitude_fuser import _BELIEF_PHRASING
+from attitude_fuser import _BELIEF_PHRASING, _RETIRED_PHRASING
 
 
 def canonical(value):
@@ -21,16 +21,20 @@ def sync_person(person):
     topics = [row["topic"] for row in rows]
     if len(topics) != len(set(topics)):
         raise ValueError("Duplicate attitude topics")
+    # "Generated" means the table wrote it — under its current wording OR any
+    # wording it has since retired. Without the retired set, a reworded sentence
+    # looks like hand-written prose and survives next to its own replacement.
     known = {sentence for topic in topics for sentence in _BELIEF_PHRASING.get(topic, {}).values()}
+    generated = known | _RETIRED_PHRASING
     current = [_BELIEF_PHRASING[row["topic"]][row["stance"]] for row in rows
                if row["stance"] in _BELIEF_PHRASING.get(row["topic"], {})]
     old = person.get("beliefs", [])
     if not isinstance(old, list) or any(not isinstance(b, str) for b in old):
         raise ValueError("Beliefs must be a list of strings")
     # Keep the original order when all statements already agree.
-    if set(b for b in old if b in known) == set(current):
+    if [b for b in old if b in generated] == current:
         return result
-    result["beliefs"] = current + [b for b in old if b not in known]
+    result["beliefs"] = current + [b for b in old if b not in generated]
     return result
 
 
@@ -41,14 +45,31 @@ def without_beliefs(payload):
     return canonical(result)
 
 
+def _next_free_pair(backup: Path, report: Path):
+    """First unused (backup, report) pair, so re-running never clobbers history."""
+    if not backup.exists() and not report.exists():
+        return backup, report
+    for n in range(2, 100):
+        b = backup.with_name(f"{backup.stem}-{n}{backup.suffix}")
+        r = report.with_name(f"{report.stem}-{n}{report.suffix}")
+        if not b.exists() and not r.exists():
+            return b, r
+    raise SystemExit("too many belief-sync backups; clean them up first")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--apply", action="store_true")
     args = ap.parse_args()
     root = Path(__file__).resolve().parents[1]
     library = root / "app/data/persona_library/personas.json"
-    backup = library.with_name("personas.backup-pre-belief-sync.json")
-    report = root / "scripts/out/belief_sync_results.json"
+    # The sync runs again whenever the phrasing table changes, so a fixed backup
+    # name would block every run after the first. Take the next free slot instead
+    # and never overwrite an existing backup or report.
+    backup, report = _next_free_pair(
+        library.with_name("personas.backup-pre-belief-sync.json"),
+        root / "scripts/out/belief_sync_results.json",
+    )
     raw = library.read_bytes()
     old = json.loads(raw)
     new = copy.deepcopy(old)

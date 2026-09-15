@@ -12,6 +12,7 @@ from typing import Dict, Any, List, Optional
 
 from ..config import Config
 from ..utils.logger import get_logger
+from . import data_model
 
 logger = get_logger("fub.data_exporter")
 
@@ -139,6 +140,8 @@ class SimulationDataExporter:
     def save_impact_results(self, results: Dict[str, Any]) -> None:
         """Persist impact interview results for later export."""
         impact_path = os.path.join(self.sim_dir, "impact_interviews.json")
+        data_model.warn_if_off_model(logger, f"Impact interviews {self.simulation_id}", "answer", results,
+                                     check=data_model.round_result_problems)
         with open(impact_path, 'w', encoding='utf-8') as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
         logger.info(f"Saved impact results to {impact_path}")

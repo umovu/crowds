@@ -20,6 +20,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
+from . import data_model
 
 logger = get_logger("fub.event_rules")
 
@@ -76,6 +77,7 @@ class EventRuleEngine:
             with open(self.rules_path, "r", encoding="utf-8") as f:
                 config = json.load(f)
                 all_rules = config.get("rules", [])
+            data_model.warn_if_off_model(logger, f"Event rules {self.rules_path}", "event_rules", config)
             # The static rules are POLICY-domain reactive events (SAPS deployment,
             # parliamentary debates, Eskom shocks, taxi strikes). They make no sense
             # in a PRODUCT stress-test — riot police don't deploy because parents

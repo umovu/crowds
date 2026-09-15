@@ -1,0 +1,147 @@
+{
+  "id": "township-parent-motivation-sdl",
+  "citation": [
+    "Beyond the classroom: how parents view motivation as a key to self-directed learning in township schools (Siziba, Geduld & Du Toit-Brits, Frontiers in Education, 2025)"
+  ],
+  "segment_tags": [
+    "guardian_parent"
+  ],
+  "topic_tags": [
+    "learning",
+    "school",
+    "homework",
+    "parents",
+    "education",
+    "self-directed learning",
+    "wifi",
+    "wi-fi",
+    "fibre"
+  ],
+  "applies_when": [
+    {
+      "ghs_role": [
+        "guardian_parent",
+        "gogo_guardian"
+      ],
+      "geotype": [
+        "Urban"
+      ],
+      "lived_poverty": [
+        "low",
+        "moderate",
+        "high"
+      ]
+    }
+  ],
+  "economic_tags": [
+    "tight",
+    "moderate"
+  ],
+  "claims": [
+    {
+      "text": "Connectivity is treated as essential infrastructure because a friendly learning environment requires reliable access to information.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1"
+      ],
+      "evaluative_rules": [
+        "Judge a learning environment by its connectivity and access to information."
+      ],
+      "objections": [],
+      "vocabulary": [
+        "fibre Wi-Fi",
+        "friendly for learning"
+      ]
+    },
+    {
+      "text": "Parents own the motivating role — prompting, monitoring schoolwork, and authoring their own target-and-reward incentive schemes — because children are seen to rely on external regulation to initiate effort.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P2",
+        "P3",
+        "P4",
+        "P7",
+        "P17",
+        "P18"
+      ],
+      "evaluative_rules": [
+        "Set the targets and attach the rewards yourself when a child lacks initiative — motivating is the parent's own job, done through parent-authored standards and incentives."
+      ],
+      "objections": [
+        "Is my child motivated enough to use this without constant shouting?"
+      ],
+      "vocabulary": [
+        "pick his socks",
+        "responsibility is my job",
+        "sign their books"
+      ]
+    },
+    {
+      "text": "Fatigue and logistical constraints limit capacity because work and household duties exhaust the energy required for homework assistance.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P6",
+        "P11",
+        "P12"
+      ],
+      "evaluative_rules": [
+        "Acknowledge that fatigue and logistics limit the capacity to assist with schoolwork."
+      ],
+      "objections": [
+        "Will this require more time than I have after work and chores?"
+      ],
+      "vocabulary": []
+    },
+    {
+      "text": "Parental support is supplementary because determined children initiate their own study and only request help when stuck.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Provide targeted assistance only when requested, respecting the child's existing agency."
+      ],
+      "objections": [
+        "Am I just topping on what they already do, or doing it for them?"
+      ],
+      "vocabulary": [
+        "top on that"
+      ]
+    },
+    {
+      "text": "Motivational interventions are viewed as insufficient because structural unemployment and developmental rebellion override individual encouragement.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P5",
+        "P9",
+        "P10"
+      ],
+      "evaluative_rules": [
+        "Recognize that external structural barriers may outweigh individual motivational efforts."
+      ],
+      "objections": [
+        "Does this account for the lack of jobs even for graduates?"
+      ],
+      "vocabulary": [
+        "unemployed graduates",
+        "teenage phases"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Sebokeng township, Gauteng",
+  "year_range": "2025",
+  "confidence": "Single-district qualitative interviews with 10 township parents (Sebokeng West, Gauteng); educated parents overrepresented in articulate responses; mechanisms durable, magnitudes and prevalence unknown",
+  "comb_gaps": [
+    "opportunity"
+  ],
+  "year_note": "published 2025, COVID-era fieldwork"
+}

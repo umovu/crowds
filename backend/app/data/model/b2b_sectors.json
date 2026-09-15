@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "about": "The planned B2B layer (sectors half): the SA context a decision-maker in each sector carries — regulator, incentive levers, what a deal must respect.",
+  "stored_in": "backend/app/data/persona_library/b2b_sectors.json",
+  "written_by": [
+    "hand-authored from QLFS industry counts and sector regulator frames"
+  ],
+  "read_by": [
+    "scripts/preview_b2b_persona.py"
+  ],
+  "rules": [
+    "Not wired into rooms yet (b2b-persona-layer plan). bodies_available is a QLFS count, or a note when two sectors share one QLFS industry."
+  ],
+  "fields": {
+    "_README": {
+      "type": "string",
+      "when": "optional"
+    },
+    "_provenance": {
+      "type": "string",
+      "when": "always"
+    },
+    "version": {
+      "type": "integer",
+      "min": 0,
+      "when": "always"
+    },
+    "sectors": {
+      "type": "object",
+      "values": {
+        "type": "object",
+        "fields": {
+          "label": {
+            "type": "string",
+            "min_length": 1,
+            "when": "always"
+          },
+          "qlfs_industry": {
+            "type": "string",
+            "when": "always"
+          },
+          "qlfs_industry_shared_with": {
+            "type": "string",
+            "when": "optional"
+          },
+          "assign_split": {
+            "type": "string",
+            "when": "optional"
+          },
+          "bodies_available": {
+            "type": "any",
+            "when": "always"
+          },
+          "regulator": {
+            "type": "string",
+            "when": "always"
+          },
+          "incentive_levers": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "scoreable_levers": {
+            "type": "list",
+            "when": "optional"
+          },
+          "deal_must_respect": {
+            "type": "list",
+            "items": {
+              "type": "string"
+            },
+            "when": "always"
+          },
+          "decision_lens": {
+            "type": "string",
+            "allowed": [
+              "commercial",
+              "procedural"
+            ],
+            "when": "always"
+          },
+          "decision_provenance": {
+            "type": "string",
+            "when": "optional"
+          },
+          "governance_frame": {
+            "type": "string",
+            "when": "optional"
+          },
+          "in_org_interest_means": {
+            "type": "string",
+            "when": "optional"
+          },
+          "risk_committee_gate": {
+            "type": "string",
+            "when": "optional"
+          },
+          "notes": {
+            "type": "string",
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

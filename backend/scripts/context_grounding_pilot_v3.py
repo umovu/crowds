@@ -10,7 +10,7 @@ Three arms per (persona, scenario) case, N repeats each:
   A baseline       — no card; economic lens exactly as production builds it.
   B card-flat      — card mechanisms injected as context (v2 style); lens unchanged.
   C card-decision  — B plus a "HOW PEOPLE LIKE YOU DECIDE" block (evaluative_rules
-                     + objection_patterns) and a restructured impulse elicitation:
+                     + objections) and a restructured impulse elicitation:
                      answer your segment's questions first, THEN rate impulse.
 
 Hard rules preserved in every arm: affordability = deterministic budget tier from
@@ -70,9 +70,14 @@ class Persona:
 
 def load_card(card_id: str) -> dict:
     card = json.loads((EXTRACTION_DIR / f"{card_id}.card.json").read_text(encoding="utf-8"))
-    if not card.get("evaluative_rules"):
+    if not claim_items(card, "evaluative_rules"):
         sys.exit(f"Card {card_id} has no evaluative_rules — backfill before running v3.")
     return card
+
+
+def claim_items(card: dict, key: str) -> list:
+    """Every claim's `key` list (evaluative_rules, objections, vocabulary), in claim order."""
+    return [x for claim in card.get("claims", []) for x in claim.get(key, [])]
 
 
 def load_persona(archetype: str) -> Persona:
@@ -121,9 +126,9 @@ def identity_block(p: Persona) -> str:
 def mechanism_block(card: dict) -> str:
     lines = ["# Research-grounded context for people like you (reason through this; do not quote it verbatim)"]
     lines.append(f"\nFrom {'; '.join(card['citation'])} [{card['claim_type']}]:")
-    lines.extend(f"  - {m}" for m in card["mechanisms"])
-    if card.get("vocabulary"):
-        lines.append(f"  Vocabulary people like you use: {', '.join(card['vocabulary'])}")
+    lines.extend(f"  - {claim['text']}" for claim in card["claims"])
+    if claim_items(card, "vocabulary"):
+        lines.append(f"  Vocabulary people like you use: {', '.join(claim_items(card, 'vocabulary'))}")
     return "\n".join(lines)
 
 
@@ -135,9 +140,9 @@ def decision_block(card: dict) -> str:
         "you may weigh them differently, but if you do, say why.",
         "Rules of thumb your segment applies when weighing something new:",
     ]
-    lines.extend(f"- {r}" for r in card["evaluative_rules"])
+    lines.extend(f"- {r}" for r in claim_items(card, "evaluative_rules"))
     lines.append("Questions people like you actually ask before spending:")
-    lines.extend(f"- {q}" for q in card.get("objection_patterns", []))
+    lines.extend(f"- {q}" for q in claim_items(card, "objections"))
     return "\n".join(lines)
 
 
@@ -267,13 +272,13 @@ def score_run(reply: dict, card: dict, system_prompt: str) -> dict:
     reaction = reply.get("reaction", "") or ""
     econ = reply.get("economic", {}) or {}
     blob = (reaction + " " + json.dumps(econ)).lower()
-    vocab_hits = [v for v in card.get("vocabulary", []) if v.lower() in blob]
+    vocab_hits = [v for v in claim_items(card, "vocabulary") if v.lower() in blob]
     # objection grounding: does primary_objection echo a documented pattern?
     obj = (econ.get("primary_objection") or "").lower()
     obj_grounded = any(
         difflib.SequenceMatcher(None, obj, q.lower()).ratio() > 0.45
         or len(set(re.findall(r"[a-z']+", obj)) & set(re.findall(r"[a-z']+", q.lower()))) >= 3
-        for q in card.get("objection_patterns", [])
+        for q in claim_items(card, "objections")
     ) if obj else False
     # leak check: rand amounts in the reply that were never in the prompt
     leaked = sorted(rand_amounts(reaction + " " + json.dumps(econ)) - rand_amounts(system_prompt))
@@ -323,7 +328,7 @@ def selftest():
         assert "BEFORE rating your impulse" not in sys_b
         # C has both, including every rule and objection pattern
         assert "HOW PEOPLE LIKE YOU DECIDE" in sys_c and "BEFORE rating your impulse" in sys_c
-        for r in card["evaluative_rules"]:
+        for r in claim_items(card, "evaluative_rules"):
             assert r in sys_c
         # budget block identical across arms — affordability never moves with the card
         block = "=== YOUR BUDGET REALITY"

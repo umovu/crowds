@@ -238,12 +238,31 @@ async def _character_context(profile: Dict[str, Any]) -> str:
     return await agent.character_context(detail="full")
 
 
+def _current_context_requested() -> bool:
+    """Present-day conditions stay OUT of a backtest unless explicitly asked for."""
+    return os.environ.get("BACKTEST_CURRENT_CONTEXT", "").strip().lower() in (
+        "1", "true", "on", "yes",
+    )
+
+
 def ask(profile: Dict[str, Any], scenario: Dict[str, Any], client) -> Tuple[Optional[str], str]:
-    """One persona, one scenario. Returns (parsed_answer | None, raw_text)."""
     import asyncio
     context = asyncio.run(_character_context(profile))
+    # A backtest scores personas against a survey that has ALREADY happened, so
+    # present-day conditions are contamination by default: they let a persona
+    # "know" things the real respondent could not have known. Opt in explicitly
+    # with BACKTEST_CURRENT_CONTEXT=1 when the test date is actually today.
+    cur_block = ""
+    if _current_context_requested():
+        try:
+            from app.services.sa_context import current_sa_realities
+            current = current_sa_realities(snapshot=profile.get("_current_snapshot"))
+            if current:
+                cur_block = f"\n\n{current}"
+        except Exception as e:  # never let context-refresh break a scored run
+            print(f"  [warn] current context unavailable: {e}")
     prompt = (
-        f"You are {profile.get('name')}.\n{context}\n\n"
+        f"You are {profile.get('name')}.\n{context}{cur_block}\n\n"
         f"Someone asks you:\n{scenario['framing']}"
         f"{_footer(scenario['answers'])}"
     )

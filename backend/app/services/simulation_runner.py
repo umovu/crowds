@@ -22,6 +22,8 @@ from queue import Queue
 from ..config import Config
 from ..utils.logger import get_logger
 from .graph_memory_updater import GraphMemoryManager
+from . import run_events
+from . import data_model
 from .simulation_ipc import SimulationIPCClient, CommandType, IPCResponse
 
 logger = get_logger('fub.simulation_runner')
@@ -213,6 +215,11 @@ class SimulationRunner:
     
     # Graph memory update configuration
     _graph_memory_enabled: Dict[str, bool] = {}  # simulation_id -> enabled
+
+    # Metadata for the run-events log, captured at /start (where a request
+    # context still exists) and read by the monitor thread (where it does not).
+    # Metadata only — never scenario text. See services/run_events.py.
+    _run_meta: Dict[str, dict] = {}
     
     @classmethod
     def get_run_state(cls, simulation_id: str) -> Optional[SimulationRunState]:
@@ -288,7 +295,8 @@ class SimulationRunner:
         state_file = os.path.join(sim_dir, "run_state.json")
         
         data = state.to_detail_dict()
-        
+        data_model.warn_if_off_model(logger, f"Run state {state.simulation_id}", "sim_run_state", data)
+
         with open(state_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         
@@ -332,6 +340,24 @@ class SimulationRunner:
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
         
+        # Run-events metadata. Stashed because the monitor thread that closes
+        # the run out has no Flask request context to read the user from.
+        try:
+            from .. import billing
+            user_id = billing.current_user_id()
+        except Exception:
+            user_id = None
+        cls._run_meta[simulation_id] = {
+            "user_id": user_id,
+            "mode": config.get("mode"),
+            "crowd_size": len(config.get("agent_configs") or []),
+            "started": time.time(),
+        }
+        run_events.record_start(
+            run_id=simulation_id, run_type="simulation",
+            **{k: v for k, v in cls._run_meta[simulation_id].items() if k != "started"},
+        )
+
         # Initialize run state
         time_config = config.get("time_config", {})
         total_hours = time_config.get("total_simulation_hours", 72)
@@ -540,6 +566,23 @@ class SimulationRunner:
             cls._save_run_state(state)
         
         finally:
+            # Close the run out in the events log. In `finally` so every exit
+            # path — clean, failed, monitor crash — is counted exactly once.
+            meta = cls._run_meta.pop(simulation_id, {})
+            failed = state.runner_status == RunnerStatus.FAILED
+            run_events.record_end(
+                run_id=simulation_id,
+                user_id=meta.get("user_id"),
+                run_type="simulation",
+                mode=meta.get("mode"),
+                crowd_size=meta.get("crowd_size"),
+                status="failed" if failed else "ok",
+                # The code only, never state.error — that text carries log tail.
+                error_code="sim_failed" if failed else None,
+                duration_seconds=(round(time.time() - meta["started"], 2)
+                                  if meta.get("started") else None),
+            )
+
             # Stop graph memory updater
             if cls._graph_memory_enabled.get(simulation_id, False):
                 try:

@@ -72,6 +72,20 @@ _QUALITY_LABELS = [
     "province_backoff", "status_race", "race_only", "population",
 ]
 
+# Sentences this table USED to produce. The belief sync recognises a generated
+# sentence by its exact text, so a rewording orphans the old sentence: the sync
+# reads it as hand-written prose, keeps it, and appends the new one alongside.
+# That is how 181 personas ended up asserting the economy twice. Any sentence
+# retired from the table above MUST be recorded here so the sync can drop it.
+# Never delete a line from this set — an old library may still carry it.
+_RETIRED_PHRASING: set = {
+    # Retired 2026-09: these turned a measured present condition into a trend or
+    # a forecast the survey question never asked about.
+    "The economy and my own prospects are getting worse, not better.",
+    "Things are improving and there's a real chance to get ahead.",
+    "Basic services in my area mostly work and are improving.",
+}
+
 # Deterministic belief phrasing per (dimension, stance). Kept LLM-free on purpose: the
 # belief sentence is data, not generation, so it's assertable. The LLM may later restate
 # it in voice, but the canonical belief is fixed here. Only non-neutral stances yield a
@@ -82,12 +96,12 @@ _BELIEF_PHRASING: Dict[str, Dict[str, str]] = {
         "high": "Government and local institutions can generally be trusted to do their job.",
     },
     "economic_optimism": {
-        "pessimistic": "The economy and my own prospects are getting worse, not better.",
-        "optimistic": "Things are improving and there's a real chance to get ahead.",
+        "pessimistic": "The economy is bad and my own prospects are poor right now.",
+        "optimistic": "The economy is okay and I have a real chance to get ahead right now.",
     },
     "service_satisfaction": {
         "dissatisfied": "Basic services in my area are failing and complaints go nowhere.",
-        "satisfied": "Basic services in my area mostly work and are improving.",
+        "satisfied": "Basic services in my area mostly work right now.",
     },
     "crime_fear": {
         "high": "Crime is a constant threat that shapes my daily decisions.",
@@ -110,6 +124,149 @@ _BELIEF_PHRASING: Dict[str, Dict[str, str]] = {
                "what's pressing where I live.",
         "high": "Waste and pollution are a real problem here, and it's on ordinary "
                 "people to do something about it.",
+    },
+    # ── Dimensions that were measured but mute ──────────────────────────────────
+    # These eight were decoded from Afrobarometer, stored on every persona, and had no
+    # sentence here — so a persona could hold the opinion and never be able to say it.
+    # The gap was invisible because it was a MISSING key, not a wrong one, and it fell
+    # exactly along the split between the hand-decoded dimensions (which had phrasing)
+    # and the table-decoded ones (which didn't). Its effect was one-directional: the
+    # library's strongest POSITIVE measurements — 202 satisfied with schools, 211 willing
+    # to pay for quality, 162 trusting of other people — were the ones left silent, while
+    # the grievance dimensions all had sentences. That is most of why rooms read bitter.
+    "education_satisfaction": {
+        "dissatisfied": "The schools around here are failing our children.",
+        "satisfied": "The schools around here mostly do their job.",
+    },
+    "councillor_responsiveness": {
+        "low": "My councillor never listens to people like me.",
+        "high": "My councillor can be made to listen if you push.",
+    },
+    "official_responsiveness": {
+        "low": "If I take a problem to a government official, nothing comes of it.",
+        "high": "If I asked a government official for help, they would probably respond.",
+    },
+    "crime_handling": {
+        "dissatisfied": "Government is handling crime badly.",
+        "satisfied": "Government handles crime reasonably well.",
+    },
+    "immigration_priority": {
+        "low": "I don't think South Africans should come ahead of immigrants for jobs "
+               "and services.",
+        "high": "South Africans should come first for jobs and services.",
+    },
+    "pays_for_quality": {
+        "no": "I can't pay extra, whatever the service is like.",
+        "yes": "I'll pay more if the service is genuinely better.",
+    },
+    "business_trust": {
+        "low": "Most companies and their bosses are out for themselves.",
+        "high": "A reputable business can generally be trusted.",
+    },
+    "social_trust": {
+        "low": "I keep my guard up with most people, neighbours included.",
+        "high": "I generally give people the benefit of the doubt.",
+    },
+    # Word of mouth, both directions (Q8 + Q10B, and Q86C).
+    "social_voice": {
+        "low": "I keep my views to myself and don't get involved in raising issues.",
+        "high": "I talk things over with the people around me, and I've joined others to raise an issue.",
+    },
+    "neighbour_trust": {
+        "low": "I don't trust my neighbours.",
+        "high": "I trust my neighbours.",
+    },
+}
+
+# How each measured attitude shows up in BEHAVIOUR — what the person does when something
+# is put in front of them, as opposed to what they believe. "Most companies are out for
+# themselves" is a belief; "when a company is selling something, you assume there's a
+# catch" is what that belief does in a room.
+#
+# This replaces the model-written voice_guide / behavioral_tendencies as the source of
+# how a persona reacts. Those were the last persona fields with no survey data behind
+# them, and they were injected as orders ("VOICE INSTRUCTIONS — follow exactly"), so an
+# invented detail in them repeated in every answer. These sentences are data: fixed per
+# (dimension, stance), assertable with the model off, and read straight off the attitudes
+# at prompt time, so editing one takes effect everywhere without a library rebuild.
+#
+# Rules for every line:
+#   * Behaviour, not manner. Nothing about how fast, how long or how cleverly someone
+#     talks — none of that was measured.
+#   * Situation-shaped, not sector-shaped. "Assumes a company has a catch" applies to a
+#     bank, a school or a clinic alike. Dimensions that are themselves about one service
+#     (education, health) say so, and are only ever selected when a question touches it.
+#   * Both poles, always. The neutral middle yields nothing, same as beliefs.
+_REACTION_PHRASING: Dict[str, Dict[str, str]] = {
+    "gov_trust": {
+        "low": "If government is behind something, you look for the catch before you believe it.",
+        "high": "If government is behind something, that counts in its favour.",
+    },
+    "economic_optimism": {
+        "pessimistic": "You're slow to commit money or time to anything new while things feel this uncertain.",
+        "optimistic": "You'll try something new if it could help you get ahead.",
+    },
+    "service_satisfaction": {
+        "dissatisfied": "When something promises to fix a basic service, you want to see it working before you believe it.",
+        "satisfied": "You don't go looking to replace services that already work for you.",
+    },
+    "crime_fear": {
+        "high": "Anything that asks you to go somewhere, carry something or be out at certain times gets weighed against the risk first.",
+        "low": "Safety rarely decides things for you.",
+    },
+    "education_satisfaction": {
+        "dissatisfied": "With schooling, you're open to alternatives, because the usual option isn't working.",
+        "satisfied": "With schooling, you need a strong reason to move away from what's already there.",
+    },
+    "health_service_satisfaction": {
+        "dissatisfied": "With health care, you're open to other options, because the usual one lets you down.",
+        "satisfied": "With health care, you need a strong reason to move away from what already works.",
+    },
+    "health_authority_trust": {
+        "low": "Health advice from the department doesn't settle it for you; you want to hear it from someone you trust.",
+        "high": "Health advice from the department carries weight with you.",
+    },
+    "councillor_responsiveness": {
+        "low": "You don't expect raising a problem locally to change anything, so you rarely bother.",
+        "high": "If something goes wrong locally, you'd raise it and expect to be heard.",
+    },
+    "official_responsiveness": {
+        "low": "You assume no official will sort it out if something goes wrong, so you factor that in upfront.",
+        "high": "You expect someone official would help put it right if something went wrong.",
+    },
+    "crime_handling": {
+        "dissatisfied": "You don't count on the authorities to protect you, so you look after yourself.",
+        "satisfied": "You trust the authorities to deal with crime, so it doesn't drive your choices much.",
+    },
+    "immigration_priority": {
+        "low": "Who else benefits doesn't change your view of whether something is good for you.",
+        "high": "You want to know South Africans come first in who benefits or gets hired.",
+    },
+    "pays_for_quality": {
+        "no": "Price decides it for you; paying more for 'better' isn't something you can do.",
+        "yes": "Price alone doesn't put you off if something is clearly better.",
+    },
+    "business_trust": {
+        "low": "When a company is selling something, you assume there's a catch until shown otherwise.",
+        "high": "You give an established company a fair hearing.",
+    },
+    "social_trust": {
+        "low": "You don't take other people's word for it; you want to see for yourself.",
+        "high": "What people around you say about something carries real weight.",
+    },
+    "environment_priority": {
+        "low": "Whether something is green doesn't come into it for you.",
+        "high": "If something is cleaner or less wasteful, that counts in its favour.",
+    },
+    # What backs a word-of-mouth count. Service delivery reads the same way as a
+    # product: a person who rallies others raises a failing service with neighbours.
+    "social_voice": {
+        "low": "You keep your opinion of something to yourself rather than spreading it.",
+        "high": "If something works for you, or lets you down, you tell people and you'll get others involved.",
+    },
+    "neighbour_trust": {
+        "low": "What your neighbours say about something doesn't sway you.",
+        "high": "If your neighbours rate something, that counts in its favour.",
     },
 }
 
@@ -172,7 +329,8 @@ def _match_with_backoff(
 
 
 def _attitudes_to_fields(
-    donor_attitudes: Dict[str, str], source: str, quality: Dict[str, str]
+    donor_attitudes: Dict[str, str], source: str, quality: Dict[str, str],
+    donor_answers: Optional[Dict[str, Dict[str, str]]] = None,
 ) -> Tuple[List[Dict], List[str]]:
     """Turn the donor's raw attitude dict into AgentProfile-shaped `attitudes` rows and
     deterministic `beliefs` sentences. Every row carries source + a PER-DIMENSION
@@ -181,12 +339,22 @@ def _attitudes_to_fields(
     attitudes: List[Dict] = []
     beliefs: List[str] = []
     for dim, stance in donor_attitudes.items():
-        attitudes.append({
+        row = {
             "topic": dim,
             "stance": stance,
             "source": source,
             "match_quality": quality[dim],
-        })
+        }
+        # The donor's LITERAL answer, where we have it. Only meaningful for a
+        # donor-matched dimension: a population_draw picked the BAND, so there is
+        # no single respondent whose answer it was, and claiming one would be a
+        # fabricated measurement.
+        answer = (donor_answers or {}).get(dim)
+        if answer and quality[dim] != "population_draw":
+            row["measured_answer"] = answer["answer"]
+            row["measured_question"] = answer["question"]
+            row["measured_asked"] = answer["asked"]
+        attitudes.append(row)
         phrasing = _BELIEF_PHRASING.get(dim, {})
         if stance in phrasing:  # only non-neutral stances become asserted beliefs
             beliefs.append(phrasing[stance])
@@ -319,7 +487,9 @@ def fuse_attitudes(
                 full[dim] = _population_draw(dist_att, dim, sk, seed) or modal[dim]
                 per_dim_quality[dim] = "population_draw"
 
-        attitudes, beliefs = _attitudes_to_fields(full, source, per_dim_quality)
+        attitudes, beliefs = _attitudes_to_fields(
+            full, source, per_dim_quality, donor.get("attitude_answers") or {}
+        )
         merged = dict(sk)
         merged["attitudes"] = attitudes
         merged["beliefs"] = beliefs

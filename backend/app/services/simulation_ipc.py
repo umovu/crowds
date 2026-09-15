@@ -17,6 +17,7 @@ from datetime import datetime
 from enum import Enum
 
 from ..utils.logger import get_logger
+from . import data_model
 
 logger = get_logger('fub.simulation_ipc')
 
@@ -148,8 +149,10 @@ class SimulationIPCClient:
         
         # Write command file
         command_file = os.path.join(self.commands_dir, f"{command_id}.json")
+        data = command.to_dict()
+        data_model.warn_if_off_model(logger, "IPC command", "ipc_command", data)
         with open(command_file, 'w', encoding='utf-8') as f:
-            json.dump(command.to_dict(), f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         logger.info(f"Send IPC command: {command_type.value}, command_id={command_id}")
         
@@ -450,8 +453,10 @@ class SimulationIPCServer:
             response: IPC response
         """
         response_file = os.path.join(self.responses_dir, f"{response.command_id}.json")
+        data = response.to_dict()
+        data_model.warn_if_off_model(logger, "IPC response", "ipc_response", data)
         with open(response_file, 'w', encoding='utf-8') as f:
-            json.dump(response.to_dict(), f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
         
         # Delete command file
         command_file = os.path.join(self.commands_dir, f"{response.command_id}.json")

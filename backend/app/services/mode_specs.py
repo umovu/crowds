@@ -14,6 +14,7 @@ score that reads as market validation. "Wants it" (LLM impulse) and "can afford 
 """
 
 from typing import Any, Dict, List, Optional
+import os
 import re
 
 
@@ -429,7 +430,9 @@ def build_pitch_announcement(pitch: Dict[str, Any], short: bool = False, operato
         parts.append(f"It's meant to {problem.rstrip('.').lower()}.")
     if pricing and pricing.lower() not in ("not stated", "pricing is unclear / not stated"):
         parts.append(f"Pricing: {pricing}.")
-    parts.append("I want your honest reaction — what works, what doesn't, what would put you off.")
+    # Same balance as panel_service.frame_pitch: one pull, one wall, one condition.
+    parts.append("I want your honest reaction: what would make you use this, what would put "
+                 "you off, and what you'd need to know first.")
     return " ".join(parts) + build_operator_context_block(operator_context)
 
 
@@ -529,3 +532,28 @@ def build_health_block(st: Dict[str, Any], *seed_texts: Optional[str]) -> str:
         + "\n".join(lines)
         + "\n  These describe YOUR life. React to health topics from them; never invent more.\n"
     )
+
+
+# ── Panel decision question (fix 4) ──────────────────────────────────────────
+# Shared here because panel_service (the question), prompt_reframer (the length rule) and
+# opinion_agent (the length backstop) all need it, and this module imports none of them.
+
+SHORT_ANSWER_SENTENCES = 3
+# The backstop allows one sentence more than is asked, so nobody is cut off for going one over.
+SHORT_ANSWER_MAX_SENTENCES = SHORT_ANSWER_SENTENCES + 1
+
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def decision_question_on() -> bool:
+    """PANEL_DECISION_QUESTION: panels ask what a person would do, in a few short sentences."""
+    return os.environ.get("PANEL_DECISION_QUESTION", "0").strip().lower() in ("1", "true", "yes", "on")
+
+
+def trim_to_sentences(text: str, limit: int) -> str:
+    """The first `limit` whole sentences of `text`; unchanged when it is already within the limit."""
+    body = (text or "").strip()
+    parts = [part.strip() for part in _SENTENCE_END.split(body) if part.strip()]
+    if len(parts) <= limit:
+        return body
+    return " ".join(parts[:limit])

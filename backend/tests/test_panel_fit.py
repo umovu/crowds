@@ -309,3 +309,111 @@ def test_coverage_gap_never_raises_on_a_bad_path(tmp_path):
     with open(panel.Config.PANEL_SESSION_DATA_DIR, "w") as fh:
         fh.write("not a directory")
     panel.log_coverage_gap(SESSION_ID, {"pitch": "x"}, note="should not raise")
+
+
+# ── "who" allocates seats, "thinks" narrows them ──────────────────────────
+#
+# The two kinds of segment combine differently, and getting it wrong is not a
+# cosmetic bug: unioning them answers a different question than the one asked.
+# "Parents" + "will pay more for better" is one room of parents who pay for
+# quality, not half a room of parents beside half a room of strangers who share
+# an opinion. Everything below runs with the model switched off.
+
+
+def test_every_thinks_segment_is_mapped_to_a_dimension():
+    """ATTITUDE_SEGMENT_DIMS is what lets a picked attitude group be folded into
+    the intersection filter. A "thinks" segment missing from it would silently
+    fall back to seat allocation — the exact bug this guards."""
+    unmapped = [sid for sid, seg in panel.SEGMENTS.items()
+                if seg.get("kind") == "thinks" and sid not in panel.ATTITUDE_SEGMENT_DIMS]
+    assert unmapped == []
+
+
+def test_the_dimension_map_reproduces_each_predicate():
+    """The map lives beside the lambdas, so it can drift from them. It can't:
+    (dim, stance) must select exactly the people the predicate selects."""
+    personas = panel.get_library().all()
+    if not personas:
+        pytest.skip("library not built in this environment")
+    for sid, (dim, stance) in panel.ATTITUDE_SEGMENT_DIMS.items():
+        by_predicate = {p.get("id") for p in personas if panel.SEGMENTS[sid]["predicate"](p)}
+        by_map = {p.get("id") for p in personas if panel.persona_attitude(p, dim) == stance}
+        assert by_predicate == by_map, f"{sid} drifted from {dim}={stance}"
+
+
+def test_list_segments_ships_the_dimension_for_thinks_cards():
+    """The picker needs it to count two picks on the SAME dimension as "either"
+    rather than stacking them into an empty room."""
+    rows = {r["id"]: r for r in panel.list_segments()}
+    if "pays_for_quality" not in rows:
+        pytest.skip("library not built in this environment")
+    assert rows["pays_for_quality"]["attitude_dim"] == "pays_for_quality"
+    assert rows["price_first"]["attitude_dim"] == "pays_for_quality"
+    assert rows["guardians"]["attitude_dim"] is None
+
+
+def test_who_plus_thinks_intersects_instead_of_unioning(tmp_path):
+    """The regression test for the Thuto.io miss: a R100/month parent product
+    asked for parents who pay for quality and got a representative national
+    room, because the two picks were unioned."""
+    personas = panel.get_library().all()
+    if not personas:
+        pytest.skip("library not built in this environment")
+    panel.Config.PANEL_SESSION_DATA_DIR = str(tmp_path)
+
+    guardians = {p["id"] for p in personas if panel.SEGMENTS["guardians"]["predicate"](p)}
+    payers = {p["id"] for p in personas if panel.SEGMENTS["pays_for_quality"]["predicate"](p)}
+    assert len(guardians | payers) > len(guardians & payers)  # the two differ, so this proves something
+
+    meta = panel.create_session(
+        "Thuto.io is a R100/month app for parents.",
+        segments=["guardians", "pays_for_quality"], n=8, seed=1)
+
+    with open(os.path.join(panel.session_dir(meta["session_id"]),
+                           panel.PROFILES_FILE), encoding="utf-8") as fh:
+        profiles = json.load(fh)
+
+    assert profiles, "no cast drawn"
+    # Every seat is BOTH a guardian and a measured quality-payer.
+    for p in profiles:
+        assert p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
+        assert panel.persona_attitude(p, "pays_for_quality") == "yes"
+
+    # The attitude was folded into the intersection filter, not into the seats.
+    assert meta["segments"] == ["guardians"]
+    assert meta["attitude_filter"] == {"pays_for_quality": ["yes"]}
+    # ...but the label still names the room the operator actually asked for.
+    assert meta["picked_segments"] == ["guardians", "pays_for_quality"]
+    assert "Will pay more for better" in meta["segment_label"]
+
+
+def test_two_attitudes_on_one_dimension_read_as_either(tmp_path):
+    """Same dimension picked twice must widen (OR), not stack into an empty
+    room — matching _persona_matches_attitudes, which ORs within a dimension."""
+    if not panel.get_library().all():
+        pytest.skip("library not built in this environment")
+    panel.Config.PANEL_SESSION_DATA_DIR = str(tmp_path)
+    meta = panel.create_session(
+        "A R100/month app for parents.",
+        segments=["guardians", "pays_for_quality", "price_first"], n=6, seed=1)
+    assert sorted(meta["attitude_filter"]["pays_for_quality"]) == ["no", "yes"]
+    assert meta["cast_size"] > 0
+
+
+def test_attitudes_picked_alone_still_form_the_room(tmp_path):
+    """A "thinks" pick with no "who" beside it is the room itself — unchanged
+    behaviour, and the fold must not swallow it."""
+    if not panel.get_library().all():
+        pytest.skip("library not built in this environment")
+    panel.Config.PANEL_SESSION_DATA_DIR = str(tmp_path)
+    meta = panel.create_session("A R100/month app.", segments=["pays_for_quality"],
+                                n=6, seed=1)
+    assert meta["segments"] == ["pays_for_quality"]
+    assert "attitude_filter" not in meta
+
+
+def test_a_cheap_price_still_derives_no_affordability_filter():
+    """R100/month sits below the moderate cut, so no filter runs. That is
+    correct and must not move — narrowing now comes from the group picked, not
+    from quietly tightening the price cuts."""
+    assert panel.derive_budget_tiers("Thuto.io is R100/month for parents.") is None

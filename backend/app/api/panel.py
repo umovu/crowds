@@ -8,6 +8,7 @@ No simulation build pipeline involved.
 """
 
 import asyncio
+import time
 import traceback
 import uuid
 
@@ -16,10 +17,11 @@ from flask import jsonify, request
 from . import panel_bp
 from .. import billing
 from ..config import Config
+from ..services import hypothesis_report
 from ..services import panel_service
-from ..services import mode_detector
 from ..services import poster_service
 from ..services import pointers
+from ..services import run_events
 from ..services import study_reader
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger
@@ -59,8 +61,12 @@ def suggest_segments():
     no LLM. Returns {"suggested": ["farmers"]} — empty list when no match."""
     try:
         pitch = request.args.get('pitch', '')
-        return jsonify({"success": True,
-                        "data": {"suggested": panel_service.suggest_segments(pitch)}})
+        return jsonify({"success": True, "data": {
+            "suggested": panel_service.suggest_segments(pitch),
+            # Attitude groups worth offering as a narrowing on top of those —
+            # a different question ("who cares enough"), so a separate field.
+            "narrowing": panel_service.suggest_narrowing(pitch),
+        }})
     except Exception as e:
         logger.error(f"Segment suggestion failed: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
@@ -175,7 +181,7 @@ def create_session():
     Request (JSON):
         {
             "pitch": "R99/month solar subscription for townships",  // Required
-            "mode": "product",          // Optional: "product" (default) | "policy"
+            "mode": "product",          // Ignored: panels have one path (see below)
             "n": 12,                    // Optional: cast size (1-50)
             "segments": ["unemployed", "informal_traders"],
                                         // Optional: groups to mix (seats split
@@ -221,9 +227,11 @@ def create_session():
             pitched = pointers.assemble_seed(pointer, slots)
         # Mode is inferred from the (possibly assembled) pitch unless the caller
         # pins one explicitly. Keyword-only detection — pure, deterministic, cheap.
-        mode = data.get('mode')
-        if not mode:
-            mode = mode_detector.detect(pitched or '').get('mode', 'product')
+        # One panel path. The pitch itself decides what applies (a stated price turns
+        # on affordability) — there is no policy/product guess to get wrong. A 50/50
+        # keyword tie used to run a priced clinic offer as "policy" and silently drop
+        # every income band. Old sessions keep their stored mode and render as before.
+        mode = "panel"
         # Free tier: cap the panel cast at 12 (paid may go up to MAX_CAST_SIZE).
         n = data.get('n', panel_service.DEFAULT_CAST_SIZE)
         ent = billing.get_entitlement(billing.current_user_id())
@@ -345,6 +353,14 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
     paths here would drift, and the whole point of the compare strip is that the
     rooms are comparable.
     """
+    started = time.time()
+    run_events.record_start(
+        run_id=session_id,
+        user_id=billing.current_user_id(),
+        run_type="panel",
+        mode=meta.get("mode"),
+        crowd_size=len(agent_ids) if agent_ids else len(meta.get("agents") or []),
+    )
     try:
         service = _interview_service(session_id)
         # The confirmed probes from the study chips become explicit follow-ups
@@ -376,6 +392,12 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
                 result.get("total_interviewed", 0), result.get("failure_reason", "unknown"),
             )
             answered = result.get("successful", 0)
+            run_events.record_end(
+                run_id=session_id, user_id=billing.current_user_id(),
+                run_type="panel", mode=meta.get("mode"), status="failed",
+                error_code="round_failed",
+                duration_seconds=round(time.time() - started, 2),
+            )
             return jsonify({
                 "success": False,
                 "code": "round_failed",
@@ -437,13 +459,27 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
             "pitch": pitch_text,
             **result,
         }
-        if meta.get('mode') == 'product':
+        if meta.get('mode') in ('product', 'panel'):
             payload["budget_tier_distribution"] = meta.get("budget_tier_distribution", {})
+        run_events.record_end(
+            run_id=session_id, user_id=billing.current_user_id(),
+            run_type="panel", mode=meta.get("mode"), status="ok",
+            crowd_size=result.get("successful"),
+            duration_seconds=round(time.time() - started, 2),
+        )
         return jsonify({"success": True, "data": payload})
 
     except FileNotFoundError as e:
+        run_events.record_end(
+            run_id=session_id, user_id=billing.current_user_id(), run_type="panel",
+            status="failed", error_code="not_found",
+            duration_seconds=round(time.time() - started, 2))
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
+        run_events.record_end(
+            run_id=session_id, user_id=billing.current_user_id(), run_type="panel",
+            status="failed", error_code="server_error",
+            duration_seconds=round(time.time() - started, 2))
         return _server_error(e, "The room could not be reached. Nothing was counted — try again.")
 
 
@@ -621,3 +657,31 @@ def ask_agent(session_id: str, agent_id: int):
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
         return _server_error(e, "That question did not go through. Try again.")
+
+
+@panel_bp.route('/sessions/<session_id>/hypothesis', methods=['GET'])
+def hypothesis(session_id: str):
+    """The follow-up report for a finished session — what the room told you,
+    and what to run next.
+
+    Facts (who was in the room, where they landed, who moved, the wall they
+    kept hitting, what their real income supports) are computed. The
+    hypotheses are one cheap LLM pass, labelled as guesses and stripped of any
+    figure, so this can never become a "% who would buy".
+
+    Query:
+        format=md    render as forwardable Markdown instead of JSON
+        refresh=1    rebuild instead of serving the cached report
+    """
+    try:
+        report = hypothesis_report.build(
+            session_id, refresh=request.args.get('refresh') in ('1', 'true'))
+        if request.args.get('format') == 'md':
+            return (hypothesis_report.render_markdown(report), 200,
+                    {'Content-Type': 'text/markdown; charset=utf-8'})
+        return jsonify({"success": True, "data": report})
+
+    except FileNotFoundError:
+        return jsonify({"success": False, "error": f"Session {session_id} not found"}), 404
+    except Exception as e:
+        return _server_error(e, "The report could not be assembled. Try again.")

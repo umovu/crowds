@@ -137,12 +137,12 @@ def test_every_skeleton_source_supplies_the_join_keys():
     except Exception:  # noqa: BLE001 — GHS is optional locally
         pass
 
-    # KNOWN PRE-EXISTING GAP, deliberately not hidden: some GHS education skeletons
-    # carry employment_status=None — 15-17 year-old learners sit outside the labour-force
-    # universe the field describes. It predates race becoming a join key and needs a data
-    # decision (is a schoolchild "Other not economically active"?), not a test tweak. Race
-    # is asserted strictly everywhere; this key is asserted strictly everywhere else.
-    known_gaps = {("education_ghs", "employment_status")}
+    # The GHS employment_status gap is FIXED (2026-09): the adapter now reads
+    # employ_Status2, which classes every non-worker "Not economically active",
+    # where employ_Status1 only said "Unspecified". Blank status used to fail the
+    # attitude match all the way down to race-only. Every join key is now asserted
+    # strictly for every source — no known gaps remain.
+    known_gaps = set()
     gaps_seen = []
 
     for name, make in sources.items():
@@ -160,8 +160,4 @@ def test_every_skeleton_source_supplies_the_join_keys():
             raise AssertionError(
                 f"{name}: only {filled}/{len(skeletons)} skeletons carry join key '{key}'")
 
-    # Fail if a known gap silently disappears too — either it was fixed (update this
-    # test) or the source stopped being exercised (worse).
-    assert gaps_seen, (
-        "expected the known GHS employment_status gap; it is absent — was it fixed, "
-        "or did the GHS source stop being tested?")
+    assert not gaps_seen, f"unexpected join-key gaps: {gaps_seen}"

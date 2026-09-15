@@ -44,7 +44,8 @@ from typing import Dict, List, Optional
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.utils.llm_client import LLMClient  # noqa: E402
-from sa_names import pick_unique_name  # noqa: E402  — sibling script, LLM-free name pool
+import sa_names  # noqa: E402  — sibling script, LLM-free name pool
+from sa_names import pick_unique_name  # noqa: E402
 
 # Non-Latin script ranges — same set as document_context_engine.sanitize_language_drift.
 # Inlined (not imported) so this offline build script doesn't pull the whole
@@ -77,9 +78,14 @@ def sanitize_language_drift(text: str, label: str = "") -> str:
 # generation mode-collapses onto a few prototypes (the "55 Thabo Mokoenas" bug).
 TEXTURE_FIELDS = [
     "persona", "background_story",
-    "voice_guide", "behavioral_tendencies",
     "group_affiliation", "interested_topics",
 ]
+# voice_guide and behavioral_tendencies are no longer written here. They were the last
+# persona fields with no survey data behind them, injected as orders into every answer.
+# How a persona REACTS now comes from attitude_fuser._REACTION_PHRASING, read off the
+# measured attitudes at prompt time. Existing values stay on old records untouched; the
+# prompts no longer use them for library personas.
+_RETIRED_TEXTURE_FIELDS = ("voice_guide", "behavioral_tendencies")
 
 # Skeleton fields the model must NOT change (it may reference them, not rewrite them).
 FROZEN_FIELDS = [
@@ -107,7 +113,8 @@ _SYSTEM = (
     "You are an expert in South African socio-economics writing realistic persona "
     "texture for a policy/product simulation. You are given FIXED demographic facts AND "
     "FIXED measured attitudes about a person and must write ONLY their human surface "
-    "(name, voice, background). You must NOT change, contradict, or restate-as-new any of "
+    "(a one-line summary and a background paragraph). You must NOT change, contradict, or "
+    "restate-as-new any of "
     "the fixed facts. The measured attitudes are survey data, not yours to invent or "
     "override: write a voice and outlook that EXPRESS them — never a person who feels the "
     "opposite. Write in ENGLISH ONLY — no isiZulu, isiXhosa, Afrikaans, or other-language "
@@ -193,18 +200,61 @@ _STANCE_GLOSS = {
         "mid": "extends some trust to people they know, less to strangers",
         "high": "is fairly trusting of other people, including neighbours and strangers",
     },
+    # Salience, not virtue — how near the issue sits to this person's life, never how
+    # much they care about the planet. Matches the vocab's own framing in
+    # attitude_donor_adapter.ATTITUDE_VOCAB.
+    # Word of mouth, both directions. social_voice = whether they talk with others about
+    # things that affect them and act with others (Q8 discuss politics + Q10B joined
+    # others to raise an issue); neighbour_trust = whether a neighbour's word counts
+    # (Q86C). Measured behaviour, never a personality claim.
+    "social_voice": {
+        "low": "keeps to themselves — rarely talks public matters over with others or joins "
+               "others to raise an issue",
+        "mid": "sometimes talks things over with others, and would join others to raise an "
+               "issue if the chance came",
+        "high": "often talks things over with others and has joined others to raise an issue",
+    },
+    "neighbour_trust": {
+        "low": "does not trust their neighbours",
+        "mid": "trusts their neighbours a little",
+        "high": "trusts their neighbours",
+    },
+    "environment_priority": {
+        "low": "has never had pollution or climate anywhere near their life — it is not "
+               "something they think about",
+        "mid": "notices waste and pollution around them, but it is not pressing",
+        "high": "sees waste and pollution as a real problem where they live, and one "
+                "ordinary people have to act on",
+    },
 }
 
-# How a measured circumstance reads as a fixed lived fact the texture must write AROUND
-# (never contradict, never restate as a number). Only fields we carry appear; a field the
-# donor didn't answer simply isn't constrained. Kept plain-language for the same reason as
-# _STANCE_GLOSS — the model gets a constraint, not a code to mis-read.
+# The measured circumstances, written as the sentences the PERSON would say. These are
+# the raw material the background_story is assembled from: the model arranges and joins
+# them, and may not add a fact that is not here (see _prompt). Only fields we carry
+# appear; a field the donor didn't answer simply isn't stated.
+#
+# Two rules, and both matter more than they look:
+#
+#   1. State the fact, never judge it. No "unfortunately", no "at least", no
+#      "struggles", no "comfortable". A fact carries no mood — only relevance.
+#
+#   2. State what IS, not what is absent. This table used to describe a person with
+#      enough money as one who "has NOT gone without basic necessities", framing an
+#      ordinary life in the vocabulary of hunger. Every positive band said what the
+#      person lacked a lack of, so the model reached for hardship even when the record
+#      held none. That was the single largest source of the library's negative skew.
 _CIRCUMSTANCE_GLOSS = {
     "lived_poverty": {
-        "none": "has not gone without basic necessities this year",
-        "low": "has occasionally gone without a basic necessity this year",
-        "moderate": "has several times gone without food, water, or cash this year",
-        "high": "frequently goes without basic necessities like food, water, or cash",
+        "none": "This year I've had enough for food, water and cash.",
+        "low": "Once or twice this year I was short for something basic.",
+        "moderate": "Several times this year I've been short for food, water or cash.",
+        "high": "I'm often short for food, water or cash.",
+    },
+    "went_without_care": {
+        "never": "I've been able to get medical care when I needed it.",
+        "rarely": "Once or twice this year I couldn't get care I needed.",
+        "sometimes": "Several times this year I couldn't get care I needed.",
+        "often": "I often can't get medical care I need.",
     },
     "went_without_care": {
         "never": "has not gone without needed medical care this year",
@@ -213,38 +263,89 @@ _CIRCUMSTANCE_GLOSS = {
         "often": "often goes without needed medical care because of cost, distance, or queues",
     },
     "owns_vehicle": {
-        "none": "has no car or vehicle in the household",
-        "household": "has access to a vehicle someone else in the household owns",
-        "own": "personally owns a car or vehicle",
+        "none": "There's no car in the house.",
+        "household": "There's a car in the house I can use.",
+        "own": "I have my own car.",
     },
     "owns_computer": {
-        "none": "has no computer at home",
-        "household": "shares a computer owned by someone else in the household",
-        "own": "personally owns a computer",
+        "none": "There's no computer in the house.",
+        "household": "There's a computer in the house I share.",
+        "own": "I have my own computer.",
     },
     "owns_bank_account": {
-        "none": "has no bank account",
-        "household": "relies on another household member's bank account",
-        "own": "has their own bank account",
+        "none": "I don't have a bank account.",
+        "household": "I use someone else's account in the house.",
+        "own": "I have my own bank account.",
+    },
+    "owns_television": {
+        "none": "There's no TV in the house.",
+        "household": "There's a TV in the house.",
+        "own": "I have my own TV.",
     },
     "internet_use": {
-        "never": "never uses the internet",
-        "rarely": "uses the internet less than once a month",
-        "monthly": "uses the internet a few times a month",
-        "weekly": "uses the internet a few times a week",
-        "daily": "uses the internet every day, mostly on a mobile phone",
+        "never": "I don't use the internet.",
+        "rarely": "I go online less than once a month.",
+        "monthly": "I go online a few times a month.",
+        "weekly": "I go online a few times a week.",
+        "daily": "I'm online every day, mostly on my phone.",
+    },
+    "owns_phone": {
+        "none": "There's no cellphone in the house.",
+        "household": "I use a cellphone that someone else in the house owns.",
+        "own": "I have my own cellphone.",
+    },
+    "phone_internet": {
+        "no": "My phone can't go on the internet.",
+        "yes": "My phone can go on the internet.",
+    },
+    "phone_use": {
+        "never": "I never use a cellphone.",
+        "rarely": "I hardly ever use a cellphone.",
+        "monthly": "I use a cellphone now and then.",
+        "weekly": "I use a cellphone most weeks.",
+        "daily": "I use my cellphone every day.",
     },
     "electricity_reliability": {
-        "never": "has no reliable mains electricity",
-        "occasional": "has mains electricity only occasionally",
-        "half": "has mains electricity about half the time",
-        "most": "has mains electricity most of the time, with regular interruptions",
-        "always": "has reliable mains electricity",
+        "never": "There's no reliable mains power where I live.",
+        "occasional": "The power is on only now and then.",
+        "half": "The power is on about half the time.",
+        "most": "The power is on most of the time, with interruptions.",
+        "always": "The power stays on where I live.",
     },
     "money_decision": {
-        "self": "decides how their household's money is spent themselves",
-        "joint": "decides household spending jointly with their partner or family",
-        "other": "does not control how the household's money is spent — someone else decides",
+        "self": "I decide how the money in my house is spent.",
+        "joint": "We decide together how the money is spent.",
+        "other": "Someone else decides how the money is spent.",
+    },
+    # Where a message can actually reach this person. Measured on every fused persona
+    # and, until now, carried but never spoken.
+    "news_radio": {
+        "never": "I don't listen to the news on radio.",
+        "rarely": "I hardly ever hear the news on radio.",
+        "monthly": "I hear the radio news now and then.",
+        "weekly": "I hear the radio news most weeks.",
+        "daily": "The radio news is on every day.",
+    },
+    "news_tv": {
+        "never": "I don't watch the news on TV.",
+        "rarely": "I hardly ever watch the news on TV.",
+        "monthly": "I see the TV news now and then.",
+        "weekly": "I catch the TV news most weeks.",
+        "daily": "I watch the TV news every day.",
+    },
+    "news_social": {
+        "never": "I don't get news from social media.",
+        "rarely": "I hardly ever see news on social media.",
+        "monthly": "I see news on social media now and then.",
+        "weekly": "I see news on social media most weeks.",
+        "daily": "I see the news on social media every day.",
+    },
+    "news_internet": {
+        "never": "I don't read news online.",
+        "rarely": "I hardly ever read news online.",
+        "monthly": "I read news online now and then.",
+        "weekly": "I read news online most weeks.",
+        "daily": "I read news online every day.",
     },
 }
 
@@ -260,14 +361,29 @@ def _attitude_constraints(skeleton: Dict) -> List[str]:
     return lines
 
 
+# Measured, kept on the persona, but never handed to the story writer. These are REACH
+# facts — which channel a message can arrive on — not autobiography. Left in the prompt
+# they dominated it: every generated story ended in a media rundown, because a model
+# given thirteen equal lines dutifully uses all thirteen. They stay on the record for
+# targeting; they just don't belong in a paragraph about a life.
+_STORY_EXCLUDED = {
+    "news_radio", "news_tv", "news_social", "news_internet", "owns_television",
+}
+
+
 def _circumstance_constraints(skeleton: Dict) -> List[str]:
-    """Plain-language lived-fact lines from the fused `circumstances` block, for the
-    prompt. Empty on un-fused skeletons or ones with no circumstances attached."""
+    """The person's own sentences for each measured circumstance, for the prompt.
+
+    First person and already finished — the model arranges these, it does not
+    re-describe them. Empty on un-fused skeletons or ones with no circumstances.
+    """
     lines = []
     for c in (skeleton.get("circumstances") or []):
+        if c.get("field") in _STORY_EXCLUDED:
+            continue
         gloss = _CIRCUMSTANCE_GLOSS.get(c.get("field"), {}).get(c.get("value"))
         if gloss:
-            lines.append(f"- This person {gloss}.")
+            lines.append(f"- {gloss}")
     return lines
 
 
@@ -282,9 +398,10 @@ def _prompt(skeleton: Dict) -> str:
     )
     circumstance_lines = _circumstance_constraints(skeleton)
     circumstance_block = (
-        "\nFIXED MEASURED CIRCUMSTANCES (real survey facts about this person's material "
-        "life — write AROUND them, keep them true; do NOT contradict them and do NOT "
-        "restate them as numbers or new fields):\n" + "\n".join(circumstance_lines) + "\n"
+        "\nTHIS PERSON'S OWN SENTENCES (real survey facts, already written in their "
+        "voice). These are the RAW MATERIAL for background_story: arrange them, join "
+        "them, order them. Do not contradict one, and do not add a fact that is not "
+        "here:\n" + "\n".join(circumstance_lines) + "\n"
         if circumstance_lines else ""
     )
     return f"""Write English-only persona texture for this South African individual.
@@ -300,19 +417,19 @@ keep them annual — never restate a fee band as a monthly figure.
 Produce a JSON object with ONLY these fields:
 - persona: 1-2 sentences on who they are and their situation. Reference a real local
   setting consistent with the province. English only.
-- background_story: ONE tight paragraph, 45-60 words, in FIRST PERSON ("I ..."), of life
-  history consistent with the fixed facts. Pick the two or three facts that most shape
-  this person's life and write those; do NOT inventory every fact you were given. No
-  list of possessions, no sentence that only restates a survey field. Specific, not
-  generic. English only.
-- voice_guide: 2-3 sentences on HOW they speak IN ENGLISH — vocabulary, formality,
-  what they reference (money in rands, load-shedding, transport, work), tone, and
-  what they would never say. Their tone must be consistent with the measured attitudes
-  above (e.g. a distrustful, pessimistic person does not sound upbeat about government).
-  No other-language words.
-- behavioral_tendencies: 2-3 sentences on what they tend to do in a group discussion
-  (when they speak up, what they push back on), consistent with their archetype AND
-  their measured attitudes.
+- background_story: ONE paragraph, 55-80 words, in FIRST PERSON ("I ..."), that ARRANGES
+  the sentences you were given above into something a person would actually say aloud.
+  Open with the fixed facts (age, schooling, work, province), then work the rest in.
+  Three hard rules:
+    * You may LEAVE OUT a fact that doesn't fit the flow. You may NEVER ADD one — no
+      place, event, hardship, possession, service, employer or family member that is not
+      in the lists above.
+    * Do not choose what to include by whether it sounds good or bad. A comfortable
+      record and a hard one both get written plainly.
+    * No inventory sentences. Never list possessions ("I have my own car, my own
+      computer, my own TV") and never string facts together with commas just to fit
+      them all in. Fold them into natural speech, or leave them out.
+  English only.
 - group_affiliation: a plausible affiliation if the facts support one (e.g. a union,
   church, street committee, taxi association), else "".
 - interested_topics: array of 3-5 topics this person cares about, in their words.
@@ -320,7 +437,104 @@ Produce a JSON object with ONLY these fields:
 Do NOT output age, income, attitudes, beliefs, or emotions as JSON fields — those are
 set elsewhere. (You must still let the measured attitudes shape the voice/outlook you
 write above; just don't emit them as separate fields.)
+
+HARD FENCE — nothing you write may name a thing this record does not contain. Before
+mentioning load-shedding, water cuts, crime, taxis, grants, stokvels, hunger or a named
+suburb, mall, employer or relative, check the lists above. If it is not there, leave it
+out. A shorter true paragraph beats a vivid invented one; this record is the only South
+Africa you know about.
 Return ONLY the JSON object. English only."""
+
+
+# ── Provenance fence ────────────────────────────────────────────────────────
+# The prompt asks the model not to invent referents. Asking is not a rule, so this
+# enforces it: a referent may appear in the texture only when a field in THIS person's
+# record licenses it. Everything here is deterministic — the same discipline as
+# attitude_fuser, applied to prose.
+#
+# The rules mirror backend/scripts/texture_provenance_audit.py, which audits the built
+# library. Keep the two in step: the audit is the report, this is the gate.
+
+def _circ(skeleton: Dict, field: str):
+    for c in (skeleton.get("circumstances") or []):
+        if c.get("field") == field:
+            return c.get("value")
+    return None
+
+
+def _stance(skeleton: Dict, topic: str):
+    for a in (skeleton.get("attitudes") or []):
+        if a.get("topic") == topic:
+            return a.get("stance")
+    return None
+
+
+# (pattern, label, license) — license(skeleton) is True when the record backs the claim.
+_REFERENT_RULES = [
+    (re.compile(r"load[- ]?shedding|power cuts?|rolling blackouts?", re.I), "load-shedding",
+     lambda s: _circ(s, "electricity_reliability") in ("never", "occasional", "half", "most")),
+    (re.compile(r"water outage|taps? run dry|water cuts?|no water", re.I), "water-outage",
+     lambda s: False),  # nothing in the record measures water supply
+    (re.compile(r"\bcrime\b|\bgangs?\b|robbery|hijack|mugg|break-?in", re.I), "crime",
+     lambda s: _stance(s, "crime_fear") in ("mid", "high")
+     or _stance(s, "crime_handling") == "dissatisfied"),
+    (re.compile(r"\btaxis?\b|taxi rank|taxi fare", re.I), "taxi",
+     lambda s: _circ(s, "owns_vehicle") == "none"
+     or "taxi" in str(s.get("transport_to_health_facility") or "").lower()),
+    (re.compile(r"\bgrants?\b|sassa", re.I), "grant",
+     lambda s: bool(s.get("receives_grant"))),
+    (re.compile(r"stokvel|society money", re.I), "stokvel",
+     lambda s: False),  # nothing in the record measures savings-group membership
+    (re.compile(r"\bhungry\b|went without food|skipped? meals?|go to bed hungry", re.I),
+     "hunger",
+     lambda s: _circ(s, "lived_poverty") in ("moderate", "high")),
+]
+
+# Every first name the pool can assign. The model is never told the person's name (it is
+# picked after generation), so ANY of these appearing in the texture is an invented
+# character — which is how 12 library personas ended up with a voice guide describing
+# someone else.
+_POOL_FIRST_NAMES = {
+    n for bank in sa_names._BANKS.values()
+    for key in ("female", "male")
+    for n in bank.get(key, [])
+}
+
+
+# Only the prose THIS generator writes is gated. Retired fields (voice_guide,
+# behavioral_tendencies) still sit on older records; checking them here would fail every
+# regeneration of an old persona on text the model was never asked to produce.
+_CHECKED_TEXT = [f for f in ("persona", "background_story") if f in TEXTURE_FIELDS]
+
+
+def _texture_violations(merged: Dict) -> List[str]:
+    """Everything in this persona's generated texture that its own record does not license."""
+    problems: List[str] = []
+    prose = " ".join(str(merged.get(f) or "") for f in _CHECKED_TEXT)
+
+    for pattern, label, licensed in _REFERENT_RULES:
+        if pattern.search(prose) and not licensed(merged):
+            problems.append(f"unlicensed referent in prose: {label}")
+
+    leaked = _POOL_FIRST_NAMES & set(re.findall(r"\b[A-Z][a-z]+\b", prose))
+    if leaked:
+        problems.append("invented person named: " + ", ".join(sorted(leaked)))
+    return problems
+
+
+def _strip_offending_sentences(merged: Dict) -> Dict:
+    """Last resort when retries are exhausted: drop the sentences carrying an
+    unlicensed referent rather than fail the persona or ship the claim."""
+    bad = [p for p, _label, licensed in _REFERENT_RULES if not licensed(merged)]
+    for field in _CHECKED_TEXT:
+        text = str(merged.get(field) or "")
+        if not text:
+            continue
+        keep = [s for s in re.split(r"(?<=[.!?])\s+", text)
+                if not any(p.search(s) for p in bad)
+                and not (_POOL_FIRST_NAMES & set(re.findall(r"\b[A-Z][a-z]+\b", s)))]
+        merged[field] = " ".join(keep).strip()
+    return merged
 
 
 def _clean(value):
@@ -372,6 +586,18 @@ def generate_texture(
             merged.setdefault("interested_topics", [])
             merged.setdefault("group_affiliation", "")
             # Name comes from the pool, not the model — unique across the build.
+            # Provenance gate. A texture that claims something this person's record
+            # does not license is a failed generation, not a stylistic quibble — retry
+            # it. On the last attempt, strip the offending sentences instead of losing
+            # the persona: a shorter true paragraph beats a vivid invented one.
+            problems = _texture_violations(merged)
+            if problems:
+                if attempt < max_retries:
+                    raise ValueError("texture failed provenance: " + "; ".join(problems))
+                merged = _strip_offending_sentences(merged)
+                print(f"[texture] stripped after {max_retries + 1} attempts: "
+                      + "; ".join(problems), file=sys.stderr)
+
             merged["name"] = pick_unique_name(
                 used,
                 gender=merged.get("gender"),

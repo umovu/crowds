@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "kind": "table",
+  "table": "public.profiles",
+  "sql": "backend/supabase/profiles.sql",
+  "about": "One row per account and whether the operator approved it. The waitlist gate reads approved on every API call.",
+  "written_by": [
+    "trigger handle_new_user",
+    "app/approval.py (_create_pending, approve, claim_notification)",
+    "trigger profiles_stamp_approved"
+  ],
+  "read_by": [
+    "app/approval.py (is_approved, get_profile)",
+    "api/waitlist.py (_is_approved)"
+  ],
+  "rules": [
+    "approved_at is stamped by a trigger when approved flips on; the backend never writes it."
+  ],
+  "fields": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "db": "uuid",
+      "when": "always"
+    },
+    "email": {
+      "type": "string",
+      "nullable": true,
+      "db": "text",
+      "when": "always"
+    },
+    "full_name": {
+      "type": "string",
+      "nullable": true,
+      "db": "text",
+      "when": "always"
+    },
+    "approved": {
+      "type": "boolean",
+      "db": "boolean",
+      "when": "always"
+    },
+    "requested_at": {
+      "type": "string",
+      "db": "timestamptz",
+      "when": "always"
+    },
+    "approved_at": {
+      "type": "string",
+      "nullable": true,
+      "db": "timestamptz",
+      "when": "always"
+    },
+    "notified_at": {
+      "type": "string",
+      "nullable": true,
+      "db": "timestamptz",
+      "when": "always",
+      "note": "The backend sends 'now()' once, guarded by notified_at is null."
+    }
+  }
+}

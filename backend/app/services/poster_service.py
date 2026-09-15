@@ -170,6 +170,8 @@ def save_poster(image_bytes: bytes, mime_type: str, filename: str = "") -> Dict:
 
 
 def _write_record(poster_id: str, record: Dict) -> None:
+    from . import data_model
+    data_model.warn_if_off_model(logger, f"Poster {poster_id}", "poster", record)
     with open(os.path.join(_poster_dir(poster_id), "poster.json"), "w",
               encoding="utf-8") as fh:
         json.dump(record, fh, indent=2, ensure_ascii=False)

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "about": "Web research per archetype for a simulation: archetype name -> research text. Context only, never persona material.",
+  "stored_in": "uploads/simulations/<simulation_id>/enrichment.json",
+  "written_by": [
+    "simulation_manager.prepare_simulation",
+    "api/simulation.py (/research/rerun)"
+  ],
+  "read_by": [
+    "simulation_manager.prepare_simulation",
+    "api/simulation.py (/enrichment)"
+  ],
+  "rules": [
+    "Web research makes context only; it never authors a persona (CLAUDE.md)."
+  ],
+  "values": {
+    "type": "string"
+  }
+}

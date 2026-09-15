@@ -20,17 +20,26 @@
     "  Framing deliberately avoids naming the event, date, or place where possible.",
     "  'high' scenarios prove little on their own — read them alongside the others."
   ],
-
   "scenarios": [
     {
       "id": "eskom-privatisation",
       "event": "Support for privatising Eskom to improve electricity supply",
       "framing": "Some people say the state power utility should be sold to private companies, because private owners would run it more efficiently and keep the lights on. Others say electricity is too important to hand to private owners chasing profit. Where do you stand?",
-      "answers": ["agree", "disagree", "neither"],
+      "answers": [
+        "agree",
+        "disagree",
+        "neither"
+      ],
       "ground_truth": {
         "kind": "afrobarometer",
         "column": "Q80A_SAF",
-        "map": {"1": "disagree", "2": "disagree", "3": "neither", "4": "agree", "5": "agree"}
+        "map": {
+          "1": "disagree",
+          "2": "disagree",
+          "3": "neither",
+          "4": "agree",
+          "5": "agree"
+        }
       },
       "contamination": "low",
       "notes": "Q80A is HELD OUT (we fused Q80C only). Every persona has lived electricity_reliability, so this tests whether a measured circumstance drives a policy view."
@@ -39,11 +48,21 @@
       "id": "eskom-ownership-neutral",
       "event": "Support for private ownership of the state power utility (neutral wording)",
       "framing": "Some people say the state power utility would keep the lights on better if companies outside government owned and ran it. Others say it should stay in government hands. Where do you stand?",
-      "answers": ["agree", "disagree", "neither"],
+      "answers": [
+        "agree",
+        "disagree",
+        "neither"
+      ],
       "ground_truth": {
         "kind": "afrobarometer",
         "column": "Q80A_SAF",
-        "map": {"1": "disagree", "2": "disagree", "3": "neither", "4": "agree", "5": "agree"}
+        "map": {
+          "1": "disagree",
+          "2": "disagree",
+          "3": "neither",
+          "4": "agree",
+          "5": "agree"
+        }
       },
       "contamination": "low",
       "notes": "WORDING PAIR with eskom-privatisation: same question, same ground truth, with 'sold', 'private' and 'chasing profit' removed. If the panel's answer moves between the two, the failure is trigger-word pattern matching, not the persona data. Must be run on the SAME seeds as its pair."
@@ -52,11 +71,21 @@
       "id": "electricity-competition",
       "event": "Allowing other companies to compete with the state power utility",
       "framing": "Some people say other companies should be allowed to generate and sell electricity in competition with the state utility. Others say that would only benefit those who can pay more. Where do you stand?",
-      "answers": ["agree", "disagree", "neither"],
+      "answers": [
+        "agree",
+        "disagree",
+        "neither"
+      ],
       "ground_truth": {
         "kind": "afrobarometer",
         "column": "Q80B_SAF",
-        "map": {"1": "disagree", "2": "disagree", "3": "neither", "4": "agree", "5": "agree"}
+        "map": {
+          "1": "disagree",
+          "2": "disagree",
+          "3": "neither",
+          "4": "agree",
+          "5": "agree"
+        }
       },
       "contamination": "low",
       "notes": "Held out. Pairs with eskom-privatisation — a panel that gets one right and the other wrong tells you it is pattern-matching on 'privatisation', not reasoning."
@@ -65,11 +94,19 @@
       "id": "jobs-vs-environment",
       "event": "Whether government should prioritise jobs over protecting the environment",
       "framing": "Some people say government should focus on creating jobs even if that harms the environment. Others say protecting the environment matters more, even if it costs jobs. Where do you stand?",
-      "answers": ["jobs", "environment", "neither"],
+      "answers": [
+        "jobs",
+        "environment",
+        "neither"
+      ],
       "ground_truth": {
         "kind": "afrobarometer",
         "column": "Q71",
-        "map": {"1": "jobs", "2": "environment", "3": "neither"}
+        "map": {
+          "1": "jobs",
+          "2": "environment",
+          "3": "neither"
+        }
       },
       "contamination": "low",
       "notes": "Held out. Unemployment is the top self-reported problem in SA, so a panel that does NOT lean heavily to jobs is failing an easy case."
@@ -78,11 +115,20 @@
       "id": "democracy-satisfaction",
       "event": "Satisfaction with the way democracy works in South Africa",
       "framing": "Overall, how satisfied are you with the way democracy works in this country?",
-      "answers": ["satisfied", "dissatisfied", "neither"],
+      "answers": [
+        "satisfied",
+        "dissatisfied",
+        "neither"
+      ],
       "ground_truth": {
         "kind": "afrobarometer",
         "column": "Q31",
-        "map": {"1": "dissatisfied", "2": "dissatisfied", "3": "satisfied", "4": "satisfied"}
+        "map": {
+          "1": "dissatisfied",
+          "2": "dissatisfied",
+          "3": "satisfied",
+          "4": "satisfied"
+        }
       },
       "contamination": "medium",
       "notes": "Held out, but adjacent to fused gov_trust — a strong result here is partly expected, so treat it as a sanity check rather than evidence of generalisation."
@@ -91,14 +137,23 @@
       "id": "etolls-noncompliance",
       "event": "Gauteng e-toll non-payment (gantries installed 2013, scheme scrapped 2022)",
       "framing": "Government installs electronic toll gantries on the highways you use. You will be billed monthly for every trip. Many people around you are saying they simply will not pay, and it is not clear what happens to those who refuse. Would you pay your toll bill?",
-      "answers": ["pay", "not_pay", "unsure"],
+      "answers": [
+        "pay",
+        "not_pay",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "external",
-        "distribution": {"not_pay": 0.75, "pay": 0.25},
+        "distribution": {
+          "not_pay": 0.75,
+          "pay": 0.25
+        },
         "source": "SANRAL reported e-toll compliance collapsing to roughly 20-25% of billed amounts before the scheme was scrapped in 2022; non-payment is therefore ~75-80%.",
         "confidence": "approximate — compliance figures were reported as a range and varied by year. Treat +/-10pp as within tolerance."
       },
-      "subgroup": {"province": "Gauteng"},
+      "subgroup": {
+        "province": "Gauteng"
+      },
       "contamination": "medium",
       "notes": "The strongest case in the set because ground truth is a measured BEHAVIOUR, not a poll. Tests whether low gov_trust plus a legitimacy objection produces non-compliance. Framing deliberately omits 'e-toll', 'SANRAL' and the date."
     },
@@ -106,10 +161,16 @@
       "id": "vat-increase",
       "event": "Proposed VAT increase (0.5pp proposed in the 2025 Budget, withdrawn after backlash)",
       "framing": "Government proposes raising VAT — the tax added to almost everything you buy — by half a percentage point, to pay for public services. Prices on most goods would rise slightly. Do you support this?",
-      "answers": ["support", "oppose", "neither"],
+      "answers": [
+        "support",
+        "oppose",
+        "neither"
+      ],
       "ground_truth": {
         "kind": "external",
-        "distribution": {"oppose": 0.70},
+        "distribution": {
+          "oppose": 0.7
+        },
         "partial": true,
         "source": "The 2025 Budget VAT increase was withdrawn after broad public and coalition opposition — a revealed-preference outcome rather than a single poll.",
         "confidence": "low precision — no single authoritative poll figure. The testable claim is DIRECTION AND INTENSITY (strong majority opposition), not the exact share."
@@ -117,12 +178,15 @@
       "contamination": "medium",
       "notes": "Tests intensity, not direction: everyone dislikes a tax rise, so the signal is whether tight-budget and grant-dependent personas object strongly enough to imply a reversal."
     },
-
     {
       "id": "case-mobile-money",
       "event": "Mobile money without a bank account (M-Pesa SA, 2010/2014, shut 2016) — FAILED",
       "framing": "We're launching a way to send and store money using just your cellphone number — you don't need a bank account at all. You load cash at any spaza shop or our agent in the mall, then send it to anyone by SMS, and they collect cash from another agent near them. Sending R100 costs about R7. It works on any phone, even a feature phone. Would you use this instead of the way you move money now?",
-      "answers": ["would_use", "would_not_use", "unsure"],
+      "answers": [
+        "would_use",
+        "would_not_use",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "would_not_use",
@@ -137,7 +201,11 @@
       "id": "case-branchless-bank",
       "event": "Branchless bank with in-store sign-up (TymeBank, from 2019) — SUCCEEDED",
       "framing": "We're opening a new bank with no branches at all. You sign up in under five minutes at a kiosk inside the Pick n Pay or Boxer where you already shop — just your ID and your fingerprint. No monthly fees, no minimum balance. Savings earn up to 10%. You send money, buy airtime and buy electricity from your phone. Card swipes at the till are free. Would you open an account?",
-      "answers": ["would_open", "would_not_open", "unsure"],
+      "answers": [
+        "would_open",
+        "would_not_open",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "would_open",
@@ -152,7 +220,11 @@
       "id": "case-till-remittance",
       "event": "Cash money transfer at a supermarket till (Shoprite, from ~2015) — SUCCEEDED",
       "framing": "You're standing at the Shoprite till. Along with your groceries you can send money to anyone in the country for R10 flat — they collect the cash at any Shoprite, no bank account, no card, they just need their ID and a code you SMS them. Would you use this to send money home?",
-      "answers": ["would_use", "would_not_use", "unsure"],
+      "answers": [
+        "would_use",
+        "would_not_use",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "would_use",
@@ -167,7 +239,11 @@
       "id": "case-ride-hailing",
       "event": "Ride-hailing in a protected taxi market (Uber SA, from 2013) — SUCCEEDED, sharply segmented",
       "framing": "We've built an app where you press a button and a car comes to fetch you. You see the driver's name and the price before you get in, and you pay by card in the app so no cash changes hands. It's roughly 30% cheaper than a metered taxi. Would you use it instead of a metered taxi or a minibus?",
-      "answers": ["would_use", "would_not_use", "unsure"],
+      "answers": [
+        "would_use",
+        "would_not_use",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "would_use",
@@ -182,7 +258,11 @@
       "id": "case-unemployment-grant",
       "event": "Unconditional cash grant for unemployed adults (SRD R350, from 2020) — huge uptake",
       "framing": "Government is considering a R350 a month payment for unemployed adults who don't receive any other grant. You'd apply on your phone by SMS or WhatsApp, and it pays into your bank account or you collect at the Post Office. Would you apply?",
-      "answers": ["would_apply", "would_not_apply", "unsure"],
+      "answers": [
+        "would_apply",
+        "would_not_apply",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "would_apply",
@@ -197,7 +277,11 @@
       "id": "case-minimum-wage",
       "event": "National minimum wage (R20/hour, effective 2019) — implemented, contested",
       "framing": "Government is setting a national minimum wage of R20 an hour, covering domestic workers and farm workers too, though at a slightly lower starting rate. Employers who pay less will face penalties. Do you support this?",
-      "answers": ["support", "oppose", "unsure"],
+      "answers": [
+        "support",
+        "oppose",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "support",
@@ -212,7 +296,11 @@
       "id": "case-national-health-insurance",
       "event": "Universal health fund replacing private cover (NHI Bill, signed 2024) — polarised",
       "framing": "Government is introducing a single national health fund. Everyone contributes through tax, and everyone gets treated at any accredited hospital or clinic, free at the point of care. Private medical schemes would no longer cover services the fund provides. Do you support this?",
-      "answers": ["support", "oppose", "unsure"],
+      "answers": [
+        "support",
+        "oppose",
+        "unsure"
+      ],
       "ground_truth": {
         "kind": "outcome",
         "direction": "support",
@@ -222,6 +310,214 @@
       },
       "contamination": "medium",
       "notes": "The best available test of whether the panel can disagree at all. Every run so far has converged, so consensus here — in either direction — is the failure."
+    },
+    {
+      "id": "roads-handling",
+      "event": "How well government is handling maintaining roads and bridges",
+      "framing": "Think about the roads and bridges you use every day. How well or badly is government handling keeping them in good condition?",
+      "answers": [
+        "well",
+        "badly",
+        "neither"
+      ],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q46K",
+        "map": {
+          "1": "badly",
+          "2": "badly",
+          "3": "well",
+          "4": "well"
+        }
+      },
+      "contamination": "low",
+      "notes": "HELD OUT (we fused Q46I water and Q46L electricity only). Roads are the most visible municipal function and every persona carries a measured road-surface context, so this tests whether lived local conditions drive a local-service judgement rather than a generic anti-government prior."
+    },
+    {
+      "id": "councillor-performance",
+      "event": "Approval of your own local government councillor's performance",
+      "framing": "Think about the councillor for your own ward. Do you approve or disapprove of the way they have performed their job over the past twelve months?",
+      "answers": [
+        "approve",
+        "disapprove",
+        "neither"
+      ],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q47C",
+        "map": {
+          "1": "disapprove",
+          "2": "disapprove",
+          "3": "approve",
+          "4": "approve"
+        }
+      },
+      "contamination": "low",
+      "notes": "HELD OUT. Pairs with councillor-corruption: real respondents are markedly kinder to their OWN councillor than to councillors as a class. A panel that scores both equally negative has collapsed the near/far distinction that matters most in a local election."
+    },
+    {
+      "id": "councillor-corruption",
+      "event": "How many local government councillors are involved in corruption",
+      "framing": "How many local government councillors do you think are involved in corruption, or haven't you heard enough to say?",
+      "answers": [
+        "most_or_all",
+        "some_or_none",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q38D",
+        "map": {
+          "0": "some_or_none",
+          "1": "some_or_none",
+          "2": "most_or_all",
+          "3": "most_or_all"
+        }
+      },
+      "pair": "councillor-performance",
+      "contamination": "low",
+      "notes": "HELD OUT. Deliberately paired with councillor-performance. The correct pattern is harsh on the class, softer on the individual. The same answer to both is a failure however well either half scores. Must be run on the SAME seeds as its pair."
+    },
+    {
+      "id": "councillor-efficacy",
+      "event": "Whether ordinary people can make local councillors listen to them",
+      "framing": "Suppose people in your area got together to raise an issue with the local council. How likely is it that you could actually make the councillors listen to what you have to say?",
+      "answers": [
+        "likely",
+        "unlikely",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q11A",
+        "map": {
+          "0": "unlikely",
+          "1": "unlikely",
+          "2": "likely",
+          "3": "likely"
+        }
+      },
+      "contamination": "low",
+      "notes": "HELD OUT (Q34B 'councillors listen' IS fused, so this is the adjacent but distinct EFFICACY question: can I move them, not do they listen). This is the core voter-education question, because a voter who believes nothing they do matters will not vote. Watch for the panel being far more fatalistic than the real distribution."
+    },
+    {
+      "id": "budget-transparency",
+      "event": "Whether local government budgets should be public",
+      "framing": "Should the local council's budget, meaning how much money it gets and what it spends it on, be available for anyone in the community to see, or should it be for government use only?",
+      "answers": [
+        "public",
+        "government_only",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q76A",
+        "map": {
+          "0": "government_only",
+          "1": "public"
+        }
+      },
+      "contamination": "low",
+      "notes": "HELD OUT. An easy near-consensus case (real support is very high) used as a floor check: a panel that manufactures disagreement here is adding noise, not signal."
+    },
+    {
+      "id": "elections-remove-leaders",
+      "event": "Whether elections let voters remove leaders who do not do what people want",
+      "framing": "Think about how elections work in practice in this country. How well do they let voters remove leaders who do not do what the people want?",
+      "answers": [
+        "well",
+        "badly",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "afrobarometer",
+        "column": "Q12B",
+        "map": {
+          "0": "badly",
+          "1": "badly",
+          "2": "well",
+          "3": "well"
+        }
+      },
+      "contamination": "medium",
+      "notes": "HELD OUT, but adjacent to fused gov_trust, so treat it as a sanity check. The voter-education payload here is the reasoning, not the share: the objections are exactly the beliefs a turnout campaign has to answer."
+    },
+    {
+      "id": "case-prepaid-water-meter",
+      "event": "Prepaid water meters in place of a monthly bill (Soweto/Phiri rollout from 2003) - RESISTED, litigated",
+      "framing": "Your municipality is replacing your water connection with a prepaid meter. You get a free basic amount each month, and after that the water only runs while there is credit loaded on the meter. You buy credit the same way you buy electricity, at the shop or on your phone. No more surprise bills and no more debt to the council. Would you accept the meter being installed?",
+      "answers": [
+        "would_accept",
+        "would_refuse",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_refuse",
+        "expected_split": "Refusal concentrated in low-income, large-household and township personas, where the free allocation runs out mid-month and the meter cuts water off with no grace. Higher-income personas are close to indifferent because they never reach the limit.",
+        "source": "The Soweto prepaid water rollout drew sustained community resistance, meter destruction and the Mazibuko constitutional litigation (2009).",
+        "confidence": "HIGH on the resistance and its cause; no share was ever measured, so score direction and segmentation only."
+      },
+      "pair": "case-prepaid-electricity-meter",
+      "contamination": "medium",
+      "notes": "The strongest local-government case in the set. The objection is not the technology, it is self-disconnection when the money runs out. Personas carry measured 'gone without water' and household size, so refusal should come from the data. A panel that likes this because it sounds like convenience has failed."
+    },
+    {
+      "id": "case-prepaid-electricity-meter",
+      "event": "Prepaid electricity meters in place of a monthly bill (national rollout) - ADOPTED, now the default",
+      "framing": "Your municipality is replacing your electricity connection with a prepaid meter. You buy units at the shop or on your phone and the power runs while there are units left. No more monthly bill and no more debt to the council. Would you accept the meter being installed?",
+      "answers": [
+        "would_accept",
+        "would_refuse",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_accept",
+        "source": "Prepaid electricity metering became the normal arrangement for most South African households, widely preferred over billed accounts for budget control.",
+        "confidence": "HIGH on adoption; LOW on any precise share."
+      },
+      "pair": "case-prepaid-water-meter",
+      "contamination": "medium",
+      "notes": "MECHANISM PAIR with case-prepaid-water-meter. Identical mechanism, opposite real outcome, because a household can go a night without lights but not a week without water. A panel that answers both the same way is pattern-matching on the word 'prepaid' and cannot be trusted on any local-service question. Must be run on the SAME seeds as its pair."
+    },
+    {
+      "id": "case-free-basic-services",
+      "event": "A free monthly allocation of water and electricity for poor households (Free Basic Services, from 2001) - ADOPTED, contested in practice",
+      "framing": "The council is offering every registered indigent household a free amount of water and electricity each month, enough for basic needs. You have to register at the municipal offices with your ID and proof of income, and re-register every year. Would you register?",
+      "answers": [
+        "would_register",
+        "would_not_register",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "would_register",
+        "expected_split": "Willingness is near-universal among eligible personas; the real failure was ACCESS, meaning registration friction, distant offices, documents, annual re-registration and households never being told they qualified. Objections should be about getting registered, not about wanting it.",
+        "source": "Free Basic Services was adopted nationally, but municipal indigent registers persistently under-covered the households that qualified.",
+        "confidence": "HIGH on uptake willingness and on the access failure; LOW on shares."
+      },
+      "contamination": "medium",
+      "notes": "The local-government twin of case-unemployment-grant: a want-versus-access test. If the panel objects on WANTING it rather than on GETTING it, the friction reasoning is not coming from the persona data."
+    },
+    {
+      "id": "case-municipal-debt-cutoff",
+      "event": "Cutting off services to households in arrears to recover municipal debt - RESISTED",
+      "framing": "The council says it cannot fix the roads and the water pipes because too many households are behind on their accounts. From next month, any household in arrears will have its water restricted and its electricity disconnected until it agrees to a payment plan. Do you support this?",
+      "answers": [
+        "support",
+        "oppose",
+        "unsure"
+      ],
+      "ground_truth": {
+        "kind": "outcome",
+        "direction": "oppose",
+        "expected_split": "Opposition strongest among low-income and grant-dependent personas; ratepaying homeowners and small business owners should be measurably more supportive. A single verdict for the whole room is a failure by construction.",
+        "source": "Municipal credit-control and disconnection drives have repeatedly triggered community resistance, illegal reconnection and reversal, while ratepayer associations have pushed for stricter enforcement.",
+        "confidence": "MEDIUM on the overall direction; HIGH that it splits on income and ratepayer status."
+      },
+      "contamination": "low",
+      "notes": "The clearest 'who pays' local case, and the one most likely to appear in a 2026 municipal manifesto. Scored on whether the ratepayer archetypes diverge from the grant-dependent ones, not on the room total."
     }
   ]
 }

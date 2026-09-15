@@ -17,10 +17,6 @@
           <button class="pp-link-btn" :class="{ active: showPast }" :disabled="busy" @click="openPast">Past panels ▾</button>
           <button v-if="session" class="pp-link-btn" :disabled="busy" @click="newPanel">+ New panel</button>
         </div>
-        <div class="pp-mode-switch">
-          <button class="pp-mode-btn" :class="{ active: mode === 'product' }" :disabled="busy || !!session" @click="mode = 'product'">Product</button>
-          <button class="pp-mode-btn" :class="{ active: mode === 'policy' }" :disabled="busy || !!session" @click="mode = 'policy'">Policy</button>
-        </div>
       </div>
 
       <!-- Past panels dropdown — saved sessions on disk, click to reopen -->
@@ -49,7 +45,7 @@
     <!-- 01 / The pitch -->
     <section class="pp-section">
       <div class="pp-section-header">
-        <span>01 / {{ mode === 'product' ? 'THE PITCH' : 'THE ANNOUNCEMENT' }}</span>
+        <span>01 / WHAT YOU'RE PUTTING TO THEM</span>
         <span>Required</span>
       </div>
       <textarea
@@ -57,9 +53,7 @@
         class="pp-textarea"
         rows="4"
         :disabled="busy"
-        :placeholder="mode === 'product'
-          ? 'Describe the product and the price. e.g. A R99/month prepaid solar lantern subscription for township households, paid via airtime.'
-          : 'Describe the policy or announcement. e.g. A new municipal water tariff adding R150/month for households above 6kL.'"
+        placeholder="Describe the offer, service or announcement, with a price if there is one. e.g. A R99/month prepaid solar lantern subscription, or a municipal water tariff adding R150/month above 6kL."
       ></textarea>
     </section>
 
@@ -122,7 +116,7 @@
     <section v-if="session" class="pp-section">
       <div class="pp-section-header">
         <span>03 / THE ROOM</span>
-        <span>{{ session.cast_size }} personas · {{ allocationLine }} <template v-if="session.mode === 'product'">· budget mix {{ tierMixLine }}</template></span>
+        <span>{{ session.cast_size }} personas · {{ allocationLine }} <template v-if="tierMixLine !== '—'">· budget mix {{ tierMixLine }}</template></span>
       </div>
       <div class="pp-roster">
         <span v-for="a in session.agents" :key="a.id" class="pp-roster-chip" :title="a.persona || ''">
@@ -200,7 +194,7 @@
             <div class="pp-dash-value">{{ emotionLine }}</div>
             <div class="pp-dash-label">emotional temperature</div>
           </div>
-          <div v-if="session && session.mode === 'product'" class="pp-dash-card">
+          <div v-if="session && tierMixLine !== '—'" class="pp-dash-card">
             <div class="pp-dash-value">{{ tierMixLine }}</div>
             <div class="pp-dash-label">budget mix (from real data)</div>
           </div>
@@ -304,7 +298,6 @@ const showPast = ref(false)
 // Multi-select: "everyone" is exclusive (it's already the full mix); picking
 // any specific group drops it, and clearing every group falls back to it.
 const selectedSegments = ref(['everyone'])
-const mode = ref('product')
 const pitchText = ref('')
 const size = ref(12)
 const sizeOptions = [8, 12, 20]
@@ -440,7 +433,7 @@ const PRODUCT_STANCE_LABELS = {
   support: 'won over', neutral: 'curious', concerned: 'unconvinced',
   oppose: 'resistant', resist: 'hostile',
 }
-const stanceLabel = (s) => (session.value && session.value.mode === 'product'
+const stanceLabel = (s) => (session.value && session.value.mode !== 'policy'
   ? (PRODUCT_STANCE_LABELS[s] || s) : s)
 const firstName = (s) => (s || 'them').split(' ')[0]
 const isAsking = (id) => !!(followups[id] && followups[id].loading)
@@ -461,7 +454,6 @@ const assemblePanel = async (reroll = false) => {
   try {
     const res = await createSession({
       pitch: pitchText.value.trim(),
-      mode: mode.value,
       n: size.value,
       segments: selectedSegments.value,
       // Re-roll = same groups, different people. Otherwise stable for the session.
@@ -494,7 +486,6 @@ const restoreSession = async (sessionId) => {
     if (Array.isArray(detail.data.segments) && detail.data.segments.length) {
       selectedSegments.value = detail.data.segments
     }
-    if (detail.data.mode) mode.value = detail.data.mode
 
     const rRes = await listRounds(sessionId, true)   // full=1 → per-agent results
     const restored = (rRes.data.rounds || []).map(r => ({
@@ -703,23 +694,6 @@ onMounted(async () => {
   font-size: 0.68rem;
   color: #1E9E5A;
 }
-
-.pp-mode-switch { display: flex; gap: 4px; flex-shrink: 0; }
-.pp-mode-btn {
-  padding: 5px 14px;
-  border: 1px solid #E5E5E5;
-  background: #fff;
-  border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #777;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.pp-mode-btn:hover:not(:disabled) { border-color: #1E9E5A; color: #1E9E5A; }
-.pp-mode-btn.active { background: #1E9E5A; border-color: #1E9E5A; color: #fff; }
-.pp-mode-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Sections */
 .pp-section { padding: 20px; }

@@ -103,6 +103,26 @@
              every run, so it belongs with the other things you set and forget. -->
         <div v-if="activeTab === 'context' && !showMobileMenu" class="tab-panel">
           <div class="field-group">
+            <!-- How to write it. Most people arrive here with a blank box and
+                 no idea what belongs in it, so the shape of a good answer is
+                 shown before the box, not after. -->
+            <div class="ctx-guide">
+              <div class="ctx-guide-head">What to put in here</div>
+              <ul class="ctx-guide-list">
+                <li><b>What it is.</b> One line, plain words.</li>
+                <li><b>What it costs.</b> The real price, and how it is paid.</li>
+                <li><b>Who buys it today.</b> The people already saying yes.</li>
+                <li><b>Anything odd about it.</b> Rules, installs, waiting lists.</li>
+              </ul>
+              <button class="ctx-eg-toggle" @click="showCtxExample = !showCtxExample">
+                {{ showCtxExample ? 'Hide example' : 'Show an example' }}
+              </button>
+              <div v-if="showCtxExample" class="ctx-eg">
+                <p class="ctx-eg-good"><b>Good:</b> {{ CTX_EXAMPLE }}</p>
+                <p class="ctx-eg-bad"><b>Too thin:</b> "We sell biodigesters."</p>
+                <button class="ctx-eg-toggle" @click="useTemplate">Start from a template</button>
+              </div>
+            </div>
             <div class="field">
               <label class="field-label">About your offer</label>
               <textarea
@@ -264,6 +284,9 @@ import { supabase } from '../../lib/supabase'
 import { getContext, saveContext } from '../../api/context'
 
 const emit = defineEmits(['close', 'open-sim'])
+// Lets a caller (the empty-context nudge on the home screen) land straight on
+// a tab instead of dropping people on Profile to go hunting.
+const props = defineProps({ initialTab: { type: String, default: '' } })
 
 const { status, isPaid, isCancelled, refresh: refreshBilling, upgrade, cancel } = useBilling()
 const { user } = useAuth()
@@ -283,6 +306,28 @@ const profileMsg = ref(null)  // { type: 'ok' | 'err', text }
 // (most visits here are for billing or the password), and re-loaded each time
 // so a second device's edit doesn't get silently overwritten by a stale draft.
 const ctxBody = ref('')
+const showCtxExample = ref(false)
+
+// The worked example and the skeleton behind "Start from a template".
+const CTX_EXAMPLE = 'We install home biodigesters in South Africa. R17,000 fitted, '
+  + 'paid up front or over 12 months. Food and garden waste in, cooking gas and '
+  + 'fertiliser out. Buyers today are homeowners in Gauteng who already compost. '
+  + 'Bigger units go to schools on a company CSI budget. Install takes a day and '
+  + 'needs a small patch of yard.'
+const CTX_TEMPLATE = 'What it is: \n'
+  + 'What it costs: \n'
+  + 'Who buys it today: \n'
+  + 'Anything odd about it: \n'
+
+// Only ever fills an empty box — a template must not eat something written.
+function useTemplate() {
+  if ((ctxBody.value || '').trim()) {
+    ctxMsg.value = { type: 'err', text: 'Clear the box first to use the template.' }
+    return
+  }
+  ctxBody.value = CTX_TEMPLATE
+  ctxMsg.value = null
+}
 const savingCtx = ref(false)
 const ctxLoaded = ref(false)
 const ctxMsg = ref(null)
@@ -485,6 +530,7 @@ function onKeydown(e) {
 }
 
 onMounted(() => {
+  if (props.initialTab) openFullpage(props.initialTab)
   document.addEventListener('keydown', onKeydown)
   refreshBilling()  // load real plan + usage
 })
@@ -667,6 +713,28 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1.4;
   max-width: 60%;
 }
+/* Your context — the how-to card above the box */
+.ctx-guide {
+  padding: 12px 14px; border: 1px solid #e6e6e6; border-radius: 10px;
+  background: #fafafa;
+}
+.ctx-guide-head {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #1E9E5A; margin-bottom: 8px;
+}
+.ctx-guide-list { margin: 0; padding-left: 18px; }
+.ctx-guide-list li { font-size: 0.78rem; line-height: 1.7; color: #444; }
+.ctx-guide-list b { color: #1a1a1a; }
+.ctx-eg-toggle {
+  margin-top: 10px; padding: 0; border: 0; background: none; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: #1E9E5A;
+  text-decoration: underline;
+}
+.ctx-eg { margin-top: 10px; border-top: 1px dashed #ddd; padding-top: 10px; }
+.ctx-eg p { margin: 0 0 8px; font-size: 0.76rem; line-height: 1.6; }
+.ctx-eg-good { color: #444; }
+.ctx-eg-bad { color: #999; }
+
 /* Your context — same field vocabulary, just taller and with the boundary note */
 .ctx-textarea { resize: vertical; min-height: 150px; line-height: 1.55; }
 .ctx-hint {

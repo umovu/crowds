@@ -162,8 +162,9 @@ def test_policy_primary_with_product_lens_adds_budget_and_keeps_policy_question(
     # budget reality block present (computed from real tier, not the LLM)
     assert "BUDGET REALITY" in out
     assert "TIGHT" in out
-    # primary policy question still present
-    assert "What does this mean for YOU" in out
+    # primary policy question still present (neutral wording: no "afraid of",
+    # no invitation to invent people and places)
+    assert "What does this mean for you" in out
     # additive affordability sub-question present
     assert "justify the spend" in out
     # never emits a buy-% / probability

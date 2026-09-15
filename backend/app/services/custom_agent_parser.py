@@ -430,7 +430,7 @@ Return ONLY a valid JSON array of agent objects. No explanation outside the JSON
         # Build background story
         background_story = data.get("background_story", "")
 
-        return AgentProfile(
+        profile = AgentProfile(
             id=idx,
             name=data.get("name", f"Agent_{idx}"),
             persona=persona or f"A participant named {data.get('name', '')}.",
@@ -460,6 +460,19 @@ Return ONLY a valid JSON array of agent objects. No explanation outside the JSON
             source_entity_uuid=None,
             source_entity_type="custom",
         )
+        # Outside data, often parsed by a model: say when it breaks the custom agent
+        # model (a stance no room understands, a story long enough to flood a prompt).
+        # Logged, never refused — the user's agent is still seated.
+        try:
+            from . import data_model
+            problems = data_model.model_problems(
+                "custom_agent", profile.to_agentsociety_format(), f"custom agent {profile.name!r}")
+        except Exception as e:  # noqa: BLE001 — a check must never drop an agent
+            problems = [f"could not check: {e}"]
+        if problems:
+            logger.warning(f"Custom agent {profile.name!r} does not match its data model: "
+                           f"{len(problems)} problem(s). First: {'; '.join(problems[:3])}")
+        return profile
 
     @staticmethod
     def merge_profiles(auto_profiles, custom_profiles) -> List[Dict[str, Any]]:

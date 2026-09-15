@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "about": "Reactive and scheduled event rules for policy simulations: when a trigger fires, an event is injected into the opinion space.",
+  "stored_in": "backend/app/config/event_rules.json",
+  "written_by": [
+    "hand-authored"
+  ],
+  "read_by": [
+    "event_rule_engine.EventRuleEngine"
+  ],
+  "rules": [
+    "Rule ids are unique.",
+    "trigger.type is one the engine evaluates; the other trigger fields are the parameters that type reads."
+  ],
+  "fields": {
+    "version": {
+      "type": "string",
+      "when": "always"
+    },
+    "description": {
+      "type": "string",
+      "when": "always"
+    },
+    "rules": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "when": "always"
+          },
+          "description": {
+            "type": "string",
+            "when": "always"
+          },
+          "category": {
+            "type": "string",
+            "when": "always"
+          },
+          "applies_to_modes": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "allowed": [
+                "policy",
+                "product"
+              ]
+            },
+            "when": "optional",
+            "note": "Unset means policy only."
+          },
+          "trigger": {
+            "type": "object",
+            "fields": {
+              "type": {
+                "type": "string",
+                "allowed": [
+                  "threshold",
+                  "topic_mention_count",
+                  "archetype_interaction",
+                  "sustained_non_participation",
+                  "non_participation_reason_threshold",
+                  "radicalism_drift",
+                  "archetype_impact_threshold",
+                  "archetype_response_count",
+                  "scheduled"
+                ],
+                "when": "always"
+              },
+              "metric": {
+                "type": "string",
+                "allowed": [
+                  "pct_agents_with_impact_above"
+                ],
+                "when": "optional"
+              },
+              "value": {
+                "type": "number",
+                "when": "optional"
+              },
+              "min_proportion": {
+                "type": "number",
+                "min": 0,
+                "max": 1,
+                "when": "optional"
+              },
+              "window_rounds": {
+                "type": "integer",
+                "min": 1,
+                "when": "optional"
+              },
+              "topics": {
+                "type": "list",
+                "items": {
+                  "type": "string"
+                },
+                "when": "optional"
+              },
+              "min_count": {
+                "type": "integer",
+                "min": 1,
+                "when": "optional"
+              },
+              "primary_archetype": {
+                "type": "string",
+                "when": "optional"
+              },
+              "secondary_archetypes": {
+                "type": "list",
+                "items": {
+                  "type": "string"
+                },
+                "when": "optional"
+              },
+              "min_secondary_count": {
+                "type": "integer",
+                "min": 0,
+                "when": "optional"
+              },
+              "reason_category": {
+                "type": "string",
+                "allowed": [
+                  "distrust",
+                  "fear",
+                  "time_constraints",
+                  "apathy",
+                  "other"
+                ],
+                "when": "optional"
+              },
+              "min_proportion_of_non_participants": {
+                "type": "number",
+                "min": 0,
+                "max": 1,
+                "when": "optional"
+              },
+              "from_max": {
+                "type": "number",
+                "when": "optional"
+              },
+              "to_min": {
+                "type": "number",
+                "when": "optional"
+              },
+              "archetype": {
+                "type": "string",
+                "when": "optional"
+              },
+              "min_impact_score": {
+                "type": "number",
+                "min": 0,
+                "max": 1,
+                "when": "optional"
+              },
+              "min_responses": {
+                "type": "integer",
+                "min": 1,
+                "when": "optional"
+              },
+              "rounds": {
+                "type": "list",
+                "items": {
+                  "type": "integer",
+                  "min": 0
+                },
+                "when": "optional"
+              },
+              "consecutive_rounds": {
+                "type": "integer",
+                "min": 1,
+                "when": "optional"
+              },
+              "count_action_types": {
+                "type": "list",
+                "items": {
+                  "type": "string"
+                },
+                "when": "optional"
+              },
+              "require_action_types": {
+                "type": "list",
+                "items": {
+                  "type": "string"
+                },
+                "when": "optional"
+              }
+            },
+            "when": "always"
+          },
+          "event": {
+            "type": "object",
+            "fields": {
+              "type": {
+                "type": "string",
+                "when": "always"
+              },
+              "source": {
+                "type": "string",
+                "when": "always"
+              },
+              "title": {
+                "type": "string",
+                "min_length": 1,
+                "when": "always"
+              },
+              "content": {
+                "type": "string",
+                "min_length": 1,
+                "when": "always"
+              },
+              "affected_archetypes": {
+                "type": "list",
+                "items": {
+                  "type": "string"
+                },
+                "when": "always"
+              },
+              "severity": {
+                "type": "string",
+                "allowed": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ],
+                "when": "always"
+              },
+              "persist_rounds": {
+                "type": "integer",
+                "min": 1,
+                "when": "always"
+              }
+            },
+            "when": "always"
+          },
+          "cooldown_rounds": {
+            "type": "integer",
+            "min": 0,
+            "when": "always"
+          },
+          "max_triggers_per_simulation": {
+            "type": "integer",
+            "min": 1,
+            "when": "always"
+          }
+        }
+      },
+      "when": "always"
+    }
+  }
+}

@@ -12,6 +12,22 @@ from typing import Dict, Any, List, Optional
 from enum import Enum
 from dataclasses import dataclass, field, asdict
 from ..config import Config
+from ..utils.logger import get_logger
+
+logger = get_logger("fub.project")
+
+
+def _warn_if_off_model(data: Dict[str, Any]) -> None:
+    """Log (never raise) when a project no longer fits app/data/model/project.json."""
+    try:
+        from ..services import data_model
+        problems = data_model.model_problems("project", data, data.get("project_id"))
+    except Exception as e:  # noqa: BLE001 — a check must never lose a user's project
+        logger.warning(f"Could not check project against its data model: {e}")
+        return
+    if problems:
+        logger.warning(f"Project {data.get('project_id')} does not match its data model: "
+                       f"{len(problems)} problem(s). First: {'; '.join(problems[:3])}")
 
 
 class CustomAgentSource(str, Enum):
@@ -195,9 +211,11 @@ class ProjectManager:
         """Save project metadata"""
         project.updated_at = datetime.now().isoformat()
         meta_path = cls._get_project_meta_path(project.project_id)
+        data = project.to_dict()
+        _warn_if_off_model(data)
 
         with open(meta_path, 'w', encoding='utf-8') as f:
-            json.dump(project.to_dict(), f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
 
     @classmethod
     def get_project(cls, project_id: str) -> Optional[Project]:

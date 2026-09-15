@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "kind": "table",
+  "table": "public.subscriptions",
+  "sql": "backend/supabase/subscriptions.sql",
+  "about": "One row per user: the plan and the free-tier counters. Billing source of truth. The backend writes with the service key; a user can only read their own row.",
+  "written_by": [
+    "app/billing.py (_create_default, increment_panel_used, increment_sim_used, set_plan)",
+    "api/billing.py (Paystack webhook, cancel)",
+    "trigger handle_new_user_subscription"
+  ],
+  "read_by": [
+    "app/billing.py (get_entitlement, get_customer_code, get_user_by_customer)"
+  ],
+  "rules": [
+    "plan is free or paid (database check).",
+    "Counters never go below zero.",
+    "paystack_subscription_code and current_period_end exist but the backend never writes them; updated_at has no trigger."
+  ],
+  "fields": {
+    "user_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "db": "uuid",
+      "when": "always"
+    },
+    "plan": {
+      "type": "string",
+      "allowed": [
+        "free",
+        "paid"
+      ],
+      "db": "text",
+      "when": "always"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "active",
+        "cancelled"
+      ],
+      "db": "text",
+      "when": "always"
+    },
+    "panel_used": {
+      "type": "integer",
+      "min": 0,
+      "db": "integer",
+      "when": "always"
+    },
+    "sim_used": {
+      "type": "integer",
+      "min": 0,
+      "db": "integer",
+      "when": "always"
+    },
+    "paystack_customer_code": {
+      "type": "string",
+      "nullable": true,
+      "db": "text",
+      "when": "always"
+    },
+    "paystack_subscription_code": {
+      "type": "string",
+      "nullable": true,
+      "db": "text",
+      "when": "always"
+    },
+    "current_period_end": {
+      "type": "string",
+      "nullable": true,
+      "db": "timestamptz",
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "db": "timestamptz",
+      "when": "always"
+    },
+    "updated_at": {
+      "type": "string",
+      "db": "timestamptz",
+      "when": "always"
+    }
+  }
+}

@@ -17,13 +17,16 @@ Framework integration points:
 """
 
 import json
+import os
 import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from agentsociety2 import PersonAgent
 
+from . import belief_relevance, mechanism_card_service, persona_facts
 from .document_context_engine import sanitize_language_drift
+from .mode_specs import SHORT_ANSWER_MAX_SENTENCES, decision_question_on, trim_to_sentences
 from ..utils.logger import get_logger
 
 logger = get_logger("fub.opinion_agent")
@@ -474,6 +477,54 @@ class OpinionCitizenAgent(PersonAgent):
         }
 
         context["simulation_state"] = sim_state
+
+        # agentsociety2 serialises the WHOLE profile into the system prompt as JSON.
+        # Left alone, that re-injects every belief (selection by relevance undone),
+        # plus the retired model-written voice_guide / behavioral_tendencies, beside
+        # the curated identity the prompt already carries. Filter it by the question
+        # this interview is about. Custom agents (no vocab stances, so no reactions)
+        # keep their author-written voice.
+        question = getattr(self, "_context_question", "") or ""
+        profile = context.get("profile")
+        if isinstance(profile, dict):
+            profile = dict(profile)
+            if persona_facts.uses_facts(profile):
+                # The dump would otherwise re-inject the story and every fact the
+                # rendered prompt left out. The agent state carries copies of both.
+                full = profile
+                profile = persona_facts.trim(full, full, question)
+                profile["what_is_true_about_you"] = [
+                    f["line"] for f in persona_facts.picked_facts(full, question)]
+                for key in ("skill_states", "skill_state"):
+                    if isinstance(context.get(key), dict):
+                        context[key] = persona_facts.trim(context[key], full, question)
+            has_reactions = bool(belief_relevance.reactions(profile.get("attitudes")))
+            if isinstance(profile.get("beliefs"), list):
+                profile["beliefs"] = belief_relevance.select(profile["beliefs"], question, 8)
+            if has_reactions:
+                profile.pop("voice_guide", None)
+                profile.pop("behavioral_tendencies", None)
+                # Model-written on library personas; the reframer no longer uses it
+                # either (see prompt_reframer._find_personal_stake).
+                profile.pop("interested_topics", None)
+                profile["how_you_react"] = belief_relevance.reactions_for(
+                    profile.get("attitudes"), question, 5)
+                for key in ("skill_states", "skill_state"):
+                    state = context.get(key)
+                    if isinstance(state, dict) and "behavioral_tendencies" in state:
+                        state = dict(state)
+                        state.pop("behavioral_tendencies", None)
+                        context[key] = state
+            # Same card gate as the reframer, or the JSON dump re-injects every bound
+            # card the rendered prompt just left out.
+            used = mechanism_card_service.cards_for_question(profile, question)
+            if used is not None:
+                profile.pop("research_citations", None)
+                if used:
+                    profile["research_context"] = mechanism_card_service.render_research_context(used)
+                else:
+                    profile.pop("research_context", None)
+            context["profile"] = profile
         return context
 
     # ------------------------------------------------------------------
@@ -556,8 +607,13 @@ class OpinionCitizenAgent(PersonAgent):
     # Character context helper (used by opinion prompts and interviews)
     # ------------------------------------------------------------------
 
-    async def character_context(self, detail: str = "full") -> str:
-        """Build character description from profile."""
+    async def character_context(self, detail: str = "full", question: str = "") -> str:
+        """Build character description from profile.
+
+        `question` is what this persona is about to be asked. It selects WHICH of their
+        measured beliefs are worth the prompt space (see belief_relevance); callers that
+        don't have it get a pole-balanced sample instead of the first N in survey order.
+        """
         profile = self.get_profile()
 
         persona = profile.get("persona", "")
@@ -577,6 +633,12 @@ class OpinionCitizenAgent(PersonAgent):
         is_institutional = self.init_state.get("is_institutional", False)
 
         lines = []
+        # Library persona on a fact prompt: survey answers picked by the question stand in
+        # for the model-written summary, story and demographic line (see persona_facts).
+        use_facts = persona_facts.uses_facts(profile)
+        if use_facts:
+            group_affiliation = ""
+            bg_story = ""
 
         identity_parts = []
         if group_affiliation:
@@ -586,20 +648,25 @@ class OpinionCitizenAgent(PersonAgent):
         if identity_parts:
             lines.append(f"[{' | '.join(identity_parts)}]")
 
-        lines.append(persona)
+        if use_facts:
+            facts = persona_facts.render(profile, question)
+            if facts:
+                lines.append(facts)
+        else:
+            lines.append(persona)
 
         attrs = []
-        if age:
+        if age and not use_facts:
             attrs.append(f"Age {age}")
-        if gender:
+        if gender and not use_facts:
             attrs.append(gender.capitalize())
-        if occupation:
+        if occupation and not use_facts:
             attrs.append(occupation)
-        if education:
+        if education and not use_facts:
             attrs.append(f"Education: {education}")
-        if marriage:
+        if marriage and not use_facts:
             attrs.append(marriage)
-        if province:
+        if province and not use_facts:
             attrs.append(f"Province: {province}")
         if stance and stance != "neutral":
             attrs.append(f"Stance: {stance}")
@@ -623,24 +690,94 @@ class OpinionCitizenAgent(PersonAgent):
             # Rendered as FIXED FACTS, not suggestions: the model may express them in
             # its own words but must not contradict or invent them. Same contract the
             # texture generator already honours at build time.
-            belief_lines = [b for b in (profile.get("beliefs") or []) if isinstance(b, str)]
-            if belief_lines:
-                # Cap raised 6 -> 8 when the health belief phrasings landed: beliefs
-                # render in ATTITUDE_VOCAB order and the health dims sit last, so the
-                # old cap silently dropped exactly the newest (health) beliefs.
+            # The literal survey answers, where the donor match gave us one. These
+            # outrank the belief sentences: a sentence is a 3-band label ("you are
+            # pessimistic") and the answer is what a real respondent actually said
+            # ("Fairly bad"). Banding collapsed "Very bad" and "Fairly bad" into one
+            # word, so every persona in the band answered at the extreme. Handing
+            # back the real answer restores the spread that was measured and then
+            # rounded away. No model writes any of this.
+            answer_lines = [
+                f"- On {row['measured_asked']}, you said: {row['measured_answer']}."
+                for row in (profile.get("attitudes") or [])
+                if isinstance(row, dict) and row.get("measured_answer") and row.get("measured_asked")
+            ]
+            if answer_lines:
                 lines.append(
-                    "\nWHAT YOU HOLD TO BE TRUE — measured survey data about people like "
-                    "you, not opinions to be argued out of:\n"
-                    + "\n".join(f"- {b}" for b in belief_lines[:8])
+                    "\nWHAT YOU ACTUALLY ANSWERED — your own words in a national survey:\n"
+                    + "\n".join(answer_lines[:15])
+                    + "\nEach answer above is about THAT ONE THING and nothing else. A "
+                    "different institution, service, place or year is a different "
+                    "question: judge it on its own and give it its own answer. Do not "
+                    "repeat one of these answers just because a question sounds similar.\n"
+                    "What DOES carry across is your strength of feeling: if you called "
+                    "something fairly bad, you are not a person who calls things the "
+                    "worst they have ever been."
                 )
-            if voice_guide:
-                lines.append(f"\nVOICE INSTRUCTIONS — follow exactly:\n{voice_guide}")
-            if behavioral_tendencies:
-                lines.append(f"\nBEHAVIORAL PATTERN — this shapes how you act:\n{behavioral_tendencies}")
-            # Research grounding (Phase 5): mechanism-card block attached by
-            # simulation_manager at cast assembly. Pre-rendered, deterministic,
-            # absent when no card bound — so this is a pure pass-through.
+
+            # Chosen by what the question is about, not by position. Beliefs render in
+            # ATTITUDE_VOCAB order, so a positional cap drops whichever dimensions were
+            # added last — which is how the health phrasings went missing at cap 6, and
+            # how `pays_for_quality` (measured on 211 of 375 personas, and the single
+            # most load-bearing belief in a product panel) reached the prompt for only
+            # 77 of them at cap 8. Raising the cap only moves the cliff; selecting by
+            # relevance removes it.
+            belief_lines = belief_relevance.select(
+                [b for b in (profile.get("beliefs") or []) if isinstance(b, str)],
+                question, 8,
+            )
+            if belief_lines:
+                # Baseline stays the default until the Item 6/7 comparison validates the new
+                # wording. Opt in with EVIDENCE_AWARE_PROMPTS=1.
+                use_evidence_aware = os.environ.get("EVIDENCE_AWARE_PROMPTS", "0").strip().lower() in ("1", "true", "yes", "on")
+                if use_evidence_aware:
+                    lines.append(
+                        "\nWHAT YOU HOLD TO BE TRUE — your measured starting outlook (survey data about people like you):\n"
+                        + "\n".join(f"- {b}" for b in belief_lines)
+                        + "\nStart from this outlook and your past experience. Consider any dated current evidence and the scenario separately. "
+                        "You may keep or change your view when the evidence supports it, but explain what caused that response. "
+                        "Do not change your identity, finances, or remembered experience."
+                    )
+                else:
+                    lines.append(
+                        "\nWHAT YOU HOLD TO BE TRUE — measured survey data about people like "
+                        "you, not opinions to be argued out of:\n"
+                        + "\n".join(f"- {b}" for b in belief_lines)
+                    )
+            # How this person REACTS, read straight off their measured attitudes and
+            # chosen by what the question touches. This replaces the model-written
+            # voice_guide / behavioral_tendencies for library personas: those had no
+            # survey source and were injected as orders, so one invented detail (e.g.
+            # load-shedding for someone whose power never goes off) repeated in every
+            # answer. Custom agents carry no vocab stances, derive no reactions, and
+            # keep the text their author wrote.
+            reaction_lines = belief_relevance.reactions_for(
+                profile.get("attitudes"), question, 5)
+            if reaction_lines:
+                lines.append(
+                    "\nHOW YOU REACT — worked out from your own survey answers:\n"
+                    + "\n".join(f"- {r}" for r in reaction_lines)
+                )
+            elif not belief_relevance.reactions(profile.get("attitudes")):
+                # Only a persona with NO measured behaviour at all (a custom agent)
+                # falls back to written text. A library persona whose reactions simply
+                # don't touch this question gets nothing — never the retired voice guide.
+                if voice_guide:
+                    lines.append(f"\nVOICE INSTRUCTIONS — follow exactly:\n{voice_guide}")
+                if behavioral_tendencies:
+                    lines.append(f"\nBEHAVIORAL PATTERN — this shapes how you act:\n{behavioral_tendencies}")
+            # Research grounding (Phase 5): mechanism-card block attached at cast
+            # assembly. Cards now bind by situation, so a persona usually fits several
+            # (most fit fintech-trust and stokvels), and an unfiltered pass-through would
+            # put money reasoning into every sim prompt whatever the scenario is about.
+            # With a question in hand, use only cards whose subject it touches — the same
+            # gate as the panel reframer. No question: keep the stored block.
             research_context = profile.get("research_context", "")
+            if question:
+                used = mechanism_card_service.cards_for_question(profile, question)
+                if used is not None:
+                    research_context = (mechanism_card_service.render_research_context(used)
+                                        if used else "")
             if research_context:
                 lines.append(f"\n{research_context}")
             if is_institutional:
@@ -811,6 +948,7 @@ class OpinionCitizenAgent(PersonAgent):
         # Use agentsociety2's built-in interview method
         # This injects _build_external_question_context() automatically
         try:
+            self._context_question = question
             response = await self.answer_external_question(
                 prompt=question + stance_check_footer(mode),
                 t=t,
@@ -880,6 +1018,7 @@ class OpinionCitizenAgent(PersonAgent):
         dom_emotion_before, dom_score_before = self._get_dominant_emotion()
 
         try:
+            self._context_question = original_question or reframed_question
             response = await self.answer_external_question(
                 prompt=reframed_question + stance_check_footer(mode),
                 t=t,
@@ -910,6 +1049,10 @@ class OpinionCitizenAgent(PersonAgent):
         stance_after, response = extract_self_reported_stance(response)
         if stance_after is None:
             stance_after = self._detect_stance_from_response(response, stance_before)
+        if mode == "panel" and decision_question_on():
+            # Backstop for the length the decision question asks for. The stance line is
+            # already read, so the trim can never lose it.
+            response = trim_to_sentences(response, SHORT_ANSWER_MAX_SENTENCES)
         self._record_interview(reframed_question, response, stance_before, stance_after)
 
         if stance_after != stance_before:
@@ -1012,46 +1155,44 @@ class OpinionCitizenAgent(PersonAgent):
 
         Args:
             question_type: One of:
-                - "biggest_concern": What is your biggest concern about this policy?
-                - "what_would_change": What would change your position?
-                - "willing_to_negotiate": Are you willing to negotiate?
-                - "mobilization_intent": Are you planning to take action?
-                - "message_to_government": What message do you have for government?
-            policy_context: Description of the policy being discussed.
+                - "first_reaction": What is your honest first reaction?
+                - "what_would_work": What would make this work for you?
+                - "what_puts_you_off": What, if anything, would put you off?
+                - "need_to_know": What would you need to know before deciding?
+                - "who_you_would_tell": Would you tell anyone about it?
+            policy_context: Description of what is being discussed.
             t: Simulation time.
 
         Returns:
             Interview result dict.
         """
+        # These used to be biggest_concern / what_would_change / willing_to_negotiate /
+        # mobilization_intent / message_to_government — a protest-study question set.
+        # Four of five presumed opposition ("will you negotiate", "are you planning
+        # action", "your message to government"), so a person with no grievance was
+        # handed one and answered accordingly, on a product, a school or a clinic
+        # alike. The set below is sector-agnostic and balanced: one open reaction, one
+        # pull, one wall, one condition, and word of mouth.
         question_templates = {
-            "biggest_concern": (
-                f"Policy or question: {policy_context}\n\n"
-                "As a South African with direct experience of your situation, "
-                "what is your BIGGEST concern about how this policy or question affects you, your family, or your community? "
-                "Be concrete and specific about the direct impacts."
+            "first_reaction": (
+                f"What is being discussed: {policy_context}\n\n"
+                "What is your honest first reaction to this, for you and the people close to you?"
             ),
-            "what_would_change": (
-                f"Policy or question: {policy_context}\n\n"
-                "As someone living in South Africa with firsthand experience of these issues, "
-                "what ONE specific change would make you shift your position on THIS policy or question? "
-                "Ground your answer in your lived experience."
+            "what_would_work": (
+                f"What is being discussed: {policy_context}\n\n"
+                "What would make this work for you? Be specific to your own situation."
             ),
-            "willing_to_negotiate": (
-                f"Policy or question: {policy_context}\n\n"
-                "As a South African directly affected by this policy or question, "
-                "are you willing to negotiate on THIS policy or question? State your specific conditions based on your reality."
+            "what_puts_you_off": (
+                f"What is being discussed: {policy_context}\n\n"
+                "What, if anything, would put you off? If nothing does, say so."
             ),
-            "mobilization_intent": (
-                f"Policy or question: {policy_context}\n\n"
-                "As someone representing or speaking for your community in South Africa, "
-                "are you or your community planning any action regarding THIS policy or question specifically? "
-                "What exactly would you and your community do?"
+            "need_to_know": (
+                f"What is being discussed: {policy_context}\n\n"
+                "What would you need to know or see before you made up your mind?"
             ),
-            "message_to_government": (
-                f"Policy or question: {policy_context}\n\n"
-                "As a South African directly impacted by this policy or question, "
-                "what direct message do you have for the policy makers about THIS policy or question? "
-                "Be specific about what you or your community needs."
+            "who_you_would_tell": (
+                f"What is being discussed: {policy_context}\n\n"
+                "Would you tell anyone about this? If so, who, and what would you say to them?"
             ),
         }
 
@@ -1177,6 +1318,7 @@ class OpinionCitizenAgent(PersonAgent):
             )
 
         try:
+            self._context_question = intervention_text
             response = await self.answer_external_question(prompt=prompt, t=t)
             response = sanitize_language_drift(response, label=f"intervention_{self.id}")
         except Exception as e:

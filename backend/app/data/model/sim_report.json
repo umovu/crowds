@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "about": "A simulation report's saved record: status, the outline and the full markdown.",
+  "stored_in": "uploads/reports/<report_id>/meta.json",
+  "written_by": [
+    "report_agent.ReportManager.save_report (Report.to_dict)"
+  ],
+  "read_by": [
+    "report_agent.ReportManager",
+    "api/report.py",
+    "Step4Report.vue"
+  ],
+  "fields": {
+    "report_id": {
+      "type": "string",
+      "min_length": 1,
+      "when": "always"
+    },
+    "simulation_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "graph_id": {
+      "type": "string",
+      "when": "always"
+    },
+    "simulation_requirement": {
+      "type": "string",
+      "when": "always"
+    },
+    "status": {
+      "type": "string",
+      "allowed": [
+        "pending",
+        "planning",
+        "generating",
+        "completed",
+        "failed"
+      ],
+      "when": "always"
+    },
+    "outline": {
+      "type": "model:sim_report_outline",
+      "nullable": true,
+      "when": "always"
+    },
+    "markdown_content": {
+      "type": "string",
+      "when": "always"
+    },
+    "created_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "completed_at": {
+      "type": "string",
+      "when": "always"
+    },
+    "error": {
+      "type": "string",
+      "nullable": true,
+      "when": "always"
+    }
+  }
+}
