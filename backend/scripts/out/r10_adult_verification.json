@@ -1,0 +1,17 @@
+{
+  "model_calls_added": 0,
+  "analysis": "post-hoc adult-only sensitivity",
+  "original_people": 40,
+  "under_18_excluded": 8,
+  "included_adults": 32,
+  "included_replies": 480,
+  "parsed_replies": 478,
+  "all_distribution_gaps_independently_reproduced": true,
+  "adult_library_size": 330,
+  "total_library_size": 375,
+  "adult_library_weight_exclusions": 4,
+  "sample_urban": 14,
+  "sample_rural": 18,
+  "weighted_urban_pct": 43.59155587884081,
+  "original_run_sha256": "ff419ec53aaf59b774b31f709f09d545d282dba96ca09109116d6500aeea5423"
+}

@@ -1,0 +1,12 @@
+{
+  "completed": 600,
+  "errors": 0,
+  "manifest_sha256": "c8b0436594630708ce19378335089f104753793011365094cfcf9a15f93304c5",
+  "parsed": 598,
+  "run_sha256": "ff419ec53aaf59b774b31f709f09d545d282dba96ca09109116d6500aeea5423",
+  "usage": {
+    "completion_tokens": 33827,
+    "prompt_tokens": 575145,
+    "total_tokens": 608972
+  }
+}

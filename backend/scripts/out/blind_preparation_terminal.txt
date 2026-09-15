@@ -1,0 +1,44 @@
+COMMAND: python backend/scripts/sync_measured_beliefs.py --apply
+{
+  "applied": true,
+  "model_calls": 0,
+  "personas": 375,
+  "changed_personas": 86,
+  "before_sha256": "f84f8bed261255529703708e318b25267ac0be36a1a3adca267300d8eef9aa25",
+  "proposed_after_sha256": "c93b9daac1c2de86a201a6cdf72c676247f3e6407ce545773155e950694c9d58",
+  "non_belief_fields_sha256": "50583872e258f1acedc7e41292d8fea1fa22649af3e36367f6595fb42711dac9",
+  "all_other_fields_unchanged": true,
+  "remaining_known_sentence_conflicts": 0,
+  "limitation": "Custom beliefs and narrative prose are preserved, not semantically validated; live service not refreshed.",
+  "after_sha256": "c93b9daac1c2de86a201a6cdf72c676247f3e6407ce545773155e950694c9d58"
+}
+
+COMMAND: python backend/scripts/backtest_panel.py --phase prepare --n 40
+{
+  "model_calls": 0,
+  "questions_sha256": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20",
+  "library_sha256": "c93b9daac1c2de86a201a6cdf72c676247f3e6407ce545773155e950694c9d58",
+  "library_size": 375,
+  "requested_room": 40,
+  "actual_room": 40,
+  "question_buckets": {
+    "held_out": 12,
+    "seen": 3
+  },
+  "planned_requests": 600,
+  "full_library_requests": 5625,
+  "paid_run_ready": false,
+  "remaining": [
+    "Separate blind ask and reveal phases",
+    "National weights and subgroup gap reporting",
+    "Provider token accounting and approved spending limit",
+    "Review narrative text against refreshed attitudes",
+    "Verify the running service loads the repaired library"
+  ]
+}
+
+All existing evidence and frozen question files unchanged. Model calls: 0.
+
+COMMAND: python -m pytest backend/tests/test_blind_preparation.py backend/tests/test_r10_validation.py backend/tests/test_education_decode.py backend/tests/test_realism_repair.py -q
+................................................                         [100%]
+48 passed in 5.08s

@@ -1,0 +1,836 @@
+{
+  "method_sha256": "9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21",
+  "input_sha256": {
+    "scripts\\out\\REALISM_REPAIR_METHOD.json": "9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21",
+    "data\\microdata\\attitudes\\afrobarometer_r9_sa.sav": "d99670bc7c30be675ac789ee41f0034c379d333b16951ac78e2d9571a582f75b",
+    "app\\data\\persona_library\\personas.json": "71ac42b1ad09c33059b31b10155d4b88596f26b27d21006e91c2dbe980766326",
+    "scripts\\out\\r10_item_list.json": "d8aa93d6c8ca2028bd99d234a7b2f49fc1b8e13f10d0377460dc350df5267898",
+    "scripts\\out\\r10_ask_scenarios.json": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20"
+  },
+  "inputs_unchanged": true,
+  "real_total": 1580,
+  "library_total": 375,
+  "real_usable": 1382,
+  "library_usable": 344,
+  "exclusions": {
+    "real": {
+      "education_band": 182,
+      "employment_status": 4,
+      "education_band + employment_status": 8,
+      "race + education_band": 2,
+      "race": 2
+    },
+    "library": {
+      "employment_status": 31
+    }
+  },
+  "balance": {
+    "status": "converged",
+    "iterations": 36,
+    "max_marginal_error": 7.113080324749887e-08,
+    "effective_n": 160.0027151674767,
+    "min_weight": 0.06345534227338655,
+    "max_weight": 8.34520049659574,
+    "targets": {
+      "race": {
+        "African/Black": 0.7933030761369538,
+        "Coloured": 0.13356327491896774,
+        "Indian/Asian": 0.04082114148451408,
+        "White": 0.03231250745956416
+      },
+      "gender": {
+        "Female": 0.5040848843158371,
+        "Male": 0.4959151156841627
+      },
+      "province": {
+        "Eastern Cape": 0.10460296951133588,
+        "Free State": 0.05859183773932859,
+        "Gauteng": 0.23988249170695655,
+        "KwaZulu-Natal": 0.20569874370114397,
+        "Limpopo": 0.10185854885444587,
+        "Mpumalanga": 0.07397281423241976,
+        "North West": 0.0703546220604048,
+        "Northern Cape": 0.02478611519407749,
+        "Western Cape": 0.12025185699988696
+      },
+      "education_band": {
+        "none": 0.031867137734335055,
+        "primary": 0.13643126553172902,
+        "secondary": 0.6366084292738216,
+        "tertiary": 0.1950931674601143
+      },
+      "employment_status": {
+        "Employed": 0.31545774468204957,
+        "Other not economically active": 0.2804300744273907,
+        "Unemployed": 0.40411218089055967
+      },
+      "age_band": {
+        "15-29": 0.3459895518905746,
+        "30-44": 0.30119581788499183,
+        "45-59": 0.22310109537025916,
+        "60+": 0.12971353485417425
+      }
+    }
+  },
+  "stored_attitude_provenance_counts_all_personas": {
+    "exact": 3510,
+    "population_draw": 163,
+    "age_backoff": 1010,
+    "race_only": 683,
+    "education_backoff": 214,
+    "province_backoff": 45
+  },
+  "ladder": [
+    [
+      "gender",
+      "province",
+      "education_band",
+      "employment_status",
+      "age_band",
+      "race"
+    ],
+    [
+      "gender",
+      "province",
+      "education_band",
+      "employment_status",
+      "race"
+    ],
+    [
+      "gender",
+      "province",
+      "employment_status",
+      "race"
+    ],
+    [
+      "gender",
+      "employment_status",
+      "race"
+    ],
+    [
+      "employment_status",
+      "race"
+    ],
+    [
+      "race"
+    ],
+    []
+  ],
+  "dimensions": [
+    {
+      "dimension": "gov_trust",
+      "real_n": 1361,
+      "library_n": 344,
+      "real_missing_band_n": 21,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 1.2315032253103375,
+      "real_full": {
+        "reduction": -0.1092396686938446,
+        "brier_loss": 0.6935257783752053,
+        "baseline_loss": 0.6252262680001771
+      },
+      "library_raw": {
+        "reduction": -0.0023077354195406574,
+        "brier_loss": 0.6489113854893418,
+        "baseline_loss": 0.6474173176142594
+      },
+      "library_balanced": {
+        "reduction": -0.024458574570943137,
+        "brier_loss": 0.6603085781980987,
+        "baseline_loss": 0.6445439518866292
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.12615843221140055,
+        "p05": -0.18367984435106663,
+        "p95": -0.08233245793296441
+      },
+      "balanced_shuffled_p95": -0.05509360114338655,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": true
+    },
+    {
+      "dimension": "economic_optimism",
+      "real_n": 1380,
+      "library_n": 344,
+      "real_missing_band_n": 2,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 0.1374390188669583,
+      "real_full": {
+        "reduction": -0.1356552142874412,
+        "brier_loss": 0.6745889065752921,
+        "baseline_loss": 0.5940085495037841
+      },
+      "library_raw": {
+        "reduction": -0.0184005286637976,
+        "brier_loss": 0.6198056477605864,
+        "baseline_loss": 0.6086069579851933
+      },
+      "library_balanced": {
+        "reduction": -0.08050377110129747,
+        "brier_loss": 0.6579158965986811,
+        "baseline_loss": 0.6088973626886133
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.11906023298990343,
+        "p05": -0.16714611318352557,
+        "p95": -0.06949766223070811
+      },
+      "balanced_shuffled_p95": -0.04305759294556157,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "service_satisfaction",
+      "real_n": 1378,
+      "library_n": 344,
+      "real_missing_band_n": 4,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 0.2543557862795365,
+      "real_full": {
+        "reduction": -0.09290952213554915,
+        "brier_loss": 0.5971230452268514,
+        "baseline_loss": 0.5463609138111185
+      },
+      "library_raw": {
+        "reduction": 0.05155271487151791,
+        "brier_loss": 0.5156404665690992,
+        "baseline_loss": 0.5436680294775135
+      },
+      "library_balanced": {
+        "reduction": 0.015256411241685641,
+        "brier_loss": 0.5414994411824194,
+        "baseline_loss": 0.5498887704008395
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.10387166298732764,
+        "p05": -0.16480802380472845,
+        "p95": -0.03819246860871154
+      },
+      "balanced_shuffled_p95": -0.049323247750477445,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": true
+    },
+    {
+      "dimension": "crime_fear",
+      "real_n": 1379,
+      "library_n": 344,
+      "real_missing_band_n": 3,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 0.3065477934025562,
+      "real_full": {
+        "reduction": -0.08882737125981754,
+        "brier_loss": 0.6726021695261151,
+        "baseline_loss": 0.6177307691557083
+      },
+      "library_raw": {
+        "reduction": 0.02966137133911495,
+        "brier_loss": 0.6196528756835357,
+        "baseline_loss": 0.6385944631913573
+      },
+      "library_balanced": {
+        "reduction": 0.013546821067157322,
+        "brier_loss": 0.6498348836094532,
+        "baseline_loss": 0.6587589735505264
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.10457898627911533,
+        "p05": -0.17551381962189302,
+        "p95": -0.046431519850479684
+      },
+      "balanced_shuffled_p95": -0.059664202915096685,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": true
+    },
+    {
+      "dimension": "education_satisfaction",
+      "real_n": 1346,
+      "library_n": 344,
+      "real_missing_band_n": 36,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 2.7535480053766714,
+      "real_full": {
+        "reduction": -0.11953787336896915,
+        "brier_loss": 0.6989278702134908,
+        "baseline_loss": 0.6243003357360678
+      },
+      "library_raw": {
+        "reduction": 0.006859963443498929,
+        "brier_loss": 0.5900812997592205,
+        "baseline_loss": 0.5941571964062593
+      },
+      "library_balanced": {
+        "reduction": -0.06386333990242132,
+        "brier_loss": 0.6262315763233103,
+        "baseline_loss": 0.5886391163556298
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.14156164366552337,
+        "p05": -0.17854353376463045,
+        "p95": -0.06587052549294661
+      },
+      "balanced_shuffled_p95": -0.05317043005811579,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "health_service_satisfaction",
+      "real_n": 1353,
+      "library_n": 344,
+      "real_missing_band_n": 29,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 2.0035112043252035,
+      "real_full": {
+        "reduction": -0.12284466418661921,
+        "brier_loss": 0.7336119907344355,
+        "baseline_loss": 0.6533512730061009
+      },
+      "library_raw": {
+        "reduction": -0.0029431399884369824,
+        "brier_loss": 0.6572508921183224,
+        "baseline_loss": 0.6553221871839114
+      },
+      "library_balanced": {
+        "reduction": -0.03319380441538189,
+        "brier_loss": 0.6841485371298153,
+        "baseline_loss": 0.6621686407778365
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.1463475784328494,
+        "p05": -0.1894405883586911,
+        "p95": -0.09461270688271575
+      },
+      "balanced_shuffled_p95": -0.06098586876421466,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": true
+    },
+    {
+      "dimension": "health_authority_trust",
+      "real_n": 1342,
+      "library_n": 344,
+      "real_missing_band_n": 40,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 2.5543991116680487,
+      "real_full": {
+        "reduction": -0.12594044704825147,
+        "brier_loss": 0.5920389887272732,
+        "baseline_loss": 0.5258173203381704
+      },
+      "library_raw": {
+        "reduction": -0.0017128925304730203,
+        "brier_loss": 0.4945004324081361,
+        "baseline_loss": 0.49365485469489745
+      },
+      "library_balanced": {
+        "reduction": -0.052986072004151064,
+        "brier_loss": 0.46600300475846923,
+        "baseline_loss": 0.44255381637814495
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.14110389321919392,
+        "p05": -0.1982212290306425,
+        "p95": -0.09453890304380161
+      },
+      "balanced_shuffled_p95": -0.04674419603954814,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "councillor_responsiveness",
+      "real_n": 1343,
+      "library_n": 344,
+      "real_missing_band_n": 39,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 2.515558586446276,
+      "real_full": {
+        "reduction": -0.15057976828619912,
+        "brier_loss": 0.7421286158013068,
+        "baseline_loss": 0.6450040547008012
+      },
+      "library_raw": {
+        "reduction": -0.06755543350770177,
+        "brier_loss": 0.6907364678788028,
+        "baseline_loss": 0.647026324065653
+      },
+      "library_balanced": {
+        "reduction": -0.06920272500001379,
+        "brier_loss": 0.69682605290277,
+        "baseline_loss": 0.6517249129745353
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.11502054761719627,
+        "p05": -0.1754248447495036,
+        "p95": -0.064053014608396
+      },
+      "balanced_shuffled_p95": -0.05153514440703445,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "official_responsiveness",
+      "real_n": 1286,
+      "library_n": 344,
+      "real_missing_band_n": 96,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 6.657889661115657,
+      "real_full": {
+        "reduction": -0.0776070047624855,
+        "brier_loss": 0.7038761998610852,
+        "baseline_loss": 0.6531845067360397
+      },
+      "library_raw": {
+        "reduction": 0.09824129874271026,
+        "brier_loss": 0.6025930146065466,
+        "baseline_loss": 0.6682419740074288
+      },
+      "library_balanced": {
+        "reduction": -0.034643796544962635,
+        "brier_loss": 0.6919093027703421,
+        "baseline_loss": 0.6687415563509579
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.09998842174752443,
+        "p05": -0.1526486978871816,
+        "p95": -0.036421541899924574
+      },
+      "balanced_shuffled_p95": -0.057048472772608445,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "crime_handling",
+      "real_n": 1374,
+      "library_n": 344,
+      "real_missing_band_n": 8,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 0.49553738013031756,
+      "real_full": {
+        "reduction": -0.13929944289315221,
+        "brier_loss": 0.4874262863589203,
+        "baseline_loss": 0.4278298294618169
+      },
+      "library_raw": {
+        "reduction": -0.041700580627999084,
+        "brier_loss": 0.44060811645836767,
+        "baseline_loss": 0.42297002099465364
+      },
+      "library_balanced": {
+        "reduction": -0.07111726483636693,
+        "brier_loss": 0.5662976753336956,
+        "baseline_loss": 0.5286981117050784
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.1451401042744087,
+        "p05": -0.19161427941103926,
+        "p95": -0.07614724058858525
+      },
+      "balanced_shuffled_p95": -0.050985027644154406,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "immigration_priority",
+      "real_n": 1347,
+      "library_n": 344,
+      "real_missing_band_n": 35,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 2.589563566967623,
+      "real_full": {
+        "reduction": -0.13278418083770793,
+        "brier_loss": 0.450206623127719,
+        "baseline_loss": 0.3974337130968633
+      },
+      "library_raw": {
+        "reduction": 0.016892439904670264,
+        "brier_loss": 0.35138142187361227,
+        "baseline_loss": 0.3574191025848073
+      },
+      "library_balanced": {
+        "reduction": -0.021994067157857566,
+        "brier_loss": 0.39218135368696067,
+        "baseline_loss": 0.38374132129515015
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.13578729074249507,
+        "p05": -0.21301476910882833,
+        "p95": -0.07043538164133621
+      },
+      "balanced_shuffled_p95": -0.05463762931236677,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": true
+    },
+    {
+      "dimension": "pays_for_quality",
+      "real_n": 1308,
+      "library_n": 344,
+      "real_missing_band_n": 74,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 4.948024921197691,
+      "real_full": {
+        "reduction": -0.12158075633016274,
+        "brier_loss": 0.6567400288108659,
+        "baseline_loss": 0.5855485885472339
+      },
+      "library_raw": {
+        "reduction": -0.03402016556412746,
+        "brier_loss": 0.5712691371906022,
+        "baseline_loss": 0.552473884180911
+      },
+      "library_balanced": {
+        "reduction": -0.09846524468135565,
+        "brier_loss": 0.5929040488854433,
+        "baseline_loss": 0.5397567667763888
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.12671409479552898,
+        "p05": -0.19940327135295655,
+        "p95": -0.07534381376444177
+      },
+      "balanced_shuffled_p95": -0.06211464753177072,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "business_trust",
+      "real_n": 1230,
+      "library_n": 344,
+      "real_missing_band_n": 152,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 10.850761964359211,
+      "real_full": {
+        "reduction": -0.1113148560785644,
+        "brier_loss": 0.6043161492690127,
+        "baseline_loss": 0.5437848202636558
+      },
+      "library_raw": {
+        "reduction": -0.007264444339087017,
+        "brier_loss": 0.5750831093018766,
+        "baseline_loss": 0.5709355795629373
+      },
+      "library_balanced": {
+        "reduction": -0.05011171214270438,
+        "brier_loss": 0.5866352343515515,
+        "baseline_loss": 0.558640787992498
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.11517184679836767,
+        "p05": -0.1683045931611798,
+        "p95": -0.07148923173492482
+      },
+      "balanced_shuffled_p95": -0.05551301574911095,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "social_trust",
+      "real_n": 1365,
+      "library_n": 344,
+      "real_missing_band_n": 17,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 0.7060492009032693,
+      "real_full": {
+        "reduction": -0.12202379431486898,
+        "brier_loss": 0.7141413514906083,
+        "baseline_loss": 0.6364761203007088
+      },
+      "library_raw": {
+        "reduction": -0.031013710375368264,
+        "brier_loss": 0.6397860325176088,
+        "baseline_loss": 0.6205407610774424
+      },
+      "library_balanced": {
+        "reduction": -0.08286192273921156,
+        "brier_loss": 0.6895179735200452,
+        "baseline_loss": 0.636755212313531
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.12696761153526726,
+        "p05": -0.1843253637410992,
+        "p95": -0.06430309101426723
+      },
+      "balanced_shuffled_p95": -0.05997083363215435,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    },
+    {
+      "dimension": "environment_priority",
+      "real_n": 1337,
+      "library_n": 344,
+      "real_missing_band_n": 45,
+      "library_missing_band_n": 0,
+      "real_missing_band_weighted_pct": 2.12240670653564,
+      "real_full": {
+        "reduction": -0.0829882699466693,
+        "brier_loss": 0.6725565010251517,
+        "baseline_loss": 0.6210191926254853
+      },
+      "library_raw": {
+        "reduction": -0.028309931711912206,
+        "brier_loss": 0.6110476699842732,
+        "baseline_loss": 0.5942251952842776
+      },
+      "library_balanced": {
+        "reduction": -0.07187342719330436,
+        "brier_loss": 0.6262367020199725,
+        "baseline_loss": 0.5842450107749853
+      },
+      "real_size_matched": {
+        "n": 50,
+        "median": -0.12669688746561525,
+        "p05": -0.17170129787184055,
+        "p95": -0.08153385259301274
+      },
+      "balanced_shuffled_p95": -0.0434694015606024,
+      "nonpopulation_weighted_share": 1.0,
+      "balanced_effective_n": 160.0027151674767,
+      "balanced_rung_counts": {
+        "1": 71,
+        "2": 120,
+        "3": 108,
+        "4": 12,
+        "0": 26,
+        "5": 7
+      },
+      "investigate": false
+    }
+  ],
+  "model_calls": 0,
+  "warning_count": 5,
+  "inconclusive_count": 0,
+  "interpretation": "Exploratory demographic-predictability warning, not accuracy or proof of stereotyping. No paid-run gate granted.",
+  "education_decode_audit": {
+    "rows": [
+      {
+        "code": -1.0,
+        "label": "Missing",
+        "n": 0,
+        "decoded": null,
+        "valid_education_rejected": false
+      },
+      {
+        "code": 0.0,
+        "label": "No formal schooling",
+        "n": 43,
+        "decoded": "none",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 1.0,
+        "label": "Informal schooling only (including Koranic schooling)",
+        "n": 7,
+        "decoded": "none",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 2.0,
+        "label": "Some primary schooling",
+        "n": 55,
+        "decoded": "primary",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 3.0,
+        "label": "Primary school completed",
+        "n": 126,
+        "decoded": "primary",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 4.0,
+        "label": "Intermediate school or Some secondary school / high school",
+        "n": 360,
+        "decoded": "secondary",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 5.0,
+        "label": "Secondary school / high school completed",
+        "n": 555,
+        "decoded": "secondary",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 6.0,
+        "label": "Post-secondary qualifications, other than university e.g. a diploma or degree from a polytechnic or college",
+        "n": 184,
+        "decoded": "tertiary",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 7.0,
+        "label": "Some university",
+        "n": 58,
+        "decoded": "tertiary",
+        "valid_education_rejected": false
+      },
+      {
+        "code": 8.0,
+        "label": "University completed",
+        "n": 141,
+        "decoded": null,
+        "valid_education_rejected": true
+      },
+      {
+        "code": 9.0,
+        "label": "Post-graduate",
+        "n": 36,
+        "decoded": null,
+        "valid_education_rejected": true
+      },
+      {
+        "code": 98.0,
+        "label": "Refused",
+        "n": 11,
+        "decoded": null,
+        "valid_education_rejected": false
+      },
+      {
+        "code": 99.0,
+        "label": "Don\u2019t know",
+        "n": 4,
+        "decoded": null,
+        "valid_education_rejected": false
+      }
+    ],
+    "valid_education_rejected_n": 177
+  }
+}

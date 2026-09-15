@@ -1,0 +1,1615 @@
+{
+  "note": "Ranked by how far the country actually moved 2022 -> 2025. Shortlist only; the final item list must be committed before any model call.",
+  "counts": {
+    "all": 83,
+    "held_out": 61,
+    "seen": 22
+  },
+  "held_out": [
+    {
+      "r9": "Q78A",
+      "r10": "Q67B",
+      "bucket": "held_out",
+      "question": "Do you think that the economic and political influence of each of the following countries or organisations on South Africa is mostly positive, mostly negative, or haven't you heard enough to say: China?",
+      "movement_tvd": 20.12,
+      "r9_truth": {
+        "very negative": 18.25,
+        "somewhat negative": 11.94,
+        "neither positive nor negative": 14.23,
+        "somewhat positive": 24.08,
+        "very positive": 31.51
+      },
+      "r10_truth": {
+        "very negative": 7.05,
+        "somewhat negative": 8.51,
+        "neither positive nor negative": 8.73,
+        "somewhat positive": 37.51,
+        "very positive": 38.19
+      }
+    },
+    {
+      "r9": "Q22A",
+      "r10": "Q21A",
+      "bucket": "held_out",
+      "question": "There are many ways to govern a country. Would you disapprove or approve of the following alternatives: Only one political party is allowed to stand for election and hold office?",
+      "movement_tvd": 16.89,
+      "r9_truth": {
+        "strongly disapprove": 33.89,
+        "disapprove": 36.57,
+        "neither approve nor disapprove": 6.73,
+        "approve": 15.7,
+        "strongly approve": 7.11
+      },
+      "r10_truth": {
+        "strongly disapprove": 32.96,
+        "disapprove": 23.12,
+        "neither approve nor disapprove": 4.22,
+        "approve": 22.31,
+        "strongly approve": 17.39
+      }
+    },
+    {
+      "r9": "Q38E",
+      "r10": "Q38E",
+      "bucket": "held_out",
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Police?",
+      "movement_tvd": 16.55,
+      "r9_truth": {
+        "none": 4.66,
+        "some of them": 31.96,
+        "most of them": 33.67,
+        "all of them": 29.72
+      },
+      "r10_truth": {
+        "none": 2.05,
+        "some of them": 27.72,
+        "most of them": 50.21,
+        "all of them": 20.02
+      }
+    },
+    {
+      "r9": "Q91B",
+      "r10": "Q91B",
+      "bucket": "held_out",
+      "question": "Please tell me whether each of the following is available inside your house, inside your compound, or outside your compound: Your main source of water for household use?",
+      "movement_tvd": 14.89,
+      "r9_truth": {
+        "inside the house": 58.55,
+        "inside the compound": 24.61,
+        "outside the compound": 16.84
+      },
+      "r10_truth": {
+        "inside the house": 43.66,
+        "inside the compound": 32.49,
+        "outside the compound": 23.84
+      }
+    },
+    {
+      "r9": "Q78B",
+      "r10": "Q67C",
+      "bucket": "held_out",
+      "question": "Do you think that the economic and political influence of each of the following countries or organisations on South Africa is mostly positive, mostly negative, or haven't you heard enough to say: United States?",
+      "movement_tvd": 13.53,
+      "r9_truth": {
+        "very negative": 13.31,
+        "somewhat negative": 11.85,
+        "neither positive nor negative": 20.16,
+        "somewhat positive": 33.08,
+        "very positive": 21.6
+      },
+      "r10_truth": {
+        "very negative": 19.21,
+        "somewhat negative": 18.63,
+        "neither positive nor negative": 9.14,
+        "somewhat positive": 30.56,
+        "very positive": 22.45
+      }
+    },
+    {
+      "r9": "Q92A",
+      "r10": "Q93A",
+      "bucket": "held_out",
+      "question": "Do you have an electric connection to your home from Eskom?",
+      "movement_tvd": 13.14,
+      "r9_truth": {
+        "no": 4.58,
+        "yes": 95.42
+      },
+      "r10_truth": {
+        "no": 17.72,
+        "yes": 82.28
+      }
+    },
+    {
+      "r9": "Q37F",
+      "r10": "Q37F",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Opposition political parties?",
+      "movement_tvd": 12.56,
+      "r9_truth": {
+        "not at all": 48.54,
+        "just a little": 27.94,
+        "somewhat": 15.81,
+        "a lot": 7.72
+      },
+      "r10_truth": {
+        "not at all": 36.93,
+        "just a little": 32.69,
+        "somewhat": 23.61,
+        "a lot": 6.76
+      }
+    },
+    {
+      "r9": "Q78C1",
+      "r10": "Q67D",
+      "bucket": "held_out",
+      "question": "Do you think that the economic and political influence of each of the following countries or organisations on South Africa is mostly positive, mostly negative, or haven't you heard enough to say: Russia?",
+      "movement_tvd": 12.41,
+      "r9_truth": {
+        "very negative": 26.31,
+        "somewhat negative": 13.08,
+        "neither positive nor negative": 17.04,
+        "somewhat positive": 23.64,
+        "very positive": 19.94
+      },
+      "r10_truth": {
+        "very negative": 13.89,
+        "somewhat negative": 18.02,
+        "neither positive nor negative": 18.27,
+        "somewhat positive": 29.79,
+        "very positive": 20.03
+      }
+    },
+    {
+      "r9": "Q38F",
+      "r10": "Q38F",
+      "bucket": "held_out",
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Judges and magistrates?",
+      "movement_tvd": 11.14,
+      "r9_truth": {
+        "none": 12.5,
+        "some of them": 46.59,
+        "most of them": 24.36,
+        "all of them": 16.55
+      },
+      "r10_truth": {
+        "none": 4.76,
+        "some of them": 47.2,
+        "most of them": 34.89,
+        "all of them": 13.15
+      }
+    },
+    {
+      "r9": "Q38G",
+      "r10": "Q38G",
+      "bucket": "held_out",
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Tax officials, like officials from the South African Revenue Service or SARS?",
+      "movement_tvd": 10.61,
+      "r9_truth": {
+        "none": 9.49,
+        "some of them": 48.29,
+        "most of them": 25.84,
+        "all of them": 16.38
+      },
+      "r10_truth": {
+        "none": 6.42,
+        "some of them": 40.75,
+        "most of them": 34.99,
+        "all of them": 17.83
+      }
+    },
+    {
+      "r9": "Q87C",
+      "r10": "Q88C",
+      "bucket": "held_out",
+      "question": "For each of the following types of people, please tell me whether you would like having people from this group as neighbours, dislike it, or not care: Homosexuals?",
+      "movement_tvd": 10.47,
+      "r9_truth": {
+        "strongly dislike": 16.33,
+        "somewhat dislike": 8.5,
+        "would not care": 52.81,
+        "somewhat like": 14.69,
+        "strongly like": 7.67
+      },
+      "r10_truth": {
+        "strongly dislike": 18.2,
+        "somewhat dislike": 15.47,
+        "would not care": 42.57,
+        "somewhat like": 14.46,
+        "strongly like": 9.3
+      }
+    },
+    {
+      "r9": "Q90A",
+      "r10": "Q90A",
+      "bucket": "held_out",
+      "question": "Which of these things do you personally own? [If “No”:] Does anyone else in your household own one: Radio?",
+      "movement_tvd": 10.37,
+      "r9_truth": {
+        "no  no one in the household owns": 14.22,
+        "someone else in household owns": 16.93,
+        "yes  personally owns": 68.84
+      },
+      "r10_truth": {
+        "no  no one in the household owns": 21.72,
+        "someone else in household owns": 19.8,
+        "yes  personally owns": 58.48
+      }
+    },
+    {
+      "r9": "Q37I",
+      "r10": "Q37I",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Courts of law?",
+      "movement_tvd": 10.13,
+      "r9_truth": {
+        "not at all": 24.2,
+        "just a little": 24.4,
+        "somewhat": 27.93,
+        "a lot": 23.47
+      },
+      "r10_truth": {
+        "not at all": 21.46,
+        "just a little": 34.38,
+        "somewhat": 28.08,
+        "a lot": 16.07
+      }
+    },
+    {
+      "r9": "Q37E",
+      "r10": "Q37E",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: The ruling party?",
+      "movement_tvd": 9.25,
+      "r9_truth": {
+        "not at all": 54.23,
+        "just a little": 22.89,
+        "somewhat": 14.61,
+        "a lot": 8.28
+      },
+      "r10_truth": {
+        "not at all": 46.45,
+        "just a little": 27.28,
+        "somewhat": 19.47,
+        "a lot": 6.8
+      }
+    },
+    {
+      "r9": "Q37B",
+      "r10": "Q37B",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Parliament?",
+      "movement_tvd": 9.13,
+      "r9_truth": {
+        "not at all": 48.04,
+        "just a little": 27.68,
+        "somewhat": 18.49,
+        "a lot": 5.79
+      },
+      "r10_truth": {
+        "not at all": 39.64,
+        "just a little": 34.88,
+        "somewhat": 20.42,
+        "a lot": 5.06
+      }
+    },
+    {
+      "r9": "Q87D",
+      "r10": "Q88D",
+      "bucket": "held_out",
+      "question": "For each of the following types of people, please tell me whether you would like having people from this group as neighbours, dislike it, or not care: Immigrants or foreign workers?",
+      "movement_tvd": 8.93,
+      "r9_truth": {
+        "strongly dislike": 23.18,
+        "somewhat dislike": 17.51,
+        "would not care": 42.27,
+        "somewhat like": 13.33,
+        "strongly like": 3.72
+      },
+      "r10_truth": {
+        "strongly dislike": 27.64,
+        "somewhat dislike": 20.98,
+        "would not care": 35.31,
+        "somewhat like": 11.36,
+        "strongly like": 4.71
+      }
+    },
+    {
+      "r9": "Q46E",
+      "r10": "Q47E",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Narrowing gaps between rich and poor?",
+      "movement_tvd": 8.89,
+      "r9_truth": {
+        "very badly": 68.67,
+        "fairly badly": 23.86,
+        "fairly well": 6.22,
+        "very well": 1.25
+      },
+      "r10_truth": {
+        "very badly": 77.56,
+        "fairly badly": 16.95,
+        "fairly well": 4.97,
+        "very well": 0.51
+      }
+    },
+    {
+      "r9": "Q9A",
+      "r10": "Q10A",
+      "bucket": "held_out",
+      "question": "In this country, how free are you to say what you think?",
+      "movement_tvd": 8.36,
+      "r9_truth": {
+        "not at all free": 10.9,
+        "not very free": 14.0,
+        "somewhat free": 27.9,
+        "completely free": 47.2
+      },
+      "r10_truth": {
+        "not at all free": 15.12,
+        "not very free": 18.15,
+        "somewhat free": 23.29,
+        "completely free": 43.45
+      }
+    },
+    {
+      "r9": "Q33H",
+      "r10": "Q35",
+      "bucket": "held_out",
+      "question": "In your opinion, how free is the news media in this country to report and comment on the news without censorship or interference by the government?",
+      "movement_tvd": 8.19,
+      "r9_truth": {
+        "not at all free": 9.04,
+        "not very free": 19.99,
+        "somewhat free": 36.62,
+        "completely free": 34.35
+      },
+      "r10_truth": {
+        "not at all free": 13.3,
+        "not very free": 23.92,
+        "somewhat free": 35.46,
+        "completely free": 27.32
+      }
+    },
+    {
+      "r9": "Q86F",
+      "r10": "Q87E",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following types of people: People from other ethnic groups?",
+      "movement_tvd": 8.15,
+      "r9_truth": {
+        "not at all": 21.69,
+        "just a little": 39.95,
+        "somewhat": 29.13,
+        "a lot": 9.23
+      },
+      "r10_truth": {
+        "not at all": 21.14,
+        "just a little": 48.1,
+        "somewhat": 27.45,
+        "a lot": 3.31
+      }
+    },
+    {
+      "r9": "Q86B",
+      "r10": "Q87A",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following types of people: Your relatives?",
+      "movement_tvd": 8.11,
+      "r9_truth": {
+        "not at all": 7.36,
+        "just a little": 19.79,
+        "somewhat": 29.06,
+        "a lot": 43.79
+      },
+      "r10_truth": {
+        "not at all": 6.53,
+        "just a little": 20.08,
+        "somewhat": 21.79,
+        "a lot": 51.61
+      }
+    },
+    {
+      "r9": "Q38A",
+      "r10": "Q38A",
+      "bucket": "held_out",
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: The president and officials in his office?",
+      "movement_tvd": 7.92,
+      "r9_truth": {
+        "none": 4.33,
+        "some of them": 27.74,
+        "most of them": 35.2,
+        "all of them": 32.73
+      },
+      "r10_truth": {
+        "none": 2.68,
+        "some of them": 21.47,
+        "most of them": 39.32,
+        "all of them": 36.53
+      }
+    },
+    {
+      "r9": "Q37K",
+      "r10": "Q37L",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: Religious leaders?",
+      "movement_tvd": 7.91,
+      "r9_truth": {
+        "not at all": 24.0,
+        "just a little": 23.78,
+        "somewhat": 28.66,
+        "a lot": 23.57
+      },
+      "r10_truth": {
+        "not at all": 16.67,
+        "just a little": 31.69,
+        "somewhat": 28.29,
+        "a lot": 23.35
+      }
+    },
+    {
+      "r9": "Q13",
+      "r10": "Q13A",
+      "bucket": "held_out",
+      "question": "People are not always able to vote in elections, for example, because they weren't registered, they were unable to go, or someone prevented them from voting. How about you? In the last national election held in 2024, did you vote, or not, or were you too young to vote? Or can't you remember whether you voted?",
+      "movement_tvd": 7.82,
+      "r9_truth": {
+        "i did not vote": 34.49,
+        "i was too young to vote": 6.78,
+        "i can't remember whether i voted": 1.43,
+        "i voted in the election": 57.31
+      },
+      "r10_truth": {
+        "i did not vote": 33.87,
+        "i was too young to vote": 0.5,
+        "i can't remember whether i voted": 0.5,
+        "i voted in the election": 65.13
+      }
+    },
+    {
+      "r9": "Q46B",
+      "r10": "Q47B",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Improving the living standards of the poor?",
+      "movement_tvd": 7.59,
+      "r9_truth": {
+        "very badly": 62.73,
+        "fairly badly": 24.11,
+        "fairly well": 11.49,
+        "very well": 1.68
+      },
+      "r10_truth": {
+        "very badly": 70.32,
+        "fairly badly": 21.03,
+        "fairly well": 7.55,
+        "very well": 1.11
+      }
+    },
+    {
+      "r9": "Q39A",
+      "r10": "Q39A",
+      "bucket": "held_out",
+      "question": "In your opinion, over the past year, has the level of corruption in this country increased, decreased, or stayed the same?",
+      "movement_tvd": 7.4,
+      "r9_truth": {
+        "increased a lot": 73.09,
+        "increased somewhat": 9.82,
+        "stayed the same": 12.85,
+        "decreased somewhat": 2.29,
+        "decreased a lot": 1.96
+      },
+      "r10_truth": {
+        "increased a lot": 69.49,
+        "increased somewhat": 8.36,
+        "stayed the same": 20.24,
+        "decreased somewhat": 1.51,
+        "decreased a lot": 0.4
+      }
+    },
+    {
+      "r9": "Q14B",
+      "r10": "Q16A",
+      "bucket": "held_out",
+      "question": "How likely do you think it is that powerful people can find out how you voted, even though there is supposed to be a secret ballot in this country?",
+      "movement_tvd": 7.39,
+      "r9_truth": {
+        "not at all likely": 33.08,
+        "not very likely": 19.04,
+        "somewhat likely": 23.36,
+        "very likely": 24.53
+      },
+      "r10_truth": {
+        "not at all likely": 39.59,
+        "not very likely": 14.74,
+        "somewhat likely": 24.23,
+        "very likely": 21.44
+      }
+    },
+    {
+      "r9": "Q37G",
+      "r10": "Q37G",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: The police?",
+      "movement_tvd": 7.09,
+      "r9_truth": {
+        "not at all": 44.0,
+        "just a little": 23.38,
+        "somewhat": 21.56,
+        "a lot": 11.05
+      },
+      "r10_truth": {
+        "not at all": 40.72,
+        "just a little": 29.49,
+        "somewhat": 17.75,
+        "a lot": 12.04
+      }
+    },
+    {
+      "r9": "Q37C",
+      "r10": "Q37C",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: The South African Electoral Commission?",
+      "movement_tvd": 6.94,
+      "r9_truth": {
+        "not at all": 42.44,
+        "just a little": 26.89,
+        "somewhat": 21.54,
+        "a lot": 9.12
+      },
+      "r10_truth": {
+        "not at all": 36.22,
+        "just a little": 31.94,
+        "somewhat": 20.82,
+        "a lot": 11.02
+      }
+    },
+    {
+      "r9": "Q5A",
+      "r10": "Q5A",
+      "bucket": "held_out",
+      "question": "Looking back, how do you rate the following compared to 12 months ago: Economic condition of this country?",
+      "movement_tvd": 6.25,
+      "r9_truth": {
+        "much worse": 34.33,
+        "worse": 28.88,
+        "same": 22.58,
+        "better": 11.62,
+        "much better": 2.59
+      },
+      "r10_truth": {
+        "much worse": 34.23,
+        "worse": 26.73,
+        "same": 28.83,
+        "better": 9.11,
+        "much better": 1.1
+      }
+    },
+    {
+      "r9": "Q46K",
+      "r10": "Q47K",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Maintaining roads and bridges?",
+      "movement_tvd": 6.04,
+      "r9_truth": {
+        "very badly": 53.72,
+        "fairly badly": 19.66,
+        "fairly well": 20.28,
+        "very well": 6.34
+      },
+      "r10_truth": {
+        "very badly": 59.28,
+        "fairly badly": 17.35,
+        "fairly well": 20.76,
+        "very well": 2.61
+      }
+    },
+    {
+      "r9": "Q87A",
+      "r10": "Q88A",
+      "bucket": "held_out",
+      "question": "For each of the following types of people, please tell me whether you would like having people from this group as neighbours, dislike it, or not care: People of a different religion?",
+      "movement_tvd": 5.95,
+      "r9_truth": {
+        "strongly dislike": 6.32,
+        "somewhat dislike": 6.31,
+        "would not care": 54.64,
+        "somewhat like": 22.76,
+        "strongly like": 9.96
+      },
+      "r10_truth": {
+        "strongly dislike": 4.91,
+        "somewhat dislike": 7.21,
+        "would not care": 50.1,
+        "somewhat like": 23.15,
+        "strongly like": 14.63
+      }
+    },
+    {
+      "r9": "Q33E",
+      "r10": "Q34D",
+      "bucket": "held_out",
+      "question": "In your opinion, how often, in this country, are people treated unequally under the law?",
+      "movement_tvd": 5.77,
+      "r9_truth": {
+        "never": 16.43,
+        "rarely": 15.59,
+        "often": 32.89,
+        "always": 35.09
+      },
+      "r10_truth": {
+        "never": 14.64,
+        "rarely": 20.68,
+        "often": 33.57,
+        "always": 31.12
+      }
+    },
+    {
+      "r9": "Q47A",
+      "r10": "Q48A",
+      "bucket": "held_out",
+      "question": "Do you approve or disapprove of the way that the following people have performed their jobs over the past 12 months, or haven't you heard enough about them to say: President Cyril Ramaphosa?",
+      "movement_tvd": 5.24,
+      "r9_truth": {
+        "strongly disapprove": 37.98,
+        "disapprove": 30.32,
+        "approve": 25.95,
+        "strongly approve": 5.76
+      },
+      "r10_truth": {
+        "strongly disapprove": 34.74,
+        "disapprove": 33.2,
+        "approve": 23.95,
+        "strongly approve": 8.12
+      }
+    },
+    {
+      "r9": "Q46C",
+      "r10": "Q47C",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Creating jobs?",
+      "movement_tvd": 5.06,
+      "r9_truth": {
+        "very badly": 76.93,
+        "fairly badly": 13.61,
+        "fairly well": 8.38,
+        "very well": 1.08
+      },
+      "r10_truth": {
+        "very badly": 79.98,
+        "fairly badly": 15.62,
+        "fairly well": 3.4,
+        "very well": 1.0
+      }
+    },
+    {
+      "r9": "Q46J",
+      "r10": "Q47J",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Fighting corruption in government?",
+      "movement_tvd": 5.01,
+      "r9_truth": {
+        "very badly": 70.14,
+        "fairly badly": 19.78,
+        "fairly well": 9.07,
+        "very well": 1.0
+      },
+      "r10_truth": {
+        "very badly": 75.15,
+        "fairly badly": 17.27,
+        "fairly well": 7.17,
+        "very well": 0.4
+      }
+    },
+    {
+      "r9": "Q38I",
+      "r10": "Q38I",
+      "bucket": "held_out",
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Religious leaders?",
+      "movement_tvd": 4.88,
+      "r9_truth": {
+        "none": 18.94,
+        "some of them": 45.74,
+        "most of them": 22.97,
+        "all of them": 12.35
+      },
+      "r10_truth": {
+        "none": 17.12,
+        "some of them": 48.23,
+        "most of them": 25.37,
+        "all of them": 9.29
+      }
+    },
+    {
+      "r9": "Q46D",
+      "r10": "Q47D",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Keeping prices stable?",
+      "movement_tvd": 4.88,
+      "r9_truth": {
+        "very badly": 71.42,
+        "fairly badly": 22.84,
+        "fairly well": 4.57,
+        "very well": 1.17
+      },
+      "r10_truth": {
+        "very badly": 69.75,
+        "fairly badly": 19.9,
+        "fairly well": 9.45,
+        "very well": 0.9
+      }
+    },
+    {
+      "r9": "Q14C",
+      "r10": "Q16B",
+      "bucket": "held_out",
+      "question": "During the last national election campaign in 2024, how much did you personally fear becoming a victim of political intimidation or violence?",
+      "movement_tvd": 4.77,
+      "r9_truth": {
+        "a lot": 5.88,
+        "somewhat": 11.52,
+        "a little bit": 13.37,
+        "not at all": 69.23
+      },
+      "r10_truth": {
+        "a lot": 5.91,
+        "somewhat": 6.74,
+        "a little bit": 16.49,
+        "not at all": 70.85
+      }
+    },
+    {
+      "r9": "Q90H",
+      "r10": "Q90I",
+      "bucket": "held_out",
+      "question": "How often do you use a mobile phone?",
+      "movement_tvd": 4.54,
+      "r9_truth": {
+        "never": 4.59,
+        "less than once a month": 1.96,
+        "a few times a month": 1.83,
+        "a few times a week": 3.59,
+        "every day": 88.04
+      },
+      "r10_truth": {
+        "never": 8.11,
+        "less than once a month": 0.8,
+        "a few times a month": 1.0,
+        "a few times a week": 4.6,
+        "every day": 85.49
+      }
+    },
+    {
+      "r9": "Q41B",
+      "r10": "Q40B",
+      "bucket": "held_out",
+      "question": "How easy or difficult was it to obtain the medical care you needed?",
+      "movement_tvd": 4.51,
+      "r9_truth": {
+        "very easy": 10.19,
+        "easy": 18.65,
+        "difficult": 12.88,
+        "very difficult": 7.37,
+        "not applicable": 50.91
+      },
+      "r10_truth": {
+        "very easy": 7.41,
+        "easy": 21.42,
+        "difficult": 12.71,
+        "very difficult": 9.11,
+        "not applicable": 49.35
+      }
+    },
+    {
+      "r9": "Q47C",
+      "r10": "Q48C",
+      "bucket": "held_out",
+      "question": "Do you approve or disapprove of the way that the following people have performed their jobs over the past 12 months, or haven't you heard enough about them to say: Your elected local government councillor?",
+      "movement_tvd": 4.49,
+      "r9_truth": {
+        "strongly disapprove": 34.51,
+        "disapprove": 35.7,
+        "approve": 25.04,
+        "strongly approve": 4.74
+      },
+      "r10_truth": {
+        "strongly disapprove": 39.0,
+        "disapprove": 33.3,
+        "approve": 24.07,
+        "strongly approve": 3.63
+      }
+    },
+    {
+      "r9": "Q41E",
+      "r10": "Q40D",
+      "bucket": "held_out",
+      "question": "And have you encountered any of these problems with a public clinic or hospital during the past 12 months: Lack of medicines or other supplies?",
+      "movement_tvd": 4.34,
+      "r9_truth": {
+        "never": 18.43,
+        "once or twice": 11.64,
+        "a few times": 10.48,
+        "often": 8.3,
+        "not applicable": 51.15
+      },
+      "r10_truth": {
+        "never": 17.28,
+        "once or twice": 14.39,
+        "a few times": 9.19,
+        "often": 9.89,
+        "not applicable": 49.25
+      }
+    },
+    {
+      "r9": "Q43B",
+      "r10": "Q45B",
+      "bucket": "held_out",
+      "question": "[If “yes” to Q45A:] How easy or difficult was it to obtain the assistance you needed?",
+      "movement_tvd": 4.17,
+      "r9_truth": {
+        "very easy": 4.21,
+        "easy": 6.68,
+        "difficult": 5.58,
+        "very difficult": 4.3,
+        "not applicable": 79.23
+      },
+      "r10_truth": {
+        "very easy": 3.1,
+        "easy": 5.6,
+        "difficult": 3.6,
+        "very difficult": 4.6,
+        "not applicable": 83.1
+      }
+    },
+    {
+      "r9": "Q42B",
+      "r10": "Q44B",
+      "bucket": "held_out",
+      "question": "[If “yes” to Q44A:] How easy or difficult was it to obtain the document you needed?",
+      "movement_tvd": 4.11,
+      "r9_truth": {
+        "very easy": 4.82,
+        "easy": 9.69,
+        "difficult": 3.99,
+        "very difficult": 4.14,
+        "not applicable": 77.36
+      },
+      "r10_truth": {
+        "very easy": 3.1,
+        "easy": 7.31,
+        "difficult": 5.01,
+        "very difficult": 6.11,
+        "not applicable": 78.48
+      }
+    },
+    {
+      "r9": "Q46A",
+      "r10": "Q47A",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Managing the economy?",
+      "movement_tvd": 4.01,
+      "r9_truth": {
+        "very badly": 59.19,
+        "fairly badly": 24.23,
+        "fairly well": 14.9,
+        "very well": 1.67
+      },
+      "r10_truth": {
+        "very badly": 63.21,
+        "fairly badly": 22.18,
+        "fairly well": 13.51,
+        "very well": 1.11
+      }
+    },
+    {
+      "r9": "Q43A",
+      "r10": "Q45A",
+      "bucket": "held_out",
+      "question": "In the past 12 months, have you requested assistance from the police?",
+      "movement_tvd": 3.89,
+      "r9_truth": {
+        "no": 79.21,
+        "yes": 20.79
+      },
+      "r10_truth": {
+        "no": 83.1,
+        "yes": 16.9
+      }
+    },
+    {
+      "r9": "Q41C",
+      "r10": "Q40C",
+      "bucket": "held_out",
+      "question": "And how often, if ever, did you have to pay a bribe, give a gift, or do a favour for a health worker or clinic or hospital staff in order to get the medical care you needed?",
+      "movement_tvd": 3.34,
+      "r9_truth": {
+        "never": 44.06,
+        "once or twice": 2.74,
+        "a few times": 1.48,
+        "often": 0.64,
+        "not applicable": 51.07
+      },
+      "r10_truth": {
+        "never": 46.75,
+        "once or twice": 1.9,
+        "a few times": 0.8,
+        "often": 1.3,
+        "not applicable": 49.25
+      }
+    },
+    {
+      "r9": "Q9C",
+      "r10": "Q10C",
+      "bucket": "held_out",
+      "question": "In this country, how free are you to choose who to vote for without feeling pressured?",
+      "movement_tvd": 3.24,
+      "r9_truth": {
+        "not at all free": 6.0,
+        "not very free": 8.02,
+        "somewhat free": 18.32,
+        "completely free": 67.65
+      },
+      "r10_truth": {
+        "not at all free": 6.16,
+        "not very free": 7.87,
+        "somewhat free": 15.24,
+        "completely free": 70.74
+      }
+    },
+    {
+      "r9": "Q33F",
+      "r10": "Q34E",
+      "bucket": "held_out",
+      "question": "In your opinion, how often, in this country, do officials who commit crimes go unpunished?",
+      "movement_tvd": 3.01,
+      "r9_truth": {
+        "never": 12.6,
+        "rarely": 13.79,
+        "often": 31.83,
+        "always": 41.78
+      },
+      "r10_truth": {
+        "never": 11.02,
+        "rarely": 14.76,
+        "often": 33.87,
+        "always": 40.34
+      }
+    },
+    {
+      "r9": "Q46M",
+      "r10": "Q47M",
+      "bucket": "held_out",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Preventing or resolving violent conflict?",
+      "movement_tvd": 2.83,
+      "r9_truth": {
+        "very badly": 49.61,
+        "fairly badly": 30.82,
+        "fairly well": 16.96,
+        "very well": 2.61
+      },
+      "r10_truth": {
+        "very badly": 48.9,
+        "fairly badly": 28.71,
+        "fairly well": 17.14,
+        "very well": 5.26
+      }
+    },
+    {
+      "r9": "Q41G",
+      "r10": "Q40F",
+      "bucket": "held_out",
+      "question": "And have you encountered any of these problems with a public clinic or hospital during the past 12 months: Long waiting time?",
+      "movement_tvd": 2.49,
+      "r9_truth": {
+        "never": 6.05,
+        "once or twice": 6.29,
+        "a few times": 8.56,
+        "often": 28.06,
+        "not applicable": 51.04
+      },
+      "r10_truth": {
+        "never": 5.3,
+        "once or twice": 7.2,
+        "a few times": 9.2,
+        "often": 29.0,
+        "not applicable": 49.3
+      }
+    },
+    {
+      "r9": "Q43D",
+      "r10": "Q45D",
+      "bucket": "held_out",
+      "question": "In the past 12 months, how often have you encountered the police in other situations, like at checkpoints, during identity checks or traffic stops, or during an investigation?",
+      "movement_tvd": 2.49,
+      "r9_truth": {
+        "never": 56.49,
+        "once or twice": 23.27,
+        "a few times": 16.81,
+        "often": 3.43
+      },
+      "r10_truth": {
+        "never": 58.16,
+        "once or twice": 23.32,
+        "a few times": 14.31,
+        "often": 4.2
+      }
+    },
+    {
+      "r9": "Q42C",
+      "r10": "Q44C",
+      "bucket": "held_out",
+      "question": "[If “yes” to Q44A:] How often, if ever, did you have to pay a bribe, give a gift, or do a favour for a government official in order to get the document you needed?",
+      "movement_tvd": 2.42,
+      "r9_truth": {
+        "never": 16.65,
+        "once or twice": 3.35,
+        "a few times": 1.24,
+        "often": 0.63,
+        "not applicable": 78.13
+      },
+      "r10_truth": {
+        "never": 18.72,
+        "once or twice": 1.4,
+        "a few times": 1.1,
+        "often": 0.3,
+        "not applicable": 78.48
+      }
+    },
+    {
+      "r9": "Q33G",
+      "r10": "Q34F",
+      "bucket": "held_out",
+      "question": "In your opinion, how often, in this country, do ordinary people who break the law go unpunished?",
+      "movement_tvd": 2.13,
+      "r9_truth": {
+        "never": 24.55,
+        "rarely": 21.75,
+        "often": 25.44,
+        "always": 28.26
+      },
+      "r10_truth": {
+        "never": 24.45,
+        "rarely": 20.93,
+        "often": 27.57,
+        "always": 27.06
+      }
+    },
+    {
+      "r9": "Q43E",
+      "r10": "Q45E",
+      "bucket": "held_out",
+      "question": "How often, if ever did you have to pay a bribe, give a gift, or do a favour for a police officer in order to avoid a problem during one of these encounters?",
+      "movement_tvd": 1.82,
+      "r9_truth": {
+        "never": 32.23,
+        "once or twice": 5.93,
+        "a few times": 3.2,
+        "often": 1.12,
+        "not applicable": 57.53
+      },
+      "r10_truth": {
+        "never": 33.2,
+        "once or twice": 6.2,
+        "a few times": 1.8,
+        "often": 0.7,
+        "not applicable": 58.1
+      }
+    },
+    {
+      "r9": "Q86C",
+      "r10": "Q87B",
+      "bucket": "held_out",
+      "question": "How much do you trust each of the following types of people: Your neighbours?",
+      "movement_tvd": 1.72,
+      "r9_truth": {
+        "not at all": 15.5,
+        "just a little": 32.98,
+        "somewhat": 33.29,
+        "a lot": 18.23
+      },
+      "r10_truth": {
+        "not at all": 17.22,
+        "just a little": 32.23,
+        "somewhat": 32.93,
+        "a lot": 17.62
+      }
+    },
+    {
+      "r9": "Q81A_SAF",
+      "r10": "Q71A",
+      "bucket": "held_out",
+      "question": "How much, if at all, have you considered moving to another country to live?",
+      "movement_tvd": 1.7,
+      "r9_truth": {
+        "not at all": 72.43,
+        "a little bit": 9.1,
+        "somewhat": 8.12,
+        "a lot": 10.35
+      },
+      "r10_truth": {
+        "not at all": 73.57,
+        "a little bit": 8.81,
+        "somewhat": 6.71,
+        "a lot": 10.91
+      }
+    },
+    {
+      "r9": "Q3",
+      "r10": "Q3",
+      "bucket": "held_out",
+      "question": "Let's start with your general view about the current direction of our country. Some people might think the country is going in the wrong direction. Others may feel it is going in the right direction. So let me ask YOU about the overall direction of the country: Would you say that the country is going in the wrong direction or going in the right direction?",
+      "movement_tvd": 1.15,
+      "r9_truth": {
+        "going in the wrong direction": 85.42,
+        "going in the right direction": 14.58
+      },
+      "r10_truth": {
+        "going in the wrong direction": 84.27,
+        "going in the right direction": 15.73
+      }
+    },
+    {
+      "r9": "Q42A",
+      "r10": "Q44A",
+      "bucket": "held_out",
+      "question": "In the past 12 months, have you tried to get an identity document like a birth certificate, driver's license, passport or voter's card, or permit from government?",
+      "movement_tvd": 1.11,
+      "r9_truth": {
+        "no": 77.29,
+        "yes": 22.71
+      },
+      "r10_truth": {
+        "no": 78.4,
+        "yes": 21.6
+      }
+    },
+    {
+      "r9": "Q90F",
+      "r10": "Q90F",
+      "bucket": "held_out",
+      "question": "Which of these things do you personally own? [If “No”:] Does anyone else in your household own one: Mobile phone?",
+      "movement_tvd": 0.53,
+      "r9_truth": {
+        "no  no one in the household owns": 3.06,
+        "someone else in household owns": 6.71,
+        "yes  personally owns": 90.23
+      },
+      "r10_truth": {
+        "no  no one in the household owns": 2.81,
+        "someone else in household owns": 7.24,
+        "yes  personally owns": 89.95
+      }
+    }
+  ],
+  "seen": [
+    {
+      "r9": "Q46L",
+      "r10": "Q47L",
+      "bucket": "seen",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Providing a reliable supply of electricity?",
+      "movement_tvd": 28.16,
+      "r9_truth": {
+        "very badly": 69.84,
+        "fairly badly": 17.6,
+        "fairly well": 10.73,
+        "very well": 1.82
+      },
+      "r10_truth": {
+        "very badly": 41.68,
+        "fairly badly": 22.44,
+        "fairly well": 29.76,
+        "very well": 6.11
+      }
+    },
+    {
+      "r9": "Q92B",
+      "r10": "Q93B",
+      "bucket": "seen",
+      "question": "[If “yes” to Q93A:] How often is electricity actually available from this connection?",
+      "movement_tvd": 20.22,
+      "r9_truth": {
+        "never": 1.26,
+        "occasionally": 14.91,
+        "about half of the time": 13.34,
+        "most of the time": 40.12,
+        "all of the time": 25.52,
+        "not applicable": 4.85
+      },
+      "r10_truth": {
+        "never": 1.8,
+        "occasionally": 6.01,
+        "about half of the time": 9.41,
+        "most of the time": 32.73,
+        "all of the time": 32.23,
+        "not applicable": 17.82
+      }
+    },
+    {
+      "r9": "Q67A",
+      "r10": "Q60A",
+      "bucket": "seen",
+      "question": "Have you heard about climate change, or haven't you had the chance to hear about this yet?",
+      "movement_tvd": 16.07,
+      "r9_truth": {
+        "no": 54.55,
+        "yes": 45.45
+      },
+      "r10_truth": {
+        "no": 38.48,
+        "yes": 61.52
+      }
+    },
+    {
+      "r9": "Q7A",
+      "r10": "Q9",
+      "bucket": "seen",
+      "question": "Over the past year, how often, if ever, have you or anyone in your family felt unsafe in your home or neighbourhood?",
+      "movement_tvd": 15.33,
+      "r9_truth": {
+        "never": 25.71,
+        "just once or twice": 17.7,
+        "several times": 18.63,
+        "many times": 16.14,
+        "always": 21.82
+      },
+      "r10_truth": {
+        "never": 38.46,
+        "just once or twice": 20.28,
+        "several times": 18.18,
+        "many times": 12.69,
+        "always": 10.39
+      }
+    },
+    {
+      "r9": "Q4B",
+      "r10": "Q4B",
+      "bucket": "seen",
+      "question": "In general, how would you describe your living conditions?",
+      "movement_tvd": 9.49,
+      "r9_truth": {
+        "very bad": 25.29,
+        "fairly bad": 19.65,
+        "neither good nor bad": 16.74,
+        "fairly good": 26.44,
+        "very good": 11.87
+      },
+      "r10_truth": {
+        "very bad": 31.23,
+        "fairly bad": 20.32,
+        "neither good nor bad": 10.91,
+        "fairly good": 29.33,
+        "very good": 8.21
+      }
+    },
+    {
+      "r9": "Q74D",
+      "r10": "Q65E",
+      "bucket": "seen",
+      "question": "How often do you get news from the following sources: Other Internet sources?",
+      "movement_tvd": 7.69,
+      "r9_truth": {
+        "never": 26.44,
+        "less than once a month": 3.74,
+        "a few times a month": 5.04,
+        "a few times a week": 13.25,
+        "every day": 51.52
+      },
+      "r10_truth": {
+        "never": 27.08,
+        "less than once a month": 3.91,
+        "a few times a month": 7.02,
+        "a few times a week": 18.15,
+        "every day": 43.83
+      }
+    },
+    {
+      "r9": "Q6E",
+      "r10": "Q7E",
+      "bucket": "seen",
+      "question": "Over the past year, how often, if ever, have you or anyone in your family gone without: A cash income?",
+      "movement_tvd": 7.21,
+      "r9_truth": {
+        "never": 35.21,
+        "just once or twice": 19.58,
+        "several times": 19.86,
+        "many times": 17.19,
+        "always": 8.16
+      },
+      "r10_truth": {
+        "never": 32.93,
+        "just once or twice": 22.26,
+        "several times": 18.73,
+        "many times": 13.39,
+        "always": 12.69
+      }
+    },
+    {
+      "r9": "Q38J",
+      "r10": "Q38J",
+      "bucket": "seen",
+      "question": "How many of the following people do you think are involved in corruption, or haven't you heard enough about them to say: Business executives?",
+      "movement_tvd": 6.97,
+      "r9_truth": {
+        "none": 6.25,
+        "some of them": 39.18,
+        "most of them": 39.47,
+        "all of them": 15.11
+      },
+      "r10_truth": {
+        "none": 4.58,
+        "some of them": 46.15,
+        "most of them": 35.21,
+        "all of them": 14.06
+      }
+    },
+    {
+      "r9": "Q46F",
+      "r10": "Q47F",
+      "bucket": "seen",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Reducing crime?",
+      "movement_tvd": 6.92,
+      "r9_truth": {
+        "very badly": 73.73,
+        "fairly badly": 15.34,
+        "fairly well": 9.42,
+        "very well": 1.51
+      },
+      "r10_truth": {
+        "very badly": 79.96,
+        "fairly badly": 11.32,
+        "fairly well": 6.51,
+        "very well": 2.2
+      }
+    },
+    {
+      "r9": "Q74A",
+      "r10": "Q65A",
+      "bucket": "seen",
+      "question": "How often do you get news from the following sources: Radio?",
+      "movement_tvd": 6.25,
+      "r9_truth": {
+        "never": 12.73,
+        "less than once a month": 3.84,
+        "a few times a month": 8.62,
+        "a few times a week": 23.17,
+        "every day": 51.64
+      },
+      "r10_truth": {
+        "never": 18.82,
+        "less than once a month": 4.0,
+        "a few times a month": 7.81,
+        "a few times a week": 19.52,
+        "every day": 49.85
+      }
+    },
+    {
+      "r9": "Q90I",
+      "r10": "Q90J",
+      "bucket": "seen",
+      "question": "How often do you use the Internet?",
+      "movement_tvd": 5.98,
+      "r9_truth": {
+        "never": 21.24,
+        "less than once a month": 3.29,
+        "a few times a month": 6.6,
+        "a few times a week": 14.79,
+        "every day": 54.08
+      },
+      "r10_truth": {
+        "never": 21.8,
+        "less than once a month": 2.1,
+        "a few times a month": 4.0,
+        "a few times a week": 12.6,
+        "every day": 59.5
+      }
+    },
+    {
+      "r9": "Q90D",
+      "r10": "Q90D",
+      "bucket": "seen",
+      "question": "Which of these things do you personally own? [If “No”:] Does anyone else in your household own one: Computer?",
+      "movement_tvd": 5.85,
+      "r9_truth": {
+        "no  no one in the household owns": 48.72,
+        "someone else in household owns": 16.61,
+        "yes  personally owns": 34.67
+      },
+      "r10_truth": {
+        "no  no one in the household owns": 52.31,
+        "someone else in household owns": 10.76,
+        "yes  personally owns": 36.92
+      }
+    },
+    {
+      "r9": "Q37A",
+      "r10": "Q37A",
+      "bucket": "seen",
+      "question": "How much do you trust each of the following, or haven't you heard enough about them to say: The president?",
+      "movement_tvd": 5.45,
+      "r9_truth": {
+        "not at all": 45.16,
+        "just a little": 27.5,
+        "somewhat": 16.94,
+        "a lot": 10.39
+      },
+      "r10_truth": {
+        "not at all": 39.74,
+        "just a little": 30.89,
+        "somewhat": 19.01,
+        "a lot": 10.36
+      }
+    },
+    {
+      "r9": "Q74B",
+      "r10": "Q65B",
+      "bucket": "seen",
+      "question": "How often do you get news from the following sources: Television?",
+      "movement_tvd": 5.44,
+      "r9_truth": {
+        "never": 6.7,
+        "less than once a month": 1.31,
+        "a few times a month": 3.82,
+        "a few times a week": 14.73,
+        "every day": 73.43
+      },
+      "r10_truth": {
+        "never": 9.1,
+        "less than once a month": 2.0,
+        "a few times a month": 4.3,
+        "a few times a week": 16.6,
+        "every day": 68.0
+      }
+    },
+    {
+      "r9": "Q4A",
+      "r10": "Q4A",
+      "bucket": "seen",
+      "question": "In general, how would you describe the present economic condition of this country?",
+      "movement_tvd": 5.32,
+      "r9_truth": {
+        "very bad": 49.34,
+        "fairly bad": 21.88,
+        "neither good nor bad": 11.69,
+        "fairly good": 11.76,
+        "very good": 5.31
+      },
+      "r10_truth": {
+        "very bad": 52.43,
+        "fairly bad": 22.06,
+        "neither good nor bad": 6.38,
+        "fairly good": 12.85,
+        "very good": 6.28
+      }
+    },
+    {
+      "r9": "Q6B",
+      "r10": "Q7B",
+      "bucket": "seen",
+      "question": "Over the past year, how often, if ever, have you or anyone in your family gone without: Enough clean water for home use?",
+      "movement_tvd": 4.34,
+      "r9_truth": {
+        "never": 40.52,
+        "just once or twice": 17.48,
+        "several times": 17.26,
+        "many times": 14.84,
+        "always": 9.9
+      },
+      "r10_truth": {
+        "never": 39.94,
+        "just once or twice": 21.82,
+        "several times": 16.02,
+        "many times": 12.81,
+        "always": 9.41
+      }
+    },
+    {
+      "r9": "Q46G",
+      "r10": "Q47G",
+      "bucket": "seen",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Improving basic health services?",
+      "movement_tvd": 4.26,
+      "r9_truth": {
+        "very badly": 36.22,
+        "fairly badly": 23.82,
+        "fairly well": 33.65,
+        "very well": 6.31
+      },
+      "r10_truth": {
+        "very badly": 36.59,
+        "fairly badly": 19.56,
+        "fairly well": 35.48,
+        "very well": 8.37
+      }
+    },
+    {
+      "r9": "Q46I",
+      "r10": "Q47I",
+      "bucket": "seen",
+      "question": "How well or badly would you say the current government is handling the following matters, or haven't you heard enough to say: Providing water and sanitation services?",
+      "movement_tvd": 3.44,
+      "r9_truth": {
+        "very badly": 49.51,
+        "fairly badly": 21.78,
+        "fairly well": 20.34,
+        "very well": 8.37
+      },
+      "r10_truth": {
+        "very badly": 48.25,
+        "fairly badly": 25.23,
+        "fairly well": 19.32,
+        "very well": 7.21
+      }
+    },
+    {
+      "r9": "Q90B",
+      "r10": "Q90B",
+      "bucket": "seen",
+      "question": "Which of these things do you personally own? [If “No”:] Does anyone else in your household own one: Television?",
+      "movement_tvd": 2.83,
+      "r9_truth": {
+        "no  no one in the household owns": 7.86,
+        "someone else in household owns": 16.14,
+        "yes  personally owns": 76.0
+      },
+      "r10_truth": {
+        "no  no one in the household owns": 9.35,
+        "someone else in household owns": 17.49,
+        "yes  personally owns": 73.17
+      }
+    },
+    {
+      "r9": "Q90C",
+      "r10": "Q90C",
+      "bucket": "seen",
+      "question": "Which of these things do you personally own? [If “No”:] Does anyone else in your household own one: Motor vehicle, car or motorcycle?",
+      "movement_tvd": 2.41,
+      "r9_truth": {
+        "no  no one in the household owns": 47.11,
+        "someone else in household owns": 21.09,
+        "yes  personally owns": 31.8
+      },
+      "r10_truth": {
+        "no  no one in the household owns": 44.7,
+        "someone else in household owns": 22.2,
+        "yes  personally owns": 33.1
+      }
+    },
+    {
+      "r9": "Q74E",
+      "r10": "Q65D",
+      "bucket": "seen",
+      "question": "How often do you get news from the following sources: Social media such as Facebook, Twitter, WhatsApp, or others?",
+      "movement_tvd": 2.36,
+      "r9_truth": {
+        "never": 22.95,
+        "less than once a month": 2.33,
+        "a few times a month": 3.61,
+        "a few times a week": 10.43,
+        "every day": 60.68
+      },
+      "r10_truth": {
+        "never": 20.72,
+        "less than once a month": 2.2,
+        "a few times a month": 3.7,
+        "a few times a week": 11.41,
+        "every day": 61.96
+      }
+    },
+    {
+      "r9": "Q90E",
+      "r10": "Q90E",
+      "bucket": "seen",
+      "question": "Which of these things do you personally own? [If “No”:] Does anyone else in your household own one: Bank account?",
+      "movement_tvd": 1.4,
+      "r9_truth": {
+        "no  no one in the household owns": 3.18,
+        "someone else in household owns": 6.63,
+        "yes  personally owns": 90.19
+      },
+      "r10_truth": {
+        "no  no one in the household owns": 3.22,
+        "someone else in household owns": 5.23,
+        "yes  personally owns": 91.55
+      }
+    }
+  ]
+}

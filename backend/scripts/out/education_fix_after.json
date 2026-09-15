@@ -1,0 +1,157 @@
+{
+  "pool": {
+    "survey_rows": 1580,
+    "donors": 1555,
+    "skipped": 25,
+    "education_band_counts": {
+      "secondary": 914,
+      "primary": 181,
+      "tertiary": 410,
+      "none": 50
+    },
+    "education_audit": {
+      "rows": [
+        {
+          "code": -1.0,
+          "label": "Missing",
+          "n": 0,
+          "decoded": null,
+          "valid_education_rejected": false
+        },
+        {
+          "code": 0.0,
+          "label": "No formal schooling",
+          "n": 43,
+          "decoded": "none",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 1.0,
+          "label": "Informal schooling only (including Koranic schooling)",
+          "n": 7,
+          "decoded": "none",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 2.0,
+          "label": "Some primary schooling",
+          "n": 55,
+          "decoded": "primary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 3.0,
+          "label": "Primary school completed",
+          "n": 126,
+          "decoded": "primary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 4.0,
+          "label": "Intermediate school or Some secondary school / high school",
+          "n": 360,
+          "decoded": "secondary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 5.0,
+          "label": "Secondary school / high school completed",
+          "n": 555,
+          "decoded": "secondary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 6.0,
+          "label": "Post-secondary qualifications, other than university e.g. a diploma or degree from a polytechnic or college",
+          "n": 184,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 7.0,
+          "label": "Some university",
+          "n": 58,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 8.0,
+          "label": "University completed",
+          "n": 141,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 9.0,
+          "label": "Post-graduate",
+          "n": 36,
+          "decoded": "tertiary",
+          "valid_education_rejected": false
+        },
+        {
+          "code": 98.0,
+          "label": "Refused",
+          "n": 11,
+          "decoded": null,
+          "valid_education_rejected": false
+        },
+        {
+          "code": 99.0,
+          "label": "Don\u2019t know",
+          "n": 4,
+          "decoded": null,
+          "valid_education_rejected": false
+        }
+      ],
+      "valid_education_rejected_n": 0
+    }
+  },
+  "seed": 1,
+  "personas": 375,
+  "tags_before": {
+    "exact": 3510,
+    "population_draw": 163,
+    "age_backoff": 1010,
+    "race_only": 683,
+    "education_backoff": 214,
+    "province_backoff": 45
+  },
+  "tags_after": {
+    "exact": 3872,
+    "population_draw": 158,
+    "age_backoff": 964,
+    "education_backoff": 174,
+    "race_only": 457
+  },
+  "stored_to_refreshed": {
+    "personas_with_stance_change": 87,
+    "stance_values_changed": 745
+  },
+  "decoder_only_replay_difference": {
+    "personas_with_stance_change": 72,
+    "stance_values_changed": 607
+  },
+  "pre_fix_replay_vs_stored": {
+    "personas_with_stance_change": 16,
+    "stance_values_changed": 143
+  },
+  "non_attitude_fields_changed": 0,
+  "non_attitude_sha256_before": "374345f7285b5883e9d44c9107f04f03e7694e3e260ba3662577db0d700f4a3b",
+  "non_attitude_sha256_after": "374345f7285b5883e9d44c9107f04f03e7694e3e260ba3662577db0d700f4a3b",
+  "library_sha256_before": "71ac42b1ad09c33059b31b10155d4b88596f26b27d21006e91c2dbe980766326",
+  "protected_sha256": {
+    "REALISM_REPAIR_METHOD.json": "9491eb81b555eab97039d1a2ce63d46bdea5600d1fcbc8621e2650bbb8748c21",
+    "r10_item_list.json": "d8aa93d6c8ca2028bd99d234a7b2f49fc1b8e13f10d0377460dc350df5267898",
+    "r10_item_lock.json": "c238879e07515624515892e6157860683fa146488b9eaf88e1e2044ed3c80841",
+    "r10_ask_scenarios.json": "48b85cd6bd7e99a641593b0bd10407fa2486b526694eebbc7f0842cd87f04e20",
+    "realism_repair_results.json": "423ffd67d9926e55a915b643e7faf9d1fc5393b735853639654b56a5d2401ee5",
+    "REALISM_REPAIR_POW.md": "52f80ebf49914d38b95d5c5fee97bec09d92f042b0fc7aabb6a9f27445cc6439",
+    "realism_repair_terminal.txt": "6f25dc1d8cd5cb029d15375024c563874a54ffbd591b94766b1340cc9be09519",
+    "r10_identical_people.json": "ab320316e999f4b66301b24ff7badbe0f84e500a7b5814607d0bf27e1ac25058",
+    "r10_identical_people.md": "27669d4212082d3598140c3b9e071f356031e6cdedfcfc4ae93c3e8daa13bd2b"
+  },
+  "derived_beliefs_would_differ_n": 86,
+  "note": "Only attitudes and attitude_match_quality copied. Beliefs, prose, circumstances, identity and finances preserved. Derived belief differences are a follow-up limitation, not modified here.",
+  "model_calls": 0,
+  "library_sha256_after": "f84f8bed261255529703708e318b25267ac0be36a1a3adca267300d8eef9aa25"
+}

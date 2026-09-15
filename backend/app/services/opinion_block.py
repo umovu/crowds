@@ -641,6 +641,17 @@ class OpinionCaptureSkill:
             (self._pitch.get("what_it_is") or "") if isinstance(self._pitch, dict) else "",
         )
 
+        # Conditional health block: the persona's real GHS health facts enter the
+        # prompt only when the seed is health-adjacent (mode_specs.build_health_block
+        # returns "" otherwise, so unrelated sims pay zero extra tokens). Empty in
+        # fast mode's abbreviated round 2+ prompts like every other context block.
+        health_section = build_health_block(
+            agent.init_state if hasattr(agent, "init_state") else {},
+            initial_prompt,
+            self._document_context,
+            (self._pitch.get("what_it_is") or "") if isinstance(self._pitch, dict) else "",
+        )
+
         recent_feed = feed[-5:]
         feed_preview = "\n".join(
             f"- [{o['agent_name']}] {o['content'][:100]}" for o in recent_feed

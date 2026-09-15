@@ -256,6 +256,12 @@ _CIRCUMSTANCE_GLOSS = {
         "sometimes": "Several times this year I couldn't get care I needed.",
         "often": "I often can't get medical care I need.",
     },
+    "went_without_care": {
+        "never": "has not gone without needed medical care this year",
+        "rarely": "has gone without needed medical care once or twice this year",
+        "sometimes": "has several times gone without needed medical care this year",
+        "often": "often goes without needed medical care because of cost, distance, or queues",
+    },
     "owns_vehicle": {
         "none": "There's no car in the house.",
         "household": "There's a car in the house I can use.",
