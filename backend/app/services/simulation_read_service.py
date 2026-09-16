@@ -120,6 +120,87 @@ def cost_breakdown(state: Any, simulation_id: str) -> Dict[str, Any]:
 
 
 # ── live progress ───────────────────────────────────────────────────────────────
+#: What a run reports before it has ever been started.
+IDLE = "idle"
+
+
+def run_status(simulation_id: str) -> Dict[str, Any]:
+    """Where the run is right now, for the screen that polls while it runs.
+
+    A run that was never started answers with zeros rather than 404: the screen opens
+    before the run does, and an error there would read as a broken simulation.
+    """
+    state = SimulationRunner.get_run_state(simulation_id)
+    if not state:
+        return {
+            "simulation_id": simulation_id,
+            "runner_status": IDLE,
+            "current_round": 0,
+            "total_rounds": 0,
+            "progress_percent": 0,
+            "simulation_actions_count": 0,
+            "total_actions_count": 0,
+        }
+
+    data = state.to_dict()
+    # How many agents have spoken so far comes from the subprocess's own status file,
+    # not the run state, so it has to be merged in.
+    env = SimulationRunner.get_env_status_detail(simulation_id)
+    data["agents_expressed_count"] = env.get("agents_expressed_count", 0)
+    data["agents_expressed"] = env.get("agents_expressed", [])
+    data["total_agents"] = env.get("total_agents", 0)
+    return data
+
+
+def run_status_detail(simulation_id: str,
+                      platform: Optional[str] = None) -> Dict[str, Any]:
+    """The run's status plus every action, and the current round's separately."""
+    state = SimulationRunner.get_run_state(simulation_id)
+    if not state:
+        return {"simulation_id": simulation_id, "runner_status": IDLE, "all_actions": []}
+
+    all_actions = SimulationRunner.get_all_actions(
+        simulation_id=simulation_id, platform=platform)
+    # "Recent" means this round. Before round 1 there is nothing recent to show.
+    recent = SimulationRunner.get_all_actions(
+        simulation_id=simulation_id, platform=platform,
+        round_num=state.current_round) if state.current_round > 0 else []
+
+    result = state.to_dict()
+    result["all_actions"] = [a.to_dict() for a in all_actions]
+    result["rounds_count"] = len(state.rounds)
+    result["recent_actions"] = [a.to_dict() for a in recent]
+    return result
+
+
+def agents(simulation_id: str) -> List[Dict[str, Any]]:
+    """The run's cast with its policy-relevant state. Raises FileNotFoundError."""
+    from .interview_service import InterviewService
+    return InterviewService(simulation_id).list_agents()
+
+
+# ── export ──────────────────────────────────────────────────────────────────────
+def parse_rounds(rounds_arg: str) -> Optional[List[int]]:
+    """"all" means every round (None); otherwise the numbers named, junk dropped."""
+    if rounds_arg == "all":
+        return None
+    return [int(r.strip()) for r in rounds_arg.split(",") if r.strip().isdigit()]
+
+
+def export_states(simulation_id: str,
+                  rounds: Optional[List[int]] = None) -> Dict[str, Any]:
+    """Stance, radicalism, emotion and mobilisation per agent per round."""
+    from .data_exporter import SimulationDataExporter
+    return SimulationDataExporter(simulation_id).export_agent_states(rounds=rounds)
+
+
+def export_impact(simulation_id: str) -> Dict[str, Any]:
+    """The aggregate read from the latest impact interviews."""
+    from .data_exporter import SimulationDataExporter
+    return SimulationDataExporter(simulation_id).export_impact_summary()
+
+
+# ── live progress ───────────────────────────────────────────────────────────────
 def profiles_progress(simulation_id: str, platform: str) -> Dict[str, Any]:
     """The cast as it is being written, for the screen that watches it fill up."""
     snap = repo.snapshot(simulation_id, repo.PROFILES_FILE)

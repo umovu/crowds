@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -163,6 +164,86 @@ def read_enrichment(simulation_id: str, root: Optional[str] = None) -> Dict[str,
     """Deep-research findings per archetype, or {} when the run has none."""
     data = _read_json(simulation_id, ENRICHMENT_FILE, root)
     return data if isinstance(data, dict) else {}
+
+
+#: The subprocess writes one SQLite database per platform inside the run's directory.
+DB_FILE = "{platform}_simulation.db"
+
+
+def db_path(simulation_id: str, platform: str = "reddit",
+            root: Optional[str] = None) -> str:
+    """Path to a platform's simulation database. Not created here."""
+    return path(simulation_id, DB_FILE.format(platform=platform), root=root)
+
+
+def _rows(database: str, sql: str, params: tuple) -> List[Dict[str, Any]]:
+    """Run one read query and return plain dicts.
+
+    An OperationalError means the table is not there yet — the subprocess creates
+    them as it runs — so it answers with no rows rather than failing. The connection
+    is closed on every path, including that one.
+    """
+    conn = sqlite3.connect(database)
+    try:
+        conn.row_factory = sqlite3.Row
+        try:
+            return [dict(row) for row in conn.execute(sql, params).fetchall()]
+        except sqlite3.OperationalError:
+            return []
+    finally:
+        conn.close()
+
+
+def _count(database: str, table: str) -> int:
+    """How many rows the table holds, or 0 while it does not exist yet."""
+    conn = sqlite3.connect(database)
+    try:
+        try:
+            return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        except sqlite3.OperationalError:
+            return 0
+    finally:
+        conn.close()
+
+
+def read_posts(simulation_id: str, platform: str = "reddit", limit: int = 50,
+               offset: int = 0, root: Optional[str] = None
+               ) -> Optional[Dict[str, Any]]:
+    """Posts this run produced, newest first, with the total.
+
+    Returns None when the database file itself is absent, which means the run has not
+    executed yet. That is a different answer from "ran but posted nothing", and the
+    caller says so differently.
+    """
+    database = db_path(simulation_id, platform, root)
+    if not os.path.exists(database):
+        return None
+    return {
+        "rows": _rows(database,
+                      "SELECT * FROM post ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                      (limit, offset)),
+        "total": _count(database, "post"),
+    }
+
+
+def read_comments(simulation_id: str, post_id: Optional[str] = None, limit: int = 50,
+                  offset: int = 0, root: Optional[str] = None
+                  ) -> Optional[List[Dict[str, Any]]]:
+    """Comments this run produced, newest first. Reddit only, which is where they live.
+
+    Returns None when the database file is absent.
+    """
+    database = db_path(simulation_id, "reddit", root)
+    if not os.path.exists(database):
+        return None
+    if post_id:
+        return _rows(database,
+                     "SELECT * FROM comment WHERE post_id = ? "
+                     "ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                     (post_id, limit, offset))
+    return _rows(database,
+                 "SELECT * FROM comment ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                 (limit, offset))
 
 
 def action_totals(simulation_id: str, root: Optional[str] = None) -> Dict[str, float]:

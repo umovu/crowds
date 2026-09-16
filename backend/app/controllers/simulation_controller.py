@@ -24,6 +24,8 @@ are unchanged. Nothing calls `url_for('simulation.*')`, so the endpoint names mo
 `simulation_read.*` breaks no link.
 """
 
+import csv
+import io
 import traceback
 
 from flask import current_app, jsonify, request, send_file
@@ -34,6 +36,7 @@ from ..repositories import simulation_repository as repo
 from ..services import simulation_read_service
 from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
+from ..services.simulation_runner import SimulationRunner
 from ..utils.logger import get_logger
 
 logger = get_logger('fub.controller.simulation')
@@ -269,6 +272,181 @@ def download_simulation_config(simulation_id: str):
                          download_name=repo.CONFIG_FILE)
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to download configuration: {str(e)}")
+        return _failed(e)
+
+
+# ── live status while a run executes ────────────────────────────────────────────
+@simulation_read_bp.route('/<simulation_id>/run-status', methods=['GET'])
+def get_run_status(simulation_id: str):
+    """The run's status, for the frontend to poll."""
+    try:
+        return jsonify({"success": True,
+                        "data": simulation_read_service.run_status(simulation_id)})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get running status: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/run-status/detail', methods=['GET'])
+def get_run_status_detail(simulation_id: str):
+    """The run's status with every action. Query: platform to filter (optional)."""
+    try:
+        return jsonify({"success": True, "data": simulation_read_service.run_status_detail(
+            simulation_id, request.args.get('platform'))})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get detailed status: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/actions', methods=['GET'])
+def get_simulation_actions(simulation_id: str):
+    """Agent action history. Query: limit, offset, platform, agent_id, round_num."""
+    try:
+        actions = SimulationRunner.get_actions(
+            simulation_id=simulation_id,
+            limit=request.args.get('limit', 100, type=int),
+            offset=request.args.get('offset', 0, type=int),
+            platform=request.args.get('platform'),
+            agent_id=request.args.get('agent_id', type=int),
+            round_num=request.args.get('round_num', type=int))
+        return jsonify({"success": True, "data": {
+            "count": len(actions), "actions": [a.to_dict() for a in actions],
+        }})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get action history: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/timeline', methods=['GET'])
+def get_simulation_timeline(simulation_id: str):
+    """One summary per round, for the progress bar. Query: start_round, end_round."""
+    try:
+        timeline = SimulationRunner.get_timeline(
+            simulation_id=simulation_id,
+            start_round=request.args.get('start_round', 0, type=int),
+            end_round=request.args.get('end_round', type=int))
+        return jsonify({"success": True, "data": {
+            "rounds_count": len(timeline), "timeline": timeline,
+        }})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get timeline: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/agent-stats', methods=['GET'])
+def get_agent_stats(simulation_id: str):
+    """Per-agent activity statistics, for the ranking view."""
+    try:
+        stats = SimulationRunner.get_agent_stats(simulation_id)
+        return jsonify({"success": True, "data": {
+            "agents_count": len(stats), "stats": stats,
+        }})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get agent statistics: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/agents', methods=['GET'])
+def list_simulation_agents(simulation_id: str):
+    """The cast with its policy-relevant state: stance, archetype, topics."""
+    try:
+        found = simulation_read_service.agents(simulation_id)
+        return jsonify({"success": True, "data": {
+            "simulation_id": simulation_id,
+            "agent_count": len(found),
+            "agents": found,
+        }})
+    except FileNotFoundError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to list agents: {str(e)}")
+        return _failed(e)
+
+
+# ── what the run produced ───────────────────────────────────────────────────────
+@simulation_read_bp.route('/<simulation_id>/posts', methods=['GET'])
+def get_simulation_posts(simulation_id: str):
+    """Posts the run produced. Query: platform, limit, offset.
+
+    A missing database means the run has not executed yet, which is said out loud
+    rather than returned as an error or as an empty result.
+    """
+    try:
+        platform = request.args.get('platform', 'reddit')
+        page = repo.read_posts(
+            simulation_id, platform,
+            limit=request.args.get('limit', 50, type=int),
+            offset=request.args.get('offset', 0, type=int))
+        if page is None:
+            return jsonify({"success": True, "data": {
+                "platform": platform, "count": 0, "posts": [],
+                "message": "Database does not exist，SimulationMay not have run yet",
+            }})
+        return jsonify({"success": True, "data": {
+            "platform": platform, "total": page["total"],
+            "count": len(page["rows"]), "posts": page["rows"],
+        }})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get posts: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/comments', methods=['GET'])
+def get_simulation_comments(simulation_id: str):
+    """Comments the run produced (Reddit only). Query: post_id, limit, offset."""
+    try:
+        rows = repo.read_comments(
+            simulation_id,
+            post_id=request.args.get('post_id'),
+            limit=request.args.get('limit', 50, type=int),
+            offset=request.args.get('offset', 0, type=int))
+        rows = rows or []
+        return jsonify({"success": True,
+                        "data": {"count": len(rows), "comments": rows}})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get comments: {str(e)}")
+        return _failed(e)
+
+
+# ── structured export ───────────────────────────────────────────────────────────
+def _csv_download(records, filename: str):
+    """Render records as a CSV attachment. Empty input still returns a file."""
+    output = io.StringIO()
+    if records:
+        writer = csv.DictWriter(output, fieldnames=records[0].keys())
+        writer.writeheader()
+        writer.writerows(records)
+    return send_file(io.BytesIO(output.getvalue().encode()), mimetype="text/csv",
+                     as_attachment=True, download_name=filename)
+
+
+@simulation_read_bp.route('/<simulation_id>/export/states', methods=['GET'])
+def export_agent_states(simulation_id: str):
+    """Time-series agent state for external analysis. Query: format (json/csv), rounds."""
+    try:
+        data = simulation_read_service.export_states(
+            simulation_id,
+            simulation_read_service.parse_rounds(request.args.get("rounds", "all")))
+        if request.args.get("format", "json") == "csv":
+            return _csv_download((data or {}).get("records"),
+                                 f"{simulation_id}_agent_states.csv")
+        return jsonify({"success": True, "data": data})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Export agent states failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/export/impact', methods=['GET'])
+def export_impact_summary(simulation_id: str):
+    """Aggregate impact summary from the latest impact interviews. Query: format."""
+    try:
+        data = simulation_read_service.export_impact(simulation_id)
+        if request.args.get("format", "json") == "csv":
+            return _csv_download((data or {}).get("predicted_actions"),
+                                 f"{simulation_id}_impact_summary.csv")
+        return jsonify({"success": True, "data": data})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Export impact summary failed: {str(e)}")
         return _failed(e)
 
 
