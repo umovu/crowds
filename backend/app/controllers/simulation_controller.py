@@ -33,7 +33,7 @@ from flask import current_app, jsonify, request, send_file
 from . import simulation_read_bp
 from ..auth import current_user_id
 from ..repositories import simulation_repository as repo
-from ..services import simulation_read_service
+from ..services import simulation_interview_service, simulation_read_service
 from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner
@@ -272,6 +272,194 @@ def download_simulation_config(simulation_id: str):
                          download_name=repo.CONFIG_FILE)
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to download configuration: {str(e)}")
+        return _failed(e)
+
+
+# ── interviews ──────────────────────────────────────────────────────────────────
+#: The only platform the simulation runs on. Kept as a check because callers still
+#: send the retired 'twitter' / 'reddit' values.
+PLATFORMS = ("opinion_space",)
+
+
+def _bad(message: str):
+    return jsonify({"success": False, "error": message}), 400
+
+
+def _timed_out(e: Exception, message: str):
+    return jsonify({"success": False, "error": f"{message}: {str(e)}"}), 504
+
+
+@simulation_read_bp.route('/interview', methods=['POST'])
+def interview_agent():
+    """Interview one agent. Needs the simulation running or recently completed."""
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        agent_id = data.get('agent_id')
+        prompt = data.get('prompt')
+        platform = data.get('platform')
+
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        if agent_id is None:
+            return _bad("Please provide agent_id")
+        if not prompt:
+            return _bad("Please provide prompt（Interview question）")
+        if platform and platform not in PLATFORMS:
+            return _bad("platform must be opinion_space (was: 'twitter' Or 'reddit'")
+
+        result = simulation_interview_service.interview_one(
+            simulation_id=simulation_id, agent_id=agent_id, prompt=prompt,
+            platform=platform, timeout=data.get('timeout', 60),
+            # Only a request can reach the graph storage, so it is passed in.
+            storage=current_app.extensions.get('graph_storage'))
+        return jsonify({"success": result.get("success", False), "data": result})
+
+    except simulation_interview_service.EnvironmentNotRunning as e:
+        return _bad(str(e))
+    except ValueError as e:
+        return _bad(str(e))
+    except TimeoutError as e:
+        return _timed_out(e, "WaitInterviewResponse timeout")
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"InterviewFailed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/interview/batch', methods=['POST'])
+def interview_agents_batch():
+    """Interview several agents, each with their own question."""
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        interviews = data.get('interviews')
+        platform = data.get('platform')
+
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        if not interviews or not isinstance(interviews, list):
+            return _bad("Please provide interviews (Interview list)")
+        if platform and platform not in PLATFORMS:
+            return _bad("platform must be 'opinion_space'")
+        for i, interview in enumerate(interviews):
+            if 'agent_id' not in interview:
+                return _bad(f"Interview list item {i+1} missing agent_id")
+            if 'prompt' not in interview:
+                return _bad(f"Interview list item {i+1} missing prompt")
+            item_platform = interview.get('platform')
+            if item_platform and item_platform not in PLATFORMS:
+                return _bad(f"Interview list item {i+1}: platform must be 'opinion_space'")
+
+        result = simulation_interview_service.interview_batch(
+            simulation_id=simulation_id, interviews=interviews,
+            platform=platform, timeout=data.get('timeout', 120))
+        return jsonify({"success": result.get("success", False), "data": result})
+
+    except simulation_interview_service.EnvironmentNotRunning as e:
+        return _bad(str(e))
+    except ValueError as e:
+        return _bad(str(e))
+    except TimeoutError as e:
+        return _timed_out(e, "Wait for batchInterviewResponse timeout")
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"BatchInterviewFailed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/interview/post-simulation', methods=['POST'])
+def interview_agents_post_simulation():
+    """Interview agents after the run finished, including ones that never spoke.
+
+    Works from the saved profiles, so it does not need a running environment.
+    """
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        prompt = data.get('prompt')
+        platform = data.get('platform', 'opinion_space')
+
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        if not prompt:
+            return _bad("Please provide prompt (interview question)")
+        if platform and platform not in PLATFORMS:
+            return _bad("platform must be 'opinion_space'")
+
+        out = simulation_interview_service.post_simulation(
+            simulation_id=simulation_id, prompt=prompt,
+            agent_id=data.get('agent_id'), platform=platform,
+            timeout=data.get('timeout', 180))
+        return jsonify({"success": out["result"].get("success", False), "data": {
+            "simulation_id": simulation_id,
+            "interviews_count": out["interviews_count"],
+            "result": out["result"],
+        }})
+
+    except simulation_interview_service.ProfilesUnavailable as e:
+        return _bad(f"Cannot load profiles: {str(e)}")
+    except simulation_interview_service.NoAgents as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except simulation_interview_service.AgentNotFound as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except ValueError as e:
+        return _bad(str(e))
+    except TimeoutError as e:
+        return _timed_out(e, "Interview timeout")
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Post-simulation interview failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/interview/all', methods=['POST'])
+def interview_all_agents():
+    """Ask every agent the same question. Needs the simulation running."""
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        prompt = data.get('prompt')
+        platform = data.get('platform')
+
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        if not prompt:
+            return _bad("Please provide prompt（Interview question）")
+        if platform and platform not in PLATFORMS:
+            return _bad("platform must be opinion_space (was: 'twitter' Or 'reddit'")
+
+        result = simulation_interview_service.interview_all(
+            simulation_id=simulation_id, prompt=prompt, platform=platform,
+            timeout=data.get('timeout', 180))
+        return jsonify({"success": result.get("success", False), "data": result})
+
+    except simulation_interview_service.EnvironmentNotRunning as e:
+        return _bad(str(e))
+    except ValueError as e:
+        return _bad(str(e))
+    except TimeoutError as e:
+        return _timed_out(e, "Wait for globalInterviewResponse timeout")
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"GlobalInterviewFailed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/interview/history', methods=['POST'])
+def get_interview_history():
+    """Every interview recorded for a run. Query body: platform, agent_id, limit."""
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+
+        history = SimulationRunner.get_interview_history(
+            simulation_id=simulation_id,
+            platform=data.get('platform'),
+            agent_id=data.get('agent_id'),
+            limit=data.get('limit', 100))
+        return jsonify({"success": True,
+                        "data": {"count": len(history), "history": history}})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get interview history: {str(e)}")
         return _failed(e)
 
 
