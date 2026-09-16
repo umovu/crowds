@@ -21,6 +21,9 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from ..config import Config
@@ -103,3 +106,168 @@ def list_ids(root: Optional[str] = None) -> List[str]:
             continue
         out.append(name)
     return out
+
+
+# ── reads that also report on the file itself ───────────────────────────────────
+ENRICHMENT_FILE = "enrichment.json"
+#: The subprocess appends one JSON object per agent action here, as it runs.
+ACTIONS_FILE = os.path.join("opinion_space", "actions.jsonl")
+
+
+def path(simulation_id: str, *parts: str, root: Optional[str] = None) -> str:
+    """A path inside the run's directory, WITHOUT creating anything.
+
+    The read-side counterpart to `sim_dir`. Use this whenever the answer is allowed to
+    be "there is nothing there" — `sim_dir` would bring the directory into existence
+    and the id would then show up in `list_ids()`.
+    """
+    return os.path.join(_root(root), simulation_id, *parts)
+
+
+def exists(simulation_id: str, root: Optional[str] = None) -> bool:
+    """Whether this run has a directory at all."""
+    return os.path.isdir(path(simulation_id, root=root))
+
+
+@dataclass(frozen=True)
+class Snapshot:
+    """A file's content plus what the UI needs to know about the file itself.
+
+    The live progress screens poll while a run is still being prepared, so "the file
+    is not there yet" and "the file is there but unreadable" are both normal, and both
+    answer with `data is None`. `modified_at` lets the screen show staleness.
+    """
+    data: Optional[Any] = None
+    present: bool = False
+    modified_at: Optional[str] = None
+
+
+def snapshot(simulation_id: str, filename: str, root: Optional[str] = None) -> Snapshot:
+    """Read one of the run's JSON files and stat it, in one pass."""
+    target = path(simulation_id, filename, root=root)
+    if not os.path.exists(target):
+        return Snapshot()
+    modified_at = None
+    try:
+        modified_at = datetime.fromtimestamp(os.stat(target).st_mtime).isoformat()
+    except OSError:  # noqa: BLE001 - a stat failure must not hide the content
+        pass
+    try:
+        with open(target, "r", encoding="utf-8") as fh:
+            return Snapshot(data=json.load(fh), present=True, modified_at=modified_at)
+    except (OSError, json.JSONDecodeError) as e:
+        logger.warning("Could not read %s for %s: %s", filename, simulation_id, e)
+        return Snapshot(present=True, modified_at=modified_at)
+
+
+def read_enrichment(simulation_id: str, root: Optional[str] = None) -> Dict[str, Any]:
+    """Deep-research findings per archetype, or {} when the run has none."""
+    data = _read_json(simulation_id, ENRICHMENT_FILE, root)
+    return data if isinstance(data, dict) else {}
+
+
+#: The subprocess writes one SQLite database per platform inside the run's directory.
+DB_FILE = "{platform}_simulation.db"
+
+
+def db_path(simulation_id: str, platform: str = "reddit",
+            root: Optional[str] = None) -> str:
+    """Path to a platform's simulation database. Not created here."""
+    return path(simulation_id, DB_FILE.format(platform=platform), root=root)
+
+
+def _rows(database: str, sql: str, params: tuple) -> List[Dict[str, Any]]:
+    """Run one read query and return plain dicts.
+
+    An OperationalError means the table is not there yet — the subprocess creates
+    them as it runs — so it answers with no rows rather than failing. The connection
+    is closed on every path, including that one.
+    """
+    conn = sqlite3.connect(database)
+    try:
+        conn.row_factory = sqlite3.Row
+        try:
+            return [dict(row) for row in conn.execute(sql, params).fetchall()]
+        except sqlite3.OperationalError:
+            return []
+    finally:
+        conn.close()
+
+
+def _count(database: str, table: str) -> int:
+    """How many rows the table holds, or 0 while it does not exist yet."""
+    conn = sqlite3.connect(database)
+    try:
+        try:
+            return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        except sqlite3.OperationalError:
+            return 0
+    finally:
+        conn.close()
+
+
+def read_posts(simulation_id: str, platform: str = "reddit", limit: int = 50,
+               offset: int = 0, root: Optional[str] = None
+               ) -> Optional[Dict[str, Any]]:
+    """Posts this run produced, newest first, with the total.
+
+    Returns None when the database file itself is absent, which means the run has not
+    executed yet. That is a different answer from "ran but posted nothing", and the
+    caller says so differently.
+    """
+    database = db_path(simulation_id, platform, root)
+    if not os.path.exists(database):
+        return None
+    return {
+        "rows": _rows(database,
+                      "SELECT * FROM post ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                      (limit, offset)),
+        "total": _count(database, "post"),
+    }
+
+
+def read_comments(simulation_id: str, post_id: Optional[str] = None, limit: int = 50,
+                  offset: int = 0, root: Optional[str] = None
+                  ) -> Optional[List[Dict[str, Any]]]:
+    """Comments this run produced, newest first. Reddit only, which is where they live.
+
+    Returns None when the database file is absent.
+    """
+    database = db_path(simulation_id, "reddit", root)
+    if not os.path.exists(database):
+        return None
+    if post_id:
+        return _rows(database,
+                     "SELECT * FROM comment WHERE post_id = ? "
+                     "ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                     (post_id, limit, offset))
+    return _rows(database,
+                 "SELECT * FROM comment ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                 (limit, offset))
+
+
+def action_totals(simulation_id: str, root: Optional[str] = None) -> Dict[str, float]:
+    """Sum the tokens and cost the subprocess recorded for each action.
+
+    Pure accumulation of stored numbers: what they cost in rand, and which prices were
+    used, is a rule and belongs in a service. A malformed line is skipped rather than
+    failing the total, because this file is appended to by a live run and the last line
+    can be half-written.
+    """
+    target = path(simulation_id, ACTIONS_FILE, root=root)
+    totals = {"prompt_tokens": 0.0, "completion_tokens": 0.0, "cost_usd": 0.0}
+    if not os.path.exists(target):
+        return totals
+    try:
+        with open(target, "r", encoding="utf-8") as fh:
+            for line in fh:
+                try:
+                    action = json.loads(line)
+                except (json.JSONDecodeError, TypeError):
+                    continue
+                totals["prompt_tokens"] += action.get("prompt_tokens", 0) or 0
+                totals["completion_tokens"] += action.get("completion_tokens", 0) or 0
+                totals["cost_usd"] += action.get("estimated_cost_usd", 0) or 0
+    except OSError as e:
+        logger.warning("Could not read actions for %s: %s", simulation_id, e)
+    return totals
