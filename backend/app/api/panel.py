@@ -20,6 +20,7 @@ from ..controllers import gates
 from ..services import billing_service
 from ..config import Config
 from ..services import hypothesis_report
+from ..services import affordability_service
 from ..services import panel_service
 from ..services import poster_service
 from ..services import pointers
@@ -114,7 +115,7 @@ def affordability_preview():
     try:
         data = request.get_json() or {}
         return jsonify({"success": True, "data": {
-            "affordability": panel_service.derive_budget_tiers(data.get('pitch') or ''),
+            "affordability": affordability_service.derive_budget_tiers(data.get('pitch') or ''),
         }})
     except Exception as e:
         logger.error(f"Failed to derive affordability: {e}")

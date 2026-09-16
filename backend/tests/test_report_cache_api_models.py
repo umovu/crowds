@@ -180,13 +180,15 @@ def test_the_room_agent_list_fits(real_module):
     assert [p for a in agents for p in dm.model_problems("api_agent_entry", a)] == []
 
 
-def test_the_persona_picker_list_fits():
+def test_the_persona_picker_list_fits(real_module):
     if not os.path.exists(LIBRARY):
         pytest.skip("persona library not built")
     from flask import Flask
-    from app.api import research
+    # Borrowed through real_module: another test file leaves a stub app.controllers
+    # in sys.modules that carries only `gates`.
+    personas = real_module("app.controllers.persona_controller")
     with Flask("model-test").app_context():
-        body = research.list_personas().get_json()
+        body = personas.list_personas().get_json()
     assert body["success"]
     assert [p for e in body["personas"] for p in dm.model_problems("api_persona_list_entry", e)] == []
 

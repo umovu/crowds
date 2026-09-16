@@ -94,27 +94,29 @@ def test_the_library_hands_out_typed_people():
 
 # ── the picker list shows library personas only ────────────────────────────
 
-def test_the_persona_picker_lists_library_personas_only():
+def test_the_persona_picker_lists_library_personas_only(real_module):
     if not os.path.exists(LIBRARY):
         pytest.skip("persona library not built in this environment")
     from flask import Flask
-    from app.api import research
+    # Borrowed through real_module: test_sim_start_and_credits leaves a stub
+    # app.controllers in sys.modules that carries only `gates`.
+    personas = real_module("app.controllers.persona_controller")
     with Flask("picking-test").app_context():
-        body = research.list_personas().get_json()
+        body = personas.list_personas().get_json()
     assert body["count"] == len(_library())
     assert {p["level"] for p in body["personas"]} == {"library"}
 
 
-def test_an_old_cached_persona_is_no_longer_served():
+def test_an_old_cached_persona_is_no_longer_served(real_module):
     import glob
     cached = [f for root in (BACKEND, os.path.dirname(BACKEND))
               for f in glob.glob(os.path.join(root, "uploads", "persona_cache", "*.json"))]
     if not cached:
         pytest.skip("no legacy cache in this checkout")
     from flask import Flask
-    from app.api import research
+    personas = real_module("app.controllers.persona_controller")
     old_id = os.path.basename(cached[0])[:-5]
     with Flask("picking-test").app_context():
-        response = research.get_persona(old_id)
+        response = personas.get_persona(old_id)
     status = response[1] if isinstance(response, tuple) else response.status_code
     assert status == 404
