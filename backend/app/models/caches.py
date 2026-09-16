@@ -12,7 +12,8 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional
 from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
-from ._caches_types import (ApiAgentEntryBudgetTier, ApiPersonaListEntryLevel, ApiSegmentKind)
+from ._caches_types import (ApiAgentEntryBudgetTier, ApiPersonaListEntryLevel, ApiSegmentKind, 
+    PersonaCacheEntryMetaLevel)
 
 
 class SaContextClaim(DataModel):
@@ -64,7 +65,7 @@ class JudgeLogLine(DataModel):
 class PersonaCacheEntryMeta(DataModel):
     entity: str = Field(default=None, json_schema_extra={'when': 'optional'})
     type: str = Field(default=None, json_schema_extra={'when': 'optional'})
-    level: Literal['exact', 'archetype'] = Field(default=None, json_schema_extra={'when': 'optional'})
+    level: PersonaCacheEntryMetaLevel = Field(default=None, json_schema_extra={'when': 'optional'})
 
 
 class PersonaCacheEntry(DataModel):

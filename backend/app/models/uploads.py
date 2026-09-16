@@ -13,8 +13,10 @@ from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
 from ._uploads_types import (CustomAgentSourceEntityType, CustomAgentStance, 
-    HypothesisReportMode, MechanismCardClaimType, PanelContextMode, PanelContextPanelSession, 
-    PanelSessionMode, PosterMimeType, ProjectStatus)
+    HypothesisReportMode, HypothesisReportMovementPeopleItemDirection, 
+    LocalPapersPapersItemSource, MechanismCardClaimType, PanelContextMode, 
+    PanelContextPanelSession, PanelSessionMode, PanelSessionSlotsProbesItemConfidence, 
+    PosterMimeType, ProjectStatus)
 
 
 class PanelContext(DataModel):
@@ -39,7 +41,7 @@ class PanelSessionSlotsProbesItem(DataModel):
     question: str = Field(json_schema_extra={'when': 'always'})
     active: bool = Field(json_schema_extra={'when': 'always'})
     base: bool = Field(default=None, json_schema_extra={'when': 'optional'})
-    confidence: Literal['strong-data', 'thin-data'] = Field(json_schema_extra={'when': 'always'})
+    confidence: PanelSessionSlotsProbesItemConfidence = Field(json_schema_extra={'when': 'always'})
 
 
 class PanelSessionSlots(DataModel):
@@ -219,7 +221,7 @@ class HypothesisReportMovementPeopleItem(DataModel):
     name: str = Field(json_schema_extra={'when': 'always'})
     from_: str = Field(alias='from', json_schema_extra={'when': 'always'})
     to: str = Field(json_schema_extra={'when': 'always'})
-    direction: Literal['warmer', 'cooler', 'sideways'] = Field(json_schema_extra={'when': 'always'})
+    direction: HypothesisReportMovementPeopleItemDirection = Field(json_schema_extra={'when': 'always'})
     round: Optional[int] = Field(json_schema_extra={'when': 'always'})
 
 
@@ -303,7 +305,7 @@ class LocalPapersPapersItem(DataModel):
     authors: List[str] = Field(json_schema_extra={'when': 'always'})
     year: Optional[int] = Field(json_schema_extra={'when': 'always'})
     abstract: str = Field(json_schema_extra={'when': 'always'})
-    source: Literal['arxiv', 'openalex', 'crossref', 'local'] = Field(json_schema_extra={'when': 'always'})
+    source: LocalPapersPapersItemSource = Field(json_schema_extra={'when': 'always'})
     url: str = Field(json_schema_extra={'when': 'always'})
     citations: Optional[int] = Field(ge=0, json_schema_extra={'when': 'always'})
     doi: Optional[str] = Field(json_schema_extra={'when': 'always'})

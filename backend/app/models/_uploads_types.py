@@ -11,6 +11,10 @@ CustomAgentSourceEntityType = Literal['custom', 'custom_manual']
 
 # ── hypothesis_report ───────────────────────────────────────────────────────
 HypothesisReportMode = Literal['panel', 'product', 'policy']
+HypothesisReportMovementPeopleItemDirection = Literal['warmer', 'cooler', 'sideways']
+
+# ── local_papers ────────────────────────────────────────────────────────────
+LocalPapersPapersItemSource = Literal['arxiv', 'openalex', 'crossref', 'local']
 
 # ── mechanism_card ──────────────────────────────────────────────────────────
 MechanismCardClaimType = Literal['qualitative', 'mixed_methods']
@@ -21,6 +25,7 @@ PanelContextPanelSession = Literal[True]
 
 # ── panel_session ───────────────────────────────────────────────────────────
 PanelSessionMode = Literal['panel', 'product', 'policy']
+PanelSessionSlotsProbesItemConfidence = Literal['strong-data', 'thin-data']
 
 # ── poster ──────────────────────────────────────────────────────────────────
 PosterMimeType = Literal['image/png', 'image/jpeg', 'image/jpg', 'image/webp']

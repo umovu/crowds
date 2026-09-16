@@ -12,7 +12,10 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional
 from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
-from ._reference_types import (GrantScheduleCurrency, WorldFactsCurrency)
+from ._reference_types import (B2bSectorsSectorsValueDecisionLens, 
+    EventRulesRulesItemEventSeverity, EventRulesRulesItemTriggerMetric, 
+    EventRulesRulesItemTriggerReasonCategory, EventRulesRulesItemTriggerType, 
+    GrantScheduleCurrency, WorldFactsCurrency, WorldFactsFactsItemProvenance)
 
 
 class GrantScheduleGrantsValue(DataModel):
@@ -40,7 +43,7 @@ class WorldFactsFactsItem(DataModel):
     derived: str = Field(default=None, json_schema_extra={'when': 'optional'})
     source: str = Field(json_schema_extra={'when': 'always'})
     as_of: str = Field(pattern='^(\\d{4}(-\\d{2})?)?$', json_schema_extra={'when': 'always'})
-    provenance: Literal['curated', 'discovered', 'web'] = Field(json_schema_extra={'when': 'always'})
+    provenance: WorldFactsFactsItemProvenance = Field(json_schema_extra={'when': 'always'})
 
 
 class WorldFacts(DataModel):
@@ -54,8 +57,8 @@ class WorldFacts(DataModel):
 
 
 class EventRulesRulesItemTrigger(DataModel):
-    type: Literal['threshold', 'topic_mention_count', 'archetype_interaction', 'sustained_non_participation', 'non_participation_reason_threshold', 'radicalism_drift', 'archetype_impact_threshold', 'archetype_response_count', 'scheduled'] = Field(json_schema_extra={'when': 'always'})
-    metric: Literal['pct_agents_with_impact_above'] = Field(default=None, json_schema_extra={'when': 'optional'})
+    type: EventRulesRulesItemTriggerType = Field(json_schema_extra={'when': 'always'})
+    metric: EventRulesRulesItemTriggerMetric = Field(default=None, json_schema_extra={'when': 'optional'})
     value: float = Field(default=None, json_schema_extra={'when': 'optional'})
     min_proportion: float = Field(default=None, ge=0, le=1, json_schema_extra={'when': 'optional'})
     window_rounds: int = Field(default=None, ge=1, json_schema_extra={'when': 'optional'})
@@ -64,7 +67,7 @@ class EventRulesRulesItemTrigger(DataModel):
     primary_archetype: str = Field(default=None, json_schema_extra={'when': 'optional'})
     secondary_archetypes: List[str] = Field(default=None, json_schema_extra={'when': 'optional'})
     min_secondary_count: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
-    reason_category: Literal['distrust', 'fear', 'time_constraints', 'apathy', 'other'] = Field(default=None, json_schema_extra={'when': 'optional'})
+    reason_category: EventRulesRulesItemTriggerReasonCategory = Field(default=None, json_schema_extra={'when': 'optional'})
     min_proportion_of_non_participants: float = Field(default=None, ge=0, le=1, json_schema_extra={'when': 'optional'})
     from_max: float = Field(default=None, json_schema_extra={'when': 'optional'})
     to_min: float = Field(default=None, json_schema_extra={'when': 'optional'})
@@ -83,7 +86,7 @@ class EventRulesRulesItemEvent(DataModel):
     title: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     content: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     affected_archetypes: List[str] = Field(json_schema_extra={'when': 'always'})
-    severity: Literal['low', 'medium', 'high', 'critical'] = Field(json_schema_extra={'when': 'always'})
+    severity: EventRulesRulesItemEventSeverity = Field(json_schema_extra={'when': 'always'})
     persist_rounds: int = Field(ge=1, json_schema_extra={'when': 'always'})
 
 
@@ -117,7 +120,7 @@ class B2bSectorsSectorsValue(DataModel):
     incentive_levers: List[str] = Field(json_schema_extra={'when': 'always'})
     scoreable_levers: list = Field(default=None, json_schema_extra={'when': 'optional'})
     deal_must_respect: List[str] = Field(json_schema_extra={'when': 'always'})
-    decision_lens: Literal['commercial', 'procedural'] = Field(json_schema_extra={'when': 'always'})
+    decision_lens: B2bSectorsSectorsValueDecisionLens = Field(json_schema_extra={'when': 'always'})
     decision_provenance: str = Field(default=None, json_schema_extra={'when': 'optional'})
     governance_frame: str = Field(default=None, json_schema_extra={'when': 'optional'})
     in_org_interest_means: str = Field(default=None, json_schema_extra={'when': 'optional'})

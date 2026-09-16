@@ -5,8 +5,18 @@
 from typing import Literal
 
 
+# ── b2b_sectors ─────────────────────────────────────────────────────────────
+B2bSectorsSectorsValueDecisionLens = Literal['commercial', 'procedural']
+
+# ── event_rules ─────────────────────────────────────────────────────────────
+EventRulesRulesItemTriggerType = Literal['threshold', 'topic_mention_count', 'archetype_interaction', 'sustained_non_participation', 'non_participation_reason_threshold', 'radicalism_drift', 'archetype_impact_threshold', 'archetype_response_count', 'scheduled']
+EventRulesRulesItemTriggerMetric = Literal['pct_agents_with_impact_above']
+EventRulesRulesItemTriggerReasonCategory = Literal['distrust', 'fear', 'time_constraints', 'apathy', 'other']
+EventRulesRulesItemEventSeverity = Literal['low', 'medium', 'high', 'critical']
+
 # ── grant_schedule ──────────────────────────────────────────────────────────
 GrantScheduleCurrency = Literal['ZAR']
 
 # ── world_facts ─────────────────────────────────────────────────────────────
 WorldFactsCurrency = Literal['ZAR']
+WorldFactsFactsItemProvenance = Literal['curated', 'discovered', 'web']

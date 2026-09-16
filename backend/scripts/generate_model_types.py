@@ -44,8 +44,20 @@ TABLES = {
 
 
 def alias(*parts: str) -> str:
-    """province -> Province; attitude_row + topic -> AttitudeRowTopic."""
-    return "".join(p.capitalize() for part in parts for p in part.split("_"))
+    """province -> Province; attitude_row + topic -> AttitudeRowTopic.
+
+    A part that is already CamelCase (an inner class name like
+    `EventRulesRulesItemTrigger`) is kept as it is: capitalize() would lowercase the
+    rest of the word and give `Eventrulesrulesitemtrigger`, which still imports fine
+    and so would never have failed loudly.
+    """
+    out = []
+    for part in parts:
+        if "_" not in part and part[:1].isupper():
+            out.append(part)
+        else:
+            out += [p.capitalize() for p in part.split("_")]
+    return "".join(out)
 
 
 def _literal(values) -> str:
@@ -66,6 +78,44 @@ def _exported(name: str) -> dict:
         return json.load(fh)
 
 
+def _class_name(name: str) -> str:
+    """The Python class a model name belongs to (persona -> LibraryPersona)."""
+    sys.path.insert(0, BACKEND)
+    os.environ.setdefault("AGENTSOCIETY_LLM_API_KEY", "generate-placeholder")
+    from app.models import REGISTRY
+    return REGISTRY[name].__name__
+
+
+def _nested(spec: dict, holder: str) -> list:
+    """(inner class name, field, allowed) for every field in a nested field table.
+
+    The inner classes are named after the path that reaches them, so the path predicts
+    the name: `values` contributes "Value", a list's `items` contributes "Item".
+    """
+    out = []
+    table = spec.get("fields")
+    if not isinstance(table, dict):
+        return out
+    for field, sub in table.items():
+        if not isinstance(sub, dict):
+            continue
+        if isinstance(sub.get("fields"), dict):
+            inner = holder + alias(field)
+            for f, s in sub["fields"].items():
+                if isinstance(s, dict) and s.get("allowed"):
+                    out.append((inner, f, s["allowed"]))
+            out += _nested(sub, inner)
+        for key, suffix in (("items", "Item"), ("values", "Value")):
+            held = sub.get(key)
+            if isinstance(held, dict) and isinstance(held.get("fields"), dict):
+                inner = holder + alias(field) + suffix
+                for f, s in held["fields"].items():
+                    if isinstance(s, dict) and s.get("allowed"):
+                        out.append((inner, f, s["allowed"]))
+                out += _nested(held, inner)
+    return out
+
+
 def rendered(module: str) -> str:
     """The generated types module for one app/models file.
 
@@ -84,6 +134,12 @@ def rendered(module: str) -> str:
             if isinstance(spec, dict) and spec.get("allowed"):
                 alias_name = alias(name, field) if prefixed else alias(field)
                 chunk.append(f"{alias_name} = {_literal(spec['allowed'])}")
+        # Nested field tables: an object field's `fields`, a list's `items.fields`, a
+        # free-key map's `values.fields`. Each is held by its own inner class, whose name
+        # the path predicts (EventRules + rules + items + trigger ->
+        # EventRulesRulesItemTrigger). Checked against every inner class: 10/10.
+        for inner_cls, inner_field, allowed in _nested(doc, _class_name(name)):
+            chunk.append(f"{alias(inner_cls, inner_field)} = {_literal(allowed)}")
         for section in ("attitude_row", "circumstance_row"):
             row = doc.get(section)
             if not isinstance(row, dict):

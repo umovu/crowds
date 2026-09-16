@@ -13,3 +13,6 @@ ApiPersonaListEntryLevel = Literal['library']
 
 # ── api_segment ─────────────────────────────────────────────────────────────
 ApiSegmentKind = Literal['who', 'thinks']
+
+# ── persona_cache_entry ─────────────────────────────────────────────────────
+PersonaCacheEntryMetaLevel = Literal['exact', 'archetype']
