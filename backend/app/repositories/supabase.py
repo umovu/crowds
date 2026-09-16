@@ -75,6 +75,19 @@ def auth_post(path: str, body: Any, params: Optional[Dict[str, Any]] = None) -> 
                          timeout=TIMEOUT)
 
 
+# ── Storage (files, not tables) ──────────────────────────────────────────────
+def download(bucket: str, obj: str, timeout: int = 60) -> bytes:
+    """One file out of a private Storage bucket. Raises if it did not come back.
+
+    Used to seed data that is too big, or too licensed, to live in git.
+    """
+    resp = requests.get(f"{url()}/storage/v1/object/{bucket}/{obj}",
+                        headers={"apikey": _key(), "Authorization": f"Bearer {_key()}"},
+                        timeout=timeout)
+    resp.raise_for_status()
+    return resp.content
+
+
 def rows(resp: requests.Response) -> list:
     """The rows in a PostgREST response, or [] when it carried no list."""
     resp.raise_for_status()

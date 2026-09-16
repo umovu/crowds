@@ -24,11 +24,9 @@ import re
 
 APP = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app")
 
-# Services that still reach storage themselves. Each one moves to app/repositories/
-# in a later pass (see the redesign plan); nothing new may join them.
-SERVICES_STILL_CALLING_SUPABASE = {
-    "persona_library.py",   # -> repositories/persona_repository.py (personas slice)
-}
+# Empty on purpose: no service may reach Supabase any more. Every one of them now
+# asks a repository. This is a rule, not a to-do list.
+SERVICES_STILL_CALLING_SUPABASE: set = set()
 
 # Models whose *Manager class still carries its own file storage. The dataclasses
 # stay in app/models/; the managers move to app/repositories/.

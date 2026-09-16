@@ -5,80 +5,45 @@ The library is the offline-built set of representative, survey-grounded SA perso
 identities (see build_library.py). The hosted app reads it here to assemble
 simulations without paying per-user persona-generation cost.
 
-Storage is JSON today (backend/app/data/persona_library/personas.json) behind a
-small interface — all callers go through PersonaLibrary, never the file. Swapping to
-a Supabase-backed store later is a new subclass implementing the same methods, not a
-rewrite of the retrieval/assembly code.
+Where the file lives and how it is fetched is app/repositories/persona_repository.py.
+This module is the rules on top of it: the drift check against the data model, the
+lsm_proxy stamp, and the query/filter/sample interface every caller goes through.
 
 This module is LLM-free and read-only.
 """
 
 from __future__ import annotations
 
-import json
-import os
 import random
 from typing import Dict, List, Optional
 
+from ..repositories import persona_repository
 from ..utils.logger import get_logger
 from . import data_model
 from .lsm_proxy import score_persona
 
 logger = get_logger("fub.persona_library")
 
-# Where the library JSON lives. Locally it's the in-repo path (gitignored, built
-# by scripts/build_library.py). On hosts it lives on the persistent volume —
-# set PERSONA_LIBRARY_PATH=/data/persona_library/personas.json — and is seeded
-# once from Supabase Storage on first boot (see _seed_from_storage). It is NOT
-# shipped in git.
-_IMAGE_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "data", "persona_library", "personas.json"
-)
-
 
 def _default_library_path() -> str:
-    return os.environ.get("PERSONA_LIBRARY_PATH") or _IMAGE_PATH
+    return persona_repository.library_path()
 
 
 def _seed_from_storage(dest_path: str) -> bool:
-    """Download the library from a private Supabase Storage bucket to dest_path.
+    """Re-sync the library file from Supabase Storage (no-op when unconfigured).
 
-    Lets the persistent volume be seeded on first boot without the file ever
-    being in git. No-op (returns False) unless the storage env vars are set.
-    Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, PERSONA_LIBRARY_BUCKET,
-         PERSONA_LIBRARY_OBJECT (default "personas.json").
+    Kept as a name here because tests and scripts patch it by this path; the
+    download itself belongs to the repository.
     """
-    url = os.environ.get("SUPABASE_URL", "").rstrip("/")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
-    bucket = os.environ.get("PERSONA_LIBRARY_BUCKET", "")
-    obj = os.environ.get("PERSONA_LIBRARY_OBJECT", "personas.json")
-    if not (url and key and bucket):
-        return False
-    try:
-        import requests
-        endpoint = f"{url}/storage/v1/object/{bucket}/{obj}"
-        resp = requests.get(
-            endpoint,
-            headers={"apikey": key, "Authorization": f"Bearer {key}"},
-            timeout=60,
-        )
-        resp.raise_for_status()
-        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-        with open(dest_path, "wb") as f:
-            f.write(resp.content)
-        logger.info(
-            "Seeded persona library from Supabase Storage (%d bytes) -> %s",
-            len(resp.content), dest_path,
-        )
-        return True
-    except Exception as e:
-        logger.error("Could not seed persona library from storage: %s", e)
-        return False
+    return persona_repository.seed_from_storage(dest_path)
 
 
 class PersonaLibrary:
-    """JSON-backed persona library. The query/filter/sample interface is the contract
-    a future SupabasePersonaLibrary would implement unchanged."""
+    """The persona library as the app uses it: checked, scored, and queryable.
+
+    Reading the bytes is persona_repository's job. The query/filter/sample interface
+    here is the contract every caller goes through, never the file.
+    """
 
     def __init__(self, path: Optional[str] = None):
         self.path = path or _default_library_path()
@@ -97,21 +62,11 @@ class PersonaLibrary:
         # dev uses the in-repo JSON); a failed download leaves any existing file
         # untouched (see _seed_from_storage).
         _seed_from_storage(self.path)
-        if not os.path.exists(self.path):
-            logger.warning(f"Persona library not found at {self.path}; library is empty. "
-                           f"Seed Supabase Storage or run scripts/build_library.py to populate it.")
-            self._personas = []
-        else:
-            try:
-                with open(self.path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                self._personas = data.get("personas", []) if isinstance(data, dict) else list(data)
-                self._report_model_drift()
-                self._stamp_lsm()
-                logger.info(f"Loaded {len(self._personas)} personas from library.")
-            except (OSError, json.JSONDecodeError) as e:
-                logger.error(f"Failed to read persona library: {e}")
-                self._personas = []
+        self._personas = persona_repository.read(self.path)
+        if self._personas:
+            self._report_model_drift()
+            self._stamp_lsm()
+            logger.info(f"Loaded {len(self._personas)} personas from library.")
         self._loaded = True
         return self
 
