@@ -121,20 +121,21 @@ def test_billing_rows_fit(supabase, real_module):
 
 
 def test_approval_rows_fit(supabase):
-    from app import approval
-    approval.invalidate(USER)
-    approval.is_approved(USER, "thandi@example.org", "Thandi")   # no row -> pending profile
-    approval.approve(USER)
-    approval.get_profile(USER)
-    approval.claim_notification(USER)
+    from app.repositories import user_repository
+    from app.services import signup_service
+    signup_service.invalidate(USER)
+    signup_service.is_approved(USER, "thandi@example.org", "Thandi")  # no row -> pending
+    signup_service.approve(USER)
+    signup_service.profile(USER)
+    user_repository.claim_notification(USER)
     assert len(supabase) >= 4
     assert _problems(supabase) == []
 
 
-def test_waitlist_rows_fit(supabase, real_module):
-    waitlist = real_module("app.api.waitlist")
-    waitlist._store("thandi@example.org", "Thandi", "Runs clinics")
-    waitlist._is_approved("thandi@example.org")
+def test_waitlist_rows_fit(supabase):
+    from app.repositories import user_repository, waitlist_repository
+    waitlist_repository.add("thandi@example.org", "Thandi", "Runs clinics")
+    user_repository.approved_by_email("thandi@example.org")
     assert _problems(supabase) == []
 
 

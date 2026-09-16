@@ -9,7 +9,7 @@ import warnings
 # Must be set before all other imports
 warnings.filterwarnings("ignore", message=".*resource_tracker.*")
 
-from flask import Flask, request
+from flask import Flask, g, jsonify, request
 from flask_cors import CORS
 
 from .config import Config
@@ -149,7 +149,7 @@ def _log_auth_config(logger):
         return
     logger.info("Auth: SUPABASE_URL = %s | SUPABASE_JWT_SECRET set = %s",
                 url or "(UNSET!)", has_secret)
-    from .approval import waitlist_enabled
+    from .services.signup_service import gate_enabled as waitlist_enabled
     logger.info("Auth: waitlist gate = %s (approve users in the profiles table)",
                 "ON" if waitlist_enabled() else "off")
     if not url and not has_secret:
@@ -218,7 +218,25 @@ def create_app(config_class=Config):
     # Auth guard: every /api/* request must carry a valid Supabase JWT.
     # Non-/api routes (e.g. /health) and CORS preflight (OPTIONS) are exempt.
     from .auth import verify_request
-    from .approval import verify_approved
+    from .services import signup_service
+
+    def verify_approved():
+        """Gate the current request. Returns a 403 response, or None to continue.
+
+        The `code` matters: the frontend keys off it (api/index.js) to show the
+        waitlist screen rather than a generic error.
+        """
+        user = getattr(g, "user", None) or {}
+        meta = user.get("user_metadata") or {}
+        if signup_service.is_approved(user.get("sub"),
+                                      user.get("email") or "",
+                                      meta.get("full_name") or meta.get("name") or ""):
+            return None
+        return jsonify({
+            "success": False,
+            "error": "Your account is on the waitlist. We'll email you when it's approved.",
+            "code": "waitlist",
+        }), 403
 
     @app.before_request
     def require_supabase_auth():
@@ -260,7 +278,8 @@ def create_app(config_class=Config):
 
     # Register blueprints
     from .api import (graph_bp, simulation_bp, report_bp, config_bp, research_bp,
-                      panel_bp, billing_bp, account_bp, waitlist_bp, context_bp)
+                      panel_bp, billing_bp, context_bp)
+    from .controllers import account_bp, signup_bp
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
@@ -269,7 +288,7 @@ def create_app(config_class=Config):
     app.register_blueprint(panel_bp, url_prefix='/api/panel')
     app.register_blueprint(billing_bp, url_prefix='/api/billing')
     app.register_blueprint(account_bp, url_prefix='/api/account')
-    app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
+    app.register_blueprint(signup_bp, url_prefix='/api/waitlist')
     app.register_blueprint(context_bp, url_prefix='/api/context')
     # Non-/api on purpose: tapped from a Telegram link with no session, and
     # authenticated by ADMIN_APPROVE_TOKEN in the URL instead of a JWT.

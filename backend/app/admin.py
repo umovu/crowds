@@ -18,7 +18,7 @@ import hmac
 
 from flask import Blueprint, request
 
-from . import approval
+from .services import signup_service
 from .utils.logger import get_logger
 
 logger = get_logger("fub.admin")
@@ -58,14 +58,14 @@ def approve():
         return _page("Not allowed", "That link isn't valid.", "#C0392B", 403)
 
     user_id = request.args.get("user", "")
-    profile = approval.get_profile(user_id)
+    profile = signup_service.profile(user_id)
     if not profile:
         return _page("Not found", "No waitlist entry matches that link.", "#C0392B", 404)
-    who = profile.get("email") or user_id
-    if profile.get("approved"):
+    who = profile.email or user_id
+    if profile.approved:
         return _page("Already approved", f"{who} already has access.", "#178048", 200)
 
-    if not approval.approve(user_id):
+    if not signup_service.approve(user_id):
         return _page("Didn't work", "Approving failed. Try the Supabase table instead.",
                      "#C0392B", 502)
     logger.info("Approved %s via admin link", who)
