@@ -18,6 +18,8 @@ LocalPapersPapersItemSource = Literal['arxiv', 'openalex', 'crossref', 'local']
 
 # ── mechanism_card ──────────────────────────────────────────────────────────
 MechanismCardClaimType = Literal['qualitative', 'mixed_methods']
+MechanismCardEconomicTags = Literal['tight', 'moderate', 'loose']
+MechanismCardCombGaps = Literal['capability', 'opportunity', 'motivation']
 
 # ── panel_context ───────────────────────────────────────────────────────────
 PanelContextMode = Literal['panel', 'product', 'policy']
@@ -25,6 +27,8 @@ PanelContextPanelSession = Literal[True]
 
 # ── panel_session ───────────────────────────────────────────────────────────
 PanelSessionMode = Literal['panel', 'product', 'policy']
+PanelSessionBudgetTierFilter = Literal['tight', 'moderate', 'loose']
+PanelSessionAffordabilityFromPriceTiers = Literal['tight', 'moderate', 'loose']
 PanelSessionSlotsProbesItemConfidence = Literal['strong-data', 'thin-data']
 
 # ── poster ──────────────────────────────────────────────────────────────────

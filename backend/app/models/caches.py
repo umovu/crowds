@@ -13,7 +13,7 @@ from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
 from ._caches_types import (ApiAgentEntryBudgetTier, ApiPersonaListEntryLevel, ApiSegmentKind, 
-    PersonaCacheEntryMetaLevel)
+    ApiSegmentTopics, PersonaCacheEntryMetaLevel)
 
 
 class SaContextClaim(DataModel):
@@ -132,7 +132,7 @@ class ApiSegment(DataModel):
     id: str = Field(pattern='^[a-z_]+$', json_schema_extra={'when': 'always'})
     label: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     description: str = Field(json_schema_extra={'when': 'always'})
-    topics: List[Literal['everyone', 'health', 'education', 'money', 'environment', 'food', 'government', 'safety']] = Field(min_length=1, json_schema_extra={'when': 'always'})
+    topics: List[ApiSegmentTopics] = Field(min_length=1, json_schema_extra={'when': 'always'})
     kind: ApiSegmentKind = Field(json_schema_extra={'when': 'always'})
     attitude_dim: Optional[str] = Field(json_schema_extra={'when': 'always'})
     count: int = Field(ge=1, json_schema_extra={'when': 'always'})

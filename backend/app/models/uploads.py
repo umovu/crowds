@@ -14,9 +14,10 @@ from pydantic import ConfigDict, Field, RootModel
 from .base import DataModel, SqliteModel
 from ._uploads_types import (CustomAgentSourceEntityType, CustomAgentStance, 
     HypothesisReportMode, HypothesisReportMovementPeopleItemDirection, 
-    LocalPapersPapersItemSource, MechanismCardClaimType, PanelContextMode, 
-    PanelContextPanelSession, PanelSessionMode, PanelSessionSlotsProbesItemConfidence, 
-    PosterMimeType, ProjectStatus)
+    LocalPapersPapersItemSource, MechanismCardClaimType, MechanismCardCombGaps, 
+    MechanismCardEconomicTags, PanelContextMode, PanelContextPanelSession, 
+    PanelSessionAffordabilityFromPriceTiers, PanelSessionBudgetTierFilter, PanelSessionMode, 
+    PanelSessionSlotsProbesItemConfidence, PosterMimeType, ProjectStatus)
 
 
 class PanelContext(DataModel):
@@ -32,7 +33,7 @@ class PanelContext(DataModel):
 class PanelSessionAffordabilityFromPrice(DataModel):
     amount: float = Field(ge=0, json_schema_extra={'when': 'always'})
     monthly: bool = Field(json_schema_extra={'when': 'always'})
-    tiers: List[Literal['tight', 'moderate', 'loose']] = Field(json_schema_extra={'when': 'always'})
+    tiers: List[PanelSessionAffordabilityFromPriceTiers] = Field(json_schema_extra={'when': 'always'})
 
 
 class PanelSessionSlotsProbesItem(DataModel):
@@ -77,7 +78,7 @@ class PanelSession(DataModel):
     archetype_distribution: Dict[str, Annotated[int, Field(ge=0)]] = Field(json_schema_extra={'when': 'always'})
     province_distribution: Dict[str, Annotated[int, Field(ge=0)]] = Field(json_schema_extra={'when': 'always'})
     budget_tier_distribution: Dict[str, Annotated[int, Field(ge=0)]] = Field(default=None, json_schema_extra={'when': 'optional'})
-    budget_tier_filter: List[Literal['tight', 'moderate', 'loose']] = Field(default=None, json_schema_extra={'when': 'optional'})
+    budget_tier_filter: List[PanelSessionBudgetTierFilter] = Field(default=None, json_schema_extra={'when': 'optional'})
     affordability_pool_size: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
     affordability_from_price: PanelSessionAffordabilityFromPrice = Field(default=None, json_schema_extra={'when': 'optional'})
     attitude_filter: Dict[str, List[str]] = Field(default=None, json_schema_extra={'when': 'optional'})
@@ -198,9 +199,9 @@ class MechanismCard(DataModel):
     region: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     confidence: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     segment_tags: List[str] = Field(min_length=1, json_schema_extra={'when': 'always'})
-    economic_tags: List[Literal['tight', 'moderate', 'loose']] = Field(default=None, json_schema_extra={'when': 'optional'})
+    economic_tags: List[MechanismCardEconomicTags] = Field(default=None, json_schema_extra={'when': 'optional'})
     topic_tags: List[Annotated[str, Field(pattern='^[a-z][a-z -]*$')]] = Field(min_length=1, json_schema_extra={'when': 'always'})
-    comb_gaps: List[Literal['capability', 'opportunity', 'motivation']] = Field(json_schema_extra={'when': 'always'})
+    comb_gaps: List[MechanismCardCombGaps] = Field(json_schema_extra={'when': 'always'})
     applies_when: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(json_schema_extra={'when': 'always'})
 
 

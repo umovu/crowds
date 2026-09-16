@@ -9,6 +9,7 @@ from typing import Literal
 B2bSectorsSectorsValueDecisionLens = Literal['commercial', 'procedural']
 
 # ── event_rules ─────────────────────────────────────────────────────────────
+EventRulesRulesItemAppliesToModes = Literal['policy', 'product']
 EventRulesRulesItemTriggerType = Literal['threshold', 'topic_mention_count', 'archetype_interaction', 'sustained_non_participation', 'non_participation_reason_threshold', 'radicalism_drift', 'archetype_impact_threshold', 'archetype_response_count', 'scheduled']
 EventRulesRulesItemTriggerMetric = Literal['pct_agents_with_impact_above']
 EventRulesRulesItemTriggerReasonCategory = Literal['distrust', 'fear', 'time_constraints', 'apathy', 'other']

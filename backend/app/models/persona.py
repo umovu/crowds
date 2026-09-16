@@ -20,28 +20,17 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional
 from pydantic import Field
 
 from .base import DataModel, export_fields
-from ._persona_types import (ActorArchetype, AttitudeMatchQuality, CurrentGrade, 
+from ._persona_types import (ActorArchetype, AttitudeMatchQuality, AttitudeRowMatchQuality, 
+    AttitudeRowSources, AttitudeRowTopic, CIRCUMSTANCES, CircumstanceRowField, 
+    CircumstanceRowMatchQuality, CircumstanceRowSources, CurrentGrade, DERIVED_FACTS, 
     EduInstitution, Education, EmploymentStatus, EmploymentStatusProvenance, 
-    FarmMarketOrientation, FarmProducts, FeesBand, Gender, Geotype, GhsRole, GuardianType, 
-    HealthFacilitySector, HealthProvenance, HomeLanguage, IncomeProvenance, Industry, 
-    MarriageStatus, Occupation, OccupationProvenance, Province, Race, SelfRatedHealth, 
-    SourceEntityType, SourceSurvey, TimeToHealthFacility, TimeToSchool, 
-    TransportToHealthFacility, UsualHealthFacility, CIRCUMSTANCES, DERIVED_FACTS, GROUPS, 
-    TOPICS)
+    FarmMarketOrientation, FarmProducts, FeesBand, GROUPS, Gender, Geotype, GhsRole, 
+    GuardianType, HealthFacilitySector, HealthProvenance, HomeLanguage, IncomeProvenance, 
+    Industry, LearnerFeeBands, MarriageStatus, Occupation, OccupationProvenance, Province, 
+    Race, SelfRatedHealth, SourceEntityType, SourceSurvey, TOPICS, TimeToHealthFacility, 
+    TimeToSchool, TransportToHealthFacility, UsualHealthFacility)
 
 HEADER = {'version': 1}
-
-
-#: Attitude topics: allowed stances, the survey items behind each, and literal answers seen.
-
-
-#: Circumstance fields: allowed values, the survey items, and prompt wording.
-
-
-#: Facts made at match time, never stored.
-
-
-
 
 
 def in_group(persona, when):
@@ -77,10 +66,10 @@ class AttitudeRow(DataModel):
     the respondent's literal answer to the one question behind it."""
     MEASURED_KEYS: ClassVar[tuple] = ('measured_question', 'measured_asked', 'measured_answer')
 
-    topic: Literal['gov_trust', 'economic_optimism', 'service_satisfaction', 'crime_fear', 'education_satisfaction', 'health_service_satisfaction', 'health_authority_trust', 'councillor_responsiveness', 'official_responsiveness', 'crime_handling', 'immigration_priority', 'pays_for_quality', 'business_trust', 'social_trust', 'environment_priority', 'social_voice', 'neighbour_trust']
+    topic: AttitudeRowTopic
     stance: str
-    source: Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
-    match_quality: Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
+    source: AttitudeRowSources
+    match_quality: AttitudeRowMatchQuality
     measured_question: str = None
     measured_asked: str = None
     measured_answer: str = None
@@ -114,10 +103,10 @@ class AttitudeRow(DataModel):
 
 class CircumstanceRow(DataModel):
     """One measured circumstance of the matched survey respondent (assets, access, poverty)."""
-    field: Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social']
+    field: CircumstanceRowField
     value: str
-    source: Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
-    match_quality: Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
+    source: CircumstanceRowSources
+    match_quality: CircumstanceRowMatchQuality
 
     @classmethod
     def cross_field_problems(cls, data, label):
@@ -185,7 +174,7 @@ class LibraryPersona(DataModel):
     time_to_school: Optional[TimeToSchool] = Field(default=None, json_schema_extra={'carried_by': 'learner'})
     guardian_type: GuardianType = Field(default=None, json_schema_extra={'carried_by': 'learner'})
     learners_in_household: int = Field(default=None, ge=0, json_schema_extra={'carried_by': 'guardian'})
-    learner_fee_bands: List[Literal['No fees', 'R1 001–R2 000 per year', 'R101–R200 per year', 'R12 001–R16 000 per year', 'R1–R100 per year', 'R2 001–R3 000 per year', 'R20 001–R40 000 per year', 'R201–R300 per year', 'R3 001–R4 000 per year', 'R301–R500 per year', 'R40 001–R80 000 per year', 'R501–R1 000 per year', 'R8 001–R12 000 per year']] = Field(default=None, json_schema_extra={'carried_by': 'guardian'})
+    learner_fee_bands: List[LearnerFeeBands] = Field(default=None, json_schema_extra={'carried_by': 'guardian'})
     guards_grandchildren: bool = Field(default=None, json_schema_extra={'carried_by': 'guardian'})
     farm_market_orientation: FarmMarketOrientation = Field(default=None, json_schema_extra={'carried_by': 'farmer'})
     farm_products: Optional[FarmProducts] = Field(default=None, json_schema_extra={'carried_by': 'farmer'})

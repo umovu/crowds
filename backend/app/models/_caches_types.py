@@ -12,6 +12,7 @@ ApiAgentEntryBudgetTier = Literal['tight', 'moderate', 'loose']
 ApiPersonaListEntryLevel = Literal['library']
 
 # ── api_segment ─────────────────────────────────────────────────────────────
+ApiSegmentTopics = Literal['everyone', 'health', 'education', 'money', 'environment', 'food', 'government', 'safety']
 ApiSegmentKind = Literal['who', 'thinks']
 
 # ── persona_cache_entry ─────────────────────────────────────────────────────

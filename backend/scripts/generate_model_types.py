@@ -86,6 +86,61 @@ def _class_name(name: str) -> str:
     return REGISTRY[name].__name__
 
 
+def _answers(spec) -> list:
+    """The answers a field allows, whether it holds one or a list of them.
+
+    A list field keeps them under `items.allowed`, so reading only `allowed` skipped
+    every list-valued field (`economic_tags`, `budget_tier_filter`, ...). The alias
+    names the item type, and the class writes `List[EconomicTags]`.
+    """
+    if not isinstance(spec, dict):
+        return []
+    if spec.get("allowed"):
+        return spec["allowed"]
+    items = spec.get("items")
+    if isinstance(items, dict) and items.get("allowed"):
+        return items["allowed"]
+    return []
+
+
+def _sections(doc: dict) -> list:
+    """(class name, field, answers) for models exported as named row sections.
+
+    `answer.json` has no top-level `fields`: AnswerRow, RoundResult and RoundFile hang
+    off `answer_row` / `round_result` / `round_file`, so a plain field-table walk never
+    sees them.
+    """
+    out = []
+    for section, cls_name in (("answer_row", "AnswerRow"),
+                              ("round_result", "RoundResult"),
+                              ("round_file", "RoundFile")):
+        table = (doc.get(section) or {}).get("fields")
+        if not isinstance(table, dict):
+            continue
+        for field, spec in table.items():
+            answers = _answers(spec)
+            # A boolean marker (`failed: Literal[True]`) gains nothing from an alias.
+            if answers and answers != [True]:
+                out.append((cls_name, field, answers))
+    return out
+
+
+def _row_tables(doc: dict) -> list:
+    """(class name, field, answers) where the answers are a table's keys.
+
+    An attitude's `topic` may be any key of `attitude_row.topics`, and a circumstance's
+    `field` any key of `circumstance_row.fields`.
+    """
+    out = []
+    for section, cls_name, field, key in (
+            ("attitude_row", "AttitudeRow", "topic", "topics"),
+            ("circumstance_row", "CircumstanceRow", "field", "fields")):
+        table = (doc.get(section) or {}).get(key)
+        if isinstance(table, dict) and table:
+            out.append((cls_name, field, list(table)))
+    return out
+
+
 def _nested(spec: dict, holder: str) -> list:
     """(inner class name, field, allowed) for every field in a nested field table.
 
@@ -102,16 +157,18 @@ def _nested(spec: dict, holder: str) -> list:
         if isinstance(sub.get("fields"), dict):
             inner = holder + alias(field)
             for f, s in sub["fields"].items():
-                if isinstance(s, dict) and s.get("allowed"):
-                    out.append((inner, f, s["allowed"]))
+                answers = _answers(s)
+                if answers:
+                    out.append((inner, f, answers))
             out += _nested(sub, inner)
         for key, suffix in (("items", "Item"), ("values", "Value")):
             held = sub.get(key)
             if isinstance(held, dict) and isinstance(held.get("fields"), dict):
                 inner = holder + alias(field) + suffix
                 for f, s in held["fields"].items():
-                    if isinstance(s, dict) and s.get("allowed"):
-                        out.append((inner, f, s["allowed"]))
+                    answers = _answers(s)
+                    if answers:
+                        out.append((inner, f, answers))
                 out += _nested(held, inner)
     return out
 
@@ -131,15 +188,20 @@ def rendered(module: str) -> str:
         doc = _exported(name)
         chunk = []
         for field, spec in (doc.get("fields") or {}).items():
-            if isinstance(spec, dict) and spec.get("allowed"):
+            answers = _answers(spec)
+            if answers:
                 alias_name = alias(name, field) if prefixed else alias(field)
-                chunk.append(f"{alias_name} = {_literal(spec['allowed'])}")
+                chunk.append(f"{alias_name} = {_literal(answers)}")
         # Nested field tables: an object field's `fields`, a list's `items.fields`, a
         # free-key map's `values.fields`. Each is held by its own inner class, whose name
         # the path predicts (EventRules + rules + items + trigger ->
         # EventRulesRulesItemTrigger). Checked against every inner class: 10/10.
         for inner_cls, inner_field, allowed in _nested(doc, _class_name(name)):
             chunk.append(f"{alias(inner_cls, inner_field)} = {_literal(allowed)}")
+        # Models exported as named row sections, and fields whose answers are a
+        # table's keys. Neither is reachable by walking a field table.
+        for cls_name, field, allowed in _sections(doc) + _row_tables(doc):
+            chunk.append(f"{alias(cls_name, field)} = {_literal(allowed)}")
         for section in ("attitude_row", "circumstance_row"):
             row = doc.get(section)
             if not isinstance(row, dict):

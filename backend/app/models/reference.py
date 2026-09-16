@@ -13,9 +13,10 @@ from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
 from ._reference_types import (B2bSectorsSectorsValueDecisionLens, 
-    EventRulesRulesItemEventSeverity, EventRulesRulesItemTriggerMetric, 
-    EventRulesRulesItemTriggerReasonCategory, EventRulesRulesItemTriggerType, 
-    GrantScheduleCurrency, WorldFactsCurrency, WorldFactsFactsItemProvenance)
+    EventRulesRulesItemAppliesToModes, EventRulesRulesItemEventSeverity, 
+    EventRulesRulesItemTriggerMetric, EventRulesRulesItemTriggerReasonCategory, 
+    EventRulesRulesItemTriggerType, GrantScheduleCurrency, WorldFactsCurrency, 
+    WorldFactsFactsItemProvenance)
 
 
 class GrantScheduleGrantsValue(DataModel):
@@ -94,7 +95,7 @@ class EventRulesRulesItem(DataModel):
     id: str = Field(pattern='^[a-z0-9_]+$', json_schema_extra={'when': 'always'})
     description: str = Field(json_schema_extra={'when': 'always'})
     category: str = Field(json_schema_extra={'when': 'always'})
-    applies_to_modes: List[Literal['policy', 'product']] = Field(default=None, json_schema_extra={'when': 'optional'})
+    applies_to_modes: List[EventRulesRulesItemAppliesToModes] = Field(default=None, json_schema_extra={'when': 'optional'})
     trigger: EventRulesRulesItemTrigger = Field(json_schema_extra={'when': 'always'})
     event: EventRulesRulesItemEvent = Field(json_schema_extra={'when': 'always'})
     cooldown_rounds: int = Field(ge=0, json_schema_extra={'when': 'always'})

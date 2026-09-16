@@ -12,7 +12,7 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional
 from pydantic import Field
 
 from .base import DataModel, export_fields, export_model
-from ._panel_types import BudgetTier, Stance
+from ._panel_types import (BudgetTier, Stance)
 
 ANSWER_HEADER = {'version': 1,
  'about': "What one person's answer in a panel round looks like, and the round file around it. "
@@ -37,8 +37,8 @@ class AnswerRow(DataModel):
     agent_id: int = Field(json_schema_extra={'when': 'always'})
     response: str = Field(json_schema_extra={'when': 'always'})
     original_question: str = Field(json_schema_extra={'when': 'always'})
-    stance_before: Literal['support', 'neutral', 'concerned', 'oppose', 'resist'] = Field(default=None, json_schema_extra={'when': 'answered'})
-    stance_after: Literal['support', 'neutral', 'concerned', 'oppose', 'resist'] = Field(default=None, json_schema_extra={'when': 'answered'})
+    stance_before: Stance = Field(default=None, json_schema_extra={'when': 'answered'})
+    stance_after: Stance = Field(default=None, json_schema_extra={'when': 'answered'})
     stance_changed: bool = Field(default=None, json_schema_extra={'when': 'answered'})
     internal_state: dict = Field(default=None, json_schema_extra={'when': 'answered'})
     impact_metadata: dict = Field(default=None, json_schema_extra={'when': 'answered'})
