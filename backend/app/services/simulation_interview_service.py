@@ -92,24 +92,38 @@ def _require_env(simulation_id: str) -> None:
             "is started and wait for it to progress.")
 
 
+def _run_async(coro, set_loop: bool = False):
+    """Run one coroutine from a synchronous request, on a loop of its own.
+
+    `set_loop` mirrors an inconsistency in the original routes rather than tidying it
+    away: most of them created a loop without installing it, while the impact and
+    query-context paths installed it with `set_event_loop`. Installing it leaves a
+    CLOSED loop as this thread's current loop afterwards, which can surface later in
+    whichever request reuses the worker thread — so the flag is deliberately opt-in
+    and set only where it already was. Worth fixing on its own, not inside a move.
+    """
+    loop = asyncio.new_event_loop()
+    if set_loop:
+        asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
+
+
 def query_context(prompt: str, storage: Any, graph_id: Optional[str]) -> Optional[Any]:
     """What the run's graph holds about this question, or None.
 
     Best effort: a failure here costs grounding, not the interview, so it is logged
-    and swallowed. Runs its own event loop because the extractor is async and this is
-    called from a synchronous request.
+    and swallowed.
     """
     if not storage or not graph_id:
         return None
     from .topic_extractor import TopicExtractor
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            return loop.run_until_complete(
-                TopicExtractor().extract_query_context(prompt, storage, graph_id))
-        finally:
-            loop.close()
+        return _run_async(
+            TopicExtractor().extract_query_context(prompt, storage, graph_id),
+            set_loop=True)
     except Exception as e:  # noqa: BLE001 - grounding is optional
         logger.warning(f"Failed to extract query context: {e}")
         return None
@@ -281,3 +295,74 @@ Remember:
         "results": results,
         "timestamp": datetime.now().isoformat(),
     }
+
+
+# ── per-agent interviews and interventions ──────────────────────────────────────
+# These work from the saved run, so they need no live environment. `InterviewService`
+# raises ValueError for an agent or run it cannot find, which the caller turns into a
+# 404 — except on the live paths, where it means a bad request instead.
+
+def _service(simulation_id: str):
+    from .interview_service import InterviewService
+    return InterviewService(simulation_id)
+
+
+def interview_one_agent(simulation_id: str, agent_id: int, question: str = "",
+                        question_type: Optional[str] = None,
+                        policy_context: Optional[str] = None) -> Dict[str, Any]:
+    """Interview one agent after the fact. No running simulation needed."""
+    return _run_async(_service(simulation_id).interview_agent(
+        agent_id=agent_id, question=question,
+        question_type=question_type, policy_context=policy_context))
+
+
+def batch_interview(simulation_id: str, question: str = "",
+                    agent_ids: Optional[List[int]] = None,
+                    question_type: Optional[str] = None,
+                    policy_context: Optional[str] = None) -> Dict[str, Any]:
+    """Ask several agents the same question, with the stance spread across them."""
+    return _run_async(_service(simulation_id).batch_interview(
+        question=question, agent_ids=agent_ids,
+        question_type=question_type, policy_context=policy_context))
+
+
+def intervene(simulation_id: str, agent_id: int,
+              intervention_text: str) -> Dict[str, Any]:
+    """Put a policy-maker's offer to one agent and see whether it moves them."""
+    return _run_async(_service(simulation_id).intervene_with_agent(
+        agent_id=agent_id, intervention_text=intervention_text))
+
+
+def impact_interview(simulation_id: str, question: str,
+                     agent_ids: Optional[List[int]] = None) -> Dict[str, Any]:
+    """Batch impact interview: the question is reframed per persona before asking.
+
+    `set_loop=True` because the original path installed the loop. See `_run_async`.
+    """
+    return _run_async(_service(simulation_id).batch_impact_interview(
+        question=question, agent_ids=agent_ids), set_loop=True)
+
+
+# ── interventions in a running (paused) simulation ──────────────────────────────
+# These go through the runner's IPC rather than the interview service, because the
+# simulation subprocess owns the agents while it is alive.
+
+def intervene_during_run(simulation_id: str, agent_id: int,
+                         intervention_text: str) -> Dict[str, Any]:
+    """Poke one agent mid-run. No judge on this path: it is interactive, and a
+    blocking Plus-tier call per poke would gate nothing."""
+    return SimulationRunner.apply_intervention_during_sim(
+        simulation_id=simulation_id, agent_id=agent_id,
+        intervention_text=intervention_text)
+
+
+def broadcast_during_run(simulation_id: str, intervention_text: str,
+                         founder_name: str = "") -> Dict[str, Any]:
+    """Announce something to the whole room mid-run.
+
+    Unlike `intervene_during_run`, this posts to the feed and the entire active room
+    reacts next round. No judge here either, for the same reason.
+    """
+    return SimulationRunner.broadcast_intervention_during_sim(
+        simulation_id=simulation_id, intervention_text=intervention_text,
+        founder_name=founder_name)

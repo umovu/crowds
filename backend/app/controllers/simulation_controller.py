@@ -463,6 +463,154 @@ def get_interview_history():
         return _failed(e)
 
 
+# ── per-agent interviews and interventions ─────────────────────────────────────
+def _live_payload(result):
+    """The runner wraps its answer; older clients expect the inner object."""
+    return result.get("result") or result
+
+
+@simulation_read_bp.route('/<simulation_id>/agents/<int:agent_id>/interview',
+                          methods=['POST'])
+def interview_single_agent(simulation_id: str, agent_id: int):
+    """Interview one agent after the fact. No running simulation required.
+
+    Body: `question`, or a `question_type` (first_reaction, what_would_work,
+    what_puts_you_off, need_to_know, who_you_would_tell) with optional
+    `policy_context`.
+    """
+    try:
+        data = request.get_json() or {}
+        question = data.get('question', '')
+        question_type = data.get('question_type')
+        if not question and not question_type:
+            return _bad("Provide 'question' or 'question_type'")
+
+        result = simulation_interview_service.interview_one_agent(
+            simulation_id=simulation_id, agent_id=agent_id, question=question,
+            question_type=question_type, policy_context=data.get('policy_context'))
+        return jsonify({"success": True, "data": result})
+
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Interview failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/agents/batch-interview', methods=['POST'])
+def batch_interview_agents(simulation_id: str):
+    """Ask several agents the same question. Body: question or question_type,
+    optional policy_context and agent_ids (default: everyone)."""
+    try:
+        data = request.get_json() or {}
+        question = data.get('question', '')
+        question_type = data.get('question_type')
+        if not question and not question_type:
+            return _bad("Provide 'question' or 'question_type'")
+
+        result = simulation_interview_service.batch_interview(
+            simulation_id=simulation_id, question=question,
+            agent_ids=data.get('agent_ids'), question_type=question_type,
+            policy_context=data.get('policy_context'))
+        return jsonify({"success": True, "data": result})
+
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Batch interview failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/agents/<int:agent_id>/intervene',
+                          methods=['POST'])
+def intervene_with_agent(simulation_id: str, agent_id: int):
+    """Put a policy-maker's offer to one agent. Body: intervention_text."""
+    try:
+        intervention_text = (request.get_json() or {}).get('intervention_text')
+        if not intervention_text:
+            return _bad("Provide 'intervention_text'")
+
+        result = simulation_interview_service.intervene(
+            simulation_id=simulation_id, agent_id=agent_id,
+            intervention_text=intervention_text)
+        return jsonify({"success": True, "data": result})
+
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Intervention failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/agents/<int:agent_id>/intervene-live',
+                          methods=['POST'])
+def intervene_live(simulation_id: str, agent_id: int):
+    """Poke one agent during a running (paused) simulation. Body: intervention_text."""
+    try:
+        intervention_text = (request.get_json() or {}).get('intervention_text')
+        if not intervention_text:
+            return _bad("Provide 'intervention_text'")
+
+        result = simulation_interview_service.intervene_during_run(
+            simulation_id=simulation_id, agent_id=agent_id,
+            intervention_text=intervention_text)
+        return jsonify({"success": result.get("success", False),
+                        "data": _live_payload(result)})
+
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Live intervention failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/broadcast-intervention', methods=['POST'])
+def broadcast_intervention(simulation_id: str):
+    """Announce something to the whole room during a running (paused) simulation.
+
+    The message posts to the feed and the entire active room reacts next round,
+    unlike intervene-live which targets one agent.
+    """
+    try:
+        data = request.get_json() or {}
+        intervention_text = data.get('intervention_text')
+        if not intervention_text:
+            return _bad("Provide 'intervention_text'")
+
+        result = simulation_interview_service.broadcast_during_run(
+            simulation_id=simulation_id, intervention_text=intervention_text,
+            founder_name=data.get('founder_name') or "")
+        return jsonify({"success": result.get("success", False),
+                        "data": _live_payload(result)})
+
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Broadcast intervention failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/interview/impact', methods=['POST'])
+def impact_interview():
+    """Batch impact interview: the question is reframed per persona before asking,
+    and the answers come back with structured impact metadata."""
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get("simulation_id")
+        question = data.get("question", "")
+        if not simulation_id:
+            return _bad("simulation_id is required")
+        if not question:
+            return _bad("question is required")
+
+        result = simulation_interview_service.impact_interview(
+            simulation_id=simulation_id, question=question,
+            agent_ids=data.get("agent_ids"))
+        return jsonify({"success": True, "data": result})
+
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Impact interview failed: {str(e)}")
+        return _failed(e)
+
+
 # ── live status while a run executes ────────────────────────────────────────────
 @simulation_read_bp.route('/<simulation_id>/run-status', methods=['GET'])
 def get_run_status(simulation_id: str):
