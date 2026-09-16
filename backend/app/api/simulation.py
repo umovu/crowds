@@ -21,7 +21,7 @@ from ..services.interview_service import InterviewService
 from ..services.custom_agent_parser import CustomAgentParser
 from ..services.agent_enricher import AgentContextEnricher
 from ..services import mode_detector
-from ..services import operator_context as oc_service
+from ..repositories import operator_context_repository as oc_service
 from ..services.sim_presets import SIM_PRESETS, apply_preset
 from ..utils.logger import get_logger
 from ..models.project import ProjectManager
@@ -722,7 +722,7 @@ def prepare_simulation():
                 # (fail-open: empty string if Supabase not configured)
                 try:
                     _uid = state.user_id or billing.current_user_id()
-                    _oc = oc_service.get_operator_context(_uid) if _uid else ""
+                    _oc = oc_service.get(_uid) if _uid else ""
                 except Exception:
                     _oc = ""
 

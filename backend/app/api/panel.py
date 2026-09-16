@@ -21,7 +21,7 @@ from ..services import hypothesis_report
 from ..services import panel_service
 from ..services import poster_service
 from ..services import pointers
-from ..services import run_events
+from ..repositories import run_event_repository as run_events
 from ..services import study_reader
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger

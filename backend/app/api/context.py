@@ -4,7 +4,7 @@ from flask import jsonify, request
 
 from . import context_bp
 from .. import billing
-from ..services import operator_context as oc
+from ..repositories import operator_context_repository as oc
 
 MAX_LEN = 1500
 
@@ -15,7 +15,7 @@ def get_context():
     # Fail-open: unauthenticated / Supabase not configured -> empty
     if not user_id:
         return jsonify({"success": True, "data": {"body": "", "updated_at": None}})
-    body = oc.get_operator_context(user_id)
+    body = oc.get(user_id)
     # updated_at is not critical for v1; fetch if needed later
     return jsonify({"success": True, "data": {"body": body, "updated_at": None}})
 
@@ -33,7 +33,7 @@ def put_context():
     if len(body) > MAX_LEN:
         body = body[:MAX_LEN]
     try:
-        saved = oc.save_operator_context(user_id, body)
+        saved = oc.save(user_id, body)
         return jsonify({"success": True, "data": saved})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500

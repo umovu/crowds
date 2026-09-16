@@ -1067,7 +1067,7 @@ def create_session(
     # is stable for its lifetime. Fail-open: empty string on any error.
     operator_context = ""
     try:
-        from .operator_context import get_operator_context as _get_oc
+        from ..repositories.operator_context_repository import get as _get_oc
         operator_context = (_get_oc(user_id) or "").strip()[:1500]
     except Exception:
         operator_context = ""

@@ -27,9 +27,7 @@ APP = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
 # Services that still reach storage themselves. Each one moves to app/repositories/
 # in a later pass (see the redesign plan); nothing new may join them.
 SERVICES_STILL_CALLING_SUPABASE = {
-    "persona_library.py",   # -> repositories/persona_repository.py
-    "operator_context.py",  # -> repositories/operator_context_repository.py
-    "run_events.py",        # -> repositories/run_event_repository.py
+    "persona_library.py",   # -> repositories/persona_repository.py (personas slice)
 }
 
 # Models whose *Manager class still carries its own file storage. The dataclasses

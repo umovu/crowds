@@ -23,14 +23,14 @@ import os
 import sys
 
 HERE = os.path.dirname(__file__)
-SERVICES = os.path.normpath(os.path.join(HERE, "..", "app", "services"))
+REPOS = os.path.normpath(os.path.join(HERE, "..", "app", "repositories"))
 
 
 def _load():
     if "run_events_under_test" in sys.modules:
         return sys.modules["run_events_under_test"]
     spec = importlib.util.spec_from_file_location(
-        "run_events_under_test", os.path.join(SERVICES, "run_events.py"))
+        "run_events_under_test", os.path.join(REPOS, "run_event_repository.py"))
     mod = importlib.util.module_from_spec(spec)
     sys.modules["run_events_under_test"] = mod
     spec.loader.exec_module(mod)

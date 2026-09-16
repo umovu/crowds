@@ -22,7 +22,7 @@ from queue import Queue
 from ..config import Config
 from ..utils.logger import get_logger
 from .graph_memory_updater import GraphMemoryManager
-from . import run_events
+from ..repositories import run_event_repository as run_events
 from . import data_model
 from .simulation_ipc import SimulationIPCClient, CommandType, IPCResponse
 

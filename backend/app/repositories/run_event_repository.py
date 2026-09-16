@@ -1,23 +1,25 @@
-"""
-Run events — an append-only record of run *metadata*, never run content.
+"""Run events: an append-only record of run *metadata*, never run content.
 
 One row when a run starts, one when it ends. Enough to answer "is this user
-profitable", "how often do runs fail", "did they come back", "which mode do
-people use" — without the operator ever being able to read what a user asked.
+profitable", "how often do runs fail", "did they come back", "which mode do people
+use" — without the operator ever being able to read what a user asked.
 
 The privacy fence is the point of this module, not a nicety:
 
 * ``ALLOWED_FIELDS`` is an allow-list. Anything else is dropped, silently.
-* Every value must be a scalar, and strings are capped at ``MAX_VALUE_LEN``.
-  A pitch, a seed, a persona answer — none of them can fit through that, so a
-  future edit cannot leak a scenario into the log by accident.
+* Every value must be a scalar, and strings are capped at ``MAX_VALUE_LEN``. A pitch,
+  a seed, a persona answer — none of them fit through that, so a future edit cannot
+  leak a scenario into the log by accident.
 * There is no field for free text and there must never be one.
 
-Storage mirrors `operator_context`: Supabase when configured, a JSONL file
-under DATA_ROOT otherwise, so local dev works with no database.
+Storage: the local JSONL file under DATA_ROOT is written first and always, and
+Supabase is a best-effort mirror on top. That order matters — local dev keeps working
+with no database, and a failed mirror never loses the line.
 
 A logging failure must never break a run. Nothing here raises.
 """
+
+from __future__ import annotations
 
 import json
 import logging
@@ -25,8 +27,8 @@ import os
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-import requests
-
+# No module-level app imports on purpose: tests load this file by path, with no
+# package, so the privacy fence can be asserted without importing the app at all.
 logger = logging.getLogger("fub.run_events")
 
 TABLE = "run_events"
@@ -58,33 +60,22 @@ def _ledger_path() -> str:
     try:
         from app.config import Config
         root = Config.DATA_ROOT
-    except Exception:
+    except Exception:  # noqa: BLE001
         root = os.environ.get("DATA_ROOT") or os.getcwd()
     return os.path.join(root, "run_events.jsonl")
 
 
-def _supabase_url() -> str:
-    return (os.environ.get("SUPABASE_URL") or "").rstrip("/")
-
-
-def _service_key() -> str:
-    return os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or ""
-
-
-def _enabled() -> bool:
-    return bool(_supabase_url() and _service_key())
-
-
-def _headers() -> dict:
-    k = _service_key()
-    return {"apikey": k, "Authorization": f"Bearer {k}", "Content-Type": "application/json"}
+def _supabase():
+    """Imported lazily: see the note on the imports above."""
+    from app.repositories import supabase
+    return supabase
 
 
 def sanitize(fields: Dict[str, Any]) -> Dict[str, Any]:
-    """Return only allow-listed, scalar, length-capped fields.
+    """Only allow-listed, scalar, length-capped fields.
 
-    This is the fence. It is a separate function so it can be asserted on
-    directly in tests, with no storage and no network involved.
+    This is the fence. It is a separate function so it can be asserted on directly in
+    tests, with no storage and no network involved.
     """
     clean: Dict[str, Any] = {}
     for key, value in (fields or {}).items():
@@ -108,10 +99,10 @@ def record(**fields: Any) -> None:
             return
         row["ts"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
         _write_local(row)
-        if _enabled():
+        if _supabase().enabled():
             _write_supabase(row)
     except Exception as e:  # pragma: no cover - defensive by design
-        logger.warning("run_events.record failed: %s", e)
+        logger.warning("run event record failed: %s", e)
 
 
 def record_start(**fields: Any) -> None:
@@ -128,27 +119,25 @@ def _write_local(row: Dict[str, Any]) -> None:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "a", encoding="utf-8") as fh:
             fh.write(json.dumps(row) + "\n")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning("Could not write run events at %s: %s", path, e)
 
 
 def _write_supabase(row: Dict[str, Any]) -> None:
     try:
-        resp = requests.post(
-            f"{_supabase_url()}/rest/v1/{TABLE}",
-            json=row,
-            headers={**_headers(), "Prefer": "return=minimal"},
-            timeout=6,
-        )
+        resp = _supabase().insert(TABLE, row, prefer="return=minimal")
         resp.raise_for_status()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         # The local line is already written; the mirror is best-effort.
-        logger.warning("run_events supabase write failed: %s", e)
+        logger.warning("run event mirror to Supabase failed: %s", e)
 
 
 def totals(user_id: Optional[str] = None) -> Dict[str, Any]:
-    """Sum the local ledger — runs, tokens, cost, failures. Cheap: one short
-    line per run. Supabase is queried in its own table view, not from here."""
+    """Sum the local ledger — runs, tokens, cost, failures.
+
+    Cheap: one short line per run. The hosted copy is queried in its own table view,
+    not from here.
+    """
     runs = failed = total_tokens = 0
     total_cost = 0.0
     try:
@@ -158,21 +147,21 @@ def totals(user_id: Optional[str] = None) -> Dict[str, Any]:
                 if not line:
                     continue
                 try:
-                    r = json.loads(line)
-                except Exception:
+                    row = json.loads(line)
+                except Exception:  # noqa: BLE001 - a torn line is skipped
                     continue
-                if r.get("event") != "end":
+                if row.get("event") != "end":
                     continue
-                if user_id and r.get("user_id") != user_id:
+                if user_id and row.get("user_id") != user_id:
                     continue
                 runs += 1
-                if r.get("status") == "failed":
+                if row.get("status") == "failed":
                     failed += 1
-                total_tokens += int(r.get("total_tokens", 0) or 0)
-                total_cost += float(r.get("cost_usd", 0.0) or 0.0)
+                total_tokens += int(row.get("total_tokens", 0) or 0)
+                total_cost += float(row.get("cost_usd", 0.0) or 0.0)
     except FileNotFoundError:
         pass
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning("Could not read run events: %s", e)
     return {
         "runs": runs,

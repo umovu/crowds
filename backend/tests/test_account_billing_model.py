@@ -48,7 +48,7 @@ def test_repo_sql_and_model_list_the_same_columns(table, model):
 
 
 def test_run_events_allow_list_is_the_table():
-    from app.services import run_events
+    from app.repositories import run_event_repository as run_events
     assert run_events.ALLOWED_FIELDS <= set(dm.load("run_event")["fields"])
 
 
@@ -85,7 +85,7 @@ def supabase(monkeypatch, tmp_path):
     monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "service-key")
     monkeypatch.delenv("AUTH_DISABLED", raising=False)
     monkeypatch.delenv("WAITLIST_ENABLED", raising=False)
-    from app.services import run_events
+    from app.repositories import run_event_repository as run_events
     monkeypatch.setattr(run_events, "_ledger_path", lambda: str(tmp_path / "run_events.jsonl"))
     return calls
 
@@ -140,7 +140,7 @@ def test_waitlist_rows_fit(supabase):
 
 
 def test_run_event_rows_fit_both_stores(supabase, tmp_path):
-    from app.services import run_events
+    from app.repositories import run_event_repository as run_events
     run_events.record_start(run_id="panel_0123456789ab", user_id=USER, run_type="panel",
                             mode="panel", crowd_size=12)
     run_events.record_end(run_id="panel_0123456789ab", user_id=USER, run_type="panel",
@@ -154,9 +154,9 @@ def test_run_event_rows_fit_both_stores(supabase, tmp_path):
 
 
 def test_operator_context_rows_fit(supabase):
-    from app.services import operator_context
-    operator_context.save_operator_context(USER, "We run three private clinics in Soweto.")
-    operator_context.get_operator_context(USER)
+    from app.repositories import operator_context_repository as operator_context
+    operator_context.save(USER, "We run three private clinics in Soweto.")
+    operator_context.get(USER)
     assert _problems(supabase) == []
 
 
