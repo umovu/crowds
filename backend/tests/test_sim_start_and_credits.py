@@ -102,8 +102,11 @@ from app.services.simulation_runner import SimulationRunner  # noqa: E402
 
 _load_app("app.models.project", "models/project")
 
-# Stub billing (no Supabase hits) with an in-process sim_used counter.
-bill = types.ModuleType("app.billing")
+# Stub billing (no Supabase hits) with an in-process sim_used counter. The routes now
+# read the caller from app.auth, ask app.controllers.gates for the 402, and count usage
+# through app.services.billing_service, so all three are stubbed. `bill._sim_used` stays
+# the counter these tests assert on.
+bill = types.ModuleType("app.services.billing_service")
 bill._sim_used = 0
 
 
@@ -111,7 +114,23 @@ def _get_entitlement(uid):
     return {"plan": "free", "sim_used": bill._sim_used}
 
 
-def _check_sim_quota():
+def _increment_sim_used(uid):
+    bill._sim_used += 1
+
+
+bill.get_entitlement = staticmethod(_get_entitlement)
+bill.increment_sim_used = staticmethod(_increment_sim_used)
+sys.modules["app.services.billing_service"] = bill
+sys.modules["app.services"].billing_service = bill
+
+_auth = types.ModuleType("app.auth")
+_auth.current_user_id = staticmethod(lambda: "user_test")
+_auth.current_user_email = staticmethod(lambda: "user@test")
+sys.modules["app.auth"] = _auth
+
+
+def _sim_quota(user_id=None):
+    """Same answer the real gate gives: None to allow, a (body, 402) to refuse."""
     if _get_entitlement(None).get("plan") == "paid":
         return None
     if int(_get_entitlement(None).get("sim_used", 0) or 0) >= 2:
@@ -119,15 +138,14 @@ def _check_sim_quota():
     return None
 
 
-def _increment_sim_used(uid):
-    bill._sim_used += 1
-
-
-bill.current_user_id = staticmethod(lambda: "user_test")
-bill.get_entitlement = staticmethod(_get_entitlement)
-bill.check_sim_quota = staticmethod(_check_sim_quota)
-bill.increment_sim_used = staticmethod(_increment_sim_used)
-sys.modules["app.billing"] = bill
+_gates = types.ModuleType("app.controllers.gates")
+_gates.sim_quota = staticmethod(_sim_quota)
+_gates.panel_quota = staticmethod(lambda user_id=None: None)
+_controllers = types.ModuleType("app.controllers")
+_controllers.__path__ = [os.path.join(APP, "controllers")]
+_controllers.gates = _gates
+sys.modules["app.controllers"] = _controllers
+sys.modules["app.controllers.gates"] = _gates
 
 # Stub the agentsociety2-bound service so importing the routes never boots it.
 _iv_stub = types.ModuleType("app.services.interview_service")

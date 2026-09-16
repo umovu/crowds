@@ -3,7 +3,9 @@
 from flask import jsonify, request
 
 from . import context_bp
-from .. import billing
+from ..auth import current_user_id
+from ..controllers import gates
+from ..services import billing_service
 from ..repositories import operator_context_repository as oc
 
 MAX_LEN = 1500
@@ -11,7 +13,7 @@ MAX_LEN = 1500
 
 @context_bp.route("", methods=["GET"])
 def get_context():
-    user_id = billing.current_user_id()
+    user_id = current_user_id()
     # Fail-open: unauthenticated / Supabase not configured -> empty
     if not user_id:
         return jsonify({"success": True, "data": {"body": "", "updated_at": None}})
@@ -22,7 +24,7 @@ def get_context():
 
 @context_bp.route("", methods=["PUT"])
 def put_context():
-    user_id = billing.current_user_id()
+    user_id = current_user_id()
     if not user_id:
         return jsonify({"success": False, "error": "Not authenticated"}), 401
     data = request.get_json(silent=True) or {}

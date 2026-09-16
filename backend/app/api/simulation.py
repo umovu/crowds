@@ -11,7 +11,9 @@ from typing import Dict, Any, List, Optional
 from flask import request, jsonify, send_file, current_app
 
 from . import simulation_bp
-from .. import billing
+from ..auth import current_user_id
+from ..controllers import gates
+from ..services import billing_service
 from ..config import Config
 from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
@@ -276,7 +278,7 @@ def create_simulation():
     # user is told up front they are out of runs; the credit itself is charged
     # only when the run actually starts (see /start), so a sim that is created
     # but never started costs nothing.
-    gate = billing.check_sim_quota()
+    gate = gates.sim_quota(current_user_id())
     if gate is not None:
         return gate
     try:
@@ -307,7 +309,7 @@ def create_simulation():
         state = manager.create_simulation(
             project_id=project_id,
             graph_id=graph_id,
-            user_id=billing.current_user_id(),
+            user_id=current_user_id(),
         )
 
         # No charge here — the sim credit is taken at /start, once the run
@@ -721,7 +723,7 @@ def prepare_simulation():
                 # Operator context: fetch the user's saved business description
                 # (fail-open: empty string if Supabase not configured)
                 try:
-                    _uid = state.user_id or billing.current_user_id()
+                    _uid = state.user_id or current_user_id()
                     _oc = oc_service.get(_uid) if _uid else ""
                 except Exception:
                     _oc = ""
@@ -969,7 +971,7 @@ def list_simulations():
         project_id = request.args.get('project_id')
 
         manager = SimulationManager()
-        simulations = manager.list_simulations(project_id=project_id, user_id=billing.current_user_id())
+        simulations = manager.list_simulations(project_id=project_id, user_id=current_user_id())
         
         return jsonify({
             "success": True,
@@ -1082,7 +1084,7 @@ def get_simulation_history():
         limit = request.args.get('limit', 20, type=int)
         
         manager = SimulationManager()
-        simulations = manager.list_simulations(user_id=billing.current_user_id())[:limit]
+        simulations = manager.list_simulations(user_id=current_user_id())[:limit]
         
         # Enhance simulation data，Only from Simulation FileRead
         enriched_simulations = []
@@ -1790,7 +1792,7 @@ def start_simulation():
         # Free tier: force the smallest preset ('quick' = 6 rounds, ≤10 agents/round)
         # regardless of what was requested, to bound token spend on the trial sim.
         # Paid plans keep whatever they chose.
-        ent = billing.get_entitlement(billing.current_user_id())
+        ent = billing_service.get_entitlement(current_user_id())
         if ent.get('plan') != 'paid':
             preset = 'quick'
         convergence_threshold = data.get('convergence_threshold')
@@ -1834,7 +1836,7 @@ def start_simulation():
         # one credit and a restart is never re-gated even after the trial runs
         # out). A sim created but never started charges nothing.
         if not state.credit_charged:
-            gate = billing.check_sim_quota()
+            gate = gates.sim_quota(current_user_id())
             if gate is not None:
                 return gate
 
@@ -1991,7 +1993,7 @@ def start_simulation():
         # twice (and recharging is skipped on restart even after the trial runs
         # out). The flag survives Railway restarts because it is saved with state.
         if not state.credit_charged:
-            billing.increment_sim_used(billing.current_user_id())
+            billing_service.increment_sim_used(current_user_id())
             state.credit_charged = True
 
         # Update simulation status

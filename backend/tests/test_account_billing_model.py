@@ -108,7 +108,7 @@ def _problems(calls):
 
 
 def test_billing_rows_fit(supabase, real_module):
-    billing = real_module("app.billing")
+    billing = real_module("app.services.billing_service")
     billing.get_entitlement(USER)            # no row -> creates the free default
     billing.increment_panel_used(USER)
     billing.increment_sim_used(USER)
@@ -204,7 +204,7 @@ def test_selecting_a_column_that_does_not_exist_is_caught():
 
 
 def test_set_plan_warns_about_an_unknown_status_but_still_saves(supabase, monkeypatch, real_module):
-    billing = real_module("app.billing")
+    billing = real_module("app.services.billing_service")
     warnings = []
     monkeypatch.setattr(billing.logger, "warning", lambda msg, *a: warnings.append(msg % a if a else msg))
     billing.set_plan(USER, "paid", status="trialing")

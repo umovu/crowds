@@ -343,9 +343,11 @@ class SimulationRunner:
         # Run-events metadata. Stashed because the monitor thread that closes
         # the run out has no Flask request context to read the user from.
         try:
-            from .. import billing
-            user_id = billing.current_user_id()
+            from ..auth import current_user_id
+            user_id = current_user_id()
         except Exception:
+            # No app context (a background restart, say): the run is still logged,
+            # just without an owner.
             user_id = None
         cls._run_meta[simulation_id] = {
             "user_id": user_id,
