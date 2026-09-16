@@ -33,7 +33,8 @@ from flask import current_app, jsonify, request, send_file
 from . import simulation_read_bp
 from ..auth import current_user_id
 from ..repositories import simulation_repository as repo
-from ..services import simulation_interview_service, simulation_read_service
+from ..services import (simulation_control_service, simulation_interview_service,
+                        simulation_read_service)
 from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner
@@ -460,6 +461,114 @@ def get_interview_history():
                         "data": {"count": len(history), "history": history}})
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to get interview history: {str(e)}")
+        return _failed(e)
+
+
+# ── controlling a run ───────────────────────────────────────────────────────────
+@simulation_read_bp.route('/stop', methods=['POST'])
+def stop_simulation():
+    """Stop a run. Body: simulation_id. The run is left paused, so it can restart."""
+    try:
+        simulation_id = (request.get_json() or {}).get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        return jsonify({"success": True,
+                        "data": simulation_control_service.stop(simulation_id)})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to stop simulation: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/env-status', methods=['POST'])
+def get_env_status():
+    """Whether the run's environment is alive and can answer interviews.
+
+    Body: simulation_id.
+    """
+    try:
+        simulation_id = (request.get_json() or {}).get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        return jsonify({"success": True,
+                        "data": simulation_control_service.env_status(simulation_id)})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get environment status: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/close-env', methods=['POST'])
+def close_simulation_env():
+    """Ask the run to close its environment gracefully. Body: simulation_id, timeout.
+
+    Different from /stop, which terminates the run abruptly. This lets the simulation
+    exit on its own terms and marks it completed.
+    """
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+
+        result = simulation_control_service.close_env(
+            simulation_id, timeout=data.get('timeout', 30))
+        return jsonify({"success": result.get("success", False), "data": result})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to close environment: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/pause', methods=['POST'])
+def pause_simulation(simulation_id: str):
+    """Pause a running simulation between rounds.
+
+    The current round finishes, then it pauses before the next one. While paused the
+    agents can be interviewed and intervened with.
+    """
+    try:
+        result = simulation_control_service.pause(simulation_id)
+        return jsonify({"success": result.get("success", False), "data": result})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Pause failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/resume', methods=['POST'])
+def resume_simulation(simulation_id: str):
+    """Resume a paused simulation."""
+    try:
+        result = simulation_control_service.resume(simulation_id)
+        return jsonify({"success": result.get("success", False), "data": result})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Resume failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/fork', methods=['POST'])
+def fork_simulation(simulation_id: str):
+    """Copy a run under a new id, optionally changing agents' states.
+
+    Body: new_simulation_id, and agent_modifications keyed by agent id.
+    """
+    try:
+        data = request.get_json() or {}
+        new_simulation_id = data.get('new_simulation_id')
+        if not new_simulation_id:
+            return _bad("Provide 'new_simulation_id'")
+
+        return jsonify({"success": True, "data": simulation_control_service.fork(
+            simulation_id, new_simulation_id, data.get('agent_modifications', {}))})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Fork failed: {str(e)}")
         return _failed(e)
 
 
