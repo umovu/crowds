@@ -1,13 +1,20 @@
-"""Operator context API — one saved business description per user."""
+"""Operator context — one saved business description per user.
+
+  GET /api/context   the caller's saved description
+  PUT /api/context   replace it
+
+The GET fails open: an unauthenticated caller, or an unconfigured Supabase, reads as
+empty rather than an error, because a blank business description is a normal state and
+the panel prompt treats it as one. The PUT does not — writing needs a known user.
+"""
 
 from flask import jsonify, request
 
 from . import context_bp
 from ..auth import current_user_id
-from ..controllers import gates
-from ..services import billing_service
 from ..repositories import operator_context_repository as oc
 
+#: Longer descriptions are truncated, not refused.
 MAX_LEN = 1500
 
 
@@ -17,9 +24,9 @@ def get_context():
     # Fail-open: unauthenticated / Supabase not configured -> empty
     if not user_id:
         return jsonify({"success": True, "data": {"body": "", "updated_at": None}})
-    body = oc.get(user_id)
     # updated_at is not critical for v1; fetch if needed later
-    return jsonify({"success": True, "data": {"body": body, "updated_at": None}})
+    return jsonify({"success": True,
+                    "data": {"body": oc.get(user_id), "updated_at": None}})
 
 
 @context_bp.route("", methods=["PUT"])
@@ -27,15 +34,13 @@ def put_context():
     user_id = current_user_id()
     if not user_id:
         return jsonify({"success": False, "error": "Not authenticated"}), 401
-    data = request.get_json(silent=True) or {}
-    body = data.get("body", "")
+
+    body = (request.get_json(silent=True) or {}).get("body", "")
     if not isinstance(body, str):
         return jsonify({"success": False, "error": "body must be a string"}), 400
-    body = body.strip()
-    if len(body) > MAX_LEN:
-        body = body[:MAX_LEN]
+
+    body = body.strip()[:MAX_LEN]
     try:
-        saved = oc.save(user_id, body)
-        return jsonify({"success": True, "data": saved})
-    except Exception as e:
+        return jsonify({"success": True, "data": oc.save(user_id, body)})
+    except Exception as e:  # noqa: BLE001
         return jsonify({"success": False, "error": str(e)}), 500

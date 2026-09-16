@@ -277,9 +277,10 @@ def create_app(config_class=Config):
         return response
 
     # Register blueprints
-    from .api import simulation_bp, config_bp, panel_bp, context_bp
-    from .controllers import (account_bp, billing_bp, graph_bp, persona_bp,
-                              report_bp, research_bp, signup_bp)
+    from .api import simulation_bp, panel_bp
+    from .controllers import (account_bp, billing_bp, config_bp, context_bp,
+                              graph_bp, persona_bp, report_bp, research_bp,
+                              signup_bp)
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')

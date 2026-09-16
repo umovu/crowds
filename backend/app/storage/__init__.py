@@ -10,6 +10,8 @@ Local graph storage replacing Zep Cloud:
 - Hybrid search (vector + keyword)
 """
 
+import logging
+
 from .graph_storage import GraphStorage
 from .neo4j_storage import Neo4jStorage
 from .ladybug_storage import LadybugStorage
@@ -17,6 +19,11 @@ from .embedding_service import EmbeddingService, EmbeddingError
 from .ner_extractor import NERExtractor
 from .search_service import SearchService
 from ..config import Config
+
+logger = logging.getLogger('fub.storage')
+
+#: The backends `get_storage` can build, in the order the API reports them.
+BACKENDS = ("neo4j", "kglite", "ladybug")
 
 __all__ = [
     "GraphStorage",
@@ -26,7 +33,9 @@ __all__ = [
     "EmbeddingError",
     "NERExtractor",
     "SearchService",
+    "BACKENDS",
     "get_storage",
+    "close_storage",
 ]
 
 
@@ -44,3 +53,18 @@ def get_storage(backend: str = None) -> GraphStorage:
         return LadybugStorage()
     else:
         return Neo4jStorage()
+
+
+def close_storage(storage) -> None:
+    """Close a storage backend, ignoring a dirty close.
+
+    Called before opening a different backend: the embedded ones (LadybugDB, KGLite)
+    hold file locks, so the old instance has to let go first. A close that throws is
+    logged and swallowed — it must not block the switch.
+    """
+    if storage is None or not hasattr(storage, 'close'):
+        return
+    try:
+        storage.close()
+    except Exception as e:  # noqa: BLE001 - a dirty close must not block the switch
+        logger.warning(f"Failed to close old storage cleanly: {e}")

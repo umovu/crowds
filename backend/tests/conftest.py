@@ -25,7 +25,7 @@ def real_module():
     def load(name):
         # Every stubbed module in the same top-level package goes, not only the
         # ones on this name's path: the real module's own imports reach siblings
-        # (app.api.config -> app.storage) that may be stubbed too.
+        # (app.controllers.config_controller -> app.storage) that may be stubbed too.
         root = name.split(".")[0]
         for key in [k for k in sys.modules if k == root or k.startswith(root + ".")]:
             if _is_stub(sys.modules[key]) and key not in saved:
