@@ -152,12 +152,15 @@ def test_an_unknown_project_status_is_caught():
     assert any("'done'" in p for p in dm.model_problems("project", _project(status="done").to_dict()))
 
 
-def test_saving_warns_but_still_saves_an_off_model_project(tmp_path, monkeypatch):
+def test_saving_warns_but_still_saves_an_off_model_project(tmp_path, monkeypatch, real_module):
     from app.models import project as project_module
+    # Borrowed through real_module: test_sim_start_and_credits leaves a stub
+    # app.repositories.project_repository in sys.modules that carries only `get`.
+    repo = real_module("app.repositories.project_repository")
     warnings = []
-    monkeypatch.setattr(project_module.ProjectManager, "PROJECTS_DIR", str(tmp_path))
+    monkeypatch.setattr(repo, "PROJECTS_DIR", str(tmp_path))
     monkeypatch.setattr(project_module.logger, "warning", lambda msg, *a: warnings.append(msg % a if a else msg))
     (tmp_path / "proj_0123456789ab").mkdir()
-    project_module.ProjectManager.save_project(_project(status="done"))
+    repo.save(_project(status="done"))
     assert (tmp_path / "proj_0123456789ab" / "project.json").exists()
     assert any("data model" in w for w in warnings)

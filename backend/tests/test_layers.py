@@ -28,9 +28,11 @@ APP = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
 # asks a repository. This is a rule, not a to-do list.
 SERVICES_STILL_CALLING_SUPABASE: set = set()
 
-# Models whose *Manager class still carries its own file storage. The dataclasses
-# stay in app/models/; the managers move to app/repositories/.
-MODELS_STILL_DOING_IO = {"project.py", "task.py"}
+# Empty on purpose: no model file touches storage any more. `ProjectManager` was the
+# last one and its file work now lives in repositories/project_repository.py, leaving
+# the Project dataclass behind. TaskManager never did any — it is a threading
+# singleton holding a dict, and was listed here by mistake in the first pass.
+MODELS_STILL_DOING_IO: set = set()
 
 _SUPABASE = re.compile(r"/rest/v1|/storage/v1|SUPABASE_SERVICE_ROLE_KEY")
 _IMPORTS_FLASK = re.compile(r"^\s*(from flask\b|import flask\b)", re.MULTILINE)

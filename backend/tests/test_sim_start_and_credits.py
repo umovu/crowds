@@ -153,11 +153,18 @@ _iv_stub.InterviewService = type("InterviewService", (), {})
 sys.modules["app.services.interview_service"] = _iv_stub
 sys.modules["app.services"].mode_detector = types.ModuleType("app.services.mode_detector")
 
-# Stub the ProjectManager used by /create(+)/start to return a fixed project.
-pm = sys.modules["app.models.project"]
-pm.ProjectManager.get_project = staticmethod(
+# Stub the project lookup used by /create(+)/start to return a fixed project.
+# Project storage moved to app.repositories.project_repository, so that is what the
+# routes call now.
+_projects = types.ModuleType("app.repositories.project_repository")
+_projects.get = staticmethod(
     lambda pid: types.SimpleNamespace(graph_id="graph_test", project_id=pid or "proj_test")
 )
+_repos = sys.modules.get("app.repositories") or types.ModuleType("app.repositories")
+_repos.__path__ = [os.path.join(APP, "repositories")]
+_repos.project_repository = _projects
+sys.modules["app.repositories"] = _repos
+sys.modules["app.repositories.project_repository"] = _projects
 
 # Import the routes under test.
 sim = _load_app("app.api.simulation", "api/simulation")

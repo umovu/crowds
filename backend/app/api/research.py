@@ -1181,8 +1181,8 @@ def _slim_paper(p: dict) -> dict:
 def list_projects_for_research():
     """List existing projects so the research page can pick which one to save into."""
     try:
-        from ..models.project import ProjectManager
-        projects = ProjectManager.list_projects() or []
+        from ..repositories import project_repository
+        projects = project_repository.list_projects() or []
         out = [{
             "project_id": p.project_id,
             "name":       p.name or "Unnamed Project",
@@ -1201,8 +1201,8 @@ def list_projects_for_research():
 def list_saved_papers(project_id: str):
     """Return the papers currently saved to this project."""
     try:
-        from ..models.project import ProjectManager
-        project = ProjectManager.get_project(project_id)
+        from ..repositories import project_repository
+        project = project_repository.get(project_id)
         if not project:
             return jsonify({"success": False, "error": "Project not found"}), 404
         papers = list(getattr(project, "saved_papers", []) or [])
@@ -1216,8 +1216,8 @@ def list_saved_papers(project_id: str):
 def save_paper_to_project(project_id: str):
     """Save (or replace) a paper on this project. De-dupes by paper id."""
     try:
-        from ..models.project import ProjectManager
-        project = ProjectManager.get_project(project_id)
+        from ..repositories import project_repository
+        project = project_repository.get(project_id)
         if not project:
             return jsonify({"success": False, "error": "Project not found"}), 404
         data = request.get_json() or {}
@@ -1230,7 +1230,7 @@ def save_paper_to_project(project_id: str):
         existing = [p for p in existing if _paper_id(p) != pid]
         existing.append(slim)
         project.saved_papers = existing
-        ProjectManager.save_project(project)
+        project_repository.save(project)
         return jsonify({"success": True, "count": len(existing), "paper": slim})
     except Exception as e:
         logger.error(f"Save paper to project {project_id} failed: {e}")
@@ -1241,14 +1241,14 @@ def save_paper_to_project(project_id: str):
 def remove_saved_paper(project_id: str, paper_id: str):
     """Remove a saved paper from a project (paper_id matches saved id)."""
     try:
-        from ..models.project import ProjectManager
-        project = ProjectManager.get_project(project_id)
+        from ..repositories import project_repository
+        project = project_repository.get(project_id)
         if not project:
             return jsonify({"success": False, "error": "Project not found"}), 404
         before = list(getattr(project, "saved_papers", []) or [])
         after  = [p for p in before if _paper_id(p) != paper_id]
         project.saved_papers = after
-        ProjectManager.save_project(project)
+        project_repository.save(project)
         return jsonify({"success": True, "removed": len(before) - len(after), "count": len(after)})
     except Exception as e:
         logger.error(f"Remove saved paper failed: {e}")

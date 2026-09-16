@@ -17,7 +17,8 @@ from ..services.custom_agent_parser import CustomAgentParser
 from ..utils.file_parser import FileParser
 from ..utils.logger import get_logger
 from ..models.task import TaskManager, TaskStatus
-from ..models.project import ProjectManager, ProjectStatus
+from ..models.project import ProjectStatus
+from ..repositories import project_repository
 
 # Get logger
 logger = get_logger('fub.api')
@@ -46,7 +47,7 @@ def get_project(project_id: str):
     """
     Get project details
     """
-    project = ProjectManager.get_project(project_id)
+    project = project_repository.get(project_id)
     
     if not project:
         return jsonify({
@@ -66,7 +67,7 @@ def list_projects():
     List all projects
     """
     limit = request.args.get('limit', 50, type=int)
-    projects = ProjectManager.list_projects(limit=limit)
+    projects = project_repository.list_projects(limit=limit)
     
     return jsonify({
         "success": True,
@@ -80,7 +81,7 @@ def delete_project(project_id: str):
     """
     Delete project
     """
-    success = ProjectManager.delete_project(project_id)
+    success = project_repository.delete(project_id)
 
     if not success:
         return jsonify({
@@ -99,7 +100,7 @@ def reset_project(project_id: str):
     """
     Reset project status (for rebuilding graph)
     """
-    project = ProjectManager.get_project(project_id)
+    project = project_repository.get(project_id)
 
     if not project:
         return jsonify({
@@ -116,7 +117,7 @@ def reset_project(project_id: str):
     project.graph_id = None
     project.graph_build_task_id = None
     project.error = None
-    ProjectManager.save_project(project)
+    project_repository.save(project)
 
     return jsonify({
         "success": True,
@@ -189,7 +190,7 @@ def generate_ontology():
             }), 400
 
         # Create project
-        project = ProjectManager.create_project(name=project_name)
+        project = project_repository.create(name=project_name)
         project.simulation_requirement = simulation_requirement
 
         # Parse and save enrichment data if provided
@@ -210,9 +211,11 @@ def generate_ontology():
         for file in uploaded_files:
             if file and file.filename and allowed_file(file.filename):
                 # Save file to project directory
-                file_info = ProjectManager.save_file_to_project(
+                # The repository picks the path; the upload object stays here, so it
+                # never has to know about Flask.
+                file_info = project_repository.save_upload(
                     project.project_id,
-                    file,
+                    file.save,
                     file.filename
                 )
                 project.files.append({
@@ -240,7 +243,7 @@ def generate_ontology():
             logger.info(f"Using simulation_requirement as synthetic document ({len(seed_doc)} chars)")
 
         if not document_texts:
-            ProjectManager.delete_project(project.project_id)
+            project_repository.delete(project.project_id)
             return jsonify({
                 "success": False,
                 "error": "No documents successfully processed. Please check file format"
@@ -248,7 +251,7 @@ def generate_ontology():
 
         # Save extracted text
         project.total_text_length = len(all_text)
-        ProjectManager.save_extracted_text(project.project_id, all_text)
+        project_repository.save_extracted_text(project.project_id, all_text)
         logger.info(f"Text extraction completed, total {len(all_text)} characters")
 
         # ========== Extract custom agents from seed document ==========
@@ -290,7 +293,7 @@ def generate_ontology():
         }
         project.analysis_summary = ontology.get("analysis_summary", "")
         project.status = ProjectStatus.ONTOLOGY_GENERATED
-        ProjectManager.save_project(project)
+        project_repository.save(project)
         logger.info(f"=== Ontology generation completed === Project ID: {project.project_id}")
 
         return jsonify({
@@ -355,7 +358,7 @@ def build_graph():
             }), 400
 
         # Get project
-        project = ProjectManager.get_project(project_id)
+        project = project_repository.get(project_id)
         if not project:
             return jsonify({
                 "success": False,
@@ -395,7 +398,7 @@ def build_graph():
         project.chunk_overlap = chunk_overlap
 
         # Get extracted text
-        text = ProjectManager.get_extracted_text(project_id)
+        text = project_repository.get_extracted_text(project_id)
         if not text:
             return jsonify({
                 "success": False,
@@ -421,7 +424,7 @@ def build_graph():
         # Update project status
         project.status = ProjectStatus.GRAPH_BUILDING
         project.graph_build_task_id = task_id
-        ProjectManager.save_project(project)
+        project_repository.save(project)
 
         # Start background task
         def build_task():
@@ -460,7 +463,7 @@ def build_graph():
 
                 # Update project graph_id
                 project.graph_id = graph_id
-                ProjectManager.save_project(project)
+                project_repository.save(project)
 
                 # Set ontology
                 task_manager.update_task(
@@ -509,7 +512,7 @@ def build_graph():
 
                 # Update project status
                 project.status = ProjectStatus.GRAPH_COMPLETED
-                ProjectManager.save_project(project)
+                project_repository.save(project)
 
                 node_count = graph_data.get("node_count", 0)
                 edge_count = graph_data.get("edge_count", 0)
@@ -537,7 +540,7 @@ def build_graph():
 
                 project.status = ProjectStatus.FAILED
                 project.error = str(e)
-                ProjectManager.save_project(project)
+                project_repository.save(project)
 
                 task_manager.update_task(
                     task_id,

@@ -295,8 +295,8 @@ class SimulationManager:
             project_for_papers = None
             if not enrichment_data and state.project_id:
                 try:
-                    from ..models.project import ProjectManager
-                    project_for_papers = ProjectManager.get_project(state.project_id)
+                    from ..repositories import project_repository
+                    project_for_papers = project_repository.get(state.project_id)
                     if project_for_papers and project_for_papers.enrichment_data:
                         enrichment_data = project_for_papers.enrichment_data
                         logger.info(f"Loaded enrichment data from project for {len(enrichment_data)} archetypes")
@@ -304,8 +304,8 @@ class SimulationManager:
                     logger.warning(f"Failed to load enrichment data from project: {e}")
             elif state.project_id:
                 try:
-                    from ..models.project import ProjectManager
-                    project_for_papers = ProjectManager.get_project(state.project_id)
+                    from ..repositories import project_repository
+                    project_for_papers = project_repository.get(state.project_id)
                 except Exception:
                     pass
 

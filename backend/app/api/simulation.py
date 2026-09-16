@@ -26,7 +26,7 @@ from ..services import mode_detector
 from ..repositories import operator_context_repository as oc_service
 from ..services.sim_presets import SIM_PRESETS, apply_preset
 from ..utils.logger import get_logger
-from ..models.project import ProjectManager
+from ..repositories import project_repository
 
 logger = get_logger('fub.api.simulation')
 
@@ -291,7 +291,7 @@ def create_simulation():
                 "error": "Please provide project_id"
             }), 400
         
-        project = ProjectManager.get_project(project_id)
+        project = project_repository.get(project_id)
         if not project:
             return jsonify({
                 "success": False,
@@ -537,7 +537,7 @@ def prepare_simulation():
                 logger.info(f"Simulation {simulation_id} has no preparation complete, preparing now")
         
         # Get necessary information from project
-        project = ProjectManager.get_project(state.project_id)
+        project = project_repository.get(state.project_id)
         if not project:
             return jsonify({
                 "success": False,
@@ -553,7 +553,7 @@ def prepare_simulation():
             }), 400
         
         # Get document text
-        document_text = ProjectManager.get_extracted_text(state.project_id) or ""
+        document_text = project_repository.get_extracted_text(state.project_id) or ""
         
         entity_types_list = data.get('entity_types')
         parallel_profile_count = data.get('parallel_profile_count', 5)
@@ -1120,7 +1120,7 @@ def get_simulation_history():
                 sim_dict["total_rounds"] = recommended_rounds
             
             # Get associated project file list（At most3items）
-            project = ProjectManager.get_project(sim.project_id)
+            project = project_repository.get(sim.project_id)
             if project and hasattr(project, 'files') and project.files:
                 sim_dict["files"] = [
                     {"filename": f.get("filename", "Unknown file")} 
@@ -1297,7 +1297,7 @@ def rerun_simulation_research(simulation_id: str):
         if not entity_types:
             return jsonify({"success": False, "error": "No entity types found in graph"}), 400
 
-        project = ProjectManager().get_project(state.project_id) if state.project_id else None
+        project = project_repository.get(state.project_id) if state.project_id else None
         seed = (project.simulation_requirement if project else "") or ""
 
         # Get agent context from request body
@@ -1928,7 +1928,7 @@ def start_simulation():
             graph_id = state.graph_id
             if not graph_id:
                 # Try to get from project
-                project = ProjectManager.get_project(state.project_id)
+                project = project_repository.get(state.project_id)
                 if project:
                     graph_id = project.graph_id
             

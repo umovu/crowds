@@ -12,7 +12,7 @@ from . import report_bp
 from ..config import Config
 from ..services.report_agent import ReportAgent, ReportManager, ReportStatus
 from ..services.simulation_manager import SimulationManager
-from ..models.project import ProjectManager
+from ..repositories import project_repository
 from ..models.task import TaskManager, TaskStatus
 from ..services.graph_tools import GraphToolsService
 from ..utils.logger import get_logger
@@ -47,7 +47,7 @@ def generate_report():
                     "already_generated": True
                 }})
 
-        project = ProjectManager.get_project(state.project_id)
+        project = project_repository.get(state.project_id)
         if not project:
             return jsonify({"success": False, "error": f"Project does not exist: {state.project_id}"}), 404
 
@@ -248,7 +248,7 @@ def chat_with_report_agent():
         if not state:
             return jsonify({"success": False, "error": f"Simulation does not exist: {simulation_id}"}), 404
 
-        project = ProjectManager.get_project(state.project_id)
+        project = project_repository.get(state.project_id)
         if not project:
             return jsonify({"success": False, "error": f"Project does not exist: {state.project_id}"}), 404
 
