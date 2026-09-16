@@ -23,11 +23,30 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
+from ..repositories import simulation_repository as repo
 from ..utils.logger import get_logger
 from .simulation_manager import SimulationManager, SimulationStatus
 from .simulation_runner import SimulationRunner
 
 logger = get_logger("fub.simulation_control")
+
+
+class RunIsRunning(RuntimeError):
+    """The run is still going, so this cannot be done to it yet."""
+
+
+def delete(simulation_id: str) -> bool:
+    """Delete a run's data from disk. False when there is no such run.
+
+    Refuses while the run is executing: deleting the directory from under a live
+    subprocess leaves it writing into nothing. The id itself is validated against the
+    data directory's real children inside the repository, so a crafted id cannot
+    escape it.
+    """
+    if simulation_id in SimulationRunner.get_running_simulations():
+        raise RunIsRunning(
+            "Simulation is currently running — stop it before deleting.")
+    return repo.delete_run(simulation_id)
 
 
 def stop(simulation_id: str) -> Dict[str, Any]:

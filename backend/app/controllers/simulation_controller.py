@@ -34,7 +34,7 @@ from . import simulation_read_bp
 from ..auth import current_user_id
 from ..repositories import simulation_repository as repo
 from ..services import (simulation_control_service, simulation_interview_service,
-                        simulation_read_service)
+                        simulation_read_service, simulation_setup_service)
 from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner
@@ -461,6 +461,69 @@ def get_interview_history():
                         "data": {"count": len(history), "history": history}})
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to get interview history: {str(e)}")
+        return _failed(e)
+
+
+# ── setting a run up ────────────────────────────────────────────────────────────
+@simulation_read_bp.route('/custom-agents/parse', methods=['POST'])
+def parse_custom_agent_document():
+    """Parse an uploaded agent-definition document into profiles.
+
+    multipart/form-data with a `file` field, plus an optional
+    `simulation_requirement` for context. Takes JSON arrays of profiles directly, and
+    unstructured text (PDF, MD, TXT) via the LLM.
+    """
+    try:
+        if 'file' not in request.files:
+            return jsonify({"success": False, "error": "No file provided"}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"success": False, "error": "Empty filename"}), 400
+
+        # `file.save` is passed in, so the upload object stays in the controller.
+        data = simulation_setup_service.parse_custom_agents(
+            file.save, file.filename,
+            request.form.get('simulation_requirement', ''))
+        return jsonify({"success": True, "data": data, "count": len(data)})
+
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to parse custom agent document: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>', methods=['DELETE'])
+def delete_simulation(simulation_id: str):
+    """Delete a run's data directory. Refuses while the run is still going."""
+    try:
+        if not simulation_control_service.delete(simulation_id):
+            return jsonify({"success": False,
+                            "error": f"Simulation {simulation_id} not found"}), 404
+        return jsonify({"success": True, "data": {"simulation_id": simulation_id}})
+    except simulation_control_service.RunIsRunning as e:
+        return jsonify({"success": False, "error": str(e)}), 409
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to delete simulation {simulation_id}: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/research/rerun', methods=['POST'])
+def rerun_simulation_research(simulation_id: str):
+    """Re-run deep web research for this run's archetypes and overwrite enrichment.
+
+    The archetypes come from the graph the run was built on. Body may carry an
+    optional `agent_context` to shape the research.
+    """
+    try:
+        return jsonify({"success": True, "data": simulation_setup_service.rerun_research(
+            simulation_id, request.get_json() or {})})
+    except simulation_setup_service.RunNotFound as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except simulation_setup_service.NoEntityTypes as e:
+        return _bad(str(e))
+    except simulation_setup_service.ResearchEmpty as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Re-run research failed for {simulation_id}: {e}")
         return _failed(e)
 
 

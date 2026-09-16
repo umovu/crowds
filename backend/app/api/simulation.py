@@ -18,7 +18,6 @@ from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner
 from ..services.custom_agent_parser import CustomAgentParser
-from ..services.agent_enricher import AgentContextEnricher
 from ..services import mode_detector
 from ..repositories import operator_context_repository as oc_service
 from ..services.sim_presets import SIM_PRESETS, apply_preset
@@ -26,71 +25,6 @@ from ..utils.logger import get_logger
 from ..repositories import project_repository
 
 logger = get_logger('fub.api.simulation')
-
-
-# ============== Custom Agent Parsing ==============
-
-@simulation_bp.route('/custom-agents/parse', methods=['POST'])
-def parse_custom_agent_document():
-    """
-    Parse a custom agent definition document.
-
-    Supports JSON files (direct AgentProfile-compatible arrays)
-    and unstructured text (PDF, MD, TXT) via LLM extraction.
-
-    Request: multipart/form-data with 'file' field
-
-    Returns:
-        {
-            "success": true,
-            "data": [ {agent_profile}, ... ]
-        }
-    """
-    try:
-        from werkzeug.utils import secure_filename
-
-        if 'file' not in request.files:
-            return jsonify({"success": False, "error": "No file provided"}), 400
-
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({"success": False, "error": "Empty filename"}), 400
-
-        # Save uploaded file temporarily
-        upload_dir = os.path.join(Config.UPLOAD_FOLDER, 'temp')
-        os.makedirs(upload_dir, exist_ok=True)
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(upload_dir, filename)
-        file.save(file_path)
-
-        # Get optional simulation context
-        simulation_requirement = request.form.get('simulation_requirement', '')
-
-        parser = CustomAgentParser()
-        profiles = parser.parse_doc(file_path, simulation_requirement)
-
-        # Clean up temp file
-        try:
-            os.remove(file_path)
-        except Exception:
-            pass
-
-        # Serialize profiles for response
-        data = [p.to_agentsociety_format() for p in profiles]
-
-        return jsonify({
-            "success": True,
-            "data": data,
-            "count": len(data)
-        })
-
-    except Exception as e:
-        logger.error(f"Failed to parse custom agent document: {str(e)}")
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
 
 
 # ============== Simulation management interface ==============
@@ -771,128 +705,6 @@ def get_prepare_status():
             "success": False,
             "error": str(e)
         }), 500
-
-
-@simulation_bp.route('/<simulation_id>', methods=['DELETE'])
-def delete_simulation(simulation_id: str):
-    """Delete a simulation's data directory from disk.
-
-    Refuses while the simulation is running. The id is validated against the
-    directory's actual children so a crafted id can never escape the data dir.
-    """
-    try:
-        import shutil
-
-        if simulation_id in SimulationRunner.get_running_simulations():
-            return jsonify({
-                "success": False,
-                "error": "Simulation is currently running — stop it before deleting."
-            }), 409
-
-        base_dir = os.path.abspath(Config.OASIS_SIMULATION_DATA_DIR)
-        if simulation_id not in os.listdir(base_dir):
-            return jsonify({"success": False, "error": f"Simulation {simulation_id} not found"}), 404
-
-        target = os.path.join(base_dir, simulation_id)
-        if not os.path.isdir(target):
-            return jsonify({"success": False, "error": f"Simulation {simulation_id} not found"}), 404
-
-        shutil.rmtree(target)
-        logger.info(f"Deleted simulation {simulation_id} from disk")
-        return jsonify({"success": True, "data": {"simulation_id": simulation_id}})
-
-    except Exception as e:
-        logger.error(f"Failed to delete simulation {simulation_id}: {str(e)}")
-        return jsonify({
-            "success": False,
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
-
-
-@simulation_bp.route('/<simulation_id>/research/rerun', methods=['POST'])
-def rerun_simulation_research(simulation_id: str):
-    """Re-run deep web research for this simulation's archetypes.
-
-    Reads entity types from the graph that this simulation is built on,
-    runs the deep research pipeline, overwrites enrichment.json.
-    
-    Request body:
-    {
-        "agent_context": {
-            "agents": [
-                {
-                    "name": "agent_name",
-                    "archetype": "agent_archetype",
-                    "description": "agent_description",
-                    "background": "agent_background"
-                }
-            ],
-            "context_focus": "specific_focus_area"
-        }   // optional, custom agent context to shape research
-    }
-    """
-    try:
-        import re as _re
-        from ..services.entity_reader import EntityReader
-        from ..services.agent_enricher import AgentContextEnricher
-        from ..services.deep_research_service import research_archetypes as _research
-
-        manager = SimulationManager()
-        state = manager._load_simulation_state(simulation_id)
-        if not state:
-            return jsonify({"success": False, "error": "Simulation not found"}), 404
-
-        from ..storage import get_storage
-        storage = get_storage()
-        reader = EntityReader(storage)
-        filtered = reader.filter_defined_entities(graph_id=state.graph_id, defined_entity_types=None, enrich_with_edges=False)
-
-        def _norm(t):
-            s = _re.sub(r'([A-Z])', r'_\1', t).lower().lstrip('_')
-            return _re.sub(r'[\s\-]+', '_', s.strip())
-
-        entity_types = list({_norm(e.type) for e in filtered.entities if e.type})
-        if not entity_types:
-            return jsonify({"success": False, "error": "No entity types found in graph"}), 400
-
-        project = project_repository.get(state.project_id) if state.project_id else None
-        seed = (project.simulation_requirement if project else "") or ""
-
-        # Get agent context from request body
-        agent_context = request.get_json() or {}
-
-        raw_research = _research(
-            archetypes=entity_types,
-            query=seed or "current socio-economic conditions South Africa 2025",
-            document_text=seed,
-            agent_context=agent_context,
-        )
-
-        if not raw_research:
-            return jsonify({
-                "success": False,
-                "error": "Research returned no results. Check FIRECRAWL_API_KEY and Firecrawl quota."
-            }), 500
-
-        enrichment = AgentContextEnricher.enrich_from_web_research(raw_research, entity_types)
-        sim_dir = manager._get_simulation_dir(simulation_id)
-        enrichment_file = os.path.join(sim_dir, "enrichment.json")
-        with open(enrichment_file, 'w', encoding='utf-8') as f:
-            json.dump(raw_research, f, ensure_ascii=False, indent=2)
-
-        return jsonify({
-            "success": True,
-            "data": {
-                "archetypes": entity_types,
-                "enriched_count": len(enrichment),
-                "enrichment": raw_research,
-                "agent_context": agent_context,
-            }
-        })
-    except Exception as e:
-        logger.error(f"Re-run research failed for {simulation_id}: {e}")
-        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
 
 
 # ============== Simulation execution control interface ==============
