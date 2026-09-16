@@ -1,8 +1,16 @@
 """A library persona, as a Python data model.
 
-The source of truth for app/data/model/persona.json (exported by
-scripts/export_data_models.py). Generated once from that JSON with every value copied,
-then maintained here: change a field here and re-export.
+What a persona IS: its fields, their types, the answers each one allows, and the rules
+that refuse a persona that does not fit. Nothing here reads or writes a file.
+
+Where each field CAME FROM — its survey, question codes, and how it reaches a prompt —
+lives in app/data/model/notes/persona.json. The two halves are merged into the
+reviewable app/data/model/persona.json by app/repositories/model_catalogue_repository.py
+(run scripts/export_data_models.py after changing either half).
+
+Two keys stay here rather than in the notes, because the app acts on them:
+`carried_by` (which personas must have a field — checked below in `_problems`) and
+`type` (the short type name the exported file carries for a rows field).
 """
 
 from __future__ import annotations
@@ -14,46 +22,6 @@ from pydantic import Field
 from .base import DataModel, export_fields
 
 HEADER = {'version': 1,
- 'about': 'What a library persona is. Every stored field is described here, with where it came '
-          'from. tests/test_persona_data_model.py checks the library, the build word lists and '
-          'every rule that names a persona field against this file.',
- 'rules': ['Every field stored on a library persona must be listed under fields. Unknown '
-           'fields fail the tests.',
-           'A measured or derived field must name its survey and the survey question codes it '
-           'came from.',
-           'A new survey field (including our own fieldwork) goes in here first, with its '
-           'survey, question codes and allowed answers. Then the build may write it.',
-           'carried_by says who has the field. A persona inside the group must have it; a '
-           'persona outside must not.',
-           'Allowed answers are copied from the survey labels exactly. A card rule or '
-           'objection ground that names an answer not listed here fails the tests.',
-           'Texture fields are written by the model and must not add facts. Retired fields are '
-           'reported, not failed, until the cleanup step.',
-           "prompt: how a fact reaches a persona's prompt when PERSONA_FACT_PROMPTS is on. "
-           'core = always; about = the pitch parts (app/data/pitch_parts.json) that pull it '
-           'in; say = its plain wording (a template with {value}, or one sentence per answer); '
-           'skip = answers never said. A fact with no prompt block never reaches a prompt. '
-           "replaced_by = a persona's own household survey field that wins over this "
-           'matched-respondent answer when both exist (they come from different real people).'],
- 'sources': {'qlfs_2026_q1': {'name': 'Stats SA Quarterly Labour Force Survey, 2026 Q1',
-                              'unit': 'person',
-                              'file': 'backend/data/microdata (DataFirst .dta, licensed, not '
-                                      'in git)'},
-             'ghs_2025': {'name': 'Stats SA General Household Survey 2025',
-                          'unit': 'person and household',
-                          'file': 'backend/data/microdata (licensed, not in git)'},
-             'afrobarometer_r9_sa': {'name': 'Afrobarometer Round 9, South Africa',
-                                     'unit': 'person',
-                                     'file': 'Afrobarometer .sav (licensed, not in git)',
-                                     'joined_by': 'one respondent per persona, matched on '
-                                                  'gender, province, education_band, '
-                                                  'employment_status, age_band, race'}},
- 'layers': {'measured': 'Straight from a survey answer.',
-            'derived': 'Computed by our code from measured answers. No model involved.',
-            'provenance': 'Records where something came from.',
-            'build': 'Made by the build step (id, name).',
-            'texture': 'Written by the model from the given facts only.',
-            'retired': 'No longer used for library personas. Kept until cleanup.'},
  'groups': {'everyone': {'when': {}, 'about': 'Every library persona.'},
             'ghs_household': {'when': {'source_survey': ['ghs_2025']},
                               'about': 'Built from the GHS 2025 household files.'},
@@ -456,295 +424,63 @@ class LibraryPersona(DataModel):
     """A library persona: identity and circumstances from national surveys, attitudes from
     one matched Afrobarometer respondent, and model-written texture that adds no facts."""
     MODEL_NAME: ClassVar[str] = "persona"
-    id: str = Field(pattern='^[0-9a-f]{16}$', json_schema_extra={'layer': 'build',
-         'carried_by': 'everyone',
-         'note': 'Hash of the frozen skeleton + build seed (build_library._stable_id). Rooms '
-                 'give each seat a number id and keep this as library_id.'})
-    name: str = Field(json_schema_extra={'layer': 'build',
-         'carried_by': 'everyone',
-         'free_text': True,
-         'note': 'From the curated SA name pool (sa_names), never written by the model.'})
-    source_entity_type: Literal['library_persona'] = Field(json_schema_extra={'layer': 'build', 'carried_by': 'everyone'})
-    age: int = Field(ge=15, json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Q14AGE']},
-                    {'survey': 'ghs_2025', 'items': ['age']}],
-         'prompt': {'core': True, 'say': 'You are {value} years old.'}})
-    gender: Literal['Female', 'Male'] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Q13GENDER']},
-                    {'survey': 'ghs_2025', 'items': ['Sex']}],
-         'prompt': {'core': True,
-                    'say': {'Male': 'You are male.', 'Female': 'You are female.'}}})
-    province: Literal['Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal', 'Limpopo', 'Mpumalanga', 'North West', 'Northern Cape', 'Western Cape'] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Province']},
-                    {'survey': 'ghs_2025', 'items': ['prov']}],
-         'prompt': {'core': True, 'say': 'You live in {value}.'}})
-    education: Optional[Literal['Less than primary completed', 'No schooling', 'Other', 'Primary', 'Primary completed', 'Secondary completed', 'Secondary not completed', 'Tertiary']] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Education_status']},
-                    {'survey': 'ghs_2025', 'items': ['education']}],
-         'prompt': {'core': True, 'say': 'Your highest schooling: {value}.'}})
-    occupation: Optional[Literal['Clerks', 'Clerks (informal)', 'Craft and related trades workers', 'Craft and related trades workers (informal)', 'Discouraged job seeker', 'Domestic workers (informal)', 'Elementary Occupation', 'Elementary Occupation (informal)', 'Employed', 'Learner (School)', 'Learner (TVET college)', 'Legislators; senior officials and managers', 'Legislators; senior officials and managers (informal)', 'Other not economically active', 'Plant and machine operators and assemblers', 'Plant and machine operators and assemblers (informal)', 'Professionals', 'School teacher', 'Service workers and shop and market sales workers', 'Service workers and shop and market sales workers (informal)', 'Skilled agricultural and fishery workers', 'Skilled agricultural and fishery workers (informal)', 'Technical and associate professionals', 'Technical and associate professionals (informal)', 'Unemployed', 'Unspecified']] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Occup', 'Infempl', 'Status']},
-                    {'survey': 'ghs_2025', 'items': ['employ_Status1', 'edu_edui']}],
-         'known_issue': 'Holds a labour-status word (Employed, Unemployed, ...) on personas '
-                        'with no occupation code. Cleanup is a separate step.',
-         'prompt': {'core': True,
-                    'say': 'Your work: {value}.',
-                    'skip': ['Employed',
-                             'Unemployed',
-                             'Other not economically active',
-                             'Discouraged job seeker',
-                             'Unspecified',
-                             'Not economically active',
-                             'Learner (School)',
-                             'Learner (TVET college)']}})
-    employment_status: Literal['Discouraged job seeker', 'Employed', 'Other not economically active', 'Unemployed'] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Status']},
-                    {'survey': 'ghs_2025', 'items': ['employ_Status2', 'employ_Status1']}],
-         'prompt': {'core': True,
-                    'say': {'Employed': 'You have paid work.',
-                            'Unemployed': 'You are unemployed and looking for work.',
-                            'Discouraged job seeker': 'You want work but have stopped looking.',
-                            'Other not economically active': 'You are not working and not '
-                                                             'looking for work.'}}})
-    informal: Optional[bool] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Infempl']}],
-         'note': 'GHS has no formality question, so null on GHS personas.',
-         'prompt': {'about': ['work'],
-                    'say': {'true': 'Your work is informal.', 'false': 'Your work is formal.'}}})
-    industry: Optional[Literal['Agriculture; hunting; forestry and fishing', 'Community; social and personal services', 'Construction', 'Financial intermediation; insurance; real estate and business services', 'Manufacturing', 'Mining and quarrying', 'Private households', 'Transport; storage and communication', 'Wholesale and retail trade']] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Indus']}],
-         'note': 'GHS has no industry question, so null on GHS personas.',
-         'prompt': {'about': ['work'], 'say': 'The industry you work in: {value}.'}})
-    marriage_status: Literal['Divorced', 'Divorced or separated', 'Legally married', 'Living together like husband and wife', 'Living together like husband and wife/partners', 'Married', 'Never married', 'Single and have never been married/never lived together as husband/wife before', 'Single, but have lived together with someone as husband/wife before', 'Widow/Widower', 'Widowed'] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Q16MARITALSTATUS']},
-                    {'survey': 'ghs_2025', 'items': ['hhc_marital']}],
-         'note': 'QLFS and GHS use different label sets. Both are kept as surveyed.',
-         'prompt': {'core': True, 'say': 'Marital status: {value}.'}})
-    is_neet: Optional[bool] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Neet']}],
-         'prompt': {'about': ['work', 'schooling'],
-                    'say': {'true': 'You are not working, studying or in training.'}}})
-    race: Literal['African/Black', 'Coloured', 'Indian/Asian', 'White'] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Q15POPULATION']},
-                    {'survey': 'ghs_2025', 'items': ['Population']}]})
-    geotype: Literal['Farms', 'Traditional', 'Urban'] = Field(json_schema_extra={'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Geo_Type_Code']},
-                    {'survey': 'ghs_2025', 'items': ['geotype']}],
-         'prompt': {'core': True,
-                    'say': {'Urban': 'You live in a town or city.',
-                            'Traditional': 'You live in a rural village under a traditional '
-                                           'authority.',
-                            'Farms': 'You live in a farming area.'}}})
-    attitudes: List[AttitudeRow] = Field(json_schema_extra={'type': 'attitude_rows',
-         'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'afrobarometer_r9_sa', 'items': ['see attitude_row.topics']}]})
-    circumstances: List[CircumstanceRow] = Field(json_schema_extra={'type': 'circumstance_rows',
-         'layer': 'measured',
-         'carried_by': 'everyone',
-         'source': [{'survey': 'afrobarometer_r9_sa',
-                     'items': ['see circumstance_row.fields']}]})
-    beliefs: List[str] = Field(min_length=1, json_schema_extra={'layer': 'derived',
-         'carried_by': 'everyone',
-         'note': 'Plain sentences made from the attitudes by attitude_fuser._BELIEF_PHRASING. '
-                 'Never written by the model.'})
-    actor_archetype: Literal['affluent_agricultural_household', 'affluent_urban_household', 'civic_moderate', 'comfortable_household', 'communal_farmer', 'community_leader', 'disillusioned_dropout', 'educator', 'gogo_guardian', 'grant_dependent_survivor', 'guardian_parent', 'informal_trader', 'institutional_loyalist', 'learner', 'rural_landholding_household', 'small_business_owner', 'smallholder_emerging_farmer', 'unemployed_youth', 'urban_professional'] = Field(json_schema_extra={'layer': 'derived',
-         'carried_by': 'everyone',
-         'note': 'Set by archetype_mapper from the measured fields, or by the role a build '
-                 'sampled for.'})
-    attitude_match_quality: Literal['age_backoff', 'education_backoff', 'exact', 'province_backoff', 'status_race', 'race_only', 'population'] = Field(json_schema_extra={'layer': 'provenance',
-         'carried_by': 'everyone',
-         'note': 'How closely the survey respondent matched this persona (attitude_fuser '
-                 'backoff ladder).'})
-    survey_respondent: str = Field(pattern='^SAF\\d+$', json_schema_extra={'layer': 'provenance',
-         'carried_by': 'everyone',
-         'note': 'Afrobarometer RESPNO of the one real respondent every attitude and '
-                 'circumstance came from.'})
-    ghs_person_rows: Optional[List[str]] = Field(default=None, json_schema_extra={'layer': 'provenance',
-         'carried_by': 'some',
-         'note': 'GHS 2025 person rows ("uqnr:personnr") this household-survey persona was '
-                 'traced back to by its surveyed facts (scripts/rematch_broken_personas.py). '
-                 'Several rows when more than one real person has exactly the same facts and '
-                 'the same phone answers.'})
-    persona: str = Field(json_schema_extra={'layer': 'texture',
-         'carried_by': 'everyone',
-         'free_text': True,
-         'note': 'One-line summary. May arrange given facts; must not add any.'})
-    background_story: str = Field(json_schema_extra={'layer': 'texture',
-         'carried_by': 'everyone',
-         'free_text': True,
-         'note': 'Arranges given facts; must not add any (texture_generator provenance gate).'})
-    group_affiliation: str = Field(json_schema_extra={'layer': 'texture', 'carried_by': 'everyone', 'free_text': True})
-    interested_topics: List[str] = Field(json_schema_extra={'layer': 'texture', 'carried_by': 'everyone'})
-    voice_guide: str = Field(json_schema_extra={'layer': 'retired',
-         'carried_by': 'everyone',
-         'free_text': True,
-         'note': 'No survey data behind it. Library prompts use reactions from attitudes '
-                 'instead. Remove in the cleanup step.'})
-    behavioral_tendencies: str = Field(json_schema_extra={'layer': 'retired',
-         'carried_by': 'everyone',
-         'free_text': True,
-         'note': 'Same as voice_guide.'})
-    source_survey: Literal['ghs_2025', 'qlfs_2026_q1'] = Field(default=None, json_schema_extra={'layer': 'provenance',
-         'carried_by': 'some',
-         'note': 'Present on personas built from a role sample (GHS households, QLFS '
-                 'professionals and farmers).'})
-    occupation_provenance: Literal['role_assigned'] = Field(default=None, json_schema_extra={'layer': 'provenance',
-         'carried_by': 'some',
-         'note': 'Set when a build assigns a role the survey cannot code (teachers). No '
-                 'current persona carries it.'})
-    employment_status_provenance: Literal['ghs_2025:employ_Status2'] = Field(default=None, json_schema_extra={'layer': 'provenance',
-         'carried_by': 'some',
-         'note': 'Set by repair_blank_employment when status was re-read from the second GHS '
-                 'status column.'})
-    home_language: Optional[Literal['Afrikaans', 'English', 'IsiNdebele', 'IsiXhosa', 'IsiZulu', 'Other language not specified', 'Sepedi', 'Sesotho', 'Setswana', 'SiSwati', 'Tshivenda', 'Xitsonga']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['Languages']}],
-         'prompt': {'about': ['language'], 'say': 'Your home language is {value}.'}})
-    monthly_household_income_rand: Optional[float] = Field(default=None, ge=0, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['fin_reqinc']}],
-         'note': 'Real reported household income per month. The only affordability anchor. '
-                 'Rooms copy it to monthly_income_rand.',
-         'prompt': {'about': ['money'],
-                    'say': "Your household's income is about R{value} a month."}})
-    income_provenance: Optional[Literal['ghs_2025_reported']] = Field(default=None, json_schema_extra={'layer': 'provenance', 'carried_by': 'ghs_household'})
-    internet_at_home: Optional[bool] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['com_int_fixed', 'com_int_mobile']}],
-         'prompt': {'about': ['online'],
-                    'say': {'true': 'Your household has internet access.',
-                            'false': 'Your household has no internet access.'}}})
-    computer_in_home: Optional[bool] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hwl_assets_comp']}],
-         'prompt': {'about': ['online'],
-                    'say': {'true': 'There is a computer in your household.',
-                            'false': 'There is no computer in your household.'}}})
-    receives_grant: Optional[bool] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['soc_grant']}],
-         'prompt': {'about': ['money', 'government'],
-                    'say': {'true': 'Your household receives a social grant.',
-                            'false': 'Your household receives no social grant.'}}})
-    medical_aid: Optional[bool] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hlt_medi']}],
-         'prompt': {'about': ['health'],
-                    'say': {'true': 'You have medical aid.',
-                            'false': 'You have no medical aid.'}}})
-    self_rated_health: Optional[Literal['Excellent', 'Fair', 'Good', 'Poor', 'Very good']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hlt_genhealth']}],
-         'prompt': {'about': ['health'],
-                    'say': {'Excellent': 'You rate your own health as excellent.',
-                            'Very good': 'You rate your own health as very good.',
-                            'Good': 'You rate your own health as good.',
-                            'Fair': 'You rate your own health as fair.',
-                            'Poor': 'You rate your own health as poor.'}}})
-    has_disability: Optional[bool] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['disab']}],
-         'prompt': {'about': ['health', 'getting_there'],
-                    'say': {'true': 'You live with a disability.'}}})
-    usual_health_facility: Optional[Literal['Private sector: Clinic', 'Private sector: Hospital', 'Private sector: Pharmacy/chemist', 'Private sector: Private doctor/specialist', 'Private sector: Traditional healer', 'Public sector: Clinic', 'Public sector: Hospital']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hhw_hltfac']}],
-         'prompt': {'about': ['health'],
-                    'say': 'Where you usually go for health care: {value}.'}})
-    health_facility_sector: Optional[Literal['private', 'public']] = Field(default=None, json_schema_extra={'layer': 'derived',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hhw_hltfac']}],
-         'note': 'public for facility codes 1-3, private otherwise '
-                 '(ghs_adapter._health_block).'})
-    transport_to_health_facility: Optional[Literal['Bus', 'Minibus taxi/sedan taxi/bakkie taxi', 'Other means of transport to nearest facility', 'Own transport', 'Walking']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hhw_transp']}],
-         'prompt': {'about': ['health', 'getting_there'],
-                    'say': 'How you get to your usual health facility: {value}.'}})
-    time_to_health_facility: Optional[Literal['15–29 minutes', '30–89 minutes', '90 minutes and more', 'Less than 15 minutes']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household',
-         'source': [{'survey': 'ghs_2025', 'items': ['hhw_time']}],
-         'prompt': {'about': ['health', 'getting_there'],
-                    'say': 'Time to reach your usual health facility: {value}.'}})
-    health_provenance: Literal['ghs_2025_reported'] = Field(default=None, json_schema_extra={'layer': 'provenance', 'carried_by': 'ghs_household'})
-    household_farms: Optional[bool] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'ghs_household_build',
-         'source': [{'survey': 'ghs_2025', 'items': ['agr_agri']}],
-         'prompt': {'about': ['farming', 'food'],
-                    'say': {'true': 'Your household farms.',
-                            'false': 'Your household does not farm.'}}})
-    ghs_role: Literal['gogo_guardian', 'guardian_parent', 'learner'] = Field(default=None, json_schema_extra={'layer': 'derived',
-         'carried_by': 'ghs_role_build',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_attend', 'hhc_relationship', 'age']}],
-         'prompt': {'core': True,
-                    'say': {'learner': 'You are a school learner.',
-                            'guardian_parent': 'You are a parent with children at school.',
-                            'gogo_guardian': 'You are a grandparent raising grandchildren who '
-                                             'are at school.'}}})
-    edu_institution: Literal['School', 'TVET college'] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'learner',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_edui']}],
-         'prompt': {'about': ['schooling'],
-                    'say': {'School': 'You go to school.',
-                            'TVET college': 'You study at a TVET college.'}}})
-    current_grade: Optional[Literal['Grade 10', 'Grade 11', 'Grade 12/Matric', 'Grade 7', 'Grade 8', 'Grade 9', 'Not applicable']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'learner',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_grde']}],
-         'prompt': {'core': True, 'say': 'You are in {value}.', 'skip': ['Not applicable']}})
-    fees_band: Optional[Literal['No fees', 'R1 001–R2 000 per year', 'R12 001–R16 000 per year', 'R16 001–R20 000 per year', 'R2 001–R3 000 per year', 'R201–R300 per year', 'R301–R500 per year', 'R4 001–R8 000 per year']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'learner',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_totfees']}],
-         'note': "Annual amount; 'per year' is stamped on paid bands.",
-         'prompt': {'about': ['schooling'], 'say': 'Your school fees: {value}.'}})
-    time_to_school: Optional[Literal['15-30 minutes', '31-60 minutes', '61-90 minutes', 'under 15 minutes']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'learner',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_time']}],
-         'prompt': {'about': ['schooling'], 'say': 'Time to get to school: {value}.'}})
-    guardian_type: Literal['grandparent', 'other relative', 'parent'] = Field(default=None, json_schema_extra={'layer': 'derived',
-         'carried_by': 'learner',
-         'source': [{'survey': 'ghs_2025', 'items': ['hhc_relationship']}],
-         'prompt': {'core': True,
-                    'say': {'parent': 'You live with your parent.',
-                            'grandparent': 'You live with your grandparent.',
-                            'other relative': 'You live with a relative.',
-                            'self': 'You head your own household.'}}})
-    learners_in_household: int = Field(default=None, ge=0, json_schema_extra={'layer': 'derived',
-         'carried_by': 'guardian',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_attend', 'age', 'edu_edui']}],
-         'note': 'Count of school-age learners in the household roster.',
-         'prompt': {'core': True, 'say': 'Learners at school in your household: {value}.'}})
-    learner_fee_bands: List[Literal['No fees', 'R1 001–R2 000 per year', 'R101–R200 per year', 'R12 001–R16 000 per year', 'R1–R100 per year', 'R2 001–R3 000 per year', 'R20 001–R40 000 per year', 'R201–R300 per year', 'R3 001–R4 000 per year', 'R301–R500 per year', 'R40 001–R80 000 per year', 'R501–R1 000 per year', 'R8 001–R12 000 per year']] = Field(default=None, json_schema_extra={'layer': 'derived',
-         'carried_by': 'guardian',
-         'source': [{'survey': 'ghs_2025', 'items': ['edu_totfees']}],
-         'prompt': {'about': ['schooling'],
-                    'say': 'School fees for the learners in your household: {value}.'}})
-    guards_grandchildren: bool = Field(default=None, json_schema_extra={'layer': 'derived',
-         'carried_by': 'guardian',
-         'source': [{'survey': 'ghs_2025', 'items': ['hhc_relationship']}],
-         'prompt': {'core': True, 'say': {'true': 'You look after your grandchildren.'}}})
-    farm_market_orientation: Literal['market', 'subsistence'] = Field(default=None, json_schema_extra={'layer': 'derived',
-         'carried_by': 'farmer',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Q210MARKET', 'Ste_icse93', 'Indus']}],
-         'prompt': {'core': True,
-                    'say': {'subsistence': 'You farm mainly to feed your household.',
-                            'market': 'You farm to sell what you produce.'}}})
-    farm_products: Optional[Literal['Farming of animals', 'Growing of crops', 'Growing of crops combined with farming of animals(mixed farming)']] = Field(default=None, json_schema_extra={'layer': 'measured',
-         'carried_by': 'farmer',
-         'source': [{'survey': 'qlfs_2026_q1', 'items': ['Q212SUBINDUSTRY']}],
-         'prompt': {'about': ['farming'], 'say': 'What you farm: {value}.'}})
+    id: str = Field(pattern='^[0-9a-f]{16}$', json_schema_extra={'carried_by': 'everyone'})
+    name: str = Field(json_schema_extra={'carried_by': 'everyone'})
+    source_entity_type: Literal['library_persona'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    age: int = Field(ge=15, json_schema_extra={'carried_by': 'everyone'})
+    gender: Literal['Female', 'Male'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    province: Literal['Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal', 'Limpopo', 'Mpumalanga', 'North West', 'Northern Cape', 'Western Cape'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    education: Optional[Literal['Less than primary completed', 'No schooling', 'Other', 'Primary', 'Primary completed', 'Secondary completed', 'Secondary not completed', 'Tertiary']] = Field(json_schema_extra={'carried_by': 'everyone'})
+    occupation: Optional[Literal['Clerks', 'Clerks (informal)', 'Craft and related trades workers', 'Craft and related trades workers (informal)', 'Discouraged job seeker', 'Domestic workers (informal)', 'Elementary Occupation', 'Elementary Occupation (informal)', 'Employed', 'Learner (School)', 'Learner (TVET college)', 'Legislators; senior officials and managers', 'Legislators; senior officials and managers (informal)', 'Other not economically active', 'Plant and machine operators and assemblers', 'Plant and machine operators and assemblers (informal)', 'Professionals', 'School teacher', 'Service workers and shop and market sales workers', 'Service workers and shop and market sales workers (informal)', 'Skilled agricultural and fishery workers', 'Skilled agricultural and fishery workers (informal)', 'Technical and associate professionals', 'Technical and associate professionals (informal)', 'Unemployed', 'Unspecified']] = Field(json_schema_extra={'carried_by': 'everyone'})
+    employment_status: Literal['Discouraged job seeker', 'Employed', 'Other not economically active', 'Unemployed'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    informal: Optional[bool] = Field(json_schema_extra={'carried_by': 'everyone'})
+    industry: Optional[Literal['Agriculture; hunting; forestry and fishing', 'Community; social and personal services', 'Construction', 'Financial intermediation; insurance; real estate and business services', 'Manufacturing', 'Mining and quarrying', 'Private households', 'Transport; storage and communication', 'Wholesale and retail trade']] = Field(json_schema_extra={'carried_by': 'everyone'})
+    marriage_status: Literal['Divorced', 'Divorced or separated', 'Legally married', 'Living together like husband and wife', 'Living together like husband and wife/partners', 'Married', 'Never married', 'Single and have never been married/never lived together as husband/wife before', 'Single, but have lived together with someone as husband/wife before', 'Widow/Widower', 'Widowed'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    is_neet: Optional[bool] = Field(json_schema_extra={'carried_by': 'everyone'})
+    race: Literal['African/Black', 'Coloured', 'Indian/Asian', 'White'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    geotype: Literal['Farms', 'Traditional', 'Urban'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    attitudes: List[AttitudeRow] = Field(json_schema_extra={'type': 'attitude_rows', 'carried_by': 'everyone'})
+    circumstances: List[CircumstanceRow] = Field(json_schema_extra={'type': 'circumstance_rows', 'carried_by': 'everyone'})
+    beliefs: List[str] = Field(min_length=1, json_schema_extra={'carried_by': 'everyone'})
+    actor_archetype: Literal['affluent_agricultural_household', 'affluent_urban_household', 'civic_moderate', 'comfortable_household', 'communal_farmer', 'community_leader', 'disillusioned_dropout', 'educator', 'gogo_guardian', 'grant_dependent_survivor', 'guardian_parent', 'informal_trader', 'institutional_loyalist', 'learner', 'rural_landholding_household', 'small_business_owner', 'smallholder_emerging_farmer', 'unemployed_youth', 'urban_professional'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    attitude_match_quality: Literal['age_backoff', 'education_backoff', 'exact', 'province_backoff', 'status_race', 'race_only', 'population'] = Field(json_schema_extra={'carried_by': 'everyone'})
+    survey_respondent: str = Field(pattern='^SAF\\d+$', json_schema_extra={'carried_by': 'everyone'})
+    ghs_person_rows: Optional[List[str]] = Field(default=None, json_schema_extra={'carried_by': 'some'})
+    persona: str = Field(json_schema_extra={'carried_by': 'everyone'})
+    background_story: str = Field(json_schema_extra={'carried_by': 'everyone'})
+    group_affiliation: str = Field(json_schema_extra={'carried_by': 'everyone'})
+    interested_topics: List[str] = Field(json_schema_extra={'carried_by': 'everyone'})
+    voice_guide: str = Field(json_schema_extra={'carried_by': 'everyone'})
+    behavioral_tendencies: str = Field(json_schema_extra={'carried_by': 'everyone'})
+    source_survey: Literal['ghs_2025', 'qlfs_2026_q1'] = Field(default=None, json_schema_extra={'carried_by': 'some'})
+    occupation_provenance: Literal['role_assigned'] = Field(default=None, json_schema_extra={'carried_by': 'some'})
+    employment_status_provenance: Literal['ghs_2025:employ_Status2'] = Field(default=None, json_schema_extra={'carried_by': 'some'})
+    home_language: Optional[Literal['Afrikaans', 'English', 'IsiNdebele', 'IsiXhosa', 'IsiZulu', 'Other language not specified', 'Sepedi', 'Sesotho', 'Setswana', 'SiSwati', 'Tshivenda', 'Xitsonga']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    monthly_household_income_rand: Optional[float] = Field(default=None, ge=0, json_schema_extra={'carried_by': 'ghs_household'})
+    income_provenance: Optional[Literal['ghs_2025_reported']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    internet_at_home: Optional[bool] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    computer_in_home: Optional[bool] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    receives_grant: Optional[bool] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    medical_aid: Optional[bool] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    self_rated_health: Optional[Literal['Excellent', 'Fair', 'Good', 'Poor', 'Very good']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    has_disability: Optional[bool] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    usual_health_facility: Optional[Literal['Private sector: Clinic', 'Private sector: Hospital', 'Private sector: Pharmacy/chemist', 'Private sector: Private doctor/specialist', 'Private sector: Traditional healer', 'Public sector: Clinic', 'Public sector: Hospital']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    health_facility_sector: Optional[Literal['private', 'public']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    transport_to_health_facility: Optional[Literal['Bus', 'Minibus taxi/sedan taxi/bakkie taxi', 'Other means of transport to nearest facility', 'Own transport', 'Walking']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    time_to_health_facility: Optional[Literal['15–29 minutes', '30–89 minutes', '90 minutes and more', 'Less than 15 minutes']] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    health_provenance: Literal['ghs_2025_reported'] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household'})
+    household_farms: Optional[bool] = Field(default=None, json_schema_extra={'carried_by': 'ghs_household_build'})
+    ghs_role: Literal['gogo_guardian', 'guardian_parent', 'learner'] = Field(default=None, json_schema_extra={'carried_by': 'ghs_role_build'})
+    edu_institution: Literal['School', 'TVET college'] = Field(default=None, json_schema_extra={'carried_by': 'learner'})
+    current_grade: Optional[Literal['Grade 10', 'Grade 11', 'Grade 12/Matric', 'Grade 7', 'Grade 8', 'Grade 9', 'Not applicable']] = Field(default=None, json_schema_extra={'carried_by': 'learner'})
+    fees_band: Optional[Literal['No fees', 'R1 001–R2 000 per year', 'R12 001–R16 000 per year', 'R16 001–R20 000 per year', 'R2 001–R3 000 per year', 'R201–R300 per year', 'R301–R500 per year', 'R4 001–R8 000 per year']] = Field(default=None, json_schema_extra={'carried_by': 'learner'})
+    time_to_school: Optional[Literal['15-30 minutes', '31-60 minutes', '61-90 minutes', 'under 15 minutes']] = Field(default=None, json_schema_extra={'carried_by': 'learner'})
+    guardian_type: Literal['grandparent', 'other relative', 'parent'] = Field(default=None, json_schema_extra={'carried_by': 'learner'})
+    learners_in_household: int = Field(default=None, ge=0, json_schema_extra={'carried_by': 'guardian'})
+    learner_fee_bands: List[Literal['No fees', 'R1 001–R2 000 per year', 'R101–R200 per year', 'R12 001–R16 000 per year', 'R1–R100 per year', 'R2 001–R3 000 per year', 'R20 001–R40 000 per year', 'R201–R300 per year', 'R3 001–R4 000 per year', 'R301–R500 per year', 'R40 001–R80 000 per year', 'R501–R1 000 per year', 'R8 001–R12 000 per year']] = Field(default=None, json_schema_extra={'carried_by': 'guardian'})
+    guards_grandchildren: bool = Field(default=None, json_schema_extra={'carried_by': 'guardian'})
+    farm_market_orientation: Literal['market', 'subsistence'] = Field(default=None, json_schema_extra={'carried_by': 'farmer'})
+    farm_products: Optional[Literal['Farming of animals', 'Growing of crops', 'Growing of crops combined with farming of animals(mixed farming)']] = Field(default=None, json_schema_extra={'carried_by': 'farmer'})
 
     @classmethod
     def cross_field_problems(cls, data, label):
@@ -854,7 +590,7 @@ def _row_section(row_cls, table_key, table, every_key):
 def export():
     """The reviewable JSON form of this model (app/data/model/persona.json)."""
     return {
-        **{k: HEADER[k] for k in ("version", "about", "rules", "sources", "layers", "groups")},
+        **{k: HEADER[k] for k in ("version", "groups")},
         "fields": export_fields(LibraryPersona),
         "attitude_row": _row_section(AttitudeRow, "topics", TOPICS, "every_topic_once"),
         "circumstance_row": _row_section(CircumstanceRow, "fields", CIRCUMSTANCES, "every_field_once"),

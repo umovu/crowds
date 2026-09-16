@@ -17,7 +17,7 @@ carry their own storage code; those move to app/repositories/ in a later pass.
 """
 
 from . import accounts, caches, panel, persona, reference, simulation, uploads
-from .base import (DataModel, DataModelError, SqliteModel, check, export_any, is_map_model,
+from .base import (DataModel, DataModelError, SqliteModel, check, is_map_model,
                    partial_problems, problems_of, strict_mode)
 from .panel import AnswerRow, RoomSeat, RoundFile, RoundResult
 from .persona import AttitudeRow, CircumstanceRow, LibraryPersona
@@ -32,17 +32,9 @@ REGISTRY = {
     **{name: cls for module in _MODULES for name, cls in module.MODELS.items()},
 }
 
-#: Model name -> function returning its exported JSON form.
-EXPORTS = {
-    "persona": persona.export,
-    "answer": panel.export_answer,
-    "room_seat": panel.export_room_seat,
-    **{name: (lambda c=cls: export_any(c)) for module in _MODULES for name, cls in module.MODELS.items()},
-}
-
 __all__ = [
-    "DataModel", "DataModelError", "SqliteModel", "check", "export_any", "is_map_model",
-    "partial_problems", "problems_of", "strict_mode", "REGISTRY", "EXPORTS",
+    "DataModel", "DataModelError", "SqliteModel", "check", "is_map_model",
+    "partial_problems", "problems_of", "strict_mode", "REGISTRY",
     "AnswerRow", "RoomSeat", "RoundFile", "RoundResult",
     "AttitudeRow", "CircumstanceRow", "LibraryPersona",
 ]

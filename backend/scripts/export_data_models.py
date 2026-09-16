@@ -26,7 +26,7 @@ def rendered(data) -> str:
 
 
 def stale() -> list:
-    from app.models import EXPORTS
+    from app.repositories.model_catalogue_repository import EXPORTS
     out = []
     for name, export in EXPORTS.items():
         path = os.path.join(MODEL_DIR, f"{name}.json")
@@ -40,7 +40,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="report stale files instead of writing")
     args = ap.parse_args()
-    from app.models import EXPORTS
+    from app.repositories.model_catalogue_repository import EXPORTS
     names = stale()
     if args.check:
         for name in names:

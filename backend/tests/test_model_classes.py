@@ -27,14 +27,14 @@ def _library():
 # ── the classes are the source of the JSON ─────────────────────────────────
 
 def test_exported_json_matches_the_classes():
-    from app.models import EXPORTS
+    from app.repositories.model_catalogue_repository import EXPORTS
     for name, export in EXPORTS.items():
         with open(os.path.join(BACKEND, "app", "data", "model", f"{name}.json"), encoding="utf-8") as fh:
             assert json.load(fh) == export(), f"app/data/model/{name}.json is stale: run scripts/export_data_models.py"
 
 
 def test_every_model_file_comes_from_a_class():
-    from app.models import EXPORTS
+    from app.repositories.model_catalogue_repository import EXPORTS
     files = {os.path.basename(p)[:-5] for p in glob.glob(os.path.join(BACKEND, "app", "data", "model", "*.json"))}
     assert files == set(EXPORTS), f"JSON-only models left: {sorted(files - set(EXPORTS))}"
 
