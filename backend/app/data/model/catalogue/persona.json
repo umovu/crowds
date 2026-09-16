@@ -1,6 +1,106 @@
 {
   "model": "persona",
+  "_file_note": "Notes for app/data/model/persona.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
   "about": "What a library persona is. Every stored field is described here, with where it came from. tests/test_persona_data_model.py checks the library, the build word lists and every rule that names a persona field against this file.",
+  "rules": [
+    "Every field stored on a library persona must be listed under fields. Unknown fields fail the tests.",
+    "A measured or derived field must name its survey and the survey question codes it came from.",
+    "A new survey field (including our own fieldwork) goes in here first, with its survey, question codes and allowed answers. Then the build may write it.",
+    "carried_by says who has the field. A persona inside the group must have it; a persona outside must not.",
+    "Allowed answers are copied from the survey labels exactly. A card rule or objection ground that names an answer not listed here fails the tests.",
+    "Texture fields are written by the model and must not add facts. Retired fields are reported, not failed, until the cleanup step.",
+    "prompt: how a fact reaches a persona's prompt when PERSONA_FACT_PROMPTS is on. core = always; about = the pitch parts (app/data/pitch_parts.json) that pull it in; say = its plain wording (a template with {value}, or one sentence per answer); skip = answers never said. A fact with no prompt block never reaches a prompt. replaced_by = a persona's own household survey field that wins over this matched-respondent answer when both exist (they come from different real people)."
+  ],
+  "sources": {
+    "qlfs_2026_q1": {
+      "name": "Stats SA Quarterly Labour Force Survey, 2026 Q1",
+      "unit": "person",
+      "file": "backend/data/microdata (DataFirst .dta, licensed, not in git)"
+    },
+    "ghs_2025": {
+      "name": "Stats SA General Household Survey 2025",
+      "unit": "person and household",
+      "file": "backend/data/microdata (licensed, not in git)"
+    },
+    "afrobarometer_r9_sa": {
+      "name": "Afrobarometer Round 9, South Africa",
+      "unit": "person",
+      "file": "Afrobarometer .sav (licensed, not in git)",
+      "joined_by": "one respondent per persona, matched on gender, province, education_band, employment_status, age_band, race"
+    }
+  },
+  "layers": {
+    "measured": "Straight from a survey answer.",
+    "derived": "Computed by our code from measured answers. No model involved.",
+    "provenance": "Records where something came from.",
+    "build": "Made by the build step (id, name).",
+    "texture": "Written by the model from the given facts only.",
+    "retired": "No longer used for library personas. Kept until cleanup."
+  },
+  "groups": {
+    "everyone": {
+      "when": {},
+      "about": "Every library persona."
+    },
+    "ghs_household": {
+      "when": {
+        "source_survey": [
+          "ghs_2025"
+        ]
+      },
+      "about": "Built from the GHS 2025 household files."
+    },
+    "ghs_household_build": {
+      "when": {
+        "source_survey": [
+          "ghs_2025"
+        ],
+        "ghs_role": [
+          null
+        ]
+      },
+      "about": "GHS households sampled by money and land (affluent, comfortable, landholding)."
+    },
+    "ghs_role_build": {
+      "when": {
+        "source_survey": [
+          "ghs_2025"
+        ],
+        "ghs_role": [
+          "learner",
+          "guardian_parent",
+          "gogo_guardian"
+        ]
+      },
+      "about": "GHS learners and the adults who look after them."
+    },
+    "learner": {
+      "when": {
+        "ghs_role": [
+          "learner"
+        ]
+      },
+      "about": "School and college learners."
+    },
+    "guardian": {
+      "when": {
+        "ghs_role": [
+          "guardian_parent",
+          "gogo_guardian"
+        ]
+      },
+      "about": "Parents and grandparents with learners at home."
+    },
+    "farmer": {
+      "when": {
+        "actor_archetype": [
+          "communal_farmer",
+          "smallholder_emerging_farmer"
+        ]
+      },
+      "about": "QLFS farm-module samples."
+    }
+  },
   "fields": {
     "id": {
       "layer": "build",
@@ -879,40 +979,5 @@
         "say": "What you farm: {value}."
       }
     }
-  },
-  "rules": [
-    "Every field stored on a library persona must be listed under fields. Unknown fields fail the tests.",
-    "A measured or derived field must name its survey and the survey question codes it came from.",
-    "A new survey field (including our own fieldwork) goes in here first, with its survey, question codes and allowed answers. Then the build may write it.",
-    "carried_by says who has the field. A persona inside the group must have it; a persona outside must not.",
-    "Allowed answers are copied from the survey labels exactly. A card rule or objection ground that names an answer not listed here fails the tests.",
-    "Texture fields are written by the model and must not add facts. Retired fields are reported, not failed, until the cleanup step.",
-    "prompt: how a fact reaches a persona's prompt when PERSONA_FACT_PROMPTS is on. core = always; about = the pitch parts (app/data/pitch_parts.json) that pull it in; say = its plain wording (a template with {value}, or one sentence per answer); skip = answers never said. A fact with no prompt block never reaches a prompt. replaced_by = a persona's own household survey field that wins over this matched-respondent answer when both exist (they come from different real people)."
-  ],
-  "sources": {
-    "qlfs_2026_q1": {
-      "name": "Stats SA Quarterly Labour Force Survey, 2026 Q1",
-      "unit": "person",
-      "file": "backend/data/microdata (DataFirst .dta, licensed, not in git)"
-    },
-    "ghs_2025": {
-      "name": "Stats SA General Household Survey 2025",
-      "unit": "person and household",
-      "file": "backend/data/microdata (licensed, not in git)"
-    },
-    "afrobarometer_r9_sa": {
-      "name": "Afrobarometer Round 9, South Africa",
-      "unit": "person",
-      "file": "Afrobarometer .sav (licensed, not in git)",
-      "joined_by": "one respondent per persona, matched on gender, province, education_band, employment_status, age_band, race"
-    }
-  },
-  "layers": {
-    "measured": "Straight from a survey answer.",
-    "derived": "Computed by our code from measured answers. No model involved.",
-    "provenance": "Records where something came from.",
-    "build": "Made by the build step (id, name).",
-    "texture": "Written by the model from the given facts only.",
-    "retired": "No longer used for library personas. Kept until cleanup."
   }
 }

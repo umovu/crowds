@@ -1,0 +1,17 @@
+{
+  "model": "sim_env_status",
+  "_file_note": "Notes for app/data/model/sim_env_status.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The heartbeat the sim subprocess writes so the app can tell it is alive, running, paused or gone.",
+  "stored_in": "uploads/simulations/<simulation_id>/env_status.json",
+  "written_by": [
+    "scripts/run_simulation_as.py (SimulationIPC.update_status)",
+    "simulation_ipc.SimulationIPCServer._update_env_status"
+  ],
+  "read_by": [
+    "simulation_runner.py",
+    "simulation_ipc.SimulationIPCClient"
+  ],
+  "rules": [
+    "status is deliberately not restricted: readers accept alive, running and paused, and must not be tightened (CLAUDE.md). Values written today: running, paused, alive, error, stopped."
+  ]
+}

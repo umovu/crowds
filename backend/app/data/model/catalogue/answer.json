@@ -1,0 +1,304 @@
+{
+  "model": "answer",
+  "_file_note": "Notes for app/data/model/answer.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "What one person's answer in a panel round looks like, and the round file around it. Written by interview_service.batch_impact_interview and panel_service.save_round; read by the results screen, the follow-up report and the segment ranking. tests/test_answer_data_model.py checks real rows and saved rounds against this file.",
+  "rules": [
+    "Every key on an answer row must be listed under answer_row.fields. Unknown keys fail the tests.",
+    "when: always = on every row; answered = on every row that has no error; failed = only on rows that have an error; optional = may be absent.",
+    "A failed row must carry error and failed. Its response is a placeholder, never an opinion.",
+    "Money fields on a row are copies of real persona data made by the room. The model never writes them.",
+    "A reader that needs a key not listed here is reading something no row carries."
+  ],
+  "answer_row": {
+    "fields": {
+      "agent_id": {
+        "type": "integer",
+        "when": "always",
+        "note": "Seat number in this room, not the library id.",
+        "read_by": [
+          "FlowResults.vue",
+          "panel_service.py",
+          "hypothesis_report.py"
+        ]
+      },
+      "response": {
+        "type": "string",
+        "when": "always",
+        "note": "What the person said, stance line removed. Placeholder text on failed rows.",
+        "read_by": [
+          "FlowResults.vue",
+          "panel_service.py",
+          "hypothesis_report.py",
+          "objections.py"
+        ]
+      },
+      "original_question": {
+        "type": "string",
+        "when": "always",
+        "note": "The pitch or announcement as the user typed it."
+      },
+      "stance_before": {
+        "type": "string",
+        "allowed": [
+          "support",
+          "neutral",
+          "concerned",
+          "oppose",
+          "resist"
+        ],
+        "when": "answered",
+        "read_by": [
+          "FlowResults.vue",
+          "panel_service.py",
+          "hypothesis_report.py"
+        ]
+      },
+      "stance_after": {
+        "type": "string",
+        "allowed": [
+          "support",
+          "neutral",
+          "concerned",
+          "oppose",
+          "resist"
+        ],
+        "when": "answered",
+        "read_by": [
+          "FlowResults.vue",
+          "panel_service.py",
+          "hypothesis_report.py"
+        ]
+      },
+      "stance_changed": {
+        "type": "boolean",
+        "when": "answered",
+        "read_by": [
+          "FlowResults.vue",
+          "panel_service.py",
+          "hypothesis_report.py"
+        ]
+      },
+      "internal_state": {
+        "type": "object",
+        "when": "answered",
+        "note": "Snapshot of the agent's state after answering (attitudes, stance, emotion)."
+      },
+      "impact_metadata": {
+        "type": "object",
+        "when": "answered",
+        "note": "Keyword heuristics on the answer (granularity, predicted action). Carries a nested error on failed rows."
+      },
+      "reframed_question": {
+        "type": "string",
+        "when": "answered",
+        "note": "The full prompt this person was given."
+      },
+      "agent_name": {
+        "type": "string",
+        "nullable": true,
+        "when": "answered",
+        "read_by": [
+          "panel_service.py",
+          "hypothesis_report.py"
+        ]
+      },
+      "actor_archetype": {
+        "type": "string",
+        "nullable": true,
+        "when": "answered",
+        "read_by": [
+          "panel_service.py"
+        ]
+      },
+      "group_affiliation": {
+        "type": "string",
+        "nullable": true,
+        "when": "answered"
+      },
+      "question_archetype": {
+        "type": "string",
+        "when": "answered"
+      },
+      "timestamp": {
+        "type": "string",
+        "when": "answered"
+      },
+      "error": {
+        "type": "string",
+        "when": "failed",
+        "read_by": [
+          "FlowResults.vue",
+          "panel_service.py"
+        ]
+      },
+      "failed": {
+        "type": "boolean",
+        "allowed": [
+          true
+        ],
+        "when": "failed",
+        "read_by": [
+          "FlowResults.vue"
+        ]
+      },
+      "library_id": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{16}$",
+        "when": "optional",
+        "note": "The persona's id in the library. Absent for custom agents."
+      },
+      "budget_tier": {
+        "type": "string",
+        "allowed": [
+          "tight",
+          "moderate",
+          "loose"
+        ],
+        "when": "optional",
+        "note": "Can afford it, computed from real income (mode_specs.budget_tier). Never from the model.",
+        "read_by": [
+          "FlowResults.vue"
+        ]
+      },
+      "is_grant_dependent": {
+        "type": "boolean",
+        "when": "optional"
+      },
+      "grant_type": {
+        "type": "string",
+        "nullable": true,
+        "when": "optional"
+      },
+      "monthly_income_rand": {
+        "type": "number",
+        "when": "optional",
+        "note": "Room copy of real monthly income (library monthly_household_income_rand, or a detected grant amount).",
+        "read_by": [
+          "FlowResults.vue"
+        ]
+      },
+      "research_cards_used": {
+        "type": "list",
+        "items": {
+          "type": "string"
+        },
+        "when": "optional",
+        "note": "Ids of the research cards that reached this prompt. Absent for old profiles with no citations.",
+        "read_by": [
+          "FlowResults.vue"
+        ]
+      },
+      "facts_used": {
+        "type": "list",
+        "items": {
+          "type": "string"
+        },
+        "when": "optional",
+        "note": "Persona facts that replaced the story in this prompt (persona_facts). Present only when PERSONA_FACT_PROMPTS is on and the seat is a library persona."
+      }
+    }
+  },
+  "round_result": {
+    "fields": {
+      "simulation_id": {
+        "type": "string",
+        "when": "always"
+      },
+      "original_question": {
+        "type": "string",
+        "when": "always"
+      },
+      "total_interviewed": {
+        "type": "integer",
+        "when": "always"
+      },
+      "successful": {
+        "type": "integer",
+        "when": "always"
+      },
+      "failed": {
+        "type": "integer",
+        "when": "always",
+        "note": "A count here. On an answer row, failed is a true/false flag."
+      },
+      "question_archetype": {
+        "type": "string",
+        "when": "always"
+      },
+      "impact_dashboard": {
+        "type": "object",
+        "when": "always"
+      },
+      "results": {
+        "type": "list",
+        "items": {
+          "type": "answer_row"
+        },
+        "when": "always"
+      },
+      "summary_narrative": {
+        "type": "string",
+        "nullable": true,
+        "when": "optional"
+      },
+      "by_segment": {
+        "type": "list",
+        "when": "optional"
+      },
+      "coverage": {
+        "type": "object",
+        "nullable": true,
+        "when": "optional"
+      },
+      "all_failed": {
+        "type": "boolean",
+        "when": "optional"
+      },
+      "unusable": {
+        "type": "boolean",
+        "when": "optional"
+      },
+      "failure_reason": {
+        "type": "string",
+        "when": "optional"
+      }
+    }
+  },
+  "round_file": {
+    "fields": {
+      "round": {
+        "type": "integer",
+        "when": "always"
+      },
+      "timestamp": {
+        "type": "string",
+        "when": "always"
+      },
+      "pitch": {
+        "type": "string",
+        "when": "always"
+      },
+      "framed_pitch": {
+        "type": "string",
+        "when": "always"
+      },
+      "agent_ids": {
+        "type": "list",
+        "items": {
+          "type": "integer"
+        },
+        "nullable": true,
+        "when": "always"
+      },
+      "carried_probe": {
+        "type": "any",
+        "nullable": true,
+        "when": "optional"
+      },
+      "result": {
+        "type": "round_result",
+        "when": "always"
+      }
+    }
+  }
+}

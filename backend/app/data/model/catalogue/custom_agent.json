@@ -1,0 +1,38 @@
+{
+  "model": "custom_agent",
+  "_file_note": "Notes for app/data/model/custom_agent.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "An agent a user brings in: parsed from an uploaded document's '# Agents' section, a JSON file, or the manual form. This is the parsed shape (AgentProfile.to_agentsociety_format) stored in project.json custom_agents and seated in sim rooms. Outside data: it is checked every time it is parsed.",
+  "stored_in": "uploads/projects/<id>/project.json -> custom_agents[]; sim rooms agentsociety_profiles.json",
+  "written_by": [
+    "custom_agent_parser.py (_dict_to_profile)",
+    "api/graph.py",
+    "api/simulation.py"
+  ],
+  "read_by": [
+    "simulation_manager.py",
+    "opinion_agent.py",
+    "prompt_reframer.py"
+  ],
+  "rules": [
+    "Never a library persona: source_entity_type is custom (parsed from a document or file) or custom_manual (the form).",
+    "Long text is capped so one upload cannot flood a prompt.",
+    "Fields marked legacy are carried for old documents and not used by current prompts."
+  ],
+  "fields": {
+    "is_core_focus": {
+      "legacy": true
+    },
+    "source_entity_uuid": {
+      "legacy": true
+    },
+    "emotion": {
+      "legacy": true
+    },
+    "needs": {
+      "legacy": true
+    },
+    "attitudes": {
+      "note": "Author-written 0-10 ratings, not survey stances. Produce no reactions, so the author's voice guide is kept."
+    }
+  }
+}

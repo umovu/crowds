@@ -1,0 +1,13 @@
+{
+  "model": "sim_opinion_db",
+  "_file_note": "Notes for app/data/model/sim_opinion_db.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The live opinion space of a running simulation: opinions, responses and per-round activity.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/opinion_simulation.db",
+  "written_by": [
+    "agentsociety_opinion_block.py"
+  ],
+  "read_by": [
+    "agentsociety_opinion_block.py",
+    "api/simulation.py"
+  ]
+}

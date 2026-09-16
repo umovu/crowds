@@ -12,39 +12,29 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional
 from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
+from ._simulation_types import (IpcCommandCommandType, IpcResponseStatus, SimActionActionType, 
+    SimActionPlatform, SimDocumentContextMode, SimDocumentContextSecondaryLens, 
+    SimLogMarkerEventType, SimReportProgressStatus, SimReportStatus, SimRunStateRunnerStatus, 
+    SimStateStatus)
 
 
 class SimAction(DataModel):
     """One agent action in a simulation: a line in actions.jsonl, and an entry in run_state recent_actions."""
     MODEL_NAME: ClassVar[str] = 'sim_action'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'One agent action in a simulation: a line in actions.jsonl, and an entry in '
-                  'run_state recent_actions.',
-         'stored_in': 'uploads/simulations/<simulation_id>/opinion_space/actions.jsonl (one per line); '
-                      'run_state.json recent_actions[]',
-         'written_by': ['agentsociety_output_writer.write_action',
-                        'simulation_runner.AgentAction.to_dict'],
-         'read_by': ['simulation_runner.py',
-                     'graph_memory_updater.py',
-                     'report_agent.py',
-                     'api/simulation.py'],
-         'rules': ['Token and cost fields are counts from the model call, never estimates by the '
-                   'model.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     round_num: int = Field(ge=0, json_schema_extra={'when': 'always'})
     timestamp: str = Field(json_schema_extra={'when': 'always'})
-    platform: Literal['opinion_space'] = Field(json_schema_extra={'when': 'always'})
+    platform: SimActionPlatform = Field(json_schema_extra={'when': 'always'})
     agent_id: int = Field(json_schema_extra={'when': 'always'})
     agent_name: str = Field(json_schema_extra={'when': 'always'})
-    action_type: Literal['EXPRESS_OPINION', 'RESPOND_TO_OPINION', 'SEARCH_TOPIC', 'OBSERVE', 'DO_NOTHING', 'NON_PARTICIPATION', 'SYSTEM_EVENT'] = Field(json_schema_extra={'when': 'always'})
-    action_args: dict = Field(json_schema_extra={'when': 'always',
-         'note': 'Shape depends on action_type (content, topics, opinion ids, target, feed_size, '
-                 'event).'})
+    action_type: SimActionActionType = Field(json_schema_extra={'when': 'always'})
+    action_args: dict = Field(json_schema_extra={'when': 'always'})
     result: Optional[Any] = Field(json_schema_extra={'when': 'always'})
     success: bool = Field(json_schema_extra={'when': 'always'})
     reason: str = Field(json_schema_extra={'when': 'always'})
     internal_thought: str = Field(json_schema_extra={'when': 'always'})
     impact_score: float = Field(json_schema_extra={'when': 'always'})
-    economic_reasoning: Optional[Any] = Field(default=None, json_schema_extra={'when': 'optional', 'note': 'Product mode only.'})
+    economic_reasoning: Optional[Any] = Field(default=None, json_schema_extra={'when': 'optional'})
     prompt_tokens: int = Field(ge=0, json_schema_extra={'when': 'always'})
     completion_tokens: int = Field(ge=0, json_schema_extra={'when': 'always'})
     estimated_cost_usd: float = Field(ge=0, json_schema_extra={'when': 'always'})
@@ -53,14 +43,8 @@ class SimAction(DataModel):
 class SimLogMarker(DataModel):
     """A marker line in actions.jsonl: the end of a round, or the end of the simulation with its token and cost totals."""
     MODEL_NAME: ClassVar[str] = 'sim_log_marker'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'A marker line in actions.jsonl: the end of a round, or the end of the simulation '
-                  'with its token and cost totals.',
-         'stored_in': 'uploads/simulations/<simulation_id>/opinion_space/actions.jsonl',
-         'written_by': ['agentsociety_output_writer.write_round_end',
-                        'agentsociety_output_writer.write_simulation_end'],
-         'read_by': ['simulation_runner.py']}
-    event_type: Literal['round_end', 'simulation_end'] = Field(json_schema_extra={'when': 'always'})
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
+    event_type: SimLogMarkerEventType = Field(json_schema_extra={'when': 'always'})
     round: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
     simulated_hours: float = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
     total_rounds: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
@@ -76,22 +60,11 @@ class SimLogMarker(DataModel):
 class SimState(DataModel):
     """A simulation's lifecycle state: status, cast size, config flag, prepare cost, and whether its credit was charged."""
     MODEL_NAME: ClassVar[str] = 'sim_state'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': "A simulation's lifecycle state: status, cast size, config flag, prepare cost, and "
-                  'whether its credit was charged.',
-         'stored_in': 'uploads/simulations/<simulation_id>/state.json',
-         'written_by': ['simulation_manager._save_simulation_state (SimulationState.to_dict)',
-                        'simulation_runner (sets status stopped on shutdown)'],
-         'read_by': ['simulation_manager._load_simulation_state',
-                     'api/simulation.py',
-                     'billing check on /start'],
-         'rules': ['credit_charged guards billing: a sim started twice is charged once, even across '
-                   'restarts.',
-                   'Sims created before owner scoping have no user_id or credit_charged.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     simulation_id: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     project_id: str = Field(json_schema_extra={'when': 'always'})
     graph_id: str = Field(json_schema_extra={'when': 'always'})
-    status: Literal['created', 'preparing', 'ready', 'running', 'paused', 'stopped', 'completed', 'failed'] = Field(json_schema_extra={'when': 'always'})
+    status: SimStateStatus = Field(json_schema_extra={'when': 'always'})
     entities_count: int = Field(ge=0, json_schema_extra={'when': 'always'})
     profiles_count: int = Field(ge=0, json_schema_extra={'when': 'always'})
     entity_types: List[str] = Field(json_schema_extra={'when': 'always'})
@@ -135,9 +108,7 @@ class SimConfigAgentConfigsItem(DataModel):
     response_delay_min: int = Field(ge=0, json_schema_extra={'when': 'always'})
     response_delay_max: int = Field(ge=0, json_schema_extra={'when': 'always'})
     sentiment_bias: float = Field(ge=-1, le=1, json_schema_extra={'when': 'always'})
-    stance: str = Field(json_schema_extra={'when': 'always',
-         'note': 'Config vocabulary (supportive/opposing/neutral/observer), not the interview stance '
-                 'ladder.'})
+    stance: str = Field(json_schema_extra={'when': 'always'})
     influence_weight: float = Field(ge=0, json_schema_extra={'when': 'always'})
 
 
@@ -151,15 +122,7 @@ class SimConfigEventConfig(DataModel):
 class SimConfig(DataModel):
     """The run configuration a simulation starts from: time pacing, one activity config per agent, and the opening events."""
     MODEL_NAME: ClassVar[str] = 'sim_config'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'The run configuration a simulation starts from: time pacing, one activity config '
-                  'per agent, and the opening events.',
-         'stored_in': 'uploads/simulations/<simulation_id>/simulation_config.json',
-         'written_by': ['simulation_manager.prepare_simulation (SimulationParameters.to_json)',
-                        'api/simulation.py (/start presets)',
-                        'scripts/run_simulation_as.py (updates on start)'],
-         'read_by': ['scripts/run_simulation_as.py', 'simulation_runner.py', 'api/simulation.py'],
-         'rules': ['No API keys are stored here: only the model name and base URL.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     simulation_id: str = Field(json_schema_extra={'when': 'always'})
     project_id: str = Field(json_schema_extra={'when': 'always'})
     graph_id: str = Field(json_schema_extra={'when': 'always'})
@@ -171,20 +134,16 @@ class SimConfig(DataModel):
     llm_base_url: str = Field(json_schema_extra={'when': 'always'})
     generated_at: str = Field(json_schema_extra={'when': 'always'})
     generation_reasoning: str = Field(json_schema_extra={'when': 'always'})
-    max_agents_per_round: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional', 'note': 'Set by the /start preset.'})
+    max_agents_per_round: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
     min_agents_per_round: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
 
 
 class SimRunState(DataModel):
     """Live progress of a running simulation, polled by the screen."""
     MODEL_NAME: ClassVar[str] = 'sim_run_state'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'Live progress of a running simulation, polled by the screen.',
-         'stored_in': 'uploads/simulations/<simulation_id>/run_state.json',
-         'written_by': ['simulation_runner._save_run_state (SimulationRunState.to_detail_dict)'],
-         'read_by': ['simulation_runner.get_run_state', 'api/simulation.py (status, actions)']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     simulation_id: str = Field(json_schema_extra={'when': 'always'})
-    runner_status: Literal['idle', 'starting', 'running', 'paused', 'stopping', 'stopped', 'completed', 'failed'] = Field(json_schema_extra={'when': 'always'})
+    runner_status: SimRunStateRunnerStatus = Field(json_schema_extra={'when': 'always'})
     current_round: int = Field(ge=0, json_schema_extra={'when': 'always'})
     total_rounds: int = Field(ge=0, json_schema_extra={'when': 'always'})
     simulated_hours: float = Field(ge=0, json_schema_extra={'when': 'always'})
@@ -206,16 +165,7 @@ class SimRunState(DataModel):
 class SimEnvStatus(DataModel):
     """The heartbeat the sim subprocess writes so the app can tell it is alive, running, paused or gone."""
     MODEL_NAME: ClassVar[str] = 'sim_env_status'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'The heartbeat the sim subprocess writes so the app can tell it is alive, running, '
-                  'paused or gone.',
-         'stored_in': 'uploads/simulations/<simulation_id>/env_status.json',
-         'written_by': ['scripts/run_simulation_as.py (SimulationIPC.update_status)',
-                        'simulation_ipc.SimulationIPCServer._update_env_status'],
-         'read_by': ['simulation_runner.py', 'simulation_ipc.SimulationIPCClient'],
-         'rules': ['status is deliberately not restricted: readers accept alive, running and paused, '
-                   'and must not be tightened (CLAUDE.md). Values written today: running, paused, '
-                   'alive, error, stopped.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     status: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     timestamp: str = Field(json_schema_extra={'when': 'always'})
     total_agents: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
@@ -233,14 +183,9 @@ class SimEnvStatus(DataModel):
 class IpcCommand(DataModel):
     """A command the app drops for the sim subprocess (interview, pause, intervention)."""
     MODEL_NAME: ClassVar[str] = 'ipc_command'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'A command the app drops for the sim subprocess (interview, pause, intervention).',
-         'stored_in': 'uploads/simulations/<simulation_id>/ipc_commands/<command_id>.json',
-         'written_by': ['simulation_ipc.SimulationIPCClient.send_command (IPCCommand.to_dict)'],
-         'read_by': ['scripts/run_simulation_as.py (poll_command)',
-                     'simulation_ipc.SimulationIPCServer.poll_commands']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     command_id: str = Field(min_length=1, json_schema_extra={'when': 'always'})
-    command_type: Literal['interview', 'batch_interview', 'close_env', 'pause', 'resume', 'apply_intervention', 'broadcast_intervention'] = Field(json_schema_extra={'when': 'always'})
+    command_type: IpcCommandCommandType = Field(json_schema_extra={'when': 'always'})
     args: dict = Field(json_schema_extra={'when': 'always'})
     timestamp: str = Field(json_schema_extra={'when': 'always'})
 
@@ -248,14 +193,9 @@ class IpcCommand(DataModel):
 class IpcResponse(DataModel):
     """The sim subprocess's answer to one command."""
     MODEL_NAME: ClassVar[str] = 'ipc_response'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': "The sim subprocess's answer to one command.",
-         'stored_in': 'uploads/simulations/<simulation_id>/ipc_responses/<command_id>.json',
-         'written_by': ['scripts/run_simulation_as.py (send_response)',
-                        'simulation_ipc.SimulationIPCServer.send_response (IPCResponse.to_dict)'],
-         'read_by': ['simulation_ipc.SimulationIPCClient.send_command']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     command_id: str = Field(min_length=1, json_schema_extra={'when': 'always'})
-    status: Literal['pending', 'processing', 'completed', 'failed'] = Field(json_schema_extra={'when': 'always'})
+    status: IpcResponseStatus = Field(json_schema_extra={'when': 'always'})
     result: Optional[dict] = Field(json_schema_extra={'when': 'always'})
     error: Optional[str] = Field(json_schema_extra={'when': 'always'})
     timestamp: str = Field(json_schema_extra={'when': 'always'})
@@ -272,19 +212,10 @@ class SimDocumentContextModeDetection(DataModel):
 class SimDocumentContext(DataModel):
     """What a simulation knows about its scenario: the decided mode, the domain, facts pulled from the document, and the operator's business briefing."""
     MODEL_NAME: ClassVar[str] = 'sim_document_context'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'What a simulation knows about its scenario: the decided mode, the domain, facts '
-                  "pulled from the document, and the operator's business briefing.",
-         'stored_in': 'uploads/simulations/<simulation_id>/document_context.json',
-         'written_by': ['simulation_manager.prepare_simulation'],
-         'read_by': ['interview_service._load_mode',
-                     'scripts/run_simulation_as.py',
-                     'opinion_block.py'],
-         'rules': ["Facts are extracted from the user's own document; they describe the scenario, "
-                   'never who the agents are.']}
-    mode: Literal['policy', 'product'] = Field(json_schema_extra={'when': 'always'})
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
+    mode: SimDocumentContextMode = Field(json_schema_extra={'when': 'always'})
     converged: bool = Field(json_schema_extra={'when': 'always'})
-    secondary_lens: Optional[Literal['policy', 'product']] = Field(json_schema_extra={'when': 'always'})
+    secondary_lens: Optional[SimDocumentContextSecondaryLens] = Field(json_schema_extra={'when': 'always'})
     mode_detection: SimDocumentContextModeDetection = Field(json_schema_extra={'when': 'always'})
     domain: Optional[str] = Field(json_schema_extra={'when': 'always'})
     domain_profile: Optional[dict] = Field(json_schema_extra={'when': 'always'})
@@ -298,26 +229,14 @@ class SimDocumentContext(DataModel):
 class SimEnrichment(RootModel[Dict[str, str]]):
     """Web research per archetype for a simulation: archetype name -> research text. Context only, never persona material."""
     MODEL_NAME: ClassVar[str] = 'sim_enrichment'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'Web research per archetype for a simulation: archetype name -> research text. '
-                  'Context only, never persona material.',
-         'stored_in': 'uploads/simulations/<simulation_id>/enrichment.json',
-         'written_by': ['simulation_manager.prepare_simulation', 'api/simulation.py (/research/rerun)'],
-         'read_by': ['simulation_manager.prepare_simulation', 'api/simulation.py (/enrichment)'],
-         'rules': ['Web research makes context only; it never authors a persona (CLAUDE.md).']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     model_config = ConfigDict(strict=True)
 
 
 class SimReplayDb(SqliteModel):
     """The replay database of a simulation: metadata, every action, injected events, per-round sentiment and the cast."""
     MODEL_NAME: ClassVar[str] = 'sim_replay_db'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'kind': 'sqlite',
-         'about': 'The replay database of a simulation: metadata, every action, injected events, '
-                  'per-round sentiment and the cast.',
-         'stored_in': 'uploads/simulations/<simulation_id>/opinion_space/replay.db',
-         'written_by': ['replay_storage.ReplayStorage'],
-         'read_by': ['replay_storage.ReplayStorage', 'api/simulation.py (replay)']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1, 'kind': 'sqlite'}
     TABLES: ClassVar[Dict[str, List[str]]] = {'simulation_meta': ['simulation_id',
                              'project_id',
                              'started_at',
@@ -394,13 +313,7 @@ class SimReplayDb(SqliteModel):
 class SimOpinionDb(SqliteModel):
     """The live opinion space of a running simulation: opinions, responses and per-round activity."""
     MODEL_NAME: ClassVar[str] = 'sim_opinion_db'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'kind': 'sqlite',
-         'about': 'The live opinion space of a running simulation: opinions, responses and per-round '
-                  'activity.',
-         'stored_in': 'uploads/simulations/<simulation_id>/opinion_space/opinion_simulation.db',
-         'written_by': ['agentsociety_opinion_block.py'],
-         'read_by': ['agentsociety_opinion_block.py', 'api/simulation.py']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1, 'kind': 'sqlite'}
     TABLES: ClassVar[Dict[str, List[str]]] = {'opinion': ['id',
                      'agent_id',
                      'agent_name',
@@ -443,11 +356,7 @@ class SimReportOutlineSectionsItem(DataModel):
 class SimReportOutline(DataModel):
     """A simulation report's outline: title, summary and sections."""
     MODEL_NAME: ClassVar[str] = 'sim_report_outline'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': "A simulation report's outline: title, summary and sections.",
-         'stored_in': 'uploads/reports/<report_id>/outline.json (also inside meta.json)',
-         'written_by': ['report_agent.ReportManager.save_outline (ReportOutline.to_dict)'],
-         'read_by': ['report_agent.ReportManager', 'api/report.py']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     title: str = Field(json_schema_extra={'when': 'always'})
     summary: str = Field(json_schema_extra={'when': 'always'})
     sections: List[SimReportOutlineSectionsItem] = Field(json_schema_extra={'when': 'always'})
@@ -456,16 +365,12 @@ class SimReportOutline(DataModel):
 class SimReport(DataModel):
     """A simulation report's saved record: status, the outline and the full markdown."""
     MODEL_NAME: ClassVar[str] = 'sim_report'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': "A simulation report's saved record: status, the outline and the full markdown.",
-         'stored_in': 'uploads/reports/<report_id>/meta.json',
-         'written_by': ['report_agent.ReportManager.save_report (Report.to_dict)'],
-         'read_by': ['report_agent.ReportManager', 'api/report.py', 'Step4Report.vue']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     report_id: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     simulation_id: str = Field(json_schema_extra={'when': 'always'})
     graph_id: str = Field(json_schema_extra={'when': 'always'})
     simulation_requirement: str = Field(json_schema_extra={'when': 'always'})
-    status: Literal['pending', 'planning', 'generating', 'completed', 'failed'] = Field(json_schema_extra={'when': 'always'})
+    status: SimReportStatus = Field(json_schema_extra={'when': 'always'})
     outline: Optional[SimReportOutline] = Field(json_schema_extra={'when': 'always'})
     markdown_content: str = Field(json_schema_extra={'when': 'always'})
     created_at: str = Field(json_schema_extra={'when': 'always'})
@@ -476,13 +381,9 @@ class SimReport(DataModel):
 class SimReportProgress(DataModel):
     """Live progress of report generation, polled by the screen."""
     MODEL_NAME: ClassVar[str] = 'sim_report_progress'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'Live progress of report generation, polled by the screen.',
-         'stored_in': 'uploads/reports/<report_id>/progress.json',
-         'written_by': ['report_agent.ReportManager.update_progress'],
-         'read_by': ['report_agent.ReportManager.get_progress', 'api/report.py']}
-    status: Literal['pending', 'planning', 'generating', 'completed', 'failed'] = Field(json_schema_extra={'when': 'always'})
-    progress: int = Field(ge=-1, le=100, json_schema_extra={'when': 'always', 'note': '-1 marks a failed report.'})
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
+    status: SimReportProgressStatus = Field(json_schema_extra={'when': 'always'})
+    progress: int = Field(ge=-1, le=100, json_schema_extra={'when': 'always'})
     message: str = Field(json_schema_extra={'when': 'always'})
     current_section: Optional[str] = Field(json_schema_extra={'when': 'always'})
     completed_sections: List[str] = Field(json_schema_extra={'when': 'always'})
@@ -492,11 +393,7 @@ class SimReportProgress(DataModel):
 class ReportLogLine(DataModel):
     """One step the report agent took: a line in the report's agent_log.jsonl."""
     MODEL_NAME: ClassVar[str] = 'report_log_line'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': "One step the report agent took: a line in the report's agent_log.jsonl.",
-         'stored_in': 'uploads/reports/<report_id>/agent_log.jsonl',
-         'written_by': ['report_agent.ReportLogger.log'],
-         'read_by': ['report_agent.ReportManager.get_agent_log', 'api/report.py']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     timestamp: str = Field(json_schema_extra={'when': 'always'})
     elapsed_seconds: float = Field(ge=0, json_schema_extra={'when': 'always'})
     report_id: str = Field(json_schema_extra={'when': 'always'})

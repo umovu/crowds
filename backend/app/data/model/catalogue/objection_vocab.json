@@ -1,0 +1,18 @@
+{
+  "model": "objection_vocab",
+  "_file_note": "Notes for app/data/model/objection_vocab.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "What a panel answer pushes against (walls) or leans toward (pulls), the words that signal each, and the persona facts that entitle someone to raise it.",
+  "stored_in": "backend/app/data/objection_vocab.json",
+  "written_by": [
+    "hand-authored (walls from the TymeBank segment benchmark; pulls authored, unvalidated)"
+  ],
+  "read_by": [
+    "objections.py",
+    "hypothesis_report.py",
+    "panel_service.rank_by_segment"
+  ],
+  "rules": [
+    "Grounds name persona facts and answers (checked against model/persona.json in test_persona_data_model).",
+    "A wall marked reading_only is read from sentences but never counted in the benchmark mention layer."
+  ]
+}

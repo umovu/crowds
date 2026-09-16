@@ -1,0 +1,23 @@
+{
+  "model": "profile",
+  "_file_note": "Notes for app/data/model/profile.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "sql": "backend/supabase/profiles.sql",
+  "about": "One row per account and whether the operator approved it. The waitlist gate reads approved on every API call.",
+  "written_by": [
+    "trigger handle_new_user",
+    "app/approval.py (_create_pending, approve, claim_notification)",
+    "trigger profiles_stamp_approved"
+  ],
+  "read_by": [
+    "app/approval.py (is_approved, get_profile)",
+    "api/waitlist.py (_is_approved)"
+  ],
+  "rules": [
+    "approved_at is stamped by a trigger when approved flips on; the backend never writes it."
+  ],
+  "fields": {
+    "notified_at": {
+      "note": "The backend sends 'now()' once, guarded by notified_at is null."
+    }
+  }
+}

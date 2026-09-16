@@ -1,0 +1,13 @@
+{
+  "model": "sim_run_state",
+  "_file_note": "Notes for app/data/model/sim_run_state.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "Live progress of a running simulation, polled by the screen.",
+  "stored_in": "uploads/simulations/<simulation_id>/run_state.json",
+  "written_by": [
+    "simulation_runner._save_run_state (SimulationRunState.to_detail_dict)"
+  ],
+  "read_by": [
+    "simulation_runner.get_run_state",
+    "api/simulation.py (status, actions)"
+  ]
+}

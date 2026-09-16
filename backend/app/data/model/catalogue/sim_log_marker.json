@@ -1,0 +1,13 @@
+{
+  "model": "sim_log_marker",
+  "_file_note": "Notes for app/data/model/sim_log_marker.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "A marker line in actions.jsonl: the end of a round, or the end of the simulation with its token and cost totals.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/actions.jsonl",
+  "written_by": [
+    "agentsociety_output_writer.write_round_end",
+    "agentsociety_output_writer.write_simulation_end"
+  ],
+  "read_by": [
+    "simulation_runner.py"
+  ]
+}

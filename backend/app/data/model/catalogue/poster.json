@@ -1,0 +1,23 @@
+{
+  "model": "poster",
+  "_file_note": "Notes for app/data/model/poster.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "An uploaded poster or advert, and the text brief the vision model read from it.",
+  "stored_in": "DATA_ROOT/posters/<poster_id>/poster.json (image beside it)",
+  "written_by": [
+    "poster_service.save_poster",
+    "poster_service.read_poster"
+  ],
+  "read_by": [
+    "poster_service.get_poster",
+    "api/research.py (poster routes)",
+    "PosterTestView.vue"
+  ],
+  "rules": [
+    "The brief describes the poster only: words, pictures, layout, claim. Never who it suits or how it would perform."
+  ],
+  "fields": {
+    "read_at": {
+      "note": "Set when the brief is read; absent while brief is null."
+    }
+  }
+}

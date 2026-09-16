@@ -1,0 +1,12 @@
+{
+  "model": "local_papers",
+  "_file_note": "Notes for app/data/model/local_papers.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "Papers a user uploaded or kept locally for literature search. Papers saved onto a project use the slimmer project saved_papers shape (model/project.json).",
+  "stored_in": "UPLOAD_DIR/research/papers/papers.json",
+  "written_by": [
+    "literature_service.LiteratureSearchService._save_local_papers_metadata"
+  ],
+  "read_by": [
+    "literature_service.LiteratureSearchService._load_local_papers"
+  ]
+}

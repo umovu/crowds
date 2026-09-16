@@ -1,0 +1,27 @@
+{
+  "model": "sim_action",
+  "_file_note": "Notes for app/data/model/sim_action.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "One agent action in a simulation: a line in actions.jsonl, and an entry in run_state recent_actions.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/actions.jsonl (one per line); run_state.json recent_actions[]",
+  "written_by": [
+    "agentsociety_output_writer.write_action",
+    "simulation_runner.AgentAction.to_dict"
+  ],
+  "read_by": [
+    "simulation_runner.py",
+    "graph_memory_updater.py",
+    "report_agent.py",
+    "api/simulation.py"
+  ],
+  "rules": [
+    "Token and cost fields are counts from the model call, never estimates by the model."
+  ],
+  "fields": {
+    "action_args": {
+      "note": "Shape depends on action_type (content, topics, opinion ids, target, feed_size, event)."
+    },
+    "economic_reasoning": {
+      "note": "Product mode only."
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "model": "sim_config",
+  "_file_note": "Notes for app/data/model/sim_config.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The run configuration a simulation starts from: time pacing, one activity config per agent, and the opening events.",
+  "stored_in": "uploads/simulations/<simulation_id>/simulation_config.json",
+  "written_by": [
+    "simulation_manager.prepare_simulation (SimulationParameters.to_json)",
+    "api/simulation.py (/start presets)",
+    "scripts/run_simulation_as.py (updates on start)"
+  ],
+  "read_by": [
+    "scripts/run_simulation_as.py",
+    "simulation_runner.py",
+    "api/simulation.py"
+  ],
+  "rules": [
+    "No API keys are stored here: only the model name and base URL."
+  ],
+  "fields": {
+    "agent_configs": {
+      "items": {
+        "fields": {
+          "stance": {
+            "note": "Config vocabulary (supportive/opposing/neutral/observer), not the interview stance ladder."
+          }
+        }
+      }
+    },
+    "max_agents_per_round": {
+      "note": "Set by the /start preset."
+    }
+  }
+}

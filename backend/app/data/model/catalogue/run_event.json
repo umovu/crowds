@@ -1,0 +1,26 @@
+{
+  "model": "run_event",
+  "_file_note": "Notes for app/data/model/run_event.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "sql": "backend/supabase/run_events.sql",
+  "about": "Run metadata, never run content: one row when a panel or sim starts, one when it ends. Written to DATA_ROOT/run_events.jsonl always, and mirrored to Supabase when configured.",
+  "written_by": [
+    "services/run_events.py (record, record_start, record_end)"
+  ],
+  "read_by": [
+    "services/run_events.py (totals)",
+    "run_events_by_user view"
+  ],
+  "rules": [
+    "Only the allow-listed scalar fields in run_events.ALLOWED_FIELDS, plus ts; no free text ever.",
+    "Strings are capped at 64 characters.",
+    "Not yet created on the hosted project (2026-09-14): only the local file is written there."
+  ],
+  "fields": {
+    "id": {
+      "note": "Database only; local lines have none."
+    },
+    "user_id": {
+      "note": "A uuid when hosted; 'dev' locally with auth off."
+    }
+  }
+}

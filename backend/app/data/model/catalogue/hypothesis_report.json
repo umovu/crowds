@@ -1,0 +1,24 @@
+{
+  "model": "hypothesis_report",
+  "_file_note": "Notes for app/data/model/hypothesis_report.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The follow-up report for a panel session: computed facts about how the room reacted, plus two or three testable guesses about why.",
+  "stored_in": "uploads/panel_sessions/<session_id>/hypothesis_report.json",
+  "written_by": [
+    "hypothesis_report.build"
+  ],
+  "read_by": [
+    "api/panel.py (report route)",
+    "HypothesisView.vue",
+    "hypothesis_report.render_markdown"
+  ],
+  "rules": [
+    "Everything except hypotheses is computed with no model.",
+    "Hypotheses carry no numbers, percentages or rand amounts, never a '% who would buy' (checked by _clean_hypotheses and the tests).",
+    "Cached on the round count: a new round rebuilds it."
+  ],
+  "fields": {
+    "by_segment": {
+      "note": "rank_by_segment output from the latest round."
+    }
+  }
+}

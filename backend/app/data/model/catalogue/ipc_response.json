@@ -1,0 +1,13 @@
+{
+  "model": "ipc_response",
+  "_file_note": "Notes for app/data/model/ipc_response.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The sim subprocess's answer to one command.",
+  "stored_in": "uploads/simulations/<simulation_id>/ipc_responses/<command_id>.json",
+  "written_by": [
+    "scripts/run_simulation_as.py (send_response)",
+    "simulation_ipc.SimulationIPCServer.send_response (IPCResponse.to_dict)"
+  ],
+  "read_by": [
+    "simulation_ipc.SimulationIPCClient.send_command"
+  ]
+}

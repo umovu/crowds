@@ -12,6 +12,7 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional
 from pydantic import ConfigDict, Field, RootModel
 
 from .base import DataModel, SqliteModel
+from ._reference_types import (GrantScheduleCurrency, WorldFactsCurrency)
 
 
 class GrantScheduleGrantsValue(DataModel):
@@ -24,21 +25,10 @@ class GrantScheduleGrantsValue(DataModel):
 class GrantSchedule(DataModel):
     """The published SASSA grant schedule: the monthly amount per grant type, used as known income for grant-dependent personas."""
     MODEL_NAME: ClassVar[str] = 'grant_schedule'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'The published SASSA grant schedule: the monthly amount per grant type, used as '
-                  'known income for grant-dependent personas.',
-         'stored_in': 'backend/data/sa_grant_amounts.json',
-         'written_by': ['hand-maintained from the SASSA / DSD schedule'],
-         'read_by': ['income_seeder.detect_grant',
-                     'income_seeder.grant_label',
-                     'panel_service._economic_fields'],
-         'rules': ['Amounts are real published policy, never estimates. They feed budget tiers.',
-                   "A 'generic' grant must exist: it is the fallback when a persona is grant-dependent "
-                   'but the type is unknown.',
-                   'Update effective_date and amounts together when SASSA publishes a new schedule.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     source: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     effective_date: str = Field(pattern='^\\d{4}-\\d{2}-\\d{2}$', json_schema_extra={'when': 'always'})
-    currency: Literal['ZAR'] = Field(json_schema_extra={'when': 'always'})
+    currency: GrantScheduleCurrency = Field(json_schema_extra={'when': 'always'})
     note: str = Field(default=None, json_schema_extra={'when': 'optional'})
     grants: Dict[str, GrantScheduleGrantsValue] = Field(json_schema_extra={'when': 'always'})
 
@@ -56,19 +46,10 @@ class WorldFactsFactsItem(DataModel):
 class WorldFacts(DataModel):
     """Curated South African everyday costs (fuel, data, taxi, grants) agents reason against so they never invent a magnitude."""
     MODEL_NAME: ClassVar[str] = 'world_facts'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'Curated South African everyday costs (fuel, data, taxi, grants) agents reason '
-                  'against so they never invent a magnitude.',
-         'stored_in': 'backend/app/data/sa_world_facts.json',
-         'written_by': ['hand-curated', 'world_facts.promote_fact'],
-         'read_by': ['world_facts.load_facts', 'world_facts.render_block'],
-         'rules': ['Every fact has a numeric value and a unit, so it can be checked with the model '
-                   'off.',
-                   'Each item appears once; provenance decides which wins if two sources disagree '
-                   '(curated > discovered > web).']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     README_: str = Field(default=None, alias='_README', json_schema_extra={'when': 'optional'})
     version: int = Field(ge=1, json_schema_extra={'when': 'always'})
-    currency: Literal['ZAR'] = Field(json_schema_extra={'when': 'always'})
+    currency: WorldFactsCurrency = Field(json_schema_extra={'when': 'always'})
     facts: List[WorldFactsFactsItem] = Field(json_schema_extra={'when': 'always'})
 
 
@@ -110,7 +91,7 @@ class EventRulesRulesItem(DataModel):
     id: str = Field(pattern='^[a-z0-9_]+$', json_schema_extra={'when': 'always'})
     description: str = Field(json_schema_extra={'when': 'always'})
     category: str = Field(json_schema_extra={'when': 'always'})
-    applies_to_modes: List[Literal['policy', 'product']] = Field(default=None, json_schema_extra={'when': 'optional', 'note': 'Unset means policy only.'})
+    applies_to_modes: List[Literal['policy', 'product']] = Field(default=None, json_schema_extra={'when': 'optional'})
     trigger: EventRulesRulesItemTrigger = Field(json_schema_extra={'when': 'always'})
     event: EventRulesRulesItemEvent = Field(json_schema_extra={'when': 'always'})
     cooldown_rounds: int = Field(ge=0, json_schema_extra={'when': 'always'})
@@ -120,15 +101,7 @@ class EventRulesRulesItem(DataModel):
 class EventRules(DataModel):
     """Reactive and scheduled event rules for policy simulations: when a trigger fires, an event is injected into the opinion space."""
     MODEL_NAME: ClassVar[str] = 'event_rules'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'Reactive and scheduled event rules for policy simulations: when a trigger fires, an '
-                  'event is injected into the opinion space.',
-         'stored_in': 'backend/app/config/event_rules.json',
-         'written_by': ['hand-authored'],
-         'read_by': ['event_rule_engine.EventRuleEngine'],
-         'rules': ['Rule ids are unique.',
-                   'trigger.type is one the engine evaluates; the other trigger fields are the '
-                   'parameters that type reads.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     version: str = Field(json_schema_extra={'when': 'always'})
     description: str = Field(json_schema_extra={'when': 'always'})
     rules: List[EventRulesRulesItem] = Field(json_schema_extra={'when': 'always'})
@@ -155,14 +128,7 @@ class B2bSectorsSectorsValue(DataModel):
 class B2bSectors(DataModel):
     """The planned B2B layer (sectors half): the SA context a decision-maker in each sector carries — regulator, incentive levers, what a deal must respect."""
     MODEL_NAME: ClassVar[str] = 'b2b_sectors'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'The planned B2B layer (sectors half): the SA context a decision-maker in each '
-                  'sector carries — regulator, incentive levers, what a deal must respect.',
-         'stored_in': 'backend/app/data/persona_library/b2b_sectors.json',
-         'written_by': ['hand-authored from QLFS industry counts and sector regulator frames'],
-         'read_by': ['scripts/preview_b2b_persona.py'],
-         'rules': ['Not wired into rooms yet (b2b-persona-layer plan). bodies_available is a QLFS '
-                   'count, or a note when two sectors share one QLFS industry.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     README_: str = Field(default=None, alias='_README', json_schema_extra={'when': 'optional'})
     provenance_: str = Field(alias='_provenance', json_schema_extra={'when': 'always'})
     version: int = Field(ge=0, json_schema_extra={'when': 'always'})
@@ -187,13 +153,7 @@ class B2bFunctionsFunctionsValue(DataModel):
 class B2bFunctions(DataModel):
     """The planned B2B layer (functions half): the sector-agnostic decision seats a B2B persona can occupy — mandate, criteria, objections, budget authority."""
     MODEL_NAME: ClassVar[str] = 'b2b_functions'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'The planned B2B layer (functions half): the sector-agnostic decision seats a B2B '
-                  'persona can occupy — mandate, criteria, objections, budget authority.',
-         'stored_in': 'backend/app/data/persona_library/b2b_functions.json',
-         'written_by': ['hand-authored from the DHET OFO register and standard buying-committee roles'],
-         'read_by': ['scripts/preview_b2b_persona.py'],
-         'rules': ['Not wired into rooms yet (b2b-persona-layer plan).']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     README_: str = Field(default=None, alias='_README', json_schema_extra={'when': 'optional'})
     provenance_: str = Field(alias='_provenance', json_schema_extra={'when': 'always'})
     version: int = Field(ge=0, json_schema_extra={'when': 'always'})
@@ -225,17 +185,7 @@ class ObjectionVocabMarkers(DataModel):
 class ObjectionVocab(DataModel):
     """What a panel answer pushes against (walls) or leans toward (pulls), the words that signal each, and the persona facts that entitle someone to raise it."""
     MODEL_NAME: ClassVar[str] = 'objection_vocab'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'What a panel answer pushes against (walls) or leans toward (pulls), the words that '
-                  'signal each, and the persona facts that entitle someone to raise it.',
-         'stored_in': 'backend/app/data/objection_vocab.json',
-         'written_by': ['hand-authored (walls from the TymeBank segment benchmark; pulls authored, '
-                        'unvalidated)'],
-         'read_by': ['objections.py', 'hypothesis_report.py', 'panel_service.rank_by_segment'],
-         'rules': ['Grounds name persona facts and answers (checked against model/persona.json in '
-                   'test_persona_data_model).',
-                   'A wall marked reading_only is read from sentences but never counted in the '
-                   'benchmark mention layer.']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     version: int = Field(ge=1, json_schema_extra={'when': 'always'})
     about: str = Field(json_schema_extra={'when': 'always'})
     walls: Dict[str, ObjectionVocabWallsValue] = Field(json_schema_extra={'when': 'always'})
@@ -245,22 +195,14 @@ class ObjectionVocab(DataModel):
 
 class PitchPartsPartsValue(DataModel):
     label: str = Field(min_length=1, json_schema_extra={'when': 'always'})
-    price: bool = Field(default=None, json_schema_extra={'when': 'optional', 'note': 'True when a stated rand price also counts as touching this part.'})
+    price: bool = Field(default=None, json_schema_extra={'when': 'optional'})
     words: List[Annotated[str, Field(pattern='^[a-z][a-z -]*\\*?$')]] = Field(min_length=1, json_schema_extra={'when': 'always'})
 
 
 class PitchParts(DataModel):
     """The parts of life a pitch can touch, and the words that signal each. A persona fact tagged with a part reaches a fact prompt when the pitch mentions it."""
     MODEL_NAME: ClassVar[str] = 'pitch_parts'
-    HEADER: ClassVar[Dict[str, Any]] = {'version': 1,
-         'about': 'The parts of life a pitch can touch, and the words that signal each. A persona fact '
-                  'tagged with a part reaches a fact prompt when the pitch mentions it.',
-         'stored_in': 'backend/app/data/pitch_parts.json',
-         'written_by': ['hand-authored'],
-         'read_by': ['persona_facts.pitch_parts'],
-         'rules': ['Words name subject matter only, never good or bad. A word ending in * matches any '
-                   'ending.',
-                   'Every part is used by at least one persona fact (test_persona_fact_prompts).']}
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     version: int = Field(ge=1, json_schema_extra={'when': 'always'})
     about: str = Field(json_schema_extra={'when': 'always'})
     parts: Dict[str, PitchPartsPartsValue] = Field(json_schema_extra={'when': 'always'})

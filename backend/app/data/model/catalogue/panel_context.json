@@ -1,0 +1,12 @@
+{
+  "model": "panel_context",
+  "_file_note": "Notes for app/data/model/panel_context.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The context file a panel session carries so the interview service knows it is a panel and what was pitched.",
+  "stored_in": "uploads/panel_sessions/<session_id>/document_context.json",
+  "written_by": [
+    "panel_service.create_session"
+  ],
+  "read_by": [
+    "interview_service._load_mode"
+  ]
+}

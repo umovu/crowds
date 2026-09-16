@@ -1,0 +1,15 @@
+{
+  "model": "judge_log_line",
+  "_file_note": "Notes for app/data/model/judge_log_line.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "One advisory quality judgement (LLM-as-judge) appended so scores survive the request that produced them.",
+  "stored_in": "DATA_ROOT/judge_log.jsonl",
+  "written_by": [
+    "judge_service.record_judgement"
+  ],
+  "read_by": [
+    "operator inspection"
+  ],
+  "rules": [
+    "Advisory only: a judgement never blocks or changes a run."
+  ]
+}

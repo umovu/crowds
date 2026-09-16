@@ -1,0 +1,14 @@
+{
+  "model": "sim_report",
+  "_file_note": "Notes for app/data/model/sim_report.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "A simulation report's saved record: status, the outline and the full markdown.",
+  "stored_in": "uploads/reports/<report_id>/meta.json",
+  "written_by": [
+    "report_agent.ReportManager.save_report (Report.to_dict)"
+  ],
+  "read_by": [
+    "report_agent.ReportManager",
+    "api/report.py",
+    "Step4Report.vue"
+  ]
+}

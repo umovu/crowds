@@ -1,0 +1,17 @@
+{
+  "model": "access_control",
+  "_file_note": "Notes for app/data/model/access_control.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "sql": "backend/supabase/access_control.sql",
+  "about": "A single row holding the invite-only switch, read by the enforce_invite_only sign-up trigger.",
+  "written_by": [
+    "operator in the dashboard"
+  ],
+  "read_by": [
+    "trigger enforce_invite_only"
+  ],
+  "fields": {
+    "id": {
+      "note": "Primary key fixed at true, so only one row can exist."
+    }
+  }
+}

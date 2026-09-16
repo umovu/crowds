@@ -1,0 +1,15 @@
+{
+  "model": "b2b_functions",
+  "_file_note": "Notes for app/data/model/b2b_functions.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The planned B2B layer (functions half): the sector-agnostic decision seats a B2B persona can occupy — mandate, criteria, objections, budget authority.",
+  "stored_in": "backend/app/data/persona_library/b2b_functions.json",
+  "written_by": [
+    "hand-authored from the DHET OFO register and standard buying-committee roles"
+  ],
+  "read_by": [
+    "scripts/preview_b2b_persona.py"
+  ],
+  "rules": [
+    "Not wired into rooms yet (b2b-persona-layer plan)."
+  ]
+}
