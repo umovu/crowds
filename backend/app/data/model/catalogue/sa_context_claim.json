@@ -1,0 +1,16 @@
+{
+  "model": "sa_context_claim",
+  "_file_note": "Notes for app/data/model/sa_context_claim.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "One dated, sourced claim about current South African conditions, as held in a context snapshot.",
+  "stored_in": "DATA_ROOT/sa_context_snapshot.json -> claims[] (or the cache's claims form)",
+  "written_by": [
+    "the SA context refresh (snapshot)"
+  ],
+  "read_by": [
+    "sa_context.format_snapshot",
+    "sa_context.detect_conflicts"
+  ],
+  "rules": [
+    "A claim past expires_at is dropped from prompts."
+  ]
+}

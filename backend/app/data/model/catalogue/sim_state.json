@@ -1,0 +1,19 @@
+{
+  "model": "sim_state",
+  "_file_note": "Notes for app/data/model/sim_state.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "A simulation's lifecycle state: status, cast size, config flag, prepare cost, and whether its credit was charged.",
+  "stored_in": "uploads/simulations/<simulation_id>/state.json",
+  "written_by": [
+    "simulation_manager._save_simulation_state (SimulationState.to_dict)",
+    "simulation_runner (sets status stopped on shutdown)"
+  ],
+  "read_by": [
+    "simulation_manager._load_simulation_state",
+    "api/simulation.py",
+    "billing check on /start"
+  ],
+  "rules": [
+    "credit_charged guards billing: a sim started twice is charged once, even across restarts.",
+    "Sims created before owner scoping have no user_id or credit_charged."
+  ]
+}

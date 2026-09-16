@@ -1,0 +1,37 @@
+{
+  "model": "room_seat",
+  "_file_note": "Notes for app/data/model/room_seat.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "One seat in a panel or sim room: a person (library persona or custom agent) plus the fields the room adds when it is built. The person part is checked against model/persona.json or model/custom_agent.json; these are the room's own fields.",
+  "stored_in": "uploads/panel_sessions/<session_id>/agentsociety_profiles.json (list of seats)",
+  "written_by": [
+    "panel_service._build_profile",
+    "mechanism_card_service.attach_research_context",
+    "panel_service.add_segment",
+    "interview_service._persist_chat_state"
+  ],
+  "read_by": [
+    "interview_service.py",
+    "prompt_reframer.py",
+    "opinion_agent.py",
+    "panel_service.rank_by_segment",
+    "FlowResults.vue"
+  ],
+  "rules": [
+    "Money fields are computed from real persona data when the room is built, never by the model.",
+    "A grant detected at room build writes income_provenance 'grant_schedule' over the persona's own; that value is a room value, not a persona one."
+  ],
+  "fields": {
+    "id": {
+      "note": "Seat number in this room. The library id is library_id."
+    },
+    "lsm_proxy": {
+      "note": "Copied from the library's in-memory load stamp. Not read from seats."
+    },
+    "segment_id": {
+      "note": "Which picked group seated this person (panel_service.SEGMENTS)."
+    },
+    "chat_state": {
+      "note": "Follow-up chat memory, kept apart so the person stays as built."
+    }
+  }
+}

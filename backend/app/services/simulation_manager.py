@@ -25,6 +25,7 @@ from .agent_enricher import AgentContextEnricher
 from .persona_library import get_library
 from .persona_retrieval import select_for_query
 from .panel_service import _build_profile, assert_library_cast, MAX_CAST_SIZE
+from ..repositories import simulation_repository
 from . import mechanism_card_service
 from . import data_model
 
@@ -156,38 +157,25 @@ class SimulationManager:
     
     def _get_simulation_dir(self, simulation_id: str) -> str:
         """Get simulation data directory"""
-        sim_dir = os.path.join(self.SIMULATION_DATA_DIR, simulation_id)
-        os.makedirs(sim_dir, exist_ok=True)
-        return sim_dir
-    
+        return simulation_repository.sim_dir(simulation_id, self.SIMULATION_DATA_DIR)
+
     def _save_simulation_state(self, state: SimulationState):
         """Save simulation state to file"""
-        sim_dir = self._get_simulation_dir(state.simulation_id)
-        state_file = os.path.join(sim_dir, "state.json")
-        
         state.updated_at = datetime.now().isoformat()
         data = state.to_dict()
         data_model.warn_if_off_model(logger, f"Simulation state {state.simulation_id}", "sim_state", data)
-
-        with open(state_file, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        
+        simulation_repository.write_state(state.simulation_id, data, self.SIMULATION_DATA_DIR)
         self._simulations[state.simulation_id] = state
-    
+
     def _load_simulation_state(self, simulation_id: str) -> Optional[SimulationState]:
         """Load simulation state from file"""
         if simulation_id in self._simulations:
             return self._simulations[simulation_id]
-        
-        sim_dir = self._get_simulation_dir(simulation_id)
-        state_file = os.path.join(sim_dir, "state.json")
-        
-        if not os.path.exists(state_file):
+
+        data = simulation_repository.read_state(simulation_id, self.SIMULATION_DATA_DIR)
+        if data is None:
             return None
-        
-        with open(state_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
+
         state = SimulationState(
             simulation_id=simulation_id,
             project_id=data.get("project_id", ""),
@@ -307,8 +295,8 @@ class SimulationManager:
             project_for_papers = None
             if not enrichment_data and state.project_id:
                 try:
-                    from ..models.project import ProjectManager
-                    project_for_papers = ProjectManager.get_project(state.project_id)
+                    from ..repositories import project_repository
+                    project_for_papers = project_repository.get(state.project_id)
                     if project_for_papers and project_for_papers.enrichment_data:
                         enrichment_data = project_for_papers.enrichment_data
                         logger.info(f"Loaded enrichment data from project for {len(enrichment_data)} archetypes")
@@ -316,8 +304,8 @@ class SimulationManager:
                     logger.warning(f"Failed to load enrichment data from project: {e}")
             elif state.project_id:
                 try:
-                    from ..models.project import ProjectManager
-                    project_for_papers = ProjectManager.get_project(state.project_id)
+                    from ..repositories import project_repository
+                    project_for_papers = project_repository.get(state.project_id)
                 except Exception:
                     pass
 
@@ -716,22 +704,16 @@ class SimulationManager:
         """
         simulations = []
 
-        if os.path.exists(self.SIMULATION_DATA_DIR):
-            for sim_id in os.listdir(self.SIMULATION_DATA_DIR):
-                # Skip hidden files (such as .DS_Store) and non-directory files
-                sim_path = os.path.join(self.SIMULATION_DATA_DIR, sim_id)
-                if sim_id.startswith('.') or not os.path.isdir(sim_path):
-                    continue
-
-                state = self._load_simulation_state(sim_id)
-                if not state:
-                    continue
-                if project_id is not None and state.project_id != project_id:
-                    continue
-                # Scope to owner: own sims + legacy ownerless; never another user's.
-                if user_id is not None and state.user_id and state.user_id != user_id:
-                    continue
-                simulations.append(state)
+        for sim_id in simulation_repository.list_ids(self.SIMULATION_DATA_DIR):
+            state = self._load_simulation_state(sim_id)
+            if not state:
+                continue
+            if project_id is not None and state.project_id != project_id:
+                continue
+            # Scope to owner: own sims + legacy ownerless; never another user's.
+            if user_id is not None and state.user_id and state.user_id != user_id:
+                continue
+            simulations.append(state)
 
         return simulations
     
@@ -741,25 +723,11 @@ class SimulationManager:
         if not state:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
 
-        sim_dir = self._get_simulation_dir(simulation_id)
-        profile_path = os.path.join(sim_dir, "agentsociety_profiles.json")
-
-        if not os.path.exists(profile_path):
-            return []
-
-        with open(profile_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return simulation_repository.read_profiles(simulation_id, self.SIMULATION_DATA_DIR)
     
     def get_simulation_config(self, simulation_id: str) -> Optional[Dict[str, Any]]:
         """Get simulation config"""
-        sim_dir = self._get_simulation_dir(simulation_id)
-        config_path = os.path.join(sim_dir, "simulation_config.json")
-        
-        if not os.path.exists(config_path):
-            return None
-        
-        with open(config_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return simulation_repository.read_config(simulation_id, self.SIMULATION_DATA_DIR)
     
     def get_run_instructions(self, simulation_id: str) -> Dict[str, str]:
         """Get run instructions"""

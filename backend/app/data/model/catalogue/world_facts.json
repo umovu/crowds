@@ -1,0 +1,18 @@
+{
+  "model": "world_facts",
+  "_file_note": "Notes for app/data/model/world_facts.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "Curated South African everyday costs (fuel, data, taxi, grants) agents reason against so they never invent a magnitude.",
+  "stored_in": "backend/app/data/sa_world_facts.json",
+  "written_by": [
+    "hand-curated",
+    "world_facts.promote_fact"
+  ],
+  "read_by": [
+    "world_facts.load_facts",
+    "world_facts.render_block"
+  ],
+  "rules": [
+    "Every fact has a numeric value and a unit, so it can be checked with the model off.",
+    "Each item appears once; provenance decides which wins if two sources disagree (curated > discovered > web)."
+  ]
+}

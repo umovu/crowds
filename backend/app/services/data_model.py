@@ -1,6 +1,6 @@
 """Check what the app stores against its data models.
 
-Models moving to Python classes live in app/model (Pydantic) and are the source of
+Models moving to Python classes live in app/models (Pydantic) and are the source of
 truth there; their JSON in app/data/model is exported from the classes. Personas,
 room seats and panel answers are checked through the classes. Every other stored
 thing is still described by its JSON file in app/data/model/ and checked here.
@@ -108,17 +108,17 @@ def _object_problems(label: str, obj: Any, fields: Dict[str, Any],
 # ── one model file per stored thing ─────────────────────────────────────────
 
 def model_problems(name: str, obj: Any, label: Optional[str] = None) -> List[str]:
-    """Everything about one stored object that does not fit its class in app/model
+    """Everything about one stored object that does not fit its class in app/models
     (REGISTRY[name]; the reviewable form is app/data/model/<name>.json)."""
     m = _classes()
     return m.problems_of(m.REGISTRY[name], obj, label or name)
 
 
 def _classes():
-    """The Python data models (app/model). Imported on first use so this module stays
+    """The Python data models (app/models). Imported on first use so this module stays
     loadable by file path, and the sim subprocess only pays for them when it checks."""
-    from app import model
-    return model
+    from app import models
+    return models
 
 
 def round_result_problems(result: Any, label: str = "round result") -> List[str]:
@@ -257,7 +257,7 @@ def room_seat_problems(seat: Any, check_persona: bool = True) -> List[str]:
 # ── personas ────────────────────────────────────────────────────────────────
 
 def persona_problems(persona: Dict[str, Any]) -> List[str]:
-    """Everything about one library persona that does not fit app.model.LibraryPersona."""
+    """Everything about one library persona that does not fit app.models.LibraryPersona."""
     m = _classes()
     who = str(persona.get("name") or persona.get("id") or "persona") if isinstance(persona, dict) else "persona"
     return m.problems_of(m.LibraryPersona, persona, who)
@@ -319,7 +319,7 @@ def rule_problems(where: str, clauses: Iterable[Dict[str, List[Any]]]) -> List[s
 # ── panel answers ───────────────────────────────────────────────────────────
 
 def answer_problems(row: Dict[str, Any]) -> List[str]:
-    """Everything about one answer row that does not fit app.model.AnswerRow."""
+    """Everything about one answer row that does not fit app.models.AnswerRow."""
     m = _classes()
     who = f"agent {row.get('agent_id')}" if isinstance(row, dict) else "answer"
     return m.problems_of(m.AnswerRow, row, who)

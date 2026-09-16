@@ -1,0 +1,13 @@
+{
+  "model": "sim_replay_db",
+  "_file_note": "Notes for app/data/model/sim_replay_db.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The replay database of a simulation: metadata, every action, injected events, per-round sentiment and the cast.",
+  "stored_in": "uploads/simulations/<simulation_id>/opinion_space/replay.db",
+  "written_by": [
+    "replay_storage.ReplayStorage"
+  ],
+  "read_by": [
+    "replay_storage.ReplayStorage",
+    "api/simulation.py (replay)"
+  ]
+}

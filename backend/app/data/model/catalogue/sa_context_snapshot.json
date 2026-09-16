@@ -1,0 +1,13 @@
+{
+  "model": "sa_context_snapshot",
+  "_file_note": "Notes for app/data/model/sa_context_snapshot.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "A pinned snapshot of current SA context claims, used instead of live search when fresh (and for historical backtests).",
+  "stored_in": "DATA_ROOT/sa_context_snapshot.json (or SA_CONTEXT_SNAPSHOT_PATH)",
+  "written_by": [
+    "the SA context refresh"
+  ],
+  "read_by": [
+    "sa_context._checked_snapshot",
+    "sa_context.format_snapshot"
+  ]
+}

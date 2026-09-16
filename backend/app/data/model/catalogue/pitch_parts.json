@@ -1,0 +1,27 @@
+{
+  "model": "pitch_parts",
+  "_file_note": "Notes for app/data/model/pitch_parts.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "The parts of life a pitch can touch, and the words that signal each. A persona fact tagged with a part reaches a fact prompt when the pitch mentions it.",
+  "stored_in": "backend/app/data/pitch_parts.json",
+  "written_by": [
+    "hand-authored"
+  ],
+  "read_by": [
+    "persona_facts.pitch_parts"
+  ],
+  "rules": [
+    "Words name subject matter only, never good or bad. A word ending in * matches any ending.",
+    "Every part is used by at least one persona fact (test_persona_fact_prompts)."
+  ],
+  "fields": {
+    "parts": {
+      "values": {
+        "fields": {
+          "price": {
+            "note": "True when a stated rand price also counts as touching this part."
+          }
+        }
+      }
+    }
+  }
+}

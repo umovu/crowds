@@ -1,0 +1,27 @@
+{
+  "model": "event_rules",
+  "_file_note": "Notes for app/data/model/event_rules.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "Reactive and scheduled event rules for policy simulations: when a trigger fires, an event is injected into the opinion space.",
+  "stored_in": "backend/app/config/event_rules.json",
+  "written_by": [
+    "hand-authored"
+  ],
+  "read_by": [
+    "event_rule_engine.EventRuleEngine"
+  ],
+  "rules": [
+    "Rule ids are unique.",
+    "trigger.type is one the engine evaluates; the other trigger fields are the parameters that type reads."
+  ],
+  "fields": {
+    "rules": {
+      "items": {
+        "fields": {
+          "applies_to_modes": {
+            "note": "Unset means policy only."
+          }
+        }
+      }
+    }
+  }
+}

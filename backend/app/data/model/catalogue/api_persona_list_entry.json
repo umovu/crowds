@@ -1,0 +1,16 @@
+{
+  "model": "api_persona_list_entry",
+  "_file_note": "Notes for app/data/model/api_persona_list_entry.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "One row of the persona picker list (GET /api/research/personas): library personas only.",
+  "stored_in": "API response only (api/research.py list_personas)",
+  "written_by": [
+    "api/research.py list_personas"
+  ],
+  "read_by": [
+    "Home.vue",
+    "FlowHome.vue (cast picker)"
+  ],
+  "rules": [
+    "Only survey-grounded library personas are listed. The legacy model-generated cache (persona_cache_entry) stopped being served on 2026-09-14."
+  ]
+}

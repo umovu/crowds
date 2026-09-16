@@ -48,7 +48,7 @@ def test_repo_sql_and_model_list_the_same_columns(table, model):
 
 
 def test_run_events_allow_list_is_the_table():
-    from app.services import run_events
+    from app.repositories import run_event_repository as run_events
     assert run_events.ALLOWED_FIELDS <= set(dm.load("run_event")["fields"])
 
 
@@ -85,7 +85,7 @@ def supabase(monkeypatch, tmp_path):
     monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "service-key")
     monkeypatch.delenv("AUTH_DISABLED", raising=False)
     monkeypatch.delenv("WAITLIST_ENABLED", raising=False)
-    from app.services import run_events
+    from app.repositories import run_event_repository as run_events
     monkeypatch.setattr(run_events, "_ledger_path", lambda: str(tmp_path / "run_events.jsonl"))
     return calls
 
@@ -108,7 +108,7 @@ def _problems(calls):
 
 
 def test_billing_rows_fit(supabase, real_module):
-    billing = real_module("app.billing")
+    billing = real_module("app.services.billing_service")
     billing.get_entitlement(USER)            # no row -> creates the free default
     billing.increment_panel_used(USER)
     billing.increment_sim_used(USER)
@@ -121,25 +121,26 @@ def test_billing_rows_fit(supabase, real_module):
 
 
 def test_approval_rows_fit(supabase):
-    from app import approval
-    approval.invalidate(USER)
-    approval.is_approved(USER, "thandi@example.org", "Thandi")   # no row -> pending profile
-    approval.approve(USER)
-    approval.get_profile(USER)
-    approval.claim_notification(USER)
+    from app.repositories import user_repository
+    from app.services import signup_service
+    signup_service.invalidate(USER)
+    signup_service.is_approved(USER, "thandi@example.org", "Thandi")  # no row -> pending
+    signup_service.approve(USER)
+    signup_service.profile(USER)
+    user_repository.claim_notification(USER)
     assert len(supabase) >= 4
     assert _problems(supabase) == []
 
 
-def test_waitlist_rows_fit(supabase, real_module):
-    waitlist = real_module("app.api.waitlist")
-    waitlist._store("thandi@example.org", "Thandi", "Runs clinics")
-    waitlist._is_approved("thandi@example.org")
+def test_waitlist_rows_fit(supabase):
+    from app.repositories import user_repository, waitlist_repository
+    waitlist_repository.add("thandi@example.org", "Thandi", "Runs clinics")
+    user_repository.approved_by_email("thandi@example.org")
     assert _problems(supabase) == []
 
 
 def test_run_event_rows_fit_both_stores(supabase, tmp_path):
-    from app.services import run_events
+    from app.repositories import run_event_repository as run_events
     run_events.record_start(run_id="panel_0123456789ab", user_id=USER, run_type="panel",
                             mode="panel", crowd_size=12)
     run_events.record_end(run_id="panel_0123456789ab", user_id=USER, run_type="panel",
@@ -153,9 +154,9 @@ def test_run_event_rows_fit_both_stores(supabase, tmp_path):
 
 
 def test_operator_context_rows_fit(supabase):
-    from app.services import operator_context
-    operator_context.save_operator_context(USER, "We run three private clinics in Soweto.")
-    operator_context.get_operator_context(USER)
+    from app.repositories import operator_context_repository as operator_context
+    operator_context.save(USER, "We run three private clinics in Soweto.")
+    operator_context.get(USER)
     assert _problems(supabase) == []
 
 
@@ -203,7 +204,7 @@ def test_selecting_a_column_that_does_not_exist_is_caught():
 
 
 def test_set_plan_warns_about_an_unknown_status_but_still_saves(supabase, monkeypatch, real_module):
-    billing = real_module("app.billing")
+    billing = real_module("app.services.billing_service")
     warnings = []
     monkeypatch.setattr(billing.logger, "warning", lambda msg, *a: warnings.append(msg % a if a else msg))
     billing.set_plan(USER, "paid", status="trialing")

@@ -15,17 +15,17 @@ def _is_stub(module) -> bool:
 def real_module():
     """Import the real module even when another test file left a stub in sys.modules.
 
-    test_sim_start_and_credits stubs app.api, app.billing and the interview service
-    while tests are collected, so its own imports stay light. A test that needs the
-    real code borrows it through this fixture; the stubs are put back afterwards so
-    that file keeps what it expects.
+    test_sim_start_and_credits stubs app.api, app.auth, app.controllers.gates,
+    app.services.billing_service and the interview service while tests are collected,
+    so its own imports stay light. A test that needs the real code borrows it through
+    this fixture; the stubs are put back afterwards so that file keeps what it expects.
     """
     saved = {}
 
     def load(name):
         # Every stubbed module in the same top-level package goes, not only the
         # ones on this name's path: the real module's own imports reach siblings
-        # (app.api.config -> app.storage) that may be stubbed too.
+        # (app.controllers.config_controller -> app.storage) that may be stubbed too.
         root = name.split(".")[0]
         for key in [k for k in sys.modules if k == root or k.startswith(root + ".")]:
             if _is_stub(sys.modules[key]) and key not in saved:

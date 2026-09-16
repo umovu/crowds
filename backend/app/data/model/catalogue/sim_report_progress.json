@@ -1,0 +1,18 @@
+{
+  "model": "sim_report_progress",
+  "_file_note": "Notes for app/data/model/sim_report_progress.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "Live progress of report generation, polled by the screen.",
+  "stored_in": "uploads/reports/<report_id>/progress.json",
+  "written_by": [
+    "report_agent.ReportManager.update_progress"
+  ],
+  "read_by": [
+    "report_agent.ReportManager.get_progress",
+    "api/report.py"
+  ],
+  "fields": {
+    "progress": {
+      "note": "-1 marks a failed report."
+    }
+  }
+}

@@ -2516,6 +2516,28 @@ class ReportManager:
         )
     
     @classmethod
+    def get_section(cls, report_id: str, section_index: int) -> Optional[Dict[str, Any]]:
+        """One section's filename and content, or None when it has not been written.
+
+        Public so a route never has to open the file itself, nor reach for the
+        private path helper.
+        """
+        path = cls._get_section_path(report_id, section_index)
+        if not os.path.exists(path):
+            return None
+        with open(path, 'r', encoding='utf-8') as f:
+            return {"filename": f"section_{section_index:02d}.md", "content": f.read()}
+
+    @classmethod
+    def markdown_path(cls, report_id: str) -> Optional[str]:
+        """The assembled report's path, or None when it was never written.
+
+        Public for the download route, which needs a path to send rather than the text.
+        """
+        path = cls._get_report_markdown_path(report_id)
+        return path if os.path.exists(path) else None
+
+    @classmethod
     def get_report_by_simulation(cls, simulation_id: str) -> Optional[Report]:
         """based onsimulationIDgetreport"""
         cls._ensure_reports_dir()

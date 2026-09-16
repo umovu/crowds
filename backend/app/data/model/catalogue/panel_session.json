@@ -1,0 +1,33 @@
+{
+  "model": "panel_session",
+  "_file_note": "Notes for app/data/model/panel_session.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "A panel session: the pitch, the room that was picked, and how it was filtered. One panel_session.json per session folder.",
+  "stored_in": "uploads/panel_sessions/<session_id>/panel_session.json",
+  "written_by": [
+    "panel_service.create_session",
+    "panel_service.add_segment",
+    "panel_service.save_round"
+  ],
+  "read_by": [
+    "api/panel.py",
+    "panel_service.py",
+    "hypothesis_report.py",
+    "PanelPitchPanel.vue",
+    "FlowResults.vue"
+  ],
+  "rules": [
+    "A filter and its pool size are stored together.",
+    "mode 'product' and 'policy' are older sessions; new sessions are 'panel'."
+  ],
+  "fields": {
+    "segments": {
+      "note": "Segment ids that allocate seats (panel_service.SEGMENTS)."
+    },
+    "picked_segments": {
+      "note": "Everything the user clicked, including attitude groups folded into the filter."
+    },
+    "pointer": {
+      "note": "Study pointer id (pointers.py), e.g. land, ab."
+    }
+  }
+}

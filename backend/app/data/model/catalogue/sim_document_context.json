@@ -1,0 +1,17 @@
+{
+  "model": "sim_document_context",
+  "_file_note": "Notes for app/data/model/sim_document_context.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "What a simulation knows about its scenario: the decided mode, the domain, facts pulled from the document, and the operator's business briefing.",
+  "stored_in": "uploads/simulations/<simulation_id>/document_context.json",
+  "written_by": [
+    "simulation_manager.prepare_simulation"
+  ],
+  "read_by": [
+    "interview_service._load_mode",
+    "scripts/run_simulation_as.py",
+    "opinion_block.py"
+  ],
+  "rules": [
+    "Facts are extracted from the user's own document; they describe the scenario, never who the agents are."
+  ]
+}

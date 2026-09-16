@@ -135,9 +135,9 @@ def test_a_new_project_fits_the_model():
 
 
 def test_a_project_with_agents_and_papers_fits_the_model():
-    from app.api.research import _slim_paper
-    paper = _slim_paper({"id": "W123", "title": "Clinic choice in Limpopo", "authors": "L. Chavalala",
-                         "year": 2025, "source": "openalex", "url": "https://example.org"})
+    from app.services.research_service import slim_paper
+    paper = slim_paper({"id": "W123", "title": "Clinic choice in Limpopo", "authors": "L. Chavalala",
+                        "year": 2025, "source": "openalex", "url": "https://example.org"})
     project = _project(custom_agents=_stored(_parser().parse_raw([FORM_AGENT])),
                        custom_agents_enabled=True, saved_papers=[paper])
     assert dm.model_problems("project", project.to_dict()) == []
@@ -152,12 +152,15 @@ def test_an_unknown_project_status_is_caught():
     assert any("'done'" in p for p in dm.model_problems("project", _project(status="done").to_dict()))
 
 
-def test_saving_warns_but_still_saves_an_off_model_project(tmp_path, monkeypatch):
+def test_saving_warns_but_still_saves_an_off_model_project(tmp_path, monkeypatch, real_module):
     from app.models import project as project_module
+    # Borrowed through real_module: test_sim_start_and_credits leaves a stub
+    # app.repositories.project_repository in sys.modules that carries only `get`.
+    repo = real_module("app.repositories.project_repository")
     warnings = []
-    monkeypatch.setattr(project_module.ProjectManager, "PROJECTS_DIR", str(tmp_path))
+    monkeypatch.setattr(repo, "PROJECTS_DIR", str(tmp_path))
     monkeypatch.setattr(project_module.logger, "warning", lambda msg, *a: warnings.append(msg % a if a else msg))
     (tmp_path / "proj_0123456789ab").mkdir()
-    project_module.ProjectManager.save_project(_project(status="done"))
+    repo.save(_project(status="done"))
     assert (tmp_path / "proj_0123456789ab" / "project.json").exists()
     assert any("data model" in w for w in warnings)

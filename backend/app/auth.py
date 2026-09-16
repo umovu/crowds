@@ -139,6 +139,21 @@ def verify_request():
     return None
 
 
+def current_user_id():
+    """The signed-in user's id, or None. Lives here because it reads `flask.g`.
+
+    It used to sit in the billing module, which meant every route wanting to know who
+    was calling imported billing to find out.
+    """
+    user = getattr(g, "user", None)
+    return user.get("sub") if user else None
+
+
+def current_user_email():
+    user = getattr(g, "user", None)
+    return user.get("email") if user else None
+
+
 def require_auth(fn):
     """Decorator form, for protecting individual routes if needed."""
     @functools.wraps(fn)

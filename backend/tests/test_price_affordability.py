@@ -6,7 +6,7 @@ the pure functions and never touch a model.
 """
 import pytest
 
-from app.services.panel_service import (
+from app.services.affordability_service import (
     BUDGET_TIERS,
     parse_price,
     price_to_tiers,

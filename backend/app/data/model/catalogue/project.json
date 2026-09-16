@@ -1,0 +1,34 @@
+{
+  "model": "project",
+  "_file_note": "Notes for app/data/model/project.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "A project: the uploaded documents, ontology and graph behind a simulation, plus custom agents and saved papers. One project.json per project folder.",
+  "stored_in": "uploads/projects/<project_id>/project.json",
+  "written_by": [
+    "models/project.py (ProjectManager.save_project)",
+    "api/graph.py",
+    "api/research.py"
+  ],
+  "read_by": [
+    "api/graph.py",
+    "api/simulation.py",
+    "api/research.py",
+    "simulation_manager.py"
+  ],
+  "rules": [
+    "Fields added after the first projects (custom agents, saved papers, enrichment) are optional because older projects never had them."
+  ],
+  "fields": {
+    "files": {
+      "items": {
+        "fields": {
+          "synthetic": {
+            "note": "True when the simulation requirement stood in for an uploaded document."
+          }
+        }
+      }
+    },
+    "enrichment_data": {
+      "note": "Archetype -> web research text."
+    }
+  }
+}

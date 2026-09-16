@@ -27,9 +27,9 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from ..config import Config
-from ..model import DataModelError
-from ..model import strict_mode as model_strict_mode
-from ..model.persona import FACT, TOPICS as ATTITUDE_TOPICS, fact_value, persona_is
+from ..models import DataModelError
+from ..models import strict_mode as model_strict_mode
+from ..models.persona import FACT, TOPICS as ATTITUDE_TOPICS, fact_value, persona_is
 from ..utils.logger import get_logger
 from .income_seeder import detect_grant, GRANT_PROVENANCE
 from .mode_specs import (SHORT_ANSWER_SENTENCES, budget_tier, build_operator_context_block,
@@ -738,76 +738,10 @@ def _mixed_cast(
     return cast, allocation
 
 
-BUDGET_TIERS = ("tight", "moderate", "loose")
-
-
-# ── Price → affordability, deterministic ──────────────────────────────────────
-# The affordability lens is NOT a user control: hand-picking who can pay lets an
-# operator stack the room and call the result evidence. Instead the price stated
-# in the operator's own pitch decides it, and the picker shows what was done so
-# it can be switched off. Both functions below are pure — same pitch, same
-# number, every time — and are asserted with the model switched off. The LLM
-# `pricing` field in mode_specs is deliberately NOT used here: an economic
-# filter must not depend on a model's re-reading of the text.
-
-# Once-off rand thresholds. A price at or above the cut needs at least that tier.
-_ONCE_OFF_CUTS = ((15000, "loose"), (2000, "moderate"))
-# Monthly commitments bite harder per rand — a R900/month subscription is a
-# bigger ask than a R900 once-off, because it recurs.
-_MONTHLY_CUTS = ((800, "loose"), (150, "moderate"))
-
-# R40 000 / R40,000 / R40000 / R199.99, optionally followed by a recurrence
-# ("/month", "per month", "pm", "p.m."). Only the operator's own digits are read.
-_PRICE_RE = re.compile(
-    r"R\s?(\d{1,3}(?:[\s,\u00a0]\d{3})+|\d+(?:\.\d{2})?)"
-    # The recurrence tail. "R2 500 a month" and "R2 500 monthly" are as common in
-    # a pitch as "/month"; without them a subscription priced as a once-off, and
-    # the derived room came out wider than the stated price allows.
-    r"(\s*(?:/|\bper\b|\ba\b|\bevery\b|\bp\.?m\.?\b)\s*(?:month|mo\b|year|yr\b|annum)?"
-    r"|\s*\bmonthly\b)?",
-    re.IGNORECASE,
-)
-_MONTHLY_RE = re.compile(r"month|monthly|/\s*mo\b|\bp\.?m\.?\b", re.IGNORECASE)
-
-
-def parse_price(pitch: str) -> Optional[Dict[str, Any]]:
-    """The largest rand figure stated in the pitch, and whether it recurs.
-
-    Pure text match over the operator's OWN words — it cannot invent a number,
-    only find one. Returns None when the pitch states no price, in which case no
-    affordability filter runs at all.
-    """
-    best: Optional[Dict[str, Any]] = None
-    for m in _PRICE_RE.finditer(pitch or ""):
-        amount = float(re.sub(r"[\s,\u00a0]", "", m.group(1)))
-        monthly = bool(_MONTHLY_RE.search(m.group(2) or ""))
-        if best is None or amount > best["amount"]:
-            best = {"amount": amount, "monthly": monthly}
-    return best
-
-
-def price_to_tiers(amount: float, monthly: bool = False) -> List[str]:
-    """Budget tiers whose income could absorb this price, cheapest tier first.
-
-    Says who COULD pay, never who would — wanting it stays a separate,
-    qualitative question the interview answers.
-    """
-    cuts = _MONTHLY_CUTS if monthly else _ONCE_OFF_CUTS
-    for cut, floor in cuts:
-        if amount >= cut:
-            return list(BUDGET_TIERS[BUDGET_TIERS.index(floor):])
-    return list(BUDGET_TIERS)
-
-
-def derive_budget_tiers(pitch: str) -> Optional[Dict[str, Any]]:
-    """Affordability lens read off the pitch, or None when no price is stated."""
-    price = parse_price(pitch)
-    if not price:
-        return None
-    tiers = price_to_tiers(price["amount"], price["monthly"])
-    if set(tiers) == set(BUDGET_TIERS):
-        return None  # everyone qualifies — no filter, nothing to explain
-    return {"amount": price["amount"], "monthly": price["monthly"], "tiers": tiers}
+# Price -> who could afford it. Moved to services/affordability_service.py so the
+# money maths has one home; imported here because create_session still filters on it.
+from .affordability_service import (BUDGET_TIERS, derive_budget_tiers, parse_price,
+                                    price_to_tiers)
 
 
 
@@ -1067,7 +1001,7 @@ def create_session(
     # is stable for its lifetime. Fail-open: empty string on any error.
     operator_context = ""
     try:
-        from .operator_context import get_operator_context as _get_oc
+        from ..repositories.operator_context_repository import get as _get_oc
         operator_context = (_get_oc(user_id) or "").strip()[:1500]
     except Exception:
         operator_context = ""

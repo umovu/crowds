@@ -1,0 +1,17 @@
+{
+  "model": "api_agent_entry",
+  "_file_note": "Notes for app/data/model/api_agent_entry.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "about": "One person in a room as the results screen receives it (GET agents for a panel or sim). Carries only stored fields, so the receipt shows what the room was built from.",
+  "stored_in": "API response only (interview_service.list_agents)",
+  "written_by": [
+    "interview_service.list_agents"
+  ],
+  "read_by": [
+    "FlowResults.vue (normalizeAgent, receipt)",
+    "AgentInterviewPanel.vue",
+    "Step5Interaction.vue"
+  ],
+  "rules": [
+    "Income arrives as monthly_income_rand (room copy) or monthly_household_income_rand (library); the screen reads both."
+  ]
+}

@@ -5,20 +5,21 @@ Persists project state on server to avoid frontend passing large data between in
 
 import os
 import json
-import uuid
-import shutil
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from enum import Enum
 from dataclasses import dataclass, field, asdict
-from ..config import Config
 from ..utils.logger import get_logger
 
 logger = get_logger("fub.project")
 
 
-def _warn_if_off_model(data: Dict[str, Any]) -> None:
-    """Log (never raise) when a project no longer fits app/data/model/project.json."""
+def warn_if_off_model(data: Dict[str, Any]) -> None:
+    """Log (never raise) when a project no longer fits app/data/model/project.json.
+
+    Public because the project repository calls it on the way to disk: the check is a
+    model concern, the writing is not.
+    """
     try:
         from ..services import data_model
         problems = data_model.model_problems("project", data, data.get("project_id"))
@@ -138,212 +139,3 @@ class Project:
             chunk_overlap=data.get('chunk_overlap', 50),
             error=data.get('error')
         )
-
-
-class ProjectManager:
-    """Project Manager - handles project persistence and retrieval"""
-
-    # Project storage root directory
-    PROJECTS_DIR = os.path.join(Config.UPLOAD_FOLDER, 'projects')
-
-    @classmethod
-    def _ensure_projects_dir(cls):
-        """Ensure project directory exists"""
-        os.makedirs(cls.PROJECTS_DIR, exist_ok=True)
-
-    @classmethod
-    def _get_project_dir(cls, project_id: str) -> str:
-        """Get project directory path"""
-        return os.path.join(cls.PROJECTS_DIR, project_id)
-
-    @classmethod
-    def _get_project_meta_path(cls, project_id: str) -> str:
-        """Get project metadata file path"""
-        return os.path.join(cls._get_project_dir(project_id), 'project.json')
-
-    @classmethod
-    def _get_project_files_dir(cls, project_id: str) -> str:
-        """Get project file storage directory"""
-        return os.path.join(cls._get_project_dir(project_id), 'files')
-
-    @classmethod
-    def _get_project_text_path(cls, project_id: str) -> str:
-        """Get project extracted text storage path"""
-        return os.path.join(cls._get_project_dir(project_id), 'extracted_text.txt')
-
-    @classmethod
-    def create_project(cls, name: str = "Unnamed Project") -> Project:
-        """
-        Create new project
-
-        Args:
-            name: Project name
-
-        Returns:
-            Newly created Project object
-        """
-        cls._ensure_projects_dir()
-
-        project_id = f"proj_{uuid.uuid4().hex[:12]}"
-        now = datetime.now().isoformat()
-
-        project = Project(
-            project_id=project_id,
-            name=name,
-            status=ProjectStatus.CREATED,
-            created_at=now,
-            updated_at=now
-        )
-
-        # Create project directory structure
-        project_dir = cls._get_project_dir(project_id)
-        files_dir = cls._get_project_files_dir(project_id)
-        os.makedirs(project_dir, exist_ok=True)
-        os.makedirs(files_dir, exist_ok=True)
-
-        # Save project metadata
-        cls.save_project(project)
-
-        return project
-
-    @classmethod
-    def save_project(cls, project: Project) -> None:
-        """Save project metadata"""
-        project.updated_at = datetime.now().isoformat()
-        meta_path = cls._get_project_meta_path(project.project_id)
-        data = project.to_dict()
-        _warn_if_off_model(data)
-
-        with open(meta_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-
-    @classmethod
-    def get_project(cls, project_id: str) -> Optional[Project]:
-        """
-        Get project
-
-        Args:
-            project_id: Project ID
-
-        Returns:
-            Project object, or None if not found
-        """
-        meta_path = cls._get_project_meta_path(project_id)
-
-        if not os.path.exists(meta_path):
-            return None
-
-        with open(meta_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        return Project.from_dict(data)
-
-    @classmethod
-    def list_projects(cls, limit: int = 50) -> List[Project]:
-        """
-        List all projects
-
-        Args:
-            limit: Result count limit
-
-        Returns:
-            Project list, sorted by creation time (descending)
-        """
-        cls._ensure_projects_dir()
-
-        projects = []
-        for project_id in os.listdir(cls.PROJECTS_DIR):
-            project = cls.get_project(project_id)
-            if project:
-                projects.append(project)
-
-        # Sort by creation time (descending)
-        projects.sort(key=lambda p: p.created_at, reverse=True)
-
-        return projects[:limit]
-
-    @classmethod
-    def delete_project(cls, project_id: str) -> bool:
-        """
-        Delete project and all its files
-
-        Args:
-            project_id: Project ID
-
-        Returns:
-            Whether deletion succeeded
-        """
-        project_dir = cls._get_project_dir(project_id)
-
-        if not os.path.exists(project_dir):
-            return False
-
-        shutil.rmtree(project_dir)
-        return True
-
-    @classmethod
-    def save_file_to_project(cls, project_id: str, file_storage, original_filename: str) -> Dict[str, str]:
-        """
-        Save uploaded file to project directory
-
-        Args:
-            project_id: Project ID
-            file_storage: Flask FileStorage object
-            original_filename: Original filename
-
-        Returns:
-            File information dictionary {filename, path, size}
-        """
-        files_dir = cls._get_project_files_dir(project_id)
-        os.makedirs(files_dir, exist_ok=True)
-
-        # Generate safe filename
-        ext = os.path.splitext(original_filename)[1].lower()
-        safe_filename = f"{uuid.uuid4().hex[:8]}{ext}"
-        file_path = os.path.join(files_dir, safe_filename)
-
-        # Save file
-        file_storage.save(file_path)
-
-        # Get file size
-        file_size = os.path.getsize(file_path)
-
-        return {
-            "original_filename": original_filename,
-            "saved_filename": safe_filename,
-            "path": file_path,
-            "size": file_size
-        }
-
-    @classmethod
-    def save_extracted_text(cls, project_id: str, text: str) -> None:
-        """Save extracted text"""
-        text_path = cls._get_project_text_path(project_id)
-        with open(text_path, 'w', encoding='utf-8') as f:
-            f.write(text)
-
-    @classmethod
-    def get_extracted_text(cls, project_id: str) -> Optional[str]:
-        """Get extracted text"""
-        text_path = cls._get_project_text_path(project_id)
-
-        if not os.path.exists(text_path):
-            return None
-
-        with open(text_path, 'r', encoding='utf-8') as f:
-            return f.read()
-
-    @classmethod
-    def get_project_files(cls, project_id: str) -> List[str]:
-        """Get all project file paths"""
-        files_dir = cls._get_project_files_dir(project_id)
-
-        if not os.path.exists(files_dir):
-            return []
-
-        return [
-            os.path.join(files_dir, f)
-            for f in os.listdir(files_dir)
-            if os.path.isfile(os.path.join(files_dir, f))
-        ]
-

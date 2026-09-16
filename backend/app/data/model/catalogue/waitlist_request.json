@@ -1,0 +1,20 @@
+{
+  "model": "waitlist_request",
+  "_file_note": "Notes for app/data/model/waitlist_request.json: where each field came from, who writes and reads it, and the rules it must obey. The field's type, allowed answers, required-ness and column type live with the class in app/models/. Merged by app/repositories/model_catalogue_repository.py.",
+  "sql": "backend/supabase/waitlist_requests.sql",
+  "about": "A stranger asking for access. The operator marks it invited; sign-up triggers then let that email in.",
+  "written_by": [
+    "api/waitlist.py (_store)",
+    "operator in the dashboard",
+    "trigger enforce_invite_only",
+    "trigger waitlist_requests_stamp_invited"
+  ],
+  "read_by": [
+    "triggers handle_new_user and enforce_invite_only"
+  ],
+  "fields": {
+    "email": {
+      "note": "Lower-case, validated by the route; unique."
+    }
+  }
+}

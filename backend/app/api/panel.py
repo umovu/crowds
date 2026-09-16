@@ -15,13 +15,16 @@ import uuid
 from flask import jsonify, request
 
 from . import panel_bp
-from .. import billing
+from ..auth import current_user_id
+from ..controllers import gates
+from ..services import billing_service
 from ..config import Config
 from ..services import hypothesis_report
+from ..services import affordability_service
 from ..services import panel_service
 from ..services import poster_service
 from ..services import pointers
-from ..services import run_events
+from ..repositories import run_event_repository as run_events
 from ..services import study_reader
 from ..services.interview_service import InterviewService
 from ..utils.logger import get_logger
@@ -112,7 +115,7 @@ def affordability_preview():
     try:
         data = request.get_json() or {}
         return jsonify({"success": True, "data": {
-            "affordability": panel_service.derive_budget_tiers(data.get('pitch') or ''),
+            "affordability": affordability_service.derive_budget_tiers(data.get('pitch') or ''),
         }})
     except Exception as e:
         logger.error(f"Failed to derive affordability: {e}")
@@ -205,7 +208,7 @@ def create_session():
     tiers are computed from real persona data.
     """
     # Free plan: capped at FREE_PANEL_LIMIT panels; paid: unlimited.
-    gate = billing.check_panel_quota()
+    gate = gates.panel_quota(current_user_id())
     if gate is not None:
         return gate
     try:
@@ -234,7 +237,7 @@ def create_session():
         mode = "panel"
         # Free tier: cap the panel cast at 12 (paid may go up to MAX_CAST_SIZE).
         n = data.get('n', panel_service.DEFAULT_CAST_SIZE)
-        ent = billing.get_entitlement(billing.current_user_id())
+        ent = billing_service.get_entitlement(current_user_id())
         if ent.get('plan') != 'paid':
             try:
                 n = min(int(n), 12)
@@ -259,12 +262,12 @@ def create_session():
             segments=routed_segments,
             budget_tiers=data.get('budget_tiers'),
             attitudes=data.get('attitudes'),
-            user_id=billing.current_user_id(),
+            user_id=current_user_id(),
             pointer=pointer,
             slots=slots if pointer else None,
         )
         # Count this panel against the user's quota (no-op on paid / billing off).
-        billing.increment_panel_used(billing.current_user_id())
+        billing_service.increment_panel_used(current_user_id())
         return jsonify({"success": True, "data": meta}), 201
     except (ValueError, RuntimeError) as e:
         return jsonify({"success": False, "error": str(e)}), 400
@@ -275,7 +278,7 @@ def create_session():
 @panel_bp.route('/sessions', methods=['GET'])
 def list_sessions():
     try:
-        return jsonify({"success": True, "data": {"sessions": panel_service.list_sessions(billing.current_user_id())}})
+        return jsonify({"success": True, "data": {"sessions": panel_service.list_sessions(current_user_id())}})
     except Exception as e:
         logger.error(f"Failed to list panel sessions: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
@@ -356,7 +359,7 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
     started = time.time()
     run_events.record_start(
         run_id=session_id,
-        user_id=billing.current_user_id(),
+        user_id=current_user_id(),
         run_type="panel",
         mode=meta.get("mode"),
         crowd_size=len(agent_ids) if agent_ids else len(meta.get("agents") or []),
@@ -393,7 +396,7 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
             )
             answered = result.get("successful", 0)
             run_events.record_end(
-                run_id=session_id, user_id=billing.current_user_id(),
+                run_id=session_id, user_id=current_user_id(),
                 run_type="panel", mode=meta.get("mode"), status="failed",
                 error_code="round_failed",
                 duration_seconds=round(time.time() - started, 2),
@@ -462,7 +465,7 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
         if meta.get('mode') in ('product', 'panel'):
             payload["budget_tier_distribution"] = meta.get("budget_tier_distribution", {})
         run_events.record_end(
-            run_id=session_id, user_id=billing.current_user_id(),
+            run_id=session_id, user_id=current_user_id(),
             run_type="panel", mode=meta.get("mode"), status="ok",
             crowd_size=result.get("successful"),
             duration_seconds=round(time.time() - started, 2),
@@ -471,13 +474,13 @@ def _run_round(session_id: str, meta, pitch_text: str, agent_ids,
 
     except FileNotFoundError as e:
         run_events.record_end(
-            run_id=session_id, user_id=billing.current_user_id(), run_type="panel",
+            run_id=session_id, user_id=current_user_id(), run_type="panel",
             status="failed", error_code="not_found",
             duration_seconds=round(time.time() - started, 2))
         return jsonify({"success": False, "error": str(e)}), 404
     except Exception as e:
         run_events.record_end(
-            run_id=session_id, user_id=billing.current_user_id(), run_type="panel",
+            run_id=session_id, user_id=current_user_id(), run_type="panel",
             status="failed", error_code="server_error",
             duration_seconds=round(time.time() - started, 2))
         return _server_error(e, "The room could not be reached. Nothing was counted — try again.")
