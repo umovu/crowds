@@ -23,6 +23,9 @@ research_bp = Blueprint('research', __name__)
 config_bp = Blueprint('config', __name__)
 context_bp = Blueprint('context', __name__)
 panel_bp = Blueprint('panel', __name__)
+#: The read-only simulation routes. Registered at /api/simulation alongside the
+#: lifecycle routes still in app/api/simulation.py, so the URLs are unchanged.
+simulation_read_bp = Blueprint('simulation_read', __name__)
 
 from . import signup_controller  # noqa: E402, F401
 from . import account_controller  # noqa: E402, F401
@@ -34,3 +37,4 @@ from . import research_controller  # noqa: E402, F401
 from . import config_controller  # noqa: E402, F401
 from . import context_controller  # noqa: E402, F401
 from . import panel_controller  # noqa: E402, F401
+from . import simulation_controller  # noqa: E402, F401

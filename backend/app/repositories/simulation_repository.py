@@ -21,6 +21,8 @@ from __future__ import annotations
 
 import json
 import os
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from ..config import Config
@@ -103,3 +105,88 @@ def list_ids(root: Optional[str] = None) -> List[str]:
             continue
         out.append(name)
     return out
+
+
+# ── reads that also report on the file itself ───────────────────────────────────
+ENRICHMENT_FILE = "enrichment.json"
+#: The subprocess appends one JSON object per agent action here, as it runs.
+ACTIONS_FILE = os.path.join("opinion_space", "actions.jsonl")
+
+
+def path(simulation_id: str, *parts: str, root: Optional[str] = None) -> str:
+    """A path inside the run's directory, WITHOUT creating anything.
+
+    The read-side counterpart to `sim_dir`. Use this whenever the answer is allowed to
+    be "there is nothing there" — `sim_dir` would bring the directory into existence
+    and the id would then show up in `list_ids()`.
+    """
+    return os.path.join(_root(root), simulation_id, *parts)
+
+
+def exists(simulation_id: str, root: Optional[str] = None) -> bool:
+    """Whether this run has a directory at all."""
+    return os.path.isdir(path(simulation_id, root=root))
+
+
+@dataclass(frozen=True)
+class Snapshot:
+    """A file's content plus what the UI needs to know about the file itself.
+
+    The live progress screens poll while a run is still being prepared, so "the file
+    is not there yet" and "the file is there but unreadable" are both normal, and both
+    answer with `data is None`. `modified_at` lets the screen show staleness.
+    """
+    data: Optional[Any] = None
+    present: bool = False
+    modified_at: Optional[str] = None
+
+
+def snapshot(simulation_id: str, filename: str, root: Optional[str] = None) -> Snapshot:
+    """Read one of the run's JSON files and stat it, in one pass."""
+    target = path(simulation_id, filename, root=root)
+    if not os.path.exists(target):
+        return Snapshot()
+    modified_at = None
+    try:
+        modified_at = datetime.fromtimestamp(os.stat(target).st_mtime).isoformat()
+    except OSError:  # noqa: BLE001 - a stat failure must not hide the content
+        pass
+    try:
+        with open(target, "r", encoding="utf-8") as fh:
+            return Snapshot(data=json.load(fh), present=True, modified_at=modified_at)
+    except (OSError, json.JSONDecodeError) as e:
+        logger.warning("Could not read %s for %s: %s", filename, simulation_id, e)
+        return Snapshot(present=True, modified_at=modified_at)
+
+
+def read_enrichment(simulation_id: str, root: Optional[str] = None) -> Dict[str, Any]:
+    """Deep-research findings per archetype, or {} when the run has none."""
+    data = _read_json(simulation_id, ENRICHMENT_FILE, root)
+    return data if isinstance(data, dict) else {}
+
+
+def action_totals(simulation_id: str, root: Optional[str] = None) -> Dict[str, float]:
+    """Sum the tokens and cost the subprocess recorded for each action.
+
+    Pure accumulation of stored numbers: what they cost in rand, and which prices were
+    used, is a rule and belongs in a service. A malformed line is skipped rather than
+    failing the total, because this file is appended to by a live run and the last line
+    can be half-written.
+    """
+    target = path(simulation_id, ACTIONS_FILE, root=root)
+    totals = {"prompt_tokens": 0.0, "completion_tokens": 0.0, "cost_usd": 0.0}
+    if not os.path.exists(target):
+        return totals
+    try:
+        with open(target, "r", encoding="utf-8") as fh:
+            for line in fh:
+                try:
+                    action = json.loads(line)
+                except (json.JSONDecodeError, TypeError):
+                    continue
+                totals["prompt_tokens"] += action.get("prompt_tokens", 0) or 0
+                totals["completion_tokens"] += action.get("completion_tokens", 0) or 0
+                totals["cost_usd"] += action.get("estimated_cost_usd", 0) or 0
+    except OSError as e:
+        logger.warning("Could not read actions for %s: %s", simulation_id, e)
+    return totals

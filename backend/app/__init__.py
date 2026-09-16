@@ -280,9 +280,11 @@ def create_app(config_class=Config):
     from .api import simulation_bp
     from .controllers import (account_bp, billing_bp, config_bp, context_bp,
                               graph_bp, panel_bp, persona_bp, report_bp,
-                              research_bp, signup_bp)
+                              research_bp, signup_bp, simulation_read_bp)
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
+    # Same prefix as simulation_bp: the read-only simulation URLs are unchanged.
+    app.register_blueprint(simulation_read_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(config_bp, url_prefix='/api/config')
     app.register_blueprint(research_bp, url_prefix='/api/research')
