@@ -19,6 +19,7 @@ billing_bp = Blueprint('billing', __name__)
 persona_bp = Blueprint('persona', __name__)
 graph_bp = Blueprint('graph', __name__)
 report_bp = Blueprint('report', __name__)
+research_bp = Blueprint('research', __name__)
 
 from . import signup_controller  # noqa: E402, F401
 from . import account_controller  # noqa: E402, F401
@@ -26,3 +27,4 @@ from . import billing_controller  # noqa: E402, F401
 from . import persona_controller  # noqa: E402, F401
 from . import graph_controller  # noqa: E402, F401
 from . import report_controller  # noqa: E402, F401
+from . import research_controller  # noqa: E402, F401

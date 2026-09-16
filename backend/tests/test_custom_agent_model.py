@@ -135,9 +135,9 @@ def test_a_new_project_fits_the_model():
 
 
 def test_a_project_with_agents_and_papers_fits_the_model():
-    from app.api.research import _slim_paper
-    paper = _slim_paper({"id": "W123", "title": "Clinic choice in Limpopo", "authors": "L. Chavalala",
-                         "year": 2025, "source": "openalex", "url": "https://example.org"})
+    from app.services.research_service import slim_paper
+    paper = slim_paper({"id": "W123", "title": "Clinic choice in Limpopo", "authors": "L. Chavalala",
+                        "year": 2025, "source": "openalex", "url": "https://example.org"})
     project = _project(custom_agents=_stored(_parser().parse_raw([FORM_AGENT])),
                        custom_agents_enabled=True, saved_papers=[paper])
     assert dm.model_problems("project", project.to_dict()) == []

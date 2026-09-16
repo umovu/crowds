@@ -13,7 +13,7 @@ panel_bp = Blueprint('panel', __name__)
 context_bp = Blueprint('context', __name__)
 # account and waitlist now live in app/controllers/ (signup slice).
 
-from .research import research_bp
+# research now lives in app/controllers/ (research slice).
 from . import simulation  # noqa: E402, F401
 from . import config  # noqa: E402, F401
 from . import panel  # noqa: E402, F401
