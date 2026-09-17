@@ -26,13 +26,18 @@ class JudgeResult:
     pass_: bool
     reasoning: str
     evidence: str
+    # The judge call itself broke (timeout, truncated JSON, bad key). A score of
+    # 0 then says nothing about the output — without this flag the caller reads
+    # a broken judge as a failed generation and pays for a pointless rewrite.
+    errored: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "score": self.score,
             "pass": self.pass_,
             "reasoning": self.reasoning,
-            "evidence": self.evidence
+            "evidence": self.evidence,
+            "errored": self.errored,
         }
 
 
@@ -68,7 +73,7 @@ class JudgeService:
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.2,
-                max_tokens=400,
+                max_tokens=900,
             )
             if not self.client._is_groq():
                 kwargs["response_format"] = {"type": "json_object"}
@@ -90,7 +95,8 @@ class JudgeService:
                 score=0,
                 pass_=False,
                 reasoning=f"Judge error: {e}",
-                evidence=""
+                evidence="",
+                errored=True,
             )
 
     def _system_prompt(self) -> str:
@@ -310,6 +316,10 @@ def judge_best_of(
     """
     first_out = generate(None)
     first_res = judge(first_out)
+
+    if first_res.errored:
+        logger.warning(f"Judge unavailable ({first_res.reasoning[:120]}); keeping first attempt")
+        return first_out, first_res, False
 
     if first_res.pass_ or first_res.score >= threshold:
         return first_out, first_res, False
