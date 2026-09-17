@@ -15,7 +15,7 @@ def _is_stub(module) -> bool:
 def real_module():
     """Import the real module even when another test file left a stub in sys.modules.
 
-    test_sim_start_and_credits stubs app.api, app.auth, app.controllers.gates,
+    test_sim_start_and_credits stubs app.auth, app.controllers.gates,
     app.services.billing_service and the interview service while tests are collected,
     so its own imports stay light. A test that needs the real code borrows it through
     this fixture; the stubs are put back afterwards so that file keeps what it expects.

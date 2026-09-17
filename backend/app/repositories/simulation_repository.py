@@ -88,6 +88,14 @@ def read_config(simulation_id: str, root: Optional[str] = None) -> Optional[Dict
     return data if isinstance(data, dict) else None
 
 
+def write_config(simulation_id: str, data: Dict[str, Any],
+                 root: Optional[str] = None) -> None:
+    """Overwrite the run's config. Raises: a half-applied preset must not look saved."""
+    target = os.path.join(sim_dir(simulation_id, root), CONFIG_FILE)
+    with open(target, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
+
+
 def read_profiles(simulation_id: str, root: Optional[str] = None) -> List[Dict[str, Any]]:
     """The run's cast, or [] when it has not been written yet."""
     data = _read_json(simulation_id, PROFILES_FILE, root)

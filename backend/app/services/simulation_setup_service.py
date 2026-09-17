@@ -379,9 +379,8 @@ def start_prepare(data: Dict[str, Any], *, storage: Any, task_manager: Any,
                                      progress=0,
                                      message="Start preparing simulation environment...")
             # Fail-open: an unreachable operator context costs flavour, not the run.
-            # Imported here, not at module level: app/api/simulation.py imports this
-            # service, and the money guard path-loads that file without stubbing the
-            # Supabase-backed repositories. Keeping this lazy keeps that import light.
+            # Imported lazily: the credit test loads this service with the
+            # Supabase-backed repositories unstubbed. Keeps that import light.
             try:
                 from ..repositories import operator_context_repository as oc_repo
                 uid = state.user_id or user_id

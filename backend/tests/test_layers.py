@@ -10,10 +10,9 @@ The app is moving to one job per layer:
     app/repositories/  the ONLY place that talks to Supabase, files or SQLite.
     app/services/      rules and calculations. No Flask, no storage calls.
     app/controllers/   thin Flask routes: read the request, call a service, answer.
-    app/api/           routes not moved yet. Shrinks each pass, then goes away.
 
 The allowlists below are the migration debt, named file by file. They may only get
-shorter: adding a Supabase call to a new service, or a new route under app/api/,
+shorter: adding a Supabase call to a new service,
 fails here. That is the point — the list is the to-do list.
 """
 

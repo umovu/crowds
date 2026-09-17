@@ -14,7 +14,9 @@ Covers local-plans/SIM_START_AND_CREDITS_FIX.md with the LLM switched off:
     charges 1 (the persisted `credit_charged` guard survives), and starting with
     the trial exhausted returns 402.
 
-AgenSociety2 (which demands AGENTSOCIETY_LLM_API_KEY) is never imported — the
+The credit rules live in `app.services.simulation_run_service`, so that is what is
+tested, directly, with no Flask request involved. AgentSociety2 (which demands
+AGENTSOCIETY_LLM_API_KEY) is never imported — the
 heavy `interview_service` module is stubbed. Real `SimulationManager` /
 `SimulationRunner` / `config` are loaded so path + persistence behaviour is the
 real code, with the network subprocess start stubbed out.
@@ -73,7 +75,6 @@ def _load_app(modname, filename):
 # app.services.__init__ (which requires agentsociety2's env vars).
 for pkg_name, pkg_path in [
     ("app", APP),
-    ("app.api", os.path.join(APP, "api")),
     ("app.services", SERVICES),
     ("app.utils", os.path.join(APP, "utils")),
     ("app.storage", os.path.join(APP, "storage")),
@@ -85,9 +86,6 @@ for pkg_name, pkg_path in [
 
 # GraphStorage is never constructed here; stub so the real services import.
 sys.modules["app.storage"].GraphStorage = type("GraphStorage", (), {})
-# The route's decorator target.
-sys.modules["app.api"].simulation_bp = types.SimpleNamespace(route=lambda *a, **k: (lambda f: f))
-
 # Real modules under test.
 config = _load_app("app.config", "config")
 Config = config.Config
@@ -118,34 +116,20 @@ def _increment_sim_used(uid):
     bill._sim_used += 1
 
 
+def _check_sim_quota(uid):
+    """Same answer as the real check: allowed, or a refusal with the upgrade code."""
+    ent = _get_entitlement(uid)
+    if ent.get("plan") != "paid" and int(ent.get("sim_used", 0) or 0) >= 2:
+        return types.SimpleNamespace(allowed=False, message="used up",
+                                     code="upgrade_required")
+    return types.SimpleNamespace(allowed=True, message="", code="upgrade_required")
+
+
 bill.get_entitlement = staticmethod(_get_entitlement)
 bill.increment_sim_used = staticmethod(_increment_sim_used)
+bill.check_sim_quota = staticmethod(_check_sim_quota)
 sys.modules["app.services.billing_service"] = bill
 sys.modules["app.services"].billing_service = bill
-
-_auth = types.ModuleType("app.auth")
-_auth.current_user_id = staticmethod(lambda: "user_test")
-_auth.current_user_email = staticmethod(lambda: "user@test")
-sys.modules["app.auth"] = _auth
-
-
-def _sim_quota(user_id=None):
-    """Same answer the real gate gives: None to allow, a (body, 402) to refuse."""
-    if _get_entitlement(None).get("plan") == "paid":
-        return None
-    if int(_get_entitlement(None).get("sim_used", 0) or 0) >= 2:
-        return ({"success": False, "error": "used up", "code": "upgrade_required"}, 402)
-    return None
-
-
-_gates = types.ModuleType("app.controllers.gates")
-_gates.sim_quota = staticmethod(_sim_quota)
-_gates.panel_quota = staticmethod(lambda user_id=None: None)
-_controllers = types.ModuleType("app.controllers")
-_controllers.__path__ = [os.path.join(APP, "controllers")]
-_controllers.gates = _gates
-sys.modules["app.controllers"] = _controllers
-sys.modules["app.controllers.gates"] = _gates
 
 # Stub the agentsociety2-bound service so importing the routes never boots it.
 _iv_stub = types.ModuleType("app.services.interview_service")
@@ -166,9 +150,9 @@ _repos.project_repository = _projects
 sys.modules["app.repositories"] = _repos
 sys.modules["app.repositories.project_repository"] = _projects
 
-# Import the routes under test.
-sim = _load_app("app.api.simulation", "api/simulation")
-SimulationStatus = sim.SimulationStatus
+# The service under test, and the readiness check it relies on.
+_load("app.services.simulation_setup_service", "simulation_setup_service.py", package="app.services")
+run = _load("app.services.simulation_run_service", "simulation_run_service.py", package="app.services")
 
 # Never launch a real simulation subprocess in tests.
 SimulationRunner.start_simulation = staticmethod(
@@ -179,20 +163,6 @@ SimulationRunner.start_simulation = staticmethod(
 SimulationRunner.get_run_state = staticmethod(lambda sid: None)
 SimulationRunner.stop_simulation = staticmethod(lambda sid: None)
 SimulationRunner.cleanup_simulation_logs = staticmethod(lambda sid: {"success": True})
-
-# Capture route JSON payloads instead of hitting Flask's render pipeline.
-class _Resp:
-    def __init__(self, payload, status_code=200):
-        self.payload = payload
-        self.status_code = status_code
-
-
-sim.jsonify = lambda payload, status_code=200: _Resp(payload, status_code)
-
-
-def _fake_request(payload):
-    return types.SimpleNamespace(get_json=lambda: payload)
-
 
 def _sim_dir(sid):
     return os.path.join(Config.OASIS_SIMULATION_DATA_DIR, sid)
@@ -211,12 +181,16 @@ def _make_prepared(sid):
 
 
 def _create_sim(sim_used=0):
-    """Drive the real /create route, returning (simulation_id, status_code)."""
+    """Create a sim through the real service, returning its id."""
     bill._sim_used = sim_used
-    sim.request = _fake_request({"project_id": "proj_test", "graph_id": "graph_test"})
-    resp = sim.create_simulation()
-    data = resp.payload["data"]
-    return data["simulation_id"], resp.status_code
+    return run.create("proj_test", "graph_test", "user_test")["simulation_id"]
+
+
+def _start(sid, preset="balanced", force=False):
+    body = {"simulation_id": sid, "platform": "opinion_space", "preset": preset}
+    if force:
+        body["force"] = True
+    return run.start(body, "user_test")
 
 
 # ── Task 1: SimulationRunner writes run state under DATA_ROOT ───────────────
@@ -237,11 +211,19 @@ def test_scripts_dir_stays_source_relative():
 
 # ── Task 2: preset block writes time_config to disk; json is bound ─────────
 
-def test_module_level_json_import_is_bound():
-    # Regression guard: the /start preset block previously raised
-    # `name 'json' is not defined` because there was no module-level import.
-    assert sim.json is not None
-    assert callable(sim.json.dumps)
+def test_start_writes_the_preset_to_disk_and_holds_free_tier_to_quick():
+    # The preset block used to crash with `name 'json' is not defined`. It now lives
+    # in the service and writes through the repository; this proves the write lands,
+    # and that a free-tier run is held to the smallest preset whatever it asked for.
+    sid = _create_sim(sim_used=0)
+    _make_prepared(sid)
+    out = _start(sid, preset="deep")
+    with open(os.path.join(_sim_dir(sid), "simulation_config.json"), encoding="utf-8") as f:
+        cfg = _json.load(f)
+    quick = SIM_PRESETS["quick"]
+    assert cfg["time_config"]["total_simulation_hours"] == quick["time_config"]["total_simulation_hours"]
+    assert cfg["max_agents_per_round"] == quick["max_agents_per_round"]
+    assert out["max_rounds_applied"] == quick["max_rounds"]
 
 
 def test_apply_preset_writes_time_config_to_disk(tmp_path):
@@ -293,55 +275,51 @@ def test_apply_preset_unknown_is_noop():
 # ── Task 3: credit charged at /start, once, never at /create ───────────────
 
 def test_create_then_abandon_charges_zero():
-    _, status = _create_sim(sim_used=0)
-    assert status == 200
+    _create_sim(sim_used=0)
     assert bill._sim_used == 0
 
 
 def test_create_then_start_charges_one():
-    sid, _ = _create_sim(sim_used=0)
+    sid = _create_sim(sim_used=0)
     _make_prepared(sid)
-    sim.request = _fake_request({"simulation_id": sid, "platform": "opinion_space", "preset": "balanced"})
-    resp = sim.start_simulation()
-    assert resp.status_code == 200
+    _start(sid)
     assert bill._sim_used == 1
     state = SimulationManager().get_simulation(sid)
     assert state.credit_charged is True
 
 
 def test_start_stop_start_charges_one_total():
-    sid, _ = _create_sim(sim_used=0)
+    sid = _create_sim(sim_used=0)
     _make_prepared(sid)
-    sim.request = _fake_request({"simulation_id": sid, "platform": "opinion_space", "preset": "balanced"})
-    assert sim.start_simulation().status_code == 200
+    _start(sid)
     assert bill._sim_used == 1
 
     # Simulated restart (force=true): the persisted credit_charged guard must
     # stop a second charge.
-    sim.request = _fake_request({"simulation_id": sid, "platform": "opinion_space", "preset": "balanced", "force": True})
-    assert sim.start_simulation().status_code == 200
+    _start(sid, force=True)
     assert bill._sim_used == 1
 
 
-def test_start_after_quota_exhausted_returns_402():
-    sid, _ = _create_sim(sim_used=1)
+def test_start_after_quota_exhausted_is_refused():
+    sid = _create_sim(sim_used=1)
     _make_prepared(sid)
     bill._sim_used = 2  # trial exhausted
-    sim.request = _fake_request({"simulation_id": sid, "platform": "opinion_space", "preset": "quick"})
-    resp = sim.start_simulation()
-    assert isinstance(resp, tuple) and resp[1] == 402
+    try:
+        _start(sid, preset="quick")
+    except run.QuotaExceeded as e:
+        # The controller answers this with a 402 carrying the upgrade code.
+        assert e.gate.code == "upgrade_required"
+    else:
+        raise AssertionError("expected the exhausted trial to refuse the start")
+    assert bill._sim_used == 2  # nothing charged for a refused start
 
 
 def test_restart_after_quota_exhausted_still_allowed():
     # A sim already charged keeps running through a restart even when the trial
     # shows exhausted — the guard checks charge state, not the quota.
-    sid, _ = _create_sim(sim_used=1)
+    sid = _create_sim(sim_used=1)
     _make_prepared(sid)
-    sim.request = _fake_request({"simulation_id": sid, "platform": "opinion_space", "preset": "balanced"})
-    assert sim.start_simulation().status_code == 200
+    _start(sid)
     bill._sim_used = 2
-    sim.request = _fake_request({"simulation_id": sid, "platform": "opinion_space", "preset": "balanced", "force": True})
-    resp = sim.start_simulation()
-    assert not isinstance(resp, tuple)  # no 402
-    assert resp.status_code == 200
+    _start(sid, force=True)  # no QuotaExceeded
     assert bill._sim_used == 2

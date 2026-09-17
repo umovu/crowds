@@ -7,7 +7,7 @@ It holds no rules and touches no storage (see tests/test_layers.py).
                   |           |
                   +-- model --+
 
-Routes still living in app/api/ are being moved here one slice at a time.
+Every route lives here. app/api/ is gone.
 """
 
 from flask import Blueprint
@@ -23,9 +23,7 @@ research_bp = Blueprint('research', __name__)
 config_bp = Blueprint('config', __name__)
 context_bp = Blueprint('context', __name__)
 panel_bp = Blueprint('panel', __name__)
-#: The read-only simulation routes. Registered at /api/simulation alongside the
-#: lifecycle routes still in app/api/simulation.py, so the URLs are unchanged.
-simulation_read_bp = Blueprint('simulation_read', __name__)
+simulation_bp = Blueprint('simulation', __name__)
 
 from . import signup_controller  # noqa: E402, F401
 from . import account_controller  # noqa: E402, F401
