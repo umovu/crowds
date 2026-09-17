@@ -2,7 +2,7 @@
 
 `billing_service` answers with a `Gate`, because the rules must be testable without a
 request in flight. Routes need a Flask response, so the conversion lives here — one
-copy, used by the controllers and by the routes still in app/api/.
+copy, used by the controllers.
 
 The shape matters: the frontend shows the upgrade modal on `code == "upgrade_required"`,
 so a refusal must keep carrying it.
