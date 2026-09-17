@@ -329,7 +329,12 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
                                     'daily': 'You get news from social media every day.'}}}}
 DERIVED_FACTS = {'age_band': {'values': ['15-24', '25-34', '35-59', '60+'],
               'from': 'age',
-              'note': 'Made at match time by mechanism_card_service._age_band. Not stored.'}}
+              'note': 'Made at match time by mechanism_card_service._age_band. Not stored.'},
+ 'youth_age_band': {'values': ['under-16', '16-17', '18-24', '25+'],
+                    'from': 'age',
+                    'note': 'Made at match time by mechanism_card_service._youth_age_band. Not '
+                            'stored. Finer than age_band for research on young people: studies '
+                            'recruit from 16 or 18.'}}
 GROUPS = {'everyone': {'when': {}, 'about': 'Every library persona.'},
  'ghs_household': {'when': {'source_survey': ['ghs_2025']},
                    'about': 'Built from the GHS 2025 household files.'},

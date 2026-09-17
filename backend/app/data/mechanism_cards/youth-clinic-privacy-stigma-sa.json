@@ -1,0 +1,237 @@
+{
+  "id": "youth-clinic-privacy-stigma-sa",
+  "citation": [
+    "Nyblade L et al. (2022). Stigma in the health clinic and implications for PrEP access and use by adolescent girls and young women: conflicting perspectives in South Africa. BMC Public Health 22:1916. doi:10.1186/s12889-022-14236-z",
+    "Strauss M, Rhodes B, George G (2015). A qualitative analysis of the barriers and facilitators of HIV counselling and testing perceived by adolescents in South Africa. BMC Health Services Research 15:250. doi:10.1186/s12913-015-0922-0"
+  ],
+  "segment_tags": [
+    "learner",
+    "unemployed_youth",
+    "institutional_loyalist"
+  ],
+  "claims": [
+    {
+      "text": "Young women describe clinic nurses as harsh, judgmental and parent-like, questioning why someone so young needs contraception or PrEP, and say this holds them back from asking for help, so they delay or avoid sexual health services",
+      "needs": [
+        {
+          "gender": [
+            "Female"
+          ],
+          "youth_age_band": [
+            "18-24"
+          ]
+        }
+      ],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P3",
+        "P7",
+        "P10",
+        "P11",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a clinic by whether staff treat you with respect, not by what services it offers"
+      ],
+      "objections": [
+        "Will the staff judge me or treat me harshly?"
+      ],
+      "vocabulary": [
+        "harsh",
+        "judgmental"
+      ]
+    },
+    {
+      "text": "Providers who hold societal norms that sexually active girls are promiscuous or irresponsible read prevention tools as moral hazards that encourage promiscuity, so they withhold, discourage, or stigmatize access because provision feels like endorsing bad behavior",
+      "needs": [
+        {
+          "gender": [
+            "Female"
+          ],
+          "youth_age_band": [
+            "18-24"
+          ]
+        }
+      ],
+      "chain_id": "C2",
+      "passages": [
+        "P5",
+        "P6",
+        "P17",
+        "P18"
+      ],
+      "evaluative_rules": [
+        "Judge a prevention product by whether providers see it as enabling promiscuity rather than protecting health"
+      ],
+      "objections": [
+        "Will using this make people think I am promiscuous?"
+      ],
+      "vocabulary": [
+        "promiscuous"
+      ]
+    },
+    {
+      "text": "Nurses describe relating to young clients as their own daughters and counselling or scolding them as a mother would, and young women describe the visit as being like asking their mother; nurses themselves say this keeps adolescents away from clinics",
+      "needs": [
+        {
+          "gender": [
+            "Female"
+          ],
+          "youth_age_band": [
+            "18-24"
+          ]
+        }
+      ],
+      "chain_id": "C3",
+      "passages": [
+        "P7",
+        "P8",
+        "P10",
+        "P19",
+        "P1",
+        "P11",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a provider by whether they act like a professional or like a parent"
+      ],
+      "objections": [],
+      "vocabulary": [
+        "parent figures"
+      ]
+    },
+    {
+      "text": "Clinic attendance is evaluated as risking public exposure of sexual activity or HIV status, so youth avoid clinics, move to unfamiliar clinics, or prefer hidden testing sites because visibility threatens disclosure and social harm",
+      "needs": [
+        {
+          "gender": [
+            "Female"
+          ],
+          "youth_age_band": [
+            "18-24"
+          ]
+        },
+        {
+          "ghs_role": [
+            "learner"
+          ],
+          "youth_age_band": [
+            "16-17",
+            "18-24"
+          ]
+        }
+      ],
+      "chain_id": "C4",
+      "passages": [
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P20",
+        "P34",
+        "P35",
+        "P36",
+        "P37",
+        "P38",
+        "P39"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether using it risks exposing your sexual activity or HIV status to people you know"
+      ],
+      "objections": [
+        "Will anyone I know see me or find out why I am here?"
+      ],
+      "vocabulary": [
+        "confidentiality"
+      ]
+    },
+    {
+      "text": "Adolescents describe a positive HIV result as life-ending and say they need counselling before a test and friends or family with them, so they avoid testing or test only when that counselling and support are there",
+      "needs": [
+        {
+          "ghs_role": [
+            "learner"
+          ],
+          "youth_age_band": [
+            "16-17",
+            "18-24"
+          ]
+        }
+      ],
+      "chain_id": "C5",
+      "passages": [
+        "P21",
+        "P22",
+        "P23",
+        "P24",
+        "P25",
+        "P26",
+        "P28",
+        "P29",
+        "P30",
+        "P31",
+        "P37",
+        "P38"
+      ],
+      "evaluative_rules": [
+        "Judge a testing service by whether it includes counseling and support before and after the result"
+      ],
+      "objections": [
+        "What will happen to me if the result is positive?"
+      ],
+      "vocabulary": [
+        "counselling"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Tshwane, Gauteng and Vulindlela, KwaZulu-Natal, South Africa",
+  "year_range": "2012-2020",
+  "confidence": "Two qualitative South African studies about SEXUAL HEALTH services specifically: 43 women aged 18-24 plus 42 clinic staff in Tshwane (2018-2020, with a 449-person survey), and 158 learners aged 16+ in 21 focus groups in rural and peri-urban KwaZulu-Natal (2012-2013). The privacy, judgement and being-seen mechanisms are durable; whether they carry to ordinary clinic visits is not tested, and magnitudes are unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "topic_tags": [
+    "hiv",
+    "aids",
+    "hiv test",
+    "hiv testing",
+    "arv",
+    "arvs",
+    "prep",
+    "contraception",
+    "contraceptive",
+    "contraceptives",
+    "family planning",
+    "condom",
+    "condoms",
+    "pregnancy",
+    "pregnant",
+    "abortion",
+    "sexual health",
+    "sti",
+    "stis",
+    "std"
+  ],
+  "applies_when": [
+    {
+      "gender": [
+        "Female"
+      ],
+      "youth_age_band": [
+        "18-24"
+      ]
+    },
+    {
+      "ghs_role": [
+        "learner"
+      ],
+      "youth_age_band": [
+        "16-17",
+        "18-24"
+      ]
+    }
+  ]
+}

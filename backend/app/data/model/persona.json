@@ -2171,6 +2171,16 @@
       ],
       "from": "age",
       "note": "Made at match time by mechanism_card_service._age_band. Not stored."
+    },
+    "youth_age_band": {
+      "values": [
+        "under-16",
+        "16-17",
+        "18-24",
+        "25+"
+      ],
+      "from": "age",
+      "note": "Made at match time by mechanism_card_service._youth_age_band. Not stored. Finer than age_band for research on young people: studies recruit from 16 or 18."
     }
   }
 }
