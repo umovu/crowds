@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import sqlite3
 from dataclasses import dataclass
 from datetime import datetime
@@ -164,6 +165,33 @@ def read_enrichment(simulation_id: str, root: Optional[str] = None) -> Dict[str,
     """Deep-research findings per archetype, or {} when the run has none."""
     data = _read_json(simulation_id, ENRICHMENT_FILE, root)
     return data if isinstance(data, dict) else {}
+
+
+def write_enrichment(simulation_id: str, data: Any,
+                     root: Optional[str] = None) -> None:
+    """Overwrite the run's deep-research findings. Raises rather than losing them."""
+    target = os.path.join(sim_dir(simulation_id, root), ENRICHMENT_FILE)
+    with open(target, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
+
+
+def delete_run(simulation_id: str, root: Optional[str] = None) -> bool:
+    """Delete a run's whole directory. False when there is no such run.
+
+    The id is matched against the data directory's ACTUAL children before anything
+    is removed, so a crafted id — `../..`, an absolute path, a symlink name — can
+    never point the delete outside the data directory. Keep that check first: it is
+    the only thing standing between a URL path segment and `rmtree`.
+    """
+    base = os.path.abspath(_root(root))
+    if not os.path.isdir(base) or simulation_id not in os.listdir(base):
+        return False
+    target = os.path.join(base, simulation_id)
+    if not os.path.isdir(target):
+        return False
+    shutil.rmtree(target)
+    logger.info("Deleted simulation %s from disk", simulation_id)
+    return True
 
 
 #: The subprocess writes one SQLite database per platform inside the run's directory.

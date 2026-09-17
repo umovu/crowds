@@ -32,8 +32,10 @@ from flask import current_app, jsonify, request, send_file
 
 from . import simulation_read_bp
 from ..auth import current_user_id
+from ..models.task import TaskManager
 from ..repositories import simulation_repository as repo
-from ..services import simulation_interview_service, simulation_read_service
+from ..services import (simulation_control_service, simulation_interview_service,
+                        simulation_read_service, simulation_setup_service)
 from ..services.entity_reader import EntityReader
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner
@@ -460,6 +462,235 @@ def get_interview_history():
                         "data": {"count": len(history), "history": history}})
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to get interview history: {str(e)}")
+        return _failed(e)
+
+
+# ── preparing a run ─────────────────────────────────────────────────────────────
+@simulation_read_bp.route('/prepare', methods=['POST'])
+def prepare_simulation():
+    """Start preparing a run: read the graph, build the cast, generate the config.
+
+    Slow, so it returns a task_id immediately and the work continues on a background
+    thread. Poll /prepare/status. An already-prepared run answers straight away
+    unless `force_regenerate` is set.
+
+    No paywall here: a sim is gated at create and charged at start, so preparing an
+    already-created sim must always be allowed for its owner.
+    """
+    try:
+        data = request.get_json() or {}
+        if not data.get('simulation_id'):
+            return _bad("Please provide simulation_id")
+
+        return jsonify({"success": True, "data": simulation_setup_service.start_prepare(
+            data,
+            # Fetched in the request: the background thread cannot reach either.
+            storage=current_app.extensions.get('graph_storage'),
+            task_manager=TaskManager(),
+            user_id=current_user_id())})
+
+    except (simulation_setup_service.RunNotFound,
+            simulation_setup_service.ProjectNotFound) as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except (simulation_setup_service.MissingRequirement,
+            simulation_setup_service.NoCustomAgents) as e:
+        return _bad(str(e))
+    except ValueError as e:
+        # Includes "GraphStorage not initialized". 404 rather than 500, as before.
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to start preparation task: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/prepare/status', methods=['POST'])
+def get_prepare_status():
+    """Progress of a preparation. Body: task_id, or simulation_id, or both.
+
+    A simulation_id is answered from the files on disk, so a finished preparation is
+    reported even when its task is gone after a restart.
+    """
+    try:
+        data = request.get_json() or {}
+        return jsonify({"success": True, "data": simulation_setup_service.prepare_status(
+            task_id=data.get('task_id'), simulation_id=data.get('simulation_id'))})
+    except simulation_setup_service.NeedTaskOrSimulation as e:
+        return _bad(str(e))
+    except simulation_setup_service.TaskNotFound as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to query task status: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ── setting a run up ────────────────────────────────────────────────────────────
+@simulation_read_bp.route('/custom-agents/parse', methods=['POST'])
+def parse_custom_agent_document():
+    """Parse an uploaded agent-definition document into profiles.
+
+    multipart/form-data with a `file` field, plus an optional
+    `simulation_requirement` for context. Takes JSON arrays of profiles directly, and
+    unstructured text (PDF, MD, TXT) via the LLM.
+    """
+    try:
+        if 'file' not in request.files:
+            return jsonify({"success": False, "error": "No file provided"}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"success": False, "error": "Empty filename"}), 400
+
+        # `file.save` is passed in, so the upload object stays in the controller.
+        data = simulation_setup_service.parse_custom_agents(
+            file.save, file.filename,
+            request.form.get('simulation_requirement', ''))
+        return jsonify({"success": True, "data": data, "count": len(data)})
+
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to parse custom agent document: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>', methods=['DELETE'])
+def delete_simulation(simulation_id: str):
+    """Delete a run's data directory. Refuses while the run is still going."""
+    try:
+        if not simulation_control_service.delete(simulation_id):
+            return jsonify({"success": False,
+                            "error": f"Simulation {simulation_id} not found"}), 404
+        return jsonify({"success": True, "data": {"simulation_id": simulation_id}})
+    except simulation_control_service.RunIsRunning as e:
+        return jsonify({"success": False, "error": str(e)}), 409
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to delete simulation {simulation_id}: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/research/rerun', methods=['POST'])
+def rerun_simulation_research(simulation_id: str):
+    """Re-run deep web research for this run's archetypes and overwrite enrichment.
+
+    The archetypes come from the graph the run was built on. Body may carry an
+    optional `agent_context` to shape the research.
+    """
+    try:
+        return jsonify({"success": True, "data": simulation_setup_service.rerun_research(
+            simulation_id, request.get_json() or {})})
+    except simulation_setup_service.RunNotFound as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except simulation_setup_service.NoEntityTypes as e:
+        return _bad(str(e))
+    except simulation_setup_service.ResearchEmpty as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Re-run research failed for {simulation_id}: {e}")
+        return _failed(e)
+
+
+# ── controlling a run ───────────────────────────────────────────────────────────
+@simulation_read_bp.route('/stop', methods=['POST'])
+def stop_simulation():
+    """Stop a run. Body: simulation_id. The run is left paused, so it can restart."""
+    try:
+        simulation_id = (request.get_json() or {}).get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        return jsonify({"success": True,
+                        "data": simulation_control_service.stop(simulation_id)})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to stop simulation: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/env-status', methods=['POST'])
+def get_env_status():
+    """Whether the run's environment is alive and can answer interviews.
+
+    Body: simulation_id.
+    """
+    try:
+        simulation_id = (request.get_json() or {}).get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+        return jsonify({"success": True,
+                        "data": simulation_control_service.env_status(simulation_id)})
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to get environment status: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/close-env', methods=['POST'])
+def close_simulation_env():
+    """Ask the run to close its environment gracefully. Body: simulation_id, timeout.
+
+    Different from /stop, which terminates the run abruptly. This lets the simulation
+    exit on its own terms and marks it completed.
+    """
+    try:
+        data = request.get_json() or {}
+        simulation_id = data.get('simulation_id')
+        if not simulation_id:
+            return _bad("Please provide simulation_id")
+
+        result = simulation_control_service.close_env(
+            simulation_id, timeout=data.get('timeout', 30))
+        return jsonify({"success": result.get("success", False), "data": result})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to close environment: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/pause', methods=['POST'])
+def pause_simulation(simulation_id: str):
+    """Pause a running simulation between rounds.
+
+    The current round finishes, then it pauses before the next one. While paused the
+    agents can be interviewed and intervened with.
+    """
+    try:
+        result = simulation_control_service.pause(simulation_id)
+        return jsonify({"success": result.get("success", False), "data": result})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Pause failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/resume', methods=['POST'])
+def resume_simulation(simulation_id: str):
+    """Resume a paused simulation."""
+    try:
+        result = simulation_control_service.resume(simulation_id)
+        return jsonify({"success": result.get("success", False), "data": result})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Resume failed: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/<simulation_id>/fork', methods=['POST'])
+def fork_simulation(simulation_id: str):
+    """Copy a run under a new id, optionally changing agents' states.
+
+    Body: new_simulation_id, and agent_modifications keyed by agent id.
+    """
+    try:
+        data = request.get_json() or {}
+        new_simulation_id = data.get('new_simulation_id')
+        if not new_simulation_id:
+            return _bad("Provide 'new_simulation_id'")
+
+        return jsonify({"success": True, "data": simulation_control_service.fork(
+            simulation_id, new_simulation_id, data.get('agent_modifications', {}))})
+    except ValueError as e:
+        return _bad(str(e))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Fork failed: {str(e)}")
         return _failed(e)
 
 

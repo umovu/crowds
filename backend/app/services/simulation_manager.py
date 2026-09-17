@@ -689,6 +689,33 @@ class SimulationManager:
     def get_simulation(self, simulation_id: str) -> Optional[SimulationState]:
         """Get simulation state"""
         return self._load_simulation_state(simulation_id)
+
+    def set_status(self, simulation_id: str,
+                   status: SimulationStatus) -> Optional[SimulationState]:
+        """Move a run to `status` and save it. None when the run does not exist.
+
+        Public because stopping a run has to leave it paused and closing one has to
+        leave it completed, and that is the control service's call rather than this
+        class's. It goes through `_save_simulation_state` so the updated timestamp,
+        the off-model check and the in-memory cache all stay correct — writing the
+        state file directly would skip all three.
+        """
+        state = self._load_simulation_state(simulation_id)
+        if not state:
+            return None
+        state.status = status
+        self._save_simulation_state(state)
+        return state
+
+    def save(self, state: SimulationState) -> None:
+        """Persist a state object the caller already holds and has changed.
+
+        Distinct from `set_status`, which RELOADS the state before touching it. When a
+        caller has already set other fields on its own copy — `/prepare` pre-fills
+        `entities_count` and `entity_types` before marking the run PREPARING — going
+        through `set_status` would reload over those and throw them away.
+        """
+        self._save_simulation_state(state)
     
     def list_simulations(
         self,
