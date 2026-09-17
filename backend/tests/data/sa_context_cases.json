@@ -1,0 +1,152 @@
+{
+  "_how_to_read": [
+    "One day's real search snippets, and blocks of 'current realities' written from them.",
+    "verdict fine = the judge should pass it. Anything else = the judge should catch it.",
+    "unsupported / invented_number / stale_crisis / wrong_shape / off_topic name what is wrong.",
+    "verdict null = a real block nobody has marked yet. Mark it before the case counts.",
+    "Broken blocks were written by hand from the same snippets, so their verdicts are certain."
+  ],
+  "as_of": "2026-09-18",
+  "snippets": [
+    "South Africa faces considerable structural obstacles to its future development. Poverty, inequality and unemployment, all of which are structurally and ...",
+    "South Africa has been struggling with low economic growth and skyrocketing unemployment, people are blaming migrants. unemployment has risen. ...",
+    "This reality is at the heart of one of the country's most persistent development challenges: youth unemployment.That is why 1 September 2026 marks an important ...",
+    "The coming year could see yet more trouble, including interstate conflict. Wars in the Horn of Africa and the Great Lakes, along with a ...",
+    "1. Escalating Conflicts Across the Continent - Sudan, the Great Lakes region, and the Sahel are experiencing deadly conflicts that risk ...",
+    "Key issues · Elections 2024 · Job creation · Government and opportunities for youth · Anti-corruption · Land reform · Gender-based violence · Floods response · Economic ...",
+    "South Africa has not had load shedding since May 16, 2025.",
+    "South Africa passed 400 days without load shedding in 2026. Rising Eskom tariffs and future supply risk make solar the smart choice.",
+    "While load shedding has been suspended since 15 May 2025—with only 26 hours recorded between 1 April and 11 September—load reduction remains a ...",
+    "Eskom is heading for a load shedding-free winter - yet electricity reform has stalled, a top business lobby has warned.",
+    "South Africans are welcoming Eskom's milestone of one year without loadshedding, but concerns are mounting over the rising cost of electricity ...",
+    "Eskom announced on 22 April that supply is set to remain stable throughout the 2026 winter season – a huge improvement from 205 days of load- ...",
+    "South African unemployment rate, which has risen to 32.7% in the first quarter of 2026, with over 8.1 million people currently unemployed.",
+    "Alongside the cost of living crisis, is the unemployment crisis with 43.7% of working age South Africans unable to secure a job.",
+    "The Quarterly Labour Force Survey (QLFS) reports an unemployment rate of 31,9% in Q4: 2024, continued difficulty many South Africans face in ...",
+    "A new report from the @livingwagesa has set South Africa's 2026 living wage at R20,000 a month net, describing it as the amount needed for a ...",
+    "rising unemployment and living costs continue to deepen hardship across communities. of-living crisis.",
+    "South Africa's rising cost of living is placing increasing pressure on low-income households, with sharp increases in electricity and water ...",
+    "Medicine shortages in clinics are caused by poor management, lack of live budgeting, unqualified MECs, provincial distribution failures, budget ...",
+    "by MM Ndwandwe · 2026 · Cited by 1 — This study investigated healthcare professionals' perceptions of the impact of medicine shortages in public health facilities of the Eastern Cape, South Africa.",
+    "The Department also wishes to clarify that reports of medicine shortages do no necessarily mean that patients are unable to receive treatment.",
+    "The Department has been made aware of concerns regarding medicines that may appear to be \"out of stock\" at public healthcare facilities in ...",
+    "Media Statement: Health Department assures the public of stable medicine supply 01 September 2026, DOWNLOAD. Media Advisory: Deputy Minister Phaahla to lead ...",
+    "by SM Zuma · 2022 · Cited by 32 — However, various provinces in South Africa experience problems with consistent provisioning of essential medicines. The resultant stock-outs, ..."
+  ],
+  "cases": [
+    {
+      "id": "real-block-1",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people currently unemployed.\n- Youth unemployment remains one of the country’s most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to South Africa’s future development.\n- The cost of living is rising, with sharp increases in electricity and water placing pressure on low-income households.\n- A 2026 living wage is set at R20,000 a month net, while rising unemployment and living costs deepen hardship across communities.\n- Load-shedding has been suspended since May 2025, with over 400 days without load-shedding, but electricity tariffs are rising.\n- Medicine shortages are reported in public health facilities, including in the Eastern Cape, though the Health Department says supply is stable.\n- Escalating conflicts in Sudan, the Great Lakes region and the Sahel are seen as risks that could bring more trouble in the coming year.",
+      "verdict": null,
+      "note": "REAL output from today's snippets — mark this one yourself"
+    },
+    {
+      "id": "real-block-2",
+      "block": "- Poverty, inequality and unemployment remain structural obstacles to development.  \n- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.  \n- Youth unemployment remains one of the country’s most persistent development challenges.  \n- The cost of living is rising, with sharp increases in electricity and water placing pressure on low-income households.  \n- Load shedding has been suspended since May 2025, but electricity tariffs are rising and load reduction continues.  \n- Medicine shortages are reported in public health facilities, including in the Eastern Cape.  \n- Conflicts in the Horn of Africa, the Great Lakes and the Sahel risk escalating into wider regional instability.",
+      "verdict": null,
+      "note": "REAL output from today's snippets — mark this one yourself"
+    },
+    {
+      "id": "real-block-3",
+      "block": "- Poverty, inequality and unemployment remain structural obstacles to South Africa's development.\n- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment is one of the country's most persistent development challenges.\n- The cost of living is rising, with sharp increases in electricity and water placing pressure on low-income households.\n- A 2026 living wage is set at R20,000 a month net, deepening hardship as living costs climb.\n- Load-shedding has been suspended since May 2025, with over 400 days without load-shedding, but electricity tariffs are rising.\n- Medicine shortages in public clinics are reported in some provinces, though the Health Department assures stable supply.",
+      "verdict": null,
+      "note": "REAL output from today's snippets — mark this one yourself"
+    },
+    {
+      "id": "unsupported-crime-bullet",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- Violent crime in townships has reached its highest level in a decade.",
+      "verdict": "unsupported",
+      "note": "no snippet mentions crime levels"
+    },
+    {
+      "id": "unsupported-taxi-bullet",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- Taxi fares have gone up sharply across Gauteng this month.",
+      "verdict": "unsupported",
+      "note": "no snippet mentions taxi fares"
+    },
+    {
+      "id": "unsupported-water-bullet",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Most municipalities are now rationing water for several days a week.",
+      "verdict": "unsupported",
+      "note": "snippets mention water price rises, not rationing"
+    },
+    {
+      "id": "invented-food-percentage",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- Food prices have risen 31% since 2022.",
+      "verdict": "invented_number",
+      "note": "no snippet gives a food price figure"
+    },
+    {
+      "id": "invented-clinic-percentage",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages affect 4 in 10 public clinics nationally.",
+      "verdict": "invented_number",
+      "note": "the 4-in-10 figure appears in no snippet"
+    },
+    {
+      "id": "invented-grant-amount",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- The child support grant is now R560 a month.",
+      "verdict": "invented_number",
+      "note": "no snippet gives a grant amount"
+    },
+    {
+      "id": "stale-loadshedding",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding continues to disrupt households and small businesses almost daily.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.",
+      "verdict": "stale_crisis",
+      "note": "snippets say load-shedding has been suspended since May 2025"
+    },
+    {
+      "id": "stale-loadshedding-stage",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Stage 4 load-shedding is back, with businesses losing trading hours every evening.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.",
+      "verdict": "stale_crisis",
+      "note": "directly contradicts the 400-days-without snippets"
+    },
+    {
+      "id": "stale-covid",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- Covid restrictions still limit how many people may gather indoors.",
+      "verdict": "stale_crisis",
+      "note": "nothing in the snippets; a long-past crisis"
+    },
+    {
+      "id": "too-few-bullets",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.",
+      "verdict": "wrong_shape",
+      "note": "3 bullets, the criteria ask for 6-8"
+    },
+    {
+      "id": "too-many-bullets",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- Electricity reform has stalled, a business lobby warns.\n- Eskom expects stable supply through the 2026 winter.\n- A 2026 living wage is set at R20,000 a month net.\n- Provincial distribution failures worsen clinic stock-outs.\n- Migrants are being blamed for unemployment in public debate.",
+      "verdict": "wrong_shape",
+      "note": "12 bullets, the criteria ask for 6-8"
+    },
+    {
+      "id": "essay-not-bullets",
+      "block": "South Africa today faces a difficult moment. Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people out of work, and the cost of living keeps climbing as electricity and water prices rise. Load-shedding, at least, has been suspended since May 2025, though load reduction continues and Eskom tariffs are going up.",
+      "verdict": "wrong_shape",
+      "note": "prose, not 6-8 bullets"
+    },
+    {
+      "id": "off-topic-foreign-conflict",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Wars in the Horn of Africa, the Great Lakes and the Sahel risk escalating.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.",
+      "verdict": "off_topic",
+      "note": "snippet-supported but not a reality facing ordinary South Africans; the real blocks did this"
+    },
+    {
+      "id": "off-topic-elections-list",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Key issues include elections, land reform, anti-corruption and gender-based violence.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.",
+      "verdict": "off_topic",
+      "note": "a keyword list from a snippet, not a lived reality"
+    },
+    {
+      "id": "hedged-nothing-bullet",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- Some things may be improving in some places, while others may not.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.",
+      "verdict": "unsupported",
+      "note": "says nothing, supported by nothing"
+    },
+    {
+      "id": "future-prediction",
+      "block": "- Unemployment has risen to 32.7% in the first quarter of 2026, with over 8.1 million people unemployed.\n- Youth unemployment remains one of the country's most persistent development challenges.\n- Poverty, inequality and unemployment remain structural obstacles to development.\n- The cost of living is rising, with sharp increases in electricity and water on low-income households.\n- Load-shedding has been suspended since May 2025, though load reduction continues.\n- Eskom tariffs are rising and concern about the cost of electricity is growing.\n- Medicine shortages are reported in public clinics, though the Health Department says supply is stable.\n- Load-shedding is expected to return by winter 2027.",
+      "verdict": "unsupported",
+      "note": "a prediction; snippets forecast stable supply, not a return"
+    }
+  ]
+}

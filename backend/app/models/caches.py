@@ -60,6 +60,8 @@ class JudgeLogLine(DataModel):
     pass_: bool = Field(alias='pass', json_schema_extra={'when': 'always'})
     reasoning: str = Field(json_schema_extra={'when': 'always'})
     evidence: str = Field(json_schema_extra={'when': 'always'})
+    # True when the judge CALL broke, so score 0 says nothing about the output.
+    errored: bool = Field(default=False, json_schema_extra={'when': 'optional'})
 
 
 class PersonaCacheEntryMeta(DataModel):
