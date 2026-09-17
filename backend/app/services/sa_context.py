@@ -274,7 +274,11 @@ def _distil(sources: List[Dict[str, str]]) -> Optional[str]:
         "facing ordinary South Africans, to ground a simulation. STRICT RULES: use "
         "ONLY what the snippets support; never add facts not present in them; if a "
         "past crisis (e.g. load-shedding) is described as eased or resolved, reflect "
-        "that or omit it; include a number only if a snippet gives one. Output 6-8 "
+        "that or omit it; include a number only if a snippet gives one. Every bullet "
+        "must be something ordinary South Africans LIVE WITH — searches return "
+        "continental news and political topic lists, and bullets about wars "
+        "elsewhere or lists of election issues tell a simulated person nothing. "
+        "Output 6-8 "
         "short, plain present-tense bullet lines. No preamble, no closing line."
     )
     user = f"Today is {today}.\n\nSNIPPETS:\n{joined}\n\nCurrent realities (6-8 bullets):"

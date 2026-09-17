@@ -225,11 +225,19 @@ REQUIRED:
         not contain facts absent from the snippets."""
         criteria = """Evaluate this list of current South African realities against the SNIPPETS in context.
 
+This block is pasted into every simulated person's prompt for the day, so ONE bad
+bullet is a failure of the whole block, not a small deduction.
+
 REQUIRED:
 1. Every bullet is supported by at least one snippet; quote any unsupported bullet in evidence
 2. Numbers appear ONLY if a snippet gives them
-3. No stale-crisis framing the snippets don't support
-4. 6-8 short bullets, plain declarative prose"""
+3. No stale-crisis framing the snippets don't support, and no prediction of a future one
+4. Every bullet is a reality ordinary South Africans live with — not foreign affairs,
+   not a list of political topics, not a bullet that says nothing
+5. 6-8 short bullets, plain declarative prose
+
+SCORING: score 3 or less if ANY bullet breaks rules 1-4, however good the rest are.
+Score 5 or less if the shape breaks rule 5. Only a block with nothing wrong scores 7+."""
         return self.judge(criteria, block, {"snippets": snippets})
 
     def judge_competitor_tiering(self, competitors: List[Dict[str, Any]],
