@@ -301,9 +301,13 @@ def _distil(sources: List[Dict[str, str]]) -> Optional[str]:
         )
         return (resp.choices[0].message.content or "").strip()
     try:
-        from .judge_service import judge_enabled, get_judge_service, judge_best_of, record_judgement
-        if judge_enabled():
-            svc = get_judge_service()
+        from .judge_service import (get_judge_service, judge_best_of, record_judgement,
+                                    sa_context_judge_enabled)
+        # Judged on the sim tier and on by default: this block is written once a
+        # day and reaches every persona prompt, and the cheap tier scored the
+        # same as the Plus tier on tests/data/sa_context_cases.json.
+        if sa_context_judge_enabled():
+            svc = get_judge_service(cheap=True)
             text, judge_result, regenerated = judge_best_of(
                 generate=_generate,
                 judge=lambda t: svc.judge_sa_context(t, snippets),

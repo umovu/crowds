@@ -9,6 +9,7 @@ path costs an extra Plus-tier call, so only enable when evaluating output qualit
 
 import json
 import logging
+import os
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from typing import Callable, Tuple
@@ -42,15 +43,28 @@ class JudgeResult:
 
 
 class JudgeService:
-    """LLM-as-judge using Plus-tier model for advisory quality scoring."""
+    """LLM-as-judge for advisory quality scoring.
+
+    `cheap=True` judges on the sim tier (SIM_LLM_*) instead of the Plus tier.
+    Measured on tests/data/sa_context_cases.json: both tiers caught 16 of 16 bad
+    context blocks and agreed on the real ones, so the SA-context judge — which
+    runs every day for every user — has no reason to pay Plus-tier rates.
+    """
 
     MIN_PASS_SCORE = 7
 
-    def __init__(self):
+    def __init__(self, cheap: bool = False):
+        self.cheap = cheap
         self.client = self._create_client()
 
     def _create_client(self) -> LLMClient:
-        """Create LLM client using Plus-tier (LLM_*) config."""
+        """Plus-tier (LLM_*) client, or the sim tier (SIM_LLM_*) when cheap."""
+        if self.cheap:
+            return LLMClient(
+                api_key=os.environ.get("SIM_LLM_API_KEY") or Config.LLM_API_KEY,
+                base_url=os.environ.get("SIM_LLM_BASE_URL") or Config.LLM_BASE_URL,
+                model=os.environ.get("SIM_LLM_MODEL") or Config.LLM_MODEL_NAME,
+            )
         return LLMClient(
             api_key=Config.LLM_API_KEY,
             base_url=Config.LLM_BASE_URL,
@@ -281,6 +295,16 @@ def record_judgement(kind: str, result: JudgeResult, *, run_id: Optional[str] = 
         logger.warning(f"judge_log append failed ({kind}): {e}")
 
 
+def sa_context_judge_enabled() -> bool:
+    """The daily SA-context block is judged even when JUDGE_ENABLED is off.
+
+    It is written once a day, shared by every run, and pasted into every persona
+    prompt — an unchecked bad block poisons a whole day. On the sim tier it costs
+    a fraction of a cent. Switch off with SA_CONTEXT_JUDGE=0.
+    """
+    return os.environ.get("SA_CONTEXT_JUDGE", "1").lower() not in ("0", "false", "no")
+
+
 def judge_enabled() -> bool:
     """True when the advisory judge is switched on (Config.JUDGE_ENABLED).
     Call sites should short-circuit on this before constructing the service so a
@@ -288,12 +312,17 @@ def judge_enabled() -> bool:
     return Config.JUDGE_ENABLED
 
 
-# Singleton
+# Singletons, one per tier
 _judge_service: Optional[JudgeService] = None
+_cheap_judge_service: Optional[JudgeService] = None
 
 
-def get_judge_service() -> JudgeService:
-    global _judge_service
+def get_judge_service(cheap: bool = False) -> JudgeService:
+    global _judge_service, _cheap_judge_service
+    if cheap:
+        if _cheap_judge_service is None:
+            _cheap_judge_service = JudgeService(cheap=True)
+        return _cheap_judge_service
     if _judge_service is None:
         _judge_service = JudgeService()
     return _judge_service
