@@ -68,9 +68,36 @@ _KEYWORD_ARCHETYPES = {
     "agri": ["communal_farmer", "smallholder_emerging_farmer"],
     # Salaried professionals (QLFS professional build)
     "professional": ["urban_professional"],
-    "premium": ["urban_professional", "civic_moderate"],
     "corporate": ["urban_professional"],
     "salaried": ["urban_professional"],
+    # Well-off households. Without these a product for people with money got the
+    # national mix (tests/data/cast_cases.json measured it).
+    "premium": ["urban_professional", "affluent_urban_household", "comfortable_household"],
+    "luxury": ["urban_professional", "affluent_urban_household", "comfortable_household"],
+    "private school": ["affluent_urban_household", "comfortable_household"],
+    "independent school": ["affluent_urban_household", "comfortable_household"],
+    "medical aid": ["urban_professional", "affluent_urban_household", "comfortable_household"],
+    "suburb": ["affluent_urban_household", "comfortable_household"],
+    "homeowner": ["affluent_urban_household", "comfortable_household"],
+    "retirement": ["urban_professional", "comfortable_household"],
+    "annuity": ["urban_professional", "comfortable_household"],
+    "investment": ["urban_professional", "affluent_urban_household"],
+    "commercial farm": ["affluent_agricultural_household", "rural_landholding_household"],
+    "landowner": ["affluent_agricultural_household", "rural_landholding_household"],
+    # Traders
+    "trader": ["informal_trader"],
+    "vendor": ["informal_trader"],
+    "hawker": ["informal_trader"],
+    # Family roles
+    "parents": ["guardian_parent"],
+    "guardian": ["guardian_parent", "gogo_guardian"],
+    "grandmother": ["gogo_guardian"],
+    "grandchild": ["gogo_guardian"],
+    "gogo": ["gogo_guardian"],
+    # Public health users (older and grant-reliant people carry most chronic care)
+    "clinic": ["grant_dependent_survivor", "gogo_guardian"],
+    "chronic": ["grant_dependent_survivor", "gogo_guardian"],
+    "medication": ["grant_dependent_survivor", "gogo_guardian"],
 }
 
 _PROVINCES = [

@@ -1,0 +1,226 @@
+{
+  "_how_to_read": [
+    "Each case targets one people type that really exists in the library (target), with its library count.",
+    "Bigger groups get more cases. Groups under 10 people only appear inside a shared 'want' group.",
+    "want: a list of groups. Each group needs at least one seat from any archetype in it.",
+    "avoid: each archetype listed may take at most 1 seat.",
+    "well_off_min / struggling_max: seat counts out of 12, using the groups below.",
+    "By chance alone a room has about 3 well-off and 4 struggling seats."
+  ],
+  "room_size": 12,
+  "groups": {
+    "well_off": ["affluent_urban_household", "affluent_agricultural_household", "comfortable_household", "urban_professional", "rural_landholding_household"],
+    "struggling": ["grant_dependent_survivor", "unemployed_youth", "disillusioned_dropout", "informal_trader", "gogo_guardian"]
+  },
+  "cases": [
+    {
+      "id": "municipal-water-outages",
+      "target": "civic_moderate (46)",
+      "source": "made up",
+      "pitch": "The municipality announces two more months of water outages while pipes are replaced.",
+      "want": [["civic_moderate", "institutional_loyalist", "community_leader"]]
+    },
+    {
+      "id": "minimum-wage-control",
+      "target": "civic_moderate (46), control: room should stay mixed",
+      "source": "made up",
+      "pitch": "Should the national minimum wage go up by 10%?",
+      "want": [["civic_moderate"]],
+      "well_off_min": 1,
+      "struggling_max": 8
+    },
+    {
+      "id": "second-chance-matric",
+      "target": "disillusioned_dropout (42)",
+      "source": "made up",
+      "pitch": "A free second-chance matric programme for adults who left school without finishing.",
+      "want": [["disillusioned_dropout"]],
+      "avoid": ["affluent_agricultural_household", "urban_professional"]
+    },
+    {
+      "id": "youth-learnerships",
+      "target": "disillusioned_dropout (42), unemployed_youth (22)",
+      "source": "made up",
+      "pitch": "A paid learnership programme for unemployed youth aged 18 to 29.",
+      "want": [["unemployed_youth"], ["disillusioned_dropout"]],
+      "avoid": ["affluent_agricultural_household"]
+    },
+    {
+      "id": "sassa-grant-increase",
+      "target": "grant_dependent_survivor (41)",
+      "source": "made up",
+      "pitch": "The old age pension and child support grant each rise by R50 a month.",
+      "want": [["grant_dependent_survivor"], ["gogo_guardian", "guardian_parent"]],
+      "well_off_min": 1
+    },
+    {
+      "id": "private-clinic-chronic-meds",
+      "target": "grant_dependent_survivor (41)",
+      "source": "tester: Ntombi",
+      "pitch": "A private clinic that hands out free government chronic medication so patients can skip public clinic queues.",
+      "want": [["grant_dependent_survivor", "gogo_guardian"], ["civic_moderate", "institutional_loyalist"]],
+      "avoid": ["learner"]
+    },
+    {
+      "id": "diabetes-awareness-screening",
+      "target": "grant_dependent_survivor (41)",
+      "source": "tester: Ntombi (diabetes month)",
+      "pitch": "Free diabetes screening days at township clinics during Diabetes Awareness Month in November.",
+      "want": [["grant_dependent_survivor", "gogo_guardian"]],
+      "avoid": ["learner"]
+    },
+    {
+      "id": "matric-maths-tutoring",
+      "target": "learner (38)",
+      "source": "made up",
+      "pitch": "A R99 a month maths tutoring app for matric learners.",
+      "want": [["learner"], ["guardian_parent", "gogo_guardian"]]
+    },
+    {
+      "id": "school-smartphone-ban",
+      "target": "learner (38), guardian_parent (23)",
+      "source": "tester: Nkosinathi (smartphone ban example)",
+      "pitch": "Government plans to ban smartphones in all public and private schools.",
+      "want": [["learner"], ["guardian_parent", "gogo_guardian"]],
+      "well_off_min": 2
+    },
+    {
+      "id": "school-feeding-scheme",
+      "target": "learner (38)",
+      "source": "made up",
+      "pitch": "The school nutrition programme is extended to weekends and school holidays.",
+      "want": [["learner"], ["guardian_parent", "gogo_guardian"]]
+    },
+    {
+      "id": "premium-gym-sandton",
+      "target": "affluent_urban_household (30)",
+      "source": "made up",
+      "pitch": "A premium gym in Sandton at R1,200 a month with personal trainers.",
+      "want": [["affluent_urban_household", "urban_professional"]],
+      "well_off_min": 6,
+      "struggling_max": 2
+    },
+    {
+      "id": "suburb-security-app",
+      "target": "affluent_urban_household (30)",
+      "source": "made up",
+      "pitch": "A neighbourhood watch app for suburban homeowners linked to private security.",
+      "want": [["affluent_urban_household", "comfortable_household"]],
+      "well_off_min": 4
+    },
+    {
+      "id": "thuto-independent-school-parents",
+      "target": "guardian_parent (23), affluent_urban_household (30)",
+      "source": "tester: Nkosinathi (Thuto.io)",
+      "pitch": "A school engagement app for parents at independent schools that shows their child's daily effort so parents can reward it.",
+      "want": [["guardian_parent"], ["affluent_urban_household", "comfortable_household", "urban_professional"]],
+      "well_off_min": 5,
+      "struggling_max": 3
+    },
+    {
+      "id": "private-school-fee-tax-break",
+      "target": "guardian_parent (23)",
+      "source": "made up",
+      "pitch": "Parents get a tax deduction for private school fees.",
+      "want": [["guardian_parent"]],
+      "well_off_min": 4
+    },
+    {
+      "id": "commercial-farm-security",
+      "target": "affluent_agricultural_household (24)",
+      "source": "made up",
+      "pitch": "A rural security service for commercial farms, with drones and armed response.",
+      "want": [["affluent_agricultural_household", "rural_landholding_household"]],
+      "avoid": ["learner"],
+      "well_off_min": 4
+    },
+    {
+      "id": "biodigester-r17000",
+      "target": "affluent_agricultural_household (24), rural_landholding_household (9)",
+      "source": "tester: biodigester (PRICE_AWARE_CAST)",
+      "pitch": "A home biodigester for R17,000 that turns kitchen and animal waste into cooking gas.",
+      "want": [["affluent_agricultural_household", "rural_landholding_household", "smallholder_emerging_farmer", "communal_farmer"]],
+      "well_off_min": 4,
+      "struggling_max": 4
+    },
+    {
+      "id": "street-trader-permits",
+      "target": "informal_trader (23)",
+      "source": "made up",
+      "pitch": "The city doubles permit fees for street traders and moves them off main roads.",
+      "want": [["informal_trader"]],
+      "avoid": ["affluent_agricultural_household"]
+    },
+    {
+      "id": "township-trader-loans",
+      "target": "informal_trader (23), small_business_owner (6)",
+      "source": "made up",
+      "pitch": "Low-interest loans of up to R50,000 for informal traders and township businesses.",
+      "want": [["informal_trader", "small_business_owner"]]
+    },
+    {
+      "id": "township-delivery-drivers",
+      "target": "unemployed_youth (22)",
+      "source": "made up",
+      "pitch": "A delivery platform that hires township youth as motorbike delivery drivers.",
+      "want": [["unemployed_youth", "disillusioned_dropout"]],
+      "avoid": ["affluent_agricultural_household"]
+    },
+    {
+      "id": "cheap-daily-data",
+      "target": "unemployed_youth (22)",
+      "source": "made up",
+      "pitch": "R5 daily data bundles for young people who cannot afford monthly contracts.",
+      "want": [["unemployed_youth", "learner", "disillusioned_dropout"]]
+    },
+    {
+      "id": "retirement-annuity",
+      "target": "urban_professional (16)",
+      "source": "made up",
+      "pitch": "A retirement annuity product for salaried professionals with tax benefits.",
+      "want": [["urban_professional"]],
+      "well_off_min": 5,
+      "struggling_max": 2
+    },
+    {
+      "id": "nhi-medical-aid-tax",
+      "target": "urban_professional (16), comfortable_household (15)",
+      "source": "made up",
+      "pitch": "Medical aid members lose their tax credit to help fund National Health Insurance.",
+      "want": [["urban_professional", "affluent_urban_household", "comfortable_household"]],
+      "well_off_min": 4
+    },
+    {
+      "id": "home-solar-financing",
+      "target": "comfortable_household (15)",
+      "source": "made up",
+      "pitch": "Home solar and battery systems for R45,000, paid off over five years.",
+      "want": [["comfortable_household", "affluent_urban_household"]],
+      "well_off_min": 4,
+      "struggling_max": 4
+    },
+    {
+      "id": "farmer-livestock-market-app",
+      "target": "communal_farmer (8), smallholder_emerging_farmer (6)",
+      "source": "tester: Tumelo (farmer archetypes)",
+      "pitch": "A mobile app that links communal and emerging farmers to livestock buyers.",
+      "want": [["communal_farmer", "smallholder_emerging_farmer"]],
+      "avoid": ["learner", "urban_professional"]
+    },
+    {
+      "id": "cattle-vaccine-subsidy",
+      "target": "communal_farmer (8), rural_landholding_household (9)",
+      "source": "made up",
+      "pitch": "Free foot-and-mouth vaccines for cattle owners in rural areas.",
+      "want": [["communal_farmer", "smallholder_emerging_farmer", "rural_landholding_household", "affluent_agricultural_household"]],
+      "avoid": ["learner", "urban_professional"]
+    },
+    {
+      "id": "grandmothers-raising-grandchildren",
+      "target": "gogo_guardian (8)",
+      "source": "made up",
+      "pitch": "An extra monthly grant for grandmothers raising their grandchildren.",
+      "want": [["gogo_guardian", "grant_dependent_survivor"], ["guardian_parent", "gogo_guardian"]]
+    }
+  ]
+}
