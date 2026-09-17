@@ -286,6 +286,26 @@ def _age_band(age) -> str | None:
     return "60+"
 
 
+def _youth_age_band(age) -> str | None:
+    """A finer split than `age_band` for research on young people.
+
+    `age_band` lumps 15 to 24 together, but youth studies recruit from 16 (school
+    learners) or 18 (young adults), so a claim from an 18-24 study must not reach a
+    15-year-old. Kept separate so the cards already written against 15-24 are unchanged.
+    """
+    try:
+        years = int(age)
+    except (TypeError, ValueError):
+        return None
+    if years < 16:
+        return "under-16"
+    if years < 18:
+        return "16-17"
+    if years < 25:
+        return "18-24"
+    return "25+"
+
+
 def situation_facts(profile: Dict) -> Dict[str, str]:
     """A persona's measured facts, flattened to {field: value-as-string}.
 
@@ -307,6 +327,9 @@ def situation_facts(profile: Dict) -> Dict[str, str]:
     band = _age_band(profile.get("age"))
     if band:
         facts["age_band"] = band
+    youth = _youth_age_band(profile.get("age"))
+    if youth:
+        facts["youth_age_band"] = youth
     return facts
 
 

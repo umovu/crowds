@@ -1,0 +1,204 @@
+{
+  "id": "healthcare-access-barriers-sa",
+  "citation": [
+    "Mntungwana S et al. (2025). Barriers to Chronic Disease Healthcare Access in Rural Eastern Cape Province, South Africa. International Journal of Environmental Research and Public Health. doi:10.3390/ijerph22121881",
+    "Tshivhase L et al. (2024). Barriers to accessing and utilising under-five primary health care services in Vhembe District. African Journal of Primary Health Care & Family Medicine. doi:10.4102/phcfm.v16i1.4429"
+  ],
+  "segment_tags": [
+    "rural_landholding_household",
+    "grant_dependent_survivor",
+    "gogo_guardian",
+    "guardian_parent"
+  ],
+  "applies_when": [
+    {
+      "geotype": [
+        "Traditional",
+        "Farms"
+      ],
+      "owns_vehicle": [
+        "none"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    },
+    {
+      "time_to_health_facility": [
+        "30–89 minutes",
+        "90 minutes and more"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    },
+    {
+      "geotype": [
+        "Traditional",
+        "Farms"
+      ],
+      "transport_to_health_facility": [
+        "Walking"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "text": "Distance and weather are the binding constraints: a facility is judged reachable only if the journey survives bad roads, rain, unreliable taxis, and empty pockets",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P20",
+        "P21",
+        "P22"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether it removes the journey, not by what it offers at the end of it"
+      ],
+      "objections": [
+        "Will I be able to reach it when it rains or when I have no transport money?"
+      ],
+      "vocabulary": [
+        "transport money"
+      ]
+    },
+    {
+      "text": "The grant is mentally divided among groceries, stokvels, transport, and emergencies, so a clinic trip is weighed against every other survival need and dropped when money runs out",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P15"
+      ],
+      "evaluative_rules": [
+        "Weigh any health cost against groceries, stokvels, and emergencies before committing"
+      ],
+      "objections": [
+        "Will this take money away from groceries, stokvels, or emergencies?"
+      ],
+      "vocabulary": [
+        "government grant",
+        "stokvels"
+      ]
+    },
+    {
+      "text": "Waiting time is experienced as bodily harm: hunger, thirst, and exposure in queues make attendance feel worse than staying home",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P11",
+        "P12",
+        "P13",
+        "P24",
+        "P25",
+        "P28",
+        "P36",
+        "P38"
+      ],
+      "evaluative_rules": [
+        "Judge a facility by how the wait treats your body, not by the treatment promised"
+      ],
+      "objections": [
+        "Will I have to wait for hours hungry, thirsty, or outside in bad weather?"
+      ],
+      "vocabulary": [
+        "stand outside in bad weather"
+      ]
+    },
+    {
+      "text": "Illness is classified before treatment is chosen: conditions labelled African or mild are routed to traditional healers, herbs, or pharmacies, not the clinic",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P29",
+        "P30",
+        "P31",
+        "P32",
+        "P33",
+        "P34",
+        "P35"
+      ],
+      "evaluative_rules": [
+        "Sort the illness first: African or mild conditions go to traditional or home care, not the clinic"
+      ],
+      "objections": [
+        "Is this for an illness that my family treats with traditional healers or herbs?"
+      ],
+      "vocabulary": [
+        "traditional healers",
+        "African diseases"
+      ]
+    },
+    {
+      "text": "Respect is the test of a service: staff who are slow, distracted, or dismissive signal that patients are not valued, so the facility is bypassed or endured with dread",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P14",
+        "P23",
+        "P24",
+        "P25",
+        "P26",
+        "P27",
+        "P37"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether its staff treat you as valued, not by the medicine on the shelf"
+      ],
+      "objections": [
+        "Will the staff treat me like I matter, or will I leave feeling drained?"
+      ],
+      "vocabulary": []
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Eastern Cape and Vhembe District, Limpopo, South Africa",
+  "year_range": "2024-2024",
+  "confidence": "Two rural qualitative studies: 32 people (23 patients, 9 health professionals) at Eastern Cape facilities, fieldwork November-December 2024; and 16 guardians of under-fives at two Vhembe (Limpopo) clinics, fieldwork year not stated, published 2024. Mechanisms durable; magnitudes unknown, and both settings are rural, so urban travel and queue details may differ.",
+  "comb_gaps": [
+    "capability",
+    "opportunity",
+    "motivation"
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "hospital",
+    "nurse",
+    "nurses",
+    "doctor",
+    "medicine",
+    "medication",
+    "treatment",
+    "health",
+    "healthcare",
+    "consultation",
+    "appointment",
+    "chronic",
+    "sick",
+    "illness",
+    "pills"
+  ]
+}
