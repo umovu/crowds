@@ -40,6 +40,17 @@ _PRICE_RE = re.compile(
 )
 _MONTHLY_RE = re.compile(r"month|monthly|/\s*mo\b|\bp\.?m\.?\b", re.IGNORECASE)
 
+# Money the pitch OFFERS the person — a loan, grant, subsidy, bursary, prize or
+# salary — is not a price they must find. Read as one, "loans of up to R50,000"
+# priced a township product out of reach of everyone it was for, and the room
+# came back all well-off. Checked in the words just before the figure.
+_INBOUND_MONEY_RE = re.compile(
+    r"\b(loan|loans|grant|grants|subsidy|subsidised|subsidized|bursary|bursaries|"
+    r"stipend|salary|salaries|wage|wages|payout|prize|funding|rebate|refund|"
+    r"credit|financing|compensation|pension)\b[^.]{0,40}$",
+    re.IGNORECASE,
+)
+
 
 def parse_price(pitch: str) -> Optional[Dict[str, Any]]:
     """The largest rand figure stated in the pitch, and whether it recurs.
@@ -50,6 +61,8 @@ def parse_price(pitch: str) -> Optional[Dict[str, Any]]:
     """
     best: Optional[Dict[str, Any]] = None
     for m in _PRICE_RE.finditer(pitch or ""):
+        if _INBOUND_MONEY_RE.search((pitch or "")[:m.start()]):
+            continue  # money offered to them, not a price they pay
         amount = float(re.sub(r"[\s, ]", "", m.group(1)))
         monthly = bool(_MONTHLY_RE.search(m.group(2) or ""))
         if best is None or amount > best["amount"]:

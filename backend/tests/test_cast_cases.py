@@ -16,7 +16,7 @@ BACKEND = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
 LIBRARY = os.path.join(BACKEND, "app", "data", "persona_library", "personas.json")
 SCRIPT = os.path.join(BACKEND, "scripts", "check_cast_cases.py")
 
-BASELINE = 19
+BASELINE = 20
 
 
 def test_room_picker_score_does_not_drop():
