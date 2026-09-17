@@ -32,6 +32,7 @@ from flask import current_app, jsonify, request, send_file
 
 from . import simulation_read_bp
 from ..auth import current_user_id
+from ..models.task import TaskManager
 from ..repositories import simulation_repository as repo
 from ..services import (simulation_control_service, simulation_interview_service,
                         simulation_read_service, simulation_setup_service)
@@ -462,6 +463,64 @@ def get_interview_history():
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to get interview history: {str(e)}")
         return _failed(e)
+
+
+# ── preparing a run ─────────────────────────────────────────────────────────────
+@simulation_read_bp.route('/prepare', methods=['POST'])
+def prepare_simulation():
+    """Start preparing a run: read the graph, build the cast, generate the config.
+
+    Slow, so it returns a task_id immediately and the work continues on a background
+    thread. Poll /prepare/status. An already-prepared run answers straight away
+    unless `force_regenerate` is set.
+
+    No paywall here: a sim is gated at create and charged at start, so preparing an
+    already-created sim must always be allowed for its owner.
+    """
+    try:
+        data = request.get_json() or {}
+        if not data.get('simulation_id'):
+            return _bad("Please provide simulation_id")
+
+        return jsonify({"success": True, "data": simulation_setup_service.start_prepare(
+            data,
+            # Fetched in the request: the background thread cannot reach either.
+            storage=current_app.extensions.get('graph_storage'),
+            task_manager=TaskManager(),
+            user_id=current_user_id())})
+
+    except (simulation_setup_service.RunNotFound,
+            simulation_setup_service.ProjectNotFound) as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except (simulation_setup_service.MissingRequirement,
+            simulation_setup_service.NoCustomAgents) as e:
+        return _bad(str(e))
+    except ValueError as e:
+        # Includes "GraphStorage not initialized". 404 rather than 500, as before.
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to start preparation task: {str(e)}")
+        return _failed(e)
+
+
+@simulation_read_bp.route('/prepare/status', methods=['POST'])
+def get_prepare_status():
+    """Progress of a preparation. Body: task_id, or simulation_id, or both.
+
+    A simulation_id is answered from the files on disk, so a finished preparation is
+    reported even when its task is gone after a restart.
+    """
+    try:
+        data = request.get_json() or {}
+        return jsonify({"success": True, "data": simulation_setup_service.prepare_status(
+            task_id=data.get('task_id'), simulation_id=data.get('simulation_id'))})
+    except simulation_setup_service.NeedTaskOrSimulation as e:
+        return _bad(str(e))
+    except simulation_setup_service.TaskNotFound as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to query task status: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 # ── setting a run up ────────────────────────────────────────────────────────────

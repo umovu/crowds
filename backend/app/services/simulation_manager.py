@@ -706,6 +706,16 @@ class SimulationManager:
         state.status = status
         self._save_simulation_state(state)
         return state
+
+    def save(self, state: SimulationState) -> None:
+        """Persist a state object the caller already holds and has changed.
+
+        Distinct from `set_status`, which RELOADS the state before touching it. When a
+        caller has already set other fields on its own copy — `/prepare` pre-fills
+        `entities_count` and `entity_types` before marking the run PREPARING — going
+        through `set_status` would reload over those and throw them away.
+        """
+        self._save_simulation_state(state)
     
     def list_simulations(
         self,
