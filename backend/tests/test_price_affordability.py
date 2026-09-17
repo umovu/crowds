@@ -88,3 +88,22 @@ def test_a_month_and_monthly_read_as_recurring(pitch, amount):
     assert price == {"amount": float(amount), "monthly": True}
     # 2500/month clears the monthly loose cut; as a once-off it would not.
     assert derive_budget_tiers(pitch)["tiers"] == ["loose"]
+
+
+@pytest.mark.parametrize("pitch", [
+    "Low-interest loans of up to R50,000 for township entrepreneurs",
+    "A subsidy of R100 000 for households that install solar",
+    "A bursary of R60,000 a year for engineering students",
+    "A stipend of R3 500 a month for community health workers",
+])
+def test_money_offered_to_them_is_not_a_price(pitch):
+    """A loan, grant, subsidy, bursary or stipend is money coming IN. Read as a
+    price it emptied the room of the people the offer was for."""
+    assert parse_price(pitch) is None
+    assert derive_budget_tiers(pitch) is None
+
+
+def test_a_price_still_counts_when_the_pitch_also_offers_money():
+    """The full stop ends the offer: the second sentence states a real price."""
+    price = parse_price("Loans of up to R50,000 for traders. The app costs R199 a month.")
+    assert price == {"amount": 199.0, "monthly": True}
