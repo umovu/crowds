@@ -125,3 +125,4 @@ backend/scripts/out/*
 !backend/scripts/out/r10_ask_scenarios.json
 !backend/scripts/out/r10_item_lock.json
 !backend/scripts/out/REALISM_REPAIR_METHOD.json
+backend/judge_log.jsonl
