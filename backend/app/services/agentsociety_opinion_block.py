@@ -92,7 +92,8 @@ Additional SA realities relevant to policy stress-testing:
 """.strip()
 
 
-def build_sa_context(mode: str = "policy", snapshot: Optional[Dict] = None, historical: bool = False) -> str:
+def build_sa_context(mode: str = "policy", snapshot: Optional[Dict] = None,
+                     historical: bool = False, query: str = "") -> str:
     """Assemble the SA context block for a given mode.
 
     Core grounding is always included. The unrest/edge-case priming is appended
@@ -103,6 +104,11 @@ def build_sa_context(mode: str = "policy", snapshot: Optional[Dict] = None, hist
     entirely, so a backtest against a past survey date never sees facts that
     postdate it. `snapshot` pins one dated context for a whole run, so a cache
     refresh cannot change the facts halfway through.
+
+    `query` is the pitch text. When it names a South African place, a second,
+    smaller "NEAR YOU" block is appended below the national one (see
+    query_context). Off unless QUERY_CONTEXT=1, and silent when the pitch names
+    no place.
     """
     base = SA_CORE_CONTEXT
     if historical or historical_mode():
@@ -119,6 +125,15 @@ def build_sa_context(mode: str = "policy", snapshot: Optional[Dict] = None, hist
             base = base + "\n\n" + live
     except Exception as e:  # never let context-refresh break a run
         logger.warning("Live SA context unavailable, using static: %s", e)
+    # A local block for the place the pitch names, under the national one. Same
+    # fail-safe rule: anything missing and the persona sees what it sees today.
+    try:
+        from .query_context import local_context
+        near = local_context(query)
+        if near:
+            base = base + "\n\n" + near
+    except Exception as e:
+        logger.warning("Local context unavailable: %s", e)
     if mode == "policy":
         return base + "\n\n" + SA_UNREST_CONTEXT
     return base

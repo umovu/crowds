@@ -754,8 +754,14 @@ class OpinionCaptureSkill:
         # product / custom casts get core grounding only (no riot nudge). The
         # snapshot pins one dated context for the whole run, so a cache refresh
         # cannot change the facts halfway through.
+        # The pitch (product) or the scenario (policy) is also what the local
+        # "NEAR YOU" block is scoped to: if it names a place, that place is
+        # searched. Both are passed — a product pitch can name the place in
+        # either half.
+        seed_text = " ".join(x for x in (pitch_topic, initial_prompt or "") if x)
         sa_context = build_sa_context(
-            self._mode, snapshot=self._current_snapshot, historical=self._historical
+            self._mode, snapshot=self._current_snapshot, historical=self._historical,
+            query=seed_text,
         )
 
         if self._fast_mode and not is_first_encounter:

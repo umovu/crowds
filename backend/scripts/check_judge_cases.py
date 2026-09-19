@@ -35,7 +35,12 @@ def score(verbose=False):
 
     with open(CASES, encoding="utf-8") as fh:
         sheet = json.load(fh)
-    snippets, svc = sheet["snippets"], get_judge_service()
+    svc = get_judge_service()
+    # Most cases are judged against the day's national snippets. A case may name
+    # a different set instead ("snippets": "local"), because a NEAR YOU block has
+    # to be judged against the local search that produced it — judging it against
+    # national snippets would fail every local bullet as unsupported.
+    snippet_sets = {"national": sheet["snippets"], **(sheet.get("snippet_sets") or {})}
 
     caught = bad_total = wrong = good_total = 0
     for case in sheet["cases"]:
@@ -44,7 +49,8 @@ def score(verbose=False):
             if verbose:
                 print(f"SKIP  {case['id']} — not marked yet")
             continue
-        result = svc.judge_sa_context(case["block"], snippets)
+        snippets = snippet_sets[case.get("snippets", "national")]
+        result = svc.judge_sa_context(case["block"], snippets, place=case.get("place", ""))
         if result.errored:
             print(f"ERROR {case['id']} — judge call failed: {result.reasoning[:120]}")
             continue
