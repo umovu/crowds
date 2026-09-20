@@ -80,7 +80,7 @@
       "internal_state": {
         "type": "object",
         "when": "answered",
-        "note": "Snapshot of the agent's state after answering (attitudes, stance, emotion)."
+        "note": "Snapshot of the agent's state after answering (attitudes, stance)."
       },
       "impact_metadata": {
         "type": "object",

@@ -189,7 +189,7 @@ def parse_rounds(rounds_arg: str) -> Optional[List[int]]:
 
 def export_states(simulation_id: str,
                   rounds: Optional[List[int]] = None) -> Dict[str, Any]:
-    """Stance, radicalism, emotion and mobilisation per agent per round."""
+    """Stance, radicalism and mobilisation per agent per round."""
     from .data_exporter import SimulationDataExporter
     return SimulationDataExporter(simulation_id).export_agent_states(rounds=rounds)
 

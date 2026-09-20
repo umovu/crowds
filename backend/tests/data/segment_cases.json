@@ -1,0 +1,31 @@
+{
+  "about": "Answer sheet for the beachhead suggester: for a pitch, which 'who' segment is the best first customer. Scored by scripts/check_segment_cases.py. `accept` is the set that counts as right — more than one entry means either is defensible. `reject` names a plausible-looking wrong answer the suggester has actually given or could give. `blind` marks pitches the keyword table matches nothing on.",
+  "version": 1,
+  "cases": [
+    {"id": "second-chance-matric", "pitch": "A free second-chance matric programme for adults who left school without finishing.", "accept": ["unemployed", "youth"], "reject": ["learners"]},
+    {"id": "youth-learnerships", "pitch": "A paid learnership programme for unemployed youth aged 18 to 29.", "accept": ["unemployed", "youth"]},
+    {"id": "sassa-grant-increase", "pitch": "The old age pension and child support grant each rise by R50 a month.", "accept": ["grant_recipients", "gogo_guardians"]},
+    {"id": "matric-maths-tutoring", "pitch": "A R99 a month maths tutoring app for matric learners.", "accept": ["guardians", "learners", "fee_paying", "guardians_low_fee"], "reject": ["no_fee_school"]},
+    {"id": "school-feeding-scheme", "pitch": "The school nutrition programme is extended to weekends and school holidays.", "accept": ["no_fee_school", "guardians_no_fee", "learners_no_fee", "grant_recipients"]},
+    {"id": "premium-gym-sandton", "pitch": "A premium gym in Sandton at R1,200 a month with personal trainers.", "accept": ["professionals"], "reject": ["unemployed", "grant_recipients"]},
+    {"id": "thuto-independent-school-parents", "pitch": "A school engagement app for parents at independent schools that shows their child's daily effort so parents can reward it.", "accept": ["guardians_high_fee"], "reject": ["guardians", "no_fee_school", "guardians_no_fee"]},
+    {"id": "private-school-fee-tax-break", "pitch": "Parents get a tax deduction for private school fees.", "accept": ["guardians_high_fee", "fee_paying"], "reject": ["guardians_no_fee"]},
+    {"id": "street-trader-permits", "pitch": "The city doubles permit fees for street traders and moves them off main roads.", "accept": ["informal_traders"]},
+    {"id": "township-trader-loans", "pitch": "Low-interest loans of up to R50,000 for informal traders and township businesses.", "accept": ["informal_traders", "small_business"]},
+    {"id": "township-delivery-drivers", "pitch": "A delivery platform that hires township youth as motorbike delivery drivers.", "accept": ["unemployed", "youth"]},
+    {"id": "cheap-daily-data", "pitch": "R5 daily data bundles for young people who cannot afford monthly contracts.", "accept": ["youth", "unemployed", "learners"]},
+    {"id": "retirement-annuity", "pitch": "A retirement annuity product for salaried professionals with tax benefits.", "accept": ["professionals", "employed"], "reject": ["unemployed", "grant_recipients"]},
+    {"id": "farmer-livestock-market-app", "pitch": "A mobile app that links communal and emerging farmers to livestock buyers.", "accept": ["farmers", "smallholder_owners"]},
+    {"id": "cattle-vaccine-subsidy", "pitch": "Free foot-and-mouth vaccines for cattle owners in rural areas.", "accept": ["farmers", "smallholder_owners"]},
+    {"id": "grandmothers-raising-grandchildren", "pitch": "An extra monthly grant for grandmothers raising their grandchildren.", "accept": ["gogo_guardians", "grant_recipients"]},
+
+    {"id": "burial-plan-minibus-ranks", "pitch": "A R60-a-month burial plan sold at minibus ranks, paid by debit order.", "accept": ["grant_recipients", "gogo_guardians", "employed"], "blind": true},
+    {"id": "creche-working-mothers", "pitch": "An affordable day-care place for babies and toddlers so mothers can go back to work.", "accept": ["unemployed", "youth", "employed"], "blind": true},
+    {"id": "stokvel-bulk-buying", "pitch": "A bulk-buying club where neighbours pool money monthly and split a wholesale grocery order.", "accept": ["grant_recipients", "unemployed", "informal_traders"], "blind": true},
+    {"id": "minibus-driver-insurance", "pitch": "Cover for minibus owners that pays out while a damaged vehicle is off the road.", "accept": ["small_business", "informal_traders"], "blind": true},
+    {"id": "tractor-sharing-rural", "pitch": "Hire a tractor by the hour instead of buying one, booked by phone call.", "accept": ["farmers", "smallholder_owners"], "blind": true},
+    {"id": "prepaid-electricity-smoothing", "pitch": "Spread a big prepaid electricity top-up over four weekly payments at no extra cost.", "accept": ["grant_recipients", "unemployed", "employed"], "blind": true},
+    {"id": "homework-help-whatsapp", "pitch": "A WhatsApp line where a tutor answers one homework question a day, free for the first term.", "accept": ["guardians", "learners", "guardians_no_fee", "no_fee_school"], "blind": true},
+    {"id": "armed-response-smallholding", "pitch": "Round-the-clock armed response for plots and smallholdings outside town.", "accept": ["smallholder_owners", "farmers"], "blind": true}
+  ]
+}

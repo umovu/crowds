@@ -304,10 +304,17 @@ class OpinionCitizenAgent(PersonAgent):
         self._actor_archetype = actor_archetype
 
     # ------------------------------------------------------------------
-    # Psychological state: emotion, needs, attitudes (AgentSociety-inspired)
+    # Psychological state: needs, attitudes (AgentSociety-inspired)
+    #
+    # A six-emotion block used to ride along here and be injected into the
+    # interview context. Nothing ever populated it for a library persona, so
+    # every agent arrived with all six at 0 and `max()` handed back the first
+    # key — "sadness" — on 582 of 582 stored responses. An A/B over 45 real
+    # interviews showed the block was not inert either: setting joy to 8 moved
+    # the mean stance DOWN (+0.07 -> -0.33), because a raw score in the context
+    # reads as one more thing to hedge about, not as a mood. Removed rather than
+    # fixed: it has never carried signal, and it demonstrably carried noise.
     # ------------------------------------------------------------------
-
-    EMOTION_KEYS = ["sadness", "joy", "fear", "disgust", "anger", "surprise"]
     NEEDS_KEYS = [
         "physiological_hunger", "physiological_tired",
         "safety_physical", "safety_economic",
@@ -316,16 +323,7 @@ class OpinionCitizenAgent(PersonAgent):
     ]
 
     def _init_psychological_state(self, profile: Dict[str, Any]) -> None:
-        """Read emotion/needs/attitudes from profile into live skill_state."""
-        # Emotion: 6 core emotions rated 0-10
-        emotion = profile.get("emotion", {})
-        if not isinstance(emotion, dict):
-            emotion = {}
-        self.init_state["emotion"] = {
-            k: max(0, min(10, int(emotion.get(k, 0))))
-            for k in self.EMOTION_KEYS
-        }
-
+        """Read needs/attitudes from profile into live skill_state."""
         # Needs: Maslow hierarchy rated 0-100
         needs = profile.get("needs", {})
         if not isinstance(needs, dict):
@@ -354,53 +352,8 @@ class OpinionCitizenAgent(PersonAgent):
             )
 
         # Persist
-        self.set_skill_state("emotion", self.init_state["emotion"])
         self.set_skill_state("needs", self.init_state["needs"])
         self.set_skill_state("attitudes", self.init_state["attitudes"])
-
-    def update_emotion_from_post(self, content: str) -> None:
-        """Simple keyword-based heuristic to adjust emotion after a post."""
-        text = content.lower()
-        delta = {k: 0 for k in self.EMOTION_KEYS}
-
-        fear_keywords = ["scared", "terrified", "afraid", "fear", "terror", "panic", "worried", "anxious"]
-        anger_keywords = ["angry", "furious", "rage", "outraged", "mad", "livid", "resent", "hate"]
-        sadness_keywords = ["sad", "depressed", "grief", "sorrow", "heartbroken", "devastated", "hopeless"]
-        joy_keywords = ["happy", "joyful", "excited", "relieved", "glad", "celebrate", "proud", "hopeful"]
-        disgust_keywords = ["disgusted", "sick", "appalled", "revolted", "ashamed", "dismayed"]
-        surprise_keywords = ["shocked", "surprised", "stunned", "amazed", "unexpected", "unbelievable"]
-
-        for kw in fear_keywords:
-            if kw in text:
-                delta["fear"] += 1
-        for kw in anger_keywords:
-            if kw in text:
-                delta["anger"] += 1
-        for kw in sadness_keywords:
-            if kw in text:
-                delta["sadness"] += 1
-        for kw in joy_keywords:
-            if kw in text:
-                delta["joy"] += 1
-        for kw in disgust_keywords:
-            if kw in text:
-                delta["disgust"] += 1
-        for kw in surprise_keywords:
-            if kw in text:
-                delta["surprise"] += 1
-
-        emotion = self.init_state.get("emotion", {})
-        for k in self.EMOTION_KEYS:
-            emotion[k] = max(0, min(10, emotion.get(k, 0) + delta[k]))
-        self.init_state["emotion"] = emotion
-        self.set_skill_state("emotion", emotion)
-
-    def _get_dominant_emotion(self) -> Tuple[str, int]:
-        """Return (emotion_key, score) for the highest emotion."""
-        emotion = self.init_state.get("emotion", {})
-        if not emotion:
-            return ("neutral", 0)
-        return max(emotion.items(), key=lambda x: x[1])
 
     # ------------------------------------------------------------------
     # Stance helpers
@@ -455,7 +408,6 @@ class OpinionCitizenAgent(PersonAgent):
             }
 
         # Inject simulation-specific state
-        dom_emotion, dom_score = self._get_dominant_emotion()
         sim_state = {
             "current_stance": self.init_state.get("stance", "neutral"),
             "previous_stance": self.init_state.get("previous_stance"),
@@ -469,9 +421,6 @@ class OpinionCitizenAgent(PersonAgent):
             "recent_posts": self._get_recent_posts(limit=5),
             "recent_interviews": self._get_recent_interviews(limit=3),
             # Psychological state (AgentSociety-inspired)
-            "emotion": self.init_state.get("emotion", {}),
-            "dominant_emotion": dom_emotion,
-            "dominant_emotion_score": dom_score,
             "needs": self.init_state.get("needs", {}),
             "attitudes": self.init_state.get("attitudes", {}),
         }
@@ -536,12 +485,7 @@ class OpinionCitizenAgent(PersonAgent):
 
         Called by opinion_block.py after an agent generates a post.
         Persists in skill_state so interview context includes post history.
-        Updates emotion heuristically based on post content.
         """
-        # Update emotional state from post content
-        self.update_emotion_from_post(content)
-        dom_emotion, dom_score = self._get_dominant_emotion()
-
         posts = self.init_state.get("posts_history", [])
         posts.append({
             "round": round_num,
@@ -549,9 +493,6 @@ class OpinionCitizenAgent(PersonAgent):
             "content": content[:500],  # Truncate for memory
             "impact_score": impact_score,
             "timestamp": datetime.now().isoformat(),
-            # Emotional tags for causal memory
-            "dominant_emotion": dom_emotion,
-            "dominant_emotion_score": dom_score,
             "stance_at_post": self.init_state.get("stance", "neutral"),
         })
         # Keep last 20 posts
@@ -574,8 +515,7 @@ class OpinionCitizenAgent(PersonAgent):
         return interviews[-limit:] if interviews else []
 
     def _record_interview(self, question: str, response: str, stance_before: str, stance_after: str):
-        """Record an interview in memory with emotional context."""
-        dom_emotion, dom_score = self._get_dominant_emotion()
+        """Record an interview in memory with its stance move."""
         interviews = self.init_state.get("interview_memory", [])
         interviews.append({
             "question": question[:300],
@@ -583,9 +523,6 @@ class OpinionCitizenAgent(PersonAgent):
             "stance_before": stance_before,
             "stance_after": stance_after,
             "timestamp": datetime.now().isoformat(),
-            # Emotional + causal tags
-            "dominant_emotion": dom_emotion,
-            "dominant_emotion_score": dom_score,
             "stance_delta": self._stance_delta_value(stance_before, stance_after),
         })
         # Keep last 10 interviews
@@ -1015,7 +952,6 @@ class OpinionCitizenAgent(PersonAgent):
             t = datetime.now()
 
         stance_before = self.init_state.get("stance", "neutral")
-        dom_emotion_before, dom_score_before = self._get_dominant_emotion()
 
         try:
             self._context_question = original_question or reframed_question
@@ -1061,26 +997,18 @@ class OpinionCitizenAgent(PersonAgent):
             self.set_skill_state("stance", stance_after)
             self.set_skill_state("previous_stance", stance_before)
 
-        dom_emotion_after, dom_score_after = self._get_dominant_emotion()
-
         # Lightweight heuristic: extract mentioned entities/people from response
         mentioned_entities = self._extract_mentioned_entities(response)
 
         impact_metadata = {
             "granularity": self._detect_impact_granularity(response),
             "affected_entity": mentioned_entities[0] if mentioned_entities else None,
-            "emotional_tone": dom_emotion_after,
-            "emotional_intensity": dom_score_after,
-            "emotional_shift": dom_score_after - dom_score_before,
             "stance_stability": "stable" if stance_after == stance_before else "shifted",
             "predicted_action": self._extract_predicted_action(response),
             "reasoning_anchors": mentioned_entities,
         }
 
         internal_state = {
-            "dominant_emotion": dom_emotion_after,
-            "dominant_emotion_score": dom_score_after,
-            "emotion": dict(self.init_state.get("emotion", {})),
             "needs": dict(self.init_state.get("needs", {})),
             "attitudes": dict(self.init_state.get("attitudes", {})),
             "stance": stance_after,

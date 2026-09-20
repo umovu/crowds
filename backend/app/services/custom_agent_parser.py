@@ -177,8 +177,6 @@ STATUS:
 - needs: {{"physiological_hunger": 50, ...}} (all 11 Maslow needs 0-100)
 
 MENTAL:
-- emotions: {{"sadness": 0, "joy": 0, "fear": 0, "disgust": 0, "anger": 0, "surprise": 0}} (0-10)
-- emotion_keyword, emotion_thought
 - attitudes: [{{"topic": "...", "rating": 5, "description": "..."}}]
 - beliefs: ["..."]
 
@@ -333,9 +331,6 @@ STATUS (Dynamic Attributes):
 - needs: object mapping Maslow need types to intensity 0-100. Use keys: physiological_hunger, physiological_tired, safety_physical, safety_economic, belonging, affection, respect, status, achievement, personal_growth, purpose
 
 MENTAL PROCESS:
-- emotions: object with keys sadness, joy, fear, disgust, anger, surprise. Each value 0-10.
-- emotion_keyword: single word e.g. "anxious", "hopeful"
-- emotion_thought: one-sentence explanation of emotional state
 - attitudes: array of {{"topic": "...", "rating": 0-10, "description": "..."}}
 - beliefs: array of strings
 
@@ -397,14 +392,6 @@ Return ONLY a valid JSON array of agent objects. No explanation outside the JSON
         # Normalize relationships into a structured format if needed
         relationships = data.get("relationships", {})
 
-        # Normalize emotions
-        emotions = data.get("emotions")
-        if emotions and isinstance(emotions, dict):
-            # Ensure all 6 keys exist
-            for key in ["sadness", "joy", "fear", "disgust", "anger", "surprise"]:
-                if key not in emotions:
-                    emotions[key] = 0.0
-
         # Normalize attitudes
         attitudes = data.get("attitudes")
         if attitudes and isinstance(attitudes, list):
@@ -451,9 +438,6 @@ Return ONLY a valid JSON array of agent objects. No explanation outside the JSON
             is_institutional=data.get("is_institutional", False),
             is_core_focus=data.get("is_core_focus", False),
             stance=data.get("stance"),
-            emotions=emotions,
-            emotion_keyword=data.get("emotion_keyword"),
-            emotion_thought=data.get("emotion_thought"),
             needs=needs,
             attitudes=attitudes,
             beliefs=beliefs,

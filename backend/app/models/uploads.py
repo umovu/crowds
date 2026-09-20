@@ -123,7 +123,6 @@ class CustomAgent(DataModel):
     source_entity_uuid: Optional[str] = Field(default=None, json_schema_extra={'when': 'optional'})
     source_entity_type: CustomAgentSourceEntityType = Field(json_schema_extra={'when': 'always'})
     created_at: str = Field(json_schema_extra={'when': 'always'})
-    emotion: Dict[str, Annotated[float, Field(ge=0, le=10)]] = Field(default=None, json_schema_extra={'when': 'optional'})
     needs: List[CustomAgentNeedsItem] = Field(default=None, json_schema_extra={'when': 'optional'})
     attitudes: List[CustomAgentAttitudesItem] = Field(default=None, json_schema_extra={'when': 'optional'})
     beliefs: List[str] = Field(default=None, json_schema_extra={'when': 'optional'})

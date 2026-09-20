@@ -48,9 +48,6 @@ def test_impact_interview_fallback_carries_a_top_level_error():
         id = 1
         init_state = {"stance": "neutral"}
 
-        def _get_dominant_emotion(self):
-            return ("neutral", 0)
-
         async def answer_external_question(self, **_kw):
             raise RuntimeError("Error code: 401 - invalid api key")
 

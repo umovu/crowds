@@ -610,13 +610,11 @@ class InterviewService:
 
     def _build_impact_dashboard(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Aggregate impact metadata across all agents."""
-        emotional_temperature = {}
         stance_distribution = {}
         mobilization_risk = {"low": 0, "medium": 0, "high": 0}
         granularity_distribution = {"micro": 0, "meso": 0, "macro": 0}
         affected_entities = []
         stance_changed_count = 0
-        emotional_shifts = []
         predicted_actions = []
 
         answered = 0
@@ -634,10 +632,6 @@ class InterviewService:
 
             # Impact metadata
             meta = r.get("impact_metadata", {})
-
-            # Emotional temperature
-            emotion = meta.get("emotional_tone", "neutral")
-            emotional_temperature[emotion] = emotional_temperature.get(emotion, 0) + 1
 
             # Granularity
             gran = meta.get("granularity", "meso")
@@ -658,15 +652,6 @@ class InterviewService:
             if ent and ent not in affected_entities:
                 affected_entities.append(ent)
 
-            # Emotional shift
-            shift = meta.get("emotional_shift", 0)
-            if shift != 0:
-                emotional_shifts.append({
-                    "agent_id": r.get("agent_id"),
-                    "agent_name": r.get("agent_name"),
-                    "shift": shift,
-                })
-
             # Predicted actions
             action = meta.get("predicted_action")
             if action:
@@ -677,7 +662,6 @@ class InterviewService:
                 })
 
         return {
-            "emotional_temperature": emotional_temperature,
             "stance_distribution": stance_distribution,
             "stance_changed_count": stance_changed_count,
             # Rates are per ANSWERED person, not per seat. Every loop above skips
@@ -689,7 +673,6 @@ class InterviewService:
             "mobilization_risk": mobilization_risk,
             "granularity_distribution": granularity_distribution,
             "affected_entities": affected_entities,
-            "emotional_shifts": emotional_shifts,
             "predicted_actions": predicted_actions,
         }
 

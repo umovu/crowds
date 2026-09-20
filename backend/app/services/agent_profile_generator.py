@@ -66,11 +66,9 @@ class AgentProfile:
     stance: Optional[str] = None
 
     # === AgentSociety Psychological Architecture ===
-    # Emotions (0-10 scale for each)
-    emotions: Optional[Dict[str, float]] = None
-    emotion_keyword: Optional[str] = None
-    emotion_thought: Optional[str] = None
-
+    # (No emotion block: it was injected into the interview context but never
+    # populated for a library persona, and an A/B over 45 interviews showed it
+    # moved answers without carrying signal. Removed everywhere.)
     # Needs (Maslow's hierarchy)
     needs: Optional[List[Dict]] = None
 
@@ -110,8 +108,6 @@ class AgentProfile:
             "created_at": self.created_at,
         }
         # Psychological state (used by OpinionCitizenAgent._init_psychological_state)
-        if self.emotions:
-            profile["emotion"] = self.emotions
         if self.needs:
             profile["needs"] = self.needs
         if self.attitudes:
@@ -143,9 +139,6 @@ class AgentProfile:
             "is_institutional": self.is_institutional,
             "is_core_focus": self.is_core_focus,
             "stance": self.stance,
-            "emotions": self.emotions,
-            "emotion_keyword": self.emotion_keyword,
-            "emotion_thought": self.emotion_thought,
             "needs": self.needs,
             "attitudes": self.attitudes,
             "beliefs": self.beliefs,

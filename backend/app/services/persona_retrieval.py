@@ -220,3 +220,135 @@ def select_for_query(
                     break
 
     return chosen
+
+
+# ── Typed tilt: the same job as derive_tilt, read rather than keyword-matched ──
+#
+# `derive_tilt` can only fire on a word that happens to be in its table: a pitch
+# about "minibus ranks" matches nothing, and the room falls back to a plain
+# cross-section that misses the people the pitch is actually about. The typed
+# tier reads the pitch instead and rates every archetype on one ladder.
+#
+# It stays a TILT, never a pick: the output is the same multiplier map, so
+# MAX_TILT, the spread floor and the representative base all still apply, and a
+# wrong rating is bounded by exactly the guards that already exist. Missing key,
+# failed call or a flat answer falls back to the keyword tilt.
+
+# A rung the model rates each archetype against. Index 0..3.
+_RELEVANCE_LEVELS = [
+    "Not affected by this at all",
+    "Touched indirectly, would have an opinion but no stake",
+    "Clearly affected, this lands on their situation",
+    "This is exactly who it is aimed at",
+]
+# Rungs 2 and 3 mean "has a stake". A tilt needs most of the probability there.
+_STAKE_FROM_LEVEL = 2
+_MIN_STAKE = 0.5
+
+
+def _archetype_descriptions(personas: List[Dict]) -> Dict[str, str]:
+    """One plain description per archetype, summarised from the library itself.
+
+    Written from the measured fields rather than by hand, so a description can
+    never drift from who the archetype actually contains.
+    """
+    import statistics
+    from collections import Counter, defaultdict
+
+    groups: Dict[str, List[Dict]] = defaultdict(list)
+    for p in personas:
+        a = p.get("actor_archetype")
+        if a:
+            groups[a].append(p)
+
+    def common(values) -> str:
+        vals = [v for v in values if v not in (None, "")]
+        return Counter(vals).most_common(1)[0][0] if vals else ""
+
+    out: Dict[str, str] = {}
+    for arch, members in groups.items():
+        ages = [p["age"] for p in members if isinstance(p.get("age"), (int, float))]
+        incomes = [p["monthly_household_income_rand"] for p in members
+                   if isinstance(p.get("monthly_household_income_rand"), (int, float))
+                   and p["monthly_household_income_rand"] > 0]
+        grants = sum(1 for p in members if p.get("receives_grant"))
+        bits = [arch.replace("_", " ")]
+        if ages:
+            bits.append(f"typically around {int(statistics.median(ages))} years old")
+        status = common(p.get("employment_status") for p in members)
+        if status:
+            bits.append(f"mostly {status.lower()}")
+        geo = common(p.get("geotype") for p in members)
+        if geo:
+            bits.append(f"mainly {geo.lower()} areas")
+        if incomes:
+            bits.append(f"household income around R{int(statistics.median(incomes)):,} a month")
+        if members and grants * 2 >= len(members):
+            bits.append("most receive a social grant")
+        out[arch] = "; ".join(bits)
+    return out
+
+
+def _stake(answer: Dict) -> float:
+    """Probability this archetype has a real stake (rung 2 or 3)."""
+    probs = answer.get("probabilities") or {}
+    return sum(float(v) for k, v in probs.items() if int(k) >= _STAKE_FROM_LEVEL)
+
+
+def derive_tilt_typed(
+    query: str,
+    *,
+    library: Optional[PersonaLibrary] = None,
+) -> Optional[Tuple[Dict[str, float], Optional[str]]]:
+    """Rate every archetype against the pitch in one typed call.
+
+    Returns the same `(weights, province)` shape as `derive_tilt`, or None when
+    the tier is unavailable or the call fails — callers fall back to keywords.
+    """
+    from ..utils import typesafe_client as ts
+
+    if not query or not ts.enabled():
+        return None
+
+    lib = library or get_library()
+    personas = lib.all()
+    if not personas:
+        return None
+
+    descriptions = _archetype_descriptions(personas)
+    if not descriptions:
+        return None
+
+    questions = {
+        arch: ts.score_question(
+            f"How much does this announcement or product land on this group of "
+            f"South Africans: {desc}",
+            _RELEVANCE_LEVELS,
+        )
+        for arch, desc in descriptions.items()
+    }
+    questions["_province"] = ts.choice_question(
+        "Which South African province does this name or clearly point at?",
+        {p: None for p in _PROVINCES} | {"not_stated": "No province is named or implied"},
+    )
+
+    answers = ts.ask(query, questions)
+    if not answers:
+        return None
+
+    weights: Dict[str, float] = {}
+    for arch in descriptions:
+        answer = answers.get(arch) or {}
+        stake = _stake(answer)
+        if stake >= _MIN_STAKE:
+            # Full stake earns the cap; the floor earns a mild nudge.
+            weights[arch] = 1.0 + stake * (MAX_TILT - 1.0)
+
+    prov_answer = answers.get("_province") or {}
+    province = prov_answer.get("choice")
+    if province == "not_stated" or (prov_answer.get("confidence") or 0.0) < 0.5:
+        province = None
+
+    logger.info("Typed tilt: %d archetype(s) upweighted, province=%s",
+                len(weights), province)
+    return weights, province

@@ -25,9 +25,6 @@
     "source_entity_uuid": {
       "legacy": true
     },
-    "emotion": {
-      "legacy": true
-    },
     "needs": {
       "legacy": true
     },
