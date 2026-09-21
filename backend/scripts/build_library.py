@@ -197,6 +197,19 @@ def build(
             n_comfortable=comfortable, n_rural=rural_landholding, seed=seed)
         mapped.extend(fuse_attitudes(aff_skeletons, seed=seed))
 
+    # A QLFS-sampled skeleton knows its own metro because the survey recorded it, so
+    # it moves onto the persona as a measured circumstance rather than staying a
+    # top-level field the persona model does not have. Skeletons from the GHS
+    # samplers carry no metro here and are placed later by add_ghs_geography.py —
+    # drawn, not measured, which is why the two sources stay distinguishable.
+    for sk in mapped:
+        metro = sk.pop("metro", None)
+        if metro:
+            sk.setdefault("circumstances", []).append({
+                "field": "metro", "value": metro,
+                "source": "qlfs_2026_q1", "match_quality": "exact",
+            })
+
     print(f"Generating English-only texture for {len(mapped)} personas (LLM, offline)...")
     client = tg.LLMClient(api_key=llm_api_key, base_url=llm_base_url, model=llm_model)
     # Shared name state: names come from a curated pool (not the LLM) and must be

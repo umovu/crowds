@@ -105,6 +105,71 @@ _PROVINCES = [
     "Limpopo", "Mpumalanga", "North West", "Free State", "Northern Cape",
 ]
 
+# Fewer personas than this in a metro and a room asked for it would be the same
+# faces every run. 15 is a 12-seat room plus a little slack.
+MIN_METRO_POOL = 15
+
+# The province prefix Stats SA puts on every `Metro_code` label, so a metro focus
+# can widen to its own province on the way down.
+_METRO_PROVINCES = {
+    "WC": "Western Cape", "EC": "Eastern Cape", "NC": "Northern Cape",
+    "FS": "Free State", "KZN": "KwaZulu-Natal", "NW": "North West",
+    "GP": "Gauteng", "MP": "Mpumalanga", "LP": "Limpopo",
+}
+
+
+# How much of a room goes to the place a pitch names, when one is named and the
+# library can fill it. 0.6 leaves a real minority of outsiders rather than a token
+# one, and is low enough that the anti-echo-chamber floor still has room to work.
+PLACE_SHARE = 0.6
+
+
+def _draw(pool: List[Tuple[Dict, float]], n: int, rng: random.Random,
+          chosen: List[Dict], chosen_names: set) -> List[Dict]:
+    """Weighted sampling WITHOUT replacement, deterministic, appending to `chosen`.
+
+    Names are de-duplicated: the library reuses common SA names heavily (e.g.
+    ~55 personas literally named "Thabo Mokoena"), and a cast with duplicate
+    names breaks the run — the feed shows "[Thabo Mokoena] said …" for several
+    different people, agents respond to a smeared namesake, and name-keyed UI
+    (chat, stance spectrum) merges them. One name per cast.
+
+    Returns whoever was left undrawn, for the diversity floor to swap from.
+    """
+    pool = list(pool)
+    target = len(chosen) + max(0, n)
+    while pool and len(chosen) < target:
+        total = sum(w for _, w in pool)
+        if total <= 0:
+            break
+        r = rng.uniform(0, total)
+        acc = 0.0
+        for idx, (p, w) in enumerate(pool):
+            acc += w
+            if acc >= r:
+                pool.pop(idx)
+                nm = (p.get("name") or "").strip().lower()
+                if nm and nm in chosen_names:
+                    break  # drop this namesake; redraw on the next iteration
+                chosen.append(p)
+                if nm:
+                    chosen_names.add(nm)
+                break
+    return [p for p, _ in pool]
+
+
+def _metro_of(persona: Dict) -> Optional[str]:
+    """The persona's imputed metro, or None if the library predates that pass.
+
+    Lives in `circumstances` beside the other measured fields rather than at the
+    top level, because it is drawn from GHS like they are — see
+    scripts/add_ghs_geography.py for how sure any one placement is.
+    """
+    for row in persona.get("circumstances") or []:
+        if row.get("field") == "metro":
+            return row.get("value")
+    return None
+
 
 def derive_tilt(query: str) -> Tuple[Dict[str, float], Optional[str]]:
     """Derive an (archetype_weights, province) tilt from free text — LLM-free.
@@ -123,20 +188,49 @@ def derive_tilt(query: str) -> Tuple[Dict[str, float], Optional[str]]:
     return weights, province
 
 
+def derive_place(query: str) -> Tuple[Optional[str], Optional[str]]:
+    """The (metro, province) a pitch points at, via the gazetteer — LLM-free.
+
+    Reuses `query_context.detect_place` rather than a second place list, so
+    "Sunnyside" resolves the same way for the cast as it does for the local
+    facts block. Imported lazily: query_context pulls in Config, and the
+    benchmark scripts import this module standalone with no app config.
+
+    A named place that is not in a metro ("Upington", "Tzaneen") still yields its
+    province — the province is the honest answer for it, and the alternative was
+    no place focus at all, which is how a Northern Cape bakery got a room with no
+    Northern Cape in it.
+    """
+    if not query:
+        return None, None
+    try:
+        from .query_context import detect_place
+    except (ImportError, ValueError):
+        return None, None
+    place = detect_place(query) or {}
+    return place.get("metro") or None, place.get("province") or None
+
+
+def derive_metro(query: str) -> Optional[str]:
+    """The metro a pitch points at, or None. Thin wrapper over `derive_place`."""
+    return derive_place(query)[0]
+
+
 def select_for_query(
     n: int,
     query: str = "",
     *,
     tilt: Optional[Dict[str, float]] = None,
     province: Optional[str] = None,
+    metro: Optional[str] = None,
     library: Optional[PersonaLibrary] = None,
     seed: int = 0,
 ) -> List[Dict]:
     """Select n personas: representative base, bounded tilt toward query relevance.
 
-    `tilt`/`province` override the keyword-derived tilt when given (e.g. from an LLM
-    query parser). Deterministic for a seed. Never returns an echo chamber: relevant
-    archetypes are upweighted but capped, and a spread floor is enforced.
+    `tilt`/`province`/`metro` override what the query itself implies (e.g. from an
+    LLM query parser). Deterministic for a seed. Never returns an echo chamber:
+    relevant archetypes are upweighted but capped, and a spread floor is enforced.
     """
     lib = library or get_library()
     personas = lib.all()
@@ -149,47 +243,62 @@ def select_for_query(
     if tilt is None:
         tilt, derived_province = derive_tilt(query)
         province = province or derived_province
+    if metro is None:
+        metro, gazetteer_province = derive_place(query)
+        province = province or gazetteer_province
+    if metro and not province:
+        province = _METRO_PROVINCES.get(metro.split(" - ")[0])
+
+    # Thin-bucket guard: a metro the library barely covers cannot fill a room, and
+    # boosting it would just seat the same handful of people every run. Below the
+    # floor we drop to the province, which is a real answer rather than a thin one.
+    if metro:
+        in_metro = sum(1 for p in personas if _metro_of(p) == metro)
+        if in_metro < MIN_METRO_POOL:
+            logger.info("Metro %s has only %d personas (<%d) — falling back to %s.",
+                        metro, in_metro, MIN_METRO_POOL, province or "no place tilt")
+            metro = None
 
     rng = random.Random(seed)
 
-    # Per-persona weight: baseline 1.0, multiplied by the archetype tilt, and by a
-    # province boost when a province focus is set (province-relevant personas get more
-    # seats, but other provinces still appear).
+    # Per-persona weight: baseline 1.0, multiplied by the archetype tilt. Place is
+    # NOT a multiplier — see the seat reservation below for why.
     def weight(p: Dict) -> float:
         w = 1.0
         a = p.get("actor_archetype")
         if a in tilt:
             w *= tilt[a]
-        if province and p.get("province") == province:
-            w *= 1.5
         return w
 
     weighted = [(p, weight(p)) for p in personas]
 
-    # Weighted sampling WITHOUT replacement, deterministic.
-    # Names are de-duplicated: the library reuses common SA names heavily (e.g.
-    # ~55 personas literally named "Thabo Mokoena"), and a cast with duplicate
-    # names breaks the run — the feed shows "[Thabo Mokoena] said …" for several
-    # different people, agents respond to a smeared namesake, and name-keyed UI
-    # (chat, stance spectrum) merges them. One name per cast.
+    # Place gets RESERVED SEATS, not a weight multiplier. A multiplier cannot do
+    # this job: Tshwane is 6% of the library, so even a 2x boost left 1 Tshwane
+    # person in a 12-seat "Pretoria" room, and Limpopo at 1.5x left one Limpopo
+    # voice in a room about a Limpopo water tariff. The multiplier needed to fix
+    # that is so large it stops being a tilt and becomes a filter with extra steps.
+    # Reserving a share of the seats says the same thing honestly and bounds it:
+    # PLACE_SHARE of the room is local, the rest stays a national cross-section, so
+    # the outsider who doesn't already care is still in the room by construction.
+    local: List[Tuple[Dict, float]] = []
+    if metro:
+        local = [(p, w) for p, w in weighted if _metro_of(p) == metro]
+    elif province:
+        local = [(p, w) for p, w in weighted if p.get("province") == province]
+
     chosen: List[Dict] = []
     chosen_names: set = set()
-    pool = list(weighted)
-    while pool and len(chosen) < n:
-        total = sum(w for _, w in pool)
-        r = rng.uniform(0, total)
-        acc = 0.0
-        for idx, (p, w) in enumerate(pool):
-            acc += w
-            if acc >= r:
-                pool.pop(idx)
-                nm = (p.get("name") or "").strip().lower()
-                if nm and nm in chosen_names:
-                    break  # drop this namesake; redraw on the next iteration
-                chosen.append(p)
-                if nm:
-                    chosen_names.add(nm)
-                break
+
+    if local:
+        seats = min(int(round(n * PLACE_SHARE)), len(local))
+        _draw(local, seats, rng, chosen, chosen_names)
+        logger.info("Place focus %s: %d of %d seats local (pool %d).",
+                    metro or province, len(chosen), n, len(local))
+
+    # The rest of the room is drawn from everyone (locals included — a place with
+    # more than its share of relevant voices should not be capped at the share).
+    remaining = [(p, w) for p, w in weighted if p not in chosen]
+    undrawn = _draw(remaining, n - len(chosen), rng, chosen, chosen_names)
 
     # Anti-echo-chamber floor: if the tilt collapsed diversity, swap in personas of
     # missing archetypes (from the unchosen pool) until we hit the spread floor or run
@@ -197,7 +306,7 @@ def select_for_query(
     target_distinct = min(MIN_DISTINCT_ARCHETYPES, n, len({p.get("actor_archetype") for p in personas}))
     distinct = {p.get("actor_archetype") for p in chosen}
     if len(distinct) < target_distinct:
-        leftovers = [p for p, _ in pool]
+        leftovers = list(undrawn)
         rng.shuffle(leftovers)
         for p in leftovers:
             nm = (p.get("name") or "").strip().lower()

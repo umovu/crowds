@@ -24,6 +24,7 @@ dropped — that is also the simulation's universe (we don't make toddler person
 
 from __future__ import annotations
 
+import re
 import os
 from typing import Dict, List, Optional
 
@@ -56,6 +57,7 @@ _LABELLED_COLS = [
     "Neet",               # Yes/No — not in employment, education or training
     "Q15POPULATION",      # population group — canonical race vocabulary
     "Geo_Type_Code",      # Urban / Traditional / Farms → canonical Urban|Rural
+    "Metro_code",         # the 17 Stats SA metro codes; GHS uses the same labels
 ]
 
 MIN_AGE = 15  # QLFS labour-status universe; also the sim's persona universe
@@ -113,6 +115,23 @@ def _occupation_label(row: pd.Series) -> str:
     return str(status)  # "Unemployed", "Discouraged job seeker", "Other not economically active"
 
 
+def _metro_label(value: object) -> Optional[str]:
+    """QLFS's metro label, spelled the way GHS spells it.
+
+    The two surveys carry the same 17 codes but not the same spelling: QLFS uses
+    a hyphen and "Non Metro", GHS an en dash and "Non-metro", and QLFS has a
+    stray double space after "WC". One spelling per place, or a persona built
+    today and a persona placed from GHS would look like they live in different
+    cities — and the cast picker, which matches these labels exactly, would seat
+    neither of them for the same pitch.
+    """
+    if value is None or (isinstance(value, float) and value != value):
+        return None
+    label = str(value).replace("–", "-").strip()
+    label = re.sub(r"\s*-\s*", " - ", re.sub(r"\s+", " ", label))
+    return re.sub(r"\bNon[ -]Metro\b", "Non-metro", label, flags=re.I) or None
+
+
 def _row_to_skeleton(row: pd.Series) -> Dict[str, object]:
     """Decode one survey row into an identity skeleton dict."""
     def s(v) -> Optional[str]:
@@ -145,6 +164,13 @@ def _row_to_skeleton(row: pd.Series) -> Dict[str, object]:
         # `ada.geotype_to_canonical` collapses it to Urban|Rural for JOINING against
         # Afrobarometer's binary URBRUR — used only if geotype ever becomes a join key.
         "geotype": s(row.get("Geo_Type_Code")),
+        # The metro this surveyed household actually sat in — REAL, not drawn.
+        # The library's first 375 personas predate this column and carry a metro
+        # imputed from GHS instead (scripts/add_ghs_geography.py); anyone sampled
+        # from here on knows where they live because the survey recorded it. The
+        # label is normalised to GHS's spelling so one metro name means one place
+        # across both sources.
+        "metro": _metro_label(row.get("Metro_code")),
     }
 
 

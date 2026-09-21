@@ -107,6 +107,11 @@ class CircumstanceRow(DataModel):
     value: str
     source: CircumstanceRowSources
     match_quality: CircumstanceRowMatchQuality
+    #: Imputed rows only (metro, dwelling): how many real survey people the value was
+    #: drawn from, and what share of them held it. Kept so a placement can say how sure
+    #: it is instead of reading as a fact about this person.
+    pool: Optional[int] = None
+    share: Optional[float] = None
 
     @classmethod
     def cross_field_problems(cls, data, label):

@@ -136,7 +136,12 @@ def broken_reasons(person, donor, gh=None):
         why.append("wrong area")
     if gh and phone_contradictions(person, gh):
         why.append("phone contradiction")
-    stored = [r for r in person.get("circumstances") or [] if r.get("match_quality") != "population_draw"]
+    # Only the Afrobarometer rows came from this persona's matched respondent. GHS
+    # rows (metro, dwelling) are drawn from a demographic pool, so the respondent
+    # has no answer to check them against — see scripts/add_ghs_geography.py.
+    stored = [r for r in person.get("circumstances") or []
+              if r.get("source") == "afrobarometer_r9_sa"
+              and r.get("match_quality") != "population_draw"]
     if any((donor.get("circumstances") or {}).get(r["field"]) != r["value"] for r in stored):
         why.append("facts not from recorded survey person")
     if (person.get("age") or 0) >= 75 and (donor.get("_age") or 0) < 75:

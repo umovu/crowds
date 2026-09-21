@@ -118,6 +118,36 @@ _CITIES: Dict[str, str] = {
     "Brits": "North West",
 }
 
+# City -> the Stats SA metro it falls in, using the exact `Metro_code` labels the
+# persona library carries (GHS/QLFS share these 17 codes). Only the eight metros
+# are listed: a city with no entry is a non-metro town, and the caller falls back
+# to the province, which is the truth for it anyway.
+#
+# The point of this map is that the cast picker can only match what the survey
+# measured. Survey geography stops at the metro, so "Sunnyside" and "Soweto"
+# both resolve to their metro here even though the CONTEXT block still searches
+# the suburb by name. Local facts go suburb-deep; the people stay metro-deep.
+_CITY_METROS: Dict[str, str] = {
+    "Johannesburg": "GP - City of Johannesburg",
+    "Soweto": "GP - City of Johannesburg",
+    "Randburg": "GP - City of Johannesburg",
+    "Roodepoort": "GP - City of Johannesburg",
+    "Sandton": "GP - City of Johannesburg",
+    "Midrand": "GP - City of Johannesburg",
+    "Pretoria": "GP - City of Tshwane",
+    "Tshwane": "GP - City of Tshwane",
+    "Ekurhuleni": "GP - Ekurhuleni",
+    "Benoni": "GP - Ekurhuleni",
+    "Kempton Park": "GP - Ekurhuleni",
+    "Cape Town": "WC - City of Cape Town",
+    "Durban": "KZN - eThekwini",
+    "eThekwini": "KZN - eThekwini",
+    "Gqeberha": "EC - Nelson Mandela Bay",
+    "Port Elizabeth": "EC - Nelson Mandela Bay",
+    "East London": "EC - Buffalo City",
+    "Bloemfontein": "FS - Mangaung",
+}
+
 # Suburb / township -> the city it should be searched with. Ambiguous names
 # (Sunnyside, Extension 2) are pinned to their most-searched instance; a pitch
 # that also names the other city corrects it via the parent-hint pass below.
@@ -218,8 +248,9 @@ def detect_place(text: str) -> Optional[Dict[str, str]]:
     city beats province, because "Sunnyside" is what makes the block local — the
     province alone is barely narrower than the national block we already have.
 
-    Returns {"name", "parent", "label", "province"}; `label` is what to search
-    and to show the persona.
+    Returns {"name", "parent", "label", "province", "metro"}; `label` is what to
+    search and to show the persona, and `metro` ("" when the place is not in one)
+    is how far down the CAST can honestly follow — the surveys stop at the metro.
     """
     if not text or not text.strip():
         return None
@@ -235,19 +266,19 @@ def detect_place(text: str) -> Optional[Dict[str, str]]:
                 parent = city
                 break
         province = _CITIES.get(parent, "")
-        return {"name": name, "parent": parent,
-                "label": f"{name}, {parent}", "province": province}
+        return {"name": name, "parent": parent, "label": f"{name}, {parent}",
+                "province": province, "metro": _CITY_METROS.get(parent, "")}
 
     for name, pat in _CITY_PATTERNS:
         if pat.search(text):
             province = _CITIES[name]
-            return {"name": name, "parent": province,
-                    "label": name, "province": province}
+            return {"name": name, "parent": province, "label": name,
+                    "province": province, "metro": _CITY_METROS.get(name, "")}
 
     for name, pat in _PROVINCE_PATTERNS:
         if pat.search(text):
-            return {"name": name, "parent": "South Africa",
-                    "label": name, "province": name}
+            return {"name": name, "parent": "South Africa", "label": name,
+                    "province": name, "metro": ""}
 
     return None
 

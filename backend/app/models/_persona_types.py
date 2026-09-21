@@ -39,11 +39,11 @@ LearnerFeeBands = Literal['No fees', 'R1 001–R2 000 per year', 'R101–R200 pe
 FarmMarketOrientation = Literal['market', 'subsistence']
 FarmProducts = Literal['Farming of animals', 'Growing of crops', 'Growing of crops combined with farming of animals(mixed farming)']
 AttitudeRowTopic = Literal['gov_trust', 'economic_optimism', 'service_satisfaction', 'crime_fear', 'education_satisfaction', 'health_service_satisfaction', 'health_authority_trust', 'councillor_responsiveness', 'official_responsiveness', 'crime_handling', 'immigration_priority', 'pays_for_quality', 'business_trust', 'social_trust', 'environment_priority', 'social_voice', 'neighbour_trust']
-CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social']
+CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social', 'metro', 'dwelling', 'rdp_housing']
 AttitudeRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
 AttitudeRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
-CircumstanceRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
-CircumstanceRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
+CircumstanceRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals', 'ghs_2025', 'qlfs_2026_q1']
+CircumstanceRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population', 'prov_geo_race_sex_age', 'prov_geo_race_sex', 'prov_geo_race', 'prov_geo', 'prov']
 TOPICS = {'gov_trust': {'stances': ['low', 'mid', 'high'],
                'source': {'survey': 'afrobarometer_r9_sa',
                           'items': ['Q37A', 'Q37D'],
@@ -326,7 +326,50 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
                                                'month.',
                                     'weekly': 'You get news from social media a few times a '
                                               'week.',
-                                    'daily': 'You get news from social media every day.'}}}}
+                                    'daily': 'You get news from social media every day.'}}},
+ 'metro': {'values': ['WC - Non-metro',
+                      'WC - City of Cape Town',
+                      'EC - Non-metro',
+                      'EC - Buffalo City',
+                      'EC - Nelson Mandela Bay',
+                      'NC - Non-metro',
+                      'FS - Non-metro',
+                      'FS - Mangaung',
+                      'KZN - Non-metro',
+                      'KZN - eThekwini',
+                      'NW - Non-metro',
+                      'GP - Non-metro',
+                      'GP - Ekurhuleni',
+                      'GP - City of Johannesburg',
+                      'GP - City of Tshwane',
+                      'MP - Non-metro',
+                      'LP - Non-metro'],
+           'source': {'survey': 'qlfs_2026_q1', 'items': ['Metro_code']},
+           'note': 'Where the persona lives, at the finest level the surveys measure. A '
+                   "persona sampled from QLFS carries its own survey row's metro (real, "
+                   "match_quality 'exact'); the library's original 375 predate that and carry "
+                   'one drawn from the GHS spread for people like them '
+                   '(scripts/add_ghs_geography.py), with `share` saying how sure that '
+                   'placement is. No prompt block on purpose -- a persona must not claim to be '
+                   'from a place the survey never put them in.'},
+ 'dwelling': {'values': ['house_own_stand',
+                         'traditional_dwelling',
+                         'flat',
+                         'complex_house',
+                         'backyard_room',
+                         'backyard_shack',
+                         'informal_settlement',
+                         'room_on_property',
+                         'other_dwelling'],
+              'source': {'survey': 'ghs_2025', 'items': ['hsg_maind']},
+              'note': "The kind of home, collapsed from GHS's 12 dwelling types. Backyard and "
+                      "informal dwellings are what 'township' means here -- GHS has no "
+                      'township flag, so this is the measured proxy. Imputed the same way as '
+                      'metro.'},
+ 'rdp_housing': {'values': ['yes', 'no'],
+                 'source': {'survey': 'ghs_2025', 'items': ['hsg_rdp']},
+                 'note': 'Lives in an RDP or state-subsidised house. Imputed the same way as '
+                         'metro.'}}
 DERIVED_FACTS = {'age_band': {'values': ['15-24', '25-34', '35-59', '60+'],
               'from': 'age',
               'note': 'Made at match time by mechanism_card_service._age_band. Not stored.'}}
