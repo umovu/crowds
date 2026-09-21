@@ -281,8 +281,122 @@ def _poster_payload(record: dict) -> dict:
         "bytes": record.get("bytes"),
         "created_at": record.get("created_at"),
         "brief": record.get("brief"),
-        "questions": poster_service.POSTER_QUESTIONS,
+        "original_brief": record.get("original_brief"),
+        "fields": record.get("fields", {}),
+        "original_fields": record.get("original_fields"),
+        "ask_label_primary": record.get("ask_label_primary"),
+        "ask_label_secondary": record.get("ask_label_secondary"),
+        "channel": record.get("channel"),
+        "brief_edited": bool(record.get("brief_edited")),
+        "frozen": bool(record.get("frozen")),
+        "action_labels": list(poster_service.ACTION_LABELS),
+        "channel_labels": list(poster_service.CHANNEL_LABELS),
+        "questions": [
+            {"id": qid, "text": text}
+            for qid, text in poster_service.POSTER_QUESTION_SPECS
+        ],
     }
+
+
+@panel_bp.route('/posters/<poster_id>', methods=['PATCH'])
+def update_poster(poster_id: str):
+    """Human correction of the brief and closed labels. No vision re-read."""
+    try:
+        data = request.get_json() or {}
+        record = poster_service.update_poster(
+            poster_id,
+            fields=data.get("fields"),
+            ask_label_primary=data.get("ask_label_primary"),
+            ask_label_secondary=data.get("ask_label_secondary"),
+            channel=data.get("channel"),
+        )
+        return jsonify({"success": True, "data": _poster_payload(record)})
+    except FileNotFoundError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Poster update failed for {poster_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@panel_bp.route('/posters/<poster_id>/panel', methods=['POST'])
+def poster_panel(poster_id: str):
+    """Create a panel session for a stored poster and run the four-question round.
+
+    Billing counts this as one panel, not four. Body: n, province, seed, spread.
+    """
+    try:
+        poster = poster_service.get_poster(poster_id)
+        if not poster or not poster.get("brief"):
+            return jsonify({"success": False, "error": f"Poster {poster_id} not found or not read"}), 404
+        gate = billing.check_panel_quota()
+        if gate is not None:
+            return gate
+        data = request.get_json() or {}
+        brief = poster["brief"]
+        n = data.get("n", panel_service.DEFAULT_CAST_SIZE)
+        ent = billing.get_entitlement(billing.current_user_id())
+        if ent.get("plan") != "paid":
+            try:
+                n = min(int(n), 12)
+            except (ValueError, TypeError):
+                n = 12
+        meta = panel_service.create_session(
+            brief,
+            mode="product",
+            n=n,
+            province=data.get("province"),
+            seed=data.get("seed"),
+            poster_id=poster_id,
+            spread=data.get("spread", True),
+            user_id=billing.current_user_id(),
+        )
+        # One panel against quota — not once per question.
+        billing.increment_panel_used(billing.current_user_id())
+
+        session_id = meta["session_id"]
+        service = _interview_service(session_id)
+        concurrency = max(1, min(int(data.get("concurrency", 6)), 10))
+        per_question = {}
+        for qid, qtext in poster_service.POSTER_QUESTION_SPECS:
+            framed = panel_service.frame_poster_question(brief, qtext)
+            batch = _run_async(service.batch_impact_interview(
+                question=framed,
+                concurrency=concurrency,
+            ))
+            per_question[qid] = batch.get("results") or []
+
+        round_payload = panel_service.build_poster_round_payload(
+            brief=brief,
+            per_question_results=per_question,
+            poster=poster,
+        )
+        round_num = panel_service.save_round(session_id, {
+            "pitch": brief,
+            "poster_id": poster_id,
+            "questions": round_payload["questions"],
+            "result": round_payload,
+        })
+        poster_service.freeze_poster(poster_id)
+
+        return jsonify({
+            "success": True,
+            "data": {
+                "session_id": session_id,
+                "round": round_num,
+                "poster_id": poster_id,
+                "session": meta,
+                **round_payload,
+            },
+        }), 201
+    except FileNotFoundError as e:
+        return jsonify({"success": False, "error": str(e)}), 404
+    except (ValueError, RuntimeError) as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Poster panel failed for {poster_id}: {e}")
+        return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
 
 
 @panel_bp.route('/sessions/<session_id>/rounds', methods=['GET'])

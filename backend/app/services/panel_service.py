@@ -495,6 +495,8 @@ def create_session(
     segments: Optional[List[str]] = None,
     budget_tiers: Optional[List[str]] = None,
     user_id: Optional[str] = None,
+    poster_id: Optional[str] = None,
+    spread: bool = False,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
@@ -559,7 +561,7 @@ def create_session(
         library = _FilteredLibrary(qualified)
 
     if seg_list == ["everyone"]:
-        cast = select_for_query(n, pitch, province=province, seed=seed, library=library)
+        cast = select_for_query(n, pitch, province=province, seed=seed, library=library, spread=spread)
         allocation = {"everyone": len(cast)}
     else:
         cast, allocation = _mixed_cast(seg_list, n, seed, province, library)
@@ -598,6 +600,8 @@ def create_session(
         "requested_size": n,
         "seed": seed,
         "province": province,
+        "poster_id": poster_id,
+        "spread": spread,
         "created_at": datetime.now().isoformat(),
         "rounds_run": 0,
         "archetype_distribution": _count_by(profiles, "actor_archetype"),
@@ -812,6 +816,122 @@ def frame_pitch(pitch: str, mode: str) -> str:
         f"I'm putting this in front of you: {text}\n"
         "I want your honest reaction — what works, what doesn't, what would put you off."
     )
+
+
+def frame_poster_question(brief: str, question: str) -> str:
+    """Frame one poster question against the brief text. LLM-free."""
+    return (
+        f"You are looking at this poster, described in words:\n\n"
+        f"{(brief or '').strip()}\n\n"
+        f"Answer this one question only:\n{(question or '').strip()}"
+    )
+
+
+def merge_question_answers(
+    per_question_results: Dict[str, List[Dict[str, Any]]],
+    question_ids: Optional[List[str]] = None,
+) -> List[Dict[str, Any]]:
+    """Merge per-question interview batches into one persona row with keyed answers.
+
+    `per_question_results` maps stable short ids (ask, attention, off, trust) to
+    the list of per-agent results for that question. Answers are never keyed by
+    array index. When question_ids is empty/None this is not used — ordinary
+    single-pitch rounds keep their existing shape.
+    """
+    order = list(question_ids or per_question_results.keys())
+    by_agent: Dict[Any, Dict[str, Any]] = {}
+    for qid in order:
+        for row in per_question_results.get(qid) or []:
+            aid = row.get("agent_id")
+            if aid is None:
+                continue
+            slot = by_agent.get(aid)
+            if slot is None:
+                slot = {
+                    "agent_id": aid,
+                    "agent_name": row.get("agent_name"),
+                    "actor_archetype": row.get("actor_archetype"),
+                    "group_affiliation": row.get("group_affiliation"),
+                    "library_id": row.get("library_id"),
+                    "budget_tier": row.get("budget_tier"),
+                    "answers": {},
+                    "errors": {},
+                }
+                for key in ("is_grant_dependent", "grant_type", "monthly_income_rand"):
+                    if row.get(key) is not None:
+                        slot[key] = row[key]
+                by_agent[aid] = slot
+            if row.get("error"):
+                slot["errors"][qid] = row.get("error")
+            slot["answers"][qid] = row.get("response") or row.get("answer") or ""
+            # Keep latest identity fields if a later question filled them in.
+            for key in ("agent_name", "actor_archetype", "group_affiliation", "budget_tier"):
+                if row.get(key) and not slot.get(key):
+                    slot[key] = row[key]
+    return [by_agent[k] for k in sorted(by_agent.keys(), key=lambda x: (str(type(x)), x))]
+
+
+def build_poster_round_payload(
+    *,
+    brief: str,
+    per_question_results: Dict[str, List[Dict[str, Any]]],
+    poster: Dict[str, Any],
+    question_specs: Optional[List[tuple]] = None,
+) -> Dict[str, Any]:
+    """Assemble a poster round: keyed answers + deterministic findings.
+
+    Labelling of the ask answer uses the closed-list heuristic in poster_scoring
+    (model-off). A cheap LLM labeler can replace labels later without touching
+    the arithmetic in poster_scoring.
+    """
+    from . import poster_scoring
+    from .poster_service import POSTER_QUESTION_SPECS
+
+    specs = question_specs or POSTER_QUESTION_SPECS
+    qids = [qid for qid, _ in specs]
+    personas = merge_question_answers(per_question_results, qids)
+
+    primary = poster.get("ask_label_primary") or "unclear"
+    secondary = poster.get("ask_label_secondary") or ""
+    fields = poster.get("fields") or {}
+
+    persona_labels = []
+    for p in personas:
+        words = (p.get("answers") or {}).get("ask") or ""
+        label = poster_scoring.label_action_from_text(words)
+        p["ask_label"] = label
+        persona_labels.append({
+            "label": label,
+            "words": words,
+            "name": p.get("agent_name") or "",
+            "segment": p.get("actor_archetype") or "",
+            "agent_id": p.get("agent_id"),
+        })
+
+    findings = poster_scoring.build_findings(
+        primary=primary,
+        secondary=secondary,
+        persona_labels=persona_labels,
+        claims_implied=fields.get("claims_implied") or "",
+        claim_answers=[(p.get("answers") or {}).get("ask") or "" for p in personas],
+        trust_answers=[(p.get("answers") or {}).get("trust") or "" for p in personas],
+        attention_answers=[(p.get("answers") or {}).get("attention") or "" for p in personas],
+        brief_edited=bool(poster.get("brief_edited")),
+    )
+
+    return {
+        "pitch": brief,
+        "questions": [{"id": qid, "text": text} for qid, text in specs],
+        "total_interviewed": len(personas),
+        "successful": len([p for p in personas if p.get("answers")]),
+        "failed": len([p for p in personas if p.get("errors")]),
+        "results": personas,
+        "findings": findings,
+        "poster_id": poster.get("poster_id"),
+        "ask_label_primary": primary,
+        "ask_label_secondary": secondary,
+        "channel": poster.get("channel"),
+    }
 
 
 def synthesize_panel_summary(pitch: str, results: List[Dict[str, Any]], mode: str = "product",

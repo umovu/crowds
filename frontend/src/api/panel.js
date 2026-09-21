@@ -41,3 +41,9 @@ export const uploadPoster = (file, read = true) => {
 
 export const getPoster = (posterId) =>
   service.get(`/api/panel/posters/${posterId}`)
+
+export const updatePoster = (posterId, payload) =>
+  service.patch(`/api/panel/posters/${posterId}`, payload)
+
+export const runPosterPanel = (posterId, payload = {}) =>
+  service.post(`/api/panel/posters/${posterId}/panel`, payload)

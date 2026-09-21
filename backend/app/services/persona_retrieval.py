@@ -104,6 +104,7 @@ def select_for_query(
     province: Optional[str] = None,
     library: Optional[PersonaLibrary] = None,
     seed: int = 0,
+    spread: bool = False,
 ) -> List[Dict]:
     """Select n personas: representative base, bounded tilt toward query relevance.
 
@@ -119,7 +120,9 @@ def select_for_query(
     if n >= len(personas):
         return list(personas)
 
-    if tilt is None:
+    if spread:
+        tilt = {}
+    elif tilt is None:
         tilt, derived_province = derive_tilt(query)
         province = province or derived_province
 
@@ -167,29 +170,120 @@ def select_for_query(
     # Anti-echo-chamber floor: if the tilt collapsed diversity, swap in personas of
     # missing archetypes (from the unchosen pool) until we hit the spread floor or run
     # out. Keeps a tilted room from becoming one note.
-    target_distinct = min(MIN_DISTINCT_ARCHETYPES, n, len({p.get("actor_archetype") for p in personas}))
+    target_distinct = min(
+        (MIN_DISTINCT_ARCHETYPES + 2 if spread else MIN_DISTINCT_ARCHETYPES),
+        n,
+        len({p.get("actor_archetype") for p in personas}),
+    )
+    leftovers = [p for p, _ in pool]
+    rng.shuffle(leftovers)
+    chosen = _enforce_archetype_floor(
+        chosen, leftovers, chosen_names, target_distinct,
+    )
+
+    if spread and n >= 4:
+        # Province/age variety must not undo the archetype floor. Dimension
+        # swaps refuse any move that would drop below target_distinct, and we
+        # re-check the floor once more afterward.
+        chosen = _spread_dimensions(
+            chosen, leftovers, chosen_names, n, target_distinct,
+        )
+        chosen = _enforce_archetype_floor(
+            chosen, leftovers, chosen_names, target_distinct,
+        )
+
+    return chosen
+
+
+def _enforce_archetype_floor(
+    chosen: List[Dict],
+    leftovers: List[Dict],
+    chosen_names: set,
+    target_distinct: int,
+) -> List[Dict]:
+    """Swap in missing archetypes until the distinct-archetype floor is met."""
+    from collections import Counter
+
     distinct = {p.get("actor_archetype") for p in chosen}
-    if len(distinct) < target_distinct:
-        leftovers = [p for p, _ in pool]
-        rng.shuffle(leftovers)
+    if len(distinct) >= target_distinct:
+        return chosen
+    for p in leftovers:
+        nm = (p.get("name") or "").strip().lower()
+        if p.get("actor_archetype") not in distinct and not (nm and nm in chosen_names):
+            counts = Counter(c.get("actor_archetype") for c in chosen)
+            most_common_arch = counts.most_common(1)[0][0]
+            for i in range(len(chosen) - 1, -1, -1):
+                if chosen[i].get("actor_archetype") == most_common_arch:
+                    removed_nm = (chosen[i].get("name") or "").strip().lower()
+                    chosen[i] = p
+                    chosen_names.discard(removed_nm)
+                    if nm:
+                        chosen_names.add(nm)
+                    break
+            distinct = {c.get("actor_archetype") for c in chosen}
+            if len(distinct) >= target_distinct:
+                break
+    return chosen
+
+
+def _spread_dimensions(
+    chosen: List[Dict],
+    leftovers: List[Dict],
+    chosen_names: set,
+    n: int,
+    target_archetypes: int,
+) -> List[Dict]:
+    """When spread=True, also push province / age-band variety where seats allow.
+
+    Never drops distinct archetypes below `target_archetypes`.
+    """
+    from collections import Counter
+
+    def age_band(p: Dict) -> str:
+        age = p.get("age")
+        if not isinstance(age, int):
+            return "unknown"
+        if age < 35:
+            return "under_35"
+        if age < 55:
+            return "35_54"
+        return "55_plus"
+
+    def _archetype_ok_after(remove_i: int, incoming: Dict) -> bool:
+        arches = [
+            incoming.get("actor_archetype") if i == remove_i else chosen[i].get("actor_archetype")
+            for i in range(len(chosen))
+        ]
+        return len(set(arches)) >= target_archetypes
+
+    def _swap_for(key_fn, min_distinct: int) -> None:
+        distinct = {key_fn(p) for p in chosen}
+        if len(distinct) >= min_distinct:
+            return
         for p in leftovers:
             nm = (p.get("name") or "").strip().lower()
-            # Don't reintroduce a duplicate name via the diversity swap.
-            if p.get("actor_archetype") not in distinct and not (nm and nm in chosen_names):
-                # Replace the most over-represented archetype's last pick.
-                from collections import Counter
-                counts = Counter(c.get("actor_archetype") for c in chosen)
-                most_common_arch = counts.most_common(1)[0][0]
-                for i in range(len(chosen) - 1, -1, -1):
-                    if chosen[i].get("actor_archetype") == most_common_arch:
-                        removed_nm = (chosen[i].get("name") or "").strip().lower()
-                        chosen[i] = p
-                        chosen_names.discard(removed_nm)
-                        if nm:
-                            chosen_names.add(nm)
-                        break
-                distinct = {c.get("actor_archetype") for c in chosen}
-                if len(distinct) >= target_distinct:
-                    break
+            if nm and nm in chosen_names:
+                continue
+            k = key_fn(p)
+            if k in distinct or k == "unknown":
+                continue
+            counts = Counter(key_fn(c) for c in chosen)
+            most_common = counts.most_common(1)[0][0]
+            for i in range(len(chosen) - 1, -1, -1):
+                if key_fn(chosen[i]) != most_common:
+                    continue
+                if not _archetype_ok_after(i, p):
+                    continue
+                removed_nm = (chosen[i].get("name") or "").strip().lower()
+                chosen[i] = p
+                chosen_names.discard(removed_nm)
+                if nm:
+                    chosen_names.add(nm)
+                distinct = {key_fn(c) for c in chosen}
+                break
+            if len(distinct) >= min_distinct:
+                return
 
+    _swap_for(lambda p: p.get("province") or "unknown", min(3, n))
+    _swap_for(age_band, min(3, n))
     return chosen

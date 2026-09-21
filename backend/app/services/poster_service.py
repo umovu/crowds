@@ -13,9 +13,10 @@ the model switched off. `StubPosterReader` needs no key and no network.
 
 import json
 import os
+import re
 import uuid
 from datetime import datetime
-from typing import Dict, Optional, Protocol
+from typing import Dict, List, Optional, Protocol, Tuple
 
 from ..config import Config
 from ..utils.llm_client import LLMClient
@@ -31,6 +32,12 @@ ALLOWED_MIME = {
 }
 
 MAX_BYTES = 8 * 1024 * 1024
+ACTION_LABELS = (
+    "buy", "sign_up", "apply", "contact", "visit", "attend", "vote", "donate", "none", "unclear",
+)
+CHANNEL_LABELS = (
+    "whatsapp", "call", "sms_ussd", "website", "app", "in_person", "qr_code", "none",
+)
 
 # What the vision model is asked for. Description only: every word on the
 # poster, what is pictured, the layout, the claim. Deliberately NOT asked: who
@@ -39,12 +46,14 @@ READ_PROMPT = """You are looking at a poster or advertisement, most likely from 
 
 Describe it so that someone who cannot see it understands exactly what is on it.
 
-Use exactly these six headings, in this order, and nothing else. Write the
+Use exactly these headings, in this order, and nothing else. Write the
 heading, then your answer under it. Do not restate the instructions.
 
 TEXT ON THE POSTER
     Every word, transcribed exactly, including the small print. After each
-    piece, note how prominent it is: headline, body, or footnote.
+    piece, note how prominent it is: headline, body, or footnote. For any
+    price or amount, say whether it sits in its own bubble, box, or large
+    type, or just inside a sentence.
 
 WHAT IS PICTURED
     People (apparent age, dress), objects, setting, logos, branding. Say so
@@ -54,14 +63,43 @@ LAYOUT
     What the eye hits first, second, third.
 
 CLAIMS
-    What it states outright, and separately, what it only implies.
+    Two parts. Write them under these two headings, exactly:
+    States outright: what the poster writes in plain words. Transcribe it;
+    do not interpret or add.
+    Implies: what the poster never says, but invites a reader to infer —
+    unstated benefits, a cost hidden by wording like "from only", a reward
+    implied to be proven. This part must be different from the stated part:
+    do not repeat a stated claim, and must not restate an idea already said.
+    If there is no real implication, write: none
 
 THE ASK
     What the reader is asked to do, and how to do it.
 
 PRICE SHOWN
-    One line. List every price, fee or amount that appears, separated by
-    commas. If no amount appears anywhere, write: none
+    One line per amount. For every price, fee or amount that appears, write
+    the figure and whether it is recurring and over what period (for example
+    per month, per year, once, or unclear). If no amount appears anywhere,
+    write: none
+
+LABELS
+    Write exactly three lines, nothing else under this heading:
+    primary action: <label>
+    secondary action: <label or none>
+    channel: <label>
+    Primary and secondary must each be one of: buy, sign_up, apply, contact,
+    visit, attend, vote, donate, none, unclear.
+    Channel must be one of: whatsapp, call, sms_ussd, website, app, in_person,
+    qr_code, none.
+    Do not invent a label. If the ask is not clear, use unclear.
+
+    Decide the two labels from the poster's own elements, not from intent:
+    - The main button or call is the primary action.
+    - A price or amount in its own bubble, box, or large type, sitting apart
+      from the button, is a second ask of its own: secondary action is buy.
+      Do not fold that price into the primary ask.
+    - No such separate second ask: secondary action must be none.
+    - Three competing asks: primary is unclear, secondary is none.
+    Never more than two asks.
 
 Report only what is actually on the poster. Do not judge whether it is good.
 Do not say who it is aimed at, do not describe an audience or a market, and do
@@ -71,12 +109,34 @@ not guess who would respond to it. Choosing who sees this is not your job.
 # Poster-shaped questions. A poster is met while scrolling, so the useful
 # reactions are about attention and trust, not willingness to pay. No question
 # here asks for a click probability or any other score.
-POSTER_QUESTIONS = [
-    "What is this asking you to do?",
-    "Would you stop scrolling for this, or keep going? Say why.",
-    "What feels off about it, if anything?",
-    "Do you trust whoever is behind this? What would make you trust them more?",
+# Stable short ids — answers are keyed by these, never by array index.
+POSTER_QUESTION_SPECS: List[Tuple[str, str]] = [
+    ("ask", "What is this asking you to do?"),
+    ("attention", "Would you stop scrolling for this, or keep going? Say why."),
+    ("off", "What feels off about it, if anything?"),
+    ("trust", "Do you trust whoever is behind this? What would make you trust them more?"),
 ]
+POSTER_QUESTIONS = [q for _, q in POSTER_QUESTION_SPECS]
+POSTER_QUESTION_IDS = [qid for qid, _ in POSTER_QUESTION_SPECS]
+
+BRIEF_HEADINGS = (
+    "TEXT ON THE POSTER",
+    "WHAT IS PICTURED",
+    "LAYOUT",
+    "CLAIMS",
+    "THE ASK",
+    "PRICE SHOWN",
+)
+
+EMPTY_FIELDS = {
+    "text": "",
+    "pictured": "",
+    "layout": "",
+    "claims_stated": "",
+    "claims_implied": "",
+    "ask": "",
+    "price": "",
+}
 
 
 class PosterReader(Protocol):
@@ -88,7 +148,7 @@ class PosterReader(Protocol):
 class VisionPosterReader:
     """The real reader — one call to the vision tier per poster."""
 
-    def __init__(self, max_tokens: int = 8000, temperature: float = 0.2):
+    def __init__(self, max_tokens: int = 8000, temperature: float = 0):
         self.max_tokens = max_tokens
         self.temperature = temperature
 
@@ -119,10 +179,23 @@ class StubPosterReader:
 
     def __init__(self, brief: Optional[str] = None):
         self.brief = brief or (
-            "Headline: SAVE R500, GET R7 000 BACK.\n"
-            "Offer: a savings club paying out every December.\n"
-            "Call to action: join before 31 July, WhatsApp the number shown.\n"
-            "PRICE SHOWN: R500 per month"
+            "TEXT ON THE POSTER\n"
+            "SAVE R500, GET R7 000 BACK. (headline)\n"
+            "Join before 31 July. (body)\n\n"
+            "WHAT IS PICTURED\n"
+            "A family and a savings logo.\n\n"
+            "LAYOUT\n"
+            "Headline first, then offer and button.\n\n"
+            "CLAIMS\n"
+            "It states outright that you save R500, and separately, what it only implies: a December payout.\n\n"
+            "THE ASK\n"
+            "Sign up by WhatsApp before 31 July.\n\n"
+            "PRICE SHOWN\n"
+            "R500 per month\n\n"
+            "LABELS\n"
+            "primary: sign_up\n"
+            "secondary: buy\n"
+            "channel: whatsapp"
         )
 
     def read(self, image_bytes: bytes, mime_type: str) -> str:
@@ -164,6 +237,12 @@ def save_poster(image_bytes: bytes, mime_type: str, filename: str = "") -> Dict:
         "image_path": image_path,
         "created_at": datetime.now().isoformat(),
         "brief": None,
+        "fields": dict(EMPTY_FIELDS),
+        "ask_label_primary": None,
+        "ask_label_secondary": None,
+        "channel": None,
+        "brief_edited": False,
+        "frozen": False,
     }
     _write_record(poster_id, record)
     return record
@@ -199,7 +278,223 @@ def read_poster(poster_id: str, reader: Optional[PosterReader] = None) -> Dict:
         image_bytes = fh.read()
 
     reader = reader or VisionPosterReader()
-    record["brief"] = reader.read(image_bytes, record["mime_type"])
+    brief = reader.read(image_bytes, record["mime_type"])
+    record["brief"] = brief
+    record["original_brief"] = brief
+    record["fields"] = parse_brief(brief)
+    record["original_fields"] = dict(record["fields"])
+    labels = parse_labels(brief)
+    record.update(labels)
+    record["original_ask_label_primary"] = labels["ask_label_primary"]
+    record["original_ask_label_secondary"] = labels["ask_label_secondary"]
+    record["original_channel"] = labels["channel"]
+    record["brief_edited"] = False
+    record["frozen"] = False
     record["read_at"] = datetime.now().isoformat()
+    _write_record(poster_id, record)
+    return record
+
+
+def parse_brief(text: str) -> Dict[str, str]:
+    """Extract the fixed read headings without changing the original brief."""
+    source = text or ""
+    fields = dict(EMPTY_FIELDS)
+    names = {
+        "TEXT ON THE POSTER": "text",
+        "WHAT IS PICTURED": "pictured",
+        "LAYOUT": "layout",
+        "CLAIMS": "claims",
+        "THE ASK": "ask",
+        "PRICE SHOWN": "price",
+    }
+    upper = source.upper()
+    # Cut LABELS section off so it does not pollute PRICE SHOWN.
+    labels_at = upper.find("\nLABELS")
+    if labels_at < 0:
+        labels_at = upper.find("LABELS\n")
+    body = source if labels_at < 0 else source[:labels_at]
+    body_upper = body.upper()
+    found = sorted(
+        (body_upper.find(h), h) for h in BRIEF_HEADINGS if body_upper.find(h) >= 0
+    )
+    for index, (start, heading) in enumerate(found):
+        end = found[index + 1][0] if index + 1 < len(found) else len(body)
+        value = body[start + len(heading):end].strip()
+        if heading == "CLAIMS":
+            parts = re.split(
+                r"(?:,\s*)?(?:and\s+)?separately,?\s*what it only implies\s*[:\-]?",
+                value,
+                maxsplit=1,
+                flags=re.I,
+            )
+            if len(parts) == 1:
+                parts = re.split(
+                    r"\bimplies\b\s*[:\-]?",
+                    value,
+                    maxsplit=1,
+                    flags=re.I,
+                )
+            stated = parts[0].strip()
+            # Strip the prompt scaffolding ("States outright:") — the human
+            # edits this field, so it must hold only the claim itself.
+            stated = re.sub(
+                r"^\s*(?:it\s+)?states\s+outright(?:\s+that)?\s*[:\-]?\s*",
+                "",
+                stated,
+                flags=re.I,
+            ).strip()
+            implied = parts[1].strip() if len(parts) == 2 else ""
+            implied = re.sub(r"^\s*[:\-]\s*", "", implied).strip()
+            fields["claims_stated"] = stated
+            fields["claims_implied"] = implied
+        else:
+            fields[names[heading]] = value
+    return fields
+
+
+def _normalize_label_token(raw: str) -> str:
+    """Collapse model phrasing into a closed-list token. Never invents a label."""
+    token = (raw or "").strip().lower()
+    token = re.sub(r"^[\-\*\d\.\)\s]+", "", token)
+    token = token.split("(")[0].strip()
+    token = re.sub(r"[^a-z0-9_\s\-]+", "", token)
+    token = token.replace("-", "_").replace(" ", "_")
+    token = re.sub(r"_+", "_", token).strip("_")
+    return token
+
+
+def parse_labels(text: str) -> Dict[str, str]:
+    """Pull primary/secondary/channel from the read text.
+
+    Prefers a LABELS section when present. Unknown action → unclear.
+    Unknown channel → none. secondary none → empty string.
+    """
+    source = text or ""
+    upper = source.upper()
+    labels_at = upper.find("\nLABELS")
+    if labels_at < 0:
+        labels_at = upper.find("LABELS\n")
+    if labels_at < 0 and upper.startswith("LABELS"):
+        labels_at = 0
+    section = source[labels_at:] if labels_at >= 0 else source
+
+    values: Dict[str, str] = {}
+    for line in section.splitlines():
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        key_n = _normalize_label_token(key)
+        # Accept primary / primary_action / primaryaction
+        key_n = key_n.replace("_action", "").replace("action_", "")
+        values[key_n] = _normalize_label_token(value)
+
+    primary = values.get("primary", "unclear")
+    secondary = values.get("secondary", "none")
+    channel = values.get("channel", "none")
+
+    return {
+        "ask_label_primary": primary if primary in ACTION_LABELS else "unclear",
+        "ask_label_secondary": (
+            "" if secondary in ("", "none")
+            else (secondary if secondary in ACTION_LABELS else "unclear")
+        ),
+        "channel": channel if channel in CHANNEL_LABELS else "none",
+    }
+
+
+def brief_from_fields(fields: Dict[str, str], labels: Optional[Dict[str, str]] = None) -> str:
+    """Rebuild a plain-text brief from edited fields. No model call."""
+    f = {**EMPTY_FIELDS, **(fields or {})}
+    claims = f.get("claims_stated") or ""
+    if f.get("claims_implied"):
+        claims = (
+            f"{claims.rstrip()}\n"
+            f"and separately, what it only implies: {f['claims_implied']}"
+        ).strip()
+    parts = [
+        f"TEXT ON THE POSTER\n{f.get('text', '')}",
+        f"WHAT IS PICTURED\n{f.get('pictured', '')}",
+        f"LAYOUT\n{f.get('layout', '')}",
+        f"CLAIMS\n{claims}",
+        f"THE ASK\n{f.get('ask', '')}",
+        f"PRICE SHOWN\n{f.get('price', '') or 'none'}",
+    ]
+    if labels:
+        parts.append(
+            "LABELS\n"
+            f"primary: {labels.get('ask_label_primary') or 'unclear'}\n"
+            f"secondary: {labels.get('ask_label_secondary') or 'none'}\n"
+            f"channel: {labels.get('channel') or 'none'}"
+        )
+    return "\n\n".join(parts).strip() + "\n"
+
+
+def update_poster(
+    poster_id: str,
+    *,
+    fields: Optional[Dict[str, str]] = None,
+    ask_label_primary: Optional[str] = None,
+    ask_label_secondary: Optional[str] = None,
+    channel: Optional[str] = None,
+) -> Dict:
+    """Human correction of the brief. Never re-calls vision. Freezes after a round."""
+    record = get_poster(poster_id)
+    if not record:
+        raise FileNotFoundError(f"Poster {poster_id} not found")
+    if record.get("frozen"):
+        raise ValueError(
+            "This brief is frozen after a panel round. Start a new run to edit."
+        )
+    if not record.get("brief"):
+        raise ValueError("Poster has not been read yet")
+
+    # Keep the original read once.
+    if "original_brief" not in record:
+        record["original_brief"] = record.get("brief")
+        record["original_fields"] = dict(record.get("fields") or EMPTY_FIELDS)
+        record["original_ask_label_primary"] = record.get("ask_label_primary")
+        record["original_ask_label_secondary"] = record.get("ask_label_secondary")
+        record["original_channel"] = record.get("channel")
+
+    next_fields = dict(record.get("fields") or EMPTY_FIELDS)
+    if fields:
+        for key in EMPTY_FIELDS:
+            if key in fields and fields[key] is not None:
+                next_fields[key] = str(fields[key])
+
+    primary = ask_label_primary if ask_label_primary is not None else record.get("ask_label_primary")
+    secondary = ask_label_secondary if ask_label_secondary is not None else record.get("ask_label_secondary")
+    ch = channel if channel is not None else record.get("channel")
+
+    if primary is not None and primary not in ACTION_LABELS:
+        raise ValueError(f"Invalid primary action '{primary}'")
+    if secondary not in (None, "") and secondary not in ACTION_LABELS:
+        raise ValueError(f"Invalid secondary action '{secondary}'")
+    if secondary == "none":
+        secondary = ""
+    if ch is not None and ch not in CHANNEL_LABELS:
+        raise ValueError(f"Invalid channel '{ch}'")
+
+    labels = {
+        "ask_label_primary": primary or "unclear",
+        "ask_label_secondary": secondary or "",
+        "channel": ch or "none",
+    }
+    record["fields"] = next_fields
+    record.update(labels)
+    record["brief"] = brief_from_fields(next_fields, labels)
+    record["brief_edited"] = True
+    record["edited_at"] = datetime.now().isoformat()
+    _write_record(poster_id, record)
+    return record
+
+
+def freeze_poster(poster_id: str) -> Dict:
+    """Lock the brief after a round so old results never silently change."""
+    record = get_poster(poster_id)
+    if not record:
+        raise FileNotFoundError(f"Poster {poster_id} not found")
+    record["frozen"] = True
+    record["frozen_at"] = datetime.now().isoformat()
     _write_record(poster_id, record)
     return record
