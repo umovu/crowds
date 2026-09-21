@@ -307,10 +307,15 @@ def detect_subjects(text: str, limit: int = 2) -> List[str]:
     """The subjects the pitch touches, most-specific first, at most `limit`.
 
     Reuses sa_context._topics_in so a pitch is classified by one set of rules,
-    not two that can drift apart.
+    not two that can drift apart, and then widens that with the typed reader
+    when it is on — "a backup battery for when the lights go out" is a power
+    pitch that no word list catches, and an uncaught subject means the local
+    search never asks about the thing the pitch is actually about.
     """
+    from .pitch_subjects import subjects as _widen
     from .sa_context import _topics_in
-    found = _topics_in(text or "")
+    found = _widen(text or "", _topics_in(text or ""),
+                   vocabulary=list(_SUBJECT_SEARCH_WORDS))
     # Stable order: follow _SUBJECT_SEARCH_WORDS, not set iteration order, so the
     # same pitch always builds the same queries and so hits the same cache entry.
     return [s for s in _SUBJECT_SEARCH_WORDS if s in found][:limit]
