@@ -164,21 +164,11 @@ class B2bFunctions(DataModel):
     functions: Dict[str, B2bFunctionsFunctionsValue] = Field(json_schema_extra={'when': 'always'})
 
 
-class ObjectionVocabWallsDefinition(DataModel):
-    """What a reading model is told this wall means. `cues` stay the substring
-    layer; this is the layer that can tell 'talk to my mother' from 'no one to
-    talk to when it goes wrong'."""
-    what: str = Field(min_length=1, json_schema_extra={'when': 'always'})
-    not_for: str = Field(min_length=1, json_schema_extra={'when': 'always'})
-    examples: List[Annotated[str, Field(min_length=1)]] = Field(min_length=1, json_schema_extra={'when': 'always'})
-
-
 class ObjectionVocabWallsValue(DataModel):
     label: str = Field(min_length=1, json_schema_extra={'when': 'always'})
     source: str = Field(json_schema_extra={'when': 'always'})
     cues: List[Annotated[str, Field(min_length=1)]] = Field(min_length=1, json_schema_extra={'when': 'always'})
     grounds: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(json_schema_extra={'when': 'always'})
-    definition: ObjectionVocabWallsDefinition = Field(default=None, json_schema_extra={'when': 'optional'})
     reading_only: bool = Field(default=None, json_schema_extra={'when': 'optional'})
 
 
