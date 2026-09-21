@@ -510,12 +510,10 @@
             </Transition>
           </div>
 
-          <div v-if="phase >= 4" class="auto-advance-msg">
-            <span class="spinner-sm"></span>
-            <span>Environment ready — launching simulation...</span>
-          </div>
-          <div v-else class="auto-advance-msg waiting">
-            <span>Preparing environment...</span>
+          <div v-if="phase >= 4" class="action-group">
+            <button class="action-btn primary" @click="handleStartSimulation">
+              Start Simulation →
+            </button>
           </div>
         </div>
       </div>
@@ -1049,18 +1047,6 @@ const loadPreparedData = async () => {
   }
 }
 
-// Auto-advance: when env setup completes (phase 4), emit next-step exactly once
-const autoAdvancedToSim = ref(false)
-watch(phase, (newPhase) => {
-  if (newPhase >= 4 && !autoAdvancedToSim.value) {
-    autoAdvancedToSim.value = true
-    const params = {}
-    if (useCustomRounds.value) {
-      params.maxRounds = customMaxRounds.value
-    }
-    emit('next-step', params)
-  }
-})
 
 // Scroll log to bottom
 const logContent = ref(null)

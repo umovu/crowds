@@ -187,9 +187,9 @@ const refreshGraph = () => {
   }
 }
 
-// Watch route params
+// Watch route params — immediate:true handles initial load, no duplicate in onMounted
 watch(() => route.params.reportId, (newId) => {
-  if (newId && newId !== currentReportId.value) {
+  if (newId) {
     currentReportId.value = newId
     loadReportData()
   }
@@ -197,7 +197,6 @@ watch(() => route.params.reportId, (newId) => {
 
 onMounted(() => {
   addLog('InteractionView initialized')
-  loadReportData()
 })
 </script>
 

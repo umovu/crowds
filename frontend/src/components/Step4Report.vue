@@ -127,6 +127,10 @@
             </div>
           </div>
 
+          <button v-if="isComplete" class="action-btn primary" @click="goToInteraction">
+            Chat with Agents →
+          </button>
+
           <button v-if="isComplete" class="download-md-btn" @click="downloadMarkdown">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -3287,6 +3291,26 @@ watch(() => props.reportId, (newId) => {
   background: #E5E7EB;
   color: #374151;
   border-color: #D1D5DB;
+}
+
+.action-btn.primary {
+  background: #000;
+  color: #FFF;
+  border-color: #000;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.action-btn.primary:hover {
+  opacity: 0.8;
+  background: #000;
+  color: #FFF;
 }
 
 /* Result Wrapper */

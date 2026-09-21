@@ -121,6 +121,12 @@ export const getSimulationPosts = (simulationId, platform = 'reddit', limit = 50
   })
 }
 
+export const getAgentPosts = (simulationId, userId, platform = 'reddit', limit = 50) => {
+  return service.get(`/api/simulation/${simulationId}/posts`, {
+    params: { platform, user_id: userId, limit }
+  })
+}
+
 /**
  * Get simulation timeline (summarized by rounds)
  * @param {string} simulationId

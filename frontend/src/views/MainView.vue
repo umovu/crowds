@@ -323,14 +323,15 @@ const pollTaskStatus = async (taskId) => {
         addLog('Graph build task completed.')
         stopPolling()
         stopGraphPolling() // Stop polling, do final load
-        currentPhase.value = 2
-        
-        // Final load
+
+        // Load project data BEFORE setting currentPhase=2 so that
+        // graph_id is available on projectData when Step1's watch fires
         const projRes = await getProject(currentProjectId.value)
         if (projRes.success && projRes.data.graph_id) {
             projectData.value = projRes.data
             await loadGraph(projRes.data.graph_id)
         }
+        currentPhase.value = 2
       } else if (task.status === 'failed') {
         stopPolling()
         error.value = task.error

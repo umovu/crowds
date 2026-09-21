@@ -9,8 +9,7 @@ import os
 import re
 from typing import Optional, Dict, Any, List
 from openai import OpenAI
-
-from ..config import Config
+from dotenv import load_dotenv
 
 
 class LLMClient:
@@ -23,9 +22,13 @@ class LLMClient:
         model: Optional[str] = None,
         timeout: float = 300.0
     ):
-        self.api_key = api_key or Config.LLM_API_KEY
-        self.base_url = base_url or Config.LLM_BASE_URL
-        self.model = model or Config.LLM_MODEL_NAME
+        # Reload .env on every instantiation so model/key changes apply without restart
+        _env_path = os.path.join(os.path.dirname(__file__), '../../../.env')
+        load_dotenv(_env_path, override=True)
+
+        self.api_key = api_key or os.environ.get('LLM_API_KEY')
+        self.base_url = base_url or os.environ.get('LLM_BASE_URL', 'http://localhost:11434/v1')
+        self.model = model or os.environ.get('LLM_MODEL_NAME', 'qwen2.5:32b')
 
         if not self.api_key:
             raise ValueError("LLM_API_KEY not configured")
@@ -43,6 +46,14 @@ class LLMClient:
     def _is_ollama(self) -> bool:
         """Check if we're talking to an Ollama server."""
         return '11434' in (self.base_url or '')
+
+    def _supports_json_mode(self) -> bool:
+        """Check if provider supports response_format json_object."""
+        url = self.base_url or ''
+        # Gemini's OpenAI-compatible endpoint does not support json_object mode
+        if 'generativelanguage.googleapis.com' in url:
+            return False
+        return True
 
     def chat(
         self,
@@ -102,11 +113,12 @@ class LLMClient:
         Returns:
             Parsed JSON object
         """
+        fmt = {"type": "json_object"} if self._supports_json_mode() else None
         response = self.chat(
             messages=messages,
             temperature=temperature,
             max_tokens=max_tokens,
-            response_format={"type": "json_object"}
+            response_format=fmt
         )
         # Clean markdown code block markers
         cleaned_response = response.strip()

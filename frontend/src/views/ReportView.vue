@@ -106,8 +106,11 @@ const updateStatus = (status) => {
 }
 
 // --- Data Logic ---
+const loadingReport = ref(false)
 const loadReportData = async () => {
+  if (loadingReport.value) return  // prevent duplicate concurrent fetches
   try {
+    loadingReport.value = true
     addLog(`Loading report data: ${currentReportId.value}`)
 
     // Get report info to retrieve simulation_id
@@ -119,10 +122,12 @@ const loadReportData = async () => {
     }
   } catch (err) {
     addLog(`Load error: ${err.message}`)
+  } finally {
+    loadingReport.value = false
   }
 }
 
-// Watch route params
+// Watch route params — immediate:true handles initial load, no need for onMounted call
 watch(() => route.params.reportId, (newId) => {
   if (newId && newId !== currentReportId.value) {
     currentReportId.value = newId
@@ -132,7 +137,6 @@ watch(() => route.params.reportId, (newId) => {
 
 onMounted(() => {
   addLog('ReportView initialized')
-  loadReportData()
 })
 </script>
 

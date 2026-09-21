@@ -712,6 +712,17 @@ const sendMessage = async () => {
 }
 
 const sendToReportAgent = async (message) => {
+  if (!props.simulationId) {
+    chatHistory.value.push({
+      role: 'assistant',
+      content: 'Loading simulation data, please try again in a few seconds...',
+      timestamp: new Date().toISOString()
+    })
+    // Retry once after 3 seconds automatically
+    setTimeout(() => sendToReportAgent(message), 3000)
+    return
+  }
+
   addLog(`Send to Report Agent: ${message.substring(0, 50)}...`)
 
   // Build chat history for API
@@ -910,12 +921,8 @@ const loadReportData = async () => {
   try {
     addLog(`Loading report data: ${props.reportId}`)
 
-    // Get report info
-    const reportRes = await getReport(props.reportId)
-    if (reportRes.success && reportRes.data) {
-      // Load agent logs to get report outline and sections
-      await loadAgentLogs()
-    }
+    // Skip full report fetch — just load agent logs directly
+    await loadAgentLogs()
   } catch (err) {
     addLog(`Failed to load report: ${err.message}`)
   }
@@ -972,7 +979,7 @@ const handleClickOutside = (e) => {
 onMounted(() => {
   addLog('Step5 Interaction initialized')
   loadReportData()
-  loadProfiles()
+  // loadProfiles is handled by the simulationId watcher below
   document.addEventListener('click', handleClickOutside)
 })
 

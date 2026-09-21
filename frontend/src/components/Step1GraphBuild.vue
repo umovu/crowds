@@ -158,9 +158,15 @@
         <div class="card-content">
           <p class="api-note">POST /api/simulation/create</p>
           <p class="description">Graph build is complete. Please proceed to the next step to set up the simulation environment</p>
-          <div v-if="currentPhase >= 2" class="auto-advance-msg">
-            <span v-if="creatingSimulation" class="spinner-sm"></span>
-            <span>{{ creatingSimulation ? 'Creating simulation...' : 'Graph built — preparing agents...' }}</span>
+          <div v-if="currentPhase >= 2" class="action-group">
+            <button
+              class="action-btn primary"
+              :disabled="creatingSimulation"
+              @click="handleEnterEnvSetup"
+            >
+              <span v-if="creatingSimulation" class="spinner-sm"></span>
+              {{ creatingSimulation ? 'Creating simulation...' : 'Enter Environment Setup →' }}
+            </button>
           </div>
         </div>
       </div>
@@ -204,12 +210,6 @@ const selectedOntologyItem = ref(null)
 const logContent = ref(null)
 const creatingSimulation = ref(false)
 
-// Auto-advance when graph build completes (phase 2)
-watch(() => props.currentPhase, (newPhase, oldPhase) => {
-  if (newPhase >= 2 && !creatingSimulation.value) {
-    handleEnterEnvSetup()
-  }
-})
 
 // Enter environment setup - create simulation and navigate
 const handleEnterEnvSetup = async () => {
@@ -602,14 +602,38 @@ watch(() => props.systemLogs.length, () => {
 }
 
 /* Step 03 Auto-advance message */
-.auto-advance-msg {
+.action-group {
   display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.action-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: #FF5722;
-  font-weight: 500;
-  padding: 12px 0;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.action-btn.primary {
+  background: #000;
+  color: #FFF;
+}
+
+.action-btn.primary:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .progress-section {
