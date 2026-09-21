@@ -258,6 +258,50 @@
         }
       },
       "when": "optional"
+    },
+    "place": {
+      "type": "object",
+      "fields": {
+        "label": {
+          "type": "string",
+          "when": "always"
+        },
+        "level": {
+          "type": "string",
+          "allowed": [
+            "metro",
+            "province"
+          ],
+          "when": "always"
+        },
+        "metro": {
+          "type": "string",
+          "nullable": true,
+          "when": "always"
+        },
+        "province": {
+          "type": "string",
+          "nullable": true,
+          "when": "always"
+        },
+        "seats": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "of": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        },
+        "measured_seats": {
+          "type": "integer",
+          "min": 0,
+          "when": "always"
+        }
+      },
+      "nullable": true,
+      "when": "optional"
     }
   },
   "together": [

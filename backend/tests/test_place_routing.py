@@ -143,3 +143,60 @@ def test_every_imputed_row_says_how_sure_it_is(library):
             if row.get("source") == "ghs_2025":
                 assert row.get("pool", 0) >= 1
                 assert 0.0 < row.get("share", 0) <= 1.0
+
+
+# ── what the operator is told ───────────────────────────────────────────
+
+def test_the_room_says_where_it_is():
+    """A place-tilted room is invisible in the roster, so the summary line is
+    the only place the operator learns the room was scoped."""
+    from app.services.persona_retrieval import describe_place
+
+    query = "a prepaid transport card for commuters in Pretoria"
+    place = describe_place(query, _room(query))
+    assert place["level"] == "metro"
+    assert place["label"] == "City of Tshwane, Gauteng"
+    assert place["seats"] >= int(SEATS * PLACE_SHARE)
+    assert place["of"] == SEATS
+
+
+def test_a_fallback_room_is_labelled_by_the_seats_not_the_pitch():
+    """East London names a metro too thin to fill a room. The line must say
+    Eastern Cape, because that is what the picker actually did."""
+    from app.services.persona_retrieval import describe_place
+
+    query = "a delivery service in East London"
+    place = describe_place(query, _room(query))
+    assert place is None or place["level"] == "province"
+    if place:
+        assert place["metro"] is None
+        assert place["label"] == "Eastern Cape"
+
+
+def test_a_placeless_pitch_says_nothing_about_place():
+    from app.services.persona_retrieval import describe_place
+
+    query = "a savings product for salaried workers"
+    assert describe_place(query, _room(query)) is None
+
+
+def test_the_line_admits_how_many_seats_were_placed_rather_than_recorded():
+    """Today every persona's metro is imputed, so measured_seats is 0 and the UI
+    says so. When the library grows from QLFS this rises on its own."""
+    from app.services.persona_retrieval import describe_place
+
+    query = "a clinic booking service in Soweto"
+    place = describe_place(query, _room(query))
+    assert 0 <= place["measured_seats"] <= place["seats"]
+
+
+def test_a_province_room_has_nothing_to_disclaim():
+    """Province came off the persona's own survey row from the beginning. Only
+    the metro is ever a placement, so a province-level room must not apologise
+    for one."""
+    from app.services.persona_retrieval import describe_place
+
+    query = "a bakery in Upington"
+    place = describe_place(query, _room(query))
+    assert place["level"] == "province"
+    assert place["measured_seats"] == place["seats"]

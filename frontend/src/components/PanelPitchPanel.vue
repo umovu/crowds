@@ -118,6 +118,10 @@
         <span>03 / THE ROOM</span>
         <span>{{ session.cast_size }} personas · {{ allocationLine }} <template v-if="tierMixLine !== '—'">· budget mix {{ tierMixLine }}</template></span>
       </div>
+      <div v-if="placeLine" class="pp-place">
+        <span class="pp-place-label">📍 {{ placeLine }}</span>
+        <span class="pp-place-note">{{ placeNote }}</span>
+      </div>
       <div class="pp-roster">
         <span v-for="a in session.agents" :key="a.id" class="pp-roster-chip" :title="a.persona || ''">
           <span class="pp-roster-name">{{ a.name }}</span>
@@ -368,6 +372,29 @@ const allocationLine = computed(() => {
   const alloc = session.value?.segment_allocation || {}
   const parts = Object.entries(alloc).map(([label, count]) => `${count} ${label}`)
   return parts.length > 1 ? parts.join(' · ') : (session.value?.segment_label || '')
+})
+
+// Where the room is set. A place-tilted room looks exactly like an untilted one
+// in the roster — nobody says their city, because a persona's metro is a
+// placement rather than a fact about them — so this line is the only place the
+// operator learns the room was scoped, and the only place the honesty about it
+// can live.
+const placeLine = computed(() => {
+  const place = session.value?.place
+  if (!place) return ''
+  return `${place.label} · ${place.seats} of ${place.of} seats`
+})
+
+const placeNote = computed(() => {
+  const place = session.value?.place
+  if (!place) return ''
+  const drawn = place.seats - (place.measured_seats || 0)
+  const where = place.level === 'metro'
+    ? 'Attitudes are province-level.'
+    : 'The surveys place people no finer than this.'
+  return drawn > 0
+    ? `${drawn} of these ${place.seats} were placed here from survey data for people like them, not recorded here. ${where}`
+    : where
 })
 
 const tierMixLine = computed(() => {
@@ -847,6 +874,22 @@ onMounted(async () => {
 }
 
 /* Roster */
+.pp-place {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 7px 12px;
+  background: #F0FAF4;
+  border-left: 2px solid #1E9E5A;
+  border-radius: 2px;
+}
+.pp-place-label { font-size: 0.78rem; font-weight: 600; color: #1A1A1A; }
+/* The caveat is deliberately in the same box as the claim, not a tooltip: a
+   placement read as a fact is the failure mode this whole line exists to stop. */
+.pp-place-note { font-size: 0.68rem; color: #777; }
+
 .pp-roster { display: flex; flex-wrap: wrap; gap: 6px; }
 .pp-roster-chip {
   display: inline-flex;

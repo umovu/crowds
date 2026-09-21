@@ -216,6 +216,75 @@ def derive_metro(query: str) -> Optional[str]:
     return derive_place(query)[0]
 
 
+def describe_place(query: str, cast: List[Dict], *, province: Optional[str] = None,
+                   metro: Optional[str] = None) -> Optional[Dict]:
+    """What to tell the operator about where this room is, or None if nowhere.
+
+    A room tilted to a place looks, in the roster, exactly like a room that
+    wasn't — same names, same archetypes, and nobody says their city (metro has
+    no prompt block, because it is a placement and not a fact about them). So
+    the only place this shows up is here, said plainly: which place, how many
+    seats it got, and how sure the placement is.
+
+    `level` says which rung the picker actually used, because a pitch about
+    Gqeberha that quietly fell back to the Eastern Cape must not be shown as a
+    Gqeberha room.
+    """
+    if not cast:
+        return None
+    if metro is None and province is None:
+        metro, province = derive_place(query)
+        if metro and not province:
+            province = _METRO_PROVINCES.get(metro.split(" - ")[0])
+    if not (metro or province):
+        return None
+
+    seated_metro = sum(1 for p in cast if _metro_of(p) == metro) if metro else 0
+    seated_province = sum(1 for p in cast if p.get("province") == province) if province else 0
+    # The label follows the SEATS, not the pitch. A metro dropped by the
+    # thin-bucket guard still lands a few of its people by chance through the
+    # province tilt — East London seated 3 Buffalo City people out of a room the
+    # picker had already widened to the Eastern Cape — and calling that a Buffalo
+    # City room would be the exact overclaim this line exists to prevent. So a
+    # metro only gets the label when it actually won the reserved seats.
+    reserved = int(round(len(cast) * PLACE_SHARE))
+    level = ("metro" if metro and seated_metro >= reserved
+             else "province" if seated_province else "none")
+    if level == "none":
+        return None
+
+    seats = seated_metro if level == "metro" else seated_province
+    local = [p for p in cast
+             if (_metro_of(p) == metro if level == "metro"
+                 else p.get("province") == province)]
+    # Province is on the persona's own survey row — it always was. Only the metro
+    # can be a placement, so a province-level room has nothing to disclaim.
+    measured = (len(local) if level == "province"
+                else sum(1 for p in local if _placement_is_measured(p)))
+
+    name = metro.split(" - ", 1)[-1] if level == "metro" else province
+    return {
+        "label": f"{name}, {province}" if level == "metro" and province else name,
+        "level": level,
+        "metro": metro if level == "metro" else None,
+        "province": province,
+        "seats": seats,
+        "of": len(cast),
+        # How many of those seats know where they live rather than having been
+        # placed there. Shown so "7 of 12 in Tshwane" is never read as seven
+        # people the survey found in Tshwane.
+        "measured_seats": measured,
+    }
+
+
+def _placement_is_measured(persona: Dict) -> bool:
+    """True when this persona's metro came off their own survey row."""
+    for row in persona.get("circumstances") or []:
+        if row.get("field") == "metro":
+            return row.get("match_quality") == "exact"
+    return False
+
+
 def select_for_query(
     n: int,
     query: str = "",

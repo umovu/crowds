@@ -30,6 +30,7 @@ PanelSessionMode = Literal['panel', 'product', 'policy']
 PanelSessionBudgetTierFilter = Literal['tight', 'moderate', 'loose']
 PanelSessionAffordabilityFromPriceTiers = Literal['tight', 'moderate', 'loose']
 PanelSessionSlotsProbesItemConfidence = Literal['strong-data', 'thin-data']
+PanelSessionPlaceLevel = Literal['metro', 'province']
 
 # ── poster ──────────────────────────────────────────────────────────────────
 PosterMimeType = Literal['image/png', 'image/jpeg', 'image/jpg', 'image/webp']
