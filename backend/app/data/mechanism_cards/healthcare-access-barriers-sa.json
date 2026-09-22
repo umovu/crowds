@@ -80,7 +80,13 @@
     },
     {
       "text": "The grant is mentally divided among groceries, stokvels, transport, and emergencies, so a clinic trip is weighed against every other survival need and dropped when money runs out",
-      "needs": [],
+      "needs": [
+        {
+          "employment_status": [
+            "Unemployed"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P7",

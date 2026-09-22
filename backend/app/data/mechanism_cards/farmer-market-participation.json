@@ -71,7 +71,13 @@
     },
     {
       "text": "The harvest is mentally split into consumption first and surplus second; because the surplus is tiny, it is absorbed by the immediate community, making volume-dependent formal channels irrelevant.",
-      "needs": [],
+      "needs": [
+        {
+          "geotype": [
+            "Traditional"
+          ]
+        }
+      ],
       "chain_id": "C3",
       "passages": [
         "P1",

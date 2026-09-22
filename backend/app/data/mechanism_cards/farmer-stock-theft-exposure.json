@@ -95,7 +95,13 @@
     },
     {
       "text": "Cultural ceremonies create a steady, unregulated demand for livestock that does not require proof of ownership, so theft surges around traditional events.",
-      "needs": [],
+      "needs": [
+        {
+          "geotype": [
+            "Traditional"
+          ]
+        }
+      ],
       "chain_id": "C4",
       "passages": [
         "P1",

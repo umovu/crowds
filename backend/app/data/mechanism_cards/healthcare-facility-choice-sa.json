@@ -58,7 +58,13 @@
     },
     {
       "text": "Negative experience of clinics as slow, under-resourced, and staffed by rude workers makes clinic-first rules read as burdensome, because patients judge the clinic as not worth following.",
-      "needs": [],
+      "needs": [
+        {
+          "health_service_satisfaction": [
+            "dissatisfied"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P3",
@@ -112,7 +118,16 @@
     },
     {
       "text": "Public facilities read as unwelcoming and unsafe for men, because male patients experience long waits, gender-biased triage, and humiliating treatment by female nurses.",
-      "needs": [],
+      "needs": [
+        {
+          "health_service_satisfaction": [
+            "dissatisfied"
+          ],
+          "gender": [
+            "Male"
+          ]
+        }
+      ],
       "chain_id": "C4",
       "passages": [
         "P21",

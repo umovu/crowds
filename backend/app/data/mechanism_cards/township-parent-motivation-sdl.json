@@ -118,7 +118,13 @@
     },
     {
       "text": "Motivational interventions are viewed as insufficient because structural unemployment and developmental rebellion override individual encouragement.",
-      "needs": [],
+      "needs": [
+        {
+          "employment_status": [
+            "Unemployed"
+          ]
+        }
+      ],
       "chain_id": "C5",
       "passages": [
         "P5",

@@ -93,7 +93,13 @@
     },
     {
       "text": "Convenience and affordability for elderly people are the access test: distance and transport barriers make a facility unusable because elderly patients cannot reach it",
-      "needs": [],
+      "needs": [
+        {
+          "age_band": [
+            "60+"
+          ]
+        }
+      ],
       "chain_id": "C5",
       "passages": [
         "P10",

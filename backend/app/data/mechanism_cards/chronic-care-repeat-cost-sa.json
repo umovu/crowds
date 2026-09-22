@@ -28,7 +28,13 @@
     },
     {
       "text": "Scarce transport funds are protected from waste: a clinic known for stock-outs is judged not worth the cost of attendance, so the patient shops around or self-treats instead",
-      "needs": [],
+      "needs": [
+        {
+          "health_service_satisfaction": [
+            "dissatisfied"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P4"

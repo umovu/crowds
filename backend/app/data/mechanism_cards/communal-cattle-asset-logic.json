@@ -62,7 +62,13 @@
     },
     {
       "text": "Cattle theft is read as a symptom of youth unemployment and absent herders, so a solution is credible only if it absorbs idle youth labour or substitutes for the missing herder.",
-      "needs": [],
+      "needs": [
+        {
+          "employment_status": [
+            "Unemployed"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P5",
