@@ -1,0 +1,178 @@
+{
+  "id": "chronic-care-repeat-cost-sa",
+  "citation": [
+    "Goudge J, Gilson L, Russell S, Gumede T, Mills A (2009). Affordability, availability and acceptability barriers to health care for the chronically ill: longitudinal case studies from South Africa. BMC Health Services Research 9:75. doi:10.1186/1472-6963-9-75"
+  ],
+  "segment_tags": [
+    "grant_dependent_survivor"
+  ],
+  "claims": [
+    {
+      "text": "A chronic illness turns a per-visit price into a monthly bill: the journey and payment recur every month, repeat consultation costs can reach a large share of household income, and what must be paid today is the binding constraint, so anything requiring upfront payment or travel is read as inaccessible",
+      "needs": [],
+      "chain_id": "C6+C1",
+      "passages": [
+        "P19",
+        "P20",
+        "P1",
+        "P2"
+      ],
+      "evaluative_rules": [
+        "Weigh care-seeking against immediate transport and out-of-pocket costs"
+      ],
+      "objections": [
+        "How many times a month would I have to pay this?"
+      ],
+      "vocabulary": []
+    },
+    {
+      "text": "Scarce transport funds are protected from waste: a clinic known for stock-outs is judged not worth the cost of attendance, so the patient shops around or self-treats instead",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P4"
+      ],
+      "evaluative_rules": [
+        "Avoid wasting scarce transport funds on a trip likely to be fruitless"
+      ],
+      "objections": [
+        "Do I have money for transport to get there?",
+        "Will I arrive and find the medicine is out of stock?"
+      ],
+      "vocabulary": [
+        "money for transport",
+        "shopping around"
+      ]
+    },
+    {
+      "text": "Unclarified referral instructions defeat unempowered patients: without asking questions, people get lost in the referral system and give up",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P5"
+      ],
+      "objections": [],
+      "vocabulary": [
+        "unempowered",
+        "get 'lost' and give up"
+      ]
+    },
+    {
+      "text": "Respectful, explanatory provider communication is the test of whether formal treatment is worth returning to: when it fails, families turn to prophets, traditional healers, or faith healers and abandon the health system",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P6",
+        "P7",
+        "P8",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17"
+      ],
+      "evaluative_rules": [
+        "Judge formal treatment by whether providers give clear diagnosis, explanation, and respectful communication"
+      ],
+      "objections": [
+        "Will the nurses listen to me and explain what is wrong?"
+      ],
+      "vocabulary": [
+        "hospital treatment as a failure"
+      ]
+    },
+    {
+      "text": "A need becomes actionable only when it can be explained and justified to others: legitimacy in the eyes of friends and relatives unlocks financial support",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P10",
+        "P12"
+      ],
+      "evaluative_rules": [
+        "Support a need only when it can be explained and justified to others"
+      ],
+      "objections": [
+        "Can I explain this need to my family and neighbours so they will help?"
+      ],
+      "vocabulary": [
+        "dependant on gifts"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Agincourt sub-district, rural Mpumalanga, South Africa",
+  "year_range": "2004-2005",
+  "confidence": "Longitudinal case studies in one rural sub-district (Agincourt, Mpumalanga): household survey of 280 households and 30 case households followed for 10 months, fieldwork 2004-2005, before the ART rollout matured. Mechanisms durable; magnitudes, prices and shares are of that time and place, not national.",
+  "comb_gaps": [
+    "capability",
+    "opportunity",
+    "motivation"
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "hospital",
+    "nurse",
+    "doctor",
+    "medicine",
+    "medication",
+    "treatment",
+    "health",
+    "healthcare",
+    "chronic",
+    "illness",
+    "sick",
+    "consultation",
+    "appointment",
+    "pills"
+  ],
+  "applies_when": [
+    {
+      "went_without_care": [
+        "sometimes",
+        "often"
+      ],
+      "lived_poverty": [
+        "moderate",
+        "high"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    },
+    {
+      "owns_vehicle": [
+        "none"
+      ],
+      "went_without_care": [
+        "sometimes",
+        "often"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    },
+    {
+      "time_to_health_facility": [
+        "30–89 minutes",
+        "90 minutes and more"
+      ],
+      "lived_poverty": [
+        "moderate",
+        "high"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    }
+  ]
+}

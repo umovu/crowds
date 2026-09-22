@@ -1,0 +1,144 @@
+{
+  "id": "older-persons-clinic-experience-sa",
+  "citation": [
+    "Motsohi T, Namane M, Anele AC, Abbas M, Kalula SZ (2020). Older persons' experience with health care at two primary level clinics in Cape Town, South Africa: a qualitative assessment. BJGP Open 4(3):bjgpopen20X101048. doi:10.3399/bjgpopen20X101048"
+  ],
+  "segment_tags": [
+    "gogo_guardian",
+    "grant_dependent_survivor"
+  ],
+  "claims": [
+    {
+      "text": "Being examined, listened to, and treated respectfully is the test of care: when staff are too few and complaints are dismissed, patients fall silent or become fed up because they feel unheard",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P11",
+        "P26"
+      ],
+      "evaluative_rules": [
+        "Judge care by whether you are examined, listened to, and treated with respect"
+      ],
+      "objections": [
+        "Will I actually be examined, or just given tablets?",
+        "Will they listen to me when I tell them about my body?"
+      ],
+      "vocabulary": [
+        "treated with respect",
+        "listen",
+        "fed up",
+        "keep quiet"
+      ]
+    },
+    {
+      "text": "Age must not decide whether help is possible: abruptness and refusal toward older patients are read as structural ageism because help is withheld on the basis of age",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge help by whether age is being used to refuse it"
+      ],
+      "objections": [],
+      "vocabulary": [
+        "ageism"
+      ]
+    },
+    {
+      "text": "Fairness is first-come-first-served: a person who arrives after you must be seen after you, because queue order is the measure of right and wrong",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P13"
+      ],
+      "evaluative_rules": [
+        "Judge fairness by queue order, not connections or payments"
+      ],
+      "objections": [
+        "Will I be seen after someone who came after me?"
+      ],
+      "vocabulary": []
+    },
+    {
+      "text": "Doctor-led examination is the quality benchmark: patients prefer doctors and distrust nurses who dismiss complaints because thorough examination and meaningful attention to complaints define good care",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P23",
+        "P24",
+        "P26",
+        "P29"
+      ],
+      "evaluative_rules": [
+        "Judge provider quality by whether a doctor examines you thoroughly"
+      ],
+      "objections": [
+        "Will I be seen by a doctor, or dismissed by a nurse?"
+      ],
+      "vocabulary": [
+        "examination"
+      ]
+    },
+    {
+      "text": "Convenience and affordability for elderly people are the access test: distance and transport barriers make a facility unusable because elderly patients cannot reach it",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P10",
+        "P15",
+        "P30"
+      ],
+      "evaluative_rules": [
+        "Judge access by whether an elderly person can actually get there"
+      ],
+      "objections": [
+        "Can I even get there?"
+      ],
+      "vocabulary": []
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Hanover Park and Vanguard community health centres, Cape Town, South Africa",
+  "year_range": "2017-2017",
+  "confidence": "Four focus groups with 33 patients aged 60 and over (median 66, 76% women) at two public community health centres in low-income Cape Town suburbs, August-November 2017. Mechanisms durable; magnitudes unknown, and both clinics serve one metro, so waiting times and travel details are local.",
+  "comb_gaps": [
+    "capability",
+    "opportunity",
+    "motivation"
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "hospital",
+    "nurse",
+    "nurses",
+    "doctor",
+    "medicine",
+    "medication",
+    "treatment",
+    "health",
+    "healthcare",
+    "consultation",
+    "appointment",
+    "queue",
+    "pills"
+  ],
+  "applies_when": [
+    {
+      "age_band": [
+        "60+"
+      ]
+    }
+  ]
+}
