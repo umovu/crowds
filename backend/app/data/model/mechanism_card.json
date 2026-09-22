@@ -27,6 +27,13 @@
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
       "when": "always"
     },
+    "subject": {
+      "type": "string",
+      "min_length": 1,
+      "max_length": 300,
+      "when": "optional",
+      "note": "One human-written line saying what this research is about, in plain words, for the typed reader in card_subjects to match a pitch against. Falls back to topic_tags when absent, which reads as keywords and scores like keywords. Never shown to a persona — the prompt block is built from claims."
+    },
     "claim_type": {
       "type": "string",
       "allowed": [

@@ -217,13 +217,35 @@ def topic_matches(card: Dict, question: str) -> bool:
                for t in (card.get("topic_tags") or []))
 
 
-def cards_for_question(profile: Dict, question: str, cap: int = DEFAULT_CARD_CAP):
+def subjects_touched(question: str, cards: List[Dict] | None = None) -> set:
+    """The ids of cards this question is about — topic tags, widened by the typed reader.
+
+    Computed per ROOM, not per persona: every persona in a panel is asked about the
+    same pitch, so reading it once and passing the answer down is the difference
+    between one typed read and one per agent. `cards_for_question` falls back to
+    computing it when no caller has.
+    """
+    pool = cards if cards is not None else load_cards()
+    tagged = {c.get("id") for c in pool if c.get("id") and topic_matches(c, question)}
+    try:
+        from . import card_subjects
+    except (ImportError, ValueError):  # loaded by file path, with no package
+        return tagged
+    return card_subjects.widen(question, pool, tagged)
+
+
+def cards_for_question(profile: Dict, question: str, cap: int = DEFAULT_CARD_CAP,
+                       touched: set | None = None):
     """The bound cards whose subject the question touches, or None for a legacy profile.
 
     Binding at cast build stays by archetype (who the research studied). This is the
     second gate, applied at prompt time: a clinic panel gave all twelve salaried
     professionals a middle-class-spending card and a fintech-trust card — about 80% of
     every prompt, on nothing the question was about.
+
+    `touched` is the room's already-computed answer from `subjects_touched`. Pass it
+    whenever more than one persona is asked the same question — otherwise each call
+    re-derives it, and with the typed reader on that is one request per persona.
 
     Returns None when the profile carries research_context but no citations (a cast
     built before citations existed), so the caller keeps its stored block rather than
@@ -236,7 +258,14 @@ def cards_for_question(profile: Dict, question: str, cap: int = DEFAULT_CARD_CAP
     facts = situation_facts(profile)
     bound = [narrowed_to(by_id[c.get("card_id")], facts) for c in citations
              if isinstance(c, dict) and c.get("card_id") in by_id]
-    return [c for c in bound if c and topic_matches(c, question)][:cap]
+    if touched is None:
+        # Over the WHOLE library, not this persona's bound subset: "what is this
+        # pitch about" is a property of the pitch, so the answer is identical for
+        # every persona in the room and the memo in card_subjects can hold it.
+        # Asked per-subset, each persona's different set of ids is a different
+        # question and a room of twelve buys twelve reads.
+        touched = subjects_touched(question)
+    return [c for c in bound if c and c.get("id") in touched][:cap]
 
 
 # ── Situation matching: WHO a card describes, read from the persona's own record ──

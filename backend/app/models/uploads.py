@@ -208,6 +208,13 @@ class MechanismCard(DataModel):
     MODEL_NAME: ClassVar[str] = 'mechanism_card'
     HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     id: str = Field(pattern='^[a-z0-9]+(-[a-z0-9]+)*$', json_schema_extra={'when': 'always'})
+    subject: str = Field(default=None, min_length=1, max_length=300, json_schema_extra={
+        'when': 'optional',
+        'note': ("One human-written line saying what this research is about, in plain words, "
+                 "for the typed reader in card_subjects to match a pitch against. Falls back "
+                 "to topic_tags when absent, which reads as keywords and scores like keywords. "
+                 "Never shown to a persona — the prompt block is built from claims."),
+    })
     claim_type: MechanismCardClaimType = Field(json_schema_extra={'when': 'always'})
     claims: List[MechanismCardClaim] = Field(min_length=1, max_length=5, json_schema_extra={'when': 'always'})
     citation: List[Annotated[str, Field(min_length=1)]] = Field(min_length=1, json_schema_extra={'when': 'always'})
