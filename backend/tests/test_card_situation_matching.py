@@ -197,7 +197,7 @@ def test_a_card_without_rules_falls_back_to_its_label():
 
 def test_every_shipped_card_says_who_it_describes():
     known = set(mcs._SITUATION_FIELDS) | {
-        "age_band", "lived_poverty", "owns_vehicle", "owns_computer", "owns_bank_account",
+        "age_band", "youth_age_band", "lived_poverty", "owns_vehicle", "owns_computer", "owns_bank_account",
         "internet_use", "money_decision", "went_without_care", "electricity_reliability",
         "health_service_satisfaction", "health_authority_trust"}
     for card in mcs.load_cards():
@@ -218,3 +218,58 @@ def test_every_shipped_claim_with_its_own_rule_reaches_someone():
             if claim["needs"]:
                 assert any(mcs._clause_strength(claim["needs"], f) for f in fits), \
                     (card["id"], claim["text"][:60])
+
+
+# ── A claim reaches only the group its study was about ─────────────────────────
+# youth-clinic-privacy-stigma-sa rests on two studies: young women 18-24 (Nyblade,
+# claims 0-2), and school learners 16+, boys and girls (Strauss, claim 4). Claim 3
+# draws on both. Without per-claim `needs`, a 16-year-old boy was told nurses scold
+# him like a daughter for asking about contraception, and 15-year-olds got claims from
+# studies that recruited from 16.
+
+YOUTH = "youth-clinic-privacy-stigma-sa"
+
+
+def _youth_claims(profile):
+    card = next(c for c in mcs.load_cards() if c["id"] == YOUTH)
+    view = mcs.narrowed_to(card, mcs.situation_facts(profile)) \
+        if mcs.situation_match_strength(card, mcs.situation_facts(profile)) else None
+    if not view:
+        return None
+    kept = {c["text"] for c in view["claims"]}
+    return [i for i, c in enumerate(card["claims"]) if c["text"] in kept]
+
+
+def test_youth_age_band_splits_where_youth_studies_recruit():
+    assert [mcs._youth_age_band(a) for a in (15, 16, 17, 18, 24, 25)] == \
+        ["under-16", "16-17", "16-17", "18-24", "18-24", "25+"]
+    # The coarse band the older cards use is unchanged.
+    assert mcs._age_band(15) == mcs._age_band(24) == "15-24"
+
+
+def test_young_woman_gets_the_young_women_claims():
+    # Claims 0-3. The HIV-testing claim comes from the learner study, so not for her.
+    assert _youth_claims({"gender": "Female", "age": 21}) == [0, 1, 2, 3]
+
+
+def test_young_woman_still_at_school_gets_all_five():
+    assert _youth_claims({"gender": "Female", "age": 18, "ghs_role": "learner"}) == [0, 1, 2, 3, 4]
+
+
+def test_teen_boy_learner_gets_only_the_learner_study_claims():
+    assert _youth_claims({"gender": "Male", "age": 16, "ghs_role": "learner"}) == [3, 4]
+
+
+def test_under_16_gets_nothing():
+    assert _youth_claims({"gender": "Female", "age": 15, "ghs_role": "learner"}) is None
+
+
+def test_young_man_not_in_school_gets_nothing():
+    assert _youth_claims({"gender": "Male", "age": 20}) is None
+
+
+def test_youth_card_stays_off_for_a_general_clinic_pitch():
+    card = next(c for c in mcs.load_cards() if c["id"] == YOUTH)
+    assert not mcs.topic_matches(card, "Book a nurse visit at the clinic on WhatsApp and "
+                                       "get your chronic meds delivered.")
+    assert mcs.topic_matches(card, "A free HIV testing van at high schools.")

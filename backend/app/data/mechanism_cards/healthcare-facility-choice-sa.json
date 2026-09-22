@@ -1,0 +1,188 @@
+{
+  "id": "healthcare-facility-choice-sa",
+  "citation": [
+    "Majola TN et al. (2026). Healthcare workers' perspectives on patient bypassing of Primary Health Care facilities in Mpumalanga province, South Africa. African Journal of Primary Health Care & Family Medicine. doi:10.4102/phcfm.v18i1.5368",
+    "Chavalala L et al. (2025). General Male Patients' Experiences When Visiting Public Health Facilities in Limpopo Province, South Africa. Public Health Challenges. doi:10.1002/puh2.70166"
+  ],
+  "segment_tags": [
+    "grant_dependent_survivor",
+    "unemployed_youth",
+    "gogo_guardian",
+    "guardian_parent",
+    "informal_trader"
+  ],
+  "applies_when": [
+    {
+      "health_service_satisfaction": [
+        "dissatisfied"
+      ],
+      "went_without_care": [
+        "sometimes",
+        "often"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    },
+    {
+      "health_facility_sector": [
+        "public"
+      ],
+      "health_service_satisfaction": [
+        "dissatisfied"
+      ],
+      "age_band": [
+        "25-34",
+        "35-59",
+        "60+"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "text": "Unfamiliarity with the referral system makes clinic-first entry read as optional, because patients do not know the correct starting point and go straight to casualty or hospital.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2"
+      ],
+      "objections": [],
+      "vocabulary": [
+        "referral system",
+        "casualty"
+      ]
+    },
+    {
+      "text": "Negative experience of clinics as slow, under-resourced, and staffed by rude workers makes clinic-first rules read as burdensome, because patients judge the clinic as not worth following.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a facility by whether it wastes your time, not by the official pathway.",
+        "Judge a facility by whether staff treat you like a human being."
+      ],
+      "objections": [
+        "Will this waste my time like the clinic does?",
+        "Will the staff treat me like a human being?"
+      ],
+      "vocabulary": [
+        "waste my time",
+        "long queues",
+        "shortage of treatment"
+      ]
+    },
+    {
+      "text": "Local clinics staffed by known community members with shared consulting rooms make locally delivered care read as exposing, because patients fear stigma and loss of confidentiality.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P17",
+        "P18",
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a facility by whether your neighbours can see or learn your condition."
+      ],
+      "objections": [
+        "Will people in my community see me or learn my condition?"
+      ],
+      "vocabulary": [
+        "confidentiality"
+      ]
+    },
+    {
+      "text": "Public facilities read as unwelcoming and unsafe for men, because male patients experience long waits, gender-biased triage, and humiliating treatment by female nurses.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P21",
+        "P22",
+        "P23",
+        "P24",
+        "P25",
+        "P26",
+        "P27",
+        "P28",
+        "P29",
+        "P30",
+        "P31",
+        "P32",
+        "P37",
+        "P38"
+      ],
+      "evaluative_rules": [
+        "Judge a facility by whether it welcomes men rather than prioritising women."
+      ],
+      "objections": [],
+      "vocabulary": []
+    },
+    {
+      "text": "Clinic-based nurse interaction reads as threatening, because patients expect mistreatment from nurses based on experienced or reported harsh and disrespectful behaviour.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P26",
+        "P27",
+        "P28",
+        "P29",
+        "P34",
+        "P35",
+        "P37",
+        "P38"
+      ],
+      "evaluative_rules": [
+        "Judge a facility by whether nurses will keep your condition private and speak to you respectfully."
+      ],
+      "objections": [
+        "Will I be humiliated or shouted at by nurses?"
+      ],
+      "vocabulary": []
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Mpumalanga and Limpopo provinces, South Africa",
+  "year_range": "2025-2026",
+  "confidence": "Two qualitative studies: 20 healthcare workers at 10 Mpumalanga hospitals (so the bypassing reasons are staff-reported, not patients' own words) and 28 men in four focus groups in Limpopo. Fieldwork dates are not stated in either paper; the years shown are publication years. Mechanisms durable; magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "hospital",
+    "nurse",
+    "nurses",
+    "doctor",
+    "medicine",
+    "medication",
+    "treatment",
+    "health",
+    "healthcare",
+    "consultation",
+    "appointment",
+    "chronic",
+    "sick",
+    "illness",
+    "pills"
+  ]
+}

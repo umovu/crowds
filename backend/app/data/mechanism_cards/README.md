@@ -15,7 +15,7 @@ qualitative research. One card per file, named `<id>.json`.
   `evaluative_rules`. A claim reaches only people the card fits and its own `needs`
   fit (`[]` means everyone the card fits). A claim left out takes its words with it.
 
-## Cards (16)
+## Cards (21)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
@@ -33,9 +33,13 @@ qualitative research. One card per file, named `<id>.json`.
 - `youth-mobile-airtime-economy` — phone and airtime as status and currency
 - `youth-phone-safety-cost-economics` — theft, cost and safety in device decisions
 - `stokvels-calibration` — stokvel trust, lump sums, social infrastructure
+- `chronic-care-repeat-cost-sa` — repeat costs of chronic care, transport, when treatment feels worth returning to
+- `healthcare-access-barriers-sa` — distance, transport and grant money competing with clinic visits
+- `healthcare-facility-choice-sa` — bypassing the clinic, choosing where to seek care
+- `older-persons-clinic-experience-sa` — older patients, overcrowding, being listened to and respected
+- `youth-clinic-privacy-stigma-sa` — young people, sexual health, judgement and privacy (claims routed by study group)
 
 ## Gaps still open
 
 No card for `institutional_loyalist` or `community_leader` specifically. No SA
-qualitative source for subscription persistence. Health cards are drafted
-(`docs/extraction/`) and awaiting sign-off.
+qualitative source for subscription persistence.
