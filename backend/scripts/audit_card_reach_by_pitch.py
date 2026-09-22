@@ -91,6 +91,32 @@ PITCHES = [
     ("connectivity",
      "Uncapped home wifi for R249 a month, installed free, on a month-to-month contract "
      "with no credit check."),
+    ("environment / recycling",
+     "A company collects your sorted recycling from your door every week and pays you "
+     "R20 a month in airtime for it."),
+    ("environment / climate",
+     "The city wants to add R30 a month to every rates bill to fund tree planting and "
+     "clean-up of the river that runs through the township."),
+]
+
+# What real users have actually brought, in their own terms. Kept separate from the
+# spread above so the audit can say whether the gaps land on the people using it.
+TESTER_PITCHES = [
+    ("Thuto / parent app",
+     "An app that shows parents how much effort their child puts into schoolwork each "
+     "day, so they can reward it. R60 a month."),
+    ("school phone ban",
+     "Your child's school wants to ban smartphones during school hours. Phones would be "
+     "handed in at the gate each morning and collected after school."),
+    ("Ntombi / chronic meds",
+     "A private clinic hands out your government chronic medication for free. You collect "
+     "with a barcode, no queue, and no one opens your file."),
+    ("Ntombi / diabetes",
+     "A free diabetes screening day at your local private clinic in November, with a "
+     "finger-prick test and a nurse to talk you through the result."),
+    ("biodigester",
+     "A home biodigester that turns kitchen and garden waste into cooking gas, R17,000 "
+     "installed, or R700 a month over two years."),
 ]
 
 
@@ -133,7 +159,7 @@ def main() -> int:
     print("-" * len(header))
 
     totals = collections.defaultdict(lambda: [0, 0])
-    for label, pitch in PITCHES:
+    for label, pitch in PITCHES + [("* " + l, t) for l, t in TESTER_PITCHES]:
         row = label[:25].ljust(26)
         for mode, flag in modes:
             os.environ["FUB_TYPED_CARDS"] = flag
@@ -159,7 +185,7 @@ def main() -> int:
     print("-" * len(header))
     row = "mean".ljust(26)
     for mode, _ in modes:
-        n = len(PITCHES)
+        n = len(PITCHES) + len(TESTER_PITCHES)
         row += f"{totals[mode][0]/n:>8.0f}% {totals[mode][1]/n:>4.0f} sets  "
     print(row)
     print("\n'%' = personas arriving with at least one card. "
