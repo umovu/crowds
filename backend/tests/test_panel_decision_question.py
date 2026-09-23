@@ -52,9 +52,8 @@ def test_stock_probes_match_the_study_reader():
                                           study_reader.LENS_FALLBACK_PROBES["land"][0]["question"])
 
 
-def test_word_of_mouth_is_asked_per_person_not_in_the_rooms_pitch(monkeypatch):
-    # The room's shared text carries no word-of-mouth ask; the reframer adds it only
-    # for people whose answer can count (tests/test_word_of_mouth_ask.py).
+def test_we_do_not_ask_word_of_mouth_ourselves(monkeypatch):
+    # Asked only when the founder's words ask it (tests/test_word_of_mouth_on_request.py).
     _on(monkeypatch)
     assert "tell anyone" not in panel_service.frame_pitch(PITCH, "panel")
 

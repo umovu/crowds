@@ -271,3 +271,29 @@ def test_markdown_never_promises_a_purchase_rate(tmp_path):
     md = hyp.render_markdown(hyp.build(_write_session(tmp_path))).lower()
     for banned in ("would buy", "conversion", "likelihood to buy", "validation score"):
         assert banned not in md
+
+
+# ── Word of mouth is counted only when the founder asked it ─────────────────
+# We no longer add "would you tell anyone?" to every pitch (every answer ended on
+# it). A count of who said they'd tell someone, on a pitch that never asked, is
+# chance, so the report shows it only when the founder's own words asked.
+
+_TALKERS = [{"id": 1, "name": "Nomsa", "actor_archetype": "informal_trader",
+             "attitudes": [{"topic": "social_voice", "stance": "high"}]}]
+_TOLD = [{"agent_id": 1, "agent_name": "Nomsa", "stance_before": "neutral",
+          "stance_after": "support", "stance_changed": True,
+          "response": "I'd tell my neighbours about it straight away."}]
+
+
+def test_word_of_mouth_is_not_counted_when_nobody_asked(tmp_path):
+    _write_session(tmp_path, results=_TOLD, profiles=_TALKERS,
+                   meta={**META, "pitch": "A clinic that packs your chronic medication."})
+    assert hyp.facts(SESSION_ID)["word_of_mouth"] == {"would_tell": 0, "would_warn": 0, "heard": 0}
+
+
+def test_word_of_mouth_is_counted_when_the_founder_asked(tmp_path):
+    _write_session(tmp_path, results=_TOLD, profiles=_TALKERS,
+                   meta={**META, "pitch": "A clinic that packs your chronic medication. "
+                                          "Would you tell your friends about it?"})
+    wom = hyp.facts(SESSION_ID)["word_of_mouth"]
+    assert wom["heard"] == 1 and wom["would_tell"] == 1
