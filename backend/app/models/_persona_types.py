@@ -39,11 +39,11 @@ LearnerFeeBands = Literal['No fees', 'R1 001–R2 000 per year', 'R101–R200 pe
 FarmMarketOrientation = Literal['market', 'subsistence']
 FarmProducts = Literal['Farming of animals', 'Growing of crops', 'Growing of crops combined with farming of animals(mixed farming)']
 AttitudeRowTopic = Literal['gov_trust', 'economic_optimism', 'service_satisfaction', 'crime_fear', 'education_satisfaction', 'health_service_satisfaction', 'health_authority_trust', 'councillor_responsiveness', 'official_responsiveness', 'crime_handling', 'immigration_priority', 'pays_for_quality', 'business_trust', 'social_trust', 'environment_priority', 'social_voice', 'neighbour_trust']
-CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social', 'metro', 'dwelling', 'rdp_housing']
+CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social', 'metro', 'dwelling', 'rdp_housing', 'learners_in_household', 'ghs_role', 'learner_fee_bands', 'medical_aid']
 AttitudeRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
 AttitudeRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
-CircumstanceRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals', 'ghs_2025', 'qlfs_2026_q1']
-CircumstanceRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population', 'prov_geo_race_sex_age', 'prov_geo_race_sex', 'prov_geo_race', 'prov_geo', 'prov']
+CircumstanceRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals', 'ghs_2025', 'qlfs_2026_q1', 'ghs_2025:household']
+CircumstanceRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population', 'prov_geo_race_sex_age', 'prov_geo_race_sex', 'prov_geo_race', 'prov_geo', 'prov', 'geo_race_sex_age', 'geo_sex_age', 'sex_age', 'age']
 TOPICS = {'gov_trust': {'stances': ['low', 'mid', 'high'],
                'source': {'survey': 'afrobarometer_r9_sa',
                           'items': ['Q37A', 'Q37D'],
@@ -369,7 +369,54 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
  'rdp_housing': {'values': ['yes', 'no'],
                  'source': {'survey': 'ghs_2025', 'items': ['hsg_rdp']},
                  'note': 'Lives in an RDP or state-subsidised house. Imputed the same way as '
-                         'metro.'}}
+                         'metro.'},
+ 'learners_in_household': {'values': ['0', '1', '2', '3', '4'],
+                           'source': {'survey': 'ghs_2025',
+                                      'items': ['edu_attend', 'edu_edui', 'age']},
+                           'optional': True,
+                           'note': 'School-system learners aged 6-18 in the household; 4 means '
+                                   'four or more. Imputed from a matched real GHS adult '
+                                   '(scripts/add_ghs_household.py), never measured on this '
+                                   'persona: the row carries pool, share and grade. A value on '
+                                   "the persona's own survey row wins."},
+ 'ghs_role': {'values': ['learner', 'guardian_parent', 'gogo_guardian'],
+              'source': {'survey': 'ghs_2025', 'items': ['hhc_relationship']},
+              'optional': True,
+              'note': "Only written when it applies. guardian_parent covers the head's own "
+                      "adult child whose learner is the head's grandchild, always graded weak. "
+                      'Imputed from a matched real GHS adult (scripts/add_ghs_household.py), '
+                      'never measured on this persona: the row carries pool, share and grade. '
+                      "A value on the persona's own survey row wins."},
+ 'learner_fee_bands': {'values': ['No fees',
+                                  'R1–R100 per year',
+                                  'R101–R200 per year',
+                                  'R201–R300 per year',
+                                  'R301–R500 per year',
+                                  'R501–R1 000 per year',
+                                  'R1 001–R2 000 per year',
+                                  'R2 001–R3 000 per year',
+                                  'R3 001–R4 000 per year',
+                                  'R4 001–R8 000 per year',
+                                  'R8 001–R12 000 per year',
+                                  'R12 001–R16 000 per year',
+                                  'R16 001–R20 000 per year',
+                                  'R20 001–R40 000 per year',
+                                  'R40 001–R80 000 per year',
+                                  'More than R80 000 per year'],
+                       'source': {'survey': 'ghs_2025', 'items': ['edu_totfees']},
+                       'optional': True,
+                       'note': 'The dearest annual fee band a learner in the household pays. '
+                               'Imputed from a matched real GHS adult '
+                               '(scripts/add_ghs_household.py), never measured on this '
+                               'persona: the row carries pool, share and grade. A value on the '
+                               "persona's own survey row wins."},
+ 'medical_aid': {'values': ['True', 'False'],
+                 'source': {'survey': 'ghs_2025', 'items': ['hlt_medi']},
+                 'optional': True,
+                 'note': 'Covered by a medical aid scheme. Imputed from a matched real GHS '
+                         'adult (scripts/add_ghs_household.py), never measured on this '
+                         'persona: the row carries pool, share and grade. A value on the '
+                         "persona's own survey row wins."}}
 DERIVED_FACTS = {'age_band': {'values': ['15-24', '25-34', '35-59', '60+'],
               'from': 'age',
               'note': 'Made at match time by mechanism_card_service._age_band. Not stored.'},

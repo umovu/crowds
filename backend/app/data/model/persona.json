@@ -1735,7 +1735,8 @@
       "afrobarometer_r9_sa:students",
       "afrobarometer_r9_sa:teacher_class_professionals",
       "ghs_2025",
-      "qlfs_2026_q1"
+      "qlfs_2026_q1",
+      "ghs_2025:household"
     ],
     "match_quality": [
       "age_backoff",
@@ -1750,7 +1751,11 @@
       "prov_geo_race_sex",
       "prov_geo_race",
       "prov_geo",
-      "prov"
+      "prov",
+      "geo_race_sex_age",
+      "geo_sex_age",
+      "sex_age",
+      "age"
     ],
     "every_field_once": true,
     "fields": {
@@ -2226,6 +2231,82 @@
           ]
         },
         "note": "Lives in an RDP or state-subsidised house. Imputed the same way as metro."
+      },
+      "learners_in_household": {
+        "values": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "source": {
+          "survey": "ghs_2025",
+          "items": [
+            "edu_attend",
+            "edu_edui",
+            "age"
+          ]
+        },
+        "optional": true,
+        "note": "School-system learners aged 6-18 in the household; 4 means four or more. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
+      },
+      "ghs_role": {
+        "values": [
+          "learner",
+          "guardian_parent",
+          "gogo_guardian"
+        ],
+        "source": {
+          "survey": "ghs_2025",
+          "items": [
+            "hhc_relationship"
+          ]
+        },
+        "optional": true,
+        "note": "Only written when it applies. guardian_parent covers the head's own adult child whose learner is the head's grandchild, always graded weak. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
+      },
+      "learner_fee_bands": {
+        "values": [
+          "No fees",
+          "R1–R100 per year",
+          "R101–R200 per year",
+          "R201–R300 per year",
+          "R301–R500 per year",
+          "R501–R1 000 per year",
+          "R1 001–R2 000 per year",
+          "R2 001–R3 000 per year",
+          "R3 001–R4 000 per year",
+          "R4 001–R8 000 per year",
+          "R8 001–R12 000 per year",
+          "R12 001–R16 000 per year",
+          "R16 001–R20 000 per year",
+          "R20 001–R40 000 per year",
+          "R40 001–R80 000 per year",
+          "More than R80 000 per year"
+        ],
+        "source": {
+          "survey": "ghs_2025",
+          "items": [
+            "edu_totfees"
+          ]
+        },
+        "optional": true,
+        "note": "The dearest annual fee band a learner in the household pays. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
+      },
+      "medical_aid": {
+        "values": [
+          "True",
+          "False"
+        ],
+        "source": {
+          "survey": "ghs_2025",
+          "items": [
+            "hlt_medi"
+          ]
+        },
+        "optional": true,
+        "note": "Covered by a medical aid scheme. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
       }
     }
   },
