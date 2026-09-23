@@ -2253,6 +2253,11 @@
           ]
         },
         "optional": true,
+        "prompt": {
+          "core": true,
+          "say": "Learners at school in your household: {value}.",
+          "replaced_by": "learners_in_household"
+        },
         "note": "School-system learners aged 6-18 in the household; 4 means four or more. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
       },
       "ghs_role": {
@@ -2268,6 +2273,15 @@
           ]
         },
         "optional": true,
+        "prompt": {
+          "core": true,
+          "say": {
+            "learner": "You are a school learner.",
+            "guardian_parent": "You are a parent with children at school.",
+            "gogo_guardian": "You are a grandparent raising grandchildren who are at school."
+          },
+          "replaced_by": "ghs_role"
+        },
         "note": "Only written when it applies. guardian_parent covers the head's own adult child whose learner is the head's grandchild, always graded weak. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
       },
       "learner_fee_bands": {
@@ -2296,6 +2310,13 @@
           ]
         },
         "optional": true,
+        "prompt": {
+          "about": [
+            "schooling"
+          ],
+          "say": "School fees for the learners in your household: {value}.",
+          "replaced_by": "learner_fee_bands"
+        },
         "note": "The dearest annual fee band a learner in the household pays. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
       },
       "medical_aid": {
@@ -2310,6 +2331,16 @@
           ]
         },
         "optional": true,
+        "prompt": {
+          "about": [
+            "health"
+          ],
+          "say": {
+            "True": "You have medical aid.",
+            "False": "You have no medical aid."
+          },
+          "replaced_by": "medical_aid"
+        },
         "note": "Covered by a medical aid scheme. Imputed from a matched real GHS adult (scripts/add_ghs_household.py), never measured on this persona: the row carries pool, share and grade. A value on the persona's own survey row wins."
       }
     }
