@@ -39,7 +39,7 @@ LearnerFeeBands = Literal['No fees', 'R1 001–R2 000 per year', 'R101–R200 pe
 FarmMarketOrientation = Literal['market', 'subsistence']
 FarmProducts = Literal['Farming of animals', 'Growing of crops', 'Growing of crops combined with farming of animals(mixed farming)']
 AttitudeRowTopic = Literal['gov_trust', 'economic_optimism', 'service_satisfaction', 'crime_fear', 'education_satisfaction', 'health_service_satisfaction', 'health_authority_trust', 'councillor_responsiveness', 'official_responsiveness', 'crime_handling', 'immigration_priority', 'pays_for_quality', 'business_trust', 'social_trust', 'environment_priority', 'social_voice', 'neighbour_trust']
-CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social', 'metro', 'dwelling', 'rdp_housing', 'learners_in_household', 'ghs_role', 'learner_fee_bands', 'medical_aid']
+CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehicle', 'owns_computer', 'owns_bank_account', 'owns_television', 'internet_use', 'owns_phone', 'phone_internet', 'phone_use', 'electricity_reliability', 'money_decision', 'news_radio', 'news_tv', 'news_internet', 'news_social', 'metro', 'dwelling', 'rdp_housing', 'learners_in_household', 'ghs_role', 'learner_fee_bands', 'medical_aid', 'solar_panels', 'home_security', 'water_interruptions', 'water_backup', 'housing_tenure', 'transport_to_work', 'recycles', 'not_recycling_reason']
 AttitudeRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
 AttitudeRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
 CircumstanceRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals', 'ghs_2025', 'qlfs_2026_q1', 'ghs_2025:household']
@@ -433,7 +433,134 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
                  'note': 'Covered by a medical aid scheme. Imputed from a matched real GHS '
                          'adult (scripts/add_ghs_household.py), never measured on this '
                          'persona: the row carries pool, share and grade. A value on the '
-                         "persona's own survey row wins."}}
+                         "persona's own survey row wins."},
+ 'solar_panels': {'values': ['True', 'False'],
+                  'source': {'survey': 'ghs_2025', 'items': ['hwl_assets_solarp']},
+                  'optional': True,
+                  'prompt': {'about': ['services'],
+                             'say': {'True': 'Your household has solar panels.',
+                                     'False': 'Your household has no solar panels.'}},
+                  'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's own "
+                          'household where it was built from a GHS respondent (grade '
+                          "measured), otherwise the matched donor's household (grade "
+                          'strong/weak, with pool and share).'},
+ 'home_security': {'values': ['True', 'False'],
+                   'source': {'survey': 'ghs_2025', 'items': ['hwl_assets_secure']},
+                   'optional': True,
+                   'prompt': {'about': ['safety'],
+                              'say': {'True': 'Your household has a home security service.',
+                                      'False': 'Your household has no home security service.'}},
+                   'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's own "
+                           'household where it was built from a GHS respondent (grade '
+                           "measured), otherwise the matched donor's household (grade "
+                           'strong/weak, with pool and share).'},
+ 'water_interruptions': {'values': ['none', 'sometimes', 'often'],
+                         'source': {'survey': 'ghs_2025',
+                                    'items': ['wat_inte_12mth', 'wat_inte_freq']},
+                         'optional': True,
+                         'prompt': {'about': ['services'],
+                                    'say': {'none': 'Your water supply was not cut in the past '
+                                                    'year.',
+                                            'sometimes': 'Your water supply was cut a few '
+                                                         'times in the past year.',
+                                            'often': 'Your water supply is cut at least a '
+                                                     'couple of times a month.'}},
+                         'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's "
+                                 'own household where it was built from a GHS respondent '
+                                 "(grade measured), otherwise the matched donor's household "
+                                 '(grade strong/weak, with pool and share).'},
+ 'water_backup': {'values': ['borehole', 'tank', 'none'],
+                  'source': {'survey': 'ghs_2025',
+                             'items': ['hwl_assets_borehole', 'hwl_assets_rainwtnk']},
+                  'optional': True,
+                  'prompt': {'about': ['services'],
+                             'say': {'borehole': 'Your household has a borehole.',
+                                     'tank': 'Your household has a rainwater tank.',
+                                     'none': 'Your household has no borehole or water tank.'}},
+                  'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's own "
+                          'household where it was built from a GHS respondent (grade '
+                          "measured), otherwise the matched donor's household (grade "
+                          'strong/weak, with pool and share).'},
+ 'housing_tenure': {'values': ['own', 'bond', 'rent', 'rent_free'],
+                    'source': {'survey': 'ghs_2025', 'items': ['hsg_tenure']},
+                    'optional': True,
+                    'prompt': {'about': ['housing'],
+                               'say': {'own': 'Your household owns its home outright.',
+                                       'bond': 'Your household is still paying off its home.',
+                                       'rent': 'Your household rents its home.',
+                                       'rent_free': 'Your household lives in its home without '
+                                                    'paying rent.'}},
+                    'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's own "
+                            'household where it was built from a GHS respondent (grade '
+                            "measured), otherwise the matched donor's household (grade "
+                            'strong/weak, with pool and share).'},
+ 'transport_to_work': {'values': ['works_from_home',
+                                  'walk',
+                                  'taxi',
+                                  'bus',
+                                  'train',
+                                  'lift_club',
+                                  'own_car',
+                                  'company_transport',
+                                  'other'],
+                       'source': {'survey': 'ghs_2025', 'items': ['lab_transp']},
+                       'optional': True,
+                       'prompt': {'about': ['getting_there', 'work'],
+                                  'say': {'works_from_home': 'You work from home.',
+                                          'walk': 'You walk to work.',
+                                          'taxi': 'You take a minibus taxi to work.',
+                                          'bus': 'You take a bus to work.',
+                                          'train': 'You take a train to work.',
+                                          'lift_club': 'You get to work in a lift club.',
+                                          'own_car': 'You drive to work.',
+                                          'company_transport': 'Your employer transports you '
+                                                               'to work.',
+                                          'other': 'You get to work some other way.'}},
+                       'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's "
+                               'own household where it was built from a GHS respondent (grade '
+                               "measured), otherwise the matched donor's household (grade "
+                               'strong/weak, with pool and share).'},
+ 'recycles': {'values': ['True', 'False'],
+              'source': {'survey': 'ghs_2025', 'items': ['SWR_SEPWASTE']},
+              'optional': True,
+              'prompt': {'about': ['environment'],
+                         'say': {'True': 'Your household sorts its recycling.',
+                                 'False': 'Your household does not sort its recycling.'}},
+              'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's own "
+                      'household where it was built from a GHS respondent (grade measured), '
+                      "otherwise the matched donor's household (grade strong/weak, with pool "
+                      'and share).'},
+ 'not_recycling_reason': {'values': ['no_space',
+                                     'cost',
+                                     'dont_know_what',
+                                     'not_important',
+                                     'dirty'],
+                          'source': {'survey': 'ghs_2025',
+                                     'items': ['SWR_NOTSEPWASTE_SPACE',
+                                               'SWR_NOTSEPWASTE_COST',
+                                               'SWR_NOTSEPWASTE_KNOWLEDGE',
+                                               'SWR_NOTSEPWASTE_Importance',
+                                               'SWR_NOTSEPWASTE_DIRTY']},
+                          'optional': True,
+                          'prompt': {'about': ['environment'],
+                                     'say': {'no_space': 'The main reason your household '
+                                                         "doesn't recycle is that there is no "
+                                                         'space for it.',
+                                             'cost': "The main reason your household doesn't "
+                                                     'recycle is the cost.',
+                                             'dont_know_what': 'The main reason your household '
+                                                               "doesn't recycle is not knowing "
+                                                               'what can be recycled.',
+                                             'not_important': 'The main reason your household '
+                                                              "doesn't recycle is that it "
+                                                              "doesn't seem important.",
+                                             'dirty': "The main reason your household doesn't "
+                                                      'recycle is that it is dirty and '
+                                                      'untidy.'}},
+                          'note': "From GHS 2025 (scripts/add_ghs_household.py): the persona's "
+                                  'own household where it was built from a GHS respondent '
+                                  "(grade measured), otherwise the matched donor's household "
+                                  '(grade strong/weak, with pool and share).'}}
 DERIVED_FACTS = {'age_band': {'values': ['15-24', '25-34', '35-59', '60+'],
               'from': 'age',
               'note': 'Made at match time by mechanism_card_service._age_band. Not stored.'},

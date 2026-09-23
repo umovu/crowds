@@ -114,7 +114,9 @@ def test_circumstances_match_the_adapter():
                 if v["source"]["survey"] in ("ghs_2025", "qlfs_2026_q1")}
     # The household pass (add_ghs_household) writes children at school and medical
     # aid off the same survey, as optional rows.
-    household = {"learners_in_household", "ghs_role", "learner_fee_bands", "medical_aid"}
+    household = {"learners_in_household", "ghs_role", "learner_fee_bands", "medical_aid",
+                 "solar_panels", "home_security", "water_interruptions", "water_backup",
+                 "housing_tenure", "transport_to_work", "recycles", "not_recycling_reason"}
     assert set(from_ghs) == {"metro", "dwelling", "rdp_housing"} | household
     assert all(CIRCUMSTANCES[f].get("optional") for f in household)
     assert CIRCUMSTANCES["metro"]["source"]["survey"] == "qlfs_2026_q1"

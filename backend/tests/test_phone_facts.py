@@ -95,7 +95,9 @@ def test_phone_facts_are_optional_but_the_rest_are_not():
     rows = [{"field": f, "value": e["values"][0], "source": "afrobarometer_r9_sa", "match_quality": "exact"}
             for f, e in CIRCUMSTANCES.items() if not e.get("optional")]
     # The household pass (scripts/add_ghs_household.py) only writes where a fact applies.
-    household = {"learners_in_household", "ghs_role", "learner_fee_bands", "medical_aid"}
+    household = {"learners_in_household", "ghs_role", "learner_fee_bands", "medical_aid",
+                 "solar_panels", "home_security", "water_interruptions", "water_backup",
+                 "housing_tenure", "transport_to_work", "recycles", "not_recycling_reason"}
     assert {f for f, e in CIRCUMSTANCES.items() if e.get("optional")} == set(PHONE) | household
     assert _row_problems("p", rows, CircumstanceRow, "field", CIRCUMSTANCES) == []
     missing = _row_problems("p", rows[1:], CircumstanceRow, "field", CIRCUMSTANCES)
