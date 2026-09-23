@@ -489,8 +489,6 @@ class InterviewService:
                     reframed = reframer.reframe(
                         question, profile, mode=self.mode,
                         secondary_lens=self.secondary_lens if self.converged else None,
-                        # A panel pitch asks word of mouth per person; a sim never did.
-                        ask_word_of_mouth=self._is_panel,
                     )
                     archetype = reframer.detect_archetype(question)
 
