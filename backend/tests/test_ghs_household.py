@@ -459,3 +459,112 @@ def test_a_measured_answer_is_said_instead_of_the_filled_one():
     lines = [f["line"] for f in persona_facts.picked_facts(persona, "A clinic visit, no medical aid needed.")]
     assert "You have no medical aid." in lines
     assert "You have medical aid." not in lines
+
+
+# ── Household facts for the topics no card covered ──────────────────────────
+# audit_card_gaps.py: power, water, safety, housing, transport and environment had no
+# research card for anyone. GHS records what each household has and does on all six;
+# these are said to the persona as facts about their life.
+
+def test_water_cuts_read_as_three_levels():
+    assert hh.water_interruptions(2, 8) == "none"
+    assert hh.water_interruptions(1, 1) == "often"      # every week
+    assert hh.water_interruptions(1, 2) == "often"      # a couple of times a month
+    assert hh.water_interruptions(1, 4) == "sometimes"  # a couple of times a year
+    assert hh.water_interruptions(8, 8) is None         # not asked of this household
+
+
+def test_water_backup_names_the_bigger_step_first():
+    assert hh.water_backup(1, 1) == "borehole"
+    assert hh.water_backup(2, 1) == "tank"
+    assert hh.water_backup(2, 2) == "none"
+    assert hh.water_backup(9, 2) is None
+
+
+def test_the_first_ranked_reason_not_to_recycle_is_kept():
+    row = {"SWR_NOTSEPWASTE_SPACE": 2, "SWR_NOTSEPWASTE_COST": 1, "SWR_NOTSEPWASTE_DIRTY": 3}
+    assert hh.not_recycling_reason(row) == "cost"
+    assert hh.not_recycling_reason({"SWR_NOTSEPWASTE_SPACE": 8}) is None
+
+
+def test_tenure_and_the_way_to_work_decode():
+    assert hh._TENURE[3] == "bond" and hh._TENURE[5] == "own" and hh._TENURE[1] == "rent"
+    assert hh._TRANSPORT[5] == "taxi" and hh._TRANSPORT[9] == "own_car"
+    assert 88 not in hh._TRANSPORT
+
+
+def _own_household_frame():
+    rows = []
+    for i in range(40):
+        rows.append({**_person(f"u{i}", 30 + i % 11, "none"), "personnr": "01",
+                     "solar_panels": "False", "home_security": "False",
+                     "water_interruptions": "none", "water_backup": "none",
+                     "housing_tenure": "rent", "recycles": "False",
+                     "not_recycling_reason": "no_space", "transport_to_work": "taxi"})
+    rows.append({**_person("mine", 44, "parent", learners="2", med=True), "personnr": "03",
+                 "solar_panels": "True", "home_security": "True",
+                 "water_interruptions": "often", "water_backup": "borehole",
+                 "housing_tenure": "bond", "recycles": "True",
+                 "not_recycling_reason": None, "transport_to_work": "own_car"})
+    return pd.DataFrame(rows)
+
+
+def test_a_persona_built_from_ghs_reads_its_own_household():
+    frame = _own_household_frame()
+    persona = _persona(1, age=44, ghs_person_rows=["mine:3"], employment_status="Employed")
+    result = hh.assign([persona], frame)[0]
+    assert result["measured"] and result["donor"]["uqnr"] == "mine"
+    facts = {r["field"]: r for r in hh.rows_for(persona, result)}
+    assert facts["solar_panels"]["value"] == "True"
+    assert facts["housing_tenure"]["value"] == "bond"
+    assert facts["transport_to_work"]["value"] == "own_car"
+    assert facts["learners_in_household"]["value"] == "2"
+    assert {r["grade"] for r in facts.values()} == {"measured"}
+
+
+def test_a_matched_persona_gets_the_donors_whole_household():
+    frame = _own_household_frame()
+    persona = _persona(1, age=35, employment_status="Employed")
+    result = hh.assign([persona], frame)[0]
+    assert not result.get("measured")
+    facts = {r["field"]: r["value"] for r in hh.rows_for(persona, result)}
+    donor = result["donor"]
+    for field in hh.HOUSEHOLD_FACTS:
+        if donor.get(field) is not None:
+            assert facts[field] == donor[field]
+
+
+def test_the_way_to_work_is_only_said_of_people_who_work():
+    frame = _own_household_frame()
+    for status, said in (("Employed", True), ("Unemployed", False),
+                         ("Other not economically active", False)):
+        persona = _persona(1, age=44, ghs_person_rows=["mine:3"], employment_status=status)
+        fields = {r["field"] for r in hh.rows_for(persona, hh.assign([persona], frame)[0])}
+        assert ("transport_to_work" in fields) is said, status
+
+
+def test_each_household_fact_reaches_the_pitch_it_is_about():
+    persona = {"circumstances": [
+        _row("solar_panels", "True", "measured"), _row("home_security", "True", "measured"),
+        _row("water_interruptions", "often", "measured"), _row("housing_tenure", "bond", "measured"),
+        _row("recycles", "False", "measured"), _row("not_recycling_reason", "no_space", "measured"),
+        _row("transport_to_work", "taxi", "measured")]}
+    power = _facts(persona, "A solar and battery kit that keeps the lights on when the power is out.")
+    assert power["solar_panels"] == "Your household has solar panels."
+    assert power["water_interruptions"] == "Your water supply is cut at least a couple of times a month."
+    safety = _facts(persona, "A neighbourhood patrol with a panic button app.")
+    assert safety["home_security"] == "Your household has a home security service."
+    housing = _facts(persona, "An app that matches backyard rooms with tenants, with a written lease.")
+    assert housing["housing_tenure"] == "Your household is still paying off its home."
+    waste = _facts(persona, "A company collects your sorted recycling each week.")
+    assert waste["not_recycling_reason"].endswith("there is no space for it.")
+    commute = _facts(persona, "A shared ride to the taxi rank each morning.")
+    assert commute["transport_to_work"] == "You take a minibus taxi to work."
+
+
+def test_household_facts_stay_out_of_pitches_they_are_not_about():
+    persona = {"circumstances": [_row("solar_panels", "True", "measured"),
+                                 _row("home_security", "True", "measured"),
+                                 _row("housing_tenure", "bond", "measured")]}
+    school = _facts(persona, "An after-school maths programme for Grade 9s.")
+    assert not {"solar_panels", "home_security", "housing_tenure"} & set(school)

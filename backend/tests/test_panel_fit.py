@@ -374,8 +374,11 @@ def test_who_plus_thinks_intersects_instead_of_unioning(tmp_path):
 
     assert profiles, "no cast drawn"
     # Every seat is BOTH a guardian and a measured quality-payer.
+    # A guardian by what their household holds, measured or filled (guardian_certainty),
+    # not only by the archetype label the 31 built-as-guardian personas carry.
+    library = {p["id"]: p for p in personas}
     for p in profiles:
-        assert p.get("actor_archetype") in ("guardian_parent", "gogo_guardian")
+        assert panel.SEGMENTS["guardians"]["predicate"](library[p["library_id"]])
         assert panel.persona_attitude(p, "pays_for_quality") == "yes"
 
     # The attitude was folded into the intersection filter, not into the seats.

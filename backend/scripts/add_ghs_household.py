@@ -34,6 +34,21 @@ What is written (as `circumstances` rows, source `ghs_2025:household`):
     learner_fee_bands      the highest fee band paid, only when there are learners
     medical_aid            "True" | "False"
 
+and, for the topics audit_card_gaps.py found with no research card at all:
+
+    solar_panels           "True" | "False"                        power
+    home_security          "True" | "False"                        safety
+    water_interruptions    none | sometimes | often                water
+    water_backup           borehole | tank | none                  water
+    housing_tenure         own | bond | rent | rent_free           housing
+    transport_to_work      walk | taxi | bus | train | own_car ... transport (workers only)
+    recycles               "True" | "False"                        environment
+    not_recycling_reason   the reason ranked first, if they don't  environment
+
+A persona built from a GHS respondent (ghs_person_rows) reads all of these from its
+OWN household row, graded `measured`. Everyone else copies them from the matched
+donor, so one household's facts always come together.
+
 Each row carries the rung it was matched on, the pool size, the drawn value's
 share of that pool, and a `grade`:
 
@@ -155,6 +170,22 @@ def load_ghs() -> pd.DataFrame:
     df = df.merge(hunger, on="uqnr", how="left")
     df["hardship"] = df["fsd_hung_adult"].map(ghs_hardship)
 
+    extra = pd.read_stata(g._HOUSEHOLD_DTA, columns=["uqnr", *_HOUSEHOLD_FACT_COLUMNS],
+                          convert_categoricals=False)
+    df = df.merge(extra, on="uqnr", how="left")
+    yes_no = lambda code: _YES_NO.get(code)  # noqa: E731 — survey codes arrive as floats
+    df["solar_panels"] = df["hwl_assets_solarp"].map(yes_no)
+    df["home_security"] = df["hwl_assets_secure"].map(yes_no)
+    df["water_interruptions"] = [water_interruptions(a, f) for a, f in
+                                 zip(df["wat_inte_12mth"], df["wat_inte_freq"])]
+    df["water_backup"] = [water_backup(b, t) for b, t in
+                          zip(df["hwl_assets_borehole"], df["hwl_assets_rainwtnk"])]
+    df["housing_tenure"] = df["hsg_tenure"].map(lambda code: _TENURE.get(code))
+    df["recycles"] = df["SWR_SEPWASTE"].map(yes_no)
+    df["not_recycling_reason"] = [not_recycling_reason(row) if row["recycles"] == "False" else None
+                                  for _, row in df.iterrows()]
+    df["transport_to_work"] = df["lab_transp"].map(lambda code: _TRANSPORT.get(code))
+
     relations, counts, fees = [], [], []
     for _, row in df.iterrows():
         c = ctx.get(row["uqnr"])
@@ -168,6 +199,66 @@ def load_ghs() -> pd.DataFrame:
     df["medical_aid"] = df["hlt_medi"].map(g._HLT_MEDI)
     df = df[df["province"].notna() & df["gender"].notna() & df["geo"].notna()]
     return df.reset_index(drop=True)
+
+
+# ── Household facts for the topics no card covers ───────────────────────────
+# audit_card_gaps.py found power, water, safety, housing, transport and environment
+# with no research card for anyone. GHS records what each household actually has and
+# does on all six. These are facts about a life, said to the persona as facts; they
+# are not reasoning and nobody writes a "why" for them.
+
+_YES_NO = {1: "True", 2: "False"}
+# hsg_tenure: 1-2 rented, 3-4 owned but still paying off, 5 owned outright, 6 rent-free.
+_TENURE = {1: "rent", 2: "rent", 3: "bond", 4: "bond", 5: "own", 6: "rent_free"}
+# lab_transp, asked of people who work. 88 (not applicable) says nothing.
+_TRANSPORT = {1: "works_from_home", 2: "walk", 3: "other", 4: "other", 5: "taxi", 6: "bus",
+              7: "train", 8: "lift_club", 9: "own_car", 10: "company_transport", 11: "other"}
+# Asked of households that do not recycle: which reason came first.
+_NOT_RECYCLING = {"SWR_NOTSEPWASTE_SPACE": "no_space", "SWR_NOTSEPWASTE_COST": "cost",
+                  "SWR_NOTSEPWASTE_KNOWLEDGE": "dont_know_what",
+                  "SWR_NOTSEPWASTE_Importance": "not_important",
+                  "SWR_NOTSEPWASTE_DIRTY": "dirty"}
+_HOUSEHOLD_FACT_COLUMNS = ["hwl_assets_solarp", "hwl_assets_secure", "hwl_assets_borehole",
+                           "hwl_assets_rainwtnk", "wat_inte_12mth", "wat_inte_freq",
+                           "hsg_tenure", "SWR_SEPWASTE", *_NOT_RECYCLING]
+
+# Every household fact the pass writes. One list, so assign(), rows_for() and the
+# validation stay in step with each other.
+HOUSEHOLD_FACTS = ("solar_panels", "home_security", "water_interruptions", "water_backup",
+                   "housing_tenure", "recycles", "not_recycling_reason")
+# Asked of the person, not the household, and only of people who work.
+PERSON_FACTS = ("transport_to_work",)
+
+
+def water_interruptions(any_last_year, how_often) -> Optional[str]:
+    """none | sometimes | often, from wat_inte_12mth and wat_inte_freq."""
+    if any_last_year == 2:
+        return "none"
+    if any_last_year == 1:
+        if how_often in (1, 2):          # every week, a couple of times a month
+            return "often"
+        if how_often in (3, 4, 5):       # monthly or less
+            return "sometimes"
+    return None
+
+
+def water_backup(borehole, tank) -> Optional[str]:
+    """borehole | tank | none. A borehole is named first: it is the bigger step."""
+    if borehole == 1:
+        return "borehole"
+    if tank == 1:
+        return "tank"
+    if borehole == 2 and tank == 2:
+        return "none"
+    return None
+
+
+def not_recycling_reason(row) -> Optional[str]:
+    """The reason the household ranked first for not recycling, if it gave one."""
+    for column, reason in _NOT_RECYCLING.items():
+        if row.get(column) == 1:
+            return reason
+    return None
 
 
 # GHS fsd_hung_adult: 1 never, 2 seldom, 3 sometimes, 4 often, 5 always ran short of
@@ -293,7 +384,37 @@ def _weighted_pick(pool: pd.DataFrame, rng: random.Random) -> pd.Series:
     return pool.iloc[-1]
 
 
+def own_row_index(df: pd.DataFrame) -> Dict[str, int]:
+    """'uqnr:personnr' -> frame row, the key a GHS-built persona keeps in ghs_person_rows."""
+    if "personnr" not in df.columns:
+        return {}
+    return {f"{str(u).strip()}:{int(p)}": i
+            for i, (u, p) in enumerate(zip(df["uqnr"], df["personnr"])) if p == p}
+
+
 def assign(personas: List[Dict], df: pd.DataFrame) -> List[Optional[Dict]]:
+    """Where each persona's household facts come from.
+
+    A persona built from a GHS respondent (ghs_person_rows) reads their OWN household:
+    measured, not borrowed. Everyone else gets a matched donor (_assign_matched).
+    """
+    index = own_row_index(df)
+    out: List[Optional[Dict]] = [None] * len(personas)
+    rest: List[int] = []
+    for i, persona in enumerate(personas):
+        key = next((k for k in persona.get("ghs_person_rows") or [] if k in index), None)
+        if key is None:
+            rest.append(i)
+            continue
+        out[i] = {"donor": df.iloc[index[key]], "measured": True, "quality": "exact",
+                  "pool": 1, "relation_share": 1.0, "donor_quality": "exact",
+                  "donor_pool": 1, "medical_share": {}, "fact_shares": {}}
+    for i, result in zip(rest, _assign_matched([personas[i] for i in rest], df)):
+        out[i] = result
+    return out
+
+
+def _assign_matched(personas: List[Dict], df: pd.DataFrame) -> List[Optional[Dict]]:
     """One donor per persona, with the pool facts needed to grade what they carry.
 
     Seats are set per (sex, age band, geotype) from the MEAN of the members' own pool
@@ -353,6 +474,8 @@ def assign(personas: List[Dict], df: pd.DataFrame) -> List[Optional[Dict]]:
                 "donor_quality": donor_quality,
                 "donor_pool": len(donor_pool),
                 "medical_share": spread(donor_pool, "medical_aid"),
+                "fact_shares": {f: spread(donor_pool, f) for f in HOUSEHOLD_FACTS + PERSON_FACTS
+                                if f in donor_pool.columns},
             }
     return out
 
@@ -383,39 +506,55 @@ def rows_for(persona: Dict, result: Optional[Dict]) -> List[Dict]:
     if not result:
         return []
     donor, quality, pool = result["donor"], result["quality"], result["pool"]
+    measured = bool(result.get("measured"))
     rel_share = result["relation_share"]
     relation = donor["learner_relation"]
     base = {"source": SOURCE, "match_quality": quality, "pool": pool}
-    rows = []
 
+    def grade(q, share, rel=None):
+        # The persona's own household row is not an estimate.
+        return "measured" if measured else _grade(q, share, rel)
+
+    rows = []
     if persona.get("learners_in_household") in (None, "", []):
         rows.append({**base, "field": "learners_in_household", "value": donor["learners"],
-                     "share": rel_share, "grade": _grade(quality, rel_share, relation)})
+                     "share": rel_share, "grade": grade(quality, rel_share, relation)})
         role = _RELATION_ROLE.get(relation)
         if role and not persona.get("ghs_role"):
             rows.append({**base, "field": "ghs_role", "value": role,
-                         "share": rel_share, "grade": _grade(quality, rel_share, relation)})
+                         "share": rel_share, "grade": grade(quality, rel_share, relation)})
         if donor["fee_band"] and not persona.get("learner_fee_bands"):
             rows.append({**base, "field": "learner_fee_bands", "value": donor["fee_band"],
-                         "share": rel_share, "grade": _grade(quality, rel_share, relation)})
+                         "share": rel_share, "grade": grade(quality, rel_share, relation)})
 
+    dq = result.get("donor_quality", quality)
+    donor_base = {**base, "match_quality": dq, "pool": result.get("donor_pool", pool)}
     if persona.get("medical_aid") is None and donor["medical_aid"] is not None:
         value = str(bool(donor["medical_aid"]))
         share = round(result["medical_share"].get(str(donor["medical_aid"]), 0.0), 3)
-        dq = result.get("donor_quality", quality)
-        rows.append({**base, "match_quality": dq, "pool": result.get("donor_pool", pool),
-                     "field": "medical_aid", "value": value,
-                     "share": share, "grade": _grade(dq, share)})
+        rows.append({**donor_base, "field": "medical_aid", "value": value,
+                     "share": 1.0 if measured else share, "grade": grade(dq, share)})
+
+    facts = list(HOUSEHOLD_FACTS)
+    # How someone gets to work is only asked of people who work, so only said of them.
+    if persona.get("employment_status") == "Employed":
+        facts += PERSON_FACTS
+    for field in facts:
+        value = donor.get(field)
+        if value is None or value != value:  # missing, or NaN from the frame
+            continue
+        share = 1.0 if measured else round(result["fact_shares"].get(field, {}).get(value, 0.0), 3)
+        rows.append({**donor_base, "field": field, "value": value,
+                     "share": share, "grade": grade(dq, share)})
     return rows
 
 
 def _targets(personas: List[Dict]) -> List[Dict]:
-    """Adults with at least one of the two facts missing. Learners are skipped: they
-    are the child in the household, and this pass describes the adults."""
+    """Every adult. The household facts are missing for all of them, and rows_for()
+    skips any fact already measured on the persona's own row. Learners are skipped:
+    they are the child in the household, and this pass describes the adults."""
     return [p for p in personas
-            if (p.get("age") or 0) >= ADULT_AGE and p.get("ghs_role") != "learner"
-            and (p.get("learners_in_household") in (None, "", [])
-                 or p.get("medical_aid") is None)]
+            if (p.get("age") or 0) >= ADULT_AGE and p.get("ghs_role") != "learner"]
 
 
 # ── Validation ───────────────────────────────────────────────────────────────
@@ -533,6 +672,45 @@ def validate(df: pd.DataFrame, n: int = 3000, seed: int = 11) -> None:
         worst = max(worst, abs(real - got))
         print(f"  {sex:<7}{band:<7} n={len(part):4d}   real {real:6.1%}   imputed {got:6.1%}")
     print(f"  largest group gap: {worst:.1%}")
+
+    # The household facts for the uncovered topics. Solar and security follow income,
+    # so the split that matters is by hardship x area: a fact smeared evenly across
+    # comfortable and struggling households would pass the national total and still
+    # be wrong for every room.
+    print("\nHOUSEHOLD FACTS — share holding the value, real vs imputed "
+          "(overall, then the worst hardship x area group)")
+    groups = list(zip(test["hardship"].fillna("?"), test["geo"].fillna("?")))
+    checks = {"solar_panels": "True", "home_security": "True", "water_interruptions": "often",
+              "water_backup": "none", "housing_tenure": "rent", "recycles": "True",
+              "transport_to_work": "own_car"}
+    for field, value in checks.items():
+        # Only where the donor has an answer too: with none, the persona gets no row for
+        # this fact at all, so counting it as "not this value" would measure a row that
+        # is never written.
+        pairs = [(w, t == value, r["donor"].get(field) == value, grp)
+                 for w, t, r, grp in zip(weights, test[field], results, groups)
+                 if t == t and t is not None
+                 and r["donor"].get(field) is not None and r["donor"].get(field) == r["donor"].get(field)]
+        if not pairs:
+            continue
+        tw = sum(w for w, *_ in pairs)
+        real = sum(w for w, t, _, _ in pairs if t) / tw
+        got = sum(w for w, _, d, _ in pairs if d) / tw
+        right = sum(w for w, t, d, _ in pairs if t == d) / tw
+        gaps = []
+        for grp in set(g for *_, g in pairs):
+            part = [(w, t, d) for w, t, d, g in pairs if g == grp]
+            if len(part) < 60:
+                continue
+            pw = sum(w for w, *_ in part)
+            gaps.append((abs(sum(w for w, t, _ in part if t) - sum(w for w, _, d in part if d)) / pw,
+                         grp, sum(w for w, t, _ in part if t) / pw, sum(w for w, _, d in part if d) / pw))
+        worst_gap = max(gaps) if gaps else None
+        line = f"  {field}={value:<9} real {real:6.1%}  imputed {got:6.1%}  right/person {right:6.1%}"
+        if worst_gap:
+            line += (f"  | worst group {worst_gap[1][0]}/{worst_gap[1][1]}: "
+                     f"real {worst_gap[2]:.1%} imputed {worst_gap[3]:.1%}")
+        print(line)
 
 
 # ── Report + write ───────────────────────────────────────────────────────────

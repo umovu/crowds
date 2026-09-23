@@ -116,8 +116,8 @@ class CircumstanceRow(DataModel):
     #: age and sex, and 60%+ of the pool hold the drawn value. `weak`: anything looser,
     #: and every likely_parent. Validated on hidden GHS adults: strong 71% right per
     #: person, weak 53%. A room's SHARE is right either way; this says how far to trust
-    #: the one person.
-    grade: Optional[Literal["strong", "weak"]] = None
+    #: the one person. `measured`: read from the persona's own GHS household row.
+    grade: Optional[Literal["measured", "strong", "weak"]] = None
 
     @classmethod
     def cross_field_problems(cls, data, label):
