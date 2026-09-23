@@ -196,32 +196,6 @@
 
               <!-- MENTAL TAB -->
               <div v-show="activeTab === 'mental'" class="form-grid">
-                <div class="section-label">Initial Emotions (0–10)</div>
-                <div class="emotions-grid">
-                  <div v-for="emo in emotions" :key="emo.key" class="emotion-item">
-                    <div class="emotion-label">
-                      <span class="emotion-name">{{ emo.label }}</span>
-                      <span class="emotion-desc">{{ emo.desc }}</span>
-                    </div>
-                    <div class="slider-field">
-                      <input v-model.number="form.emotions[emo.key]" type="range" min="0" max="10" step="0.5" />
-                      <span class="slider-val">{{ form.emotions[emo.key] }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-label">Emotion Meta</div>
-                <div class="form-row two-col">
-                  <div class="field">
-                    <label>Emotion Keyword</label>
-                    <input v-model="form.emotion_keyword" type="text" placeholder="e.g. anxious, hopeful" />
-                  </div>
-                  <div class="field">
-                    <label>Emotion Thought</label>
-                    <input v-model="form.emotion_thought" type="text" placeholder="One-sentence explanation" />
-                  </div>
-                </div>
-
                 <div class="section-label">Cognitive Attitudes (0 = opposed, 10 = supportive)</div>
                 <div class="attitudes-list">
                   <div v-for="(att, idx) in form.attitudes" :key="idx" class="attitude-row">
@@ -280,15 +254,6 @@ const mbtiTypes = [
   'ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'
 ]
 
-const emotions = [
-  { key: 'sadness', label: 'Sadness', desc: 'Melancholy, grief' },
-  { key: 'joy', label: 'Joy', desc: 'Happiness, enthusiasm' },
-  { key: 'fear', label: 'Fear', desc: 'Anxiety, dread' },
-  { key: 'disgust', label: 'Disgust', desc: 'Revulsion, contempt' },
-  { key: 'anger', label: 'Anger', desc: 'Frustration, rage' },
-  { key: 'surprise', label: 'Surprise', desc: 'Shock, amazement' },
-]
-
 const maslowNeeds = [
   { key: 'physiological_hunger', label: 'Hunger', desc: 'Need for food' },
   { key: 'physiological_tired', label: 'Rest', desc: 'Need for sleep/rest' },
@@ -323,9 +288,6 @@ function makeDefaultForm() {
     currency_balance: '',
     relationships: { family: [], friends: [], colleagues: [] },
     needs: Object.fromEntries(maslowNeeds.map(n => [n.key, 50])),
-    emotions: { sadness: 0, joy: 0, fear: 0, disgust: 0, anger: 0, surprise: 0 },
-    emotion_keyword: '',
-    emotion_thought: '',
     attitudes: [],
     beliefs: [],
   }
@@ -662,15 +624,13 @@ function save() {
 }
 
 /* Needs */
-.needs-grid,
-.emotions-grid {
+.needs-grid {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.need-item,
-.emotion-item {
+.need-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -680,23 +640,20 @@ function save() {
   border: 1px solid #F0F0F0;
 }
 
-.need-info,
-.emotion-label {
+.need-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
   flex: 1;
 }
 
-.need-name,
-.emotion-name {
+.need-name {
   font-size: 0.85rem;
   font-weight: 500;
   color: #333;
 }
 
-.need-desc,
-.emotion-desc {
+.need-desc {
   font-size: 0.75rem;
   color: #999;
 }

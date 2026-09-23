@@ -28,7 +28,6 @@ FORM_AGENT = {
     "attitudes": [{"topic": "crime", "rating": 8, "description": "Worried about break-ins"}],
     "beliefs": "Crime is rising\nPolice come late",
     "needs": {"safety_physical": 70},
-    "emotions": {"fear": 6},
 }
 DOCUMENT = """# Agents
 ```json

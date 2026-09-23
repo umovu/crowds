@@ -190,10 +190,6 @@
             <div class="pp-dash-value">{{ stanceLine }}</div>
             <div class="pp-dash-label">stance spread</div>
           </div>
-          <div class="pp-dash-card">
-            <div class="pp-dash-value">{{ emotionLine }}</div>
-            <div class="pp-dash-label">emotional temperature</div>
-          </div>
           <div v-if="session && tierMixLine !== '—'" class="pp-dash-card">
             <div class="pp-dash-value">{{ tierMixLine }}</div>
             <div class="pp-dash-label">budget mix (from real data)</div>
@@ -386,12 +382,6 @@ const stanceLine = computed(() => {
   const dist = dashboard.value.stance_distribution || {}
   return Object.entries(dist).sort((a, b) => b[1] - a[1])
     .map(([k, v]) => `${v} ${stanceLabel(k)}`).join(' · ') || '—'
-})
-
-const emotionLine = computed(() => {
-  const dist = dashboard.value.emotional_temperature || {}
-  return Object.entries(dist).sort((a, b) => b[1] - a[1]).slice(0, 3)
-    .map(([k, v]) => `${v} ${k}`).join(' · ') || '—'
 })
 
 const pretty = (s) => (s || '').replace(/_/g, ' ')

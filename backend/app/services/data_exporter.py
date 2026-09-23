@@ -43,14 +43,6 @@ class SimulationDataExporter:
                         "stance": str,
                         "current_radicalism": int,
                         "mobilization_level": int,
-                        "dominant_emotion": str,
-                        "dominant_emotion_score": int,
-                        "fear": int,
-                        "anger": int,
-                        "sadness": int,
-                        "joy": int,
-                        "disgust": int,
-                        "surprise": int,
                         "safety_economic": int,
                         "safety_physical": int,
                         "post_count": int,
@@ -77,7 +69,6 @@ class SimulationDataExporter:
             name = profile.get("name", f"Agent_{agent_id}")
 
             # Extract current state from profile (last known state)
-            emotion = profile.get("emotion", {})
             needs = profile.get("needs", {})
             posts = profile.get("posts_history", [])
 
@@ -90,14 +81,6 @@ class SimulationDataExporter:
                 "stance": profile.get("stance", "neutral"),
                 "current_radicalism": profile.get("current_radicalism", profile.get("base_radicalism", 1)),
                 "mobilization_level": profile.get("mobilization_level", 0),
-                "dominant_emotion": self._get_dominant_emotion(emotion),
-                "dominant_emotion_score": max(emotion.values()) if emotion else 0,
-                "fear": emotion.get("fear", 0),
-                "anger": emotion.get("anger", 0),
-                "sadness": emotion.get("sadness", 0),
-                "joy": emotion.get("joy", 0),
-                "disgust": emotion.get("disgust", 0),
-                "surprise": emotion.get("surprise", 0),
                 "safety_economic": needs.get("safety_economic", 0),
                 "safety_physical": needs.get("safety_physical", 0),
                 "post_count": len(posts),
@@ -127,12 +110,10 @@ class SimulationDataExporter:
         return {
             "simulation_id": self.simulation_id,
             "generated_at": datetime.now().isoformat(),
-            "emotional_temperature": {},
             "stance_distribution": {},
             "mobilization_risk": {"low": 0, "medium": 0, "high": 0},
             "granularity_distribution": {"micro": 0, "meso": 0, "macro": 0},
             "affected_entities": [],
-            "emotional_shifts": [],
             "predicted_actions": [],
             "note": "No impact interviews conducted yet. Run /interview/impact first.",
         }
@@ -146,8 +127,3 @@ class SimulationDataExporter:
             json.dump(results, f, ensure_ascii=False, indent=2)
         logger.info(f"Saved impact results to {impact_path}")
 
-    @staticmethod
-    def _get_dominant_emotion(emotion: Dict[str, int]) -> str:
-        if not emotion:
-            return "neutral"
-        return max(emotion.items(), key=lambda x: x[1])[0]

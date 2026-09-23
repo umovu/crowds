@@ -34,19 +34,6 @@
       </div>
 
       <div class="detail-stats">
-        <div v-if="hasEmotions" class="stat-group">
-          <span class="stat-label">Emotions</span>
-          <div class="emotion-bars">
-            <div v-for="(val, key) in visibleEmotions" :key="key" class="emotion-bar">
-              <span class="bar-label">{{ key }}</span>
-              <div class="bar-track">
-                <div class="bar-fill" :style="{ width: (val / 10 * 100) + '%', background: emotionColor(key) }"></div>
-              </div>
-              <span class="bar-val">{{ val }}</span>
-            </div>
-          </div>
-        </div>
-
         <div v-if="hasAttitudes" class="stat-group">
           <span class="stat-label">Attitudes</span>
           <div class="attitude-bars">
@@ -111,16 +98,6 @@ const stanceClass = computed(() => {
   return 'stance-neutral'
 })
 
-const hasEmotions = computed(() => {
-  const e = props.agent.emotions || {}
-  return Object.values(e).some(v => v > 0)
-})
-
-const visibleEmotions = computed(() => {
-  const e = props.agent.emotions || {}
-  return Object.fromEntries(Object.entries(e).filter(([, v]) => v > 0))
-})
-
 const hasAttitudes = computed(() => {
   return (props.agent.attitudes || []).length > 0
 })
@@ -144,18 +121,6 @@ const isCustom = computed(() => {
   const src = props.agent.source_entity_type || ''
   return src.startsWith('custom')
 })
-
-function emotionColor(key) {
-  const map = {
-    sadness: '#5B8DB8',
-    joy: '#F4A261',
-    fear: '#8B5CF6',
-    disgust: '#84A98C',
-    anger: '#E63946',
-    surprise: '#F4D35E',
-  }
-  return map[key] || '#999'
-}
 
 function attitudeClass(rating) {
   if (rating >= 7) return 'att-support'
@@ -355,14 +320,12 @@ function attitudeClass(rating) {
 }
 
 /* Bars */
-.emotion-bars,
 .attitude-bars {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.emotion-bar,
 .attitude-bar {
   display: flex;
   align-items: center;

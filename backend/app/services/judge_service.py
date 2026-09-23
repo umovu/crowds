@@ -9,6 +9,7 @@ path costs an extra Plus-tier call, so only enable when evaluating output qualit
 
 import json
 import logging
+import os
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from typing import Callable, Tuple
@@ -26,26 +27,44 @@ class JudgeResult:
     pass_: bool
     reasoning: str
     evidence: str
+    # The judge call itself broke (timeout, truncated JSON, bad key). A score of
+    # 0 then says nothing about the output — without this flag the caller reads
+    # a broken judge as a failed generation and pays for a pointless rewrite.
+    errored: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "score": self.score,
             "pass": self.pass_,
             "reasoning": self.reasoning,
-            "evidence": self.evidence
+            "evidence": self.evidence,
+            "errored": self.errored,
         }
 
 
 class JudgeService:
-    """LLM-as-judge using Plus-tier model for advisory quality scoring."""
+    """LLM-as-judge for advisory quality scoring.
+
+    `cheap=True` judges on the sim tier (SIM_LLM_*) instead of the Plus tier.
+    Measured on tests/data/sa_context_cases.json: both tiers caught 16 of 16 bad
+    context blocks and agreed on the real ones, so the SA-context judge — which
+    runs every day for every user — has no reason to pay Plus-tier rates.
+    """
 
     MIN_PASS_SCORE = 7
 
-    def __init__(self):
+    def __init__(self, cheap: bool = False):
+        self.cheap = cheap
         self.client = self._create_client()
 
     def _create_client(self) -> LLMClient:
-        """Create LLM client using Plus-tier (LLM_*) config."""
+        """Plus-tier (LLM_*) client, or the sim tier (SIM_LLM_*) when cheap."""
+        if self.cheap:
+            return LLMClient(
+                api_key=os.environ.get("SIM_LLM_API_KEY") or Config.LLM_API_KEY,
+                base_url=os.environ.get("SIM_LLM_BASE_URL") or Config.LLM_BASE_URL,
+                model=os.environ.get("SIM_LLM_MODEL") or Config.LLM_MODEL_NAME,
+            )
         return LLMClient(
             api_key=Config.LLM_API_KEY,
             base_url=Config.LLM_BASE_URL,
@@ -68,7 +87,7 @@ class JudgeService:
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.2,
-                max_tokens=400,
+                max_tokens=900,
             )
             if not self.client._is_groq():
                 kwargs["response_format"] = {"type": "json_object"}
@@ -90,7 +109,8 @@ class JudgeService:
                 score=0,
                 pass_=False,
                 reasoning=f"Judge error: {e}",
-                evidence=""
+                evidence="",
+                errored=True,
             )
 
     def _system_prompt(self) -> str:
@@ -213,17 +233,57 @@ REQUIRED:
 5. 2-4 plain sentences"""
         return self.judge(criteria, summary, {"pitch": pitch, "reactions": roster})
 
-    def judge_sa_context(self, block: str, snippets: List[str]) -> JudgeResult:
-        """Evaluate the daily SA current-realities block against the search
-        snippets it was distilled from. Pure entailment check: the block must
-        not contain facts absent from the snippets."""
-        criteria = """Evaluate this list of current South African realities against the SNIPPETS in context.
+    def judge_sa_context(self, block: str, snippets: List[str],
+                         place: str = "") -> JudgeResult:
+        """Evaluate a current-realities block against the search snippets it was
+        distilled from. Pure entailment check: the block must not contain facts
+        absent from the snippets.
+
+        `place` switches it to the local "NEAR YOU" variant: a shorter block, and
+        one extra failure mode — a national fact under a local heading, which a
+        persona would read as a fact about their own street. Without this the
+        national shape rule (6-8 bullets) fails every local block for being the
+        length it is supposed to be.
+        """
+        if place:
+            scope = (
+                f"Evaluate this list of current local realities in {place}, South Africa, "
+                f"against the SNIPPETS in context."
+            )
+            relevance = (
+                f"4. Every bullet is about {place} — or somewhere close enough that people there\n"
+                f"   use it, such as a neighbouring suburb's clinic — and is something they live\n"
+                f"   with. NOT a national fact, NOT a different city or province, NOT general\n"
+                f"   background. A national statistic under a local heading is a failure: the\n"
+                f"   reader takes it as a fact about their own street. A bullet naming a private\n"
+                f"   individual — a victim, an accused, a person in an incident — is also a\n"
+                f"   failure: one named person's misfortune is not a condition residents live\n"
+                f"   with. (Naming a place, a facility or its address is fine, and useful.)"
+            )
+            shape = "5. 3-5 short bullets, plain declarative prose"
+            pasted_when = " for that run"
+        else:
+            scope = "Evaluate this list of current South African realities against the SNIPPETS in context."
+            relevance = (
+                "4. Every bullet is a reality ordinary South Africans live with — not foreign affairs,\n"
+                "   not a list of political topics, not a bullet that says nothing"
+            )
+            shape = "5. 6-8 short bullets, plain declarative prose"
+            pasted_when = " for the day"
+        criteria = f"""{scope}
+
+This block is pasted into every simulated person's prompt{pasted_when}, so ONE bad
+bullet is a failure of the whole block, not a small deduction.
 
 REQUIRED:
 1. Every bullet is supported by at least one snippet; quote any unsupported bullet in evidence
 2. Numbers appear ONLY if a snippet gives them
-3. No stale-crisis framing the snippets don't support
-4. 6-8 short bullets, plain declarative prose"""
+3. No stale-crisis framing the snippets don't support, and no prediction of a future one
+{relevance}
+{shape}
+
+SCORING: score 3 or less if ANY bullet breaks rules 1-4, however good the rest are.
+Score 5 or less if the shape breaks rule 5. Only a block with nothing wrong scores 7+."""
         return self.judge(criteria, block, {"snippets": snippets})
 
     def judge_competitor_tiering(self, competitors: List[Dict[str, Any]],
@@ -267,6 +327,16 @@ def record_judgement(kind: str, result: JudgeResult, *, run_id: Optional[str] = 
         logger.warning(f"judge_log append failed ({kind}): {e}")
 
 
+def sa_context_judge_enabled() -> bool:
+    """The daily SA-context block is judged even when JUDGE_ENABLED is off.
+
+    It is written once a day, shared by every run, and pasted into every persona
+    prompt — an unchecked bad block poisons a whole day. On the sim tier it costs
+    a fraction of a cent. Switch off with SA_CONTEXT_JUDGE=0.
+    """
+    return os.environ.get("SA_CONTEXT_JUDGE", "1").lower() not in ("0", "false", "no")
+
+
 def judge_enabled() -> bool:
     """True when the advisory judge is switched on (Config.JUDGE_ENABLED).
     Call sites should short-circuit on this before constructing the service so a
@@ -274,12 +344,17 @@ def judge_enabled() -> bool:
     return Config.JUDGE_ENABLED
 
 
-# Singleton
+# Singletons, one per tier
 _judge_service: Optional[JudgeService] = None
+_cheap_judge_service: Optional[JudgeService] = None
 
 
-def get_judge_service() -> JudgeService:
-    global _judge_service
+def get_judge_service(cheap: bool = False) -> JudgeService:
+    global _judge_service, _cheap_judge_service
+    if cheap:
+        if _cheap_judge_service is None:
+            _cheap_judge_service = JudgeService(cheap=True)
+        return _cheap_judge_service
     if _judge_service is None:
         _judge_service = JudgeService()
     return _judge_service
@@ -310,6 +385,10 @@ def judge_best_of(
     """
     first_out = generate(None)
     first_res = judge(first_out)
+
+    if first_res.errored:
+        logger.warning(f"Judge unavailable ({first_res.reasoning[:120]}); keeping first attempt")
+        return first_out, first_res, False
 
     if first_res.pass_ or first_res.score >= threshold:
         return first_out, first_res, False

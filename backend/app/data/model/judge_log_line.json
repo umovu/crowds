@@ -47,6 +47,10 @@
     "evidence": {
       "type": "string",
       "when": "always"
+    },
+    "errored": {
+      "type": "boolean",
+      "when": "optional"
     }
   }
 }
