@@ -225,3 +225,41 @@ def test_a_measured_value_beats_an_imputed_row():
     persona = {"ghs_role": "gogo_guardian", "circumstances": [
         {"field": "ghs_role", "value": "guardian_parent", "source": hh.SOURCE}]}
     assert mcs.situation_facts(persona)["ghs_role"] == "gogo_guardian"
+
+
+# ── The shared fact reader: measured first, imputed as fallback ──────────────
+# Registering these four as circumstance fields once made fact_value read ONLY the
+# rows, so the 31 measured guardians lost their fee bands in the room picker, and an
+# imputed band came back as a string that list() split into letters.
+
+def test_fact_value_prefers_the_measured_answer():
+    from app.models.persona import fact_value
+    persona = {"learner_fee_bands": ["R1–R100 per year"], "medical_aid": False,
+               "circumstances": [
+                   {"field": "learner_fee_bands", "value": "No fees", "source": hh.SOURCE},
+                   {"field": "medical_aid", "value": "True", "source": hh.SOURCE}]}
+    assert fact_value(persona, "learner_fee_bands") == ["R1–R100 per year"]
+    assert fact_value(persona, "medical_aid") is False
+
+
+def test_fact_value_falls_back_to_the_imputed_row():
+    from app.models.persona import fact_value
+    persona = {"circumstances": [
+        {"field": "ghs_role", "value": "guardian_parent", "source": hh.SOURCE}]}
+    assert fact_value(persona, "ghs_role") == "guardian_parent"
+
+
+def test_the_picker_reads_an_imputed_fee_band_whole():
+    from app.services import panel_service as ps
+    persona = {"circumstances": [
+        {"field": "learner_fee_bands", "value": "R20 001–R40 000 per year", "source": hh.SOURCE}]}
+    assert ps._fee_bands(persona) == ["R20 001–R40 000 per year"]
+    assert ps._fee_tier(persona) == "high_fee"
+    assert ps._pays_school_fees(persona)
+
+
+def test_the_picker_still_reads_a_measured_guardians_bands():
+    from app.services import panel_service as ps
+    persona = {"learner_fee_bands": ["No fees", "R201–R300 per year"]}
+    assert ps._fee_bands(persona) == ["No fees", "R201–R300 per year"]
+    assert ps._fee_tier(persona) == "low_fee"

@@ -258,6 +258,13 @@ def fact_value(record: Any, fact: str) -> Any:
     if fact in TOPICS:
         rows, key, value = get(record, "attitudes"), "topic", "stance"
     elif fact in CIRCUMSTANCES:
+        # A few facts live in both places: measured on the persona's own survey row
+        # (top level) for some, imputed as a circumstance row for the rest
+        # (scripts/add_ghs_household.py). The measured answer wins, as it does in
+        # mechanism_card_service.situation_facts.
+        measured = get(record, fact)
+        if measured not in (None, "", []):
+            return measured
         rows, key, value = get(record, "circumstances"), "field", "value"
     else:
         return get(record, fact)

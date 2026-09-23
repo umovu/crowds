@@ -377,7 +377,10 @@ def _fee_tier(p: Dict[str, Any]):
 def _fee_bands(p: Dict[str, Any]) -> List[str]:
     """All school-fee bands attached to a persona: a learner's own (fees_band) or a
     guardian's across their learners (learner_fee_bands)."""
-    bands = list(fact_value(p, FACT.learner_fee_bands) or [])
+    held = fact_value(p, FACT.learner_fee_bands) or []
+    # Measured on the persona's own row it is a list; imputed it is one band (the
+    # dearest), and list() on a string would split it into letters.
+    bands = [held] if isinstance(held, str) else list(held)
     if fact_value(p, FACT.fees_band):
         bands.append(fact_value(p, FACT.fees_band))
     return bands
