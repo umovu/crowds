@@ -43,7 +43,7 @@ CircumstanceRowField = Literal['lived_poverty', 'went_without_care', 'owns_vehic
 AttitudeRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals']
 AttitudeRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population']
 CircumstanceRowSources = Literal['afrobarometer_r9_sa', 'afrobarometer_r9_sa:students', 'afrobarometer_r9_sa:teacher_class_professionals', 'ghs_2025', 'qlfs_2026_q1', 'ghs_2025:household']
-CircumstanceRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population', 'prov_geo_race_sex_age', 'prov_geo_race_sex', 'prov_geo_race', 'prov_geo', 'prov', 'geo_race_sex_age', 'geo_sex_age', 'sex_age', 'age']
+CircumstanceRowMatchQuality = Literal['age_backoff', 'education_backoff', 'exact', 'population_draw', 'province_backoff', 'race_only', 'status_race', 'population', 'prov_geo_race_sex_age', 'prov_geo_race_sex', 'prov_geo_race', 'prov_geo', 'prov', 'geo_race_sex_age', 'geo_sex_age', 'sex_age', 'age', 'prov_geo_race_sex_age_hard_emp', 'geo_race_sex_age_hard_emp', 'sex_age_hard_emp', 'sex_age_hard']
 TOPICS = {'gov_trust': {'stances': ['low', 'mid', 'high'],
                'source': {'survey': 'afrobarometer_r9_sa',
                           'items': ['Q37A', 'Q37D'],

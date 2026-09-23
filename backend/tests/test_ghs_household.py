@@ -78,10 +78,12 @@ def test_more_than_r80000_outranks_every_bounded_band():
 # ── A synthetic GHS pool ─────────────────────────────────────────────────────
 
 def _person(uqnr, age, relation, learners="0", fee=None, med=False, gender="Female",
-            province="Gauteng", geo="Urban", race="African/Black", wgt=100.0):
+            province="Gauteng", geo="Urban", race="African/Black", wgt=100.0,
+            employment="Employed", hardship="never"):
     return {"uqnr": uqnr, "age": age, "person_wgt": wgt, "province": province,
             "gender": gender, "race": race, "geo": geo, "learner_relation": relation,
-            "learners": learners, "fee_band": fee, "medical_aid": med}
+            "learners": learners, "fee_band": fee, "medical_aid": med,
+            "employment": employment, "hardship": hardship}
 
 
 def _pool():
@@ -342,3 +344,77 @@ def test_a_room_reports_how_sure_its_parents_are():
     assert ps.parent_certainty_counts(list(_parents())) == {
         "measured": 1, "strong": 2, "weak": 1}
     assert ps.parent_certainty_counts([_parents()[4]]) == {}
+
+
+
+# ── Hardship and work pick the household, not whether there is a learner ────
+# School fees follow income, and most personas carry none. Matching the DONOR on
+# food hardship and employment cut high-fee draws into below-median-income homes
+# from 42% to 36% on the validation (real: 18%), with the share living with a
+# learner unchanged, because that is still decided on demographics alone.
+
+def test_ghs_hunger_answers_become_two_levels():
+    assert hh.ghs_hardship(1) == "never"
+    assert {hh.ghs_hardship(c) for c in (2, 3, 4, 5)} == {"some"}
+    assert hh.ghs_hardship(6) is None and hh.ghs_hardship(9) is None
+
+
+def test_lived_poverty_crosses_to_the_same_two_levels():
+    assert hh.persona_hardship({"lived_poverty": "none"}) == "never"
+    for band in ("low", "moderate", "high"):
+        assert hh.persona_hardship({"lived_poverty": band}) == "some"
+    assert hh.persona_hardship({"circumstances": [
+        {"field": "lived_poverty", "value": "none"}]}) == "never"
+    assert hh.persona_hardship({}) is None
+
+
+def _split_pool():
+    """Parents in two kinds of household: comfortable earners paying high fees, and
+    unemployed households that go short of food and pay none. Plus non-parents."""
+    rows = []
+    for i in range(40):
+        rows.append(_person(f"rich{i}", 30 + i % 11, "parent", learners="1",
+                            fee="R20 001–R40 000 per year", med=True,
+                            employment="Employed", hardship="never"))
+    for i in range(40):
+        rows.append(_person(f"poor{i}", 30 + i % 11, "parent", learners="2",
+                            fee="No fees", med=False,
+                            employment="Unemployed", hardship="some"))
+    for i in range(40):
+        rows.append(_person(f"none{i}", 30 + i % 11, "none", employment="Employed",
+                            hardship="never"))
+    return pd.DataFrame(rows)
+
+
+def _parent_donors(**facts):
+    people = [_persona(i, **facts) for i in range(12)]
+    donors = [r["donor"] for r in hh.assign(people, _split_pool())
+              if r["donor"]["learner_relation"] == "parent"]
+    assert donors, "the pool is two-thirds parents, so some seats must be parents"
+    return donors
+
+
+def test_a_comfortable_earner_draws_a_comfortable_household():
+    for donor in _parent_donors(employment_status="Employed", lived_poverty="none"):
+        assert donor["uqnr"].startswith("rich")
+        assert donor["fee_band"] == "R20 001–R40 000 per year"
+
+
+def test_a_hungry_jobseeker_draws_a_household_like_theirs():
+    for donor in _parent_donors(employment_status="Unemployed", lived_poverty="high"):
+        assert donor["uqnr"].startswith("poor")
+        assert donor["fee_band"] == "No fees"
+
+
+def test_hardship_does_not_move_the_share_living_with_a_learner():
+    # Same demographics, opposite hardship: the parent seats are the same.
+    rich = [_persona(i, employment_status="Employed", lived_poverty="none") for i in range(15)]
+    poor = [_persona(i, employment_status="Unemployed", lived_poverty="high") for i in range(15)]
+    count = lambda people: sum(r["donor"]["learner_relation"] == "parent"
+                               for r in hh.assign(people, _split_pool()))
+    assert count(rich) == count(poor)
+
+
+def test_a_persona_without_the_fact_skips_the_rungs_that_need_it():
+    pool, quality = hh.match_pool(_split_pool(), _persona(1), hh._DONOR_RUNGS)
+    assert "hard" not in quality and "emp" not in quality

@@ -95,10 +95,17 @@ _GEOTYPE = {"1": "Urban", "2": "Traditional", "3": "Farms"}
 # Widest last. Age and sex are held the longest: whether someone lives with
 # school-age children turns on their age before anything else.
 #
-# Employment was tried as a leading rung, since school fees follow income. On the
-# validation it cut high-fee draws to below-median households only from 42% to 37%
-# (real: 18%) while pulling the high-fee and medical-aid totals 2-3 points off, so it
-# is not here. Income is the real driver and most skeletons do not carry it.
+# Hardship and employment lead, because school fees follow income and most skeletons
+# carry no income. Among GHS adults living with a learner, 19% of those whose
+# household never ran short of food pay over R4,000/yr against 5% who sometimes did;
+# 25% of the employed against 9% of the unemployed. On the validation, matching on
+# both cut high-fee draws landing in below-median-income households from 42% to 32%
+# (real: 18%), with every total within 2 points. Either one alone got to 37%.
+#
+# They pick the DONOR, not the relation. Used for both, they pulled the share living
+# with a learner 9 points off in one age group (6 without them): the relation is
+# decided on demographics (_RUNGS), then the household that fills it is found among
+# people like this persona in hardship and work too (_DONOR_RUNGS).
 _RUNGS: List[Tuple[str, List[str]]] = [
     ("prov_geo_race_sex_age", ["province", "geotype", "race", "gender", "age"]),
     ("geo_race_sex_age",      ["geotype", "race", "gender", "age"]),
@@ -107,8 +114,18 @@ _RUNGS: List[Tuple[str, List[str]]] = [
     ("age",                   ["age"]),
     ("population",            []),
 ]
+_DONOR_RUNGS: List[Tuple[str, List[str]]] = [
+    ("prov_geo_race_sex_age_hard_emp", ["province", "geotype", "race", "gender", "age", "hardship", "employment"]),
+    ("geo_race_sex_age_hard_emp",      ["geotype", "race", "gender", "age", "hardship", "employment"]),
+    ("sex_age_hard_emp",               ["gender", "age", "hardship", "employment"]),
+    ("sex_age_hard",                   ["gender", "age", "hardship"]),
+] + _RUNGS
 # A match on these rungs kept both age and sex, which is the precondition for strong.
-_STRONG_RUNGS = {"prov_geo_race_sex_age", "geo_race_sex_age", "geo_sex_age", "sex_age"}
+_STRONG_RUNGS = {q for q, keys in _DONOR_RUNGS if "age" in keys and "gender" in keys}
+
+# Persona column -> GHS frame column, for the keys a rung may hold.
+_KEY_COLUMNS = {"province": "province", "geotype": "geo", "race": "race",
+                "gender": "gender", "employment": "employment", "hardship": "hardship"}
 
 _RELATION_ROLE = {
     "parent": "guardian_parent",
@@ -132,6 +149,11 @@ def load_ghs() -> pd.DataFrame:
     df["gender"] = df["Sex"].map(lambda c: _label(labels, "Sex", c))
     df["race"] = df["Population"].map(lambda c: _label(labels, "Population", c))
     df["geo"] = df["geotype"].astype(str).str.strip().map(_GEOTYPE)
+    df["employment"] = [g._employment_status(row, labels) for _, row in df.iterrows()]
+    hunger = pd.read_stata(g._HOUSEHOLD_DTA, columns=["uqnr", "fsd_hung_adult"],
+                           convert_categoricals=False)
+    df = df.merge(hunger, on="uqnr", how="left")
+    df["hardship"] = df["fsd_hung_adult"].map(ghs_hardship)
 
     relations, counts, fees = [], [], []
     for _, row in df.iterrows():
@@ -146,6 +168,47 @@ def load_ghs() -> pd.DataFrame:
     df["medical_aid"] = df["hlt_medi"].map(g._HLT_MEDI)
     df = df[df["province"].notna() & df["gender"].notna() & df["geo"].notna()]
     return df.reset_index(drop=True)
+
+
+# GHS fsd_hung_adult: 1 never, 2 seldom, 3 sometimes, 4 often, 5 always ran short of
+# food for adults in the past year; 6 (no adults) and 9 (unspecified) say nothing.
+_HUNGER_NEVER, _HUNGER_SOME = {1}, {2, 3, 4, 5}
+
+
+def ghs_hardship(code) -> Optional[str]:
+    """never | some | None. The one hardship split both surveys can state."""
+    if code in _HUNGER_NEVER:
+        return "never"
+    if code in _HUNGER_SOME:
+        return "some"
+    return None
+
+
+def persona_hardship(persona: Dict) -> Optional[str]:
+    """The same split from the persona's Afrobarometer lived_poverty.
+
+    Lived poverty is the mean of five "how often have you gone without" items, food
+    first. "none" means they never went without anything, food included, which is
+    GHS "never ran short of food". Any other band means they went without something;
+    most such households also run short of food at times. A crosswalk, stated once:
+    it is the only link between the two surveys' hardship questions, and it is kept
+    to two levels so it claims no more than both can say.
+    """
+    band = persona.get("lived_poverty")
+    if band is None:
+        band = next((r.get("value") for r in persona.get("circumstances") or []
+                     if isinstance(r, dict) and r.get("field") == "lived_poverty"), None)
+    if band is None:
+        return None
+    return "never" if band == "none" else "some"
+
+
+def _persona_key(persona: Dict, key: str):
+    if key == "hardship":
+        return persona_hardship(persona)
+    if key == "employment":
+        return persona.get("employment_status")
+    return persona.get(key)
 
 
 def learner_relation(rel, age, ctx: Optional[Dict]) -> str:
@@ -178,20 +241,23 @@ def _top_fee(bands: List[str]) -> Optional[str]:
 
 # ── Matching ─────────────────────────────────────────────────────────────────
 
-def match_pool(df: pd.DataFrame, persona: Dict) -> Tuple[pd.DataFrame, str]:
-    for quality, keys in _RUNGS:
+def match_pool(df: pd.DataFrame, persona: Dict,
+               rungs: Optional[List[Tuple[str, List[str]]]] = None) -> Tuple[pd.DataFrame, str]:
+    """The most specific pool of real adults like this persona that is big enough.
+
+    A rung naming a fact the persona does not carry (no lived_poverty, say) is
+    skipped rather than matched against "unknown", so it falls to the next rung.
+    """
+    for quality, keys in (rungs or _RUNGS):
+        if any(k != "age" and _persona_key(persona, k) is None for k in keys):
+            continue
         pool = df
-        if "province" in keys:
-            pool = pool[pool["province"] == persona.get("province")]
-        if "geotype" in keys:
-            pool = pool[pool["geo"] == persona.get("geotype")]
-        if "race" in keys:
-            pool = pool[pool["race"] == persona.get("race")]
-        if "gender" in keys:
-            pool = pool[pool["gender"] == persona.get("gender")]
-        if "age" in keys:
-            age = persona.get("age") or 0
-            pool = pool[pool["age"].between(age - 5, age + 5)]
+        for key in keys:
+            if key == "age":
+                age = persona.get("age") or 0
+                pool = pool[pool["age"].between(age - 5, age + 5)]
+            else:
+                pool = pool[pool[_KEY_COLUMNS[key]] == _persona_key(persona, key)]
         if len(pool) >= MIN_POOL:
             return pool, quality
     return df, "population"
@@ -236,6 +302,7 @@ def assign(personas: List[Dict], df: pd.DataFrame) -> List[Optional[Dict]]:
     older real population.
     """
     matched = [match_pool(df, p) for p in personas]
+    donor_pools = [match_pool(df, p, _DONOR_RUNGS) for p in personas]
     out: List[Optional[Dict]] = [None] * len(personas)
 
     groups: Dict[Tuple, List[int]] = collections.defaultdict(list)
@@ -271,16 +338,21 @@ def assign(personas: List[Dict], df: pd.DataFrame) -> List[Optional[Dict]]:
                 del left[relation]
 
             pool, quality = matched[i]
-            candidates = pool[pool["learner_relation"] == relation]
-            if candidates.empty:  # the seat came from the stratum, not this pool
-                candidates = df[df["learner_relation"] == relation]
+            donor_pool, donor_quality = donor_pools[i]
+            # Closest household first; widen only when it holds nobody in this relation.
+            for candidates in (donor_pool, pool, df):
+                candidates = candidates[candidates["learner_relation"] == relation]
+                if not candidates.empty:
+                    break
             donor = _weighted_pick(candidates, rng)
             out[i] = {
                 "donor": donor,
                 "quality": quality,
                 "pool": len(pool),
                 "relation_share": round(spreads[j].get(relation, 0.0), 3),
-                "medical_share": spread(pool, "medical_aid"),
+                "donor_quality": donor_quality,
+                "donor_pool": len(donor_pool),
+                "medical_share": spread(donor_pool, "medical_aid"),
             }
     return out
 
@@ -330,8 +402,10 @@ def rows_for(persona: Dict, result: Optional[Dict]) -> List[Dict]:
     if persona.get("medical_aid") is None and donor["medical_aid"] is not None:
         value = str(bool(donor["medical_aid"]))
         share = round(result["medical_share"].get(str(donor["medical_aid"]), 0.0), 3)
-        rows.append({**base, "field": "medical_aid", "value": value,
-                     "share": share, "grade": _grade(quality, share)})
+        dq = result.get("donor_quality", quality)
+        rows.append({**base, "match_quality": dq, "pool": result.get("donor_pool", pool),
+                     "field": "medical_aid", "value": value,
+                     "share": share, "grade": _grade(dq, share)})
     return rows
 
 
@@ -359,8 +433,12 @@ def validate(df: pd.DataFrame, n: int = 3000, seed: int = 11) -> None:
     donors = df[~df["uqnr"].isin(test_hh)].reset_index(drop=True)
     test = df[df["uqnr"].isin(test_hh)].sample(n=min(n, len(test_hh)), random_state=seed)
 
+    # Each test person carries what a library persona carries: employment, and a
+    # lived-poverty band standing in for their own household's food hardship.
     fake = [{"id": f"t{i}", "age": int(r["age"]), "gender": r["gender"], "race": r["race"],
-             "province": r["province"], "geotype": r["geo"]}
+             "province": r["province"], "geotype": r["geo"],
+             "employment_status": r["employment"],
+             "lived_poverty": {"never": "none", "some": "low"}.get(r["hardship"])}
             for i, (_, r) in enumerate(test.iterrows())]
     results = assign(fake, donors)
 

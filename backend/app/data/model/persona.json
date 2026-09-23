@@ -1755,7 +1755,11 @@
       "geo_race_sex_age",
       "geo_sex_age",
       "sex_age",
-      "age"
+      "age",
+      "prov_geo_race_sex_age_hard_emp",
+      "geo_race_sex_age_hard_emp",
+      "sex_age_hard_emp",
+      "sex_age_hard"
     ],
     "every_field_once": true,
     "fields": {
