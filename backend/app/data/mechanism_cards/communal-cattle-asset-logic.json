@@ -1,5 +1,6 @@
 {
   "id": "communal-cattle-asset-logic",
+  "subject": "keeping cattle as a household's savings and standing, not only as food",
   "citation": [
     "Communal farmers' cattle-production perceptions, Ga-Matlala, Limpopo (PMC)",
     "Livestock ownership determinants, OR Tambo District (Pastoralism, Springer)",
@@ -61,7 +62,13 @@
     },
     {
       "text": "Cattle theft is read as a symptom of youth unemployment and absent herders, so a solution is credible only if it absorbs idle youth labour or substitutes for the missing herder.",
-      "needs": [],
+      "needs": [
+        {
+          "employment_status": [
+            "Unemployed"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P5",

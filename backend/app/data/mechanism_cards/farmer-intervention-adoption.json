@@ -1,5 +1,6 @@
 {
   "id": "farmer-intervention-adoption",
+  "subject": "a small farmer deciding whether to take up a new farming method or scheme",
   "citation": [
     "Smallholder perceptions of communal cattle feedlots, Eastern Cape (Frontiers)",
     "Challenges and opportunities in smallholder agriculture digitization, SA (Frontiers)",
@@ -104,7 +105,13 @@
     },
     {
       "text": "Attachment to customary grazing and scepticism of external interventions prevail, because embeddedness in traditional cultural norms or social inequality makes unfamiliar practices suspect.",
-      "needs": [],
+      "needs": [
+        {
+          "geotype": [
+            "Traditional"
+          ]
+        }
+      ],
       "chain_id": "C5",
       "passages": [
         "P10",

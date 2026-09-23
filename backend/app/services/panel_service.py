@@ -38,7 +38,7 @@ from . import data_model
 from . import mechanism_card_service
 from . import objections
 from .persona_library import get_library
-from .persona_retrieval import select_for_query
+from .persona_retrieval import describe_place, select_for_query
 
 logger = get_logger("fub.panel_service")
 
@@ -1039,6 +1039,10 @@ def create_session(
         "rounds_run": 0,
         "archetype_distribution": _count_by(profiles, "actor_archetype"),
         "province_distribution": _count_by(profiles, "province"),
+        # Where this room is, and how sure that is. A place-tilted room is
+        # invisible in the roster — nobody says their city — so this line is the
+        # only place the operator learns the room was scoped at all.
+        "place": describe_place(pitch, cast, province=province),
     }
     if pointer:
         meta["pointer"] = pointer

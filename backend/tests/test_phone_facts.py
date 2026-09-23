@@ -113,5 +113,10 @@ def test_library_phone_facts_come_from_the_persona_s_own_respondent():
     for p in carrying:
         measured = by_id[p["survey_respondent"]]
         for r in p["circumstances"]:
+            # Only Afrobarometer rows come from this persona's matched respondent.
+            # GHS rows (metro, dwelling) are drawn from a demographic pool instead,
+            # so that respondent has no answer to check them against.
+            if r["source"] != "afrobarometer_r9_sa":
+                continue
             if r["match_quality"] != "population_draw":
                 assert measured.get(r["field"]) == r["value"], (p["name"], r["field"])

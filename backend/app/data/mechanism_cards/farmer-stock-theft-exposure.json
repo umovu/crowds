@@ -1,5 +1,6 @@
 {
   "id": "farmer-stock-theft-exposure",
+  "subject": "livestock being stolen, and guarding a herd against it",
   "citation": [
     "Farmers' perceptions of stock theft in South Africa (PLOS ONE, 2024)",
     "Welfare impact of stock theft, Nyandeni (SciELO SA, 2025)"
@@ -94,7 +95,13 @@
     },
     {
       "text": "Cultural ceremonies create a steady, unregulated demand for livestock that does not require proof of ownership, so theft surges around traditional events.",
-      "needs": [],
+      "needs": [
+        {
+          "geotype": [
+            "Traditional"
+          ]
+        }
+      ],
       "chain_id": "C4",
       "passages": [
         "P1",

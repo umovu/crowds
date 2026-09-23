@@ -17,7 +17,7 @@ from ._uploads_types import (CustomAgentSourceEntityType, CustomAgentStance,
     LocalPapersPapersItemSource, MechanismCardClaimType, MechanismCardCombGaps, 
     MechanismCardEconomicTags, PanelContextMode, PanelContextPanelSession, 
     PanelSessionAffordabilityFromPriceTiers, PanelSessionBudgetTierFilter, PanelSessionMode, 
-    PanelSessionSlotsProbesItemConfidence, PosterMimeType, ProjectStatus)
+    PanelSessionPlaceLevel, PanelSessionSlotsProbesItemConfidence, PosterMimeType, ProjectStatus)
 
 
 class PanelContext(DataModel):
@@ -34,6 +34,23 @@ class PanelSessionAffordabilityFromPrice(DataModel):
     amount: float = Field(ge=0, json_schema_extra={'when': 'always'})
     monthly: bool = Field(json_schema_extra={'when': 'always'})
     tiers: List[PanelSessionAffordabilityFromPriceTiers] = Field(json_schema_extra={'when': 'always'})
+
+
+class PanelSessionPlace(DataModel):
+    """Where a room is set, and how sure that is.
+
+    `level` is the rung the cast picker actually used, not the one the pitch
+    asked for: a thin metro falls back to its province, and the label has to
+    follow the seats. `measured_seats` is how many of those locals came off a
+    survey row that named the place, as opposed to being placed there by the
+    imputation pass — without it, "7 of 12 in Tshwane" reads as a fact."""
+    label: str = Field(json_schema_extra={'when': 'always'})
+    level: PanelSessionPlaceLevel = Field(json_schema_extra={'when': 'always'})
+    metro: Optional[str] = Field(json_schema_extra={'when': 'always'})
+    province: Optional[str] = Field(json_schema_extra={'when': 'always'})
+    seats: int = Field(ge=0, json_schema_extra={'when': 'always'})
+    of: int = Field(ge=0, json_schema_extra={'when': 'always'})
+    measured_seats: int = Field(ge=0, json_schema_extra={'when': 'always'})
 
 
 class PanelSessionSlotsProbesItem(DataModel):
@@ -85,6 +102,7 @@ class PanelSession(DataModel):
     attitude_pool_size: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
     pointer: str = Field(default=None, json_schema_extra={'when': 'optional'})
     slots: PanelSessionSlots = Field(default=None, json_schema_extra={'when': 'optional'})
+    place: Optional[PanelSessionPlace] = Field(default=None, json_schema_extra={'when': 'optional'})
 
 
 class CustomAgentNeedsItem(DataModel):
@@ -190,6 +208,13 @@ class MechanismCard(DataModel):
     MODEL_NAME: ClassVar[str] = 'mechanism_card'
     HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
     id: str = Field(pattern='^[a-z0-9]+(-[a-z0-9]+)*$', json_schema_extra={'when': 'always'})
+    subject: str = Field(default=None, min_length=1, max_length=300, json_schema_extra={
+        'when': 'optional',
+        'note': ("One human-written line saying what this research is about, in plain words, "
+                 "for the typed reader in card_subjects to match a pitch against. Falls back "
+                 "to topic_tags when absent, which reads as keywords and scores like keywords. "
+                 "Never shown to a persona — the prompt block is built from claims."),
+    })
     claim_type: MechanismCardClaimType = Field(json_schema_extra={'when': 'always'})
     claims: List[MechanismCardClaim] = Field(min_length=1, max_length=5, json_schema_extra={'when': 'always'})
     citation: List[Annotated[str, Field(min_length=1)]] = Field(min_length=1, json_schema_extra={'when': 'always'})

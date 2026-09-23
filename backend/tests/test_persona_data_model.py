@@ -97,7 +97,28 @@ def test_attitude_topics_match_the_fuser():
 
 
 def test_circumstances_match_the_adapter():
-    assert {f: v["values"] for f, v in CIRCUMSTANCES.items()} == ada.CIRCUMSTANCE_VOCAB
+    """Circumstances come from two surveys now, so each half is checked against
+    the build that writes it: Afrobarometer's against the donor adapter, GHS's
+    against the geography pass. A field belonging to neither is a field nothing
+    can write."""
+    import add_ghs_geography as ghs
+
+    afrobarometer = {f: v["values"] for f, v in CIRCUMSTANCES.items()
+                     if v["source"]["survey"] == "afrobarometer_r9_sa"}
+    assert afrobarometer == ada.CIRCUMSTANCE_VOCAB
+
+    # metro is declared against QLFS, where it is measured on the persona's own
+    # survey row. The original 375 carry a metro drawn from GHS instead, which is
+    # a row-level source, not a second survey for the field.
+    from_ghs = {f: v["values"] for f, v in CIRCUMSTANCES.items()
+                if v["source"]["survey"] in ("ghs_2025", "qlfs_2026_q1")}
+    assert set(from_ghs) == {"metro", "dwelling", "rdp_housing"}
+    assert CIRCUMSTANCES["metro"]["source"]["survey"] == "qlfs_2026_q1"
+    assert set(from_ghs["dwelling"]) == set(ghs._DWELLING.values())
+    assert ghs._TOWNSHIP_DWELLINGS <= set(from_ghs["dwelling"])
+    assert set(from_ghs["rdp_housing"]) == {"yes", "no"}
+
+    assert set(afrobarometer) | set(from_ghs) == set(CIRCUMSTANCES)
 
 
 def test_texture_generator_lists_are_in_the_model():

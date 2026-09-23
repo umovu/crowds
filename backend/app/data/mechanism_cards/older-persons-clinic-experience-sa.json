@@ -1,5 +1,6 @@
 {
   "id": "older-persons-clinic-experience-sa",
+  "subject": "how older people are treated at a clinic and what that does to whether they go back",
   "citation": [
     "Motsohi T, Namane M, Anele AC, Abbas M, Kalula SZ (2020). Older persons' experience with health care at two primary level clinics in Cape Town, South Africa: a qualitative assessment. BJGP Open 4(3):bjgpopen20X101048. doi:10.3399/bjgpopen20X101048"
   ],
@@ -92,7 +93,13 @@
     },
     {
       "text": "Convenience and affordability for elderly people are the access test: distance and transport barriers make a facility unusable because elderly patients cannot reach it",
-      "needs": [],
+      "needs": [
+        {
+          "age_band": [
+            "60+"
+          ]
+        }
+      ],
       "chain_id": "C5",
       "passages": [
         "P10",
