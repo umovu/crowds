@@ -1,0 +1,157 @@
+{
+  "id": "women-taxi-commuting-sa",
+  "subject": "young women commuting by minibus taxi: fares, late-night drop-offs, and staying safe from drivers and at ranks",
+  "citation": [
+    "Duri B, McKay TJM, Gunter A (2025). Gendered mobility and safety challenges for young women using public transport in Port Shepstone, KwaZulu-Natal. Journal of Transport and Supply Chain Management 19:a1226. doi:10.4102/jtscm.v19i0.1226"
+  ],
+  "segment_tags": [
+    "unemployed_youth",
+    "civic_moderate",
+    "grant_dependent_survivor"
+  ],
+  "claims": [
+    {
+      "text": "Harassment is unavoidable in minibus taxis, so safety lies in managing male drivers' reactions rather than expecting protection.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P16",
+        "P19"
+      ],
+      "evaluative_rules": [
+        "Judge a transport option by whether it reduces exposure to male drivers and harassment, not by comfort or convenience"
+      ],
+      "objections": [
+        "Will this reduce my exposure to male drivers and harassment?"
+      ],
+      "vocabulary": [
+        "harassment",
+        "catcalling",
+        "groping"
+      ]
+    },
+    {
+      "text": "Taxi travel carries unpredictable lethal risk from route violence, so survival depends on prayer and avoiding the seat behind the driver.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P7",
+        "P8"
+      ],
+      "evaluative_rules": [
+        "Judge a transport option by whether it removes you from taxi-war exposure"
+      ],
+      "objections": [
+        "Will this keep me out of taxi-war crossfire?"
+      ],
+      "vocabulary": [
+        "taxi wars",
+        "crossfire"
+      ]
+    },
+    {
+      "text": "Being alone with a male driver or in darkness is unsafe, so safety requires visibility, lighting, and never being isolated with a driver.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P9",
+        "P10",
+        "P11",
+        "P22"
+      ],
+      "evaluative_rules": [
+        "Judge a transport option by whether it guarantees visibility, lighting, and non-isolation with a driver"
+      ],
+      "objections": [
+        "Will I ever be alone with a male driver, or in the dark?"
+      ],
+      "vocabulary": [
+        "alone with the male driver",
+        "dark"
+      ]
+    },
+    {
+      "text": "Taxis are the only feasible mode despite cost and service problems, so affordability and accessibility are the test of any alternative.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P13",
+        "P14",
+        "P15",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a transport option by whether it offers an affordable, accessible alternative to minibus taxis"
+      ],
+      "objections": [
+        "Will this be affordable and actually reach my area?"
+      ],
+      "vocabulary": [
+        "rely heavily on taxis",
+        "low income"
+      ]
+    },
+    {
+      "text": "Visible security and functioning lighting determine safety at ranks and stops, because police presence makes criminals disappear while darkness enables muggings.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P12",
+        "P21",
+        "P17",
+        "P18"
+      ],
+      "evaluative_rules": [
+        "Judge a transport option by whether it includes visible security and functioning lighting"
+      ],
+      "objections": [
+        "Will there be visible security and working lights where I wait?"
+      ],
+      "vocabulary": [
+        "police officers",
+        "streetlights"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "KwaZulu-Natal",
+  "year_range": "2025",
+  "confidence": "qualitative, single town, participant interviews — mechanisms durable, magnitudes unknown",
+  "comb_gaps": [
+    "capability"
+  ],
+  "applies_when": [
+    {
+      "gender": [
+        "Female"
+      ],
+      "age_band": [
+        "15-24",
+        "25-34"
+      ],
+      "owns_vehicle": [
+        "none",
+        "household"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "taxi",
+    "taxis",
+    "minibus",
+    "taxi rank",
+    "commute",
+    "commuting",
+    "bus",
+    "public transport",
+    "transport",
+    "uber",
+    "bolt",
+    "lift club"
+  ],
+  "year_note": "Published 2025; fieldwork dates not stated (ethics clearance 2024). Ten women aged 22-30, Port Shepstone (KwaZulu-Natal)."
+}

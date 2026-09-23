@@ -15,7 +15,7 @@ qualitative research. One card per file, named `<id>.json`.
   `evaluative_rules`. A claim reaches only people the card fits and its own `needs`
   fit (`[]` means everyone the card fits). A claim left out takes its words with it.
 
-## Cards (21)
+## Cards (25)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
@@ -38,6 +38,10 @@ qualitative research. One card per file, named `<id>.json`.
 - `healthcare-facility-choice-sa` — bypassing the clinic, choosing where to seek care
 - `older-persons-clinic-experience-sa` — older patients, overcrowding, being listened to and respected
 - `youth-clinic-privacy-stigma-sa` — young people, sexual health, judgement and privacy (claims routed by study group)
+- `medical-aid-copayment-sa` — people with medical aid who still pay out of pocket: co-payments, savings, pharmacies, generics
+- `municipal-waste-failure-sa` — when rubbish collection fails: suburbs store or pay a collector, townships dump or burn (claims routed by poverty)
+- `rural-water-scarcity-sa` — rural villages without water: buying it, boreholes, tanker queues, broken promises
+- `women-taxi-commuting-sa` — young women commuting by minibus taxi: fares, safety, drivers and dark ranks
 
 ## Gaps still open
 
