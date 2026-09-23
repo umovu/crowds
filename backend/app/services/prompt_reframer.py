@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from ..utils.logger import get_logger
 from . import belief_relevance, mechanism_card_service, persona_facts
 from .context_assembly import historical_mode
-from .mode_specs import SHORT_ANSWER_SENTENCES, decision_question_on
+from .mode_specs import SHORT_ANSWER_SENTENCES, decision_question_on, word_of_mouth_ask
 
 logger = get_logger("fub.prompt_reframer")
 
@@ -72,6 +72,7 @@ class ImpactReframer:
         agent_profile: Dict[str, Any],
         mode: str = "policy",
         secondary_lens: Optional[str] = None,
+        ask_word_of_mouth: bool = False,
     ) -> str:
         """
         Transform a generic user question into a persona-specific impact question.
@@ -152,7 +153,8 @@ class ImpactReframer:
 
         # Layer 4: Impact Question (reframed), plus any additive secondary lens.
         impact_question = self._build_impact_question(
-            user_question, agent_profile, domain, mode=mode, secondary_lens=secondary_lens
+            user_question, agent_profile, domain, mode=mode, secondary_lens=secondary_lens,
+            ask_word_of_mouth=ask_word_of_mouth,
         )
         layers.append(f"\n{impact_question}")
 
@@ -384,6 +386,7 @@ class ImpactReframer:
         domain: str,
         mode: str = "policy",
         secondary_lens: Optional[str] = None,
+        ask_word_of_mouth: bool = False,
     ) -> str:
         """Layer 4: Rewrite the question as a personal impact query.
 
@@ -399,7 +402,8 @@ class ImpactReframer:
         # say?" turned an entire clinic pitch into the question "so, who, and what would
         # you say", and a panel of twelve answered a question nobody asked.
         lines = ["QUESTION:", ""]
-        lines.append(f"{user_question}")
+        lines.append(self._with_word_of_mouth(user_question, profile, mode)
+                     if ask_word_of_mouth else f"{user_question}")
 
         lines.append("")
         if mode == "product":
@@ -442,6 +446,23 @@ class ImpactReframer:
             )
 
         return "\n".join(lines)
+
+    @staticmethod
+    def _with_word_of_mouth(question: str, profile: Dict[str, Any], mode: str) -> str:
+        """The room's question plus this person's word-of-mouth ask, when they get one.
+
+        Panels only (the caller says so): a sim interview never carried the question.
+        Placed before the length rule when the question has one, so the ask is not
+        read as outside the answer it limits.
+        """
+        ask = word_of_mouth_ask(profile, mode)
+        if not ask:
+            return question
+        marker = "\nAnswer in at most"
+        if marker in question:
+            head, tail = question.split(marker, 1)
+            return f"{head}\n{ask}{marker}{tail}"
+        return f"{question}\n\n{ask}"
 
     def _extract_proper_noun(self, text: str) -> Optional[str]:
         """Extract a capitalized proper noun from text."""

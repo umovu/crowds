@@ -550,6 +550,38 @@ def decision_question_on() -> bool:
     return os.environ.get("PANEL_DECISION_QUESTION", "0").strip().lower() in ("1", "true", "yes", "on")
 
 
+# ── Word of mouth: asked only of the people whose answer can count ───────────
+# objections.word_of_mouth counts "would tell" and "would warn off" only for someone
+# whose measured social_voice is mid or high (the grounds on both readings in
+# objection_vocab.json). The question used to be appended to the whole room's pitch,
+# so the other half was asked too and their answers were thrown away — and every
+# answer in the room ended on "I'd tell my ...". Measured on the R150 clinic panel:
+# 12 of 12 answers closed on word of mouth, the same closing phrases recurring
+# across people. Asked per person instead, the count loses nothing and half the room
+# answers in its own shape. It also keeps "tell anyone" out of the room's shared
+# question, where it read as a social_voice subject for every persona.
+WORD_OF_MOUTH_VOICES = ("mid", "high")
+WORD_OF_MOUTH_ASK = "If you would tell anyone about it, say who."
+WORD_OF_MOUTH_ASK_LONG = "Last: would you tell anyone about this? If so, who, and what would you say?"
+
+
+def _social_voice(profile: Dict[str, Any]) -> Optional[str]:
+    attitudes = (profile or {}).get("attitudes")
+    if isinstance(attitudes, dict):
+        return attitudes.get("social_voice")
+    for row in attitudes or []:
+        if isinstance(row, dict) and row.get("topic") == "social_voice":
+            return row.get("stance")
+    return None
+
+
+def word_of_mouth_ask(profile: Dict[str, Any], mode: str) -> str:
+    """The word-of-mouth question for this persona, or "" when their answer cannot count."""
+    if _social_voice(profile) not in WORD_OF_MOUTH_VOICES:
+        return ""
+    return WORD_OF_MOUTH_ASK if mode == "panel" and decision_question_on() else WORD_OF_MOUTH_ASK_LONG
+
+
 def trim_to_sentences(text: str, limit: int) -> str:
     """The first `limit` whole sentences of `text`; unchanged when it is already within the limit."""
     body = (text or "").strip()

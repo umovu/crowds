@@ -36,12 +36,13 @@ def test_one_framing_reads_for_an_announcement(monkeypatch):
 def test_the_framing_itself_names_no_subject():
     """Boilerplate must not steer relevance. The first unified wording ("what would
     work for you") made every panel pull unemployment news, economy beliefs and a
-    youth-jobs card. Only the word-of-mouth ask may select anything: social_voice."""
+    youth-jobs card. The word-of-mouth ask used to be the one exception (it selected
+    social_voice for everyone); it is now asked per person, so nothing is selected."""
     from app.services import belief_relevance, mechanism_card_service
     from app.services.sa_context import _topics_in
     boilerplate = panel_service.frame_pitch("", "panel")
     assert _topics_in(boilerplate) == set()
-    assert belief_relevance.relevant_dimensions(boilerplate) == ["social_voice"]
+    assert belief_relevance.relevant_dimensions(boilerplate) == []
     mechanism_card_service._cache = None
     assert not [c["id"] for c in mechanism_card_service.load_cards()
                 if mechanism_card_service.topic_matches(c, boilerplate)]
