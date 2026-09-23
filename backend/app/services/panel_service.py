@@ -1665,15 +1665,15 @@ STOCK_PROBES = (
 
 
 def _frame_as_decision(text: str, probes: Optional[List[str]], operator_context: str) -> str:
-    # Wording kept free of subject words (see test_the_framing_itself_names_no_subject):
-    # boilerplate must not pull topics, beliefs or cards of its own. No list of example
-    # decisions: with one, 41 of 72 answers copied "wait and see". Few asks and a hard
-    # length: four questions and a buried "2-5 sentences" rule still gave 130-word answers.
-    # (Both tested side by side, scripts/out/fix4_ab.)
-    framed = (
-        f"You hear about this: {text}\n"
-        "What would you do about it, if anything, and why? \"Nothing\" is a fine answer."
-    )
+    # The founder's words are the question, as written. Our own "What would you do about
+    # it, if anything, and why?" used to sit on top: personas answered ours instead of
+    # "would you subscribe?". On scripts/sameness_benchmark.py (144 answers a run),
+    # dropping it changed nothing measurable when the pitch asks a question, and when it
+    # does not, the room's stances spread from 0.32 to 0.62 with answers still ~50 words.
+    # The cost: more answers open on the price (41 -> 57 of 144) on question-less pitches.
+    # A hard length stays: four questions and a buried "2-5 sentences" rule once gave
+    # 130-word answers (scripts/out/fix4_ab).
+    framed = text
     block = build_operator_context_block(operator_context)
     if block:
         framed = block.lstrip("\n") + "\n\n" + framed

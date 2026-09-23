@@ -27,13 +27,22 @@ def test_off_by_default_the_framing_is_unchanged(monkeypatch):
     assert "What would you do about it" not in framed
 
 
-def test_it_asks_for_a_decision_in_a_few_sentences(monkeypatch):
+def test_the_founders_words_are_the_question(monkeypatch):
+    # Nothing of ours is put in front of or after the pitch but the length rule: our
+    # own "What would you do about it?" used to compete with "would you subscribe?".
+    _on(monkeypatch)
+    asked = "A learning app for R150 a month. Would you subscribe?"
+    framed = panel_service.frame_pitch(asked, "panel")
+    assert framed.startswith(asked)
+    assert framed == asked + "\nAnswer in at most 3 short sentences, under 60 words, in your own words."
+
+
+def test_it_keeps_answers_short(monkeypatch):
     _on(monkeypatch)
     framed = panel_service.frame_pitch(PITCH, "panel")
     assert PITCH in framed
-    assert "What would you do about it, if anything, and why?" in framed
-    assert '"Nothing" is a fine answer.' in framed
     assert "at most 3 short sentences, under 60 words" in framed
+    assert "What would you do about it" not in framed and "You hear about this" not in framed
     assert "don't like" not in framed and "honest reaction" not in framed and "For example" not in framed
 
 
