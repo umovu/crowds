@@ -418,3 +418,44 @@ def test_hardship_does_not_move_the_share_living_with_a_learner():
 def test_a_persona_without_the_fact_skips_the_rungs_that_need_it():
     pool, quality = hh.match_pool(_split_pool(), _persona(1), hh._DONOR_RUNGS)
     assert "hard" not in quality and "emp" not in quality
+
+
+# ── Filled facts reach the persona's prompt ──────────────────────────────────
+# The four fields had no prompt wording as circumstance rows, so persona_facts
+# skipped them: they steered cards and the room picker, and the persona itself
+# never heard them. Medical aid reached 147 of 375 prompts on a clinic pitch
+# (only the measured ones); now 363.
+
+def _facts(persona, pitch):
+    from app.services import persona_facts
+    return {f["field"]: f["line"] for f in persona_facts.picked_facts(
+        {"source_entity_type": "library_persona", **persona}, pitch)}
+
+
+def test_filled_facts_are_said_to_the_persona():
+    persona = {"circumstances": [
+        _row("learners_in_household", "2", "weak"),
+        _row("ghs_role", "guardian_parent", "weak"),
+        _row("learner_fee_bands", "R20 001–R40 000 per year", "weak"),
+        _row("medical_aid", "True", "strong")]}
+    school = _facts(persona, "An app for parents about their child's school fees.")
+    assert school["learners_in_household"] == "Learners at school in your household: 2."
+    assert school["ghs_role"] == "You are a parent with children at school."
+    assert "R20 001–R40 000 per year" in school["learner_fee_bands"]
+    health = _facts(persona, "A clinic nurse visit, no medical aid needed.")
+    assert health["medical_aid"] == "You have medical aid."
+
+
+def test_no_children_is_said_too_so_none_are_invented():
+    facts = _facts({"circumstances": [_row("learners_in_household", "0", "weak")]},
+                   "A new phone contract.")
+    assert facts["learners_in_household"] == "Learners at school in your household: 0."
+
+
+def test_a_measured_answer_is_said_instead_of_the_filled_one():
+    from app.services import persona_facts
+    persona = {"source_entity_type": "library_persona", "medical_aid": False,
+               "circumstances": [_row("medical_aid", "True", "strong")]}
+    lines = [f["line"] for f in persona_facts.picked_facts(persona, "A clinic visit, no medical aid needed.")]
+    assert "You have no medical aid." in lines
+    assert "You have medical aid." not in lines

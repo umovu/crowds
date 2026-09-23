@@ -6,6 +6,20 @@ import sys
 import pytest
 
 
+@pytest.fixture(autouse=True)
+def _typed_readers_off(monkeypatch):
+    """No test reaches the typed (Jev) reader unless it turns it on itself.
+
+    Config loads the repo .env at import, and a developer's .env turns the readers on
+    (FUB_TYPED_SUBJECTS, FUB_TYPED_CARDS). Left on, tests called the live API: slow,
+    billed, and non-deterministic — test_query_context failed on it for weeks, and
+    card-routing tests saw cards the reader added. Tests of the readers set the flag
+    and stub the client themselves.
+    """
+    monkeypatch.setenv("FUB_TYPED_SUBJECTS", "0")
+    monkeypatch.setenv("FUB_TYPED_CARDS", "0")
+
+
 def _is_stub(module) -> bool:
     """A module a test built by hand (types.ModuleType), not one loaded from a file."""
     return not getattr(module, "__file__", None)

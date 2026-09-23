@@ -250,8 +250,12 @@ def test_a_whatsapp_panel_prompt_says_what_the_phone_can_do(facts_on, monkeypatc
 
 def test_never_answers_read_as_plain_sentences():
     circumstances = SCHEMA["circumstance_row"]["fields"]
+    def sayings(entry):
+        say = (entry.get("prompt") or {}).get("say") or {}
+        # A template ("... {value}.") has no per-answer wording to check.
+        return say.values() if isinstance(say, dict) else []
     awkward = [f"{field}: {text}" for field, entry in circumstances.items()
-               for text in ((entry.get("prompt") or {}).get("say") or {}).values()
+               for text in sayings(entry)
                if text.rstrip(".").endswith(" never")]
     assert not awkward, awkward
 

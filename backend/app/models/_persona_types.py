@@ -374,6 +374,9 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
                            'source': {'survey': 'ghs_2025',
                                       'items': ['edu_attend', 'edu_edui', 'age']},
                            'optional': True,
+                           'prompt': {'core': True,
+                                      'say': 'Learners at school in your household: {value}.',
+                                      'replaced_by': 'learners_in_household'},
                            'note': 'School-system learners aged 6-18 in the household; 4 means '
                                    'four or more. Imputed from a matched real GHS adult '
                                    '(scripts/add_ghs_household.py), never measured on this '
@@ -382,6 +385,12 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
  'ghs_role': {'values': ['learner', 'guardian_parent', 'gogo_guardian'],
               'source': {'survey': 'ghs_2025', 'items': ['hhc_relationship']},
               'optional': True,
+              'prompt': {'core': True,
+                         'say': {'learner': 'You are a school learner.',
+                                 'guardian_parent': 'You are a parent with children at school.',
+                                 'gogo_guardian': 'You are a grandparent raising grandchildren '
+                                                  'who are at school.'},
+                         'replaced_by': 'ghs_role'},
               'note': "Only written when it applies. guardian_parent covers the head's own "
                       "adult child whose learner is the head's grandchild, always graded weak. "
                       'Imputed from a matched real GHS adult (scripts/add_ghs_household.py), '
@@ -405,6 +414,10 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
                                   'More than R80 000 per year'],
                        'source': {'survey': 'ghs_2025', 'items': ['edu_totfees']},
                        'optional': True,
+                       'prompt': {'about': ['schooling'],
+                                  'say': 'School fees for the learners in your household: '
+                                         '{value}.',
+                                  'replaced_by': 'learner_fee_bands'},
                        'note': 'The dearest annual fee band a learner in the household pays. '
                                'Imputed from a matched real GHS adult '
                                '(scripts/add_ghs_household.py), never measured on this '
@@ -413,6 +426,10 @@ CIRCUMSTANCES = {'lived_poverty': {'values': ['none', 'low', 'moderate', 'high']
  'medical_aid': {'values': ['True', 'False'],
                  'source': {'survey': 'ghs_2025', 'items': ['hlt_medi']},
                  'optional': True,
+                 'prompt': {'about': ['health'],
+                            'say': {'True': 'You have medical aid.',
+                                    'False': 'You have no medical aid.'},
+                            'replaced_by': 'medical_aid'},
                  'note': 'Covered by a medical aid scheme. Imputed from a matched real GHS '
                          'adult (scripts/add_ghs_household.py), never measured on this '
                          'persona: the row carries pool, share and grade. A value on the '
