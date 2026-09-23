@@ -112,11 +112,20 @@ def test_circumstances_match_the_adapter():
     # a row-level source, not a second survey for the field.
     from_ghs = {f: v["values"] for f, v in CIRCUMSTANCES.items()
                 if v["source"]["survey"] in ("ghs_2025", "qlfs_2026_q1")}
-    assert set(from_ghs) == {"metro", "dwelling", "rdp_housing"}
+    # The household pass (add_ghs_household) writes children at school and medical
+    # aid off the same survey, as optional rows.
+    household = {"learners_in_household", "ghs_role", "learner_fee_bands", "medical_aid"}
+    assert set(from_ghs) == {"metro", "dwelling", "rdp_housing"} | household
+    assert all(CIRCUMSTANCES[f].get("optional") for f in household)
     assert CIRCUMSTANCES["metro"]["source"]["survey"] == "qlfs_2026_q1"
     assert set(from_ghs["dwelling"]) == set(ghs._DWELLING.values())
     assert ghs._TOWNSHIP_DWELLINGS <= set(from_ghs["dwelling"])
     assert set(from_ghs["rdp_housing"]) == {"yes", "no"}
+
+    import add_ghs_household as hh
+    assert set(hh._RELATION_ROLE.values()) <= set(from_ghs["ghs_role"])
+    assert set(from_ghs["learners_in_household"]) == {str(n) for n in range(hh.MAX_LEARNERS + 1)}
+    assert set(from_ghs["medical_aid"]) == {"True", "False"}
 
     assert set(afrobarometer) | set(from_ghs) == set(CIRCUMSTANCES)
 

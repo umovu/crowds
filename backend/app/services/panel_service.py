@@ -60,8 +60,61 @@ DEFAULT_CAST_SIZE = 12
 # representative + tilt path from persona_retrieval.
 # Role checks the fee-split groups share. Built from the persona model, so a wrong
 # archetype name fails at import instead of emptying a group.
-_is_guardian = persona_is(FACT.actor_archetype, "guardian_parent", "gogo_guardian")
 _is_learner = persona_is(FACT.actor_archetype, "learner")
+
+_GUARDIAN_ROLES = ("guardian_parent", "gogo_guardian")
+# Most certain first when a parent group fills its seats.
+CERTAINTY_ORDER = ("measured", "strong", "weak")
+
+
+def guardian_certainty(p: Dict[str, Any], roles=_GUARDIAN_ROLES) -> Optional[str]:
+    """How sure we are this persona raises a learner in one of `roles`, or None.
+
+    Parents used to be found by `actor_archetype` alone, a label only the 31 people
+    built on purpose as guardians carry. Everyone else's household was never asked:
+    the library came mostly from QLFS, which records a person's job and not who they
+    live with. scripts/add_ghs_household.py fills that from matched GHS adults, and
+    each filled row says how sure it is.
+
+      measured  the persona's own survey row says so (archetype or ghs_role)
+      strong    filled from a close match most people like them share
+      weak      filled from a looser match, or a split pool
+    """
+    if p.get("actor_archetype") in roles or p.get("ghs_role") in roles:
+        return "measured"
+    for row in p.get("circumstances") or []:
+        if row.get("field") == "ghs_role" and row.get("value") in roles:
+            return row.get("grade") if row.get("grade") in CERTAINTY_ORDER else "weak"
+    return None
+
+
+def _is_guardian(p: Dict[str, Any]) -> bool:
+    return guardian_certainty(p) is not None
+
+
+def _is_gogo(p: Dict[str, Any]) -> bool:
+    return guardian_certainty(p, ("gogo_guardian",)) is not None
+
+
+def parent_certainty_counts(people: List[Dict[str, Any]]) -> Dict[str, int]:
+    """How many parents or guardians a room holds at each grade. Empty when none."""
+    counts = {grade: 0 for grade in CERTAINTY_ORDER}
+    for p in people:
+        grade = guardian_certainty(p)
+        if grade:
+            counts[grade] += 1
+    return counts if any(counts.values()) else {}
+
+
+def _most_certain_first(pool: List[Dict[str, Any]], segment: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Measured people before strong estimates before weak ones. The sort is stable,
+    so the seeded shuffle still decides order within each grade. A segment without a
+    `certainty` rule is returned untouched, so its rooms are drawn exactly as before."""
+    rank = segment.get("certainty")
+    if not rank:
+        return pool
+    return sorted(pool, key=lambda p: CERTAINTY_ORDER.index(rank(p))
+                  if rank(p) in CERTAINTY_ORDER else len(CERTAINTY_ORDER))
 
 SEGMENTS = {
     "everyone": {
@@ -151,15 +204,17 @@ SEGMENTS = {
         "topics": ['education', 'health'],
         "kind": "who",
         "label": "Parents & guardians",
-        "description": "Household heads with school-age children",
-        "predicate": persona_is(FACT.actor_archetype, "guardian_parent", "gogo_guardian"),
+        "description": "Adults raising school-age children",
+        "predicate": _is_guardian,
+        "certainty": guardian_certainty,
     },
     "gogo_guardians": {
         "topics": ['education', 'health'],
         "kind": "who",
         "label": "Gogo guardians",
         "description": "Grandparents raising learners (~39% of SA)",
-        "predicate": persona_is(FACT.actor_archetype, "gogo_guardian"),
+        "predicate": _is_gogo,
+        "certainty": lambda p: guardian_certainty(p, ("gogo_guardian",)),
     },
     "educators": {
         "topics": ['education'],
@@ -197,6 +252,7 @@ SEGMENTS = {
         "description": "Parents paying up to R4,000/yr fees — tight budgets",
         "predicate": lambda p: _is_guardian(p)
         and _fee_tier(p) == "low_fee",
+        "certainty": guardian_certainty,
     },
     "guardians_high_fee": {
         "topics": ['education'],
@@ -205,6 +261,7 @@ SEGMENTS = {
         "description": "Parents paying over R4,000/yr fees — spend headroom",
         "predicate": lambda p: _is_guardian(p)
         and _fee_tier(p) == "high_fee",
+        "certainty": guardian_certainty,
     },
     "learners_no_fee": {
         "topics": ['education'],
@@ -234,6 +291,7 @@ SEGMENTS = {
         "description": "Parents at no-fee schools — no current fee spend",
         "predicate": lambda p: _is_guardian(p)
         and _fee_tier(p) == "no_fee",
+        "certainty": guardian_certainty,
     },
 
     # ── Groups defined by a MEASURED attitude, not a demographic ─────────────
@@ -377,7 +435,10 @@ def _fee_tier(p: Dict[str, Any]):
 def _fee_bands(p: Dict[str, Any]) -> List[str]:
     """All school-fee bands attached to a persona: a learner's own (fees_band) or a
     guardian's across their learners (learner_fee_bands)."""
-    bands = list(fact_value(p, FACT.learner_fee_bands) or [])
+    held = fact_value(p, FACT.learner_fee_bands) or []
+    # Measured on the persona's own row it is a list; imputed it is one band (the
+    # dearest), and list() on a string would split it into letters.
+    bands = [held] if isinstance(held, str) else list(held)
     if fact_value(p, FACT.fees_band):
         bands.append(fact_value(p, FACT.fees_band))
     return bands
@@ -708,6 +769,9 @@ def _mixed_cast(
         if province:
             pool = [p for p in pool if p.get("province") == province]
         rng.shuffle(pool)
+        if SEGMENTS[seg_id].get("certainty"):
+            # Drawn with pop(), from the end: most certain last, so seated first.
+            pool = _most_certain_first(pool, SEGMENTS[seg_id])[::-1]
         pools[seg_id] = pool
 
     if not any(pools.values()):
@@ -1044,6 +1108,11 @@ def create_session(
         # only place the operator learns the room was scoped at all.
         "place": describe_place(pitch, cast, province=province),
     }
+    certainty = parent_certainty_counts(cast)
+    if certainty:
+        # "12 parents: 4 measured, 6 strong, 2 weak". Most parents in the library are
+        # estimated from a matched survey household, so a room of them has to say so.
+        meta["parent_certainty"] = certainty
     if pointer:
         meta["pointer"] = pointer
         meta["slots"] = dict(slots or {})
@@ -1107,6 +1176,7 @@ def add_segment(session_id: str, segment_id: str,
     # the same add on the same session seats the same people.
     random.Random(meta.get("seed") or 0).shuffle(pool)
     pool = [p for p in pool if p.get("id") not in seated_library_ids]
+    pool = _most_certain_first(pool, SEGMENTS[segment_id])
     if not pool:
         raise ValueError(
             f"No one new from {SEGMENTS[segment_id]['label']} is available"

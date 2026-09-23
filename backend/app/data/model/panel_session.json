@@ -302,6 +302,14 @@
       },
       "nullable": true,
       "when": "optional"
+    },
+    "parent_certainty": {
+      "type": "object",
+      "values": {
+        "type": "integer",
+        "min": 0
+      },
+      "when": "optional"
     }
   },
   "together": [

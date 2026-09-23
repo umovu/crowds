@@ -112,6 +112,12 @@ class CircumstanceRow(DataModel):
     #: it is instead of reading as a fact about this person.
     pool: Optional[int] = None
     share: Optional[float] = None
+    #: Household rows only (scripts/add_ghs_household.py). `strong`: matched on at least
+    #: age and sex, and 60%+ of the pool hold the drawn value. `weak`: anything looser,
+    #: and every likely_parent. Validated on hidden GHS adults: strong 71% right per
+    #: person, weak 53%. A room's SHARE is right either way; this says how far to trust
+    #: the one person.
+    grade: Optional[Literal["strong", "weak"]] = None
 
     @classmethod
     def cross_field_problems(cls, data, label):
@@ -252,6 +258,13 @@ def fact_value(record: Any, fact: str) -> Any:
     if fact in TOPICS:
         rows, key, value = get(record, "attitudes"), "topic", "stance"
     elif fact in CIRCUMSTANCES:
+        # A few facts live in both places: measured on the persona's own survey row
+        # (top level) for some, imputed as a circumstance row for the rest
+        # (scripts/add_ghs_household.py). The measured answer wins, as it does in
+        # mechanism_card_service.situation_facts.
+        measured = get(record, fact)
+        if measured not in (None, "", []):
+            return measured
         rows, key, value = get(record, "circumstances"), "field", "value"
     else:
         return get(record, fact)
