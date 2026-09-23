@@ -263,3 +263,82 @@ def test_the_picker_still_reads_a_measured_guardians_bands():
     persona = {"learner_fee_bands": ["No fees", "R201–R300 per year"]}
     assert ps._fee_bands(persona) == ["No fees", "R201–R300 per year"]
     assert ps._fee_tier(persona) == "low_fee"
+
+
+# ── The room picker's parent groups ──────────────────────────────────────────
+# "Parents & guardians" used to mean actor_archetype == guardian_parent, a label only
+# the 31 people built as guardians carry. It now means anyone known to raise a
+# learner, measured or filled, and a room seats the most certain first.
+
+def _row(field, value, grade):
+    return {"field": field, "value": value, "source": hh.SOURCE, "grade": grade}
+
+
+def _parents():
+    measured = {"id": "m", "actor_archetype": "guardian_parent",
+                "learner_fee_bands": ["R20 001–R40 000 per year"]}
+    strong = {"id": "s", "actor_archetype": "urban_professional", "circumstances": [
+        _row("ghs_role", "guardian_parent", "strong"),
+        _row("learner_fee_bands", "R40 001–R80 000 per year", "strong")]}
+    weak = {"id": "w", "actor_archetype": "civic_moderate", "circumstances": [
+        _row("ghs_role", "guardian_parent", "weak"),
+        _row("learner_fee_bands", "R8 001–R12 000 per year", "weak")]}
+    gogo = {"id": "g", "actor_archetype": "grant_dependent_survivor", "circumstances": [
+        _row("ghs_role", "gogo_guardian", "strong")]}
+    nobody = {"id": "n", "actor_archetype": "unemployed_youth", "circumstances": [
+        _row("learners_in_household", "0", "weak")]}
+    return measured, strong, weak, gogo, nobody
+
+
+def test_certainty_reads_measured_then_filled():
+    from app.services import panel_service as ps
+    measured, strong, weak, gogo, nobody = _parents()
+    assert ps.guardian_certainty(measured) == "measured"
+    assert ps.guardian_certainty({"ghs_role": "gogo_guardian"}) == "measured"
+    assert ps.guardian_certainty(strong) == "strong"
+    assert ps.guardian_certainty(weak) == "weak"
+    assert ps.guardian_certainty(nobody) is None
+    # A filled row with no grade is not trusted as strong.
+    assert ps.guardian_certainty({"circumstances": [
+        {"field": "ghs_role", "value": "guardian_parent"}]}) == "weak"
+
+
+def test_the_gogo_group_takes_grandparents_only():
+    from app.services import panel_service as ps
+    measured, strong, weak, gogo, nobody = _parents()
+    group = ps.SEGMENTS["gogo_guardians"]["predicate"]
+    assert [p["id"] for p in (measured, strong, weak, gogo, nobody) if group(p)] == ["g"]
+
+
+def test_parents_group_now_holds_filled_parents():
+    from app.services import panel_service as ps
+    group = ps.SEGMENTS["guardians"]["predicate"]
+    assert [p["id"] for p in _parents() if group(p)] == ["m", "s", "w", "g"]
+
+
+def test_high_fee_parents_include_a_filled_fee_payer():
+    from app.services import panel_service as ps
+    group = ps.SEGMENTS["guardians_high_fee"]["predicate"]
+    assert {p["id"] for p in _parents() if group(p)} == {"m", "s", "w"}
+
+
+def test_most_certain_are_seated_first():
+    from app.services import panel_service as ps
+    measured, strong, weak, gogo, nobody = _parents()
+    library = ps._FilteredLibrary([weak, strong, measured])
+    for seed in range(5):
+        cast, _ = ps._mixed_cast(["guardians"], 2, seed, None, library)
+        assert [p["id"] for p in cast] == ["m", "s"]
+
+
+def test_a_group_without_a_certainty_rule_draws_exactly_as_before():
+    from app.services import panel_service as ps
+    pool = [{"id": i} for i in range(10)]
+    assert ps._most_certain_first(pool, ps.SEGMENTS["unemployed"]) is pool
+
+
+def test_a_room_reports_how_sure_its_parents_are():
+    from app.services import panel_service as ps
+    assert ps.parent_certainty_counts(list(_parents())) == {
+        "measured": 1, "strong": 2, "weak": 1}
+    assert ps.parent_certainty_counts([_parents()[4]]) == {}

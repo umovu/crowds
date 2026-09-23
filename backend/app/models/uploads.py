@@ -103,6 +103,9 @@ class PanelSession(DataModel):
     pointer: str = Field(default=None, json_schema_extra={'when': 'optional'})
     slots: PanelSessionSlots = Field(default=None, json_schema_extra={'when': 'optional'})
     place: Optional[PanelSessionPlace] = Field(default=None, json_schema_extra={'when': 'optional'})
+    #: How sure the room's parents and guardians are: measured on their own survey row,
+    #: or estimated (strong/weak) from a matched GHS household. Absent with none seated.
+    parent_certainty: Dict[str, Annotated[int, Field(ge=0)]] = Field(default=None, json_schema_extra={'when': 'optional'})
 
 
 class CustomAgentNeedsItem(DataModel):

@@ -94,6 +94,11 @@ _GEOTYPE = {"1": "Urban", "2": "Traditional", "3": "Farms"}
 
 # Widest last. Age and sex are held the longest: whether someone lives with
 # school-age children turns on their age before anything else.
+#
+# Employment was tried as a leading rung, since school fees follow income. On the
+# validation it cut high-fee draws to below-median households only from 42% to 37%
+# (real: 18%) while pulling the high-fee and medical-aid totals 2-3 points off, so it
+# is not here. Income is the real driver and most skeletons do not carry it.
 _RUNGS: List[Tuple[str, List[str]]] = [
     ("prov_geo_race_sex_age", ["province", "geotype", "race", "gender", "age"]),
     ("geo_race_sex_age",      ["geotype", "race", "gender", "age"]),
@@ -395,6 +400,36 @@ def validate(df: pd.DataFrame, n: int = 3000, seed: int = 11) -> None:
         right = sum(w for w, t, d in pairs if t == d) / tw
         chance = real ** 2 + (1 - real) ** 2
         print(f"{'medical aid':<30}{real:>10.1%}{got:>9.1%}{right:>13.1%}{chance:>16.1%}")
+
+    # Fee tier: the fact the Thuto groups pick on. Over R4,000/yr counts as high.
+    def high_fee(band):
+        return bool(band) and _fee_rank(band) > 4000
+    real = sum(w for w, b in zip(weights, test["fee_band"]) if high_fee(b)) / w_total
+    got = sum(w for w, r in zip(weights, results) if high_fee(r["donor"]["fee_band"])) / w_total
+    right = sum(w for w, b, r in zip(weights, test["fee_band"], results)
+                if high_fee(b) == high_fee(r["donor"]["fee_band"])) / w_total
+    chance = real ** 2 + (1 - real) ** 2
+    print(f"{'pays high school fees':<30}{real:>10.1%}{got:>9.1%}{right:>13.1%}{chance:>16.1%}")
+
+    # Does a high-fee draw land on households that could pay it? Share of high-fee
+    # people whose OWN household income is below the median, imputed vs real.
+    income = pd.to_numeric(test["fin_reqinc"], errors="coerce").reset_index(drop=True)
+    income = income.where(income < g._INCOME_SENTINEL)
+    median = income.median()
+
+    def below_median_share(indices):
+        known = [i for i in indices if income.iloc[i] == income.iloc[i]]
+        poor = [i for i in known if income.iloc[i] < median]
+        return len(poor), len(known)
+
+    fees = list(test["fee_band"])
+    imp_poor, imp_known = below_median_share(
+        [i for i, r in enumerate(results) if high_fee(r["donor"]["fee_band"])])
+    real_poor, real_known = below_median_share([i for i, b in enumerate(fees) if high_fee(b)])
+    if imp_known and real_known:
+        print(f"\nHigh-fee people in below-median-income households: "
+              f"imputed {imp_poor}/{imp_known} ({imp_poor / imp_known:.0%}), "
+              f"real {real_poor}/{real_known} ({real_poor / real_known:.0%})")
 
     print("\nBY GRADE — lives with a learner, person-level")
     for grade in ("strong", "weak"):
