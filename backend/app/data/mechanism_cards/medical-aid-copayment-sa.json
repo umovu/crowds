@@ -1,0 +1,146 @@
+{
+  "id": "medical-aid-copayment-sa",
+  "subject": "people with medical aid who still pay extra out of their own pocket: co-payments, savings running out, preferred pharmacies and doubts about generics",
+  "citation": [
+    "Mpanza NM, Bradley H, Laing R (2019). Reasons why insured consumers co-pay for medicines at retail pharmacies in Pretoria, South Africa. Afr J Prim Health Care Fam Med 11(1):a1878. doi:10.4102/phcfm.v11i1.1878"
+  ],
+  "segment_tags": [
+    "urban_professional",
+    "affluent_urban_household",
+    "comfortable_household",
+    "civic_moderate"
+  ],
+  "claims": [
+    {
+      "text": "Co-payments are confusing and unexplained, so an unexplained charge gets accepted or paid under confusion rather than questioned",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P5",
+        "P6",
+        "P7",
+        "P11",
+        "P12"
+      ],
+      "evaluative_rules": [
+        "Treat an unexplained charge as something to accept and pay, not something to interrogate"
+      ],
+      "objections": [
+        "Why am I paying extra when I already pay monthly?"
+      ],
+      "vocabulary": [
+        "co-payment",
+        "threshold"
+      ]
+    },
+    {
+      "text": "Day-to-day benefits run through a savings account that depletes, so a purchase is judged by whether it draws on remaining savings or triggers out-of-pocket payment",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P9"
+      ],
+      "evaluative_rules": [
+        "Judge a medicine by whether savings still cover it or an outstanding amount falls to you"
+      ],
+      "objections": [
+        "Will this come out of my savings or will I have to co-pay?"
+      ],
+      "vocabulary": [
+        "savings account",
+        "day-to-day benefits"
+      ]
+    },
+    {
+      "text": "Scheme-designated or corporate pharmacies are the appropriate place to fill prescriptions, so availability at the preferred pharmacy decides the purchase",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P13",
+        "P14"
+      ],
+      "evaluative_rules": [
+        "Judge a pharmacy by whether the scheme prefers it or it reliably stocks the prescription"
+      ],
+      "objections": [
+        "Is this available at the pharmacy my scheme told me to use?"
+      ],
+      "vocabulary": [
+        "preferred pharmacy",
+        "corporate pharmacies"
+      ]
+    },
+    {
+      "text": "Generics are suspected of being inferior, weaker, slower, or impure because they are made by tweaking the manufacturing process",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a medicine by originator quality, not by price"
+      ],
+      "objections": [
+        "Is this generic as good as the original?"
+      ],
+      "vocabulary": [
+        "generics",
+        "originators"
+      ]
+    },
+    {
+      "text": "A familiar pharmacist is a caring, reliable advisor because doctors may be guessing, so the pharmacist's recommendation or established relationship decides the purchase",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Trust a pharmacist who knows you and your family over an unfamiliar one"
+      ],
+      "objections": [
+        "Does my pharmacist recommend this?"
+      ],
+      "vocabulary": [
+        "second opinion",
+        "my pharmacy"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa",
+  "year_range": null,
+  "confidence": "qualitative interviews, single urban region, fieldwork year not specified — mechanisms durable, magnitudes unknown",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "applies_when": [
+    {
+      "medical_aid": [
+        "True"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "medical aid",
+    "pharmacy",
+    "pharmacies",
+    "medicine",
+    "medicines",
+    "medication",
+    "prescription",
+    "co-payment",
+    "generic",
+    "generics",
+    "chronic medication",
+    "clinic",
+    "doctor"
+  ],
+  "year_note": "Published 2019; the paper does not state the fieldwork dates."
+}

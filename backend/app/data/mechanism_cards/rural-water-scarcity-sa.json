@@ -1,0 +1,143 @@
+{
+  "id": "rural-water-scarcity-sa",
+  "subject": "living with water shortages in a rural village: buying water, boreholes, tanker queues and giving up on the municipality",
+  "citation": [
+    "Seretlo-Rangata ML, Sodi T, Govender S (2025). Psychological effects of water scarcity on community members: a case study of Lephalale municipality, Limpopo province, South Africa. Frontiers in Psychology 16:1537992. doi:10.3389/fpsyg.2025.1537992"
+  ],
+  "segment_tags": [
+    "grant_dependent_survivor",
+    "communal_farmer",
+    "civic_moderate"
+  ],
+  "claims": [
+    {
+      "text": "Extreme scarcity is the baseline: when water is absent for days at a time, any offer is judged against an unbearable, hopeless situation rather than against normal service.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2"
+      ],
+      "evaluative_rules": [
+        "Judge any water solution by whether it relieves unbearable scarcity, not by convenience or preference"
+      ],
+      "objections": [
+        "Will this actually end the days without water, or just add another promise?"
+      ],
+      "vocabulary": [
+        "major water shortage",
+        "how are we supposed to live like this"
+      ]
+    },
+    {
+      "text": "Water access is a money problem: because municipal supply is unreliable, households are forced into costly private alternatives, so any solution is weighed by affordability and the private expenditure it can replace.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "evaluative_rules": [
+        "Weigh a water solution by what it costs against what people are already forced to spend privately"
+      ],
+      "objections": [
+        "Will this remove the need to pay for water from borehole owners?"
+      ],
+      "vocabulary": [
+        "we didn't have a choice",
+        "what choice do people have"
+      ]
+    },
+    {
+      "text": "Scarcity is shameful: because people cannot wash clothes and must queue publicly at tanks, water access is evaluated through dignity and stigma, not just physical need.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P6",
+        "P7"
+      ],
+      "evaluative_rules": [
+        "Judge a water solution by whether it restores dignity and removes public embarrassment"
+      ],
+      "objections": [
+        "Will this stop me from having to queue in public and go without washing?"
+      ],
+      "vocabulary": [
+        "how embarrassing is that",
+        "it's a shame on us"
+      ]
+    },
+    {
+      "text": "Promises are already broken: because shortages have been reported repeatedly while infrastructure stays behind population growth, any new offer is read through distrust of promises and expectations of unfairness.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P8",
+        "P9",
+        "P10",
+        "P11"
+      ],
+      "evaluative_rules": [
+        "Judge a water solution by whether it delivers fairly to all villages, not by what authorities promise"
+      ],
+      "objections": [
+        "Why should I believe this promise when the municipality has already failed us?"
+      ],
+      "vocabulary": [
+        "it's disappointing",
+        "it's unfair"
+      ]
+    },
+    {
+      "text": "Scarce water is contested: because people compete at tanks and communal taps, including with neighboring villages, any new solution is read through conflict risk and whether allocation will be fair.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a water solution by whether it prevents fighting and guarantees fair sharing"
+      ],
+      "objections": [
+        "Will this stop people from stealing taps and using pressure pumps to take more than their share?"
+      ],
+      "vocabulary": [
+        "we don't share water equally",
+        "this is not fair at all"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Limpopo",
+  "year_range": "2020-2021",
+  "confidence": "qualitative case study, single municipality, fieldwork around 2014 — mechanisms durable, magnitudes unknown",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "applies_when": [
+    {
+      "geotype": [
+        "Traditional",
+        "Farms"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "water",
+    "taps",
+    "borehole",
+    "boreholes",
+    "water tanker",
+    "water supply",
+    "water cuts",
+    "drought",
+    "municipality"
+  ],
+  "year_note": "Interviews October 2020 to April 2021, Ga-Seleka village, Lephalale (Limpopo); participants aged 40-60."
+}

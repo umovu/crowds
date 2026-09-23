@@ -1,0 +1,182 @@
+{
+  "id": "municipal-waste-failure-sa",
+  "subject": "what households do when the municipality stops collecting rubbish, and how comfortable and struggling households cope differently",
+  "citation": [
+    "Kalina M, Makwetu N, Tilley E (2023). 'The rich will always be able to dispose of their waste': a view from the frontlines of municipal failure in Makhanda, South Africa. Environment, Development and Sustainability. doi:10.1007/s10668-023-03363-1"
+  ],
+  "segment_tags": [
+    "affluent_urban_household",
+    "comfortable_household",
+    "grant_dependent_survivor",
+    "unemployed_youth",
+    "civic_moderate"
+  ],
+  "claims": [
+    {
+      "text": "Unreliable collection breeds private coping: when the municipality fails to show up, people store waste in yards and bins or hire private collectors, and any new service is judged by whether it reproduces the divide where the rich can always dispose of their waste.",
+      "needs": [
+        {
+          "lived_poverty": [
+            "none",
+            "low"
+          ]
+        }
+      ],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P7",
+        "P8",
+        "P9",
+        "P17"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether it reaches everyone equally, not by whether it works for those who can pay"
+      ],
+      "objections": [
+        "Will this actually reach me, or only the people who can pay for it?"
+      ],
+      "vocabulary": [
+        "deal with it as it comes",
+        "the rich will always be able to dispose of their waste"
+      ]
+    },
+    {
+      "text": "Without safe spaces, containers, or transport, burning feels preferable to dumping but still unsafe and time-consuming, so people fall back on dumping and burning, and any new product is read against a landscape of normalised dumping and filth.",
+      "needs": [
+        {
+          "lived_poverty": [
+            "moderate",
+            "high"
+          ]
+        }
+      ],
+      "chain_id": "C2",
+      "passages": [
+        "P10",
+        "P19",
+        "P20",
+        "P12",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a disposal option by whether it is safe and reachable without a car or money, not by whether it is ideal"
+      ],
+      "objections": [
+        "Do I have a safe place to use this, or will I still end up dumping or burning?"
+      ],
+      "vocabulary": [
+        "no safe spaces",
+        "dumping sites"
+      ]
+    },
+    {
+      "text": "Workers are not the root cause: unpaid salaries and internal grievances sit behind the failure, so residents blame a corrupt, morally bankrupt administration, expect continued failure, and read any new product as a symptom of that corruption rather than a credible fix.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P5",
+        "P6",
+        "P2"
+      ],
+      "evaluative_rules": [
+        "Judge a solution by whether it addresses the corrupt administration, not by whether it blames the workers"
+      ],
+      "objections": [
+        "Is this a real fix, or just another symptom of the same corrupt administration?"
+      ],
+      "vocabulary": [
+        "corrupt administration",
+        "morally bankrupt municipality"
+      ]
+    },
+    {
+      "text": "Filth becomes normal: when uncollected waste is scattered by animals and seen as a health risk to children, people stop caring about proper disposal and resign themselves to living in filth, so any new product is read against that baseline of normalised filth.",
+      "needs": [
+        {
+          "lived_poverty": [
+            "moderate",
+            "high"
+          ]
+        }
+      ],
+      "chain_id": "C4",
+      "passages": [
+        "P11",
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it can cut through resignation, not by whether it assumes people still care about proper disposal"
+      ],
+      "objections": [
+        "Will this matter when filth has already become normal?"
+      ],
+      "vocabulary": [
+        "living in filth",
+        "don't care anymore"
+      ]
+    },
+    {
+      "text": "Unequal prioritisation is the lens: because the municipality starts with rich areas where ratepayers are seen as more consistent, residents judge service delivery as unequal despite shared problems, and any new product is read through that lens of unequal prioritisation.",
+      "needs": [
+        {
+          "lived_poverty": [
+            "moderate",
+            "high"
+          ]
+        }
+      ],
+      "chain_id": "C5",
+      "passages": [
+        "P17",
+        "P18",
+        "P19"
+      ],
+      "evaluative_rules": [
+        "Judge a service by who gets prioritised first, not by whether problems are shared"
+      ],
+      "objections": [
+        "Will the rich areas get this first while we are left behind?"
+      ],
+      "vocabulary": [
+        "prioritising",
+        "rate payers"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Makhanda (Grahamstown), Eastern Cape, South Africa",
+  "year_range": "2021",
+  "confidence": "ethnographic, single municipality, fieldwork in Makhanda — mechanisms durable, magnitudes unknown",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "applies_when": [
+    {
+      "geotype": [
+        "Urban"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "waste",
+    "rubbish",
+    "refuse",
+    "garbage",
+    "bins",
+    "dumping",
+    "recycling",
+    "refuse removal",
+    "municipal",
+    "service delivery"
+  ],
+  "year_note": "Interviews June to October 2021, Makhanda (Eastern Cape)."
+}
