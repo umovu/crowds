@@ -1681,9 +1681,8 @@ def _frame_as_decision(text: str, probes: Optional[List[str]], operator_context:
     if extra:
         # One extra ask at most: each one adds sentences.
         framed += f"\nAlso: {extra[0]}"
-    # Still asked, so word of mouth stays countable (objections.word_of_mouth), but no
-    # longer an invitation to name someone.
-    framed += "\nIf you would tell anyone about it, say who."
+    # No word-of-mouth ask of our own: only the founder's words ask it
+    # (mode_specs.pitch_asks_word_of_mouth).
     framed += (f"\nAnswer in at most {SHORT_ANSWER_SENTENCES} short sentences, under 60 words, "
                "in your own words.")
     return framed
@@ -1737,10 +1736,9 @@ def frame_pitch(pitch: str, mode: str, probes: Optional[List[str]] = None, opera
     active = [p for p in (probes or []) if (p or "").strip()]
     if active:
         framed += "\n\nAlso address these specifically:\n" + "\n".join("- " + p for p in active)
-    # Word of mouth is only countable if it is asked. objections.word_of_mouth reads
-    # the answer and counts it only where the person's measured social_voice backs
-    # it — for a product, and just as much for a service-delivery question.
-    framed += "\n\nLast: would you tell anyone about this? If so, who, and what would you say?"
+    # No word-of-mouth ask of our own. Appended here it went to every pitch and every
+    # answer ended on it; now it is asked only when the founder's words ask it
+    # (mode_specs.pitch_asks_word_of_mouth), and the report counts it only then.
     return framed
 
 

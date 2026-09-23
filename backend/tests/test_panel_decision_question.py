@@ -52,9 +52,10 @@ def test_stock_probes_match_the_study_reader():
                                           study_reader.LENS_FALLBACK_PROBES["land"][0]["question"])
 
 
-def test_word_of_mouth_is_still_asked(monkeypatch):
+def test_we_do_not_ask_word_of_mouth_ourselves(monkeypatch):
+    # Asked only when the founder's words ask it (tests/test_word_of_mouth_on_request.py).
     _on(monkeypatch)
-    assert "If you would tell anyone about it, say who." in panel_service.frame_pitch(PITCH, "panel")
+    assert "tell anyone" not in panel_service.frame_pitch(PITCH, "panel")
 
 
 def test_the_decision_wording_names_no_subject(monkeypatch):

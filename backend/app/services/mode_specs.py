@@ -550,6 +550,25 @@ def decision_question_on() -> bool:
     return os.environ.get("PANEL_DECISION_QUESTION", "0").strip().lower() in ("1", "true", "yes", "on")
 
 
+# ── Word of mouth: only when the founder asks ───────────────────────────────
+# Every pitch used to end with our own "would you tell anyone about it?", so every
+# answer ended on it: on the R150 clinic panel 12 of 12 closed on who they'd tell,
+# with the same closing phrases across people, on a pitch that never asked. It also
+# put "tell anyone" in the room's shared question, where it read as a social_voice
+# subject for every persona. Now nothing is added: if the founder's own pitch or
+# follow-up asks it, every persona reads it there, and the report counts it.
+_WORD_OF_MOUTH_CUES = re.compile(
+    r"\b(?:would you tell|will you tell|tell (?:anyone|others|people|your friends|friends|"
+    r"your family|family|someone)|would you recommend|recommend (?:it|this|us)|"
+    r"word of mouth|spread the word|pass it on|share (?:it|this) with)\b",
+    re.IGNORECASE)
+
+
+def pitch_asks_word_of_mouth(text: str) -> bool:
+    """True when the founder's own words ask whether people would pass it on."""
+    return bool(_WORD_OF_MOUTH_CUES.search(text or ""))
+
+
 def trim_to_sentences(text: str, limit: int) -> str:
     """The first `limit` whole sentences of `text`; unchanged when it is already within the limit."""
     body = (text or "").strip()

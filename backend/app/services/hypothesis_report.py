@@ -36,6 +36,7 @@ from ..utils.logger import get_logger
 from . import data_model
 from . import objections
 from . import panel_service
+from .mode_specs import pitch_asks_word_of_mouth
 
 logger = get_logger("fub.hypothesis_report")
 
@@ -150,6 +151,14 @@ def facts(session_id: str) -> Dict[str, Any]:
 
     rounds = panel_service.list_rounds(session_id, include_results=True)
     last = (rounds[-1].get("result") or {}) if rounds else {}
+    # Word of mouth is counted only when the founder asked it (the pitch, or a
+    # follow-up folded into the round's framed text). Unasked, a count of who said
+    # they'd tell someone measures nothing but chance, so it reads as nobody heard.
+    asked_text = " ".join([meta.get("pitch", "")] +
+                          [r.get("framed_pitch") or r.get("pitch") or "" for r in rounds])
+    word_of_mouth = (objections.word_of_mouth(responses, aligned)
+                     if pitch_asks_word_of_mouth(asked_text)
+                     else {"would_tell": 0, "would_warn": 0, "heard": 0})
 
     return {
         "session_id": session_id,
@@ -168,7 +177,7 @@ def facts(session_id: str) -> Dict[str, Any]:
         "movement": _movement(session_id),
         "walls": objections.top_walls(responses, aligned, limit=MAX_WALLS),
         "pulls": objections.top_pulls(responses, aligned, limit=MAX_WALLS),
-        "word_of_mouth": objections.word_of_mouth(responses, aligned),
+        "word_of_mouth": word_of_mouth,
         "conditions": _conditions(results),
         "by_segment": last.get("by_segment") or [],
         "room_read": last.get("summary_narrative") or "",
