@@ -1,0 +1,179 @@
+{
+  "id": "going-private-when-the-state-fails-sa",
+  "citation": [
+    "Eakin H, Methner N, Shearing C (2026). Urban affluence and the evolving social contract: insights from adaptation to drought in South Africa. Regional Environmental Change. doi:10.1007/s10113-026-02608-9",
+    "Yeni S (2023). The community behind the gates: social cohesion and ubuntu in residential gated communities in Greenstone Hill, Johannesburg. PhD thesis, University of Johannesburg"
+  ],
+  "segment_tags": [
+    "affluent_urban_household",
+    "comfortable_household",
+    "urban_professional"
+  ],
+  "claims": [
+    {
+      "text": "Where rates and taxes are read as misappropriated, high payment generates an entitlement that the municipality owes rapid preferential service, so loud mobilisation is met with faster response and any new collective policy is read as something the state must manage on the payer's behalf and protect them from.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P28",
+        "P9",
+        "P8",
+        "P4",
+        "P6",
+        "P7",
+        "P2",
+        "P3"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether the rates paid buy rapid, preferential treatment"
+      ],
+      "objections": [
+        "Why should I carry the cost of a policy that the City should be running for me?"
+      ],
+      "vocabulary": [
+        "rates",
+        "misappropriated",
+        "protect them"
+      ]
+    },
+    {
+      "text": "Self-supply through boreholes and tanks insulates a household from restrictions, so it stops treating collective restrictions as binding on itself, disengages from the shared saving effort, and reads any new collective policy as not its problem while pursuing off-grid autonomy instead.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P11",
+        "P12",
+        "P17",
+        "P20",
+        "P21",
+        "P22",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a collective restriction by whether you are self-supplied and therefore outside it"
+      ],
+      "objections": [
+        "Is it really my problem when I am not drawing on the system?"
+      ],
+      "vocabulary": [
+        "borehole",
+        "sovereignty",
+        "off the grid"
+      ]
+    },
+    {
+      "text": "Shared scarcity and fear of running dry make following the rules a matter of everyone's benefit, so residents conserve and answer coordinated municipal messaging as one team, and read a new policy as a partnership between residents and government rather than a service delivered to them.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P13",
+        "P14",
+        "P15",
+        "P29",
+        "P27",
+        "P19",
+        "P26",
+        "P25"
+      ],
+      "evaluative_rules": [
+        "Judge a policy by whether it treats residents and government as partners sharing one scarce resource"
+      ],
+      "objections": [
+        "Does this ask everyone to play their part, or does it let some opt out?"
+      ],
+      "vocabulary": [
+        "Team Cape Town",
+        "collective",
+        "play your part"
+      ]
+    },
+    {
+      "text": "Where crime is read as rampant and the state as unable to control it, safety is treated as something only gates and enforced estate rules can deliver, so households trade space and money for security and order, and read any new policy or product by whether it preserves that safety, order and property standard.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P33",
+        "P36",
+        "P37",
+        "P34",
+        "P35",
+        "P38",
+        "P39"
+      ],
+      "evaluative_rules": [
+        "Judge a product or policy by whether it preserves safety, order and property standards"
+      ],
+      "objections": [
+        "Does this keep the space safe and orderly, or does it let the outside in?"
+      ],
+      "vocabulary": [
+        "safe and secure community",
+        "rules",
+        "peace of mind"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Cape Town (southern suburbs) and Greenstone Hill, Johannesburg, South Africa",
+  "year_range": "2018-2023",
+  "confidence": "Two small qualitative South African studies: 11 homeowner interviews in affluent Cape Town suburbs (drought water) and residents of two Johannesburg gated estates (security). For water and security the reasoning was heard; for power and solar it is an untested extension of the same reasoning, not a finding. Magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "subject": "comfortable city homeowners paying to supply for themselves what the municipality or state fails to deliver: water tanks and boreholes, private security and estates, and by extension backup power",
+  "borrowed_from": "Cape Town homeowners on private water during the drought, and Johannesburg estate residents on paying for gates and guards. The same reasoning (pay to go private because the state fails) is carried over to backup power and solar, which no South African interview study covers for comfortable homes.",
+  "economic_tags": [
+    "moderate",
+    "loose"
+  ],
+  "year_note": "Cape Town drought interviews look back on 2017-2018; the Johannesburg estate fieldwork ran up to 2023.",
+  "applies_when": [
+    {
+      "geotype": [
+        "Urban"
+      ],
+      "lived_poverty": [
+        "none",
+        "low"
+      ],
+      "housing_tenure": [
+        "own",
+        "bond"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "water",
+    "borehole",
+    "tank",
+    "water tank",
+    "drought",
+    "security",
+    "armed response",
+    "estate",
+    "gated",
+    "crime",
+    "solar",
+    "inverter",
+    "generator",
+    "backup power",
+    "power",
+    "electricity",
+    "load shedding",
+    "outage",
+    "outages",
+    "rates",
+    "municipality",
+    "council",
+    "safety",
+    "safe",
+    "patrol",
+    "panic button",
+    "neighbourhood watch",
+    "guard",
+    "guards",
+    "alarm"
+  ]
+}

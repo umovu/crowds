@@ -1,0 +1,170 @@
+{
+  "id": "black-tax-obligation-sa",
+  "citation": [
+    "Sibiya BP (2018). Black tax and the vulnerability of the emerging middle class. MBA research report, University of Pretoria (GIBS)"
+  ],
+  "segment_tags": [
+    "urban_professional",
+    "comfortable_household",
+    "affluent_urban_household"
+  ],
+  "claims": [
+    {
+      "text": "Because parents sacrificed and the family endured hardship to get one where one is, the debt is felt as guilt rather than as a stated obligation, so giving to family continues even when it is not required, and any new product or policy is read through whether it relieves family need.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P9",
+        "P10",
+        "P4",
+        "P5",
+        "P11",
+        "P7",
+        "P12",
+        "P13"
+      ],
+      "evaluative_rules": [
+        "Weigh a purchase by whether it relieves family need before it serves you"
+      ],
+      "objections": [
+        "Does this help my family, or does it only help me?"
+      ],
+      "vocabulary": [
+        "guilty conscience",
+        "I owe her"
+      ]
+    },
+    {
+      "text": "Because relatives lack income and basic needs, being prosperous or comfortable while family suffers is not possible, so family support is prioritised over personal consumption and investment, and a new product or policy is treated as legitimate only if it does not appear to benefit the individual at the family's expense.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P2",
+        "P7",
+        "P6",
+        "P13",
+        "P14",
+        "P12",
+        "P15"
+      ],
+      "evaluative_rules": [
+        "Judge a purchase by whether it can be justified while family is in need"
+      ],
+      "objections": [
+        "How would it look if I spent on this while my siblings cannot afford school fees?"
+      ],
+      "vocabulary": [
+        "sleeping hungry",
+        "cannot be seen going on holiday"
+      ]
+    },
+    {
+      "text": "Because support is embedded in an Ubuntu worldview and an extended family structure, it is lived as a shared way of life rather than a communicated obligation or tax, so contribution happens automatically and unspoken, and a new product or policy is read through whether it fits the collective family setup rather than individual gain.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P16",
+        "P17",
+        "P18",
+        "P3",
+        "P8"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it fits the larger family setup, not the individual"
+      ],
+      "objections": [
+        "Does this fit how our family does things, or does it pull me out of it?"
+      ],
+      "vocabulary": [
+        "Ubuntu",
+        "way of life"
+      ]
+    },
+    {
+      "text": "Because birth order and family tradition place responsibility automatically on the first born or the successful member, spending continues on siblings' education until they are independent, and a new product or policy is read as a means to discharge that role obligation.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it helps discharge the role obligation to dependants"
+      ],
+      "objections": [
+        "Does this help me get my younger brother independent?"
+      ],
+      "vocabulary": [
+        "first born",
+        "tradition at home"
+      ]
+    },
+    {
+      "text": "Because the arrangement is felt as unfair yet inescapable, giving continues despite resentment, and a new product or policy is met with ambivalence, weighed against its emotional cost.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P1",
+        "P2",
+        "P7"
+      ],
+      "evaluative_rules": [
+        "Weigh a purchase against the emotional cost it carries, not only its price"
+      ],
+      "objections": [
+        "Will this add to the burden I already carry?"
+      ],
+      "vocabulary": [
+        "emotional thing",
+        "chains"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Gauteng, South Africa",
+  "year_range": "2018",
+  "confidence": "One qualitative South African study: 18 in-depth interviews with employed emerging middle-class people (12 African, 3 Indian, 1 Coloured by the author's count). Mechanisms durable; magnitudes and prevalence unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "subject": "employed middle-class people who support parents, siblings and extended family from their salary (black tax), and weigh any new spending against what the family needs",
+  "year_note": "Interviews over two months in 2018 for a University of Pretoria (GIBS) MBA report.",
+  "applies_when": [
+    {
+      "race": [
+        "African/Black",
+        "Indian/Asian",
+        "Coloured"
+      ],
+      "employment_status": [
+        "Employed"
+      ],
+      "lived_poverty": [
+        "none",
+        "low"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "afford",
+    "price",
+    "cost",
+    "monthly",
+    "a month",
+    "per month",
+    "subscription",
+    "pay",
+    "payment",
+    "spend",
+    "spending",
+    "save",
+    "savings",
+    "family",
+    "salary",
+    "budget",
+    "black tax",
+    "debit order",
+    "instalment"
+  ]
+}

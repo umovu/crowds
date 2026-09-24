@@ -1,0 +1,174 @@
+{
+  "id": "clinic-by-default-pay-when-it-counts-sa",
+  "citation": [
+    "Mpanza NM, Bradley H, Laing R (2019). Reasons why insured consumers co-pay for medicines at retail pharmacies in Pretoria, South Africa. Afr J Prim Health Care Fam Med 11(1):a1878. doi:10.4102/phcfm.v11i1.1878",
+    "A qualitative study of the social and structural vulnerabilities of HIV and chronic disease syndemics in low-resource urban health facilities in South Africa (2026). Discover Public Health. doi:10.1186/s12982-026-01850-0",
+    "Nyblade L et al. (2022). Stigma in the health clinic and implications for PrEP access and use by adolescent girls and young women: conflicting perspectives in South Africa. BMC Public Health 22:1916. doi:10.1186/s12889-022-14236-z"
+  ],
+  "segment_tags": [
+    "affluent_urban_household",
+    "comfortable_household",
+    "urban_professional"
+  ],
+  "claims": [
+    {
+      "text": "A cheaper substitute is refused because a lower price is read as evidence of inferior or impure quality, so habit and brand loyalty hold the user on the familiar medicine and the saving is experienced as a threat rather than a gain.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P12",
+        "P13",
+        "P14",
+        "P18",
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a medicine by whether it is the same thing you are used to, not by what it costs"
+      ],
+      "objections": [
+        "Why is this version so cheap — what was changed to make it that way?"
+      ],
+      "vocabulary": [
+        "generics",
+        "originator",
+        "brand loyalty"
+      ]
+    },
+    {
+      "text": "A trusted prescriber or pharmacy relationship overrides price and scheme rules, because deference to the professional's recommendation means the dispensed medicine is never questioned — so a new product is read through that endorsement rather than through what it costs.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P10",
+        "P11",
+        "P15",
+        "P16",
+        "P17",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Trust the professional who knows your circumstances over the scheme's rules and prices"
+      ],
+      "objections": [
+        "What does the person who knows my history say about this?"
+      ],
+      "vocabulary": [
+        "second opinion",
+        "chain pharmacies"
+      ]
+    },
+    {
+      "text": "Clinic attendance is sacrificed to keeping the job and meeting family obligations, because income is uncertain and time is controlled by employers — so a new service model or adherence requirement is read as another demand that cannot be met, while providers read the resulting default as irresponsibility.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P21",
+        "P22",
+        "P23",
+        "P24",
+        "P28",
+        "P31",
+        "P32",
+        "P35",
+        "P36",
+        "P37",
+        "P39",
+        "P40"
+      ],
+      "evaluative_rules": [
+        "Weigh any health demand against the job and the family obligation it would displace"
+      ],
+      "objections": [
+        "How am I supposed to get there, and with what money, without losing the job?"
+      ],
+      "vocabulary": [
+        "the time and work clash",
+        "no choice"
+      ]
+    },
+    {
+      "text": "A sexual and reproductive health service is read as something that will be withheld, moralised over or used to expose you, because anticipated judgement and gossip at the clinic drive avoidance and the provider who frames herself as a parent scolds rather than serves — so the product is approached as a risk of exposure rather than a service to access.",
+      "needs": [
+        {
+          "gender": [
+            "Female"
+          ]
+        }
+      ],
+      "chain_id": "C5",
+      "passages": [
+        "P41",
+        "P42",
+        "P43",
+        "P44",
+        "P45",
+        "P46",
+        "P47",
+        "P48",
+        "P49",
+        "P50",
+        "P51",
+        "P53",
+        "P54",
+        "P55",
+        "P56",
+        "P57",
+        "P58",
+        "P59",
+        "P60"
+      ],
+      "evaluative_rules": [
+        "Judge a clinic by whether what you say there stays there, not by what it offers"
+      ],
+      "objections": [
+        "Will they ask me why I need it in front of everyone, and will it get back to people who know me?"
+      ],
+      "vocabulary": [
+        "confidentiality",
+        "judging",
+        "gossip"
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Pretoria, Johannesburg and Tshwane, South Africa",
+  "year_range": "2018-2024",
+  "confidence": "Three qualitative South African studies of close groups (insured pharmacy customers, working clinic patients, young women at clinics), none of them comfortable uninsured people. Reasoning borrowed, not heard; real people without medical aid mostly use public clinics, so treat paying privately as the exception.",
+  "comb_gaps": [
+    "capability"
+  ],
+  "subject": "people without medical aid deciding between a free public clinic and paying a private doctor or pharmacy themselves: price, trust in a known pharmacist, time off work and being judged at the clinic",
+  "borrowed_from": "Insured Pretoria pharmacy customers (on price and trusted pharmacists), Johannesburg clinic patients who work (on clinic hours against paid work) and young Tshwane women (on judgement at the clinic). No interview study covers comfortable uninsured city people choosing a private doctor, so their reasoning is carried over from these close groups.",
+  "year_note": "Tshwane 2018-2020; Johannesburg August-September 2024; the Pretoria study does not state its fieldwork dates.",
+  "applies_when": [
+    {
+      "geotype": [
+        "Urban"
+      ],
+      "lived_poverty": [
+        "none",
+        "low"
+      ],
+      "medical_aid": [
+        "False"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "doctor",
+    "gp",
+    "private doctor",
+    "pharmacy",
+    "pharmacies",
+    "medicine",
+    "medication",
+    "health",
+    "healthcare",
+    "nurse",
+    "consultation",
+    "check-up"
+  ]
+}

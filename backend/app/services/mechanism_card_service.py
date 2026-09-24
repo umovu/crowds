@@ -148,6 +148,9 @@ def _format_card_header(c: Dict) -> str:
     region = (c.get("region") or "location not specified").strip() or "location not specified"
     conf = (c.get("confidence") or "").strip()
     header = f"From {cite} [{claim}] — {region}, {year}"
+    borrowed = (c.get("borrowed_from") or "").strip()
+    if borrowed:
+        header += f" — heard from a nearby group, not people exactly like you: {borrowed[:220]}"
     if conf:
         header += f" — confidence/limits: {conf[:220]}"
     return header

@@ -218,6 +218,14 @@ class MechanismCard(DataModel):
                  "to topic_tags when absent, which reads as keywords and scores like keywords. "
                  "Never shown to a persona — the prompt block is built from claims."),
     })
+    borrowed_from: str = Field(default=None, min_length=1, max_length=400, json_schema_extra={
+        'when': 'optional',
+        'note': ("Set only when the people who spoke are a close group, not the group the card "
+                 "is gated to: who spoke, and why their reasoning carries over. The quotes stay "
+                 "the source's own; only the gate is stretched. A borrowed card needs a tight "
+                 "gate (every applies_when clause names at least two facts), and the prompt "
+                 "says the reasoning comes from a nearby group."),
+    })
     claim_type: MechanismCardClaimType = Field(json_schema_extra={'when': 'always'})
     claims: List[MechanismCardClaim] = Field(min_length=1, max_length=5, json_schema_extra={'when': 'always'})
     citation: List[Annotated[str, Field(min_length=1)]] = Field(min_length=1, json_schema_extra={'when': 'always'})

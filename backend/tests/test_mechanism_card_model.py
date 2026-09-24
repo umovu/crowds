@@ -162,6 +162,35 @@ def test_an_unknown_field_is_caught():
     assert _flags(card, "'notes_for_me' is not in the model")
 
 
+def test_a_borrowed_card_with_a_tight_gate_fits():
+    card = _good()
+    card["borrowed_from"] = "Heard from a nearby group"
+    card["applies_when"] = [{"employment_status": ["Employed"], "geotype": ["Urban"]}]
+    assert dm.mechanism_card_problems(card) == []
+
+
+def test_a_borrowed_card_with_no_gate_is_caught():
+    card = _good()
+    card["borrowed_from"] = "Heard from a nearby group"
+    card["applies_when"] = []
+    assert _flags(card, "needs an applies_when gate")
+
+
+def test_a_borrowed_card_with_a_one_fact_gate_is_caught():
+    card = _good()
+    card["borrowed_from"] = "Heard from a nearby group"
+    card["applies_when"] = [{"geotype": ["Urban"]}]
+    assert _flags(card, "fewer than two facts")
+
+
+def test_a_borrowed_card_says_so_in_the_prompt():
+    from app.services import mechanism_card_service as mcs
+    card = _good()
+    assert "nearby group" not in mcs.render_research_context([card])
+    card["borrowed_from"] = "Cape Town homeowners on water"
+    assert "heard from a nearby group" in mcs.render_research_context([card])
+
+
 # ── the app says so ───────────────────────────────────────────────────────
 
 def test_loading_warns_about_a_card_that_does_not_fit_but_still_loads_it(tmp_path, monkeypatch):
