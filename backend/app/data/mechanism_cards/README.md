@@ -48,7 +48,7 @@ qualitative research. One card per file, named `<id>.json`.
 - `rural-water-scarcity-sa` — rural villages without water: buying it, boreholes, tanker queues, broken promises
 - `women-taxi-commuting-sa` — young women commuting by minibus taxi: fares, safety, drivers and dark ranks
 - `going-private-when-the-state-fails-sa` — comfortable city homeowners paying for their own water and security; **borrowed** for backup power
-- `clinic-by-default-pay-when-it-counts-sa` — comfortable people without medical aid: price, trusted pharmacist, work hours, judgement (**borrowed**)
+- `paying-for-care-without-medical-aid-sa` — paying for care without medical aid: price, trusted pharmacist, work hours, judgement on sexual health (**borrowed**)
 - `black-tax-obligation-sa` — employed middle-class people supporting family from their salary, weighing new spending against it
 
 ## Gaps still open

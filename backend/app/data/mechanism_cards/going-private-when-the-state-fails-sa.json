@@ -12,7 +12,14 @@
   "claims": [
     {
       "text": "Where rates and taxes are read as misappropriated, high payment generates an entitlement that the municipality owes rapid preferential service, so loud mobilisation is met with faster response and any new collective policy is read as something the state must manage on the payer's behalf and protect them from.",
-      "needs": [],
+      "needs": [
+        {
+          "housing_tenure": [
+            "own",
+            "bond"
+          ]
+        }
+      ],
       "chain_id": "C1",
       "passages": [
         "P1",
@@ -39,7 +46,14 @@
     },
     {
       "text": "Self-supply through boreholes and tanks insulates a household from restrictions, so it stops treating collective restrictions as binding on itself, disengages from the shared saving effort, and reads any new collective policy as not its problem while pursuing off-grid autonomy instead.",
-      "needs": [],
+      "needs": [
+        {
+          "housing_tenure": [
+            "own",
+            "bond"
+          ]
+        }
+      ],
       "chain_id": "C2",
       "passages": [
         "P11",
@@ -64,7 +78,14 @@
     },
     {
       "text": "Shared scarcity and fear of running dry make following the rules a matter of everyone's benefit, so residents conserve and answer coordinated municipal messaging as one team, and read a new policy as a partnership between residents and government rather than a service delivered to them.",
-      "needs": [],
+      "needs": [
+        {
+          "housing_tenure": [
+            "own",
+            "bond"
+          ]
+        }
+      ],
       "chain_id": "C3",
       "passages": [
         "P13",
@@ -140,7 +161,8 @@
       ],
       "housing_tenure": [
         "own",
-        "bond"
+        "bond",
+        "rent"
       ]
     }
   ],

@@ -178,13 +178,13 @@ _BLACK_TAX_PAYER = dict(race="African/Black", employment_status="Employed",
 
 
 def test_a_sexual_health_claim_stays_off_a_diabetes_pitch():
-    claims, _ = _claims(_seat("clinic-by-default-pay-when-it-counts-sa", **_UNINSURED_WOMAN),
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
                         "A clinic that helps you manage diabetes, R150 a visit.")
     assert claims and "C5" not in claims
 
 
 def test_a_sexual_health_claim_comes_with_a_prep_pitch():
-    claims, _ = _claims(_seat("clinic-by-default-pay-when-it-counts-sa", **_UNINSURED_WOMAN),
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
                         "A clinic where young women can get PrEP without a queue.")
     assert "C5" in claims
 
@@ -211,7 +211,15 @@ def test_the_reader_can_add_a_claim_its_words_missed(monkeypatch):
     # "starting a family" names none of the claim's words; the typed reader, when on,
     # can still say the pitch involves reproductive health.
     monkeypatch.setattr(mcs, "claims_touched",
-                        lambda q, cards=None: {"clinic-by-default-pay-when-it-counts-sa#C5"})
-    claims, _ = _claims(_seat("clinic-by-default-pay-when-it-counts-sa", **_UNINSURED_WOMAN),
+                        lambda q, cards=None: {"paying-for-care-without-medical-aid-sa#C5"})
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
                         "A clinic visit to talk about starting a family, R150.")
     assert "C5" in claims
+
+
+def test_a_comfortable_renter_hears_only_the_security_claim():
+    renter = dict(geotype="Urban", circumstances={"lived_poverty": "low", "housing_tenure": "rent"})
+    owner = dict(geotype="Urban", circumstances={"lived_poverty": "low", "housing_tenure": "own"})
+    pitch = "Armed response and a guard at the gate for R450 a month, if the rates and water fail too."
+    assert _claims(_seat("going-private-when-the-state-fails-sa", **renter), pitch)[0] == {"C4"}
+    assert _claims(_seat("going-private-when-the-state-fails-sa", **owner), pitch)[0] == {"C1", "C2", "C3", "C4"}
