@@ -20,7 +20,7 @@ qualitative research. One card per file, named `<id>.json`.
   source's own; only the gate is stretched. It needs a gate of at least two facts per
   clause, and the prompt says the reasoning comes from a nearby group.
 
-## Cards (28)
+## Cards (29)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
@@ -49,6 +49,7 @@ qualitative research. One card per file, named `<id>.json`.
 - `women-taxi-commuting-sa` — young women commuting by minibus taxi: fares, safety, drivers and dark ranks
 - `going-private-when-the-state-fails-sa` — comfortable city homeowners paying for their own water and security; **borrowed** for backup power
 - `paying-for-care-without-medical-aid-sa` — paying for care without medical aid: price, trusted pharmacist, work hours, judgement on sexual health (**borrowed**)
+- `youth-clinic-candidacy-sa` — rural young people 15-24: fear of admitting a problem, distance, queues, stockouts; gossip and scolding only on HIV or sexual health pitches
 - `black-tax-obligation-sa` — employed middle-class people supporting family from their salary, weighing new spending against it
 
 ## Gaps still open
