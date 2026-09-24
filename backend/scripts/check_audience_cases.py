@@ -7,7 +7,8 @@ Scores tests/data/audience_cases.json, written by hand:
 A case passes when nothing is added, nothing is missed and every expected "can't
 match" is said.
 
-    python check_audience_cases.py
+    python check_audience_cases.py                          # keywords only
+    DOTENV_PATH=../../.env FUB_TYPED_AUDIENCE=1 python check_audience_cases.py   # + typed reader
 """
 from __future__ import annotations
 
@@ -22,9 +23,10 @@ os.environ.setdefault("AGENTSOCIETY_LLM_API_KEY", "audience-check")
 CASES = os.path.join(BACKEND, "tests", "data", "audience_cases.json")
 
 
-def score(read) -> dict:
+def score(read, reader: bool = False) -> dict:
+    """`reader`: include the needs_reader cases (wordings only the typed reader knows)."""
     with open(CASES, encoding="utf-8") as fh:
-        cases = json.load(fh)["cases"]
+        cases = [c for c in json.load(fh)["cases"] if reader or not c.get("needs_reader")]
     rows, picked_total, right_total, expected_total = [], 0, 0, 0
     for case in cases:
         got = read(case["text"])
@@ -52,15 +54,19 @@ def score(read) -> dict:
 
 
 def main() -> int:
+    from dotenv import load_dotenv
+    load_dotenv(os.environ.get("DOTENV_PATH") or os.path.join(BACKEND, "..", ".env"))
     from app.services import audience_reader
-    out = score(audience_reader.read)
+    on = audience_reader.reader_enabled()
+    out = score(audience_reader.read, reader=on)
     for r in out["rows"]:
         if not r["ok"]:
             bits = [f"added {r['added']}" if r["added"] else "", f"missed {r['missed']}" if r["missed"] else "",
                     f"didn't say {r['unsaid']}" if r["unsaid"] else "",
                     "said a 'can't match' that wasn't there" if r["extra_unmatched"] else ""]
             print(f"  FAIL {r['id']}: " + "; ".join(b for b in bits if b))
-    print(f"\nprecision (nothing wrong added): {out['precision']:.0%}")
+    print(f"\ntyped reader: {'on' if on else 'off (needs_reader cases skipped)'}")
+    print(f"precision (nothing wrong added): {out['precision']:.0%}")
     print(f"recall (nothing missed):         {out['recall']:.0%}")
     print(f"Score: {out['passed']} of {out['total']} cases passed "
           f"(held out: {out['held_out_passed']} of {out['held_out_total']})")

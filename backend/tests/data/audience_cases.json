@@ -1,5 +1,5 @@
 {
- "about": "Answer sheet for audience_reader: a founder's words -> the facts that define their room. Written by hand. `facts` and `provinces` are what a careful person would pick from audience_reader.OPTIONS; `unmatched` names each thing that must come back as 'can't match' (matched by its first word). Score with scripts/check_audience_cases.py; tests/test_audience_reader.py guards the keyword-only score. Cases marked held_out were written after the keywords were tuned and were not tuned against: their score is the honest one.",
+ "about": "Answer sheet for audience_reader: a founder's words -> the facts that define their room. Written by hand. `facts` and `provinces` are what a careful person would pick from audience_reader.OPTIONS; `unmatched` names each thing that must come back as 'can't match' (matched by its first word). Score with scripts/check_audience_cases.py; tests/test_audience_reader.py guards the keyword-only score. Cases marked held_out were written after the keywords were tuned and were not tuned against: their score is the honest one. Cases marked needs_reader use wordings the keyword list does not know; they are scored only with the typed reader on (FUB_TYPED_AUDIENCE=1).",
  "cases": [
   {
    "id": "ntombi-missing-middle",
@@ -465,6 +465,65 @@
    ],
    "unmatched": [],
    "held_out": true
+  },
+  {
+   "id": "r-pension-folks",
+   "text": "Folks on a pension who can't get to a clinic.",
+   "facts": [
+    "older"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "needs_reader": true
+  },
+  {
+   "id": "r-breadwinners",
+   "text": "Breadwinners who support a household on one salary.",
+   "facts": [
+    "working"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "needs_reader": true
+  },
+  {
+   "id": "r-hire-home",
+   "text": "A service for people who hire rather than own the place they live in.",
+   "facts": [
+    "renters"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "needs_reader": true
+  },
+  {
+   "id": "r-no-vehicle",
+   "text": "Aimed at those who catch taxis because they have no vehicle.",
+   "facts": [
+    "no_car"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "needs_reader": true
+  },
+  {
+   "id": "r-no-scheme",
+   "text": "For people who don't belong to any medical scheme.",
+   "facts": [
+    "no_medical_aid"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "needs_reader": true
+  },
+  {
+   "id": "grannies",
+   "text": "For grannies looking after their grandkids.",
+   "facts": [
+    "grandparents"
+   ],
+   "provinces": [],
+   "unmatched": []
   }
  ]
 }

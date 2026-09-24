@@ -6,11 +6,16 @@ This reads the audience part of the founder's own sentence into a short list of
 facts the personas actually carry, and the room is then the people who match ALL of
 them (same field twice reads as either: "renters or homeowners").
 
-Keywords only, with the model off. A typed reader (Jev) was tried on the answer
-sheet (tests/data/audience_cases.json, 2026-09-24) and made it worse: precision
-fell from 100% to 88% because it inferred facts nobody wrote ("Soweto" read as
-struggling, "retired" as out of work, a city name as "lives in a city"), and it
-found nothing the keywords missed. A founder's audience must be what they said.
+Keywords are the floor and run with the model off. The typed reader (Jev,
+FUB_TYPED_AUDIENCE) can only ADD a fact, for wordings the list does not know
+("people who don't belong to any medical scheme"). Measured on the answer sheet
+(tests/data/audience_cases.json, 2026-09-25):
+  * asked loosely ("the customers are: aged 60+"), it inferred facts nobody wrote
+    ("Soweto" as struggling, "retired" as out of work): precision fell to 88%.
+  * given the people sentences only, a definition per fact with what does and does
+    not count (READER_DEFS), and a no-inferring rule: 100% precision alone, and
+    keywords + reader stay at 100%/100% while catching 3 of 5 wordings the list missed.
+A founder's audience must be what they said, so the definitions are the guard.
 
   * Only facts on the fixed list below.
   * Nothing is invented: a phrase that names
@@ -24,10 +29,14 @@ Selection only: it chooses among real library people and never writes one.
 
 from __future__ import annotations
 
+import os
 import re
 from typing import Any, Dict, List, Optional
 
 from ..models.persona import fact_value
+from ..utils.logger import get_logger
+
+logger = get_logger("fub.audience_reader")
 
 # id -> (plain label, persona field, answers that count, keywords). Keywords are
 # matched as whole words/phrases, so "men" never fires inside "women".
@@ -211,10 +220,103 @@ def _unmatched(about: str) -> List[str]:
     return [u["say"] for u in UNMATCHABLE if any(_has(about, w) for w in u["words"])]
 
 
+# What the typed reader is told each fact means: (the fact, what counts, what does
+# NOT count). The "does not count" half is what stops it inferring: without it,
+# "Soweto" read as struggling and "retired" as out of work.
+READER_RULE = ("Answer yes only if the text itself says this about the people the product is for. "
+               "Never infer it from a place name, a job, a price or the product. A product feature "
+               "(for example 'no medical aid needed') says nothing about who buys it.")
+READER_DEFS: Dict[str, tuple] = {
+    "city": ("lives in a city, town or township", "they are described as urban, city, town or township dwellers",
+             "only a city or province is named as a place, e.g. 'in Joburg' or 'in Cape Town'"),
+    "rural": ("lives in a rural area", "rural, village, countryside, farm communities",
+              "a province like Limpopo is named without saying rural"),
+    "working": ("has a job", "workers, employees, working people, professionals, nurses, shift workers",
+                "being a customer, a parent or a farmer alone; retired people"),
+    "out_of_work": ("is unemployed", "unemployed, jobless, job seekers, out of work",
+                    "retired people, pensioners, students, learners, grant recipients"),
+    "no_medical_aid": ("has no medical aid", "without medical aid, uninsured, paying cash or out of pocket for health care",
+                       "a product that does not require medical aid"),
+    "has_medical_aid": ("has medical aid", "medical aid members, insured patients", "a product that accepts medical aid"),
+    "renters": ("rents their home", "renters, tenants, people who rent", "people who own"),
+    "homeowners": ("owns their home", "homeowners, people who own their home or house",
+                   "renters; people who merely live in a house"),
+    "bond": ("is paying off a home loan", "bond holders, paying off a home loan or bond", "homeowners in general"),
+    "car_owners": ("owns a car", "car owners, drivers, motorists", "commuters in general"),
+    "no_car": ("has no car", "without a car, taxi users, relying on taxis or buses", "commuters in general"),
+    "women": ("is a woman", "women, mothers, moms, girls, ladies", "families or parents in general"),
+    "men": ("is a man", "men, fathers, dads", "families or parents in general"),
+    "young": ("is aged 15 to 34", "young people, youth, young adults, students, young drivers or mothers",
+              "children in the household"),
+    "age_15_24": ("is aged 15 to 24", "teenagers, teens, school leavers, under 25", "young adults in general"),
+    "age_25_34": ("is aged 25 to 34", "an age range that includes 25 to 34", "young people in general"),
+    "middle_aged": ("is aged 35 to 59", "middle-aged, an age range inside 35 to 59", "adults in general"),
+    "older": ("is aged 60 or over", "pensioners, retirees, retired people, elderly, seniors, people on a pension, over 60",
+              "grandparents alone"),
+    "parents": ("is raising children at school", "parents, mothers, fathers, guardians, families with school children",
+                "adults in general"),
+    "grandparents": ("is a grandparent raising grandchildren", "grandparents or gogos raising grandchildren",
+                     "older people in general"),
+    "learners": ("is a high-school learner", "learners, pupils, high school or matric students",
+                 "university students; parents of learners"),
+    "farmers": ("is a farmer", "farmers, smallholders, people who grow crops or keep livestock", "people who buy food"),
+    "small_business": ("owns a registered small business", "small business owners, SME owners",
+                       "informal traders, spaza owners, hawkers"),
+    "comfortable": ("is financially comfortable", "middle class, middle income, affluent, well-off, higher income",
+                    "a place name; a price they can pay"),
+    "struggling": ("is struggling financially", "low-income, poor households or people, struggling to get by",
+                   "a place name like Soweto or a township; poor service"),
+    "tertiary": ("studied after school", "graduates, degree holders, university educated", "students still studying"),
+}
+READER_MIN_PROBABILITY = 0.8
+_reader_memo: Dict[str, List[str]] = {}
+
+
+def reader_enabled() -> bool:
+    """OFF unless FUB_TYPED_AUDIENCE is set and the typed reader has a key."""
+    if (os.environ.get("FUB_TYPED_AUDIENCE") or "").strip().lower() not in ("1", "true", "yes", "on"):
+        return False
+    try:
+        from ..utils import typesafe_client
+    except (ImportError, ValueError):
+        return False
+    return typesafe_client.enabled()
+
+
+def _reader_facts(about: str) -> List[str]:
+    """Facts the typed reader is sure the people sentences state. One read per text; adds only."""
+    if not about.strip() or not reader_enabled():
+        return []
+    if about in _reader_memo:
+        return list(_reader_memo[about])
+    from ..utils import typesafe_client as ts
+    ids = list(READER_DEFS)
+    questions = {
+        f"fact_{i}": ts.noul_question(
+            f"The text says the product's customers are people who {READER_DEFS[f][0]}.",
+            when_true=f"{READER_RULE} Counts: {READER_DEFS[f][1]}.",
+            when_false=f"Not stated about the customers, or only implied. Does not count: {READER_DEFS[f][2]}.",
+        )
+        for i, f in enumerate(ids)
+    }
+    try:
+        answers = ts.ask(about, questions)
+    except Exception as e:  # noqa: BLE001 — an unreachable reader is a reader that is off
+        logger.warning("Typed audience read failed: %s", e)
+        return []
+    if not answers:
+        return []
+    found = [ids[int(q.split("_")[1])] for q in questions
+             if (answers.get(q) or {}).get("noul", 0.0) >= READER_MIN_PROBABILITY]
+    _reader_memo[about] = found
+    return list(found)
+
+
 def read(text: str) -> Dict[str, Any]:
     """The audience a founder's text names: fact ids, provinces, and what could not be matched."""
     about = audience_text(text)
     facts = _keyword_facts(about)
+    facts += [f for f in _reader_facts(about) if f not in facts]
     # "Mothers" names a woman AND a parent, so both facts are kept on purpose.
     facts = _narrowest(facts)
     return {

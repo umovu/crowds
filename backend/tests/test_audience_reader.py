@@ -122,3 +122,74 @@ def test_a_described_audience_is_not_re_split_into_keyword_groups():
     assert pss._audience({"audience": {"facts": ["working"]}}, "land", pitch) is None
     assert pss._audience({"audience": {"facts": ["working"]}, "segments": ["employed"]},
                          "land", pitch) == ["employed"]  # an explicit pick still wins
+
+
+# ── the typed reader (stubbed: nothing calls a model) ────────────────────────
+
+class _Stub:
+    def __init__(self, yes=(), fail=False):
+        self.yes, self.fail, self.reads = set(yes), fail, 0
+
+    def enabled(self):
+        return True
+
+    def noul_question(self, instructions, when_true=None, when_false=None):
+        return {"instructions": instructions}
+
+    def ask(self, state, questions):
+        if self.fail:
+            raise RuntimeError("unreachable")
+        self.reads += 1
+        ids = list(ar.READER_DEFS)
+        return {q: {"noul": 0.95 if ids[int(q.split("_")[1])] in self.yes else 0.0} for q in questions}
+
+
+@pytest.fixture
+def reader(monkeypatch):
+    from app.utils import typesafe_client
+    def on(stub):
+        monkeypatch.setenv("FUB_TYPED_AUDIENCE", "1")
+        monkeypatch.setattr(typesafe_client, "enabled", stub.enabled)
+        monkeypatch.setattr(typesafe_client, "noul_question", stub.noul_question)
+        monkeypatch.setattr(typesafe_client, "ask", stub.ask)
+        ar._reader_memo.clear()
+        return stub
+    yield on
+    ar._reader_memo.clear()
+
+
+def test_every_fact_is_defined_for_the_reader():
+    assert set(ar.READER_DEFS) == set(ar.OPTIONS)
+    assert all(len(d) == 3 and all(d) for d in ar.READER_DEFS.values())
+
+
+def test_the_reader_is_off_by_default():
+    assert not ar.reader_enabled()
+
+
+def test_the_reader_adds_a_wording_the_keywords_miss(reader):
+    reader(_Stub(yes={"no_medical_aid"}))
+    assert ar.read("For people who don't belong to any medical scheme.")["facts"] == ["no_medical_aid"]
+
+
+def test_the_reader_cannot_remove_what_the_keywords_found(reader):
+    reader(_Stub(yes=set()))
+    assert ar.read("Car insurance for young drivers.")["facts"] == ["car_owners", "young"]
+
+
+def test_a_failed_read_leaves_the_keywords(reader):
+    reader(_Stub(fail=True))
+    assert ar.read("A funeral policy for pensioners in rural Limpopo.")["facts"] == ["rural", "older"]
+
+
+def test_a_text_is_read_once(reader):
+    stub = reader(_Stub())
+    for _ in range(5):
+        ar.read("For people who hire rather than own the place they live in.")
+    assert stub.reads == 1
+
+
+def test_a_product_with_no_people_sentence_is_never_sent_to_the_reader(reader):
+    stub = reader(_Stub(yes={"no_medical_aid"}))
+    assert ar.read("A nurse the same day with no queue.")["facts"] == []
+    assert stub.reads == 0
