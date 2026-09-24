@@ -223,3 +223,11 @@ def test_a_comfortable_renter_hears_only_the_security_claim():
     pitch = "Armed response and a guard at the gate for R450 a month, if the rates and water fail too."
     assert _claims(_seat("going-private-when-the-state-fails-sa", **renter), pitch)[0] == {"C4"}
     assert _claims(_seat("going-private-when-the-state-fails-sa", **owner), pitch)[0] == {"C1", "C2", "C3", "C4"}
+
+
+def test_a_rural_teen_on_an_ordinary_clinic_pitch_hears_no_sexual_health_claim():
+    teen = dict(geotype="Traditional", age=17)
+    claims, cards = _claims(_seat("youth-clinic-candidacy-sa", **teen),
+                            "A nurse you can see the same day for R150 a visit, no queue.")
+    assert "youth-clinic-candidacy-sa" in cards
+    assert {"C1", "C3", "C5"} <= claims and not claims & {"C2", "C4"}
