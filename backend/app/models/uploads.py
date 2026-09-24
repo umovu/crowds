@@ -204,6 +204,17 @@ class MechanismCardClaim(DataModel):
     evaluative_rules: List[Annotated[str, Field(min_length=1)]] = Field(default=None, json_schema_extra={'when': 'optional'})
     objections: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
     vocabulary: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
+    about: str = Field(default=None, min_length=1, max_length=300, json_schema_extra={
+        'when': 'optional',
+        'note': ("What a pitch must involve for this claim to belong in the prompt, in one "
+                 "human-written line. Absent means the claim fits whatever the card fits. "
+                 "Present, the claim stays only when one of its about_tags is in the pitch "
+                 "or the typed reader is sure the pitch involves this line."),
+    })
+    about_tags: List[Annotated[str, Field(pattern='^[a-z][a-z -]*$')]] = Field(default=None, json_schema_extra={
+        'when': 'optional',
+        'note': "Words that put the claim in the prompt without the typed reader (whole-word match).",
+    })
 
 
 class MechanismCard(DataModel):

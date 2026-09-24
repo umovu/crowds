@@ -32,6 +32,20 @@
       "vocabulary": [
         "guilty conscience",
         "I owe her"
+      ],
+      "about": "a product or service that could cover, protect or support parents, siblings or other family members",
+      "about_tags": [
+        "family",
+        "parents",
+        "siblings",
+        "funeral",
+        "burial",
+        "school fees",
+        "dependants",
+        "dependents",
+        "extended family",
+        "relatives",
+        "send money"
       ]
     },
     {
@@ -56,6 +70,21 @@
       "vocabulary": [
         "sleeping hungry",
         "cannot be seen going on holiday"
+      ],
+      "about": "spending on yourself: comfort, lifestyle, luxury or an upgrade you could do without",
+      "about_tags": [
+        "luxury",
+        "holiday",
+        "holidays",
+        "lifestyle",
+        "treat",
+        "premium",
+        "upgrade",
+        "gym",
+        "restaurant",
+        "entertainment",
+        "streaming",
+        "new car"
       ]
     },
     {
@@ -78,25 +107,14 @@
       "vocabulary": [
         "Ubuntu",
         "way of life"
-      ]
-    },
-    {
-      "text": "Because birth order and family tradition place responsibility automatically on the first born or the successful member, spending continues on siblings' education until they are independent, and a new product or policy is read as a means to discharge that role obligation.",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P19",
-        "P20"
       ],
-      "evaluative_rules": [
-        "Judge a product by whether it helps discharge the role obligation to dependants"
-      ],
-      "objections": [
-        "Does this help me get my younger brother independent?"
-      ],
-      "vocabulary": [
-        "first born",
-        "tradition at home"
+      "about": "how a household or extended family shares money and decides on it together",
+      "about_tags": [
+        "family",
+        "household",
+        "extended family",
+        "relatives",
+        "stokvel"
       ]
     },
     {
@@ -117,6 +135,17 @@
       "vocabulary": [
         "emotional thing",
         "chains"
+      ],
+      "about": "taking on a new regular payment: a subscription, contract, debit order or monthly fee",
+      "about_tags": [
+        "subscription",
+        "debit order",
+        "instalment",
+        "instalments",
+        "contract",
+        "monthly",
+        "per month",
+        "a month"
       ]
     }
   ],
@@ -165,6 +194,32 @@
     "budget",
     "black tax",
     "debit order",
-    "instalment"
+    "instalment",
+    "parents",
+    "siblings",
+    "funeral",
+    "burial",
+    "school fees",
+    "dependants",
+    "dependents",
+    "extended family",
+    "relatives",
+    "send money",
+    "luxury",
+    "holiday",
+    "holidays",
+    "lifestyle",
+    "treat",
+    "premium",
+    "upgrade",
+    "gym",
+    "restaurant",
+    "entertainment",
+    "streaming",
+    "new car",
+    "household",
+    "stokvel",
+    "instalments",
+    "contract"
   ]
 }

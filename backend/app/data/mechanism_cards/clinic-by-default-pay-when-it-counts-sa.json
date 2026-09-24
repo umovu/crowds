@@ -128,6 +128,25 @@
         "confidentiality",
         "judging",
         "gossip"
+      ],
+      "about": "sexual or reproductive health: contraception, HIV prevention or testing, pregnancy or sexually transmitted infections",
+      "about_tags": [
+        "sexual health",
+        "contraception",
+        "contraceptive",
+        "contraceptives",
+        "prep",
+        "hiv",
+        "condom",
+        "condoms",
+        "pregnancy",
+        "pregnant",
+        "family planning",
+        "sti",
+        "stis",
+        "std",
+        "reproductive health",
+        "pap smear"
       ]
     }
   ],
@@ -169,6 +188,22 @@
     "healthcare",
     "nurse",
     "consultation",
-    "check-up"
+    "check-up",
+    "sexual health",
+    "contraception",
+    "contraceptive",
+    "contraceptives",
+    "prep",
+    "hiv",
+    "condom",
+    "condoms",
+    "pregnancy",
+    "pregnant",
+    "family planning",
+    "sti",
+    "stis",
+    "std",
+    "reproductive health",
+    "pap smear"
   ]
 }

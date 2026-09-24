@@ -34,7 +34,7 @@ as keywords and scores like keywords.
 from __future__ import annotations
 
 import os
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 from ..utils.logger import get_logger
 
@@ -136,6 +136,45 @@ def read_cards(text: str, cards: List[Dict]) -> Set[str]:
     _memo[memo_key] = set(found)
     if found:
         logger.info("Typed cards: %s", ", ".join(sorted(found)))
+    return set(found)
+
+
+def read_claims(text: str, abouts: List[Tuple[str, str]]) -> Set[str]:
+    """The keys of claims a typed reader is confident this pitch involves.
+
+    `abouts` is (claim key, the claim's `about` line). Same rules as `read_cards`:
+    one request per pitch, memoized; empty when the reader is off, fails or is
+    unsure, so the claims' own about_tags decide alone.
+    """
+    if not text or not abouts or not typed_cards_enabled():
+        return set()
+    ts = _typesafe()
+    if not ts:
+        return set()
+    askable = [(k, a) for k, a in abouts if k and a][:MAX_CARDS_PER_READ]
+    memo_key = f"{text}\x00claims\x00{','.join(sorted(k for k, _a in askable))}"
+    if memo_key in _memo:
+        return set(_memo[memo_key])
+    ids = {f"claim_{i}": key for i, (key, _a) in enumerate(askable)}  # plain question ids
+    questions = {
+        qid: ts.noul_question(
+            f"This pitch involves {about}.",
+            when_true="The pitch clearly involves that, even if it never uses those exact words.",
+            when_false="The pitch does not really involve that.",
+        )
+        for qid, (_k, about) in zip(ids, askable)
+    }
+    try:
+        answers = ts.ask(text, questions)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Typed claim read failed: %s", e)
+        return set()
+    if not answers:
+        return set()
+    found = {ids[q] for q in questions if (answers.get(q) or {}).get("noul", 0.0) >= MIN_PROBABILITY}
+    _memo[memo_key] = set(found)
+    if found:
+        logger.info("Typed claims: %s", ", ".join(sorted(found)))
     return set(found)
 
 
