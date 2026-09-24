@@ -38,6 +38,7 @@ Usage:
     python sameness_benchmark.py run --label baseline           # writes out/sameness_baseline.json
     FLAG=1 python sameness_benchmark.py run --label variant
     python sameness_benchmark.py compare baseline variant       # the difference, with intervals
+    python sameness_benchmark.py run --label x --segment employed --seeds 9   # more, targeted rooms
 """
 from __future__ import annotations
 
@@ -159,7 +160,7 @@ def _wire_llm():
                 os.environ[f"AGENTSOCIETY_{tier}_{key}"] = os.environ.get(f"AGENTSOCIETY_LLM_{key}", "")
 
 
-def run(label: str) -> dict:
+def run(label: str, segment: str = "everyone", seeds: int = len(SEEDS)) -> dict:
     sys.path.insert(0, BACKEND)
     os.chdir(BACKEND)
     _wire_llm()
@@ -170,9 +171,9 @@ def run(label: str) -> dict:
 
     rooms = []
     for name, pitch in PITCHES.items():
-        for seed in SEEDS:
+        for seed in [101 * (i + 1) for i in range(seeds)]:
             meta = ps.create_session(pitch=pitch, mode="panel", n=ROOM, seed=seed,
-                                     segments=["everyone"], user_id="sameness-benchmark")
+                                     segments=[segment], user_id="sameness-benchmark")
             framed = ps.frame_pitch(pitch, "panel")
             svc = InterviewService(meta["session_id"], base_dir=Config.PANEL_SESSION_DATA_DIR)
             res = asyncio.run(svc.batch_impact_interview(framed, concurrency=6))
@@ -186,6 +187,7 @@ def run(label: str) -> dict:
 
     out = {
         "label": label,
+        "segment": segment,
         "flags": {f: os.environ.get(f) for f in FLAGS},
         "rooms": rooms,
         "summary": {k: _summary([r[k] for r in rooms])
@@ -230,12 +232,14 @@ def main() -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("run")
     r.add_argument("--label", required=True)
+    r.add_argument("--segment", default="everyone", help="panel segment every room is drawn from")
+    r.add_argument("--seeds", type=int, default=len(SEEDS), help="rooms per pitch")
     c = sub.add_parser("compare")
     c.add_argument("a")
     c.add_argument("b")
     args = ap.parse_args()
     if args.cmd == "run":
-        out = run(args.label)
+        out = run(args.label, args.segment, args.seeds)
         print("\nSUMMARY (mean, 95% interval across rooms)")
         for key, s in out["summary"].items():
             print(f"  {key:<14} {s['mean']:.3f} ± {s['ci'] or 0:.3f}")

@@ -156,3 +156,70 @@ if __name__ == "__main__":
         fn()
         print(f"ok  {fn.__name__}")
     print(f"\n{len(fns)} tests passed")
+
+
+# ── claims scoped by what the pitch is about (`about`) ─────────────────────
+
+def _seat(card_id, **facts):
+    """A profile bound to one card, with the facts its gate reads."""
+    rows = [{"field": k, "value": v} for k, v in facts.pop("circumstances", {}).items()]
+    return {"research_citations": [{"card_id": card_id}], "circumstances": rows, **facts}
+
+
+def _claims(profile, question):
+    cards = mcs.cards_for_question(profile, question) or []
+    return {cl["chain_id"] for c in cards for cl in c["claims"]}, {c["id"] for c in cards}
+
+
+_UNINSURED_WOMAN = dict(geotype="Urban", medical_aid="False", gender="Female",
+                        circumstances={"lived_poverty": "low"})
+_BLACK_TAX_PAYER = dict(race="African/Black", employment_status="Employed",
+                        circumstances={"lived_poverty": "low"})
+
+
+def test_a_sexual_health_claim_stays_off_a_diabetes_pitch():
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "A clinic that helps you manage diabetes, R150 a visit.")
+    assert claims and "C5" not in claims
+
+
+def test_a_sexual_health_claim_comes_with_a_prep_pitch():
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "A clinic where young women can get PrEP without a queue.")
+    assert "C5" in claims
+
+
+def test_black_tax_stays_off_a_trivial_pitch():
+    _, cards = _claims(_seat("black-tax-obligation-sa", **_BLACK_TAX_PAYER),
+                       "A shared ride to the taxi rank for R15 a trip, so you pay less.")
+    assert "black-tax-obligation-sa" not in cards
+
+
+def test_black_tax_speaks_on_funeral_cover_for_family():
+    claims, _ = _claims(_seat("black-tax-obligation-sa", **_BLACK_TAX_PAYER),
+                        "Funeral cover for R80 a month that covers your parents too.")
+    assert {"C1", "C5"} <= claims
+
+
+def test_black_tax_speaks_on_spending_on_yourself():
+    claims, _ = _claims(_seat("black-tax-obligation-sa", **_BLACK_TAX_PAYER),
+                        "A luxury weekend holiday package you pay for once.")
+    assert "C2" in claims and "C5" not in claims
+
+
+def test_the_reader_can_add_a_claim_its_words_missed(monkeypatch):
+    # "starting a family" names none of the claim's words; the typed reader, when on,
+    # can still say the pitch involves reproductive health.
+    monkeypatch.setattr(mcs, "claims_touched",
+                        lambda q, cards=None: {"paying-for-care-without-medical-aid-sa#C5"})
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "A clinic visit to talk about starting a family, R150.")
+    assert "C5" in claims
+
+
+def test_a_comfortable_renter_hears_only_the_security_claim():
+    renter = dict(geotype="Urban", circumstances={"lived_poverty": "low", "housing_tenure": "rent"})
+    owner = dict(geotype="Urban", circumstances={"lived_poverty": "low", "housing_tenure": "own"})
+    pitch = "Armed response and a guard at the gate for R450 a month, if the rates and water fail too."
+    assert _claims(_seat("going-private-when-the-state-fails-sa", **renter), pitch)[0] == {"C4"}
+    assert _claims(_seat("going-private-when-the-state-fails-sa", **owner), pitch)[0] == {"C1", "C2", "C3", "C4"}

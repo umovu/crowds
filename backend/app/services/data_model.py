@@ -213,6 +213,14 @@ def mechanism_card_problems(card: Any, file_name: Optional[str] = None) -> List[
     out += [f"{label}: segment tag {t!r} is not a persona type"
             for t in card.get("segment_tags") or [] if t not in archetypes]
     out += rule_problems(label, card.get("applies_when"))
+    if card.get("borrowed_from"):
+        # Borrowed reasoning only reaches people who closely match the speakers.
+        clauses = card.get("applies_when") or []
+        if not clauses:
+            out.append(f"{label}: a borrowed card needs an applies_when gate")
+        out += [f"{label}: borrowed card gate clause {j} names fewer than two facts"
+                for j, clause in enumerate(clauses)
+                if isinstance(clause, dict) and len(clause) < 2]
     for i, claim in enumerate(card.get("claims") or []):
         if not isinstance(claim, dict):
             continue

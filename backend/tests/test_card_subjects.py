@@ -161,3 +161,41 @@ def test_an_unbound_card_is_never_admitted_by_the_reader(monkeypatch):
     _on(monkeypatch, _Stub({"farm-card": 1.0}))
     got = mcs.cards_for_question(_profile("clinic-card"), PITCH)
     assert [c["id"] for c in got] == ["clinic-card"]
+
+
+# ── Claims with an `about` line ──────────────────────────────────────────────
+
+SCOPED = {"id": "clinic-card", "topic_tags": ["clinic"],
+          "claims": [{"chain_id": "C1", "text": "queues"},
+                     {"chain_id": "C2", "text": "judged", "about": "sexual health",
+                      "about_tags": ["contraception"]}]}
+
+
+def test_claim_reader_is_off_without_the_flag(monkeypatch):
+    stub = _Stub({"claim_0": 1.0})
+    monkeypatch.setattr(cs, "_typesafe", lambda: stub)
+    assert cs.read_claims(PITCH, [("clinic-card#C2", "sexual health")]) == set()
+    assert stub.reads == 0
+
+
+def test_claim_reader_adds_a_claim_the_words_missed(monkeypatch):
+    _on(monkeypatch, _Stub({"claim_0": 0.9}))
+    assert mcs.claims_touched("A clinic visit about starting a family.", [SCOPED]) \
+        == {"clinic-card#C2"}
+
+
+def test_a_claim_the_words_found_stays_whatever_the_reader_says(monkeypatch):
+    _on(monkeypatch, _Stub({"claim_0": 0.0}))
+    assert mcs.claims_touched("A clinic for contraception.", [SCOPED]) == {"clinic-card#C2"}
+
+
+def test_a_failed_claim_read_leaves_the_words_to_decide(monkeypatch):
+    _on(monkeypatch, _Stub({}, fail=True))
+    assert mcs.claims_touched(PITCH, [SCOPED]) == set()
+
+
+def test_the_same_pitch_reads_its_claims_once(monkeypatch):
+    stub = _on(monkeypatch, _Stub({"claim_0": 0.9}))
+    for _ in range(12):
+        cs.read_claims(PITCH, [("clinic-card#C2", "sexual health")])
+    assert stub.reads == 1

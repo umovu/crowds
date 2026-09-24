@@ -199,7 +199,10 @@ def test_every_shipped_card_says_who_it_describes():
     known = set(mcs._SITUATION_FIELDS) | {
         "age_band", "youth_age_band", "lived_poverty", "owns_vehicle", "owns_computer", "owns_bank_account",
         "internet_use", "money_decision", "went_without_care", "electricity_reliability",
-        "health_service_satisfaction", "health_authority_trust"}
+        "health_service_satisfaction", "health_authority_trust",
+        # GHS household circumstances (#112)
+        "housing_tenure", "solar_panels", "home_security", "water_interruptions",
+        "water_backup", "transport_to_work", "recycles"}
     for card in mcs.load_cards():
         rules = card.get("applies_when")
         assert rules, card["id"]

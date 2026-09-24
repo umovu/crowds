@@ -148,6 +148,9 @@ def _format_card_header(c: Dict) -> str:
     region = (c.get("region") or "location not specified").strip() or "location not specified"
     conf = (c.get("confidence") or "").strip()
     header = f"From {cite} [{claim}] — {region}, {year}"
+    borrowed = (c.get("borrowed_from") or "").strip()
+    if borrowed:
+        header += f" — heard from a nearby group, not people exactly like you: {borrowed[:220]}"
     if conf:
         header += f" — confidence/limits: {conf[:220]}"
     return header
@@ -217,6 +220,42 @@ def topic_matches(card: Dict, question: str) -> bool:
                for t in (card.get("topic_tags") or []))
 
 
+def claim_key(card: Dict, claim: Dict) -> str:
+    return f"{card.get('id')}#{claim.get('chain_id')}"
+
+
+def claims_touched(question: str, cards: List[Dict] | None = None) -> set:
+    """Keys of the claims with an `about` line that this question involves.
+
+    A card is picked by what the pitch is about; a claim inside it can be narrower.
+    The clinic card's claim about being judged over sexual health does not belong
+    on a diabetes pitch. Same discipline as `subjects_touched`: the claim's own
+    about_tags are the floor, the typed reader can only add, and one read per pitch.
+    Claims without `about` are not asked about — they go wherever their card goes.
+    """
+    pool = cards if cards is not None else load_cards()
+    scoped = [(claim_key(c, cl), cl) for c in pool for cl in c.get("claims") or []
+              if cl.get("about")]
+    tagged = {k for k, cl in scoped if topic_matches({"topic_tags": cl.get("about_tags")}, question)}
+    try:
+        from . import card_subjects
+    except (ImportError, ValueError):
+        return tagged
+    return tagged | card_subjects.read_claims(question, [(k, cl["about"]) for k, cl in scoped
+                                                          if k not in tagged])
+
+
+def _about_narrowed(card: Dict | None, involved: set) -> Dict | None:
+    """The card without the claims the question does not involve; None when none is left."""
+    if not card:
+        return None
+    claims = card.get("claims") or []
+    kept = [cl for cl in claims if not cl.get("about") or claim_key(card, cl) in involved]
+    if not kept:
+        return None
+    return card if len(kept) == len(claims) else {**card, "claims": kept}
+
+
 def subjects_touched(question: str, cards: List[Dict] | None = None) -> set:
     """The ids of cards this question is about — topic tags, widened by the typed reader.
 
@@ -265,7 +304,11 @@ def cards_for_question(profile: Dict, question: str, cap: int = DEFAULT_CARD_CAP
         # Asked per-subset, each persona's different set of ids is a different
         # question and a room of twelve buys twelve reads.
         touched = subjects_touched(question)
-    return [c for c in bound if c and c.get("id") in touched][:cap]
+    on_topic = [c for c in bound if c and c.get("id") in touched]
+    if any(cl.get("about") for c in on_topic for cl in c.get("claims") or []):
+        involved = claims_touched(question)  # per pitch, memoized in card_subjects
+        on_topic = [_about_narrowed(c, involved) for c in on_topic]
+    return [c for c in on_topic if c][:cap]
 
 
 # ── Situation matching: WHO a card describes, read from the persona's own record ──

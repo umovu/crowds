@@ -34,6 +34,13 @@
       "when": "optional",
       "note": "One human-written line saying what this research is about, in plain words, for the typed reader in card_subjects to match a pitch against. Falls back to topic_tags when absent, which reads as keywords and scores like keywords. Never shown to a persona — the prompt block is built from claims."
     },
+    "borrowed_from": {
+      "type": "string",
+      "min_length": 1,
+      "max_length": 400,
+      "when": "optional",
+      "note": "Set only when the people who spoke are a close group, not the group the card is gated to: who spoke, and why their reasoning carries over. The quotes stay the source's own; only the gate is stretched. A borrowed card needs a tight gate (every applies_when clause names at least two facts), and the prompt says the reasoning comes from a nearby group."
+    },
     "claim_type": {
       "type": "string",
       "allowed": [
@@ -105,6 +112,22 @@
             },
             "when": "always",
             "note": "Words people use when reasoning this way. Reaches a prompt only with its claim."
+          },
+          "about": {
+            "type": "string",
+            "min_length": 1,
+            "max_length": 300,
+            "when": "optional",
+            "note": "What a pitch must involve for this claim to belong in the prompt, in one human-written line. Absent means the claim fits whatever the card fits. Present, the claim stays only when one of its about_tags is in the pitch or the typed reader is sure the pitch involves this line."
+          },
+          "about_tags": {
+            "type": "list",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z -]*$"
+            },
+            "when": "optional",
+            "note": "Words that put the claim in the prompt without the typed reader (whole-word match)."
           }
         }
       },

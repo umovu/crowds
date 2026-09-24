@@ -204,6 +204,17 @@ class MechanismCardClaim(DataModel):
     evaluative_rules: List[Annotated[str, Field(min_length=1)]] = Field(default=None, json_schema_extra={'when': 'optional'})
     objections: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
     vocabulary: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
+    about: str = Field(default=None, min_length=1, max_length=300, json_schema_extra={
+        'when': 'optional',
+        'note': ("What a pitch must involve for this claim to belong in the prompt, in one "
+                 "human-written line. Absent means the claim fits whatever the card fits. "
+                 "Present, the claim stays only when one of its about_tags is in the pitch "
+                 "or the typed reader is sure the pitch involves this line."),
+    })
+    about_tags: List[Annotated[str, Field(pattern='^[a-z][a-z -]*$')]] = Field(default=None, json_schema_extra={
+        'when': 'optional',
+        'note': "Words that put the claim in the prompt without the typed reader (whole-word match).",
+    })
 
 
 class MechanismCard(DataModel):
@@ -217,6 +228,14 @@ class MechanismCard(DataModel):
                  "for the typed reader in card_subjects to match a pitch against. Falls back "
                  "to topic_tags when absent, which reads as keywords and scores like keywords. "
                  "Never shown to a persona — the prompt block is built from claims."),
+    })
+    borrowed_from: str = Field(default=None, min_length=1, max_length=400, json_schema_extra={
+        'when': 'optional',
+        'note': ("Set only when the people who spoke are a close group, not the group the card "
+                 "is gated to: who spoke, and why their reasoning carries over. The quotes stay "
+                 "the source's own; only the gate is stretched. A borrowed card needs a tight "
+                 "gate (every applies_when clause names at least two facts), and the prompt "
+                 "says the reasoning comes from a nearby group."),
     })
     claim_type: MechanismCardClaimType = Field(json_schema_extra={'when': 'always'})
     claims: List[MechanismCardClaim] = Field(min_length=1, max_length=5, json_schema_extra={'when': 'always'})

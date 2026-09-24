@@ -15,7 +15,12 @@ qualitative research. One card per file, named `<id>.json`.
   `evaluative_rules`. A claim reaches only people the card fits and its own `needs`
   fit (`[]` means everyone the card fits). A claim left out takes its words with it.
 
-## Cards (25)
+- **Borrowed:** a card with `borrowed_from` was heard from a close group, not the
+  people it is gated to (no interview study covers them). The quotes stay the
+  source's own; only the gate is stretched. It needs a gate of at least two facts per
+  clause, and the prompt says the reasoning comes from a nearby group.
+
+## Cards (28)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
@@ -42,6 +47,9 @@ qualitative research. One card per file, named `<id>.json`.
 - `municipal-waste-failure-sa` — when rubbish collection fails: suburbs store or pay a collector, townships dump or burn (claims routed by poverty)
 - `rural-water-scarcity-sa` — rural villages without water: buying it, boreholes, tanker queues, broken promises
 - `women-taxi-commuting-sa` — young women commuting by minibus taxi: fares, safety, drivers and dark ranks
+- `going-private-when-the-state-fails-sa` — comfortable city homeowners paying for their own water and security; **borrowed** for backup power
+- `paying-for-care-without-medical-aid-sa` — paying for care without medical aid: price, trusted pharmacist, work hours, judgement on sexual health (**borrowed**)
+- `black-tax-obligation-sa` — employed middle-class people supporting family from their salary, weighing new spending against it
 
 ## Gaps still open
 
