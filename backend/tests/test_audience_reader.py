@@ -1,0 +1,124 @@
+"""The founder's "who it's for" becomes a room of people who are ALL of it. LLM-off.
+
+Picking three group chips seats anyone in any of the three. A described audience
+("city workers without medical aid") is one group, so the room must be the people
+who match every fact, and anything the library cannot match must be said out loud.
+"""
+import json
+import os
+import sys
+
+import pytest
+
+HERE = os.path.dirname(__file__)
+BACKEND = os.path.normpath(os.path.join(HERE, ".."))
+sys.path.insert(0, os.path.join(BACKEND, "scripts"))
+LIBRARY = os.path.join(BACKEND, "app", "data", "persona_library", "personas.json")
+
+from app.services import audience_reader as ar  # noqa: E402
+
+NTOMBI = ("These individuals live predominantly in urban provinces, earn between R7 500 and "
+          "R30 000 per month, and are often younger workers or informal entrepreneurs who "
+          "rely on pay-as-you-go healthcare.")
+
+
+# ── reading the words ────────────────────────────────────────────────────────
+
+def test_the_answer_sheet_passes_with_the_model_off():
+    # Raise this if the sheet grows; never lower it to make a change pass.
+    import check_audience_cases
+    out = check_audience_cases.score(ar.read)
+    failed = [r for r in out["rows"] if not r["ok"]]
+    assert not failed, failed
+    assert out["total"] >= 44 and out["held_out_total"] >= 12
+
+
+def test_a_product_feature_is_not_read_as_the_buyer():
+    got = ar.read("A nurse the same day for R150, with no queue and no medical aid needed.")
+    assert got["facts"] == [] and got["provinces"] == []
+
+
+def test_what_the_library_cannot_match_is_said_not_guessed():
+    got = ar.read(NTOMBI)
+    assert set(got["facts"]) == {"city", "working", "no_medical_aid", "young"}
+    said = " ".join(got["unmatched"])
+    assert "income" in said and "informal" in said
+
+
+def test_a_narrower_fact_beats_the_broader_one_it_sits_inside():
+    assert ar.read("Cover for homeowners paying off a bond.")["facts"] == ["bond"]
+
+
+def test_an_age_range_reads_as_every_band_it_touches():
+    assert ar.read("For renters aged 25-35.")["facts"] == ["renters", "age_25_34", "middle_aged"]
+
+
+def test_an_unknown_fact_is_refused():
+    with pytest.raises(ValueError):
+        ar.rule(["billionaires"])
+
+
+# ── matching people ──────────────────────────────────────────────────────────
+
+def test_facts_on_different_fields_must_all_hold():
+    person = {"geotype": "Urban", "employment_status": "Employed", "medical_aid": True, "age": 30}
+    assert ar.matches(person, ar.rule(["city", "working"]))
+    assert not ar.matches(person, ar.rule(["city", "working", "no_medical_aid"]))
+
+
+def test_facts_on_the_same_field_are_either():
+    renter = {"circumstances": [{"field": "housing_tenure", "value": "rent"}]}
+    assert ar.matches(renter, ar.rule(["renters", "homeowners"]))
+
+
+def test_a_fact_the_person_does_not_carry_does_not_match():
+    assert not ar.matches({"geotype": "Urban"}, ar.rule(["no_medical_aid"]))
+
+
+# ── the room ─────────────────────────────────────────────────────────────────
+
+@pytest.fixture
+def ps(tmp_path, monkeypatch):
+    if not os.path.exists(LIBRARY):
+        pytest.skip("persona library not built in this environment")
+    from app.services import panel_service
+    monkeypatch.setattr(panel_service, "_base_dir", lambda: str(tmp_path))
+    return panel_service
+
+
+def test_every_seat_is_all_of_the_audience(ps, tmp_path):
+    facts = ["city", "working", "no_medical_aid"]
+    meta = ps.create_session("A R150 nurse visit.", mode="panel", n=12, seed=3,
+                             audience={"facts": facts})
+    seats = json.load(open(tmp_path / meta["session_id"] / "agentsociety_profiles.json", encoding="utf-8"))
+    by_id = {p["id"]: p for p in ps.get_library().all()}
+    wanted = ar.rule(facts)
+    assert len(seats) == 12
+    assert all(ar.matches(by_id[s["library_id"]], wanted) for s in seats)
+    assert meta["audience_pool_size"] == ar.count(facts) < len(by_id)
+    assert meta["segment_label"] == "Lives in a city or town · Has a job · No medical aid"
+
+
+def test_an_audience_nobody_is_says_so(ps):
+    with pytest.raises(ValueError, match="No one in the library"):
+        ps.create_session("A pitch.", mode="panel", n=12, seed=1,
+                          audience={"facts": ["learners", "older"]})
+
+
+def test_the_chip_shows_the_facts_and_the_count_instead_of_group_guesses():
+    if not os.path.exists(LIBRARY):
+        pytest.skip("persona library not built in this environment")
+    from app.services import study_reader
+    spec = study_reader.read_study("An app for working mothers in Joburg, R99 a month.")
+    aud = spec["audience"]
+    assert aud["facts"] == ["working", "women", "parents"] and aud["provinces"] == ["Gauteng"]
+    assert aud["segments"] == []
+    assert aud["count"] == ar.count(aud["facts"], aud["provinces"]) > 0
+
+
+def test_a_described_audience_is_not_re_split_into_keyword_groups():
+    from app.services import panel_session_service as pss
+    pitch = "An app for teachers and parents."
+    assert pss._audience({"audience": {"facts": ["working"]}}, "land", pitch) is None
+    assert pss._audience({"audience": {"facts": ["working"]}, "segments": ["employed"]},
+                         "land", pitch) == ["employed"]  # an explicit pick still wins

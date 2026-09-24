@@ -126,9 +126,35 @@
           </template>
           <template v-else>
             <div class="pp-field-label">Who's in the room?</div>
+            <!-- The audience the founder described, read into facts. The room is
+                 people who are ALL of them; each can be removed. What the library
+                 cannot match is said, never guessed. -->
+            <div v-if="audienceParts.length || study?.audience?.unmatched?.length" class="pp-suggest">
+              <div class="pp-suggest-head">
+                <span class="pp-suggest-title">From your description</span>
+              </div>
+              <div class="pp-suggest-chips">
+                <button
+                  v-for="part in audienceParts"
+                  :key="part.key"
+                  class="pp-suggest-chip"
+                  :title="'Remove ' + part.label"
+                  @click="removeAudiencePart(part.key)"
+                >
+                  <span class="pp-suggest-chip-label">{{ part.label }}</span>
+                  <span class="pp-suggest-chip-count">×</span>
+                </button>
+              </div>
+              <div v-if="audienceIds" class="pp-suggest-note">
+                <b>{{ audienceIds.size }}</b> people are all of this. Tap one to drop it.
+              </div>
+              <div v-for="u in (study?.audience?.unmatched || [])" :key="u" class="pp-suggest-note">
+                Can't match {{ u }}.
+              </div>
+            </div>
             <!-- Groups the pitch itself names, with the real library count.
                  Suggested, never applied — clicking is the operator's call. -->
-            <div v-if="suggestionChips.length" class="pp-suggest">
+            <div v-if="suggestionChips.length && !audienceParts.length" class="pp-suggest">
               <div class="pp-suggest-head">
                 <span class="pp-suggest-title">Groups that match your pitch</span>
                 <button class="pp-suggest-dismiss" @click="suggestionDismissed = true">×</button>
@@ -1192,12 +1218,49 @@ const promptPlaceholder = computed(() => posterBrief.value
 // summary reads the confirmed study spec once the chips are up, else the raw
 // picker selection — never both, so they can't drift.
 const crowdPickerOpen = ref(false)
+
+// ── The audience the founder described ────────────────────────────────────
+// The read turns "for working mothers in Joburg" into facts the personas carry
+// (audience_reader). The room is everyone who is ALL of them: facts on the same
+// field are "either", different fields stack. Each part can be removed, and the
+// count is recomputed here from the member ids the read sent.
+const audienceOff = ref(new Set())
+watch(study, () => { audienceOff.value = new Set() })
+const audienceParts = computed(() => {
+  const a = study.value?.audience
+  if (!a || lens.value === 'fit') return []
+  const facts = (a.facts || []).map((f, i) => ({ key: f, label: (a.labels || [])[i] || f, field: (a.fields || {})[f] || f }))
+  const provs = (a.provinces || []).map(p => ({ key: '@' + p, label: p, field: 'province' }))
+  return [...facts, ...provs].filter(p => !audienceOff.value.has(p.key))
+})
+const audienceIds = computed(() => {
+  const members = study.value?.audience?.members || {}
+  if (!audienceParts.value.length) return null
+  const byField = {}
+  for (const p of audienceParts.value) {
+    const set = byField[p.field] || (byField[p.field] = new Set())
+    for (const id of members[p.key] || []) set.add(id)
+  }
+  let ids = null
+  for (const set of Object.values(byField)) {
+    ids = ids === null ? new Set(set) : new Set([...ids].filter(id => set.has(id)))
+  }
+  return ids
+})
+const removeAudiencePart = (key) => {
+  audienceOff.value = new Set([...audienceOff.value, key])
+}
+
 const crowdSummary = computed(() => {
   if (isFit.value) return 'All six buyer groups'
   const src = (study.value && lens.value !== 'fit')
     ? (study.value.audience.segments || [])
     : selectedSegments.value
   const sel = src && src.length ? src : ['everyone']
+  if (sel.length === 1 && sel[0] === 'everyone' && audienceParts.value.length) {
+    const parts = audienceParts.value.map(p => p.label)
+    return parts.length <= 3 ? parts.join(' · ') : `${parts.length} things you described`
+  }
   if (sel.length === 1 && sel[0] === 'everyone') return 'Everyone'
   const labelOf = (id) => (segments.value.find(s => s.id === id)?.label || id)
   if (sel.length <= 2) return sel.map(labelOf).join(' + ')
@@ -1266,7 +1329,12 @@ const pickedMemberIds = computed(() => {
 // widens the pool, matching how _mixed_cast fills the seats — but they OVERLAP,
 // so this is the union, not the sum. Adding the counts double-counts anyone in
 // both groups and reports a room bigger than the library can draw.
-const matchCount = computed(() => pickedMemberIds.value?.size ?? null)
+const matchCount = computed(() => {
+  const picked = pickedMemberIds.value
+  const described = audienceIds.value
+  if (picked && described) return [...picked].filter(id => described.has(id)).length
+  return (picked || described)?.size ?? null
+})
 
 // How much of a group you already have, given what's picked. Null when nothing
 // is picked, so an untouched picker stays quiet.
@@ -1458,6 +1526,13 @@ const submitPanel = async () => {
     if (spec.lens !== 'fit') {
       const segs = spec.audience.segments || []
       if (segs.length) body.segments = segs
+      // The audience they described, minus any part they removed.
+      if (audienceParts.value.length) {
+        body.audience = {
+          facts: audienceParts.value.filter(p => !p.key.startsWith('@')).map(p => p.key),
+          provinces: audienceParts.value.filter(p => p.key.startsWith('@')).map(p => p.key.slice(1)),
+        }
+      }
     }
     // Attitudes now ride in as ordinary segments (the "What they already think"
     // family), so nothing extra is sent for them. Affordability is derived

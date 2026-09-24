@@ -1,0 +1,470 @@
+{
+ "about": "Answer sheet for audience_reader: a founder's words -> the facts that define their room. Written by hand. `facts` and `provinces` are what a careful person would pick from audience_reader.OPTIONS; `unmatched` names each thing that must come back as 'can't match' (matched by its first word). Score with scripts/check_audience_cases.py; tests/test_audience_reader.py guards the keyword-only score. Cases marked held_out were written after the keywords were tuned and were not tuned against: their score is the honest one.",
+ "cases": [
+  {
+   "id": "ntombi-missing-middle",
+   "source": "tester (Ntombi)",
+   "text": "The out-of-pocket healthcare segment in South Africa consists of an estimated 10 to 16 million people who fall into what economists call the \"missing middle\". These individuals live predominantly in urban provinces, earn between R7 500 and R30 000 per month, and are often younger workers or informal entrepreneurs who actively rely on pay-as-you-go healthcare products instead of traditional monthly premiums.",
+   "facts": [
+    "city",
+    "working",
+    "no_medical_aid",
+    "young"
+   ],
+   "provinces": [],
+   "unmatched": [
+    "income",
+    "informal"
+   ]
+  },
+  {
+   "id": "working-mothers-joburg",
+   "text": "An app for working mothers in Joburg, R99 a month.",
+   "facts": [
+    "working",
+    "women",
+    "parents"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "clinic-feature-trap",
+   "text": "A private clinic chain wants to launch a R150 pay-per-visit nurse service. You book on WhatsApp and see a nurse the same day, with no queue and no medical aid needed. Would you use it?",
+   "facts": [],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "renting-first-flat",
+   "text": "A budgeting app for young people renting their first flat in Cape Town.",
+   "facts": [
+    "young",
+    "renters"
+   ],
+   "provinces": [
+    "Western Cape"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "bond-insurance",
+   "text": "Home insurance for homeowners paying off a bond.",
+   "facts": [
+    "bond"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "rural-pensioners",
+   "text": "A funeral policy for pensioners in rural Limpopo.",
+   "facts": [
+    "rural",
+    "older"
+   ],
+   "provinces": [
+    "Limpopo"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "middle-class-solar",
+   "text": "Solar kits for middle-class homeowners tired of load shedding.",
+   "facts": [
+    "homeowners",
+    "comfortable"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "no-car-commuters",
+   "text": "A taxi-booking app for commuters without a car.",
+   "facts": [
+    "no_car"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "durban-motorists",
+   "text": "A fuel rewards card for motorists in Durban.",
+   "facts": [
+    "car_owners"
+   ],
+   "provinces": [
+    "KwaZulu-Natal"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "township-learners",
+   "text": "Maths tutoring for high school learners at township schools.",
+   "facts": [
+    "city",
+    "learners"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "unemployed-youth-ec",
+   "text": "A job-matching service for unemployed youth in the Eastern Cape.",
+   "facts": [
+    "out_of_work",
+    "young"
+   ],
+   "provinces": [
+    "Eastern Cape"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "loyalty-earn-trap",
+   "text": "A loyalty programme where customers earn points on groceries.",
+   "facts": [],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "medical-aid-gp",
+   "text": "Private GP visits for people with medical aid who hate waiting.",
+   "facts": [
+    "has_medical_aid"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "uninsured-soweto",
+   "text": "An affordable clinic for uninsured families in Soweto.",
+   "facts": [
+    "no_medical_aid"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "stokvel-women",
+   "text": "A savings app for low-income women who belong to a stokvel.",
+   "facts": [
+    "women",
+    "struggling"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "sandton-gym",
+   "text": "Premium gym membership for affluent professionals in Sandton.",
+   "facts": [
+    "working",
+    "comfortable"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "fathers-line",
+   "text": "A parenting advice line for fathers.",
+   "facts": [
+    "men",
+    "parents"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "gogo-bursary",
+   "text": "Grandparents raising grandchildren need help with school costs, so we offer a small bursary.",
+   "facts": [
+    "grandparents"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "rural-women-nurse",
+   "text": "A WhatsApp nurse for rural women who struggle to reach a clinic.",
+   "facts": [
+    "rural",
+    "women"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "student-data",
+   "text": "Cheap data bundles for students.",
+   "facts": [
+    "young"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "pretoria-renters",
+   "text": "Our target market is tertiary-educated renters aged 25-35 in Pretoria.",
+   "facts": [
+    "renters",
+    "age_25_34",
+    "middle_aged",
+    "tertiary"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "sme-loans",
+   "text": "Short-term loans for small business owners.",
+   "facts": [
+    "small_business"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "maize-farmers",
+   "text": "An app that helps farmers sell their maize directly to buyers.",
+   "facts": [
+    "farmers"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "no-audience-meal-kit",
+   "text": "A meal kit delivered weekly, R400 a week.",
+   "facts": [],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "two-provinces-renters",
+   "text": "For people in Gauteng and the Western Cape who rent.",
+   "facts": [
+    "renters"
+   ],
+   "provinces": [
+    "Gauteng",
+    "Western Cape"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "young-drivers",
+   "text": "Car insurance for young drivers.",
+   "facts": [
+    "young",
+    "car_owners"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "school-shoes-parents",
+   "text": "We sell school shoes to parents at no-fee schools.",
+   "facts": [
+    "parents"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "sassa-payout",
+   "text": "A dignified payout service for SASSA grant recipients.",
+   "facts": [],
+   "provinces": [],
+   "unmatched": [
+    "grants"
+   ]
+  },
+  {
+   "id": "zulu-mothers",
+   "text": "A radio health show for isiZulu-speaking mothers in KwaZulu-Natal.",
+   "facts": [
+    "women",
+    "parents"
+   ],
+   "provinces": [
+    "KwaZulu-Natal"
+   ],
+   "unmatched": [
+    "home"
+   ]
+  },
+  {
+   "id": "everyone",
+   "text": "This is for everyone in South Africa.",
+   "facts": [],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "over-60-rural",
+   "text": "Home visits by nurses for people over 60 living in villages.",
+   "facts": [
+    "older",
+    "rural"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "poor-service-trap",
+   "text": "Customers complain about poor service at banks, so we built a better app.",
+   "facts": [],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "h-nurses-shift",
+   "text": "A meal service for nurses and other shift workers in Durban hospitals.",
+   "facts": [
+    "working"
+   ],
+   "provinces": [
+    "KwaZulu-Natal"
+   ],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-single-moms",
+   "text": "Affordable after-school care aimed at single moms who work full time.",
+   "facts": [
+    "women",
+    "parents",
+    "working"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-retired-cape",
+   "text": "Our customers are retired couples living in the Western Cape.",
+   "facts": [
+    "older"
+   ],
+   "provinces": [
+    "Western Cape"
+   ],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-matric",
+   "text": "A study app for matric learners in rural KwaZulu-Natal.",
+   "facts": [
+    "learners",
+    "rural"
+   ],
+   "provinces": [
+    "KwaZulu-Natal"
+   ],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-jobseekers-soweto",
+   "text": "CV help for job seekers in Soweto.",
+   "facts": [
+    "out_of_work"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-car-tracking",
+   "text": "Vehicle tracking for people who own a car in townships.",
+   "facts": [
+    "car_owners",
+    "city"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-feature-cheap",
+   "text": "A cheap phone that works without data, sold at spaza shops for R299.",
+   "facts": [],
+   "provinces": [],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-under-25",
+   "text": "A mental health chat line for people under 25.",
+   "facts": [
+    "age_15_24"
+   ],
+   "provinces": [],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-tenants-rights",
+   "text": "A legal help line for tenants facing eviction in Johannesburg.",
+   "facts": [
+    "renters"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-well-off-parents",
+   "text": "A private school finder for well-off parents in Pretoria.",
+   "facts": [
+    "comfortable",
+    "parents"
+   ],
+   "provinces": [
+    "Gauteng"
+   ],
+   "unmatched": [],
+   "held_out": true
+  },
+  {
+   "id": "h-income-band",
+   "text": "A credit card for employees earning more than R20 000 a month.",
+   "facts": [
+    "working"
+   ],
+   "provinces": [],
+   "unmatched": [
+    "income"
+   ],
+   "held_out": true
+  },
+  {
+   "id": "h-farm-women",
+   "text": "Seed loans for women farmers in the Eastern Cape.",
+   "facts": [
+    "women",
+    "farmers"
+   ],
+   "provinces": [
+    "Eastern Cape"
+   ],
+   "unmatched": [],
+   "held_out": true
+  }
+ ]
+}
