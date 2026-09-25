@@ -1,278 +1,253 @@
 {
   "id": "chronic-care-repeat-cost-sa",
-  "subject": "the money and travel a long-term illness costs every month to keep getting care",
   "citation": [
-    "Goudge J, Gilson L, Russell S, Gumede T, Mills A (2009). Affordability, availability and acceptability barriers to health care for the chronically ill: longitudinal case studies from South Africa. BMC Health Services Research 9:75. doi:10.1186/1472-6963-9-75"
+    "The impact of persistent precarity on patients' capacity to manage their treatment burden: a qualitative study of people with HIV and multimorbidity in urban and rural South Africa (2023). Frontiers in Medicine 10:1061190. doi:10.3389/fmed.2023.1061190"
   ],
   "segment_tags": [
     "grant_dependent_survivor"
   ],
   "claims": [
     {
-      "text": "A chronic illness turns a per-visit price into a monthly bill: the journey and payment recur every month, repeat consultation costs can reach a large share of household income, and what must be paid today is the binding constraint, so anything requiring upfront payment or travel is read as inaccessible",
+      "text": "Persistent income precarity makes treatment and healthy-living demands read as financially impossible, so care is delayed, traded off, or paid for with borrowed money, and anything requiring out-of-pocket spending or nutritious food is judged out of reach.",
       "needs": [],
-      "chain_id": "C6+C1",
+      "chain_id": "C1",
       "passages": [
-        "P19",
-        "P20",
-        "P1",
-        "P2"
+        "P2",
+        "P5",
+        "P11",
+        "P10",
+        "P6",
+        "P14",
+        "P8",
+        "P9"
       ],
       "evaluative_rules": [
-        "Weigh care-seeking against immediate transport and out-of-pocket costs"
+        "Judge a treatment or healthy-living demand by whether it can be afforded without borrowing or sacrificing other essentials"
       ],
       "objections": [
-        "How many times a month would I have to pay this?"
-      ],
-      "vocabulary": [],
-      "readings": [
-        {
-          "text": "Someone who sees repeated consultations reaching a large share of household income would weigh a new service by whether it removes the need to pay for each visit separately.",
-          "passages": [
-            "P19",
-            "P20"
-          ]
-        },
-        {
-          "text": "If what must be paid today is the binding constraint, a new service that still requires upfront payment or travel would be read as inaccessible no matter its other benefits.",
-          "passages": [
-            "P1",
-            "P2"
-          ]
-        },
-        {
-          "text": "Someone who has lost livelihoods and social networks would be more open to a new service only if it does not depend on having money in hand or relatives to assist.",
-          "passages": [
-            "P19",
-            "P2"
-          ]
-        },
-        {
-          "text": "If the cost burden fluctuates with how many times one is required to go, a new service that reduces the number of required visits would be weighed as more accessible even when monthly costs remain.",
-          "passages": [
-            "P20"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "Scarce transport funds are protected from waste: a clinic known for stock-outs is judged not worth the cost of attendance, so the patient shops around or self-treats instead",
-      "needs": [
-        {
-          "health_service_satisfaction": [
-            "dissatisfied"
-          ]
-        }
-      ],
-      "chain_id": "C2",
-      "passages": [
-        "P4"
-      ],
-      "evaluative_rules": [
-        "Avoid wasting scarce transport funds on a trip likely to be fruitless"
-      ],
-      "objections": [
-        "Do I have money for transport to get there?",
-        "Will I arrive and find the medicine is out of stock?"
+        "Will this require money I do not have, or food I cannot afford?"
       ],
       "vocabulary": [
-        "money for transport",
-        "shopping around"
+        "take each day as it comes",
+        "there is no money"
       ],
       "readings": [
         {
-          "text": "Someone who has self-treated after a fruitless trip would weigh any new option by first asking whether it can be checked before spending on transport.",
+          "text": "Someone who borrows money just to get to the clinic would weigh any new product or service by whether it removes the need for travel or can be reached without spending money they do not have.",
           "passages": [
-            "P4"
+            "P14"
           ]
         },
         {
-          "text": "If a person has shopped around because of regular stock-outs, they would be more open to a new option that removes the need to travel to a clinic at all.",
+          "text": "If a person is already buying boosters and vitamins one at a time, they would assess a new product or service by whether it can be bought in small, separate amounts rather than as a single larger outlay.",
           "passages": [
-            "P4"
+            "P8"
           ]
         },
         {
-          "text": "Someone who has judged a clinic not worth the cost of attendance would be cautious about any new option that still depends on that same clinic being stocked.",
+          "text": "Someone who feels doctors ignore that there is nothing in their rural area would be more open to a new product or service only if it does not depend on nutritious food being available or affordable where they live.",
           "passages": [
-            "P4"
+            "P10"
           ]
         },
         {
-          "text": "If a person has self-treated instead of consulting, they would weigh a new option mainly by whether it makes self-treatment safer or more informed.",
+          "text": "If a person is selling sheep heads to add to an old age grant because they want fresh foods, they would judge a new product or service by whether it helps them get those foods without requiring another difficult trade-off.",
           "passages": [
-            "P4"
+            "P9"
           ]
         }
       ]
     },
     {
-      "text": "Unclarified referral instructions defeat unempowered patients: without asking questions, people get lost in the referral system and give up",
+      "text": "Dependence on others for treatment costs turns asking for help into a source of guilt and shame, so patients keep seeking care while carrying debt or go without medication when support runs out, and anything assuming reliable family or financial backing is read as unrealistic.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P4",
+        "P7"
+      ],
+      "evaluative_rules": [
+        "Judge a treatment option by whether it can be sustained without burdening or shaming the people who help you"
+      ],
+      "objections": [
+        "Will this force me to keep asking others for money I cannot repay?"
+      ],
+      "vocabulary": [
+        "debt",
+        "guilty"
+      ],
+      "readings": [
+        {
+          "text": "Someone who keeps seeking care while carrying debt would weigh a new service by whether it reduces the need to ask others for help, since asking is a source of guilt and shame.",
+          "passages": [
+            "P4",
+            "P3"
+          ]
+        },
+        {
+          "text": "If a person goes without medication when support runs out, they would see a new service as unrealistic if it assumes reliable family backing.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who feels constantly guilty about incurring expenses for treatment would be open to a new service that lessens dependence on others, but only if it does not add to the debt they already carry.",
+          "passages": [
+            "P4",
+            "P3"
+          ]
+        },
+        {
+          "text": "If a person keeps seeking care while carrying debt, they would read any new service that assumes reliable financial backing as out of touch with their situation.",
+          "passages": [
+            "P3"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Unsafe or inaccessible home terrain makes moving about and travelling alone read as risky and physically hard, so patients wait for companions, take dangerous routes, or struggle with mobility aids, and anything requiring frequent clinic travel or home mobility is judged unsafe or impractical.",
       "needs": [],
       "chain_id": "C3",
       "passages": [
-        "P5"
-      ],
-      "objections": [],
-      "vocabulary": [
-        "unempowered",
-        "get 'lost' and give up"
-      ],
-      "readings": [
-        {
-          "text": "Someone who gets lost in the referral system and gives up would be unlikely to ask questions about a new referral process, so they would need the next steps to be made obvious without them having to ask.",
-          "passages": [
-            "P5"
-          ]
-        },
-        {
-          "text": "If unclarified referral instructions defeat unempowered patients, a new service that relies on patients asking questions to clarify what to do next would be hard for them to weigh up at all.",
-          "passages": [
-            "P5"
-          ]
-        },
-        {
-          "text": "Someone who is likely to get lost and give up would weigh a new policy more favourably if it removed the need to ask questions, but they might still give up if any part of it remained unclarified.",
-          "passages": [
-            "P5"
-          ]
-        },
-        {
-          "text": "If highly vulnerable households seem less likely to take alternative action, they would be less likely to pursue a new product that requires them to take alternative action when instructions are unclear.",
-          "passages": [
-            "P5"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "Respectful, explanatory provider communication is the test of whether formal treatment is worth returning to: when it fails, families turn to prophets, traditional healers, or faith healers and abandon the health system",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P6",
-        "P7",
-        "P8",
-        "P11",
         "P12",
-        "P13",
-        "P14",
-        "P15",
-        "P16",
-        "P17"
+        "P16"
       ],
       "evaluative_rules": [
-        "Judge formal treatment by whether providers give clear diagnosis, explanation, and respectful communication"
+        "Judge a treatment or service by whether it can be reached and used without unsafe travel or difficult movement"
       ],
       "objections": [
-        "Will the nurses listen to me and explain what is wrong?"
+        "Will I have to travel alone or move around in ways that are unsafe or too hard for me?"
       ],
       "vocabulary": [
-        "hospital treatment as a failure"
+        "not safe",
+        "huge risk"
       ],
       "readings": [
         {
-          "text": "Someone who has felt humiliated by nurses would weigh a new service first by whether it seems likely to repeat that humiliation, and only then by what it offers.",
+          "text": "Someone who says moving about in the shack with a wheelchair became too hard would weigh any new service that still requires moving about at home as impractical.",
           "passages": [
-            "P11",
             "P12"
           ]
         },
         {
-          "text": "If a person has given up on the public health system after years of provider irritation, they would approach a new formal service expecting their continuing symptoms to be dismissed again.",
+          "text": "If a person says it is not safe to stay where they are, they would judge a new service that depends on home visits or home mobility as unsafe.",
           "passages": [
-            "P15",
-            "P13"
+            "P12"
           ]
         },
         {
-          "text": "Someone who left treatment because no one explained what it could achieve would look at a new service mainly for whether it promises a cure rather than just control of symptoms.",
+          "text": "Someone who waits for a companion to walk with from the clinic would see a new service that requires frequent clinic travel alone as risky.",
           "passages": [
-            "P8",
             "P16"
           ]
         },
         {
-          "text": "If a family has turned to a faith healer after seeing hospital treatment as a failure, they would weigh a new formal service against the explanations they already received from that healer.",
+          "text": "If a person says they will just take the chance and go into the forest alone when companions take too long, they would weigh a new service that reduces the need for that route as safer, but would still see any required solo travel as a huge risk.",
           "passages": [
-            "P6",
-            "P14"
+            "P16"
           ]
         }
       ]
     },
     {
-      "text": "A need becomes actionable only when it can be explained and justified to others: legitimacy in the eyes of friends and relatives unlocks financial support",
+      "text": "Household violence and substance-use stress are read as direct causes of worsening illness, so patients accept their conditions and treat adherence to clinic guidance as the best available response, and home monitoring or self-management is judged helpful mainly when it reduces clinic dependence.",
       "needs": [],
-      "chain_id": "C5",
+      "chain_id": "C4",
       "passages": [
-        "P10",
-        "P12"
+        "P17",
+        "P18",
+        "P1",
+        "P20"
       ],
       "evaluative_rules": [
-        "Support a need only when it can be explained and justified to others"
+        "Judge a new health tool by whether it reduces the burden of getting to and depending on the clinic"
       ],
       "objections": [
-        "Can I explain this need to my family and neighbours so they will help?"
+        "Will this actually reduce my dependence on clinic visits, or just add another thing to manage?"
       ],
       "vocabulary": [
-        "dependant on gifts"
+        "adhere to the guidance",
+        "accepted them"
       ],
       "readings": [
         {
-          "text": "Someone who has seen a need become actionable only when it can be explained and justified to others would weigh a new offering by whether it gives them the words and standing to explain their situation to friends and relatives.",
+          "text": "Someone who has accepted their conditions and treats adherence to clinic guidance as the best available response would judge a new home monitoring tool mainly by whether it reduces clinic dependence.",
           "passages": [
-            "P10"
+            "P1",
+            "P20"
           ]
         },
         {
-          "text": "If a person has felt humiliation when unable to explain or justify a need, they would look at a new product or service for whether it spares them that exposure before others.",
+          "text": "If a person sees household violence and substance-use stress as direct causes of worsening illness, they may be less open to a new self-management approach that asks them to take on more responsibility at home.",
           "passages": [
-            "P12"
+            "P17",
+            "P18"
           ]
         },
         {
-          "text": "Someone who has seen knowledge from nurses empower a mother to become a resource would weigh a new offering by whether it passes on understanding that lets them justify needs to their community.",
+          "text": "Someone who believes the best they can do is adhere to nurse guidance and not miss clinic dates would weigh a new product or policy by whether it fits within that clinic-centred routine rather than replacing it.",
           "passages": [
-            "P12"
+            "P1"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Health information arrives verbally from nurses and community health workers with no take-home written material, so retained information is limited and patients depend on in-person visits, making anything that assumes patients can read and follow written instructions at home a mismatch with current support.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P15"
+      ],
+      "evaluative_rules": [
+        "Judge a health product or policy by whether it matches how information actually reaches and stays with patients"
+      ],
+      "objections": [
+        "Will I be expected to read and follow written instructions at home on my own?"
+      ],
+      "vocabulary": [
+        "do not receive any papers",
+        "share information"
+      ],
+      "readings": [
+        {
+          "text": "Someone who relies on nurses and community health workers to share information verbally would weigh a new product or service by whether it can be explained in person during a visit, since no papers are given to take home.",
+          "passages": [
+            "P15"
           ]
         },
         {
-          "text": "If a person has relied on a mother's ability to explain and justify need to unlock support, they would judge a new service by how much it strengthens the account they can give to friends and relatives.",
+          "text": "If health information is only shared verbally and no papers are given to take home, a new product or service that assumes written instructions can be followed at home would be seen as a mismatch with current support.",
           "passages": [
-            "P10"
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who depends on in-person visits from nurses and community health workers to check on them and share information would be more open to a new product or service that fits into those visits rather than one that expects independent use at home.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "If retained information is limited because nothing is given to take home, a new product or service that includes a way for nurses or community health workers to repeat or reinforce information during visits would be weighed more favourably than one that relies on written material.",
+          "passages": [
+            "P15"
           ]
         }
       ]
     }
   ],
   "claim_type": "qualitative",
-  "region": "Agincourt sub-district, rural Mpumalanga, South Africa",
-  "year_range": "2004-2005",
-  "confidence": "Longitudinal case studies in one rural sub-district (Agincourt, Mpumalanga): household survey of 280 households and 30 case households followed for 10 months, fieldwork 2004-2005, before the ART rollout matured. Mechanisms durable; magnitudes, prices and shares are of that time and place, not national.",
+  "region": "Cape Town (Western Cape) and Bulungula (Eastern Cape), South Africa",
+  "year_range": "2021",
+  "confidence": "One qualitative South African study: semi-structured interviews with 30 patients with HIV and other chronic conditions at public clinics in urban Cape Town and rural Eastern Cape, 2021. Mechanisms durable; the sample is people with HIV, so HIV-specific detail does not carry to every chronic illness.",
   "comb_gaps": [
     "capability",
-    "opportunity",
-    "motivation"
+    "opportunity"
   ],
-  "topic_tags": [
-    "clinic",
-    "clinics",
-    "hospital",
-    "nurse",
-    "doctor",
-    "medicine",
-    "medication",
-    "treatment",
-    "health",
-    "healthcare",
-    "chronic",
-    "illness",
-    "sick",
-    "consultation",
-    "appointment",
-    "pills"
-  ],
+  "subject": "the money and travel a long-term illness costs every month to keep getting care",
   "applies_when": [
     {
       "went_without_care": [
@@ -318,5 +293,25 @@
         "60+"
       ]
     }
-  ]
+  ],
+  "topic_tags": [
+    "appointment",
+    "chronic",
+    "clinic",
+    "clinics",
+    "consultation",
+    "debt",
+    "doctor",
+    "health",
+    "healthcare",
+    "hospital",
+    "illness",
+    "medication",
+    "medicine",
+    "nurse",
+    "pills",
+    "sick",
+    "treatment"
+  ],
+  "year_note": "Interviews February to April 2021; published 2023."
 }

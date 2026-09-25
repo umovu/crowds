@@ -43,17 +43,17 @@ qualitative research. One card per file, named `<id>.json`.
 - `youth-mobile-airtime-economy` — phone and airtime as status and currency
 - `youth-phone-safety-cost-economics` — theft, cost and safety in device decisions
 - `stokvels-calibration` — stokvel trust, lump sums, funeral saving (struggling city residents; others borrowed)
-- `chronic-care-repeat-cost-sa` — repeat costs of chronic care, transport, when treatment feels worth returning to
+- `chronic-care-repeat-cost-sa` — living with chronic illness on a precarious income: debt, guilt about asking family, unsafe routes, stress (2021 interviews)
 - `healthcare-access-barriers-sa` — distance, transport and grant money competing with clinic visits
-- `healthcare-facility-choice-sa` — bypassing the clinic, choosing where to seek care
+- `men-health-seeking-sa` — adult men and clinics: confidentiality, herbs vs pills, queues, dignity, female nurses, masculinity (replaces the staff-reported clinic-choice card)
 - `older-persons-clinic-experience-sa` — older patients, overcrowding, being listened to and respected
-- `youth-clinic-privacy-stigma-sa` — young people, sexual health, judgement and privacy (claims routed by study group)
+- `youth-clinic-privacy-stigma-sa` — young people and sexual health services: privacy, judgement, a positive result, relatable staff (young people's own accounts)
 - `medical-aid-copayment-sa` — people with medical aid who still pay out of pocket: co-payments, savings, pharmacies, generics
 - `municipal-waste-failure-sa` — when rubbish collection fails: suburbs store or pay a collector, townships dump or burn (claims routed by poverty)
 - `rural-water-scarcity-sa` — rural villages without water: buying it, boreholes, tanker queues, broken promises
 - `women-taxi-commuting-sa` — young women commuting by minibus taxi: fares, safety, drivers and dark ranks
 - `going-private-when-the-state-fails-sa` — comfortable city homeowners paying for their own water and security; **borrowed** for backup power
-- `paying-for-care-without-medical-aid-sa` — paying for care without medical aid: price, trusted pharmacist, work hours, judgement on sexual health (**borrowed**)
+- `paying-for-care-without-medical-aid-sa` — paying for care or convenience without medical aid: fees vs food and wages, a lost day, being seen (struggling city residents; comfortable borrowed)
 - `black-tax-obligation-sa` — employed middle-class people supporting family from their salary, weighing new spending against it
 
 ## Gaps still open

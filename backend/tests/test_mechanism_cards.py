@@ -177,16 +177,22 @@ _BLACK_TAX_PAYER = dict(race="African/Black", employment_status="Employed",
                         circumstances={"lived_poverty": "low"})
 
 
-def test_a_sexual_health_claim_stays_off_a_diabetes_pitch():
+def test_hiv_disclosure_claims_stay_off_a_diabetes_pitch():
     claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
                         "A clinic that helps you manage diabetes, R150 a visit.")
-    assert claims and "C5" not in claims
+    assert claims and not claims & {"C1", "C2"}
 
 
-def test_a_sexual_health_claim_comes_with_a_prep_pitch():
+def test_hiv_disclosure_claims_come_with_an_hiv_treatment_pitch():
     claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
-                        "A clinic where young women can get PrEP without a queue.")
-    assert "C5" in claims
+                        "Collect your ARVs at a pharmacy near work instead of the clinic, R50.")
+    assert "C1" in claims
+
+
+def test_the_delivery_claim_comes_with_a_home_delivery_pitch():
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "Your monthly medication delivered to your home for R30.")
+    assert "C2" in claims
 
 
 def test_black_tax_stays_off_a_trivial_pitch():

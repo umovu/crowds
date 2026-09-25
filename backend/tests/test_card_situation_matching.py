@@ -250,12 +250,11 @@ def test_young_woman_gets_the_young_women_claims():
     assert _youth_claims({"gender": "Female", "age": 21}) == [0, 1, 2, 3]
 
 
-def test_young_woman_still_at_school_gets_all_five():
-    assert _youth_claims({"gender": "Female", "age": 18, "ghs_role": "learner"}) == [0, 1, 2, 3, 4]
-
-
-def test_teen_boy_learner_gets_only_the_learner_study_claims():
-    assert _youth_claims({"gender": "Male", "age": 16, "ghs_role": "learner"}) == [3, 4]
+def test_every_young_person_the_card_fits_hears_all_of_it():
+    # Rebuilt from young people's own accounts across three studies (staff views
+    # left out), so its findings are not split by which study a claim came from.
+    assert _youth_claims({"gender": "Female", "age": 18, "ghs_role": "learner"}) == [0, 1, 2, 3]
+    assert _youth_claims({"gender": "Male", "age": 16, "ghs_role": "learner"}) == [0, 1, 2, 3]
 
 
 def test_under_16_gets_nothing():
