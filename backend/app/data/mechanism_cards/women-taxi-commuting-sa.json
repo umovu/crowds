@@ -32,6 +32,32 @@
         "harassment",
         "catcalling",
         "groping"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has been groped by a passenger and blamed for it would weigh any new safety measure by whether it gives her a way to shut down unwanted attention without provoking a worse reaction.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If a woman has been touched by a driver while other drivers laughed, she would be sceptical of any new service that relies on drivers or their colleagues to intervene.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who replies respectfully to drivers to avoid being stared at would judge a new policy by whether it reduces her need to manage a driver's mood during the trip.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If a woman gives out her number to avoid being called names, she would be open to a new option that lets her refuse attention without direct confrontation.",
+          "passages": [
+            "P19"
+          ]
+        }
       ]
     },
     {
@@ -51,6 +77,32 @@
       "vocabulary": [
         "taxi wars",
         "crossfire"
+      ],
+      "readings": [
+        {
+          "text": "Someone who prays when they leave the house that they do not get shot would weigh any new option mainly by whether it removes the need to rely on prayer for survival.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "If taxi wars have become a normal thing that can occur at any time without knowing, a new option would be judged by how much it reduces the unpredictability of lethal risk.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who accepts advice not to sit in the seat behind the taxi driver just in case he gets shot would be cautious about a new option that still involves any seating position linked to the driver.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If route violence is seen as normal because taxi drivers are always fighting for taxi routes, a new option would be weighed by whether it removes the passenger from route disputes altogether.",
+          "passages": [
+            "P8"
+          ]
+        }
       ]
     },
     {
@@ -72,6 +124,35 @@
       "vocabulary": [
         "alone with the male driver",
         "dark"
+      ],
+      "readings": [
+        {
+          "text": "Someone who fears being mugged or robbed in the dark would weigh a new service by whether it reduces time spent in darkness and increases visibility or lighting.",
+          "passages": [
+            "P9",
+            "P22"
+          ]
+        },
+        {
+          "text": "If being alone with a male driver is the core fear, a new service would be weighed by whether it removes isolation with a driver or adds another person to the vehicle.",
+          "passages": [
+            "P10",
+            "P11"
+          ]
+        },
+        {
+          "text": "Someone who has been mugged before would be more open to a new service only if it directly addresses lighting and visibility, not just convenience.",
+          "passages": [
+            "P9",
+            "P22"
+          ]
+        },
+        {
+          "text": "If early morning travel means being the first one alone with a taxi driver, a new service would be weighed by whether it changes that early isolation or leaves it unchanged.",
+          "passages": [
+            "P11"
+          ]
+        }
       ]
     },
     {
@@ -93,6 +174,32 @@
       "vocabulary": [
         "rely heavily on taxis",
         "low income"
+      ],
+      "readings": [
+        {
+          "text": "Someone who relies heavily on taxis because buses only use one route would weigh any new service by whether it actually reaches their home and workplace.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If taking two taxis to work on a low income is the current reality, a new option would be weighed by whether it reduces the number of separate trips needed.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "Someone who pays extra to be dropped at their gate when late would weigh a new service by whether it removes the need for those additional costs at odd hours.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "If only minibus taxis can reach an area because of narrow, terrible roads, any alternative would be weighed by whether it can physically access that area at all.",
+          "passages": [
+            "P20"
+          ]
+        }
       ]
     },
     {
@@ -114,6 +221,32 @@
       "vocabulary": [
         "police officers",
         "streetlights"
+      ],
+      "readings": [
+        {
+          "text": "Someone who feels safe when police officers are at the taxi rank would weigh a new policy on visible security by asking whether it puts officers where criminals are nowhere to be seen.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If darkness at taxi ranks and stops enables muggings because you cannot see properly, a new policy on functioning lighting would be weighed by whether it removes that darkness.",
+          "passages": [
+            "P21"
+          ]
+        },
+        {
+          "text": "Someone who keeps their bag zip at the front so they can see it would weigh a new policy on visible security by asking whether it makes the bag zip precaution less necessary.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If important small belongings are put in a bra so that everything important remains on the person, a new policy on visible security would be weighed by whether it reduces the need for that precaution.",
+          "passages": [
+            "P18"
+          ]
+        }
       ]
     }
   ],

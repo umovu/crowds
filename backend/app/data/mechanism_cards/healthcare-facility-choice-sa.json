@@ -54,6 +54,32 @@
       "vocabulary": [
         "referral system",
         "casualty"
+      ],
+      "readings": [
+        {
+          "text": "Someone who brings a child straight to casualty without starting at the clinic would weigh a new referral policy mainly by whether it makes the correct starting point obvious before they travel.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If patients seek care wherever they want without understanding the system, they would treat a new service as one more place they may or may not choose to enter, not as a required step.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who sees a lack of awareness as the reason patients bypass the clinic would be more open to a new product only if it visibly teaches the entry order, but would not assume people will follow it on their own.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If young mothers are among those who do not know the system, a new policy aimed at clinic-first entry would be weighed by whether it reaches them early enough to change where they first seek care.",
+          "passages": [
+            "P1"
+          ]
+        }
       ]
     },
     {
@@ -94,6 +120,39 @@
         "waste my time",
         "long queues",
         "shortage of treatment"
+      ],
+      "readings": [
+        {
+          "text": "Someone who judges the clinic as not worth following because of long queues and slow service would weigh any new clinic-first rule as another delay to avoid, unless the rule clearly shortens waiting time.",
+          "passages": [
+            "P8",
+            "P9",
+            "P11"
+          ]
+        },
+        {
+          "text": "If a person has experienced staff attitude in the clinic as rude and dehumanising, they would weigh a new clinic-first rule as forcing them back into mistreatment, making them less open to it.",
+          "passages": [
+            "P14",
+            "P15",
+            "P16"
+          ]
+        },
+        {
+          "text": "Someone who believes clinics lack equipment, consulting rooms and drugs would weigh a new clinic-first rule as sending them to a place that cannot help them, so they would see little reason to follow it.",
+          "passages": [
+            "P10",
+            "P12",
+            "P13"
+          ]
+        },
+        {
+          "text": "If a patient feels doctors treat them better than nurses and that hospitals offer quicker x-rays, they would weigh a new clinic-first rule as blocking access to better care, unless the clinic could offer the same examinations.",
+          "passages": [
+            "P6",
+            "P7"
+          ]
+        }
       ]
     },
     {
@@ -114,6 +173,32 @@
       ],
       "vocabulary": [
         "confidentiality"
+      ],
+      "readings": [
+        {
+          "text": "Someone who fears neighbours will make stigmatising comments about chronic diseases would weigh any new local service by whether it makes their attendance visible to people from the community.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If a person worries that community members work at the same local clinic, they would be cautious about a new service that draws on locally known staff.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "Someone who avoids local clinics because of sensitive issues they would not want other people to know would look for clear separation from known staff in any new local offering.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "If a person believes infrastructure limits confidentiality when health workers share consulting rooms, they would weigh a new service by whether it avoids shared spaces.",
+          "passages": [
+            "P20"
+          ]
+        }
       ]
     },
     {
@@ -149,7 +234,41 @@
         "Judge a facility by whether it welcomes men rather than prioritising women."
       ],
       "objections": [],
-      "vocabulary": []
+      "vocabulary": [],
+      "readings": [
+        {
+          "text": "Someone who has waited long hours without being told why would weigh a new service on whether it gives a clear reason for any delay and a place to sit while waiting.",
+          "passages": [
+            "P21",
+            "P22",
+            "P23",
+            "P30"
+          ]
+        },
+        {
+          "text": "Someone who has seen women helped quickly while he was left in the queue would weigh a new service on whether men are seen in the same order as women.",
+          "passages": [
+            "P24",
+            "P25"
+          ]
+        },
+        {
+          "text": "Someone who has had a female nurse joke about his condition to other patients would weigh a new service on whether consultations stay between him and the nurse.",
+          "passages": [
+            "P26",
+            "P27",
+            "P28",
+            "P29"
+          ]
+        },
+        {
+          "text": "Someone who found it difficult to open up to female nurses would weigh a new service on whether he can be helped by male staff.",
+          "passages": [
+            "P31",
+            "P32"
+          ]
+        }
+      ]
     },
     {
       "text": "Clinic-based nurse interaction reads as threatening, because patients expect mistreatment from nurses based on experienced or reported harsh and disrespectful behaviour.",
@@ -171,7 +290,33 @@
       "objections": [
         "Will I be humiliated or shouted at by nurses?"
       ],
-      "vocabulary": []
+      "vocabulary": [],
+      "readings": [
+        {
+          "text": "Someone who expects nurses to joke about their condition to other patients would weigh any new clinic-based service by whether it limits what nurses can say to others about them.",
+          "passages": [
+            "P27"
+          ]
+        },
+        {
+          "text": "If a person has been shouted at by a nurse for their condition, they would look at a new service for whether it reduces the chance of being spoken to harshly.",
+          "passages": [
+            "P29"
+          ]
+        },
+        {
+          "text": "Someone who believes nurses should be trained to treat patients well and equally would judge a new service by whether it shows nurses being patient with people who are sick.",
+          "passages": [
+            "P35"
+          ]
+        },
+        {
+          "text": "If a person has avoided facilities to escape victimisation by health workers, they would weigh a new service by whether it keeps them away from direct nurse interaction.",
+          "passages": [
+            "P38"
+          ]
+        }
+      ]
     }
   ],
   "claim_type": "qualitative",

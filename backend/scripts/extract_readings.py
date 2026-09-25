@@ -21,7 +21,8 @@ feeds the checks deliberately bad readings to prove they catch them.
 
 Usage:
   <venv-python> backend/scripts/extract_readings.py --card-id township-parent-motivation-sdl [--sim-tier]
-Reads and rewrites docs/extraction/<card-id>.card.json (a draft, not a shipped card).
+Reads and rewrites docs/extraction/<card-id>.card.json (a draft), or with --shipped the
+card in app/data/mechanism_cards/ (then review the diff before it ships).
 """
 
 import argparse
@@ -33,6 +34,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extract_card import get_client, chat_json  # noqa: E402
 from validate_card import EXTRACTION_DIR, parse_worksheet  # noqa: E402
+
+SHIPPED_DIR = Path(__file__).resolve().parents[1] / "app" / "data" / "mechanism_cards"
 
 SYSTEM = """You write readings of research findings for a South African simulation of real people.
 A finding describes what some people do. A reading says how a person who does that
@@ -164,8 +167,12 @@ def main() -> int:
     ap.add_argument("--card-id", required=True)
     ap.add_argument("--sim-tier", action="store_true",
                     help="use the cheap simulation model instead of the research model")
+    ap.add_argument("--shipped", action="store_true",
+                    help="add readings to the shipped card in app/data/mechanism_cards, whose gates and "
+                         "claims may have been edited since the draft; its passage ids must be the worksheet's")
     args = ap.parse_args()
-    card_path = EXTRACTION_DIR / f"{args.card_id}.card.json"
+    card_path = (SHIPPED_DIR / f"{args.card_id}.json" if args.shipped
+                 else EXTRACTION_DIR / f"{args.card_id}.card.json")
     ws = parse_worksheet(EXTRACTION_DIR / f"{args.card_id}.worksheet.md")
     passages = {p["id"]: p["passage"] for p in ws["passages"]}
     card = json.loads(card_path.read_text(encoding="utf-8"))

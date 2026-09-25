@@ -41,6 +41,34 @@
       "vocabulary": [
         "harsh",
         "judgmental"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has felt held back from asking for help because nurses are harsh would weigh a new service by whether it removes the need to face a nurse's questioning at all.",
+          "passages": [
+            "P1",
+            "P16"
+          ]
+        },
+        {
+          "text": "If a young woman has delayed seeking help because a nurse acted like a parent, she would look for a new service that clearly separates professional care from personal judgment.",
+          "passages": [
+            "P7",
+            "P11"
+          ]
+        },
+        {
+          "text": "Someone who has seen healthcare workers bring Christianity into the picture would be cautious about a new service unless it guarantees that personal beliefs will not shape the care she receives.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If a young woman finds it weird to consult someone the same age as her mother, she would weigh a new service by whether it offers access to people who feel more like peers than parent figures.",
+          "passages": [
+            "P10"
+          ]
+        }
       ]
     },
     {
@@ -70,6 +98,32 @@
       ],
       "vocabulary": [
         "promiscuous"
+      ],
+      "readings": [
+        {
+          "text": "Someone who worries that a new prevention tool would encourage girls to be promiscuous would weigh it as a moral hazard that could reflect badly on the girls, making them hesitant to make it available.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If a provider fears that a new prevention tool would lead girls to stop using condoms because they are protected from HIV, they would weigh it as something that could increase adolescent pregnancies, making them cautious about offering it.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who sees sexually active girls as promiscuous and irresponsible would weigh a new prevention tool as something that could encourage riskier and more frequent sex, making them reluctant to provide it without stigma.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If a provider feels a responsibility to uphold the moral character of girls as expected by their community, they would weigh a new prevention tool as something that contradicts that responsibility, possibly providing it only with an undercurrent of stigma.",
+          "passages": [
+            "P18"
+          ]
+        }
       ]
     },
     {
@@ -100,6 +154,34 @@
       "objections": [],
       "vocabulary": [
         "parent figures"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has been scolded by a nurse acting like a mother would be wary of a new clinic service unless it clearly separates professional care from personal judgement.",
+          "passages": [
+            "P7",
+            "P11"
+          ]
+        },
+        {
+          "text": "If a young woman expects the visit to be like asking her mother, she would weigh a new service by whether it offers a different, less familial interaction.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "Someone who has seen nurses counsel a teenager until she changes her mind would be cautious about a new service that gives nurses more room to counsel rather than simply provide care.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If a young person has stayed away from a clinic because a nurse said she was too young, she would look for a new service that removes that kind of harsh, parent-like response.",
+          "passages": [
+            "P16",
+            "P1"
+          ]
+        }
       ]
     },
     {
@@ -145,6 +227,33 @@
       ],
       "vocabulary": [
         "confidentiality"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen clinic staff direct a girl to a specific room for HIV services in front of everyone would weigh a new service by whether it keeps the reason for a visit unspoken in shared spaces.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If someone has moved clinics because neighbours attend the same one, they would look at a new service mainly for whether it separates them from people who know them.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who fears nurses will gossip about personal issues would be more open to a new service only if it removes staff from the process of learning why they came.",
+          "passages": [
+            "P14",
+            "P15"
+          ]
+        },
+        {
+          "text": "If someone has avoided testing because school-based testing led teachers to disclose results, they would judge a new service by whether it keeps results away from any authority figure connected to their daily life.",
+          "passages": [
+            "P35"
+          ]
+        }
       ]
     },
     {
@@ -183,6 +292,33 @@
       ],
       "vocabulary": [
         "counselling"
+      ],
+      "readings": [
+        {
+          "text": "If a new option includes counselling before the test, someone who says it is better to be counselled first would weigh it as more acceptable because counselling helps them know how to take care of themselves if the result is positive.",
+          "passages": [
+            "P29",
+            "P30"
+          ]
+        },
+        {
+          "text": "Someone who gained strength from other guys going to test in tents would weigh a new option by whether it lets them test as a group rather than alone.",
+          "passages": [
+            "P25"
+          ]
+        },
+        {
+          "text": "If testing is offered at home with the whole family, they would weigh it as better because family are unlikely to use a positive status against one another.",
+          "passages": [
+            "P28"
+          ]
+        },
+        {
+          "text": "Someone who fears schoolmates will notice shock and speculate about a positive result would weigh a new option by how much space it gives them to leave without drawing attention.",
+          "passages": [
+            "P37"
+          ]
+        }
       ]
     }
   ],
