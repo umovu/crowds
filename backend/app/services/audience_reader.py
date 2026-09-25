@@ -88,6 +88,21 @@ OPTIONS: Dict[str, Dict[str, Any]] = {
                      "words": ["grandparents", "gogos", "grannies"]},
     "learners": {"label": "High-school learners", "field": "ghs_role", "values": ["learner"],
                  "words": ["learners", "pupils", "high school students", "high-school students"]},
+    # School fees (GHS fee band of the household's learners), the same tiers the fee
+    # groups use: panel_service._fee_tier. "fee_tier" is worked out, not stored.
+    "fee_paying": {"label": "Pays school fees", "field": "fee_tier", "values": ["low_fee", "high_fee"],
+                   "words": ["fee-paying", "fee paying", "pay school fees", "paying school fees", "pay fees",
+                             "paying fees"]},
+    "low_fee": {"label": "Low school fees (up to R4,000 a year)", "field": "fee_tier", "values": ["low_fee"],
+                "words": ["low-fee", "low fee", "low-fee schools", "low fee schools"]},
+    "high_fee": {"label": "High school fees (over R4,000 a year)", "field": "fee_tier", "values": ["high_fee"],
+                 # "at/in private schools", not "a private school finder" (the product).
+                 "words": ["at private schools", "at a private school", "in private schools", "at private school",
+                           "private school parents", "private-school parents", "at independent schools",
+                           "high-fee", "high fee", "former model c", "model c"]},
+    "no_fee": {"label": "Children at no-fee schools", "field": "fee_tier", "values": ["no_fee"],
+               "words": ["no-fee school", "no-fee schools", "no fee school", "no fee schools", "non-fee-paying",
+                         "non-fee paying"]},
     "farmers": {"label": "Farmers", "field": "actor_archetype",
                 "values": ["communal_farmer", "smallholder_emerging_farmer"],
                 "words": ["farmers", "farmer", "smallholders", "smallholder farmers"]},
@@ -259,6 +274,14 @@ READER_DEFS: Dict[str, tuple] = {
                      "older people in general"),
     "learners": ("is a high-school learner", "learners, pupils, high school or matric students",
                  "university students; parents of learners"),
+    "fee_paying": ("has children at a school that charges fees", "fee-paying schools, paying school fees, private or model C schools",
+                   "the product's own price; no-fee schools"),
+    "low_fee": ("pays low school fees, up to R4,000 a year", "low-fee schools, cheap fee-paying schools",
+                "private or expensive schools; no-fee schools"),
+    "high_fee": ("pays high school fees, over R4,000 a year", "private, independent, former model C or expensive schools",
+                 "fee-paying schools in general; low-fee schools"),
+    "no_fee": ("has children at a no-fee school", "no-fee schools, schools that charge no fees",
+               "a product with no fees; township schools unless stated no-fee"),
     "farmers": ("is a farmer", "farmers, smallholders, people who grow crops or keep livestock", "people who buy food"),
     "small_business": ("owns a registered small business", "small business owners, SME owners",
                        "informal traders, spaza owners, hawkers"),
@@ -345,10 +368,20 @@ def _age_band(age) -> Optional[str]:
     return "15-24" if age < 25 else "25-34" if age < 35 else "35-59" if age < 60 else "60+"
 
 
+def _value(persona: Dict[str, Any], field: str):
+    """A persona's answer for one audience field; age band and fee tier are worked out."""
+    if field == "age_band":
+        return _age_band(fact_value(persona, "age"))
+    if field == "fee_tier":
+        from .panel_service import _fee_tier  # same tiers as the fee groups; panel_service imports us
+        return _fee_tier(persona)
+    return fact_value(persona, field)
+
+
 def matches(persona: Dict[str, Any], wanted: Dict[str, set]) -> bool:
     """True when the persona has every wanted fact. A fact the persona lacks does not match."""
     for field, allowed in wanted.items():
-        value = _age_band(fact_value(persona, "age")) if field == "age_band" else fact_value(persona, field)
+        value = _value(persona, field)
         if value is None or str(value) not in allowed:
             return False
     return True

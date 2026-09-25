@@ -193,3 +193,12 @@ def test_a_product_with_no_people_sentence_is_never_sent_to_the_reader(reader):
     stub = reader(_Stub(yes={"no_medical_aid"}))
     assert ar.read("A nurse the same day with no queue.")["facts"] == []
     assert stub.reads == 0
+
+
+def test_a_fee_paying_room_seats_no_one_from_a_no_fee_school(ps, tmp_path):
+    meta = ps.create_session("A R100 a month learning app.", mode="panel", n=12, seed=5,
+                             audience={"facts": ["parents", "fee_paying"]})
+    seats = json.load(open(tmp_path / meta["session_id"] / "agentsociety_profiles.json", encoding="utf-8"))
+    by_id = {p["id"]: p for p in ps.get_library().all()}
+    tiers = {ps._fee_tier(by_id[s["library_id"]]) for s in seats}
+    assert tiers <= {"low_fee", "high_fee"}

@@ -274,7 +274,8 @@
    "id": "school-shoes-parents",
    "text": "We sell school shoes to parents at no-fee schools.",
    "facts": [
-    "parents"
+    "parents",
+    "no_fee"
    ],
    "provinces": [],
    "unmatched": []
@@ -521,6 +522,49 @@
    "text": "For grannies looking after their grandkids.",
    "facts": [
     "grandparents"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "fee-paying-middle-class",
+   "text": "A R100 a month incentivised learning app for middle-class parents whose children are at fee-paying schools.",
+   "facts": [
+    "parents",
+    "fee_paying",
+    "comfortable"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "private-school-coding",
+   "text": "Holiday coding camps for learners at private schools in Cape Town.",
+   "facts": [
+    "learners",
+    "high_fee"
+   ],
+   "provinces": [
+    "Western Cape"
+   ],
+   "unmatched": []
+  },
+  {
+   "id": "low-fee-parents",
+   "text": "A homework club for parents with children at low-fee schools.",
+   "facts": [
+    "parents",
+    "low_fee"
+   ],
+   "provinces": [],
+   "unmatched": []
+  },
+  {
+   "id": "no-fees-product-trap",
+   "text": "An investment app from R50 a month with no fees, for young professionals.",
+   "facts": [
+    "young",
+    "working"
    ],
    "provinces": [],
    "unmatched": []
