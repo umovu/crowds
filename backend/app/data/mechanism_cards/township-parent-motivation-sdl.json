@@ -32,33 +32,29 @@
       ],
       "readings": [
         {
-          "text": "Someone who already treats parental responsibility as non-negotiable and organises support around the time actually available would weigh a new product or policy by whether it lets them keep signing books, checking homework and visiting school without adding to an already full day.",
-          "passages": [
-            "P5",
-            "P8",
-            "P12"
-          ]
-        },
-        {
-          "text": "If a new product or policy promises to reduce the time and energy burden of supporting a learner, someone who comes home late and too tired to prepare for tomorrow would weigh it mainly by whether it fits around work schedules and the household duties that fill the rest of the day.",
+          "text": "Someone who comes home late and tired would judge a new product or policy by whether it can be used after work without adding to the time and energy burden.",
           "passages": [
             "P7",
-            "P12",
             "P13"
           ]
         },
         {
-          "text": "Someone who provides resources such as Wi-Fi and laptops and hires a tutor when time runs short would weigh a new product or policy by whether it adds to the learning environment they already try to build or replaces the support they already pay for.",
-          "passages": [
-            "P1",
-            "P4"
-          ]
-        },
-        {
-          "text": "If a new product or policy asks for more of a parent's own time and energy, someone who sees motivating and supporting the learner as their own job as a parent would weigh it against that duty rather than against convenience alone.",
+          "text": "If a parent sees motivating the child as their own job, they would weigh a new product or policy by whether it strengthens their ability to check homework, sign books and visit school.",
           "passages": [
             "P8",
-            "P13"
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who already provides resources like fibre Wi-Fi and laptops would judge a new product or policy by whether it fits into the support they already organise around work schedules.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If a single parent must cook, clean and wash uniforms, they would weigh a new product or policy by whether it reduces the time and energy burden of household duties and school support.",
+          "passages": [
+            "P12"
           ]
         }
       ]
@@ -85,28 +81,28 @@
       ],
       "readings": [
         {
-          "text": "Someone who already sets higher targets than her child and tells the child to believe in herself would welcome a new product or policy only if it helps the child take over the goal-setting rather than leaving the parent to keep raising the bar.",
+          "text": "Someone who says their child relies on them because they are educated and does not set her own goals would judge a new product by whether it prompts the child to set goals after poor results, not by whether it simply sets goals for the child.",
           "passages": [
-            "P18",
-            "P17"
-          ]
-        },
-        {
-          "text": "If a parent sees that the child only picks up his socks and wants to do better after poor results, they would weigh a new product or policy by whether it prompts the child to act before results turn poor, not only after.",
-          "passages": [
+            "P17",
             "P3"
           ]
         },
         {
-          "text": "Someone who uses incentives tied to a target the child sets for herself would judge a new product or policy by whether it preserves the child's own target-setting inside the incentive, rather than replacing it with targets handed down.",
+          "text": "If the parent already uses incentives so the child sets a target for herself, they would be less open to a product that replaces that incentive structure, but more open to one that extends it.",
           "passages": [
             "P2"
           ]
         },
         {
-          "text": "If a parent believes the child relies on them because they are educated and that they must be the one who helps, they would be cautious about a new product or policy that takes over the helping role instead of scaffolding the child's own goal-setting.",
+          "text": "Someone who sets their own higher standards to motivate the child would weigh a new product by whether it lets the parent keep raising targets and prompting the child, rather than taking over that prompting.",
           "passages": [
-            "P17"
+            "P18"
+          ]
+        },
+        {
+          "text": "If the parent must talk or shout before the child sees poor results and picks up her socks, they would be open to a product only if it scaffolds that moment of self-correction, not if it removes the parent's role in triggering it.",
+          "passages": [
+            "P3"
           ]
         }
       ]
@@ -132,28 +128,27 @@
       ],
       "readings": [
         {
-          "text": "Someone who already sees their child as a determined self-starter would welcome a new product or policy mainly if it leaves the child to begin and work on their own, stepping in only where the child asks for help.",
+          "text": "Someone who says their child is very determined and puts in more effort would judge a new product by whether it gives the child room to apply that effort without the parent having to drive the process.",
           "passages": [
-            "P14",
-            "P16"
+            "P14"
           ]
         },
         {
-          "text": "If a parent's help is understood as topping up what the child has already studied, they would judge a new offering by whether it builds on the child's own study rather than replacing it.",
+          "text": "If the child studies and knows the concepts so the parent's help is just to top up, a new product would be weighed by whether it fits into that topping-up role rather than replacing the child's own study.",
           "passages": [
             "P15"
           ]
         },
         {
-          "text": "Someone who dislikes doing everything for their children would be wary of a new product or policy that takes over the work, because it would undercut the child's habit of starting and only seeking assistance where needed.",
+          "text": "Someone who only helps where the child wants to be assisted and does not like doing everything for them would be wary of a new product that expects the parent to manage the child's work.",
           "passages": [
             "P16"
           ]
         },
         {
-          "text": "If a child is determined and puts in more effort on their own, a parent would see less need for a new product or policy that promises to carry the studying for them.",
+          "text": "If the child starts their work and only comes to the parent when they have a problem, a new product would be judged by whether it lets the child start and continue independently and brings the parent in only on request.",
           "passages": [
-            "P14"
+            "P16"
           ]
         }
       ]
@@ -179,27 +174,27 @@
       ],
       "readings": [
         {
-          "text": "Someone who sees their teenager as going through a phase where parental presence is unwelcome would judge a new product or policy by whether it reaches the learner through the learner's own interests rather than through the parent pushing it.",
+          "text": "Someone who sees their teenager going through his own phases and wanting to do his own things would judge a new product by whether it lets the child pursue those things without the parent having to be there all the time.",
           "passages": [
             "P10"
           ]
         },
         {
-          "text": "If a parent reads their teenager's resistance as rebellion tied to social and fashion interests, they would weigh a new offering by whether it works around that resistance instead of demanding more parental involvement.",
+          "text": "If a parent knows their older child is a rebel who cares a lot about fashion, they would weigh a new product by whether it can connect to that fashion interest instead of requiring the parent to push harder.",
           "passages": [
             "P11"
           ]
         },
         {
-          "text": "Someone whose child is unhappy with subjects chosen after a setback and who lights up for performance or sport would weigh a new product or policy by whether it lets that learner engage through what they actually care about rather than through academic pressure.",
+          "text": "Someone who sees their sixteen-year-old as more social and not academically happy with her subjects would be more open to a product that engages her through her social priorities rather than through parental pressure about schoolwork.",
           "passages": [
             "P19"
           ]
         },
         {
-          "text": "If a parent is already stretched for time and finds that being there constantly is not what the teenager wants, they would weigh a new offering by how little of their own involvement it requires while still engaging the learner.",
+          "text": "If a parent has a child who does not like school but gets excited to perform or do sports, they would judge a new product by whether it can work through that performance or sports interest, and would be less open to one that depends on the parent pushing academic work.",
           "passages": [
-            "P10"
+            "P19"
           ]
         }
       ]
@@ -225,28 +220,28 @@
       ],
       "readings": [
         {
-          "text": "Someone who reads their child's school happiness mainly through friendships and creative or sporting performance would weigh a new product or policy by whether it visibly strengthens the child's social and expressive life at school, not by its academic signals.",
+          "text": "Someone who sees their child's happiness at school as coming from friends would judge a new product or policy by whether it strengthens the child's social belonging at school.",
           "passages": [
-            "P20",
+            "P20"
+          ]
+        },
+        {
+          "text": "If a parent sees their child's engagement through sports and arts rather than academic signals, they would weigh a new product or policy by whether it connects to the child's creative and performing life.",
+          "passages": [
             "P19"
           ]
         },
         {
-          "text": "If a parent has watched unemployed graduates undermine their child's motivation, they would judge a new product or policy by whether it draws a clear line from schoolwork to visible post-school opportunity before they give it any weight.",
+          "text": "Someone who believes academic motivation is undermined by unemployed graduates would be sceptical of a new product or policy unless it visibly connects schoolwork to post-school opportunity.",
           "passages": [
             "P6"
           ]
         },
         {
-          "text": "Someone whose child is socially content but academically unhappy with the subjects they were pushed into would weigh a new product or policy by whether it reconnects the child to the subjects and creative interests they actually wanted, rather than by whether it simply raises academic effort.",
+          "text": "If a parent reads their child's engagement through friendships and self-expression, they would be less open to a new product or policy that focuses only on academic signals without linking to social life.",
           "passages": [
+            "P20",
             "P19"
-          ]
-        },
-        {
-          "text": "If a parent hears mostly about friends and little about academics, they would treat a new product or policy as relevant only when it works through the child's social world rather than expecting the child to be moved by academic appeal alone.",
-          "passages": [
-            "P20"
           ]
         }
       ]
