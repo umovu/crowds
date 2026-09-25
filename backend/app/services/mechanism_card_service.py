@@ -181,6 +181,13 @@ def render_research_context(cards: List[Dict]) -> str:
                 lines.append(f"  - When the conditions described held, {txt[0].lower() + txt[1:] if txt else txt}")
             if "impossible" in txt.lower() or "always" in txt.lower() or "never" in txt.lower():
                 lines[-1] += " — in that study context; a sustained improvement may change this, but trust recovers slowly."
+            readings = [str(r.get("text", "")).strip() for r in claim.get("readings") or []
+                        if isinstance(r, dict) and r.get("text")]
+            if readings:
+                # Several honest readings of one finding, so a room does not all take
+                # the same angle: the persona picks the one that fits their own life.
+                lines.append("    People who do this read something new in different ways — take the one that fits you:")
+                lines += [f"      · {r}" for r in readings]
         if vocabulary:
             lines.append(f"  Vocabulary people like you use: {', '.join(vocabulary)}")
     lines.append(

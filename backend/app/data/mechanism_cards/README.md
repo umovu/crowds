@@ -20,6 +20,11 @@ qualitative research. One card per file, named `<id>.json`.
   source's own; only the gate is stretched. It needs a gate of at least two facts per
   clause, and the prompt says the reasoning comes from a nearby group.
 
+- **Readings:** a claim can carry 2-4 `readings`, different ways someone who does
+  this might read a new offer (some more open, some less), each tied to its passages.
+  Drafted by `scripts/extract_readings.py`, signed off like the rest of the card. The
+  prompt lists them and the persona takes the one that fits their life.
+
 ## Cards (28)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
@@ -33,7 +38,7 @@ qualitative research. One card per file, named `<id>.json`.
 - `incentivized-learning-engagement` — public vs private reward design
 - `reward-design-motivation-crowding-sa-v2` — intrinsic vs extrinsic motivation (SA classrooms)
 - `parent-digital-learning-perceptions-sa` — parent trust and permission for digital tools
-- `township-parent-motivation-sdl` — township parents supporting self-directed learning
+- `township-parent-motivation-sdl` — parents at no-fee and low-fee city schools motivating a child to study on their own (claims carry readings)
 - `youth-waithood-identity` — unemployed youth identity, dignity, nihilism
 - `youth-mobile-airtime-economy` — phone and airtime as status and currency
 - `youth-phone-safety-cost-economics` — theft, cost and safety in device decisions

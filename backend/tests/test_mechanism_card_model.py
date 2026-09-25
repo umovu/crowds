@@ -191,6 +191,31 @@ def test_a_borrowed_card_says_so_in_the_prompt():
     assert "heard from a nearby group" in mcs.render_research_context([card])
 
 
+def test_a_claim_with_readings_fits_and_shows_them_in_the_prompt():
+    from app.services import mechanism_card_service as mcs
+    card = _good()
+    card["claims"][0]["readings"] = [
+        {"text": "Someone who already does this would see less need for a tool.", "passages": ["P1"]},
+        {"text": "If it saves them effort, someone who does this would weigh it kindly.", "passages": ["P1"]},
+    ]
+    assert dm.mechanism_card_problems(card) == []
+    block = mcs.render_research_context([card])
+    assert "take the one that fits you" in block
+    assert "Someone who already does this would see less need for a tool." in block
+
+
+def test_a_number_in_a_reading_is_caught():
+    card = _good()
+    card["claims"][0]["readings"] = [{"text": "Someone paying R60 would think twice.", "passages": ["P1"]}]
+    assert _flags(card, "number in claim")
+
+
+def test_a_reading_without_passages_is_caught():
+    card = _good()
+    card["claims"][0]["readings"] = [{"text": "Someone would weigh it.", "passages": []}]
+    assert dm.mechanism_card_problems(card)
+
+
 # ── the app says so ───────────────────────────────────────────────────────
 
 def test_loading_warns_about_a_card_that_does_not_fit_but_still_loads_it(tmp_path, monkeypatch):

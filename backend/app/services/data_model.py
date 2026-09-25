@@ -226,7 +226,8 @@ def mechanism_card_problems(card: Any, file_name: Optional[str] = None) -> List[
             continue
         where = f"{label} claims[{i}]"
         words = [claim.get("text"), *(claim.get("objections") or []),
-                 *(claim.get("vocabulary") or []), *(claim.get("evaluative_rules") or [])]
+                 *(claim.get("vocabulary") or []), *(claim.get("evaluative_rules") or []),
+                 *(r.get("text") for r in claim.get("readings") or [] if isinstance(r, dict))]
         out += [f"{where}: number in claim: {x!r}"
                 for x in words if isinstance(x, str) and _DIGIT.search(x)]
         out += rule_problems(where, claim.get("needs"))

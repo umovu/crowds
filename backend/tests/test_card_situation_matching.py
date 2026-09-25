@@ -202,7 +202,7 @@ def test_every_shipped_card_says_who_it_describes():
         "health_service_satisfaction", "health_authority_trust",
         # GHS household circumstances (#112)
         "housing_tenure", "solar_panels", "home_security", "water_interruptions",
-        "water_backup", "transport_to_work", "recycles"}
+        "water_backup", "transport_to_work", "recycles", "learner_fee_bands"}
     for card in mcs.load_cards():
         rules = card.get("applies_when")
         assert rules, card["id"]

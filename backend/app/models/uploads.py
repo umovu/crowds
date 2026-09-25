@@ -196,6 +196,11 @@ class Project(DataModel):
     error: Optional[str] = Field(json_schema_extra={'when': 'always'})
 
 
+class MechanismCardReading(DataModel):
+    text: str = Field(min_length=1, max_length=400, json_schema_extra={'when': 'always'})
+    passages: List[str] = Field(min_length=1, json_schema_extra={'when': 'always'})
+
+
 class MechanismCardClaim(DataModel):
     text: str = Field(min_length=1, max_length=600, json_schema_extra={'when': 'always'})
     needs: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(json_schema_extra={'when': 'always'})
@@ -204,6 +209,13 @@ class MechanismCardClaim(DataModel):
     evaluative_rules: List[Annotated[str, Field(min_length=1)]] = Field(default=None, json_schema_extra={'when': 'optional'})
     objections: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
     vocabulary: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
+    readings: List[MechanismCardReading] = Field(default=None, max_length=4, json_schema_extra={
+        'when': 'optional',
+        'note': ("Different ways someone who does this might read a new offer (scripts/"
+                 "extract_readings.py): some more open, some less, each tied to its passages. "
+                 "One reading per claim hands a whole room the same angle; each persona takes "
+                 "the one that fits their own life. Never a purchase decision."),
+    })
     about: str = Field(default=None, min_length=1, max_length=300, json_schema_extra={
         'when': 'optional',
         'note': ("What a pitch must involve for this claim to belong in the prompt, in one "
