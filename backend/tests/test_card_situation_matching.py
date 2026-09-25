@@ -168,23 +168,18 @@ def test_middle_class_people_do_not_get_the_removed_income_insecure_claim():
     assert "income-insecure" not in claims("low")
 
 
-def test_learning_cards_keep_private_learner_experience_from_parents():
-    cards = {c["id"]: c for c in mcs.load_cards()}
-    parent = {"ghs_role": "guardian_parent"}
+def test_learner_studies_reach_parents_only_as_borrowed():
+    # The learners were studied, not their parents: a parent hears it as what
+    # learners like their child say, marked as borrowed.
+    card = {c["id"]: c for c in mcs.load_cards()}["learner-motivation-grade12-sa"]
     learner = {"ghs_role": "learner"}
-
-    engagement = cards["incentivized-learning-engagement"]
-    assert len(mcs.narrowed_to(engagement, parent)["claims"]) == 1
-    assert len(mcs.narrowed_to(engagement, learner)["claims"]) == 5
-
-    rewards = cards["reward-design-motivation-crowding-sa-v2"]
-    assert len(mcs.narrowed_to(rewards, parent)["claims"]) == 1
-    assert len(mcs.narrowed_to(rewards, learner)["claims"]) == 5
-
-
-def test_edtech_card_has_no_teacher_only_role_threat_claim():
-    card = next(c for c in mcs.load_cards() if c["id"] == "edtech-adoption-barriers")
-    assert all("instructors" not in text.lower() for text in _texts(card))
+    parent = {"ghs_role": "guardian_parent", "learner_fee_bands": "No fees"}
+    assert mcs.situation_match_strength(card, learner) >= 1
+    assert "_borrowed" not in mcs.narrowed_to(card, learner)
+    assert 0 < mcs.situation_match_strength(card, parent) < 1
+    assert mcs.narrowed_to(card, parent)["_borrowed"] is True
+    assert mcs.situation_match_strength(card, {"ghs_role": "guardian_parent",
+                                               "learner_fee_bands": "R20 001–R40 000 per year"}) == 0
 
 
 def test_a_card_without_rules_falls_back_to_its_label():
@@ -206,7 +201,7 @@ def test_every_shipped_card_says_who_it_describes():
     for card in mcs.load_cards():
         rules = card.get("applies_when")
         assert rules, card["id"]
-        for clause in rules + [c for claim in card["claims"] for c in claim["needs"]]:
+        for clause in rules + (card.get("borrowed_when") or []) + [c for claim in card["claims"] for c in claim["needs"]]:
             assert clause and set(clause) <= known, (card["id"], clause)
 
 

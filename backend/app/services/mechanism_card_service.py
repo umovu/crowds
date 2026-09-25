@@ -149,7 +149,8 @@ def _format_card_header(c: Dict) -> str:
     conf = (c.get("confidence") or "").strip()
     header = f"From {cite} [{claim}] — {region}, {year}"
     borrowed = (c.get("borrowed_from") or "").strip()
-    if borrowed:
+    # A card with borrowed_when is borrowed only for the people it reached that way.
+    if borrowed and (not c.get("borrowed_when") or c.get("_borrowed")):
         header += f" — heard from a nearby group, not people exactly like you: {borrowed[:220]}"
     if conf:
         header += f" — confidence/limits: {conf[:220]}"
@@ -412,10 +413,18 @@ def situation_facts(profile: Dict) -> Dict[str, str]:
     return facts
 
 
-def situation_match_strength(card: Dict, facts: Dict[str, str]) -> int:
+def situation_match_strength(card: Dict, facts: Dict[str, str]) -> float:
     """0 when the card does not describe this persona; otherwise the size of the most
-    specific clause that holds (more conditions met = a closer fit)."""
-    return _clause_strength(card.get("applies_when"), facts)
+    specific clause that holds (more conditions met = a closer fit).
+
+    `applies_when` is who the research studied. `borrowed_when` is a close group the
+    reasoning carries over to (parents of the learners studied, comfortable users of
+    a scheme studied in a poor area): they get the card too, marked as borrowed, and
+    always rank below anyone the card describes directly."""
+    direct = _clause_strength(card.get("applies_when"), facts)
+    if direct:
+        return direct
+    return _clause_strength(card.get("borrowed_when"), facts) / 10
 
 
 def _clause_strength(clauses, facts: Dict[str, str]) -> int:
@@ -440,7 +449,10 @@ def narrowed_to(card: Dict, facts: Dict[str, str]) -> Dict | None:
     kept = [c for c in claims if not c.get("needs") or _clause_strength(c["needs"], facts)]
     if not kept:
         return None
-    return card if len(kept) == len(claims) else {**card, "claims": kept}
+    view = card if len(kept) == len(claims) else {**card, "claims": kept}
+    if card.get("borrowed_when") and not _clause_strength(card.get("applies_when"), facts):
+        view = {**view, "_borrowed": True}  # reached through borrowed_when: the prompt says so
+    return view
 
 
 def cards_for_persona(profile: Dict, cap: int | None = None) -> List[Dict]:

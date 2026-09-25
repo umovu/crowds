@@ -246,6 +246,18 @@
       },
       "when": "always",
       "note": "Who the card is for: clauses of persona facts; all facts in a clause must hold, any clause is enough. Facts and answers checked against model/persona.json."
+    },
+    "borrowed_when": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "values": {
+          "type": "list",
+          "min_items": 1
+        }
+      },
+      "when": "optional",
+      "note": "A close group the reasoning carries over to, beyond who was studied (applies_when): parents of the learners studied, say. They get the card marked as borrowed (borrowed_from says who spoke) and rank below direct fits. Clauses name at least two facts."
     }
   }
 }

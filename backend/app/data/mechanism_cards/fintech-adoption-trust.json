@@ -1,10 +1,7 @@
 {
   "id": "fintech-adoption-trust",
-  "subject": "banking, mobile money and digital payments: trusting a bank, wallet or payment app to hold or move your money",
   "citation": [
-    "Factors influencing fintech adoption in SA: branchless mobile banking (Athens Journal of Business)",
-    "Determining customer acceptance of digital-only banks in SA (SAJIM, SciELO)",
-    "Perceived benefit, risk and trust in fintech adoption, Sub-Saharan Africa (PMC)"
+    "Slazus BJ, Bick G (2022). Factors that influence FinTech adoption in South Africa: a study of consumer behaviour towards branchless mobile banking. Athens Journal of Business & Economics 8(1): 43-64 (qualitative interview phase)."
   ],
   "segment_tags": [
     "urban_professional",
@@ -16,6 +13,239 @@
     "gogo_guardian",
     "guardian_parent",
     "disillusioned_dropout"
+  ],
+  "claims": [
+    {
+      "text": "Familiarity is the bridge: a new channel is adopted when it reads as an extension of what the user already does, not as a novel risk",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P5"
+      ],
+      "evaluative_rules": [
+        "Judge a new channel by whether it extends what you already use, not by its novelty"
+      ],
+      "objections": [
+        "Does this fit with what I already do, or is it a whole new risk?"
+      ],
+      "vocabulary": [
+        "extension",
+        "already using"
+      ],
+      "readings": [
+        {
+          "text": "Someone who sees a new channel as an extension of what they already do on their PC would weigh a new product by how closely it mirrors the steps they already know from internet banking.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If a new service is framed as an extension of internet banking, someone who already uses internet banking would assess it primarily for continuity with their existing PC habits rather than as a separate risk.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who adopted m-banking because it extended their internet banking would be less open to a new product that requires learning a different routine from the one they already use on their PC.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If a new product is presented as a novel risk rather than an extension of what they already do, someone who values familiarity would weigh it with more caution than a product that connects to their existing internet banking.",
+          "passages": [
+            "P5"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Convenience is the pull: always-available access from a device already in hand makes the channel worth using",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P2"
+      ],
+      "evaluative_rules": [
+        "Weigh a channel by convenience and round-the-clock access"
+      ],
+      "objections": [
+        "Can I get to it whenever I need it, from what I already carry?"
+      ],
+      "vocabulary": [
+        "convenience",
+        "round-the-clock"
+      ],
+      "readings": [
+        {
+          "text": "Someone who values always-available access from a device already in hand would weigh a new service mainly by whether it removes steps they currently take elsewhere.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If convenience is the pull, a new product that adds even a small amount of setup or waiting would feel less worth using than the channel they already reach for.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who sees the channel as worth using because it is always available would be more open to a new offering only when it works on the phone or iPad they already carry.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If the device in hand is what makes the channel worth using, a new policy that requires a different device or a separate visit would be weighed as a loss of that convenience.",
+          "passages": [
+            "P2"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Security measures such as fingerprint login make the app feel comfortable, so it is read as a secure and trustworthy place to bank.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P3",
+        "P4"
+      ],
+      "evaluative_rules": [
+        "Judge a channel by whether its security feels easy and reassuring, not burdensome"
+      ],
+      "objections": [
+        "Does it make me feel safe without making me work for it?"
+      ],
+      "vocabulary": [
+        "fingerprint authentication",
+        "security measures"
+      ],
+      "readings": [
+        {
+          "text": "Someone who feels comfortable because security measures are in place would weigh a new banking feature by first checking whether it preserves that sense of protection.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "If fingerprint login makes the app feel comfortable and secure, a new service that adds extra steps before access would be seen as undermining that ease.",
+          "passages": [
+            "P3",
+            "P4"
+          ]
+        },
+        {
+          "text": "Someone who finds fingerprint authentication easier and quicker than a password would be more open to a new policy that keeps biometric login as the default.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If the app is read as a secure and trustworthy place to bank because of fingerprint login, a new product that works only on devices without biometrics would be treated with caution.",
+          "passages": [
+            "P3",
+            "P4"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Traditional banking feels more expensive, so a cheaper channel is a reason to switch.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P6"
+      ],
+      "evaluative_rules": [
+        "Weigh a channel by whether it costs less than the traditional way"
+      ],
+      "objections": [
+        "Is it actually cheaper than what I use now?"
+      ],
+      "vocabulary": [
+        "cheaper",
+        "switched over"
+      ],
+      "readings": [
+        {
+          "text": "Someone who switched because m-banking was cheaper would weigh a new service mainly on whether it keeps things below traditional banking.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who found the app cheaper would be less open to a new service if it does not clearly show it is cheaper than traditional banking.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If the new service is cheaper only in some situations, this person would weigh it against the app they already use for lower prices.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who already switched for a cheaper channel would still consider a new service if it is presented as cheaper than traditional banking.",
+          "passages": [
+            "P6"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Human contact is the trust anchor: a fully digitised experience without a person to speak to is read as untrustworthy and incomplete",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P8"
+      ],
+      "evaluative_rules": [
+        "Judge a channel by whether you can still reach a human when you need one"
+      ],
+      "objections": [
+        "Can I speak to a human if something goes wrong?"
+      ],
+      "vocabulary": [
+        "speak to a human",
+        "completely digitised"
+      ],
+      "readings": [
+        {
+          "text": "If a new service is fully digitised, they would weigh it as untrustworthy and incomplete unless it offers a way to speak to a human.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "Someone who wants to be able to speak to a human would weigh a new service more favourably if it includes a person to speak to as part of the experience.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If a new service is completely digitised, they would weigh it as incomplete even if it is efficient, because it lacks the human contact they use as a trust anchor.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "Someone who does not trust a completely digitised experience would weigh a new service with human contact as more trustworthy than one without it.",
+          "passages": [
+            "P8"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa",
+  "year_range": "2022",
+  "confidence": "Seven in-depth interviews with South African bank customers about mobile banking (the qualitative phase of a mixed-methods study). Thin: few voices, demographics not reported. Mechanisms plausible; magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
   ],
   "topic_tags": [
     "bank",
@@ -33,6 +263,8 @@
     "account",
     "digital bank"
   ],
+  "subject": "banking, mobile money and digital payments: trusting a bank, wallet or payment app to hold or move your money",
+  "year_note": "Published 2022; the qualitative phase is 7 in-depth interviews before a survey, which is not used here.",
   "applies_when": [
     {
       "owns_bank_account": [
@@ -45,107 +277,5 @@
         "monthly"
       ]
     }
-  ],
-  "claims": [
-    {
-      "text": "Cost can discourage adoption when a digital financial service is more expensive than the option it replaces.",
-      "needs": [],
-      "chain_id": "C1",
-      "passages": [
-        "P5",
-        "P14",
-        "P17",
-        "P20",
-        "P32",
-        "P36"
-      ],
-      "objections": [
-        "Is this cheaper than what I already use?"
-      ],
-      "vocabulary": [
-        "cheaper"
-      ]
-    },
-    {
-      "text": "Convenience can encourage adoption when a service saves time and fits a person's existing digital habits.",
-      "needs": [],
-      "chain_id": "C2",
-      "passages": [
-        "P1",
-        "P4",
-        "P9",
-        "P17",
-        "P21",
-        "P28",
-        "P33",
-        "P37"
-      ],
-      "objections": [
-        "Can I access it anytime, anywhere, without extra effort?"
-      ],
-      "vocabulary": [
-        "convenience"
-      ]
-    },
-    {
-      "text": "Trust can encourage adoption when security is clear and the provider is known; some people may prefer human help when trust is low.",
-      "needs": [],
-      "chain_id": "C3",
-      "passages": [
-        "P3",
-        "P7",
-        "P10",
-        "P15",
-        "P16",
-        "P23",
-        "P24",
-        "P25",
-        "P30",
-        "P31",
-        "P38",
-        "P40",
-        "P41",
-        "P42",
-        "P43",
-        "P44",
-        "P45"
-      ],
-      "objections": [
-        "Do I trust this institution, and can I see the security measures?"
-      ],
-      "vocabulary": [
-        "trust",
-        "human interaction"
-      ]
-    },
-    {
-      "text": "Adoption is easier when a person has the skills, device, data, and network access needed to use the service.",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P8",
-        "P18",
-        "P19",
-        "P22",
-        "P26",
-        "P27",
-        "P29"
-      ],
-      "objections": [
-        "Do I have the skills and the data to use this without help?"
-      ],
-      "vocabulary": [
-        "cost of data"
-      ]
-    }
-  ],
-  "claim_type": "mixed_methods",
-  "region": "South Africa",
-  "year_range": "2019-2025",
-  "confidence": "Mixed-method evidence from selected bank and fintech users in South Africa and a four-country African study. The findings describe factors linked to adoption, not how common they are in the wider population.",
-  "comb_gaps": [
-    "capability",
-    "opportunity",
-    "motivation"
   ]
 }

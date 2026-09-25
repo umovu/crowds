@@ -261,6 +261,12 @@ class MechanismCard(DataModel):
     topic_tags: List[Annotated[str, Field(pattern='^[a-z][a-z -]*$')]] = Field(min_length=1, json_schema_extra={'when': 'always'})
     comb_gaps: List[MechanismCardCombGaps] = Field(json_schema_extra={'when': 'always'})
     applies_when: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(json_schema_extra={'when': 'always'})
+    borrowed_when: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(default=None, json_schema_extra={
+        'when': 'optional',
+        'note': ("A close group the reasoning carries over to, beyond who was studied (applies_when): "
+                 "parents of the learners studied, say. They get the card marked as borrowed "
+                 "(borrowed_from says who spoke) and rank below direct fits. Clauses name at least two facts."),
+    })
 
 
 class HypothesisReportRoomCoverage(DataModel):

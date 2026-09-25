@@ -235,3 +235,16 @@ def test_loading_warns_about_a_card_that_does_not_fit_but_still_loads_it(tmp_pat
     assert len(cards) == 2
     assert any("bad-card" in w and "data model" in w for w in warnings)
     assert not any("youth-waithood-identity" in w for w in warnings)
+
+
+def test_borrowed_when_without_who_spoke_is_caught():
+    card = _good()
+    card["borrowed_when"] = [{"ghs_role": ["guardian_parent"], "geotype": ["Urban"]}]
+    assert _flags(card, "needs borrowed_from")
+
+
+def test_a_loose_borrowed_when_is_caught():
+    card = _good()
+    card["borrowed_from"] = "Heard from learners"
+    card["borrowed_when"] = [{"ghs_role": ["guardian_parent"]}]
+    assert _flags(card, "fewer than two facts")

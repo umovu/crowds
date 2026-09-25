@@ -25,24 +25,24 @@ qualitative research. One card per file, named `<id>.json`.
   Drafted by `scripts/extract_readings.py`, signed off like the rest of the card. The
   prompt lists them and the persona takes the one that fits their life.
 
-## Cards (28)
+- **Borrowed gate:** `borrowed_when` lets a close group (parents of the learners studied) get the card, marked as borrowed and ranked below direct fits.
+
+## Cards (26)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
 - `farmer-market-participation` — why smallholders do or don't sell
 - `farmer-intervention-adoption` — reaction to new agri interventions and tech
 - `middle-class-status-identity` — status signalling, Black Tax, asset deficit
-- `fintech-adoption-trust` — cost, convenience, trust, self-efficacy, social proof
-- `education-payment-conversion` — free-to-paid school and edtech decisions
-- `edtech-adoption-barriers` — money, home and infrastructure barriers to e-learning
-- `incentivized-learning-engagement` — public vs private reward design
-- `reward-design-motivation-crowding-sa-v2` — intrinsic vs extrinsic motivation (SA classrooms)
-- `parent-digital-learning-perceptions-sa` — parent trust and permission for digital tools
+- `fintech-adoption-trust` — familiarity, convenience, fingerprint security, cost, wanting a person (7 interviews: thin)
+- `education-payment-conversion` — choosing a school: quality, teachers, reputation, safety, zoning (fee-paying parents; no-fee parents borrowed)
+- `incentivized-learning-engagement` — gamified quizzes, leaderboards, freeloading (university students; learners and parents borrowed)
+- `learner-motivation-grade12-sa` — what keeps a high-school learner working: escaping poverty, making caregivers proud, being acknowledged (parents borrowed)
 - `township-parent-motivation-sdl` — parents at no-fee and low-fee city schools motivating a child to study on their own (claims carry readings)
 - `youth-waithood-identity` — unemployed youth identity, dignity, nihilism
 - `youth-mobile-airtime-economy` — phone and airtime as status and currency
 - `youth-phone-safety-cost-economics` — theft, cost and safety in device decisions
-- `stokvels-calibration` — stokvel trust, lump sums, social infrastructure
+- `stokvels-calibration` — stokvel trust, lump sums, funeral saving (struggling city residents; others borrowed)
 - `chronic-care-repeat-cost-sa` — repeat costs of chronic care, transport, when treatment feels worth returning to
 - `healthcare-access-barriers-sa` — distance, transport and grant money competing with clinic visits
 - `healthcare-facility-choice-sa` — bypassing the clinic, choosing where to seek care
