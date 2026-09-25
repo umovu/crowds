@@ -1,15 +1,257 @@
 {
   "id": "incentivized-learning-engagement",
-  "subject": "rewards, points or prizes used to get someone to keep learning",
   "citation": [
-    "Influence of gamified e-learning quizzes on student motivation, SA higher education (SciELO IJTL)",
-    "Usage of a mobile social learning platform with virtual badges in a primary school (Computers & Education)",
-    "Learner and parent perceptions of visible rewards at two South African high schools (Commonwealth Youth and Development)",
-    "M-Thuto: mobile learning for code-switching mathematics learners in SA (SciELO)"
+    "Adam E, van den Berg R (2022). The influence of gamified e-learning quizzes on students' motivation: a case of programming students at a South African higher education institution. The Independent Journal of Teaching and Learning 17(2): 44-62."
   ],
   "segment_tags": [
     "learner",
-    "guardian_parent"
+    "guardian_parent",
+    "unemployed_youth"
+  ],
+  "claims": [
+    {
+      "text": "Comfort and flexible time at home make online lectures feel positive, so engagement follows when the format fits one's own rhythm, and gamified tools are read as a pleasant way to break monotony and keep engagement.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P6"
+      ],
+      "evaluative_rules": [
+        "Judge an online learning format by whether it lets you stay comfortable and work as time fits, not by where it happens"
+      ],
+      "objections": [
+        "Does this fit into my own time and comfort, or does it force a fixed rhythm?"
+      ],
+      "vocabulary": [
+        "comfortable at home",
+        "broke up the monotony"
+      ],
+      "readings": [
+        {
+          "text": "Someone who values being comfortable at home and working as time fits for them would weigh a new online lecture format by whether it still allows that personal rhythm and comfort.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "text": "If the format fits one's own rhythm, someone who found group work quite fun online would be open to new online lectures that keep that flexible, self-paced feel.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who saw Menti as breaking the monotony of class would look for new gamified tools to do the same, but only if they make you part of it rather than adding more to follow.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If a new online lecture format removes the comfort of eating a full lunch at home or forces a fixed schedule, someone who liked working as time fitted for them would weigh it less positively.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Self-discipline is a struggle at home and face-to-face contact with friends and lecturers is missed, so campus learning is preferred and gamified tools are read against that loss.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "evaluative_rules": [
+        "Judge a learning format by whether it gives you face-to-face contact and instant feedback, not just convenience"
+      ],
+      "objections": [
+        "Does this replace the face-to-face interaction and instant feedback I miss, or does it leave me alone with my own discipline?"
+      ],
+      "vocabulary": [
+        "discipline myself",
+        "bouncing off ideas"
+      ],
+      "readings": [
+        {
+          "text": "Someone who could not discipline themselves at home would weigh a gamified tool mainly by whether it recreates the structure of campus learning.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "If face-to-face contact with friends and lecturers is missed, a new tool would be read for how far it restores that direct interaction.",
+          "passages": [
+            "P4",
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who prefers coming to campus than learning online would be cautious about any tool that keeps learning at a distance.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If bouncing ideas off lecturers and getting feedback instantly is valued, a gamified tool would be judged on whether it can match that immediacy.",
+          "passages": [
+            "P5"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Seeing others' responses and comparing answers makes the quiz feel like it helps learning, so participation is driven by wanting to see what others think, and gamified quizzes are read as a collective learning tool.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P7",
+        "P8"
+      ],
+      "evaluative_rules": [
+        "Judge a learning tool by whether it lets you compare your answer with other people's responses"
+      ],
+      "objections": [
+        "Will I be able to see what others think and learn from their responses?"
+      ],
+      "vocabulary": [
+        "seeing other people's responses",
+        "what other people think"
+      ],
+      "readings": [
+        {
+          "text": "Someone who learns more from seeing other people's responses would weigh a new quiz tool by how clearly it displays the range of answers from the group.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "If you put up an answer and it was wrong and you wondering what other people think, you would be drawn to a new quiz format that lets you compare your answer with others before moving on.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "Someone who sees gamified quizzes as a collective learning tool would be cautious about a new quiz that hides other people's responses until the end.",
+          "passages": [
+            "P7",
+            "P8"
+          ]
+        },
+        {
+          "text": "If seeing other people's responses helped you learn better during online classes, you would judge a new quiz by whether it keeps that shared response visible while you are still answering.",
+          "passages": [
+            "P7"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Participation is optional when someone else will answer or answers can be copied, so low-effort non-participation spreads, and gamified quizzes are read as demotivating when others do not participate.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P9",
+        "P10"
+      ],
+      "evaluative_rules": [
+        "Judge a quiz by whether everyone is actually taking part, not just whether it is offered"
+      ],
+      "objections": [
+        "Why should I take part if others are just keeping quiet or copying answers?"
+      ],
+      "vocabulary": [
+        "keep quiet",
+        "do not participate"
+      ],
+      "readings": [
+        {
+          "text": "Someone who stays quiet because they know someone else will answer would weigh a new product by whether it makes their own effort visible or lets them stay in the background.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "If people copy answers from Google just to have something there, they would look at a new service for how easily it can be answered without real engagement.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "Someone who feels demotivated when others do not participate would judge a new policy by whether it requires everyone to take part or lets some people opt out.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "If someone asks why they are doing it when others are not, they would weigh a new product by whether participation is spread evenly or falls on a few.",
+          "passages": [
+            "P10"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Public failure is the threat: real-name leaderboards create pressure to avoid being identified with wrong answers, so anonymity and no last-place display make gamified quizzes feel safer and more motivating, especially when rewards are offered.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a gamified quiz by whether it protects you from public failure and rewards right answers, not by how competitive it is"
+      ],
+      "objections": [
+        "Will I be exposed if I get a question wrong, and is there any reward for getting it right?"
+      ],
+      "vocabulary": [
+        "real name",
+        "freedom of choice"
+      ],
+      "readings": [
+        {
+          "text": "Someone who worries that coming out last would make them feel like the dumbest person in the room would weigh a new quiz product by whether it hides the last-place name, because not displaying those who would not make the cut feels really nice.",
+          "passages": [
+            "P12",
+            "P13"
+          ]
+        },
+        {
+          "text": "If using a real name puts pressure on people because everyone would know exactly who got a question wrong, a new quiz product would be weighed by how much it allows anonymity instead of real-name leaderboards.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "Someone who says not getting a reward from getting the right answers demotivates most people would weigh a new quiz product by whether it offers rewards, especially if long-term extra marks or bonus points could be gained.",
+          "passages": [
+            "P14",
+            "P16"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "South Africa (higher education institution)",
+  "year_range": null,
+  "confidence": "One qualitative South African study: a focus group of university programming students on gamified online quizzes (points, leaderboards). Mechanisms plausible; magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
   ],
   "topic_tags": [
     "learning",
@@ -21,147 +263,37 @@
     "homework",
     "rewards"
   ],
+  "subject": "rewards, points or prizes used to get someone to keep learning",
+  "year_note": "Published 2022; online learning during the pandemic.",
   "applies_when": [
+    {
+      "youth_age_band": [
+        "18-24"
+      ],
+      "education": [
+        "Tertiary"
+      ]
+    }
+  ],
+  "borrowed_when": [
     {
       "ghs_role": [
         "learner"
+      ],
+      "youth_age_band": [
+        "16-17",
+        "18-24"
       ]
     },
     {
       "ghs_role": [
-        "guardian_parent"
+        "guardian_parent",
+        "gogo_guardian"
+      ],
+      "geotype": [
+        "Urban"
       ]
     }
   ],
-  "claims": [
-    {
-      "text": "Comfort and flexibility at home make online learning feel positive because the learner can control their own schedule, dress, and eating.",
-      "needs": [
-        {
-          "ghs_role": [
-            "learner"
-          ]
-        }
-      ],
-      "chain_id": "C1",
-      "passages": [
-        "P1",
-        "P2"
-      ],
-      "objections": [],
-      "vocabulary": [
-        "comfortable at home"
-      ]
-    },
-    {
-      "text": "The absence of physical presence and structure makes online learning feel isolating and inferior because the learner struggles with self-discipline and misses immediate peer and lecturer feedback.",
-      "needs": [
-        {
-          "ghs_role": [
-            "learner"
-          ]
-        }
-      ],
-      "chain_id": "C2",
-      "passages": [
-        "P3",
-        "P4",
-        "P5",
-        "P6",
-        "P7"
-      ],
-      "objections": [
-        "Will I be able to discipline myself without the structure of campus?"
-      ],
-      "vocabulary": [
-        "discipline myself",
-        "bouncing off ideas"
-      ]
-    },
-    {
-      "text": "Interactivity and anonymity in a gamified quiz break monotony and sustain engagement for actively-participating learners, because the learner becomes an active part of the class and learns from seeing others' responses — though the same format risks social loafing or superficial answering for less-engaged learners.",
-      "needs": [
-        {
-          "ghs_role": [
-            "learner"
-          ]
-        }
-      ],
-      "chain_id": "C3",
-      "passages": [
-        "P8",
-        "P9",
-        "P10",
-        "P11",
-        "P12",
-        "P13"
-      ],
-      "objections": [],
-      "vocabulary": [
-        "broke up the monotony"
-      ]
-    },
-    {
-      "text": "Public leaderboards and real-name displays demotivate participation because the learner evaluates self-worth through social comparison and fears the embarrassment of being seen as the dumbest.",
-      "needs": [
-        {
-          "ghs_role": [
-            "learner"
-          ]
-        }
-      ],
-      "chain_id": "C4",
-      "passages": [
-        "P14",
-        "P15",
-        "P16",
-        "P17",
-        "P18",
-        "P19",
-        "P20"
-      ],
-      "objections": [
-        "Will my wrong answer be displayed publicly and embarrass me?"
-      ],
-      "vocabulary": [
-        "dumbest person in this room"
-      ]
-    },
-    {
-      "text": "A history of winning or losing shapes whether public reward ceremonies feel fair or exclusionary because the experience of being honoured or left out determines support for visible rewards versus individualised recognition.",
-      "needs": [],
-      "chain_id": "C5",
-      "passages": [
-        "P21",
-        "P22",
-        "P23",
-        "P24",
-        "P25",
-        "P26",
-        "P27",
-        "P28",
-        "P29",
-        "P30",
-        "P31",
-        "P32",
-        "P33",
-        "P34",
-        "P35"
-      ],
-      "objections": [
-        "Will this reward system make me feel excluded if I never win?",
-        "Will the teacher give more attention only to award winners?"
-      ],
-      "vocabulary": [
-        "individualised rewards"
-      ]
-    }
-  ],
-  "claim_type": "qualitative",
-  "region": "Eastern Cape",
-  "year_range": "2021",
-  "confidence": "Mixed-methods and qualitative, single-province higher education and high school samples, fieldwork around 2021 — mechanisms durable, magnitudes unknown.",
-  "comb_gaps": [
-    "opportunity"
-  ]
+  "borrowed_from": "University programming students on gamified quizzes. High-school learners hear it as how students like them respond to points and leaderboards; city parents as how their child might."
 }

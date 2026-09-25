@@ -223,3 +223,33 @@ def test_a_comfortable_renter_hears_only_the_security_claim():
     pitch = "Armed response and a guard at the gate for R450 a month, if the rates and water fail too."
     assert _claims(_seat("going-private-when-the-state-fails-sa", **renter), pitch)[0] == {"C4"}
     assert _claims(_seat("going-private-when-the-state-fails-sa", **owner), pitch)[0] == {"C1", "C2", "C3", "C4"}
+
+
+# ── borrowed_when: a close group gets the card, marked as borrowed ──────────
+
+def _borrow_card():
+    card = dict(next(c for c in mcs.load_cards() if c["id"] == "youth-waithood-identity"))
+    card.update(applies_when=[{"ghs_role": ["learner"]}],
+                borrowed_when=[{"ghs_role": ["guardian_parent"], "geotype": ["Urban"]}],
+                borrowed_from="Heard from learners like your child")
+    return card
+
+
+def test_the_studied_group_gets_the_card_directly():
+    card = _borrow_card()
+    facts = {"ghs_role": "learner"}
+    view = mcs.narrowed_to(card, facts)
+    assert mcs.situation_match_strength(card, facts) >= 1
+    assert "nearby group" not in mcs.render_research_context([view])
+
+
+def test_a_close_group_gets_it_marked_borrowed_and_ranked_lower():
+    card = _borrow_card()
+    facts = {"ghs_role": "guardian_parent", "geotype": "Urban"}
+    view = mcs.narrowed_to(card, facts)
+    assert 0 < mcs.situation_match_strength(card, facts) < 1
+    assert "heard from a nearby group" in mcs.render_research_context([view])
+
+
+def test_someone_in_neither_gate_gets_nothing():
+    assert mcs.situation_match_strength(_borrow_card(), {"ghs_role": "guardian_parent", "geotype": "Farms"}) == 0

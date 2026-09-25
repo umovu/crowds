@@ -24,7 +24,36 @@
       "objections": [
         "How many times a month would I have to pay this?"
       ],
-      "vocabulary": []
+      "vocabulary": [],
+      "readings": [
+        {
+          "text": "Someone who sees repeated consultations reaching a large share of household income would weigh a new service by whether it removes the need to pay for each visit separately.",
+          "passages": [
+            "P19",
+            "P20"
+          ]
+        },
+        {
+          "text": "If what must be paid today is the binding constraint, a new service that still requires upfront payment or travel would be read as inaccessible no matter its other benefits.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who has lost livelihoods and social networks would be more open to a new service only if it does not depend on having money in hand or relatives to assist.",
+          "passages": [
+            "P19",
+            "P2"
+          ]
+        },
+        {
+          "text": "If the cost burden fluctuates with how many times one is required to go, a new service that reduces the number of required visits would be weighed as more accessible even when monthly costs remain.",
+          "passages": [
+            "P20"
+          ]
+        }
+      ]
     },
     {
       "text": "Scarce transport funds are protected from waste: a clinic known for stock-outs is judged not worth the cost of attendance, so the patient shops around or self-treats instead",
@@ -49,6 +78,32 @@
       "vocabulary": [
         "money for transport",
         "shopping around"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has self-treated after a fruitless trip would weigh any new option by first asking whether it can be checked before spending on transport.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "If a person has shopped around because of regular stock-outs, they would be more open to a new option that removes the need to travel to a clinic at all.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "Someone who has judged a clinic not worth the cost of attendance would be cautious about any new option that still depends on that same clinic being stocked.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "If a person has self-treated instead of consulting, they would weigh a new option mainly by whether it makes self-treatment safer or more informed.",
+          "passages": [
+            "P4"
+          ]
+        }
       ]
     },
     {
@@ -62,6 +117,32 @@
       "vocabulary": [
         "unempowered",
         "get 'lost' and give up"
+      ],
+      "readings": [
+        {
+          "text": "Someone who gets lost in the referral system and gives up would be unlikely to ask questions about a new referral process, so they would need the next steps to be made obvious without them having to ask.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If unclarified referral instructions defeat unempowered patients, a new service that relies on patients asking questions to clarify what to do next would be hard for them to weigh up at all.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who is likely to get lost and give up would weigh a new policy more favourably if it removed the need to ask questions, but they might still give up if any part of it remained unclarified.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If highly vulnerable households seem less likely to take alternative action, they would be less likely to pursue a new product that requires them to take alternative action when instructions are unclear.",
+          "passages": [
+            "P5"
+          ]
+        }
       ]
     },
     {
@@ -88,6 +169,36 @@
       ],
       "vocabulary": [
         "hospital treatment as a failure"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has felt humiliated by nurses would weigh a new service first by whether it seems likely to repeat that humiliation, and only then by what it offers.",
+          "passages": [
+            "P11",
+            "P12"
+          ]
+        },
+        {
+          "text": "If a person has given up on the public health system after years of provider irritation, they would approach a new formal service expecting their continuing symptoms to be dismissed again.",
+          "passages": [
+            "P15",
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who left treatment because no one explained what it could achieve would look at a new service mainly for whether it promises a cure rather than just control of symptoms.",
+          "passages": [
+            "P8",
+            "P16"
+          ]
+        },
+        {
+          "text": "If a family has turned to a faith healer after seeing hospital treatment as a failure, they would weigh a new formal service against the explanations they already received from that healer.",
+          "passages": [
+            "P6",
+            "P14"
+          ]
+        }
       ]
     },
     {
@@ -106,6 +217,32 @@
       ],
       "vocabulary": [
         "dependant on gifts"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen a need become actionable only when it can be explained and justified to others would weigh a new offering by whether it gives them the words and standing to explain their situation to friends and relatives.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "If a person has felt humiliation when unable to explain or justify a need, they would look at a new product or service for whether it spares them that exposure before others.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "Someone who has seen knowledge from nurses empower a mother to become a resource would weigh a new offering by whether it passes on understanding that lets them justify needs to their community.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If a person has relied on a mother's ability to explain and justify need to unlock support, they would judge a new service by how much it strengthens the account they can give to friends and relatives.",
+          "passages": [
+            "P10"
+          ]
+        }
       ]
     }
   ],

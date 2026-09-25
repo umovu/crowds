@@ -42,6 +42,34 @@
         "rates",
         "misappropriated",
         "protect them"
+      ],
+      "readings": [
+        {
+          "text": "If a new collective policy is introduced, someone who pays high rates and sees that money as misappropriated would read it as something the state must manage on their behalf and protect them from, because they already feel the government should protect them.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who believes their high rates deserve really great service would weigh a new collective policy by whether it brings rapid preferential service to their area, since they see faster response as tied to their payment.",
+          "passages": [
+            "P9",
+            "P6"
+          ]
+        },
+        {
+          "text": "If a new collective policy requires residents to take over responsibility, someone who already feels the government has put a lot of responsibility on them would be less open to it, because they see pushing the city as their burden.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who accepts that even a completely efficient city would take a long time to reach an equitable state would weigh a new collective policy conditionally, open to it only if it acknowledges that those who have enjoyed privileges the most have got to pay for it.",
+          "passages": [
+            "P8"
+          ]
+        }
       ]
     },
     {
@@ -74,6 +102,32 @@
         "borehole",
         "sovereignty",
         "off the grid"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says they did not have to abide by harsh restrictions because of their borehole would weigh a new collective water policy as not their problem and likely ignore it.",
+          "passages": [
+            "P11"
+          ]
+        },
+        {
+          "text": "If a person values sovereignty and getting off the grid to save themselves from dealing with Council, they would read a new collective policy as another Council matter to avoid rather than join.",
+          "passages": [
+            "P21"
+          ]
+        },
+        {
+          "text": "Someone who shrugs and asks whether it is really their problem would be less open to a new collective policy unless it directly threatened their own supply.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "If a person recognizes that more autonomous households leave Council carrying infrastructure costs, they might weigh a new collective policy as something that could raise costs for those who are not autonomous.",
+          "passages": [
+            "P16"
+          ]
+        }
       ]
     },
     {
@@ -107,6 +161,33 @@
         "Team Cape Town",
         "collective",
         "play your part"
+      ],
+      "readings": [
+        {
+          "text": "Someone who stood in the same queue and got the same liters as everyone else would read a new policy by asking whether it keeps that same-queue fairness, and would weigh it more openly if it does not let money or status change what each household gets.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If the fear of carrying twenty-five liters and the stress of buckets, basins and dead plants is still present, a new policy would be weighed by whether it reduces that carrying and anxiety, and would be read more cautiously if it leaves households to manage that strain alone.",
+          "passages": [
+            "P14",
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who learned that rules had to be followed for everyone's benefit and not only yours would read a new policy as a shared set of rules, and would weigh it by whether it asks every household to play the same part rather than leaving some to do more.",
+          "passages": [
+            "P29"
+          ]
+        },
+        {
+          "text": "If the real recipe for success is collective action and partnership between residents and government, a new policy would be weighed by whether it builds that resident-government partnership, and would be read less openly if it is framed only as government delivering to residents.",
+          "passages": [
+            "P27"
+          ]
+        }
       ]
     },
     {
@@ -132,6 +213,36 @@
         "safe and secure community",
         "rules",
         "peace of mind"
+      ],
+      "readings": [
+        {
+          "text": "Someone who sees estate rules as the mechanism that keeps the community safe and orderly would weigh any new policy or product by whether it reinforces those rules and the standard of care they enforce.",
+          "passages": [
+            "P38"
+          ]
+        },
+        {
+          "text": "If safety is understood as something only gates and enforced estate rules can deliver, a new policy or product would be read first for whether it preserves that safety, order and property standard.",
+          "passages": [
+            "P33",
+            "P34",
+            "P35"
+          ]
+        },
+        {
+          "text": "Someone who treats the estate as a trade of space and money for security would be less open to a new policy or product that asks them to give up more space, money or the order they paid for.",
+          "passages": [
+            "P35",
+            "P39"
+          ]
+        },
+        {
+          "text": "If the state is read as unable to control crime, a new policy or product that depends on state delivery or on conditions outside the gate would be weighed as unreliable.",
+          "passages": [
+            "P36",
+            "P37"
+          ]
+        }
       ]
     }
   ],

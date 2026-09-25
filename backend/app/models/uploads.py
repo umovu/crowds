@@ -196,6 +196,11 @@ class Project(DataModel):
     error: Optional[str] = Field(json_schema_extra={'when': 'always'})
 
 
+class MechanismCardReading(DataModel):
+    text: str = Field(min_length=1, max_length=400, json_schema_extra={'when': 'always'})
+    passages: List[str] = Field(min_length=1, json_schema_extra={'when': 'always'})
+
+
 class MechanismCardClaim(DataModel):
     text: str = Field(min_length=1, max_length=600, json_schema_extra={'when': 'always'})
     needs: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(json_schema_extra={'when': 'always'})
@@ -204,6 +209,13 @@ class MechanismCardClaim(DataModel):
     evaluative_rules: List[Annotated[str, Field(min_length=1)]] = Field(default=None, json_schema_extra={'when': 'optional'})
     objections: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
     vocabulary: List[Annotated[str, Field(min_length=1)]] = Field(json_schema_extra={'when': 'always'})
+    readings: List[MechanismCardReading] = Field(default=None, max_length=4, json_schema_extra={
+        'when': 'optional',
+        'note': ("Different ways someone who does this might read a new offer (scripts/"
+                 "extract_readings.py): some more open, some less, each tied to its passages. "
+                 "One reading per claim hands a whole room the same angle; each persona takes "
+                 "the one that fits their own life. Never a purchase decision."),
+    })
     about: str = Field(default=None, min_length=1, max_length=300, json_schema_extra={
         'when': 'optional',
         'note': ("What a pitch must involve for this claim to belong in the prompt, in one "
@@ -249,6 +261,12 @@ class MechanismCard(DataModel):
     topic_tags: List[Annotated[str, Field(pattern='^[a-z][a-z -]*$')]] = Field(min_length=1, json_schema_extra={'when': 'always'})
     comb_gaps: List[MechanismCardCombGaps] = Field(json_schema_extra={'when': 'always'})
     applies_when: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(json_schema_extra={'when': 'always'})
+    borrowed_when: List[Dict[str, Annotated[list, Field(min_length=1)]]] = Field(default=None, json_schema_extra={
+        'when': 'optional',
+        'note': ("A close group the reasoning carries over to, beyond who was studied (applies_when): "
+                 "parents of the learners studied, say. They get the card marked as borrowed "
+                 "(borrowed_from says who spoke) and rank below direct fits. Clauses name at least two facts."),
+    })
 
 
 class HypothesisReportRoomCoverage(DataModel):

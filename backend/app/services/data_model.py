@@ -213,9 +213,14 @@ def mechanism_card_problems(card: Any, file_name: Optional[str] = None) -> List[
     out += [f"{label}: segment tag {t!r} is not a persona type"
             for t in card.get("segment_tags") or [] if t not in archetypes]
     out += rule_problems(label, card.get("applies_when"))
+    if card.get("borrowed_when"):
+        out += rule_problems(label, card.get("borrowed_when"))
+        if not card.get("borrowed_from"):
+            out.append(f"{label}: borrowed_when needs borrowed_from to say who spoke")
     if card.get("borrowed_from"):
-        # Borrowed reasoning only reaches people who closely match the speakers.
-        clauses = card.get("applies_when") or []
+        # Borrowed reasoning only reaches people who closely match the speakers: the
+        # borrowed_when gate when the card has one, otherwise the whole applies_when.
+        clauses = card.get("borrowed_when") or card.get("applies_when") or []
         if not clauses:
             out.append(f"{label}: a borrowed card needs an applies_when gate")
         out += [f"{label}: borrowed card gate clause {j} names fewer than two facts"
@@ -226,7 +231,8 @@ def mechanism_card_problems(card: Any, file_name: Optional[str] = None) -> List[
             continue
         where = f"{label} claims[{i}]"
         words = [claim.get("text"), *(claim.get("objections") or []),
-                 *(claim.get("vocabulary") or []), *(claim.get("evaluative_rules") or [])]
+                 *(claim.get("vocabulary") or []), *(claim.get("evaluative_rules") or []),
+                 *(r.get("text") for r in claim.get("readings") or [] if isinstance(r, dict))]
         out += [f"{where}: number in claim: {x!r}"
                 for x in words if isinstance(x, str) and _DIGIT.search(x)]
         out += rule_problems(where, claim.get("needs"))

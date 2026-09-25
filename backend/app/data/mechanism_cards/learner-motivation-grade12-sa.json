@@ -1,0 +1,312 @@
+{
+  "id": "learner-motivation-grade12-sa",
+  "citation": [
+    "Motivating Grade 12 learners at a quintile 3 secondary school in South Africa (2022). The Independent Journal of Teaching and Learning 17(1)."
+  ],
+  "segment_tags": [
+    "learner",
+    "guardian_parent"
+  ],
+  "claims": [
+    {
+      "text": "When home conditions block daytime study, learners study late at night, and come to school tired and less productive.",
+      "needs": [
+        {
+          "lived_poverty": [
+            "moderate",
+            "high"
+          ]
+        }
+      ],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2"
+      ],
+      "evaluative_rules": [
+        "Judge a study arrangement by whether it fits the actual hours when quiet is available, not by an ideal daytime schedule"
+      ],
+      "objections": [
+        "Does this assume I have a quiet place to study during the day?"
+      ],
+      "vocabulary": [
+        "quiet study space",
+        "tired and unproductive"
+      ],
+      "readings": [
+        {
+          "text": "Someone who studies late at night because their siblings are active during the day would weigh a new policy that offers supervised study periods at school as a way to avoid being tired and unproductive the next day.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "text": "If studying late at night when everybody is asleep is the only quiet time available, a new product that requires daytime participation would seem impractical.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who is tired and unproductive at school after studying late at night would be cautious about any new service that adds more tasks to their evening routine.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If a very small house makes daytime study impossible, a new policy that helps learners find quiet space outside the home would be worth considering.",
+          "passages": [
+            "P1"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Hunger blocks focus and comprehension in class, so basic needs such as food come before learning.",
+      "needs": [
+        {
+          "lived_poverty": [
+            "moderate",
+            "high"
+          ]
+        }
+      ],
+      "chain_id": "C2",
+      "passages": [
+        "P3"
+      ],
+      "evaluative_rules": [
+        "Weigh any learning support by whether it first removes the bodily obstacles to concentration"
+      ],
+      "objections": [
+        "Will this work if I am still hungry when I use it?"
+      ],
+      "vocabulary": [
+        "cannot focus",
+        "nothing goes in"
+      ],
+      "readings": [
+        {
+          "text": "Someone who comes to school hungry and cannot focus in class would weigh a new school meal programme mainly on whether it removes hunger before lessons start.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If hearing the words but nothing going in is the daily experience, a new learning tool would be judged first on whether it assumes a learner has already eaten.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "Someone who cannot focus in class because of hunger would be cautious about any new education policy that adds more content without first addressing food.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If hunger blocks focus and comprehension, a new service that combines food with study support would seem more relevant than one that only offers study support.",
+          "passages": [
+            "P3"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Schooling is the only realistic escape from poverty, so hard work and good marks are the route out, and effort follows anything that supports academic achievement as that escape.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "evaluative_rules": [
+        "Judge an opportunity by whether it moves you closer to good marks and out of poor living conditions"
+      ],
+      "objections": [
+        "Does this actually help me get out of the conditions we live in?"
+      ],
+      "vocabulary": [
+        "get out of the conditions",
+        "better life"
+      ],
+      "readings": [
+        {
+          "text": "If a new product, service or policy supports academic achievement, someone who sees schooling as the only realistic escape from poverty would weigh it as directly serving their route out.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who works as hard as possible to get good marks would weigh a new product, service or policy mainly by whether it helps them get out of the conditions they live in.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If a new product, service or policy does not clearly support good marks, someone who sees hard work and good marks as the route out would weigh it as less relevant to their escape from poverty.",
+          "passages": [
+            "P5",
+            "P6"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Caregiver checking and involvement are motivating, and their absence is demotivating, so effort is sustained by making caregivers proud through academic achievement.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "evaluative_rules": [
+        "Weigh a support by whether it keeps someone checking on your schoolwork and progress"
+      ],
+      "objections": [
+        "Will someone still check my homework and ask about my schoolwork if I use this?"
+      ],
+      "vocabulary": [
+        "checks my homework",
+        "make them proud"
+      ],
+      "readings": [
+        {
+          "text": "Someone who is asked every day if they have schoolwork would weigh a new offering by whether it gives their caregivers a clear way to keep checking on their progress.",
+          "passages": [
+            "P7",
+            "P11"
+          ]
+        },
+        {
+          "text": "If a learner is motivated by knowing their mother would do anything for them when it comes to schoolwork, they would be open to a new offering that lets them show appreciation and love through learning.",
+          "passages": [
+            "P8",
+            "P12"
+          ]
+        },
+        {
+          "text": "Someone who becomes demotivated when nobody checks their homework would be less open to a new offering that leaves them without a controlled environment or regular enquiries about their activities.",
+          "passages": [
+            "P10",
+            "P11"
+          ]
+        },
+        {
+          "text": "If a learner values learning as a means of making their parents or guardians proud, they would weigh a new offering by whether it helps them achieve academically in a way their caregivers can see.",
+          "passages": [
+            "P12"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Acknowledgement motivates and its absence discourages, so recognition of effort and achievement renews effort, while criticism or being ignored demotivates.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P13",
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a reward by whether it gives visible proof of being seen as intelligent and hardworking"
+      ],
+      "objections": [
+        "Will this show people at home that I have done well?"
+      ],
+      "vocabulary": [
+        "certificate",
+        "proud of me"
+      ],
+      "readings": [
+        {
+          "text": "Someone who is motivated by receiving a certificate to show at home would weigh a new recognition scheme by whether it offers a tangible token they can display to family.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If a person feels their effort is met with criticism at home, they would be drawn to a new product or policy that provides an external, positive acknowledgement of having done well.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "Someone who never hears a parent say they are proud would be cautious about a new initiative, weighing whether its recognition feels genuine or just another empty gesture.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "If a person craves being regarded as intelligent and hardworking, they would assess a new service by how visibly it signals those qualities to others.",
+          "passages": [
+            "P16"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Langeberg district, Western Cape, South Africa",
+  "year_range": null,
+  "confidence": "One qualitative South African study: interviews with 10 Grade 12 learners (aged 17-18) at a quintile 3 secondary school. Mechanisms durable; magnitudes and prevalence unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "topic_tags": [
+    "coins",
+    "homework",
+    "incentive",
+    "incentives",
+    "learner",
+    "learners",
+    "learning",
+    "marks",
+    "matric",
+    "motivation",
+    "points",
+    "reward",
+    "rewards",
+    "school",
+    "study",
+    "studying"
+  ],
+  "subject": "what keeps a high-school learner working: escaping poverty, making caregivers proud, being acknowledged, and what hunger and home conditions take away",
+  "year_note": "Published 2022.",
+  "applies_when": [
+    {
+      "ghs_role": [
+        "learner"
+      ]
+    }
+  ],
+  "borrowed_when": [
+    {
+      "ghs_role": [
+        "guardian_parent",
+        "gogo_guardian"
+      ],
+      "learner_fee_bands": [
+        "No fees",
+        "R1–R100 per year",
+        "R101–R200 per year",
+        "R201–R300 per year",
+        "R301–R500 per year",
+        "R501–R1 000 per year",
+        "R1 001–R2 000 per year",
+        "R2 001–R3 000 per year",
+        "R3 001–R4 000 per year"
+      ]
+    }
+  ],
+  "borrowed_from": "Grade 12 learners at a quintile 3 (no-fee) school in the Western Cape. Parents at similar schools hear it as what learners like their child say keeps them going."
+}

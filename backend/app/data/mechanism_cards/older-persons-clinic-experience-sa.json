@@ -35,6 +35,34 @@
         "listen",
         "fed up",
         "keep quiet"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says you must just keep your mouth shut because you need the tablets would weigh a new service mainly by whether it still lets them get medication without having to complain or ask for more attention.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If you believe there is no examination and you are just given something, you would look for a new service that makes examination a clear, visible step before any treatment is offered.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who is fed up after asking to be examined and only being examined with clothes on would be cautious about a new service unless it shows that complaints about the body are taken seriously and lead to a different examination.",
+          "passages": [
+            "P8",
+            "P6"
+          ]
+        },
+        {
+          "text": "If you have seen doctors and nurses improvise because there are too few of them, you would weigh a new service by whether it reduces the number of people waiting and still leaves time for a proper examination.",
+          "passages": [
+            "P11",
+            "P3"
+          ]
+        }
       ]
     },
     {
@@ -54,6 +82,32 @@
       "objections": [],
       "vocabulary": [
         "ageism"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has been told to just get out when asking a simple question would weigh any new service by whether it removes the chance of being chased out before being heard.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If a person believes help is withheld because of age, they would look for a new service that does not make age the reason for what is or is not offered.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "Someone who sees wheelchair patients not getting first privilege at reception and the doctor would weigh a new service by whether it changes who is seen first.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "If an older person has seen a folder put aside after a toilet break, they would weigh a new service by whether it keeps their place when they step away.",
+          "passages": [
+            "P20"
+          ]
+        }
       ]
     },
     {
@@ -69,7 +123,33 @@
       "objections": [
         "Will I be seen after someone who came after me?"
       ],
-      "vocabulary": []
+      "vocabulary": [],
+      "readings": [
+        {
+          "text": "Someone who says what is right is right and what is wrong is wrong would judge any new service by whether it keeps the order of arrival as the only measure of who is seen first.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If a person who comes after me must be seen after me, they would be wary of a new policy that lets staff or others move a later arrival ahead, even when that later arrival has some special reason.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who complains that the one that came afterwards will be seen before the first one would be open to a new service only if it makes the first-come-first-served order visible and enforceable.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If queue order is the measure of right and wrong, they would weigh a new policy by asking whether it removes the power of the person collecting cards to decide who is seen first.",
+          "passages": [
+            "P13"
+          ]
+        }
+      ]
     },
     {
       "text": "Doctor-led examination is the quality benchmark: patients prefer doctors and distrust nurses who dismiss complaints because thorough examination and meaningful attention to complaints define good care",
@@ -89,6 +169,32 @@
       ],
       "vocabulary": [
         "examination"
+      ],
+      "readings": [
+        {
+          "text": "Someone who believes doctors thoroughly examine you would weigh a new service by whether it guarantees a doctor-led examination rather than a nurse-led one.",
+          "passages": [
+            "P24"
+          ]
+        },
+        {
+          "text": "If you have had a professional nurse dismiss your complaint as nothing that will go away, you would be cautious about a new service that routes first contact through nurses.",
+          "passages": [
+            "P23"
+          ]
+        },
+        {
+          "text": "Someone who attaches quality to having specific complaints addressed meaningfully would be open to a new service only if it shows how complaints are genuinely acknowledged and treatment adjusted, regardless of who provides it.",
+          "passages": [
+            "P26"
+          ]
+        },
+        {
+          "text": "If you acknowledge good service from other categories of staff but still hold doctors' qualifications in higher regard, you would weigh a new service by the qualifications of the person assigned to you.",
+          "passages": [
+            "P29"
+          ]
+        }
       ]
     },
     {
@@ -112,7 +218,33 @@
       "objections": [
         "Can I even get there?"
       ],
-      "vocabulary": []
+      "vocabulary": [],
+      "readings": [
+        {
+          "text": "Someone who sees elderly people walking from the sports ground as unacceptable would weigh a new service by whether it removes the distance and transport barrier for those patients.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "If a lift was offered and people did not take that opportunity, a new service would be judged by whether it fits what the community is actually willing to use, not only by its availability.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who notes that elderly patients are also carers for grandchildren would weigh a new service by whether it limits the waiting period at the facility.",
+          "passages": [
+            "P30"
+          ]
+        },
+        {
+          "text": "If taxis cannot work in another area, a new service would be judged by whether it can be reached without crossing those transport boundaries.",
+          "passages": [
+            "P15"
+          ]
+        }
+      ]
     }
   ],
   "claim_type": "qualitative",

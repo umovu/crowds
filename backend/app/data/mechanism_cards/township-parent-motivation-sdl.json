@@ -1,11 +1,283 @@
 {
   "id": "township-parent-motivation-sdl",
-  "subject": "how parents get a child to study on their own at home",
   "citation": [
-    "Beyond the classroom: how parents view motivation as a key to self-directed learning in township schools (Siziba, Geduld & Du Toit-Brits, Frontiers in Education, 2025)"
+    "Siziba T, Geduld B, Du Toit-Brits C (2025). Beyond the classroom: how parents view motivation as a key to self-directed learning in township schools. Frontiers in Education 10. doi:10.3389/feduc.2025.1587470"
   ],
   "segment_tags": [
     "guardian_parent"
+  ],
+  "claims": [
+    {
+      "text": "Because work and single-parent household duties leave little time and energy, parental responsibility for motivating and supporting the learner is treated as non-negotiable and must be organised around the time actually available, so support takes the form of providing resources, checking homework, signing books, hiring tutors and visiting school, and any new product or policy is judged by whether it reduces the time and energy burden and fits around work schedules.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P7",
+        "P12",
+        "P13",
+        "P8",
+        "P4",
+        "P1",
+        "P5"
+      ],
+      "evaluative_rules": [
+        "Judge any support or product by whether it reduces the time and energy burden and fits around work schedules"
+      ],
+      "objections": [
+        "Will this fit around my work schedule and actually take work off me rather than add to it?"
+      ],
+      "vocabulary": [
+        "responsibility is my job as a parent",
+        "I do not have enough time"
+      ],
+      "readings": [
+        {
+          "text": "Someone who comes home late and tired would judge a new product or policy by whether it can be used after work without adding to the time and energy burden.",
+          "passages": [
+            "P7",
+            "P13"
+          ]
+        },
+        {
+          "text": "If a parent sees motivating the child as their own job, they would weigh a new product or policy by whether it strengthens their ability to check homework, sign books and visit school.",
+          "passages": [
+            "P8",
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who already provides resources like fibre Wi-Fi and laptops would judge a new product or policy by whether it fits into the support they already organise around work schedules.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If a single parent must cook, clean and wash uniforms, they would weigh a new product or policy by whether it reduces the time and energy burden of household duties and school support.",
+          "passages": [
+            "P12"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Because the learner lacks self-direction and relies on the parent, especially where the parent is educated, the parent must set standards, targets and incentives that trigger the child's own goal-setting, so the parent raises targets, offers incentives and prompts the child after poor results, and any new product or policy is judged by whether it scaffolds the child's independent goal-setting rather than replacing it.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P17",
+        "P3",
+        "P2",
+        "P18"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it scaffolds the child's own goal-setting rather than doing the work for them"
+      ],
+      "objections": [
+        "Does this build my child's own goal-setting, or does it just replace the pushing I already do?"
+      ],
+      "vocabulary": [
+        "set a certain target for herself",
+        "set my own standards just to motivate her"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says their child relies on them because they are educated and does not set her own goals would judge a new product by whether it prompts the child to set goals after poor results, not by whether it simply sets goals for the child.",
+          "passages": [
+            "P17",
+            "P3"
+          ]
+        },
+        {
+          "text": "If the parent already uses incentives so the child sets a target for herself, they would be less open to a product that replaces that incentive structure, but more open to one that extends it.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who sets their own higher standards to motivate the child would weigh a new product by whether it lets the parent keep raising targets and prompting the child, rather than taking over that prompting.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "If the parent must talk or shout before the child sees poor results and picks up her socks, they would be open to a product only if it scaffolds that moment of self-correction, not if it removes the parent's role in triggering it.",
+          "passages": [
+            "P3"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Because the learner already self-directs and studies independently, the parent's role is only to top up or assist on request rather than do everything for the child, so the parent helps only where the child asks and steps back otherwise, and any new product or policy is judged by whether it preserves and rewards the child's existing self-directed study habits.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P14",
+        "P15",
+        "P16"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it preserves and rewards the child's existing self-directed study habits"
+      ],
+      "objections": [
+        "Will this leave my child's own study routine intact instead of taking it over?"
+      ],
+      "vocabulary": [
+        "my help is just to top on that",
+        "I don't like doing everything for them"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says their child is very determined and puts in more effort would judge a new product by whether it gives the child room to apply that effort without the parent having to drive the process.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "If the child studies and knows the concepts so the parent's help is just to top up, a new product would be weighed by whether it fits into that topping-up role rather than replacing the child's own study.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who only helps where the child wants to be assisted and does not like doing everything for them would be wary of a new product that expects the parent to manage the child's work.",
+          "passages": [
+            "P16"
+          ]
+        },
+        {
+          "text": "If the child starts their work and only comes to the parent when they have a problem, a new product would be judged by whether it lets the child start and continue independently and brings the parent in only on request.",
+          "passages": [
+            "P16"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Because the adolescent is in a developmental phase where rebellion and competing social and fashion interests make the child resistant to parental involvement, pushing harder is counterproductive, so the parent limits or adapts involvement and tolerates the child's own priorities, and any new product or policy is judged by whether it engages the learner through their own interests rather than through parental pressure.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P10",
+        "P11",
+        "P19"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it engages the learner through their own interests rather than through parental pressure"
+      ],
+      "objections": [
+        "Will this reach my teenager through what they care about, or will it just be more pressure they resist?"
+      ],
+      "vocabulary": [
+        "teenagers go through their own phases",
+        "our kids are rebels"
+      ],
+      "readings": [
+        {
+          "text": "Someone who sees their teenager going through his own phases and wanting to do his own things would judge a new product by whether it lets the child pursue those things without the parent having to be there all the time.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "If a parent knows their older child is a rebel who cares a lot about fashion, they would weigh a new product by whether it can connect to that fashion interest instead of requiring the parent to push harder.",
+          "passages": [
+            "P11"
+          ]
+        },
+        {
+          "text": "Someone who sees their sixteen-year-old as more social and not academically happy with her subjects would be more open to a product that engages her through her social priorities rather than through parental pressure about schoolwork.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "If a parent has a child who does not like school but gets excited to perform or do sports, they would judge a new product by whether it can work through that performance or sports interest, and would be less open to one that depends on the parent pushing academic work.",
+          "passages": [
+            "P19"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Because the learner's happiness at school is tied to social life and non-academic interests and academic motivation is undermined by poor labour-market prospects, school is valued for social belonging and self-expression and academic effort is questioned when graduates are unemployed, so the parent reads the child's engagement through friendships, sports and arts rather than academic signals, and any new product or policy is judged by whether it connects schoolwork to visible post-school opportunity and to the learner's social and creative life.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P20",
+        "P19",
+        "P6"
+      ],
+      "evaluative_rules": [
+        "Judge a product by whether it connects schoolwork to visible post-school opportunity and to the learner's social and creative life"
+      ],
+      "objections": [
+        "Will this lead somewhere after school, and does it speak to my child's friends, sport or art?"
+      ],
+      "vocabulary": [
+        "so many unemployed graduates",
+        "his happy at school because of his friends"
+      ],
+      "readings": [
+        {
+          "text": "Someone who sees their child's happiness at school as coming from friends would judge a new product or policy by whether it strengthens the child's social belonging at school.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "If a parent sees their child's engagement through sports and arts rather than academic signals, they would weigh a new product or policy by whether it connects to the child's creative and performing life.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "Someone who believes academic motivation is undermined by unemployed graduates would be sceptical of a new product or policy unless it visibly connects schoolwork to post-school opportunity.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If a parent reads their child's engagement through friendships and self-expression, they would be less open to a new product or policy that focuses only on academic signals without linking to social life.",
+          "passages": [
+            "P20",
+            "P19"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Sebokeng, Gauteng, South Africa",
+  "year_range": "2025",
+  "confidence": "One qualitative South African study: semi-structured interviews with 10 parents or guardians at two township schools in Sebokeng, Gauteng; the authors note educated parents were overrepresented. Mechanisms durable; magnitudes and prevalence unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "subject": "how parents get a child to study on their own at home",
+  "year_note": "Published June 2025; interviews with parents at two township schools.",
+  "applies_when": [
+    {
+      "ghs_role": [
+        "guardian_parent",
+        "gogo_guardian"
+      ],
+      "geotype": [
+        "Urban"
+      ],
+      "learner_fee_bands": [
+        "No fees",
+        "R1–R100 per year",
+        "R101–R200 per year",
+        "R201–R300 per year",
+        "R301–R500 per year",
+        "R501–R1 000 per year",
+        "R1 001–R2 000 per year",
+        "R2 001–R3 000 per year",
+        "R3 001–R4 000 per year"
+      ]
+    }
   ],
   "topic_tags": [
     "learning",
@@ -16,139 +288,16 @@
     "self-directed learning",
     "wifi",
     "wi-fi",
-    "fibre"
-  ],
-  "applies_when": [
-    {
-      "ghs_role": [
-        "guardian_parent",
-        "gogo_guardian"
-      ],
-      "geotype": [
-        "Urban"
-      ],
-      "lived_poverty": [
-        "low",
-        "moderate",
-        "high"
-      ]
-    }
-  ],
-  "economic_tags": [
-    "tight",
-    "moderate"
-  ],
-  "claims": [
-    {
-      "text": "Connectivity is treated as essential infrastructure because a friendly learning environment requires reliable access to information.",
-      "needs": [],
-      "chain_id": "C1",
-      "passages": [
-        "P1"
-      ],
-      "evaluative_rules": [
-        "Judge a learning environment by its connectivity and access to information."
-      ],
-      "objections": [],
-      "vocabulary": [
-        "fibre Wi-Fi",
-        "friendly for learning"
-      ]
-    },
-    {
-      "text": "Parents own the motivating role — prompting, monitoring schoolwork, and authoring their own target-and-reward incentive schemes — because children are seen to rely on external regulation to initiate effort.",
-      "needs": [],
-      "chain_id": "C2",
-      "passages": [
-        "P2",
-        "P3",
-        "P4",
-        "P7",
-        "P17",
-        "P18"
-      ],
-      "evaluative_rules": [
-        "Set the targets and attach the rewards yourself when a child lacks initiative — motivating is the parent's own job, done through parent-authored standards and incentives."
-      ],
-      "objections": [
-        "Is my child motivated enough to use this without constant shouting?"
-      ],
-      "vocabulary": [
-        "pick his socks",
-        "responsibility is my job",
-        "sign their books"
-      ]
-    },
-    {
-      "text": "Fatigue and logistical constraints limit capacity because work and household duties exhaust the energy required for homework assistance.",
-      "needs": [],
-      "chain_id": "C3",
-      "passages": [
-        "P6",
-        "P11",
-        "P12"
-      ],
-      "evaluative_rules": [
-        "Acknowledge that fatigue and logistics limit the capacity to assist with schoolwork."
-      ],
-      "objections": [
-        "Will this require more time than I have after work and chores?"
-      ],
-      "vocabulary": []
-    },
-    {
-      "text": "Parental support is supplementary because determined children initiate their own study and only request help when stuck.",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P13",
-        "P14",
-        "P15",
-        "P16"
-      ],
-      "evaluative_rules": [
-        "Provide targeted assistance only when requested, respecting the child's existing agency."
-      ],
-      "objections": [
-        "Am I just topping on what they already do, or doing it for them?"
-      ],
-      "vocabulary": [
-        "top on that"
-      ]
-    },
-    {
-      "text": "Motivational interventions are viewed as insufficient because structural unemployment and developmental rebellion override individual encouragement.",
-      "needs": [
-        {
-          "employment_status": [
-            "Unemployed"
-          ]
-        }
-      ],
-      "chain_id": "C5",
-      "passages": [
-        "P5",
-        "P9",
-        "P10"
-      ],
-      "evaluative_rules": [
-        "Recognize that external structural barriers may outweigh individual motivational efforts."
-      ],
-      "objections": [
-        "Does this account for the lack of jobs even for graduates?"
-      ],
-      "vocabulary": [
-        "unemployed graduates",
-        "teenage phases"
-      ]
-    }
-  ],
-  "claim_type": "qualitative",
-  "region": "Sebokeng township, Gauteng",
-  "year_range": "2025",
-  "confidence": "Single-district qualitative interviews with 10 township parents (Sebokeng West, Gauteng); educated parents overrepresented in articulate responses; mechanisms durable, magnitudes and prevalence unknown",
-  "comb_gaps": [
-    "opportunity"
-  ],
-  "year_note": "published 2025, COVID-era fieldwork"
+    "fibre",
+    "reward",
+    "rewards",
+    "incentive",
+    "incentives",
+    "tutor",
+    "tutoring",
+    "study",
+    "studying",
+    "schoolwork",
+    "motivation"
+  ]
 }
