@@ -54,7 +54,10 @@ def _audience(data: Dict[str, Any], pointer: Optional[str],
     segments = data.get('segments')
     if not segments and data.get('segment'):
         segments = [data.get('segment')]
-    if pointer and not segments:
+    # A described audience is the room already; routing the pitch to keyword
+    # groups on top would re-split it (and could leave no one who is both).
+    described = data.get('audience') or {}
+    if pointer and not segments and not (described.get('facts') or described.get('provinces')):
         segments = pointers.route_segments(pointer, pitched) or None
     return segments
 
@@ -90,6 +93,7 @@ def create(data: Dict[str, Any], user_id: Optional[str]) -> Dict[str, Any]:
         segments=segments,
         budget_tiers=data.get('budget_tiers'),
         attitudes=data.get('attitudes'),
+        audience=data.get('audience'),
         user_id=user_id,
         pointer=pointer,
         slots=slots if pointer else None,

@@ -103,6 +103,14 @@ def test_money_offered_to_them_is_not_a_price(pitch):
     assert derive_budget_tiers(pitch) is None
 
 
+def test_what_the_buyers_earn_is_not_the_price():
+    """An audience described by income ("earn between R7 500 and R30 000 a month")
+    priced a R150 visit at R30 000, and the room came back all well-off."""
+    pitch = ("A R150 pay-per-visit nurse service. These people live in cities and "
+             "earn between R7 500 and R30 000 per month.")
+    assert parse_price(pitch) == {"amount": 150.0, "monthly": False}
+
+
 def test_a_price_still_counts_when_the_pitch_also_offers_money():
     """The full stop ends the offer: the second sentence states a real price."""
     price = parse_price("Loans of up to R50,000 for traders. The app costs R199 a month.")

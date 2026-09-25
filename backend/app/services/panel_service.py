@@ -35,6 +35,7 @@ from .income_seeder import detect_grant, GRANT_PROVENANCE
 from .mode_specs import (SHORT_ANSWER_SENTENCES, budget_tier, build_operator_context_block,
                          decision_question_on)
 from . import data_model
+from . import audience_reader
 from . import mechanism_card_service
 from . import objections
 from .persona_library import get_library
@@ -908,6 +909,7 @@ def create_session(
     user_id: Optional[str] = None,
     pointer: Optional[str] = None,
     slots: Optional[Dict[str, Any]] = None,
+    audience: Optional[Dict[str, List[str]]] = None,
 ) -> Dict[str, Any]:
     """Create a panel session: select a cast, compute economics, write the dir.
 
@@ -1041,6 +1043,24 @@ def create_session(
             attitude_pool_size = len(qualified)
             library = _FilteredLibrary(qualified)
 
+    # Audience lens: the founder's own description of who it is for, read into
+    # facts the personas carry (audience_reader). Everyone seated has ALL of them;
+    # picking three group chips instead seats anyone in ANY of the three.
+    audience_facts = list((audience or {}).get("facts") or [])
+    audience_provinces = list((audience or {}).get("provinces") or [])
+    audience_pool_size = None
+    if audience_facts or audience_provinces:
+        wanted = audience_reader.rule(audience_facts, audience_provinces)
+        qualified = [p for p in library.all() if audience_reader.matches(p, wanted)]
+        if not qualified:
+            raise ValueError(
+                "No one in the library is all of: "
+                + ", ".join(audience_reader.labels(audience_facts, audience_provinces))
+                + " — remove one and try again."
+            )
+        audience_pool_size = len(qualified)
+        library = _FilteredLibrary(qualified)
+
     if seg_list == ["everyone"]:
         cast = select_for_query(n, pitch, province=province, seed=seed, library=library)
         allocation = {"everyone": len(cast)}
@@ -1132,6 +1152,13 @@ def create_session(
         # "18 of the library", not just "12 seats".
         meta["attitude_filter"] = {d: sorted(v) for d, v in attitudes.items() if v}
         meta["attitude_pool_size"] = attitude_pool_size
+    if audience_pool_size is not None:
+        # How many real people are all of it, so "12 seats" reads as "12 of 87".
+        meta["audience_facts"] = audience_facts
+        meta["audience_provinces"] = audience_provinces
+        meta["audience_pool_size"] = audience_pool_size
+        if picked_seg_list == ["everyone"]:
+            meta["segment_label"] = " · ".join(audience_reader.labels(audience_facts, audience_provinces))
     _write_checked(os.path.join(sdir, META_FILE), meta, _meta_problems, "Panel session")
 
     logger.info(f"Created panel session {session_id}: {len(profiles)} personas, mode={mode}, seed={seed}")

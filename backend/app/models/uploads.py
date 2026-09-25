@@ -75,7 +75,7 @@ class PanelSession(DataModel):
     """A panel session: the pitch, the room that was picked, and how it was filtered. One panel_session.json per session folder."""
     MODEL_NAME: ClassVar[str] = 'panel_session'
     HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
-    TOGETHER: ClassVar[List[List[str]]] = [['budget_tier_filter', 'affordability_pool_size'], ['attitude_filter', 'attitude_pool_size']]
+    TOGETHER: ClassVar[List[List[str]]] = [['budget_tier_filter', 'affordability_pool_size'], ['attitude_filter', 'attitude_pool_size'], ['audience_facts', 'audience_pool_size']]
     session_id: str = Field(pattern='^panel_[0-9a-f]{12}$', json_schema_extra={'when': 'always'})
     user_id: Optional[str] = Field(default=None, json_schema_extra={'when': 'optional'})
     pitch: str = Field(min_length=1, json_schema_extra={'when': 'always'})
@@ -100,6 +100,11 @@ class PanelSession(DataModel):
     affordability_from_price: PanelSessionAffordabilityFromPrice = Field(default=None, json_schema_extra={'when': 'optional'})
     attitude_filter: Dict[str, List[str]] = Field(default=None, json_schema_extra={'when': 'optional'})
     attitude_pool_size: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
+    #: The founder's "who it's for", read into facts (audience_reader.OPTIONS ids);
+    #: everyone seated has all of them. With the provinces named and how many qualified.
+    audience_facts: List[str] = Field(default=None, json_schema_extra={'when': 'optional'})
+    audience_provinces: List[str] = Field(default=None, json_schema_extra={'when': 'optional'})
+    audience_pool_size: int = Field(default=None, ge=0, json_schema_extra={'when': 'optional'})
     pointer: str = Field(default=None, json_schema_extra={'when': 'optional'})
     slots: PanelSessionSlots = Field(default=None, json_schema_extra={'when': 'optional'})
     place: Optional[PanelSessionPlace] = Field(default=None, json_schema_extra={'when': 'optional'})
