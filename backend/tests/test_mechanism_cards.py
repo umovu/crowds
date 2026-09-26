@@ -16,6 +16,8 @@ app.services __init__.
 import importlib.util
 import os
 import re
+
+import pytest
 import sys
 
 HERE = os.path.dirname(__file__)
@@ -285,3 +287,40 @@ def test_hiv_disclosure_stays_off_a_chronic_medication_pitch():
                         "A private clinic that manages your diabetes: monthly check-ups and your "
                         "medication collected without the public queue, R200 a month.")
     assert claims and "C1" not in claims
+
+
+# ── a card stays in its own area of life ─────────────────────────────────────
+# "fee" and "fees" on a card built from HIV clinic studies pulled it into a learning
+# app pitch for parents at "fee-paying schools" (local panel, 2026-09-26). General
+# words (money, queues, delivery) belong to no one area; a card's tags must name its own.
+
+HEALTH_CARDS = {"chronic-care-repeat-cost-sa", "healthcare-access-barriers-sa", "medical-aid-copayment-sa",
+                "men-health-seeking-sa", "older-persons-clinic-experience-sa",
+                "paying-for-care-without-medical-aid-sa", "youth-clinic-candidacy-sa",
+                "youth-clinic-privacy-stigma-sa"}
+EDUCATION_CARDS = {"education-payment-conversion", "incentivized-learning-engagement",
+                   "learner-motivation-grade12-sa", "township-parent-motivation-sdl"}
+OFF_TOPIC = {
+    "education": ("A R100 a month incentivised learning app for middle-class parents whose children "
+                  "are at fee-paying schools.", HEALTH_CARDS),
+    "solar": ("A small solar and battery kit rented for R299 a month that keeps your lights, fridge and "
+              "phone going when the power is out.", HEALTH_CARDS | EDUCATION_CARDS),
+    "funeral": ("Funeral cover for R80 a month that pays out within 48 hours, signed up on your phone.",
+                HEALTH_CARDS | EDUCATION_CARDS),
+    "food delivery": ("Groceries delivered to your door for a R35 delivery fee, no queues at the shop.",
+                      HEALTH_CARDS | EDUCATION_CARDS),
+    "clinic": ("A private clinic that manages your diabetes: monthly check-ups and your medication "
+               "collected without the public queue, R200 a month.", EDUCATION_CARDS),
+}
+
+
+@pytest.mark.parametrize("name", sorted(OFF_TOPIC))
+def test_cards_stay_out_of_other_areas_of_life(name):
+    pitch, must_not = OFF_TOPIC[name]
+    fired = {c["id"] for c in mcs.load_cards() if mcs.topic_matches(c, pitch)}
+    assert not fired & must_not, f"{name}: {sorted(fired & must_not)}"
+
+
+def test_the_area_lists_name_real_cards():
+    ids = {c["id"] for c in mcs.load_cards()}
+    assert HEALTH_CARDS <= ids and EDUCATION_CARDS <= ids
