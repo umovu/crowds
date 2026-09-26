@@ -27,7 +27,7 @@ qualitative research. One card per file, named `<id>.json`.
 
 - **Borrowed gate:** `borrowed_when` lets a close group (parents of the learners studied) get the card, marked as borrowed and ranked below direct fits.
 
-## Cards (26)
+## Cards (27)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
@@ -45,6 +45,7 @@ qualitative research. One card per file, named `<id>.json`.
 - `stokvels-calibration` — stokvel trust, lump sums, funeral saving (struggling city residents; others borrowed)
 - `chronic-care-repeat-cost-sa` — living with chronic illness on a precarious income: debt, guilt about asking family, unsafe routes, stress (2021 interviews)
 - `healthcare-access-barriers-sa` — distance, transport and grant money competing with clinic visits
+- `youth-clinic-candidacy-sa` — rural young people 15-24 and ordinary clinics: fear of admitting a problem, distance, queues, stockouts; gossip and scolding only on HIV or sexual health pitches
 - `men-health-seeking-sa` — adult men and clinics: confidentiality, herbs vs pills, queues, dignity, female nurses, masculinity (replaces the staff-reported clinic-choice card)
 - `older-persons-clinic-experience-sa` — older patients, overcrowding, being listened to and respected
 - `youth-clinic-privacy-stigma-sa` — young people and sexual health services: privacy, judgement, a positive result, relatable staff (young people's own accounts)

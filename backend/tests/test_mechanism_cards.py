@@ -259,3 +259,11 @@ def test_a_close_group_gets_it_marked_borrowed_and_ranked_lower():
 
 def test_someone_in_neither_gate_gets_nothing():
     assert mcs.situation_match_strength(_borrow_card(), {"ghs_role": "guardian_parent", "geotype": "Farms"}) == 0
+
+
+def test_a_rural_teen_on_an_ordinary_clinic_pitch_hears_no_sexual_health_claim():
+    teen = dict(geotype="Traditional", age=17)
+    claims, cards = _claims(_seat("youth-clinic-candidacy-sa", **teen),
+                            "A nurse you can see the same day for R150 a visit, no queue.")
+    assert "youth-clinic-candidacy-sa" in cards
+    assert {"C1", "C3", "C5"} <= claims and not claims & {"C2", "C4"}

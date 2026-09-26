@@ -1,0 +1,336 @@
+{
+  "id": "youth-clinic-candidacy-sa",
+  "citation": [
+    "Nkosi B, Seeley J, Ngwenya N, Mchunu SL, Gumede D, Ferguson J, Doyle AM (2019). Exploring adolescents and young people's candidacy for utilising health services in a rural district, South Africa. BMC Health Services Research 19:195. doi:10.1186/s12913-019-3960-1"
+  ],
+  "segment_tags": [
+    "unemployed_youth",
+    "learner"
+  ],
+  "claims": [
+    {
+      "text": "Young people are scared to say they have a problem, so they put off the clinic until pregnancy or serious illness forces them to go.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P2",
+        "P3",
+        "P12",
+        "P15"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether it lets you be seen without being judged as an illegitimate user"
+      ],
+      "objections": [
+        "Do I really have to go, or can I wait until it gets worse?"
+      ],
+      "vocabulary": [
+        "forced to go",
+        "scared",
+        "we do not like to say I have a problem"
+      ],
+      "readings": [
+        {
+          "text": "Someone who delays care until pregnancy or serious illness forces them to go would weigh a new service by whether it removes the need to say they have a problem first.",
+          "passages": [
+            "P2",
+            "P3",
+            "P12"
+          ]
+        },
+        {
+          "text": "If a person only goes to the clinic when they are compelled, they would be more open to a service that reaches them before symptoms become severe.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who is scared to say they have a problem would be less open to a service that asks them to identify themselves as needing care.",
+          "passages": [
+            "P12",
+            "P15"
+          ]
+        },
+        {
+          "text": "If a person puts off the clinic until forced, they would weigh a new service by whether it fits the moment when severity of symptoms finally pushes them to seek help.",
+          "passages": [
+            "P2",
+            "P15"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Because colour-coded files and consultation-room numbering make HIV status visible to neighbours, the local clinic is evaluated as a site of gossip and lost confidentiality, so treatment collection is avoided, appointment dates are missed and care is sought outside the catchment area; a service is therefore read as acceptable only if it is anonymous and located away from people who know you.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P4",
+        "P6",
+        "P5",
+        "P18",
+        "P17"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether using it keeps your status invisible to people who know you"
+      ],
+      "objections": [
+        "Will people here be able to tell what I am being treated for?"
+      ],
+      "vocabulary": [
+        "seen",
+        "subject of gossip",
+        "collect their treatment privately"
+      ],
+      "about": "a health condition people could be identified and gossiped about for if seen at the local clinic, such as HIV, ARV treatment, TB, pregnancy or sexual health",
+      "about_tags": [
+        "hiv",
+        "arv",
+        "arvs",
+        "tb",
+        "treatment",
+        "pregnancy",
+        "pregnant",
+        "sexual health",
+        "sti",
+        "stis",
+        "prep",
+        "test",
+        "testing"
+      ],
+      "readings": [
+        {
+          "text": "Someone who fears being seen at the local clinic because colour-coded files and consultation-room numbering make HIV status visible to neighbours will weigh a new service mainly by whether it is anonymous and located away from people who know you.",
+          "passages": [
+            "P4",
+            "P6"
+          ]
+        },
+        {
+          "text": "If a person has missed appointment dates because nurses shout about health issues in public, they will read a new service as acceptable only if it removes that public exposure.",
+          "passages": [
+            "P5",
+            "P18"
+          ]
+        },
+        {
+          "text": "Someone who already seeks care outside the catchment area or from traditional healers and private practitioners because of embarrassment at being seen at clinics will be more open to a new service only if it is not tied to the local clinic setting.",
+          "passages": [
+            "P17",
+            "P4"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Long distances, transport costs and full-day waiting queues make clinic attendance register as unaffordable and time-costly relative to its benefit, so care is postponed, presentation happens only when very ill, and traditional healers and pharmacists are used instead; a service is therefore read as usable only if it reduces the travel and waiting burden.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P8",
+        "P10",
+        "P19",
+        "P15",
+        "P17",
+        "P6",
+        "P9"
+      ],
+      "evaluative_rules": [
+        "Weigh a service by the travel and waiting time it costs against the benefit it returns"
+      ],
+      "objections": [
+        "Will this cost me a whole day and money I do not have?"
+      ],
+      "vocabulary": [
+        "spend the whole day at the clinic",
+        "very ill"
+      ],
+      "readings": [
+        {
+          "text": "Someone who walks five to six kilometres and waits all day only to be sent home at sunset without care would weigh a new service mainly by whether it removes the travel and full-day queue, because that is what currently makes the clinic unusable.",
+          "passages": [
+            "P8",
+            "P10"
+          ]
+        },
+        {
+          "text": "If a person already delays care until very ill and uses traditional healers or pharmacists instead of clinics, they would judge a new service by whether it is closer and faster than those alternatives, not by whether it is more formal.",
+          "passages": [
+            "P15",
+            "P17"
+          ]
+        },
+        {
+          "text": "Someone who avoids their local clinic because they fear being seen and judged would be open to a new service only if it offers private collection or treatment away from public queues, even if it still requires some travel.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If a person has no local service for a problem like alcohol abuse and must travel far for it, they would read a new service as usable only if it brings that care into their area, otherwise the distance makes it irrelevant.",
+          "passages": [
+            "P9"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Providers who morally disapprove of premarital sex, contraception and abortion scold and adjudicate young clients, so services are resisted or avoided, nurses are feared to shout in public and problems are hidden; a service is therefore read as trustworthy only if provider judgement is removed and confidentiality is guaranteed.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P20",
+        "P11",
+        "P5",
+        "P12",
+        "P18",
+        "P6"
+      ],
+      "evaluative_rules": [
+        "Trust a service only where the provider will not judge or scold you for what you come for"
+      ],
+      "objections": [
+        "Will the nurse shout at me or moralise about my behaviour?"
+      ],
+      "vocabulary": [
+        "shout at them",
+        "judged morally",
+        "we do not like to say I have a problem"
+      ],
+      "about": "sexual or reproductive health: contraception, pregnancy, abortion, HIV prevention or sexually transmitted infections",
+      "about_tags": [
+        "sexual health",
+        "contraception",
+        "contraceptive",
+        "contraceptives",
+        "pregnancy",
+        "pregnant",
+        "abortion",
+        "prep",
+        "hiv",
+        "condom",
+        "condoms",
+        "family planning",
+        "sti",
+        "stis",
+        "std"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has hidden a problem because they fear being scolded would weigh a new service mainly by whether it removes any chance of provider judgement before they consider using it.",
+          "passages": [
+            "P12",
+            "P18"
+          ]
+        },
+        {
+          "text": "If a provider has used language like killing of an innocent soul, a person who heard that would read a new service as trustworthy only if it guarantees that no provider can adjudicate their choices.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "Someone who fears nurses shouting in public would be more open to a new service if it offers collection privately, but would still hesitate if any part of it routes them through a clinic where people are judgmental.",
+          "passages": [
+            "P5",
+            "P6"
+          ]
+        },
+        {
+          "text": "If a young person has felt judged morally during antenatal care, they would weigh a new service by whether confidentiality is guaranteed, and would remain wary if provider roles still allow scolding.",
+          "passages": [
+            "P20",
+            "P11"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Clinics that run out of medication, are overcrowded, close before everyone is seen and lack emergency and mental-health services are judged unable to deliver reliable care, so young people disengage or look for care elsewhere.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P9",
+        "P10",
+        "P13",
+        "P17"
+      ],
+      "evaluative_rules": [
+        "Judge a service as credible only if it states who is responsible for making it work"
+      ],
+      "objections": [
+        "Will they even have the medicine when I get there?"
+      ],
+      "vocabulary": [
+        "runs out of medication",
+        "overcrowded"
+      ],
+      "readings": [
+        {
+          "text": "If a new service is placed inside the same clinic that runs out of medication and is overcrowded, someone who has waited until sunset without care would weigh it as likely to close before they are seen.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "Someone who already travels far for mental-health or rehab services would weigh a new service by whether it brings that care closer instead of repeating what the clinic lacks.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "If a new service is offered through mobile clinics, someone who knows mobile clinics do not have medication would weigh it as unreliable for treatment.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who already consults traditional healers or private practitioners to avoid being seen at clinics would weigh a new clinic-based service against the privacy of care outside their catchment area.",
+          "passages": [
+            "P17"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "uMkhanyakude district, rural KwaZulu-Natal, South Africa",
+  "year_range": "2017",
+  "confidence": "One qualitative South African study: group discussions and interviews with 70 young people aged 10 to 24, plus 15 community leaders, 10 school health team members and 6 nurses, in one rural district. Some quotes are adults speaking about young people. Mechanisms durable; magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
+  ],
+  "subject": "young people aged 10 to 24 in a rural area deciding whether and where to go for health care: fear of admitting a problem, distance and transport cost, queues, stockouts, gossip and being scolded by nurses",
+  "year_note": "Fieldwork January to June 2017; published 2019.",
+  "applies_when": [
+    {
+      "age_band": [
+        "15-24"
+      ],
+      "geotype": [
+        "Traditional",
+        "Farms"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "nurse",
+    "nurses",
+    "health",
+    "healthcare",
+    "doctor",
+    "medicine",
+    "medication",
+    "hospital",
+    "check-up",
+    "sick",
+    "hiv",
+    "pregnancy",
+    "contraception",
+    "sexual health",
+    "tb"
+  ]
+}
