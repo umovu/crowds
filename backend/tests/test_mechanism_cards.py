@@ -275,3 +275,13 @@ def test_a_rural_teen_on_an_ordinary_clinic_pitch_hears_no_sexual_health_claim()
                             "A nurse you can see the same day for R150 a visit, no queue.")
     assert "youth-clinic-candidacy-sa" in cards
     assert {"C1", "C3", "C5"} <= claims and not claims & {"C2", "C4"}
+
+
+def test_hiv_disclosure_stays_off_a_chronic_medication_pitch():
+    # Spot check 2026-09-26: "your medication collected without the public queue" on a
+    # diabetes plan pulled the HIV-disclosure claim into 11 of 12 prompts, because its
+    # words included "medication" and "treatment". It is about HIV, so HIV words only.
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "A private clinic that manages your diabetes: monthly check-ups and your "
+                        "medication collected without the public queue, R200 a month.")
+    assert claims and "C1" not in claims

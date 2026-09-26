@@ -36,19 +36,16 @@
         "scared to be seen in the clinic queues",
         "people talk"
       ],
-      "about": "HIV or another condition people could be identified by when they are seen collecting treatment at a clinic",
+      "about": "HIV treatment or testing (ARVs, PrEP), where being seen collecting it at a clinic could reveal your status",
       "about_tags": [
         "hiv",
         "arv",
         "arvs",
         "antiretroviral",
         "antiretrovirals",
-        "treatment",
-        "medication",
-        "chronic medication",
-        "pills",
-        "delivery",
-        "delivered"
+        "prep",
+        "hiv test",
+        "hiv testing"
       ],
       "readings": [
         {
