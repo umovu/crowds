@@ -87,15 +87,12 @@ CARD_CLUSTER = {
     "farmer-stock-theft-exposure": "farmer",
     "farmer-market-participation": "farmer",
     "farmer-intervention-adoption": "farmer",
-    "middle-class-status-identity": "middle_class",
     "fintech-adoption-trust": "middle_class",
     "education-payment-conversion": "education",
     "incentivized-learning-engagement": "education",
     "learner-motivation-grade12-sa": "education",
     "township-parent-motivation-sdl": "education",
     "youth-waithood-identity": "youth",
-    "youth-mobile-airtime-economy": "youth",
-    "youth-phone-safety-cost-economics": "youth",
     "stokvels-calibration": "stokvel",
 }
 

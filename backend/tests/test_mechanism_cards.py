@@ -89,24 +89,31 @@ def test_render_block_contract():
             assert not re.search(r"\d", line), f"digit in card content line: {line!r}"
 
 
-def test_economic_tags_filter_by_tier():
-    # middle-class-status-identity is tagged moderate/loose; a tight-tier
-    # urban_professional must not bind it, a loose one may.
-    tight = mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="tight")
-    loose = mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="loose")
-    assert "middle-class-status-identity" not in [c["id"] for c in tight]
-    assert "middle-class-status-identity" in [c["id"] for c in loose]
-    # township-sample learner cards must not bind for a loose-tier learner
+_TIERED = [
+    {"id": "middle-tier", "segment_tags": ["urban_professional"], "economic_tags": ["moderate", "loose"],
+     "claims": [{"text": "a", "needs": [], "chain_id": "C1", "passages": ["P1"], "objections": [], "vocabulary": []}]},
+    {"id": "tight-tier", "segment_tags": ["learner"], "economic_tags": ["tight"],
+     "claims": [{"text": "b", "needs": [], "chain_id": "C1", "passages": ["P1"], "objections": [], "vocabulary": []}]},
+    {"id": "class-blind", "segment_tags": ["learner"],
+     "claims": [{"text": "c", "needs": [], "chain_id": "C1", "passages": ["P1"], "objections": [], "vocabulary": []}]},
+]
+
+
+def test_economic_tags_filter_by_tier(monkeypatch):
+    # A card tagged moderate/loose must not bind a tight-tier persona; a tight-only
+    # card must not bind a loose one; an untagged card binds every tier.
+    monkeypatch.setattr(mcs, "_cache", _TIERED)
+    tight = [c["id"] for c in mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="tight")]
+    loose = [c["id"] for c in mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="loose")]
+    assert "middle-tier" not in tight and "middle-tier" in loose
     loose_learner = [c["id"] for c in mcs.cards_for_archetype("learner", cap=99, budget_tier="loose")]
-    assert "youth-mobile-airtime-economy" not in loose_learner
-    # untagged (class-blind) cards apply to every tier
-    assert "incentivized-learning-engagement" in loose_learner
+    assert "tight-tier" not in loose_learner and "class-blind" in loose_learner
 
 
-def test_no_tier_means_no_economic_filtering():
+def test_no_tier_means_no_economic_filtering(monkeypatch):
     # Policy casts carry no budget_tier: binding must be tier-blind (back-compat).
-    untiered = [c["id"] for c in mcs.cards_for_archetype("learner", cap=99)]
-    assert "youth-mobile-airtime-economy" in untiered
+    monkeypatch.setattr(mcs, "_cache", _TIERED)
+    assert "tight-tier" in [c["id"] for c in mcs.cards_for_archetype("learner", cap=99)]
 
 
 def _learner(age, poverty):
@@ -114,16 +121,17 @@ def _learner(age, poverty):
             "circumstances": [{"field": "lived_poverty", "value": poverty}]}
 
 
-def test_attach_follows_the_persona_record_not_the_tier_label():
-    # Cards now bind by situation (applies_when on the persona's own record). The
-    # township airtime card describes young people who go short: a comfortable
-    # sixteen-year-old does not get it, one whose record says they go short does.
+def test_attach_follows_the_persona_record_not_the_tier_label(monkeypatch):
+    # Cards bind by situation (applies_when on the persona's own record): a card about
+    # learners who go short reaches a sixteen-year-old whose record says so, not one
+    # whose record says they are comfortable.
+    card = {**_TIERED[2], "id": "goes-short", "applies_when": [
+        {"ghs_role": ["learner"], "lived_poverty": ["moderate", "high"]}]}
+    monkeypatch.setattr(mcs, "_cache", [card])
     out = mcs.attach_research_context(_learner(16, "none"), cap=99)
-    assert all(c["card_id"] != "youth-mobile-airtime-economy"
-               for c in out.get("research_citations", []))
+    assert not out.get("research_citations")
     out = mcs.attach_research_context(_learner(16, "high"), cap=99)
-    assert any(c["card_id"] == "youth-mobile-airtime-economy"
-               for c in out["research_citations"])
+    assert [c["card_id"] for c in out["research_citations"]] == ["goes-short"]
 
 
 def test_attach_adds_both_keys_when_bound():
