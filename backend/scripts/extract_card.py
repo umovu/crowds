@@ -82,7 +82,77 @@ def thinking_off(model: str) -> dict:
     return {}
 
 
+# ── Spend cap ────────────────────────────────────────────────────────────────
+# Card building shares a wallet with the hosted product, so every call made through
+# chat() is costed from the provider's own token counts and added to a ledger, and a
+# call that could push the ledger past CARD_SPEND_CAP_USD is refused before it is made.
+# Rates are DeepSeek V4 Pro's (USD per million tokens; verified 2026-09-18), doubled in
+# peak hours. Every model is costed at Pro rates, so a cheaper model only over-counts.
+SPEND_LEDGER = WORKTREE_ROOT / "docs" / "extraction" / ".spend.json"
+RATES = {"in": 0.66, "cached": 0.022, "out": 1.98}
+PEAK_UTC_HOURS = set(range(1, 4)) | set(range(6, 10))  # weekdays
+
+
+class SpendCapReached(RuntimeError):
+    pass
+
+
+def _peak(now=None) -> bool:
+    from datetime import datetime, timezone
+    now = now or datetime.now(timezone.utc)
+    return now.weekday() < 5 and now.hour in PEAK_UTC_HOURS
+
+
+def call_cost(prompt_tokens: int, cached_tokens: int, completion_tokens: int, peak: bool) -> float:
+    fresh = max(0, prompt_tokens - cached_tokens)
+    usd = (fresh * RATES["in"] + cached_tokens * RATES["cached"] + completion_tokens * RATES["out"]) / 1e6
+    return usd * (2 if peak else 1)
+
+
+def spent() -> dict:
+    try:
+        return json.loads(SPEND_LEDGER.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"usd": 0.0, "calls": 0, "prompt_tokens": 0, "cached_tokens": 0, "completion_tokens": 0}
+
+
+def _cap() -> float | None:
+    raw = (os.environ.get("CARD_SPEND_CAP_USD") or "").strip()
+    return float(raw) if raw else None
+
+
+def _check_cap(system: str, user: str, max_tokens: int) -> None:
+    cap = _cap()
+    if cap is None:
+        return
+    worst = call_cost((len(system) + len(user)) // 3, 0, max_tokens, _peak())
+    so_far = spent()["usd"]
+    if so_far + worst > cap:
+        raise SpendCapReached(f"Spend cap ${cap:.2f}: ${so_far:.4f} spent, and this call could cost "
+                              f"up to ${worst:.4f}. Raise CARD_SPEND_CAP_USD to go on.")
+
+
+def _record(resp) -> None:
+    u = getattr(resp, "usage", None)
+    if u is None:
+        return
+    prompt, out = u.prompt_tokens or 0, u.completion_tokens or 0
+    cached = getattr(u, "prompt_cache_hit_tokens", None)
+    if cached is None:
+        details = getattr(u, "prompt_tokens_details", None)
+        cached = getattr(details, "cached_tokens", 0) if details else 0
+    led = spent()
+    led["usd"] = round(led["usd"] + call_cost(prompt, cached or 0, out, _peak()), 6)
+    led["calls"] += 1
+    led["prompt_tokens"] += prompt
+    led["cached_tokens"] += cached or 0
+    led["completion_tokens"] += out
+    SPEND_LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    SPEND_LEDGER.write_text(json.dumps(led, indent=1), encoding="utf-8")
+
+
 def chat(client, model, system: str, user: str, max_tokens: int = 8000) -> str:
+    _check_cap(system, user, max_tokens)
     resp = client.chat.completions.create(
         model=model,
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
@@ -90,6 +160,7 @@ def chat(client, model, system: str, user: str, max_tokens: int = 8000) -> str:
         max_tokens=max_tokens,
         extra_body=thinking_off(model),
     )
+    _record(resp)
     content = (resp.choices[0].message.content or "").strip()
     if not content:
         # An empty answer is a transport/mode failure, not malformed JSON: a repair pass
