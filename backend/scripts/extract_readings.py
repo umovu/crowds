@@ -137,13 +137,68 @@ def draft(client, model, claim: dict, passages: dict, feedback: str = "") -> lis
     return out.get("readings") or []
 
 
-def judge(client, model, claim: dict, readings: list, passages: dict) -> list:
-    """A second read of each reading beside its quotes: does it follow, which way does it point."""
+def model_judge(client, model, claim: dict, readings: list, passages: dict) -> list:
+    """The research model's read of each reading beside its quotes: does it follow, which way."""
     listed = "\n".join(
         f"[{i}] {r['text']}\n    QUOTES: " + " | ".join(f"{p}: {passages.get(p, '')}" for p in r.get("passages") or [])
         for i, r in enumerate(readings))
     out = chat_json(client, model, JUDGE, f"FINDING: {claim['text']}\n\nREADINGS:\n{listed}", max_tokens=1500) or {}
     return out.get("readings") or []
+
+
+# Jev (TypeSafe) reads each reading first, on its own key, so the research model only
+# sees the ones Jev is unsure of. Calibrated 2026-09-26 on 349 readings the research
+# model had judged plus 20 with an invented motive appended: below 0.2 caught all 20
+# invented and no good reading; at 0.6 and above every reading was good; the band
+# between held all 9 the research model had flagged, so it goes to the model.
+JEV_FAIL_BELOW = 0.2
+JEV_PASS_FROM = 0.6
+
+
+def jev_labels(claim: dict, readings: list, passages: dict):
+    """[(p_follows, direction)] per reading from Jev, or None when Jev is off or fails."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    try:
+        from app.utils import typesafe_client as ts
+    except Exception:  # noqa: BLE001
+        return None
+    if not ts.enabled():
+        return None
+    state = f"FINDING: {claim['text']}\n\n" + "\n\n".join(
+        f"READING [{i}]: {r['text']}\nITS QUOTES: " + " | ".join(passages.get(p, "") for p in r.get("passages") or [])
+        for i, r in enumerate(readings))
+    qs = {}
+    for i in range(len(readings)):
+        qs[f"f{i}"] = ts.noul_question(
+            f"Reading [{i}] says nothing about the person that its quotes and the finding do not support. "
+            "Saying how such a person would weigh a new offer is allowed.",
+            when_true="Every fact, feeling, motive, belief or behaviour it gives the person is in the quotes or finding.",
+            when_false="It gives the person a fact, feeling, motive, belief or behaviour the quotes never mention.")
+        qs[f"d{i}"] = ts.choice_question(f"Which way does reading [{i}] point on a new offer?",
+                                         {"open": "more open to it", "less": "less open to it",
+                                          "conditional": "open only if something holds"})
+    ans = ts.ask(state, qs)
+    if not ans:
+        return None
+    out = [((ans.get(f"f{i}") or {}).get("noul"), (ans.get(f"d{i}") or {}).get("choice")) for i in range(len(readings))]
+    return None if any(p is None for p, _d in out) else out
+
+
+def judge(client, model, claim: dict, readings: list, passages: dict) -> list:
+    """Jev first; the research model only when Jev is unsure of a reading, or is off."""
+    jev = jev_labels(claim, readings, passages)
+    if jev is None:
+        return model_judge(client, model, claim, readings, passages)
+    labels = [{"i": i, "follows": p >= JEV_PASS_FROM if p < JEV_FAIL_BELOW or p >= JEV_PASS_FROM else None,
+               "adds": "Jev: says more about the person than the quotes" if p < JEV_FAIL_BELOW else "",
+               "direction": d} for i, (p, d) in enumerate(jev)]
+    if any(l["follows"] is None for l in labels):
+        second = {l.get("i"): l for l in model_judge(client, model, claim, readings, passages)}
+        for l in labels:
+            if l["follows"] is None:
+                m = second.get(l["i"], {})
+                l["follows"], l["adds"] = m.get("follows", True), m.get("adds", "")
+    return labels
 
 
 def read_claim(client, model, claim: dict, passages: dict, tries: int = 2):

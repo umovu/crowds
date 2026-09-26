@@ -27,33 +27,31 @@ qualitative research. One card per file, named `<id>.json`.
 
 - **Borrowed gate:** `borrowed_when` lets a close group (parents of the learners studied) get the card, marked as borrowed and ranked below direct fits.
 
-## Cards (26)
+## Cards (24)
 
 - `communal-cattle-asset-logic` — cattle as savings, insurance and status
 - `farmer-stock-theft-exposure` — theft risk, police distrust
 - `farmer-market-participation` — why smallholders do or don't sell
 - `farmer-intervention-adoption` — reaction to new agri interventions and tech
-- `middle-class-status-identity` — status signalling, Black Tax, asset deficit
 - `fintech-adoption-trust` — familiarity, convenience, fingerprint security, cost, wanting a person (7 interviews: thin)
 - `education-payment-conversion` — choosing a school: quality, teachers, reputation, safety, zoning (fee-paying parents; no-fee parents borrowed)
 - `incentivized-learning-engagement` — gamified quizzes, leaderboards, freeloading (university students; learners and parents borrowed)
 - `learner-motivation-grade12-sa` — what keeps a high-school learner working: escaping poverty, making caregivers proud, being acknowledged (parents borrowed)
 - `township-parent-motivation-sdl` — parents at no-fee and low-fee city schools motivating a child to study on their own (claims carry readings)
-- `youth-waithood-identity` — unemployed youth identity, dignity, nihilism
-- `youth-mobile-airtime-economy` — phone and airtime as status and currency
-- `youth-phone-safety-cost-economics` — theft, cost and safety in device decisions
+- `youth-waithood-identity` — young and out of work: self-worth tied to providing, avoiding peers, substances as escape, support, a route back (Mdantsane interviews)
 - `stokvels-calibration` — stokvel trust, lump sums, funeral saving (struggling city residents; others borrowed)
-- `chronic-care-repeat-cost-sa` — repeat costs of chronic care, transport, when treatment feels worth returning to
+- `chronic-care-repeat-cost-sa` — living with chronic illness on a precarious income: debt, guilt about asking family, unsafe routes, stress (2021 interviews)
 - `healthcare-access-barriers-sa` — distance, transport and grant money competing with clinic visits
-- `healthcare-facility-choice-sa` — bypassing the clinic, choosing where to seek care
+- `youth-clinic-candidacy-sa` — rural young people 15-24 and ordinary clinics: fear of admitting a problem, distance, queues, stockouts; gossip and scolding only on HIV or sexual health pitches
+- `men-health-seeking-sa` — adult men and clinics: confidentiality, herbs vs pills, queues, dignity, female nurses, masculinity (replaces the staff-reported clinic-choice card)
 - `older-persons-clinic-experience-sa` — older patients, overcrowding, being listened to and respected
-- `youth-clinic-privacy-stigma-sa` — young people, sexual health, judgement and privacy (claims routed by study group)
+- `youth-clinic-privacy-stigma-sa` — young people and sexual health services: privacy, judgement, a positive result, relatable staff (young people's own accounts)
 - `medical-aid-copayment-sa` — people with medical aid who still pay out of pocket: co-payments, savings, pharmacies, generics
 - `municipal-waste-failure-sa` — when rubbish collection fails: suburbs store or pay a collector, townships dump or burn (claims routed by poverty)
 - `rural-water-scarcity-sa` — rural villages without water: buying it, boreholes, tanker queues, broken promises
 - `women-taxi-commuting-sa` — young women commuting by minibus taxi: fares, safety, drivers and dark ranks
 - `going-private-when-the-state-fails-sa` — comfortable city homeowners paying for their own water and security; **borrowed** for backup power
-- `paying-for-care-without-medical-aid-sa` — paying for care without medical aid: price, trusted pharmacist, work hours, judgement on sexual health (**borrowed**)
+- `paying-for-care-without-medical-aid-sa` — paying for care or convenience without medical aid: fees vs food and wages, a lost day, being seen (struggling city residents; comfortable borrowed)
 - `black-tax-obligation-sa` — employed middle-class people supporting family from their salary, weighing new spending against it
 
 ## Gaps still open

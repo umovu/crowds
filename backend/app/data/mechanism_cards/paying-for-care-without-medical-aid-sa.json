@@ -1,9 +1,9 @@
 {
   "id": "paying-for-care-without-medical-aid-sa",
   "citation": [
-    "Mpanza NM, Bradley H, Laing R (2019). Reasons why insured consumers co-pay for medicines at retail pharmacies in Pretoria, South Africa. Afr J Prim Health Care Fam Med 11(1):a1878. doi:10.4102/phcfm.v11i1.1878",
-    "A qualitative study of the social and structural vulnerabilities of HIV and chronic disease syndemics in low-resource urban health facilities in South Africa (2026). Discover Public Health. doi:10.1186/s12982-026-01850-0",
-    "Nyblade L et al. (2022). Stigma in the health clinic and implications for PrEP access and use by adolescent girls and young women: conflicting perspectives in South Africa. BMC Public Health 22:1916. doi:10.1186/s12889-022-14236-z"
+    "Acceptability of a fee for home delivery of HIV treatment in KwaZulu-Natal, South Africa (2024). BMC Health Services Research 24. doi:10.1186/s12913-023-10533-4",
+    "Barriers to care among people living with HIV in South Africa: patient and healthcare provider perspectives (2012). AIDS Care. Durban, fieldwork around 2010; patient accounts only.",
+    "A qualitative study of the social and structural vulnerabilities of HIV and chronic disease syndemics in low-resource urban health facilities in South Africa (2026). Discover Public Health. doi:10.1186/s12982-026-01850-0"
   ],
   "segment_tags": [
     "affluent_urban_household",
@@ -12,302 +12,350 @@
   ],
   "claims": [
     {
-      "text": "A cheaper substitute is refused because a lower price is read as evidence of inferior or impure quality, so habit and brand loyalty hold the user on the familiar medicine and the saving is experienced as a threat rather than a gain.",
+      "text": "Being seen at a clinic or identified as HIV-positive is the binding threat: fear of judgment and disclosure through clinic attendance drives avoidance of collection, so a delivery option is judged by whether it removes visibility from queues and clinic spaces.",
       "needs": [],
-      "chain_id": "C2",
+      "chain_id": "C1",
       "passages": [
-        "P12",
-        "P13",
-        "P14",
+        "P2",
+        "P16",
+        "P17",
         "P18",
         "P19",
-        "P20"
+        "P20",
+        "P21",
+        "P43",
+        "P44"
       ],
       "evaluative_rules": [
-        "Judge a medicine by whether it is the same thing you are used to, not by what it costs"
+        "Judge a collection option by whether it hides your status from people who know you, not by convenience alone"
       ],
       "objections": [
-        "Why is this version so cheap — what was changed to make it that way?"
+        "Will using this expose me to people who know me or let them identify my status?"
       ],
       "vocabulary": [
-        "generics",
-        "originator",
-        "brand loyalty"
+        "scared to be seen in the clinic queues",
+        "people talk"
+      ],
+      "about": "HIV treatment or testing (ARVs, PrEP), where being seen collecting it at a clinic could reveal your status",
+      "about_tags": [
+        "hiv",
+        "arv",
+        "arvs",
+        "antiretroviral",
+        "antiretrovirals",
+        "prep",
+        "hiv test",
+        "hiv testing"
       ],
       "readings": [
         {
-          "text": "Someone who questions whether generics are inferior or weak and wonders why they are made so cheap would weigh a new cheaper substitute as a likely threat to quality and would need strong proof of equivalence before considering it.",
+          "text": "Someone who fears being seen in clinic queues would weigh a delivery option mainly by whether it removes them from those visible spaces.",
           "passages": [
-            "P12"
+            "P2",
+            "P43"
           ]
         },
         {
-          "text": "Someone who assumes a generic is made by tweaking the development process and worries about unknown reactants or impurities would weigh a new cheaper substitute as a possible source of hidden impurity and would rely on a doctor's endorsement to reduce that worry.",
+          "text": "If a person is worried about being seen by people they know at the clinic, they would judge a delivery option by whether it avoids those encounters, but may still fear being seen receiving medication at home.",
           "passages": [
-            "P13"
+            "P20",
+            "P21",
+            "P44"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Disclosure risk travels home: visible or identifiable delivery threatens secrecy with household members, partners, and neighbours, so home delivery is judged acceptable only when it is designed to conceal HIV status.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P4",
+        "P15",
+        "P38",
+        "P39",
+        "P40",
+        "P41",
+        "P42"
+      ],
+      "evaluative_rules": [
+        "Judge a delivery service by whether it can be seen or recognised as HIV-related by people at home"
+      ],
+      "objections": [
+        "Will the delivery be branded, uniformed, or repeated in a way that reveals my secret to my household or neighbours?"
+      ],
+      "vocabulary": [
+        "my privacy or secret might be exposed",
+        "a car that is not branded"
+      ],
+      "about": "medication or treatment delivered to your home, where household members or neighbours could see it",
+      "about_tags": [
+        "delivery",
+        "delivered",
+        "home delivery",
+        "deliver",
+        "courier"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has not told their parents or partner they are taking medication would weigh a new delivery service mainly by whether the delivery itself could expose that secret, so any visible sign of medication would make it unacceptable.",
+          "passages": [
+            "P3"
           ]
         },
         {
-          "text": "Someone who believes the quality between generics and originators is the same and that generics are sometimes made by the same company would weigh a new cheaper substitute as a reasonable option with no expected difference in quality.",
+          "text": "If a person believes a delivery is too obvious because a uniformed worker or branded car signals that someone in the house is sick, they would be more open to a service that uses an unbranded car and no uniform.",
           "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "Someone who has paused treatment at home for fear of disclosure would judge a new delivery option by whether it could be noticed by household members or neighbours, and would likely reject any service that draws attention to the home.",
+          "passages": [
+            "P38",
+            "P39",
+            "P41"
+          ]
+        },
+        {
+          "text": "If a person fears a partner's reaction or loss of support, they would weigh a new delivery service primarily by whether it could be kept hidden from that partner, and would only consider it if it could be made to look like something other than HIV care.",
+          "passages": [
+            "P42"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Money is already spoken for: when income is absent and essential food competes with every fee, any charge is weighed against household survival, so a fee-based delivery is acceptable only if it replaces an existing clinic cost or is pooled and shared.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P7",
+        "P8",
+        "P13",
+        "P29",
+        "P30",
+        "P31",
+        "P32",
+        "P45",
+        "P46",
+        "P51"
+      ],
+      "evaluative_rules": [
+        "Judge a fee by whether it takes money away from food and survival, not by its face value"
+      ],
+      "objections": [
+        "Will paying for this mean my household goes without food or I must beg or borrow to cover it?"
+      ],
+      "vocabulary": [
+        "the same money is the one we need to buy healthy food",
+        "any amount will be a problem for an unemployed person"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says the same money is needed to buy healthy food would weigh any delivery fee against whether it removes an existing clinic cost like transport or a return visit, not as a new expense.",
+          "passages": [
+            "P7",
+            "P31",
+            "P32"
+          ]
+        },
+        {
+          "text": "If a person fears they would have to sell scrap metal or steal gates and pots to raise cash for a delivery, they would see a fee-based service as a threat to household survival unless the fee is pooled and shared.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "Someone who already missed a clinic appointment because they could not raise two hundred Rand would be more open to a delivery only if it clearly replaces that clinic cost and does not add a new charge.",
+          "passages": [
+            "P29",
+            "P30"
+          ]
+        },
+        {
+          "text": "If a person weighs a twenty Rand lettuce against a loaf of bread for a child, they would treat any delivery fee as competing with essential food and would accept it only when it is shared or substitutes an existing clinic expense.",
+          "passages": [
+            "P51",
+            "P7"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Clinic time is lost income: when visits consume a full day and employers are inflexible, the cost of attending is counted in wages and queues, so a delivery fee is judged worthwhile when it is set against what a clinic visit already costs.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P5",
+        "P6",
+        "P9",
+        "P14",
+        "P33",
+        "P34",
+        "P36",
+        "P37"
+      ],
+      "evaluative_rules": [
+        "Judge a delivery fee against the time, travel, and lost work of a clinic visit, not as a new expense"
+      ],
+      "objections": [
+        "Does the fee cost me less than the day of work and transport I would lose at the clinic?"
+      ],
+      "vocabulary": [
+        "holding a queue at the clinic",
+        "the time and work clash"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says they would rather pay for delivery than hold a queue at the clinic would weigh a delivery fee against the wages and time already lost to a full-day visit.",
+          "passages": [
+            "P5",
+            "P36"
+          ]
+        },
+        {
+          "text": "If a person must negotiate with an employer just to attend on a different day, they would judge a delivery fee as worthwhile when it removes that negotiation and the risk of being refused.",
+          "passages": [
+            "P33",
+            "P37"
+          ]
+        },
+        {
+          "text": "Someone who already pays transport to go to other clinics would weigh a delivery fee favourably only if it is set at a similar expense to what a clinic visit already costs.",
+          "passages": [
+            "P9",
             "P14"
           ]
         },
         {
-          "text": "Someone who has developed brand loyalty from long use and feels comfortable with a familiar medicine would weigh a new cheaper substitute as an unwelcome change and would be willing to co-pay to avoid switching.",
+          "text": "If a person compares work and the clinic and decides not to go back because they cannot miss work, they would weigh a delivery fee against the income they would otherwise lose by attending.",
           "passages": [
-            "P18",
-            "P19"
+            "P34",
+            "P36"
           ]
         }
       ]
     },
     {
-      "text": "A trusted prescriber or pharmacy relationship overrides price and scheme rules, because deference to the professional's recommendation means the dispensed medicine is never questioned — so a new product is read through that endorsement rather than through what it costs.",
+      "text": "Continuity is the goal: convenience and flexibility matter because missed appointments and clinic delays break treatment, so delivery is judged acceptable when it is linked to clinical check-ups and affordable group payment arrangements.",
       "needs": [],
-      "chain_id": "C3",
+      "chain_id": "C5",
       "passages": [
+        "P1",
         "P10",
         "P11",
-        "P15",
-        "P16",
-        "P17",
-        "P20"
+        "P12",
+        "P35"
       ],
       "evaluative_rules": [
-        "Trust the professional who knows your circumstances over the scheme's rules and prices"
+        "Judge a delivery scheme by whether it keeps medication flowing without breaking the link to clinical monitoring"
       ],
       "objections": [
-        "What does the person who knows my history say about this?"
+        "Will this still get me my blood check-ups and medication on time, or will I fall through the cracks?"
       ],
       "vocabulary": [
-        "second opinion",
-        "chain pharmacies"
+        "link the clinics or hospitals",
+        "contribute as a group"
       ],
       "readings": [
         {
-          "text": "Someone who accepts what the doctor says even when it feels like a gamble would weigh a new product mainly through the prescriber's word, not through what it costs.",
+          "text": "Someone who values getting medication at home even when busy would weigh a new delivery option by whether it removes the need to go to the pharmacy and find medication has not yet arrived.",
           "passages": [
-            "P17"
+            "P1"
           ]
         },
         {
-          "text": "If a pharmacy relationship means they sometimes do not even make a co-payment, they would read a new product through that pharmacy's care rather than through price.",
+          "text": "If delivery is offered, someone would weigh it by whether it is linked to clinics or hospitals for annual check-ups and blood check-ups rather than being delivery alone.",
           "passages": [
-            "P16"
+            "P10"
           ]
         },
         {
-          "text": "If they assume a corporate pharmacy will always have the prescription, they would weigh a new product by whether that pharmacy dispenses it, not by scheme rules or co-payment.",
+          "text": "Someone who sees group contribution as a way to raise the delivery amount would weigh a new option by whether it allows group collection and payment among fellow group mates.",
           "passages": [
             "P11"
           ]
-        }
-      ]
-    },
-    {
-      "text": "Clinic attendance is sacrificed to keeping the job and meeting family obligations, because income is uncertain and time is controlled by employers — so a new service model or adherence requirement is read as another demand that cannot be met, while providers read the resulting default as irresponsibility.",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P21",
-        "P22",
-        "P23",
-        "P24",
-        "P28",
-        "P31",
-        "P32",
-        "P35",
-        "P36",
-        "P37",
-        "P39",
-        "P40"
-      ],
-      "evaluative_rules": [
-        "Weigh any health demand against the job and the family obligation it would displace"
-      ],
-      "objections": [
-        "How am I supposed to get there, and with what money, without losing the job?"
-      ],
-      "vocabulary": [
-        "the time and work clash",
-        "no choice"
-      ],
-      "readings": [
-        {
-          "text": "Someone who cannot risk losing their job by taking time off to visit the clinic would weigh any new service model first by whether it fits within employer-controlled time, and would see a model that still requires daytime attendance as another demand that cannot be met.",
-          "passages": [
-            "P21",
-            "P23"
-          ]
         },
         {
-          "text": "If a person has no choice because the boss will not release them to come to clinic, they would be more open to a new service model only if it removes the need to ask the employer for time, and would read a model that still depends on clinic attendance as impossible.",
+          "text": "If a new option is introduced, someone would weigh it by whether it eliminates concerns around missed appointments through the convenience and flexibility of getting medication even with other commitments.",
           "passages": [
-            "P23"
-          ]
-        },
-        {
-          "text": "Someone who did not take medication during a funeral because they were not comfortable with people knowing their HIV status would weigh a new service model by whether it can be used without revealing their status to family, and would see a model that requires visible clinic visits or medication handling as another demand that cannot be met.",
-          "passages": [
-            "P28"
-          ]
-        },
-        {
-          "text": "If a person routinely attends funerals or weddings at home and does not prioritize treatment schedules during those times, they would weigh a new service model by whether it can follow them across family obligations, and would read a model tied to a fixed clinic schedule as another demand that cannot be met.",
-          "passages": [
-            "P24"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "A sexual and reproductive health service is read as something that will be withheld, moralised over or used to expose you, because anticipated judgement and gossip at the clinic drive avoidance and the provider who frames herself as a parent scolds rather than serves — so the product is approached as a risk of exposure rather than a service to access.",
-      "needs": [
-        {
-          "gender": [
-            "Female"
-          ]
-        }
-      ],
-      "chain_id": "C5",
-      "passages": [
-        "P41",
-        "P42",
-        "P43",
-        "P44",
-        "P45",
-        "P46",
-        "P47",
-        "P48",
-        "P49",
-        "P50",
-        "P51",
-        "P53",
-        "P54",
-        "P55",
-        "P56",
-        "P57",
-        "P58",
-        "P59",
-        "P60"
-      ],
-      "evaluative_rules": [
-        "Judge a clinic by whether what you say there stays there, not by what it offers"
-      ],
-      "objections": [
-        "Will they ask me why I need it in front of everyone, and will it get back to people who know me?"
-      ],
-      "vocabulary": [
-        "confidentiality",
-        "judging",
-        "gossip"
-      ],
-      "about": "sexual or reproductive health: contraception, HIV prevention or testing, pregnancy or sexually transmitted infections",
-      "about_tags": [
-        "sexual health",
-        "contraception",
-        "contraceptive",
-        "contraceptives",
-        "prep",
-        "hiv",
-        "condom",
-        "condoms",
-        "pregnancy",
-        "pregnant",
-        "family planning",
-        "sti",
-        "stis",
-        "std",
-        "reproductive health",
-        "pap smear"
-      ],
-      "readings": [
-        {
-          "text": "Someone who has been shouted at when asking for help would weigh any new service first by whether asking for it could lead to another public scolding, so they would look for signs of how staff speak before deciding to approach.",
-          "passages": [
-            "P41",
-            "P42"
-          ]
-        },
-        {
-          "text": "If a provider has framed herself as a parent and counselled a teenager until she changed her mind, she would weigh a new service by whether it lets her act as a correcting mother, and she would be less open to one that requires her to simply provide what is asked.",
-          "passages": [
-            "P49",
-            "P50"
-          ]
-        },
-        {
-          "text": "Someone who fears that being seen taking pills will expose her to neighbours and friends would weigh a new service by how much it hides her visit, and she would be more open if it avoids reception questions and known local staff.",
-          "passages": [
-            "P55",
-            "P56"
-          ]
-        },
-        {
-          "text": "If a provider believes that giving PrEP would encourage promiscuity, she would weigh a new service by whether it appears to promote sex, and she would be less open to one that makes protection easy without a moral conversation.",
-          "passages": [
-            "P47",
-            "P59"
+            "P12"
           ]
         }
       ]
     }
   ],
-  "claim_type": "qualitative",
-  "region": "Pretoria, Johannesburg and Tshwane, South Africa",
-  "year_range": "2018-2024",
-  "confidence": "Three qualitative South African studies of close groups (insured pharmacy customers, working clinic patients, young women at clinics), none of them comfortable uninsured people. Reasoning borrowed, not heard; real people without medical aid mostly use public clinics, so treat paying privately as the exception.",
+  "region": "KwaZulu-Natal, Durban and Johannesburg, South Africa",
+  "year_range": "2010-2024",
+  "confidence": "Three qualitative South African studies of people living with HIV at public clinics: two focus groups of 20 on a proposed fee for home delivery of treatment, 51 patients in Durban (patient accounts only), and 13 patients in Johannesburg. Low-income, uninsured; the HIV-disclosure findings reach only pitches about HIV treatment or home delivery.",
   "comb_gaps": [
-    "capability"
+    "capability",
+    "opportunity"
   ],
-  "subject": "people without medical aid deciding between a free public clinic and paying a private doctor or pharmacy themselves: price, trust in a known pharmacist, time off work and being judged at the clinic",
-  "borrowed_from": "Insured Pretoria pharmacy customers (on price and trusted pharmacists), Johannesburg clinic patients who work (on clinic hours against paid work) and young Tshwane women (on judgement at the clinic). No interview study covers comfortable uninsured city people choosing a private doctor, so their reasoning is carried over from these close groups.",
-  "year_note": "Tshwane 2018-2020; Johannesburg August-September 2024; the Pretoria study does not state its fieldwork dates.",
+  "subject": "paying for care or for convenience without medical aid: fees weighed against food and wages, a day lost in the queue, and being seen at the clinic",
+  "year_note": "Durban around 2010; KwaZulu-Natal focus groups 2019 (published 2024); Johannesburg 2024.",
   "applies_when": [
     {
+      "medical_aid": [
+        "False"
+      ],
+      "geotype": [
+        "Urban"
+      ],
+      "lived_poverty": [
+        "moderate",
+        "high"
+      ]
+    }
+  ],
+  "borrowed_when": [
+    {
+      "medical_aid": [
+        "False"
+      ],
       "geotype": [
         "Urban"
       ],
       "lived_poverty": [
         "none",
         "low"
-      ],
-      "medical_aid": [
-        "False"
       ]
     }
   ],
+  "borrowed_from": "Low-income people living with HIV at public clinics, weighing fees against food, wages, time and being seen. Comfortable people without medical aid hear it from people close to them; no study of them exists yet.",
   "topic_tags": [
+    "check-up",
     "clinic",
     "clinics",
-    "doctor",
-    "gp",
-    "private doctor",
-    "pharmacy",
-    "pharmacies",
-    "medicine",
-    "medication",
-    "health",
-    "healthcare",
-    "nurse",
+    "condom",
+    "condoms",
     "consultation",
-    "check-up",
-    "sexual health",
     "contraception",
     "contraceptive",
     "contraceptives",
-    "prep",
+    "doctor",
+    "family planning",
+    "gp",
+    "health",
+    "healthcare",
     "hiv",
-    "condom",
-    "condoms",
+    "medication",
+    "medicine",
+    "nurse",
+    "pap smear",
+    "pharmacies",
+    "pharmacy",
     "pregnancy",
     "pregnant",
-    "family planning",
-    "sti",
-    "stis",
-    "std",
+    "prep",
+    "private doctor",
     "reproductive health",
-    "pap smear"
-  ]
+    "sexual health",
+    "std",
+    "sti",
+    "stis"
+  ],
+  "claim_type": "qualitative"
 }

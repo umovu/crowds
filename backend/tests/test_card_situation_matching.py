@@ -49,18 +49,17 @@ def _texts(card):
 
 # ── the cases that motivated this ──────────────────────────────────────────
 
-def test_struggling_professional_no_longer_gets_the_middle_class_card():
+def test_struggling_professional_does_not_get_the_middle_class_card():
     # Itumeleng Phiri in the clinic panel: professional label, often short of food.
     p = _person("urban_professional", race="African/Black", employment_status="Employed",
                 lived_poverty="high", owns_vehicle="none", owns_computer="none")
-    assert "middle-class-status-identity" not in _ids(p)
+    assert "black-tax-obligation-sa" not in _ids(p)
 
 
-def test_better_off_household_now_gets_it():
-    # No card listed "affluent_urban_household", so all 30 of them got nothing.
+def test_better_off_worker_gets_it():
     p = _person("affluent_urban_household", race="African/Black", employment_status="Employed",
                 lived_poverty="none", owns_vehicle="own")
-    assert "middle-class-status-identity" in _ids(p)
+    assert "black-tax-obligation-sa" in _ids(p)
 
 
 # ── rule semantics ─────────────────────────────────────────────────────────
@@ -157,17 +156,6 @@ def test_the_prompt_gate_narrows_claims_too():
     assert _texts(used[0]) == ["for everyone"]
 
 
-def test_middle_class_people_do_not_get_the_removed_income_insecure_claim():
-    def claims(poverty):
-        p = _person("urban_professional", race="African/Black", employment_status="Employed",
-                    lived_poverty=poverty, owns_vehicle="own")
-        return " ".join(_texts(next(c for c in mcs.cards_for_persona(p)
-                                    if c["id"] == "middle-class-status-identity")))
-    assert "income-insecure" not in claims("none")
-    assert "Black Tax" in claims("none")
-    assert "income-insecure" not in claims("low")
-
-
 def test_learner_studies_reach_parents_only_as_borrowed():
     # The learners were studied, not their parents: a parent hears it as what
     # learners like their child say, marked as borrowed.
@@ -250,12 +238,11 @@ def test_young_woman_gets_the_young_women_claims():
     assert _youth_claims({"gender": "Female", "age": 21}) == [0, 1, 2, 3]
 
 
-def test_young_woman_still_at_school_gets_all_five():
-    assert _youth_claims({"gender": "Female", "age": 18, "ghs_role": "learner"}) == [0, 1, 2, 3, 4]
-
-
-def test_teen_boy_learner_gets_only_the_learner_study_claims():
-    assert _youth_claims({"gender": "Male", "age": 16, "ghs_role": "learner"}) == [3, 4]
+def test_every_young_person_the_card_fits_hears_all_of_it():
+    # Rebuilt from young people's own accounts across three studies (staff views
+    # left out), so its findings are not split by which study a claim came from.
+    assert _youth_claims({"gender": "Female", "age": 18, "ghs_role": "learner"}) == [0, 1, 2, 3]
+    assert _youth_claims({"gender": "Male", "age": 16, "ghs_role": "learner"}) == [0, 1, 2, 3]
 
 
 def test_under_16_gets_nothing():

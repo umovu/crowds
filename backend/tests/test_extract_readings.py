@@ -5,6 +5,8 @@ checks readings that invent a motive, state a purchase, cite the wrong quotes, c
 figure, or all point the same way, and prove each one is caught.
 """
 import os
+
+import pytest
 import sys
 
 HERE = os.path.dirname(__file__)
@@ -86,3 +88,43 @@ def test_a_failed_draft_is_redrafted_with_the_failures(monkeypatch):
     readings, _labels, issues = er.read_claim(None, None, CLAIM, PASSAGES)
     assert readings == fixed and issues == []
     assert feedback_seen[0] == "" and "purchase decision" in feedback_seen[1]
+
+
+# ── Jev first, the research model only when Jev is unsure ────────────────────
+
+TWO = [GOOD, {"text": "If a parent already sets the standards, they would see less need for a new offer "
+                      "that sets targets.", "passages": ["P2"]}]
+
+
+def _jev(monkeypatch, answers):
+    monkeypatch.setattr(er, "jev_labels", lambda claim, readings, passages: answers)
+
+
+def test_jev_fails_a_reading_it_is_sure_invents(monkeypatch):
+    _jev(monkeypatch, [(0.9, "open"), (0.05, "less")])
+    monkeypatch.setattr(er, "model_judge", lambda *a: pytest.fail("the research model was asked"))
+    labels = er.judge(None, None, CLAIM, TWO, PASSAGES)
+    assert labels[0]["follows"] is True and labels[1]["follows"] is False
+    assert any("adds" in p for p in er.judge_problems(labels, CLAIM))
+
+
+def test_jev_passes_readings_it_is_sure_of_without_the_model(monkeypatch):
+    _jev(monkeypatch, [(0.9, "open"), (0.7, "less")])
+    monkeypatch.setattr(er, "model_judge", lambda *a: pytest.fail("the research model was asked"))
+    assert er.judge_problems(er.judge(None, None, CLAIM, TWO, PASSAGES), CLAIM) == []
+
+
+def test_a_reading_jev_is_unsure_of_goes_to_the_model(monkeypatch):
+    _jev(monkeypatch, [(0.9, "open"), (0.4, "less")])
+    asked = []
+    monkeypatch.setattr(er, "model_judge", lambda *a: asked.append(1) or [
+        {"i": 0, "follows": True}, {"i": 1, "follows": False, "adds": "a motive"}])
+    labels = er.judge(None, None, CLAIM, TWO, PASSAGES)
+    assert asked and labels[0]["follows"] is True and labels[1]["follows"] is False
+
+
+def test_with_jev_off_the_model_judges_alone(monkeypatch):
+    _jev(monkeypatch, None)
+    monkeypatch.setattr(er, "model_judge", lambda *a: [{"i": 0, "follows": True, "direction": "open"},
+                                                       {"i": 1, "follows": True, "direction": "less"}])
+    assert er.judge_problems(er.judge(None, None, CLAIM, TWO, PASSAGES), CLAIM) == []

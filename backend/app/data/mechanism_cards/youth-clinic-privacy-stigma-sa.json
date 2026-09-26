@@ -1,9 +1,9 @@
 {
   "id": "youth-clinic-privacy-stigma-sa",
-  "subject": "being seen, judged or gossiped about when seeking sexual health care",
   "citation": [
-    "Nyblade L et al. (2022). Stigma in the health clinic and implications for PrEP access and use by adolescent girls and young women: conflicting perspectives in South Africa. BMC Public Health 22:1916. doi:10.1186/s12889-022-14236-z",
-    "Strauss M, Rhodes B, George G (2015). A qualitative analysis of the barriers and facilitators of HIV counselling and testing perceived by adolescents in South Africa. BMC Health Services Research 15:250. doi:10.1186/s12913-015-0922-0"
+    "What do South African adolescents want in a sexual health service? (2018). South African Medical Journal 108(8). 15 focus groups, 120 adolescents aged 12-19.",
+    "Strauss M, Rhodes B, George G (2015). A qualitative analysis of the barriers and facilitators of HIV counselling and testing perceived by adolescents in South Africa. BMC Health Services Research 15:250. doi:10.1186/s12913-015-0922-0",
+    "Nyblade L et al. (2022). Stigma in the health clinic and implications for PrEP access and use by adolescent girls and young women: conflicting perspectives in South Africa. BMC Public Health 22:1916. doi:10.1186/s12889-022-14236-z"
   ],
   "segment_tags": [
     "learner",
@@ -12,323 +12,262 @@
   ],
   "claims": [
     {
-      "text": "Young women describe clinic nurses as harsh, judgmental and parent-like, questioning why someone so young needs contraception or PrEP, and say this holds them back from asking for help, so they delay or avoid sexual health services",
-      "needs": [
-        {
-          "gender": [
-            "Female"
-          ],
-          "youth_age_band": [
-            "18-24"
-          ]
-        }
-      ],
+      "text": "Privacy is the binding constraint: fear of being judged, gossiped about, or exposed by clinic staff makes a service unsafe, so a service is only worth using if it guarantees confidentiality, non-judgmental staff, and separation from adult or HIV-specific areas.",
+      "needs": [],
       "chain_id": "C1",
       "passages": [
         "P1",
-        "P3",
-        "P7",
-        "P10",
-        "P11",
-        "P16"
-      ],
-      "evaluative_rules": [
-        "Judge a clinic by whether staff treat you with respect, not by what services it offers"
-      ],
-      "objections": [
-        "Will the staff judge me or treat me harshly?"
-      ],
-      "vocabulary": [
-        "harsh",
-        "judgmental"
-      ],
-      "readings": [
-        {
-          "text": "Someone who has felt held back from asking for help because nurses are harsh would weigh a new service by whether it removes the need to face a nurse's questioning at all.",
-          "passages": [
-            "P1",
-            "P16"
-          ]
-        },
-        {
-          "text": "If a young woman has delayed seeking help because a nurse acted like a parent, she would look for a new service that clearly separates professional care from personal judgment.",
-          "passages": [
-            "P7",
-            "P11"
-          ]
-        },
-        {
-          "text": "Someone who has seen healthcare workers bring Christianity into the picture would be cautious about a new service unless it guarantees that personal beliefs will not shape the care she receives.",
-          "passages": [
-            "P3"
-          ]
-        },
-        {
-          "text": "If a young woman finds it weird to consult someone the same age as her mother, she would weigh a new service by whether it offers access to people who feel more like peers than parent figures.",
-          "passages": [
-            "P10"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "Providers who hold societal norms that sexually active girls are promiscuous or irresponsible read prevention tools as moral hazards that encourage promiscuity, so they withhold, discourage, or stigmatize access because provision feels like endorsing bad behavior",
-      "needs": [
-        {
-          "gender": [
-            "Female"
-          ],
-          "youth_age_band": [
-            "18-24"
-          ]
-        }
-      ],
-      "chain_id": "C2",
-      "passages": [
-        "P5",
         "P6",
-        "P17",
-        "P18"
-      ],
-      "evaluative_rules": [
-        "Judge a prevention product by whether providers see it as enabling promiscuity rather than protecting health"
-      ],
-      "objections": [
-        "Will using this make people think I am promiscuous?"
-      ],
-      "vocabulary": [
-        "promiscuous"
-      ],
-      "readings": [
-        {
-          "text": "Someone who worries that a new prevention tool would encourage girls to be promiscuous would weigh it as a moral hazard that could reflect badly on the girls, making them hesitant to make it available.",
-          "passages": [
-            "P5"
-          ]
-        },
-        {
-          "text": "If a provider fears that a new prevention tool would lead girls to stop using condoms because they are protected from HIV, they would weigh it as something that could increase adolescent pregnancies, making them cautious about offering it.",
-          "passages": [
-            "P6"
-          ]
-        },
-        {
-          "text": "Someone who sees sexually active girls as promiscuous and irresponsible would weigh a new prevention tool as something that could encourage riskier and more frequent sex, making them reluctant to provide it without stigma.",
-          "passages": [
-            "P17"
-          ]
-        },
-        {
-          "text": "If a provider feels a responsibility to uphold the moral character of girls as expected by their community, they would weigh a new prevention tool as something that contradicts that responsibility, possibly providing it only with an undercurrent of stigma.",
-          "passages": [
-            "P18"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "Nurses describe relating to young clients as their own daughters and counselling or scolding them as a mother would, and young women describe the visit as being like asking their mother; nurses themselves say this keeps adolescents away from clinics",
-      "needs": [
-        {
-          "gender": [
-            "Female"
-          ],
-          "youth_age_band": [
-            "18-24"
-          ]
-        }
-      ],
-      "chain_id": "C3",
-      "passages": [
         "P7",
         "P8",
-        "P10",
-        "P19",
-        "P1",
-        "P11",
-        "P16"
-      ],
-      "evaluative_rules": [
-        "Judge a provider by whether they act like a professional or like a parent"
-      ],
-      "objections": [],
-      "vocabulary": [
-        "parent figures"
-      ],
-      "readings": [
-        {
-          "text": "Someone who has been scolded by a nurse acting like a mother would be wary of a new clinic service unless it clearly separates professional care from personal judgement.",
-          "passages": [
-            "P7",
-            "P11"
-          ]
-        },
-        {
-          "text": "If a young woman expects the visit to be like asking her mother, she would weigh a new service by whether it offers a different, less familial interaction.",
-          "passages": [
-            "P10"
-          ]
-        },
-        {
-          "text": "Someone who has seen nurses counsel a teenager until she changes her mind would be cautious about a new service that gives nurses more room to counsel rather than simply provide care.",
-          "passages": [
-            "P8"
-          ]
-        },
-        {
-          "text": "If a young person has stayed away from a clinic because a nurse said she was too young, she would look for a new service that removes that kind of harsh, parent-like response.",
-          "passages": [
-            "P16",
-            "P1"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "Clinic attendance is evaluated as risking public exposure of sexual activity or HIV status, so youth avoid clinics, move to unfamiliar clinics, or prefer hidden testing sites because visibility threatens disclosure and social harm",
-      "needs": [
-        {
-          "gender": [
-            "Female"
-          ],
-          "youth_age_band": [
-            "18-24"
-          ]
-        },
-        {
-          "ghs_role": [
-            "learner"
-          ],
-          "youth_age_band": [
-            "16-17",
-            "18-24"
-          ]
-        }
-      ],
-      "chain_id": "C4",
-      "passages": [
-        "P12",
-        "P13",
-        "P14",
-        "P15",
-        "P20",
-        "P34",
-        "P35",
-        "P36",
-        "P37",
-        "P38",
-        "P39"
-      ],
-      "evaluative_rules": [
-        "Judge a service by whether using it risks exposing your sexual activity or HIV status to people you know"
-      ],
-      "objections": [
-        "Will anyone I know see me or find out why I am here?"
-      ],
-      "vocabulary": [
-        "confidentiality"
-      ],
-      "readings": [
-        {
-          "text": "Someone who has seen clinic staff direct a girl to a specific room for HIV services in front of everyone would weigh a new service by whether it keeps the reason for a visit unspoken in shared spaces.",
-          "passages": [
-            "P12"
-          ]
-        },
-        {
-          "text": "If someone has moved clinics because neighbours attend the same one, they would look at a new service mainly for whether it separates them from people who know them.",
-          "passages": [
-            "P13"
-          ]
-        },
-        {
-          "text": "Someone who fears nurses will gossip about personal issues would be more open to a new service only if it removes staff from the process of learning why they came.",
-          "passages": [
-            "P14",
-            "P15"
-          ]
-        },
-        {
-          "text": "If someone has avoided testing because school-based testing led teachers to disclose results, they would judge a new service by whether it keeps results away from any authority figure connected to their daily life.",
-          "passages": [
-            "P35"
-          ]
-        }
-      ]
-    },
-    {
-      "text": "Adolescents describe a positive HIV result as life-ending and say they need counselling before a test and friends or family with them, so they avoid testing or test only when that counselling and support are there",
-      "needs": [
-        {
-          "ghs_role": [
-            "learner"
-          ],
-          "youth_age_band": [
-            "16-17",
-            "18-24"
-          ]
-        }
-      ],
-      "chain_id": "C5",
-      "passages": [
-        "P21",
-        "P22",
-        "P23",
-        "P24",
-        "P25",
         "P26",
+        "P27",
         "P28",
         "P29",
         "P30",
         "P31",
-        "P37",
-        "P38"
+        "P32",
+        "P46",
+        "P47",
+        "P48",
+        "P49",
+        "P50",
+        "P53"
       ],
       "evaluative_rules": [
-        "Judge a testing service by whether it includes counseling and support before and after the result"
+        "Judge a service by whether it protects you from being seen, named, or talked about, not by what it offers on paper"
       ],
       "objections": [
-        "What will happen to me if the result is positive?"
+        "Will anyone find out I came here, and will the staff talk about me?"
       ],
       "vocabulary": [
-        "counselling"
+        "judged",
+        "gossiping"
       ],
       "readings": [
         {
-          "text": "If a new option includes counselling before the test, someone who says it is better to be counselled first would weigh it as more acceptable because counselling helps them know how to take care of themselves if the result is positive.",
+          "text": "Someone who fears being judged by rude nurses would weigh a new service mainly by whether it keeps them away from staff who might lecture or gossip about them.",
           "passages": [
-            "P29",
-            "P30"
+            "P1",
+            "P8",
+            "P50"
           ]
         },
         {
-          "text": "Someone who gained strength from other guys going to test in tents would weigh a new option by whether it lets them test as a group rather than alone.",
+          "text": "If a service separates young people from adult or HIV-specific areas, someone who avoids clinics because of that separation would be more willing to consider it.",
           "passages": [
-            "P25"
+            "P31",
+            "P32",
+            "P46"
           ]
         },
         {
-          "text": "If testing is offered at home with the whole family, they would weigh it as better because family are unlikely to use a positive status against one another.",
+          "text": "Someone who has changed their story or avoided testing because results were shared with teachers or neighbours would only weigh a service seriously if it guaranteed that no one in their community or school would find out.",
           "passages": [
-            "P28"
+            "P6",
+            "P26",
+            "P27",
+            "P49"
           ]
         },
         {
-          "text": "Someone who fears schoolmates will notice shock and speculate about a positive result would weigh a new option by how much space it gives them to leave without drawing attention.",
+          "text": "If a service relies on staff who are known in the community, someone who already moved clinics to avoid neighbours would weigh it as unsafe no matter what else it offers.",
           "passages": [
-            "P37"
+            "P47",
+            "P48"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "A positive result is read as a death sentence, so testing is only acceptable when counselling, peer or group support, and messages that HIV is manageable come with it.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P21",
+        "P22",
+        "P23",
+        "P33"
+      ],
+      "evaluative_rules": [
+        "Judge a testing offer by the support and counselling attached to it, not by the test itself"
+      ],
+      "objections": [
+        "If the result is positive, will I be counselled and shown how to live with it, or left to fall apart?"
+      ],
+      "vocabulary": [
+        "counselled",
+        "live positive lifestyle"
+      ],
+      "readings": [
+        {
+          "text": "If a new service offers counselling before testing, someone who believes a positive result is a death sentence would weigh it as a way to avoid doing something wrong after learning their result.",
+          "passages": [
+            "P21"
+          ]
+        },
+        {
+          "text": "If a new service includes counsellors who say a positive result does not mean the end of your life, someone who feared testing would weigh it as a reason to decide to test.",
+          "passages": [
+            "P22",
+            "P23"
+          ]
+        },
+        {
+          "text": "If a new service provides group testing, someone who gained strength from other guys going to test would weigh it as better than testing alone.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "If a new service does not include counselling before testing, someone who thinks counselling helps you know how to take care of yourself would weigh it as a problem.",
+          "passages": [
+            "P21"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Staff who act like harsh, scolding parents shut down honest disclosure, so a service is only accessible when delivered by younger, relatable, non-parental staff who listen without judging.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P1",
+        "P2",
+        "P4",
+        "P34",
+        "P41",
+        "P42",
+        "P43",
+        "P44",
+        "P45",
+        "P50",
+        "P52"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether the staff feel like peers who listen, not parents who scold"
+      ],
+      "objections": [
+        "Will the person I talk to treat me like a child and judge me, or listen and understand?"
+      ],
+      "vocabulary": [
+        "harsh",
+        "parent figures"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has been scolded by nurses for being too young would weigh a new service by whether its staff can listen without judging, since harshness holds them back from seeking help.",
+          "passages": [
+            "P50",
+            "P1"
+          ]
+        },
+        {
+          "text": "If a service is delivered by younger staff who are understanding, someone who feels shy with older nurses would weigh it as more accessible because they can become free and not feel shy.",
+          "passages": [
+            "P2",
+            "P44"
+          ]
+        },
+        {
+          "text": "Someone who has seen staff treat adolescents as their own children would weigh a new service by whether staff avoid acting like mothers, because being treated as a daughter makes them close up.",
+          "passages": [
+            "P41",
+            "P43",
+            "P52"
+          ]
+        },
+        {
+          "text": "If a service relies on staff who counsel until a teenager changes her mind, someone who wants to be heard without being judged would weigh it as less open, because that staff still acts like a parent.",
+          "passages": [
+            "P42",
+            "P45"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Incomplete or one-size-fits-all information leaves adolescents unable to make informed decisions, so a service is only valuable if it gives complete, accurate, age-appropriate information and individualised choices.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13"
+      ],
+      "evaluative_rules": [
+        "Judge a service by whether it gives you full, accurate information and real options, not a single standard answer"
+      ],
+      "objections": [
+        "Will I be told everything accurately and given choices that fit me, or just handed a standard response?"
+      ],
+      "vocabulary": [
+        "age-appropriate",
+        "one-size-fits-all"
+      ],
+      "readings": [
+        {
+          "text": "Someone who wants individualised contraception options instead of a one-size-fits-all approach would weigh a new service by whether it presents all available options and lets them choose rather than assigning a standard plan.",
+          "passages": [
+            "P9",
+            "P10"
+          ]
+        },
+        {
+          "text": "If a person has received information that was not age-appropriate and sometimes inaccurate from clinic staff, they would be cautious about a new service until it shows its information is complete and accurate for their age.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "Someone who values staff who listen, connect with common adolescent issues, and give relevant practical advice would judge a new service by whether its staff or design make them feel heard and offer ways around barriers.",
+          "passages": [
+            "P11"
+          ]
+        },
+        {
+          "text": "If a person wants to talk openly and ask questions without fear of being stigmatised or judged, they would weigh a new service by whether it creates a trusting space where they can speak openly to people who relate to them.",
+          "passages": [
+            "P12"
           ]
         }
       ]
     }
   ],
   "claim_type": "qualitative",
-  "region": "Tshwane, Gauteng and Vulindlela, KwaZulu-Natal, South Africa",
+  "region": "Five sites in four provinces; Tshwane; rural and peri-urban KwaZulu-Natal, South Africa",
   "year_range": "2012-2020",
-  "confidence": "Two qualitative South African studies about SEXUAL HEALTH services specifically: 43 women aged 18-24 plus 42 clinic staff in Tshwane (2018-2020, with a 449-person survey), and 158 learners aged 16+ in 21 focus groups in rural and peri-urban KwaZulu-Natal (2012-2013). The privacy, judgement and being-seen mechanisms are durable; whether they carry to ordinary clinic visits is not tested, and magnitudes are unknown.",
+  "confidence": "Three qualitative South African studies of young people on sexual health services: 120 adolescents aged 12-19 in 15 focus groups at five sites, 158 learners in KwaZulu-Natal, and young women aged 18-24 in Tshwane. Young people's own accounts only; clinic staff views left out. Mechanisms durable; magnitudes unknown.",
   "comb_gaps": [
     "capability",
     "opportunity"
+  ],
+  "subject": "being seen, judged or gossiped about when seeking sexual health care",
+  "applies_when": [
+    {
+      "gender": [
+        "Female"
+      ],
+      "youth_age_band": [
+        "18-24"
+      ]
+    },
+    {
+      "ghs_role": [
+        "learner"
+      ],
+      "youth_age_band": [
+        "16-17",
+        "18-24"
+      ]
+    }
   ],
   "topic_tags": [
     "hiv",
@@ -352,23 +291,5 @@
     "stis",
     "std"
   ],
-  "applies_when": [
-    {
-      "gender": [
-        "Female"
-      ],
-      "youth_age_band": [
-        "18-24"
-      ]
-    },
-    {
-      "ghs_role": [
-        "learner"
-      ],
-      "youth_age_band": [
-        "16-17",
-        "18-24"
-      ]
-    }
-  ]
+  "year_note": "Three studies: KZN focus groups 2012-2013, Tshwane 2018-2020, five-site adolescent focus groups published 2018."
 }

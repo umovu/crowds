@@ -16,6 +16,8 @@ app.services __init__.
 import importlib.util
 import os
 import re
+
+import pytest
 import sys
 
 HERE = os.path.dirname(__file__)
@@ -89,24 +91,31 @@ def test_render_block_contract():
             assert not re.search(r"\d", line), f"digit in card content line: {line!r}"
 
 
-def test_economic_tags_filter_by_tier():
-    # middle-class-status-identity is tagged moderate/loose; a tight-tier
-    # urban_professional must not bind it, a loose one may.
-    tight = mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="tight")
-    loose = mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="loose")
-    assert "middle-class-status-identity" not in [c["id"] for c in tight]
-    assert "middle-class-status-identity" in [c["id"] for c in loose]
-    # township-sample learner cards must not bind for a loose-tier learner
+_TIERED = [
+    {"id": "middle-tier", "segment_tags": ["urban_professional"], "economic_tags": ["moderate", "loose"],
+     "claims": [{"text": "a", "needs": [], "chain_id": "C1", "passages": ["P1"], "objections": [], "vocabulary": []}]},
+    {"id": "tight-tier", "segment_tags": ["learner"], "economic_tags": ["tight"],
+     "claims": [{"text": "b", "needs": [], "chain_id": "C1", "passages": ["P1"], "objections": [], "vocabulary": []}]},
+    {"id": "class-blind", "segment_tags": ["learner"],
+     "claims": [{"text": "c", "needs": [], "chain_id": "C1", "passages": ["P1"], "objections": [], "vocabulary": []}]},
+]
+
+
+def test_economic_tags_filter_by_tier(monkeypatch):
+    # A card tagged moderate/loose must not bind a tight-tier persona; a tight-only
+    # card must not bind a loose one; an untagged card binds every tier.
+    monkeypatch.setattr(mcs, "_cache", _TIERED)
+    tight = [c["id"] for c in mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="tight")]
+    loose = [c["id"] for c in mcs.cards_for_archetype("urban_professional", cap=99, budget_tier="loose")]
+    assert "middle-tier" not in tight and "middle-tier" in loose
     loose_learner = [c["id"] for c in mcs.cards_for_archetype("learner", cap=99, budget_tier="loose")]
-    assert "youth-mobile-airtime-economy" not in loose_learner
-    # untagged (class-blind) cards apply to every tier
-    assert "incentivized-learning-engagement" in loose_learner
+    assert "tight-tier" not in loose_learner and "class-blind" in loose_learner
 
 
-def test_no_tier_means_no_economic_filtering():
+def test_no_tier_means_no_economic_filtering(monkeypatch):
     # Policy casts carry no budget_tier: binding must be tier-blind (back-compat).
-    untiered = [c["id"] for c in mcs.cards_for_archetype("learner", cap=99)]
-    assert "youth-mobile-airtime-economy" in untiered
+    monkeypatch.setattr(mcs, "_cache", _TIERED)
+    assert "tight-tier" in [c["id"] for c in mcs.cards_for_archetype("learner", cap=99)]
 
 
 def _learner(age, poverty):
@@ -114,16 +123,17 @@ def _learner(age, poverty):
             "circumstances": [{"field": "lived_poverty", "value": poverty}]}
 
 
-def test_attach_follows_the_persona_record_not_the_tier_label():
-    # Cards now bind by situation (applies_when on the persona's own record). The
-    # township airtime card describes young people who go short: a comfortable
-    # sixteen-year-old does not get it, one whose record says they go short does.
+def test_attach_follows_the_persona_record_not_the_tier_label(monkeypatch):
+    # Cards bind by situation (applies_when on the persona's own record): a card about
+    # learners who go short reaches a sixteen-year-old whose record says so, not one
+    # whose record says they are comfortable.
+    card = {**_TIERED[2], "id": "goes-short", "applies_when": [
+        {"ghs_role": ["learner"], "lived_poverty": ["moderate", "high"]}]}
+    monkeypatch.setattr(mcs, "_cache", [card])
     out = mcs.attach_research_context(_learner(16, "none"), cap=99)
-    assert all(c["card_id"] != "youth-mobile-airtime-economy"
-               for c in out.get("research_citations", []))
+    assert not out.get("research_citations")
     out = mcs.attach_research_context(_learner(16, "high"), cap=99)
-    assert any(c["card_id"] == "youth-mobile-airtime-economy"
-               for c in out["research_citations"])
+    assert [c["card_id"] for c in out["research_citations"]] == ["goes-short"]
 
 
 def test_attach_adds_both_keys_when_bound():
@@ -177,16 +187,22 @@ _BLACK_TAX_PAYER = dict(race="African/Black", employment_status="Employed",
                         circumstances={"lived_poverty": "low"})
 
 
-def test_a_sexual_health_claim_stays_off_a_diabetes_pitch():
+def test_hiv_disclosure_claims_stay_off_a_diabetes_pitch():
     claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
                         "A clinic that helps you manage diabetes, R150 a visit.")
-    assert claims and "C5" not in claims
+    assert claims and not claims & {"C1", "C2"}
 
 
-def test_a_sexual_health_claim_comes_with_a_prep_pitch():
+def test_hiv_disclosure_claims_come_with_an_hiv_treatment_pitch():
     claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
-                        "A clinic where young women can get PrEP without a queue.")
-    assert "C5" in claims
+                        "Collect your ARVs at a pharmacy near work instead of the clinic, R50.")
+    assert "C1" in claims
+
+
+def test_the_delivery_claim_comes_with_a_home_delivery_pitch():
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "Your monthly medication delivered to your home for R30.")
+    assert "C2" in claims
 
 
 def test_black_tax_stays_off_a_trivial_pitch():
@@ -253,3 +269,58 @@ def test_a_close_group_gets_it_marked_borrowed_and_ranked_lower():
 
 def test_someone_in_neither_gate_gets_nothing():
     assert mcs.situation_match_strength(_borrow_card(), {"ghs_role": "guardian_parent", "geotype": "Farms"}) == 0
+
+
+def test_a_rural_teen_on_an_ordinary_clinic_pitch_hears_no_sexual_health_claim():
+    teen = dict(geotype="Traditional", age=17)
+    claims, cards = _claims(_seat("youth-clinic-candidacy-sa", **teen),
+                            "A nurse you can see the same day for R150 a visit, no queue.")
+    assert "youth-clinic-candidacy-sa" in cards
+    assert {"C1", "C3", "C5"} <= claims and not claims & {"C2", "C4"}
+
+
+def test_hiv_disclosure_stays_off_a_chronic_medication_pitch():
+    # Spot check 2026-09-26: "your medication collected without the public queue" on a
+    # diabetes plan pulled the HIV-disclosure claim into 11 of 12 prompts, because its
+    # words included "medication" and "treatment". It is about HIV, so HIV words only.
+    claims, _ = _claims(_seat("paying-for-care-without-medical-aid-sa", **_UNINSURED_WOMAN),
+                        "A private clinic that manages your diabetes: monthly check-ups and your "
+                        "medication collected without the public queue, R200 a month.")
+    assert claims and "C1" not in claims
+
+
+# ── a card stays in its own area of life ─────────────────────────────────────
+# "fee" and "fees" on a card built from HIV clinic studies pulled it into a learning
+# app pitch for parents at "fee-paying schools" (local panel, 2026-09-26). General
+# words (money, queues, delivery) belong to no one area; a card's tags must name its own.
+
+HEALTH_CARDS = {"chronic-care-repeat-cost-sa", "healthcare-access-barriers-sa", "medical-aid-copayment-sa",
+                "men-health-seeking-sa", "older-persons-clinic-experience-sa",
+                "paying-for-care-without-medical-aid-sa", "youth-clinic-candidacy-sa",
+                "youth-clinic-privacy-stigma-sa"}
+EDUCATION_CARDS = {"education-payment-conversion", "incentivized-learning-engagement",
+                   "learner-motivation-grade12-sa", "township-parent-motivation-sdl"}
+OFF_TOPIC = {
+    "education": ("A R100 a month incentivised learning app for middle-class parents whose children "
+                  "are at fee-paying schools.", HEALTH_CARDS),
+    "solar": ("A small solar and battery kit rented for R299 a month that keeps your lights, fridge and "
+              "phone going when the power is out.", HEALTH_CARDS | EDUCATION_CARDS),
+    "funeral": ("Funeral cover for R80 a month that pays out within 48 hours, signed up on your phone.",
+                HEALTH_CARDS | EDUCATION_CARDS),
+    "food delivery": ("Groceries delivered to your door for a R35 delivery fee, no queues at the shop.",
+                      HEALTH_CARDS | EDUCATION_CARDS),
+    "clinic": ("A private clinic that manages your diabetes: monthly check-ups and your medication "
+               "collected without the public queue, R200 a month.", EDUCATION_CARDS),
+}
+
+
+@pytest.mark.parametrize("name", sorted(OFF_TOPIC))
+def test_cards_stay_out_of_other_areas_of_life(name):
+    pitch, must_not = OFF_TOPIC[name]
+    fired = {c["id"] for c in mcs.load_cards() if mcs.topic_matches(c, pitch)}
+    assert not fired & must_not, f"{name}: {sorted(fired & must_not)}"
+
+
+def test_the_area_lists_name_real_cards():
+    ids = {c["id"] for c in mcs.load_cards()}
+    assert HEALTH_CARDS <= ids and EDUCATION_CARDS <= ids
