@@ -33,6 +33,33 @@
         "generics",
         "originator",
         "brand loyalty"
+      ],
+      "readings": [
+        {
+          "text": "Someone who questions whether generics are inferior or weak and wonders why they are made so cheap would weigh a new cheaper substitute as a likely threat to quality and would need strong proof of equivalence before considering it.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "Someone who assumes a generic is made by tweaking the development process and worries about unknown reactants or impurities would weigh a new cheaper substitute as a possible source of hidden impurity and would rely on a doctor's endorsement to reduce that worry.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who believes the quality between generics and originators is the same and that generics are sometimes made by the same company would weigh a new cheaper substitute as a reasonable option with no expected difference in quality.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "Someone who has developed brand loyalty from long use and feels comfortable with a familiar medicine would weigh a new cheaper substitute as an unwelcome change and would be willing to co-pay to avoid switching.",
+          "passages": [
+            "P18",
+            "P19"
+          ]
+        }
       ]
     },
     {
@@ -56,6 +83,26 @@
       "vocabulary": [
         "second opinion",
         "chain pharmacies"
+      ],
+      "readings": [
+        {
+          "text": "Someone who accepts what the doctor says even when it feels like a gamble would weigh a new product mainly through the prescriber's word, not through what it costs.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If a pharmacy relationship means they sometimes do not even make a co-payment, they would read a new product through that pharmacy's care rather than through price.",
+          "passages": [
+            "P16"
+          ]
+        },
+        {
+          "text": "If they assume a corporate pharmacy will always have the prescription, they would weigh a new product by whether that pharmacy dispenses it, not by scheme rules or co-payment.",
+          "passages": [
+            "P11"
+          ]
+        }
       ]
     },
     {
@@ -85,6 +132,33 @@
       "vocabulary": [
         "the time and work clash",
         "no choice"
+      ],
+      "readings": [
+        {
+          "text": "Someone who cannot risk losing their job by taking time off to visit the clinic would weigh any new service model first by whether it fits within employer-controlled time, and would see a model that still requires daytime attendance as another demand that cannot be met.",
+          "passages": [
+            "P21",
+            "P23"
+          ]
+        },
+        {
+          "text": "If a person has no choice because the boss will not release them to come to clinic, they would be more open to a new service model only if it removes the need to ask the employer for time, and would read a model that still depends on clinic attendance as impossible.",
+          "passages": [
+            "P23"
+          ]
+        },
+        {
+          "text": "Someone who did not take medication during a funeral because they were not comfortable with people knowing their HIV status would weigh a new service model by whether it can be used without revealing their status to family, and would see a model that requires visible clinic visits or medication handling as another demand that cannot be met.",
+          "passages": [
+            "P28"
+          ]
+        },
+        {
+          "text": "If a person routinely attends funerals or weddings at home and does not prioritize treatment schedules during those times, they would weigh a new service model by whether it can follow them across family obligations, and would read a model tied to a fixed clinic schedule as another demand that cannot be met.",
+          "passages": [
+            "P24"
+          ]
+        }
       ]
     },
     {
@@ -147,6 +221,36 @@
         "std",
         "reproductive health",
         "pap smear"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has been shouted at when asking for help would weigh any new service first by whether asking for it could lead to another public scolding, so they would look for signs of how staff speak before deciding to approach.",
+          "passages": [
+            "P41",
+            "P42"
+          ]
+        },
+        {
+          "text": "If a provider has framed herself as a parent and counselled a teenager until she changed her mind, she would weigh a new service by whether it lets her act as a correcting mother, and she would be less open to one that requires her to simply provide what is asked.",
+          "passages": [
+            "P49",
+            "P50"
+          ]
+        },
+        {
+          "text": "Someone who fears that being seen taking pills will expose her to neighbours and friends would weigh a new service by how much it hides her visit, and she would be more open if it avoids reception questions and known local staff.",
+          "passages": [
+            "P55",
+            "P56"
+          ]
+        },
+        {
+          "text": "If a provider believes that giving PrEP would encourage promiscuity, she would weigh a new service by whether it appears to promote sex, and she would be less open to one that makes protection easy without a moral conversation.",
+          "passages": [
+            "P47",
+            "P59"
+          ]
+        }
       ]
     }
   ],

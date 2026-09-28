@@ -27,6 +27,32 @@
       "vocabulary": [
         "major water shortage",
         "how are we supposed to live like this"
+      ],
+      "readings": [
+        {
+          "text": "Someone who can go days without access to water might weigh any new water offer mainly by whether it ends that unbearable stretch, not by how it compares to normal service.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If water is absent for days at a time, a new water offer could be judged against an unbearable, hopeless situation, making even a limited offer feel meaningful.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "Someone who wonders how they are supposed to live like this might weigh a new water offer as a response to a major water shortage, asking whether it can change a situation that feels unliveable.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If a major water shortage makes life feel unliveable, a new water offer may be judged against that hopeless baseline rather than against normal service.",
+          "passages": [
+            "P2"
+          ]
+        }
       ]
     },
     {
@@ -47,6 +73,28 @@
       "vocabulary": [
         "we didn't have a choice",
         "what choice do people have"
+      ],
+      "readings": [
+        {
+          "text": "If buying water from borehole owners on days when government water is unavailable already requires money, a new water solution would be judged by whether it removes that daily need to have money just to get water.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "Someone who sees water as very scarce and borehole drilling as very costly but unavoidable would be cautious about any new solution that still depends on private spending.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "If people feel they have no choice but to pay for private water, they would still weigh a new solution by its affordability, but might accept it more readily if it clearly replaces the costly alternatives they already use.",
+          "passages": [
+            "P3",
+            "P4",
+            "P5"
+          ]
+        }
       ]
     },
     {
@@ -66,6 +114,34 @@
       "vocabulary": [
         "how embarrassing is that",
         "it's a shame on us"
+      ],
+      "readings": [
+        {
+          "text": "Someone who feels the shame of not washing clothes may weigh a new water service by whether it lets them avoid that embarrassment.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If waiting in long public queues feels like a shame on us, a new water service may be judged by how much it removes public struggle.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who sees scarcity through dignity may be cautious about any new arrangement that still makes water access visibly scarce.",
+          "passages": [
+            "P6",
+            "P7"
+          ]
+        },
+        {
+          "text": "If water access is evaluated through stigma, a new service could be weighed by whether it makes scarcity less publicly visible.",
+          "passages": [
+            "P6",
+            "P7"
+          ]
+        }
       ]
     },
     {
@@ -87,6 +163,32 @@
       "vocabulary": [
         "it's disappointing",
         "it's unfair"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen promises to help come to nothing would treat any new offer as another promise likely to be broken, and would look first for what could go wrong.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If the struggle has meant travelling long distances to taps that have water, a new offer would be weighed by whether it removes that daily burden, not by what it claims.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "Someone who sees population growth outpacing the same size infrastructure would ask whether a new offer actually expands capacity or just adds more users to an already strained system.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "If only old villages were supplied with water pipes while new villages were left out, a new offer would be judged by whether it corrects that unfairness or repeats it.",
+          "passages": [
+            "P11"
+          ]
+        }
       ]
     },
     {
@@ -109,6 +211,33 @@
       "vocabulary": [
         "we don't share water equally",
         "this is not fair at all"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen people fight when government water tanks arrive would judge any new solution first by whether it removes the need to compete at the point of delivery.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If people steal communal taps that help the whole community, a new solution would be weighed by how easily its parts can be taken or broken by one person.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who is irritated that pressure pumps let some people take water before others would look more favourably on a new solution that stops one household using up the shared supply first.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "If people from neighbouring villages come to use street taps when there is water, a new solution would be read through whether it makes the boundary between who is allowed to draw water and who is not clearer.",
+          "passages": [
+            "P15",
+            "P16"
+          ]
+        }
       ]
     }
   ],

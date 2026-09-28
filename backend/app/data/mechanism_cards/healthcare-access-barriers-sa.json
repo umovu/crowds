@@ -76,6 +76,33 @@
       ],
       "vocabulary": [
         "transport money"
+      ],
+      "readings": [
+        {
+          "text": "Someone who cannot go regularly when it rains or when they lack transport money would weigh a new facility by whether it removes the need for a long journey.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If taxis refuse to come to your area when it rains, you would weigh a new facility by whether it can be reached without relying on taxis.",
+          "passages": [
+            "P1",
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who must hire a special to cross a river when it rains and feels unsafe as a woman would weigh a new service by whether it avoids that crossing.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "If you feel demotivated because the clinic is far but have no other clinic to go to, you would weigh a new facility by whether it is closer than the one you already use.",
+          "passages": [
+            "P21"
+          ]
+        }
       ]
     },
     {
@@ -104,6 +131,33 @@
       "vocabulary": [
         "government grant",
         "stokvels"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says the grant is not enough to cater for all their needs and is finished would weigh a new service by whether it fits into the same limited pool as groceries, stokvels, transport, and emergencies.",
+          "passages": [
+            "P7",
+            "P9"
+          ]
+        },
+        {
+          "text": "If a person struggles going to the clinic because they also use the grant for transport, they would weigh a new service by whether it removes the need to choose between getting there and other survival needs.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who says the grant is not enough to cover all healthcare expenses, including transport and emergencies, would weigh a new service by whether it reduces the number of competing demands on the same money.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If a person says it is difficult to come to the clinic without money and they often have no money left for emergencies, they would weigh a new service by whether it can be reached or used without drawing on the same grant that runs out.",
+          "passages": [
+            "P10"
+          ]
+        }
       ]
     },
     {
@@ -128,6 +182,33 @@
       ],
       "vocabulary": [
         "stand outside in bad weather"
+      ],
+      "readings": [
+        {
+          "text": "Someone who waits for hours and becomes hungry due to time constraints would weigh any new service mainly by whether it removes the long wait that disrupts their blood pressure management.",
+          "passages": [
+            "P11"
+          ]
+        },
+        {
+          "text": "If waiting outside in bad weather makes people feel they might catch a cold or get pneumonia, a new service would be judged by whether it keeps them out of unconducive and unfavourable weather conditions.",
+          "passages": [
+            "P28",
+            "P38"
+          ]
+        },
+        {
+          "text": "Someone who feels it is better to stay home than bring ill children because attendance could take the whole day would be slow to see value in a new service unless it clearly changed the whole-day attendance pattern.",
+          "passages": [
+            "P36"
+          ]
+        },
+        {
+          "text": "If a person has diabetes that makes them hungry and thirsty all the time while waiting five or six hours, they would weigh a new service by whether it shortens the wait enough to reduce that hunger and thirst.",
+          "passages": [
+            "P13"
+          ]
+        }
       ]
     },
     {
@@ -156,6 +237,35 @@
       "vocabulary": [
         "traditional healers",
         "African diseases"
+      ],
+      "readings": [
+        {
+          "text": "Someone who uses herbs like 'uzifo zonke' for blood pressure may weigh a new clinic service by whether it acknowledges herbs as a first step, not as a replacement for the clinic.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If a person believes some illnesses can heal without clinic treatment, they may be less open to a new policy that expects a clinic visit for every mild illness.",
+          "passages": [
+            "P32",
+            "P34"
+          ]
+        },
+        {
+          "text": "Someone who goes to traditional healers for 'gokhonya and ngoma' may be more open to a new service only if it does not dismiss African illnesses as outside its scope.",
+          "passages": [
+            "P29",
+            "P30",
+            "P35"
+          ]
+        },
+        {
+          "text": "If a person is scared of traditional medicine and too old for steaming, they may weigh a new product by how clearly it separates clinic treatment from traditional drinking and steaming.",
+          "passages": [
+            "P16"
+          ]
+        }
       ]
     },
     {
@@ -177,7 +287,35 @@
       "objections": [
         "Will the staff treat me like I matter, or will I leave feeling drained?"
       ],
-      "vocabulary": []
+      "vocabulary": [],
+      "readings": [
+        {
+          "text": "Someone who has been sent back in line with a child in pain would weigh any new service by whether staff are willing to interrupt their routine to look again at a patient who says something is wrong.",
+          "passages": [
+            "P26"
+          ]
+        },
+        {
+          "text": "If a person has had medication withheld without explanation, they would be cautious of a new service that promises better care but does not show how shortages or omissions will be explained to patients.",
+          "passages": [
+            "P14",
+            "P23"
+          ]
+        },
+        {
+          "text": "Someone who feels drained at the thought of attending would be open to a new service mainly if it visibly separates staff from their phones during patient contact.",
+          "passages": [
+            "P27"
+          ]
+        },
+        {
+          "text": "If a person has waited from early until late while caring for other children, they would weigh a new service by whether it reduces waiting and does not leave patients unattended at lunch.",
+          "passages": [
+            "P24",
+            "P25"
+          ]
+        }
+      ]
     }
   ],
   "claim_type": "qualitative",

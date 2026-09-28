@@ -113,6 +113,31 @@
             "when": "always",
             "note": "Words people use when reasoning this way. Reaches a prompt only with its claim."
           },
+          "readings": {
+            "type": "list",
+            "items": {
+              "type": "object",
+              "fields": {
+                "text": {
+                  "type": "string",
+                  "min_length": 1,
+                  "max_length": 400,
+                  "when": "always"
+                },
+                "passages": {
+                  "type": "list",
+                  "items": {
+                    "type": "string"
+                  },
+                  "min_items": 1,
+                  "when": "always"
+                }
+              }
+            },
+            "max_items": 4,
+            "when": "optional",
+            "note": "Different ways someone who does this might read a new offer (scripts/extract_readings.py): some more open, some less, each tied to its passages. One reading per claim hands a whole room the same angle; each persona takes the one that fits their own life. Never a purchase decision."
+          },
           "about": {
             "type": "string",
             "min_length": 1,
@@ -221,6 +246,18 @@
       },
       "when": "always",
       "note": "Who the card is for: clauses of persona facts; all facts in a clause must hold, any clause is enough. Facts and answers checked against model/persona.json."
+    },
+    "borrowed_when": {
+      "type": "list",
+      "items": {
+        "type": "object",
+        "values": {
+          "type": "list",
+          "min_items": 1
+        }
+      },
+      "when": "optional",
+      "note": "A close group the reasoning carries over to, beyond who was studied (applies_when): parents of the learners studied, say. They get the card marked as borrowed (borrowed_from says who spoke) and rank below direct fits. Clauses name at least two facts."
     }
   }
 }

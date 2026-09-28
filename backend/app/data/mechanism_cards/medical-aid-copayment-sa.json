@@ -33,6 +33,34 @@
       "vocabulary": [
         "co-payment",
         "threshold"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen the same medicine suddenly require a co-payment a month later would weigh any new charge with suspicion, but without a clear way to calculate it they may still accept it rather than question it.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "If someone has tried to get an explanation from the schemes offices and found them useless, they would approach a new charge expecting the explanation to be unhelpful and would be less likely to ask again.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who has heard explanations about thresholds and gaps but still does not understand them would weigh a new charge as just another part of a system they cannot follow, making them less likely to challenge it.",
+          "passages": [
+            "P6",
+            "P7"
+          ]
+        },
+        {
+          "text": "If someone is already upset because they are sick and just wants to get their medication and leave, they would weigh a new charge as something to pay quickly to avoid more upset, even if they do not understand it.",
+          "passages": [
+            "P11",
+            "P12"
+          ]
+        }
       ]
     },
     {
@@ -52,6 +80,32 @@
       "vocabulary": [
         "savings account",
         "day-to-day benefits"
+      ],
+      "readings": [
+        {
+          "text": "Someone who judges a purchase by whether it draws on remaining savings or triggers out-of-pocket payment would weigh a new product by whether it fits within the savings account balance before it runs out.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If a purchase is judged by whether it draws on remaining savings or triggers out-of-pocket payment, a new product would be weighed by whether it is covered under the day-to-day benefits funded from savings accounts.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "Someone who hardly experiences a co-payment because the scheme pays from a savings account would weigh a new product by whether it can be paid from that account rather than as an outstanding amount.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If day-to-day benefits are funded from savings accounts for the majority of schemes, a new product would be weighed by whether it falls under those savings-funded day-to-day benefits or under hospicentric specialist benefits.",
+          "passages": [
+            "P9"
+          ]
+        }
       ]
     },
     {
@@ -71,6 +125,32 @@
       "vocabulary": [
         "preferred pharmacy",
         "corporate pharmacies"
+      ],
+      "readings": [
+        {
+          "text": "Someone who only co-pays at big corporate pharmacies because their medical scheme prefers them would weigh a new pharmacy option by whether their scheme designates it, not by its co-pay amount.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If a person assumes corporate pharmacies will always have the prescription, they would be less open to a new service that relies on small pharmacies with limited stock capabilities.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "Someone who fears a small pharmacy will give an alternative medicine not prescribed by the doctor would weigh a new option mainly on whether it guarantees the exact prescribed medicine.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "If a person was told by their scheme to go to big corporate pharmacies, they might still consider a new option if it is presented as scheme-designated, even if they currently co-pay there.",
+          "passages": [
+            "P13"
+          ]
+        }
       ]
     },
     {
@@ -90,6 +170,32 @@
       "vocabulary": [
         "generics",
         "originators"
+      ],
+      "readings": [
+        {
+          "text": "Someone who questions whether generics are inferior or weak would weigh a new product by first asking whether it is of the same quality as originators, not by assuming it is equivalent.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who thinks generics take much longer to work would weigh a new product by expecting it to be slower to show results than an originator, even if it is presented as the same thing.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who assumes a generic is made by tweaking the process of developing the medicine would weigh a new product by wondering what reactants were used and whether there are impurities, rather than trusting that it is identical.",
+          "passages": [
+            "P16"
+          ]
+        },
+        {
+          "text": "If someone assumes the doctor knows about possible impurities, they would weigh a new product by deferring to a doctor's judgement about whether it is safe or pure enough, rather than deciding on their own.",
+          "passages": [
+            "P16"
+          ]
+        }
       ]
     },
     {
@@ -109,6 +215,32 @@
       "vocabulary": [
         "second opinion",
         "my pharmacy"
+      ],
+      "readings": [
+        {
+          "text": "Someone who relies on their pharmacy for a second opinion because doctors are guessing sometimes would weigh a new service by whether it preserves that pharmacist's role as a caring, reliable advisor.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "If a pharmacist's established relationship decides the purchase, a new product would be weighed by how easily the familiar pharmacist can explain and stand behind it.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "Someone who travels to their old pharmacy because they care about you and discuss stuff with them would be cautious about a new option that might bypass that relationship.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "If the pharmacist's recommendation decides the purchase, a new policy would be weighed by whether it still lets the pharmacist give a second opinion when the doctor seems to be guessing.",
+          "passages": [
+            "P20"
+          ]
+        }
       ]
     }
   ],

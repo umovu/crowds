@@ -42,6 +42,32 @@
       "vocabulary": [
         "deal with it as it comes",
         "the rich will always be able to dispose of their waste"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen collection go from weekly to now and again would judge a new service by whether it restores a predictable weekly rhythm, not by whether it adds extra bins or once-off cleanups.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If you have enough black bins to tide you over for a second, third or fourth week, you would weigh a new service mainly on whether it makes your stored waste someone else's problem sooner rather than later.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "Someone who already hires a private collector would be less open to a new municipal service unless it proves it can match the reliability of the truck they pay for themselves.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "If you believe the municipality starts with rich areas because they are seen as more consistent rate payers, you would judge any new service by whether it visibly reaches your area at the same time as the suburbs, not by whether it exists on paper.",
+          "passages": [
+            "P17"
+          ]
+        }
       ]
     },
     {
@@ -72,6 +98,33 @@
       "vocabulary": [
         "no safe spaces",
         "dumping sites"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has no safe spaces to burn and no bins to use would weigh any new product against whether it removes the need to find a place for waste at all, since both burning and dumping are already blocked.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "If burning feels preferable to dumping but is still time-consuming and unsafe, a new product would be read for whether it makes disposal quicker and safer than walking out alone into the veldt.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "Someone who sees filth as normal and says the community no longer sees it would be slower to notice a new product's benefit, because the product would be judged against a landscape where rubbish is already a daily occurrence.",
+          "passages": [
+            "P16"
+          ]
+        },
+        {
+          "text": "If people already fall back on dumping at collection points or in the veldt when bins are filthy or absent, a new product would be weighed by whether it can work without relying on municipal collection or containers.",
+          "passages": [
+            "P19",
+            "P10"
+          ]
+        }
       ]
     },
     {
@@ -92,6 +145,28 @@
       "vocabulary": [
         "corrupt administration",
         "morally bankrupt municipality"
+      ],
+      "readings": [
+        {
+          "text": "If residents blame a corrupt, morally bankrupt administration and expect continued failure, they would approach any new product as a symptom of that corruption rather than a credible fix, and would look for signs that it serves the administration rather than them.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who sees unpaid salaries and internal grievances as the reason workers do not pitch would weigh any new product by asking whether it addresses those internal grievances, and would dismiss it if it only deals with the visible service failure.",
+          "passages": [
+            "P5",
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who says workers are not fundamentally responsible would be open to a new product only if it clearly separates the workers' role from the administration's failures, and would reject it if it blames workers or ignores the administration.",
+          "passages": [
+            "P6",
+            "P5"
+          ]
+        }
       ]
     },
     {
@@ -121,6 +196,34 @@
       "vocabulary": [
         "living in filth",
         "don't care anymore"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says the community no longer sees filth because we are living in filth would weigh any new product against whether it can be used without first having to collect and pick up scattered rubbish.",
+          "passages": [
+            "P16",
+            "P11"
+          ]
+        },
+        {
+          "text": "If you have long been suffering when it comes to rubbish and say community members don't care anymore, you would judge a new product mainly by whether it works even where there are no containers and the municipality does not collect.",
+          "passages": [
+            "P15"
+          ]
+        },
+        {
+          "text": "Someone who worries that children playing in the street could get into medical waste would be more open to a new product only if it reduces the health risk from filth that has become normal.",
+          "passages": [
+            "P14",
+            "P16"
+          ]
+        },
+        {
+          "text": "If you see rubbish strewn all over because donkeys and cows get to it before the van comes around, you would be sceptical of a new product that assumes waste stays where it is put.",
+          "passages": [
+            "P11"
+          ]
+        }
       ]
     },
     {
@@ -148,6 +251,32 @@
       "vocabulary": [
         "prioritising",
         "rate payers"
+      ],
+      "readings": [
+        {
+          "text": "If someone sees the municipality starting with rich areas because ratepayers there are seen as more consistent, they would weigh a new service by whether it is offered first to those same areas or reaches them at the same time.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "Someone who argues that not everybody in the location is on Sbonelelo and that they are also ratepayers would weigh a new service by whether it treats their bought houses as deserving of the same priority as the suburbs.",
+          "passages": [
+            "P17"
+          ]
+        },
+        {
+          "text": "If someone stresses that problems are all the same and that everyone drives on the same roads with potholes, they would weigh a new service by whether it is designed around shared problems rather than separate areas.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "Someone who lacks sufficient or secure space to store waste during collection droughts would weigh a new service by whether it shortens the gap between collections, because otherwise they are left with dumping or burning their household waste.",
+          "passages": [
+            "P19"
+          ]
+        }
       ]
     }
   ],

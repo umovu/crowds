@@ -1,8 +1,7 @@
 {
   "id": "stokvels-calibration",
-  "subject": "saving with other people in a group to afford something one person could not",
   "citation": [
-    "Matuku & Kaseke (2014), 'The role of stokvels in improving people's lives: Orange Farm, Johannesburg', Social Work/Maatskaplike Werk"
+    "Matuku S, Kaseke E (2014). The role of stokvels in improving people's lives: the case in Orange Farm, Johannesburg, South Africa. Social Work/Maatskaplike Werk 50(4)."
   ],
   "segment_tags": [
     "grant_dependent_survivor",
@@ -11,6 +10,240 @@
     "informal_trader",
     "small_business_owner",
     "unemployed_youth"
+  ],
+  "claims": [
+    {
+      "text": "Income security is the binding constraint: saving through a group smooths consumption and widens access to goods and services that would otherwise be out of reach",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "evaluative_rules": [
+        "Judge a scheme by whether it smooths consumption and widens access to goods and services"
+      ],
+      "objections": [
+        "Will this help me smooth consumption and widen my access to goods and services?"
+      ],
+      "vocabulary": [
+        "income security",
+        "access goods and services"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has struggled to buy enough food and Christmas clothes on one income would weigh a new savings product mainly by whether it makes December and January spending less frightening.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If a stokvel already helps cover groceries so a back pay can go to children's clothes and school fees, a new product would be judged against that same relief from competing December and January demands.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who sees stokvels as an innovative response to unemployment would be cautious about a new product that does not clearly widen access to goods and services that are ordinarily out of reach.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If income security is the binding constraint, a new product would be weighed by whether it smooths consumption as reliably as a group saving arrangement, not merely by whether it offers another place to put money.",
+          "passages": [
+            "P3"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Social-network testimony is the entry point: benefits are believed because neighbours and known people speak well of them, not because of institutional guarantees",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P4",
+        "P5"
+      ],
+      "evaluative_rules": [
+        "Trust benefits reported by neighbours and known people over institutional claims"
+      ],
+      "objections": [
+        "Do people I know and trust speak well of this?"
+      ],
+      "vocabulary": [
+        "joining fee",
+        "neighbours"
+      ],
+      "readings": [
+        {
+          "text": "Someone who joined because neighbours spoke glowingly about the benefits would weigh a new benefit mainly by what neighbours and known people say about it, not by institutional guarantees.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who saw people they knew in their uniforms and asked how to join would weigh a new benefit by whether they can see known people already taking part in it.",
+          "passages": [
+            "P4"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Mutual support is the response to unavoidable shocks: witnessing suffering at deaths makes collective saving for funerals feel necessary",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P6",
+        "P7",
+        "P14",
+        "P15"
+      ],
+      "evaluative_rules": [
+        "Judge a scheme by whether it supports mutual assistance when shocks hit"
+      ],
+      "objections": [
+        "Will this help us help each other when death or another shock strikes?"
+      ],
+      "vocabulary": [
+        "mutual support",
+        "help each other"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen people suffer at deaths would weigh any new funeral support product by whether it makes collective saving feel as necessary as the group they started.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If mutual support for unavoidable shocks is what motivated them to join a stokvel, they would be less open to a new product that shifts the burden back to an individual household.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who phones members and arranges cooking for funerals would be open to a new product only if it fits the existing rhythm of coming together on Friday or early Saturday.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "If they already have pots, basins, tables, chairs and gas stoves for helping each other, they would weigh a new product by whether it adds to that shared equipment rather than replacing it.",
+          "passages": [
+            "P15"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Payouts are earmarked for planned purchases and building assets: a lump sum makes bulk buying, saving and investing possible, and for women members it means less dependence on men.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13"
+      ],
+      "evaluative_rules": [
+        "Judge a scheme by whether it supports saving, investment and independence from male dependence"
+      ],
+      "objections": [
+        "Will this help me save, invest and stand up for myself?"
+      ],
+      "vocabulary": [
+        "save money",
+        "stand up for yourself"
+      ],
+      "readings": [
+        {
+          "text": "If a payout lets someone buy bigger items like furniture and pay school fees, they would look at a new offer for how it supports planned, larger expenses rather than small daily spending.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "Someone who uses a payout to stock up on food, soap and washing powder would weigh a new offer by whether it helps them keep that household supply steady.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If a payout is used to buy building materials like windows, frames and tiling, they would judge a new offer by whether it helps them set aside money for building assets.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "Someone who says you must stand up for yourself and save every month would look at a new offer for whether it supports saving and less dependence on men.",
+          "passages": [
+            "P11",
+            "P13"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Trust and honesty are the survival conditions: members lend only to trusted known people and exit when contributions and groceries do not balance",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a scheme by trust, honesty and transparent value-for-money expectations"
+      ],
+      "objections": [
+        "Can I trust the people behind this, and will the value match what I put in?"
+      ],
+      "vocabulary": [
+        "trust",
+        "honesty"
+      ],
+      "readings": [
+        {
+          "text": "Someone who values honesty and understanding as the basis of survival would weigh a new service by whether it makes every contribution and payout transparent and easy to verify.",
+          "passages": [
+            "P19"
+          ]
+        },
+        {
+          "text": "If the group has already quit one scheme because the groceries did not match the money contributed, they would be cautious of any new offer and would first check how it guarantees a balance between what is put in and what comes out.",
+          "passages": [
+            "P20"
+          ]
+        },
+        {
+          "text": "Someone who lends only to trusted, known people would be more open to a new product if it helps them verify where other members live before any money changes hands.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "If members enjoy sharing ideas and are already looking for information on how to start a cooperative, they would weigh a new policy by whether it supports them in learning and planning together rather than replacing their own discussions.",
+          "passages": [
+            "P17"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Orange Farm, Johannesburg, South Africa",
+  "year_range": null,
+  "confidence": "One qualitative South African study: interviews with stokvel members in Orange Farm, a low-income Johannesburg township, most of them women. Mechanisms durable; magnitudes and prevalence unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
   ],
   "topic_tags": [
     "stokvel",
@@ -22,8 +255,33 @@
     "saving",
     "savings"
   ],
+  "subject": "saving together in a stokvel: trusting members, lump-sum payouts for planned buys, funerals and getting by",
+  "year_note": "Published 2014; fieldwork dates not stated.",
   "applies_when": [
     {
+      "geotype": [
+        "Urban"
+      ],
+      "lived_poverty": [
+        "moderate",
+        "high"
+      ]
+    }
+  ],
+  "borrowed_when": [
+    {
+      "geotype": [
+        "Urban"
+      ],
+      "lived_poverty": [
+        "low"
+      ]
+    },
+    {
+      "geotype": [
+        "Traditional",
+        "Farms"
+      ],
       "lived_poverty": [
         "low",
         "moderate",
@@ -31,96 +289,5 @@
       ]
     }
   ],
-  "economic_tags": [
-    "tight",
-    "moderate"
-  ],
-  "claims": [
-    {
-      "text": "A stokvel works because it separates grocery money from other claims on irregular income, creating a disciplined buffer that smooths consumption across the year.",
-      "needs": [],
-      "chain_id": "C1",
-      "passages": [
-        "P1",
-        "P2"
-      ],
-      "objections": [
-        "Will the groceries I get match the money I put in?"
-      ],
-      "vocabulary": [
-        "groceries"
-      ]
-    },
-    {
-      "text": "A burial society works because witnessing neighbours' funeral hardship turns shared vulnerability into a pooled response of equipment, labour and presence.",
-      "needs": [],
-      "chain_id": "C2",
-      "passages": [
-        "P4",
-        "P13",
-        "P14"
-      ],
-      "objections": [],
-      "vocabulary": [
-        "big pots"
-      ]
-    },
-    {
-      "text": "A rotating savings scheme works because small regular contributions are locked away from daily temptation, converting them into a lump sum that buys assets or pays large bills.",
-      "needs": [],
-      "chain_id": "C3",
-      "passages": [
-        "P6",
-        "P7",
-        "P8",
-        "P9"
-      ],
-      "objections": [
-        "Can I trust these people with my contributions?"
-      ],
-      "vocabulary": [
-        "back pay"
-      ]
-    },
-    {
-      "text": "A stokvel works as a credit source because lending is confined mainly to a trusted circle, occasionally extending to trusted outsiders, where lender and borrower know each other's circumstances and social ties enforce repayment.",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P10",
-        "P15",
-        "P16",
-        "P17"
-      ],
-      "objections": [
-        "Do I know where the borrowers live?"
-      ],
-      "vocabulary": [
-        "interest"
-      ]
-    },
-    {
-      "text": "A stokvel spreads because visible uniforms and personal networks signal an accessible, socially endorsed institution with clear entry rules.",
-      "needs": [],
-      "chain_id": "C5",
-      "passages": [
-        "P3"
-      ],
-      "objections": [
-        "How do I join and what does it cost to enter?"
-      ],
-      "vocabulary": [
-        "joining fee",
-        "uniforms"
-      ]
-    }
-  ],
-  "claim_type": "qualitative",
-  "region": "Orange Farm, Johannesburg",
-  "year_range": null,
-  "confidence": "qualitative case study, single township, fieldwork date not specified — mechanisms transferable, magnitudes unknown",
-  "comb_gaps": [
-    "capability",
-    "opportunity"
-  ]
+  "borrowed_from": "Stokvel members in Orange Farm, a low-income Johannesburg township, most of them women. How a stokvel works (trusted members, payouts for planned buys, funeral cover) carries over to members elsewhere and better off."
 }

@@ -1,14 +1,247 @@
 {
   "id": "education-payment-conversion",
-  "subject": "paying school fees, and deciding whether a fee-charging school is worth it",
   "citation": [
-    "The performance of low-fee independent schools in South Africa (RESEP, Stellenbosch)",
-    "Parental demographics and school choice decision-making, Western Gauteng (SciELO SA)",
-    "Factors affecting parents' choice of schools for Grade 1 learners (ERIC)"
+    "Venketsamy R et al. (2021). Factors affecting parents' choice of schools for Grade 1 learners. South African Journal of Childhood Education 11(1)."
   ],
   "segment_tags": [
     "guardian_parent",
     "grant_dependent_survivor"
+  ],
+  "claims": [
+    {
+      "text": "Zoning policy is read as a constraint on choice: when the zoned school is poor quality, the policy is experienced as forcing placement, so the parent either keeps the child there or moves further out.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P4"
+      ],
+      "evaluative_rules": [
+        "Judge a school by whether the zone gives you a real choice, not by the policy's promise of placement"
+      ],
+      "objections": [
+        "Does this school actually give me a choice, or am I being forced into it by the zone?"
+      ],
+      "vocabulary": [
+        "zoning story",
+        "forced"
+      ],
+      "readings": [
+        {
+          "text": "Someone who felt almost forced to place a child in the zoned school would weigh any new policy by whether it loosens the zone boundary enough to make other schools possible.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If moving further out was the only way to escape a poor quality zoned school, a new policy would be judged by whether it removes the need to relocate for a better option.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who keeps a child in the zoned school because other schools are too far away would look at a new policy mainly for whether it brings a better school within reach of home.",
+          "passages": [
+            "P4"
+          ]
+        },
+        {
+          "text": "If the zoned school is poor quality and other schools refuse to take the child, a new policy would be read as meaningful only if it changes which school the zone assigns.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Quality education outweighs proximity: when a school is poor quality or too far, the parent removes the child or seeks another school because quality education is the key criterion for judging a school.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P3",
+        "P5",
+        "P19",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a school by quality education, not by how close it is"
+      ],
+      "objections": [
+        "Is my child actually getting quality education here, or should I take her out?"
+      ],
+      "vocabulary": [
+        "quality education",
+        "exit"
+      ],
+      "readings": [
+        {
+          "text": "Someone who removed a child because the distance was too much effort would weigh a new school first by whether it is closer to home.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If a parent could not keep a child where there is no quality education, they would judge a new school mainly by whether it provides quality education.",
+          "passages": [
+            "P5"
+          ]
+        },
+        {
+          "text": "Someone who enquires and seeks out a school that provides quality education would weigh a new school by how clearly it offers quality education.",
+          "passages": [
+            "P19"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Strong learner-teacher and parent-teacher relationships indicate a good school: teacher passion, feedback quality, and the relationship between parent and teacher drive the decision to choose or keep the child in the school.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "evaluative_rules": [
+        "Judge a school by the quality of the learner-teacher and parent-teacher relationship"
+      ],
+      "objections": [
+        "What kind of feedback does the teacher give, and how does she handle it?"
+      ],
+      "vocabulary": [
+        "passionate about teaching",
+        "feedback"
+      ],
+      "readings": [
+        {
+          "text": "Someone who values the relationship between parent and teacher would weigh a new school policy by how clearly it creates regular one-on-one feedback moments, since they already judge the quality of feedback when they go for reports.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "If a parent sees that a teacher is passionate and the child is excited about learning, they would be cautious about any new school change that might disrupt that existing teacher-child bond.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "Someone who knows the child is with the teacher for the whole day would be open to a new school approach only if it strengthens the parent-teacher relationship in the Foundation Phase, not if it makes meeting the teacher rarer.",
+          "passages": [
+            "P8"
+          ]
+        },
+        {
+          "text": "If a parent monitors how a teacher handles negative feedback, they would weigh a new school policy by whether it gives them more chances to see how the teacher responds when feedback is not positive.",
+          "passages": [
+            "P7"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Reputation and accessible information determine school suitability: when a parent lacks direct knowledge, facilities, history, student mix, and what other parents say become the basis for choosing a school.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P9",
+        "P10",
+        "P11"
+      ],
+      "evaluative_rules": [
+        "Judge a school by its facilities, history, student mix, and what other parents say"
+      ],
+      "objections": [
+        "What do other parents say about this school, and what facilities and student mix does it have?"
+      ],
+      "vocabulary": [
+        "referral",
+        "mix of students"
+      ],
+      "readings": [
+        {
+          "text": "Someone who relies on what colleagues say about a school would weigh a new school information service by whether it includes the same kind of word-of-mouth reputation they already use.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "If a parent judges a school by its facilities, how long it has existed, and the mix of students, they would weigh a new school information service by whether it shows those same details.",
+          "passages": [
+            "P10"
+          ]
+        },
+        {
+          "text": "Someone who had no information and no referral would weigh a new school information service by whether it gives them enough information on a school when they search and call.",
+          "passages": [
+            "P11"
+          ]
+        },
+        {
+          "text": "If a parent lacks direct knowledge and has not heard about a school, they would weigh a new school information service by whether it makes a school visible without needing a referral.",
+          "passages": [
+            "P9",
+            "P11"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Child safety and fair treatment outweigh staying in a school: when a parent perceives discipline, safety, or bullying problems, the parent exits or avoids the school because safety and fair treatment come first.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P12",
+        "P13"
+      ],
+      "evaluative_rules": [
+        "Judge a school by whether the child is safe and treated fairly, not by its reputation alone"
+      ],
+      "objections": [
+        "Is my child safe here, and how will the teachers treat him if I complain?"
+      ],
+      "vocabulary": [
+        "safety issue",
+        "protecting him"
+      ],
+      "readings": [
+        {
+          "text": "Someone who has seen a school lose its reputation over discipline and safety would weigh a new school policy mainly by whether it separates small children from bigger ones and supervises breaks.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If a parent has already moved a child because voicing dissatisfaction could lead to unfair treatment, they would be cautious about any new school initiative that asks parents to raise concerns directly.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "Someone who left a school because teachers told children to defend themselves would be more open to a new approach that promises adult supervision and protection instead of expecting children to handle bullying alone.",
+          "passages": [
+            "P13"
+          ]
+        },
+        {
+          "text": "If a parent is now free to look at other schools because they no longer have to use the online system, they would weigh any new school offering against the safety and discipline record they hear from other parents.",
+          "passages": [
+            "P12"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Gauteng, South Africa",
+  "year_range": null,
+  "confidence": "One qualitative South African study: individual and focus-group interviews with 10 parents (5 mothers, 5 fathers) of Grade 1 children at an ex-model C school in Gauteng. Mechanisms durable; magnitudes unknown.",
+  "comb_gaps": [
+    "capability",
+    "opportunity"
   ],
   "topic_tags": [
     "school",
@@ -19,109 +252,43 @@
     "tuition",
     "private school"
   ],
+  "subject": "choosing a school and deciding whether a fee-charging school is worth it: quality, teachers, reputation, safety and zoning",
+  "year_note": "Published 2021.",
   "applies_when": [
     {
       "ghs_role": [
         "guardian_parent",
         "gogo_guardian"
+      ],
+      "learner_fee_bands": [
+        "R1–R100 per year",
+        "R101–R200 per year",
+        "R201–R300 per year",
+        "R301–R500 per year",
+        "R501–R1 000 per year",
+        "R1 001–R2 000 per year",
+        "R2 001–R3 000 per year",
+        "R3 001–R4 000 per year",
+        "R4 001–R8 000 per year",
+        "R8 001–R12 000 per year",
+        "R12 001–R16 000 per year",
+        "R16 001–R20 000 per year",
+        "R20 001–R40 000 per year",
+        "R40 001–R80 000 per year",
+        "More than R80 000 per year"
       ]
     }
   ],
-  "claims": [
+  "borrowed_when": [
     {
-      "text": "Perceived quality gaps in public schooling trigger migration to a limited functional sub-system, because parents evaluate schools by academic outcomes rather than proximity or default assignment.",
-      "needs": [],
-      "chain_id": "C1",
-      "passages": [
-        "P2",
-        "P4",
-        "P6",
-        "P14",
-        "P15"
+      "ghs_role": [
+        "guardian_parent",
+        "gogo_guardian"
       ],
-      "objections": [],
-      "vocabulary": [
-        "migration of learners",
-        "limited functional sub-system",
-        "quality education"
+      "learner_fee_bands": [
+        "No fees"
       ]
-    },
-    {
-      "text": "Financial and informational scarcity converts zoning policy into a forced constraint, because affordability and local access override all other school attributes.",
-      "needs": [],
-      "chain_id": "C2",
-      "passages": [
-        "P3",
-        "P8",
-        "P11",
-        "P16",
-        "P17",
-        "P20"
-      ],
-      "objections": [
-        "Is this school in my zone, or will I be forced to accept it?",
-        "Can I afford the transport and fees, or is proximity my only real filter?"
-      ],
-      "vocabulary": [
-        "zoning story"
-      ]
-    },
-    {
-      "text": "Higher parental education transforms school choice into an active marketplace search, because informed criteria like learner-teacher ratios and teacher passion become the filters for decision-making.",
-      "needs": [],
-      "chain_id": "C3",
-      "passages": [
-        "P9",
-        "P12",
-        "P13",
-        "P22",
-        "P25",
-        "P26",
-        "P28",
-        "P29",
-        "P33"
-      ],
-      "objections": [
-        "How do I find out about teacher quality and the curriculum before I enrol?"
-      ],
-      "vocabulary": [
-        "learner-teacher ratios"
-      ]
-    },
-    {
-      "text": "Perceived threats to safety and discipline turn schools into risk environments, because parental vigilance and willingness to exit become the primary safeguards for the child.",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P30",
-        "P31"
-      ],
-      "objections": [
-        "What do other parents say about discipline and safety here?"
-      ],
-      "vocabulary": [
-        "disciplinary issue"
-      ]
-    },
-    {
-      "text": "When traditional norms lose relevance, choice becomes preference-driven, because parents formulate new ideal-school aspirations and make trade-offs in pursuit of perceived quality.",
-      "needs": [],
-      "chain_id": "C5",
-      "passages": [
-        "P1",
-        "P5",
-        "P14"
-      ],
-      "objections": [],
-      "vocabulary": []
     }
   ],
-  "claim_type": "qualitative",
-  "region": "Western Gauteng and Centurion area",
-  "year_range": null,
-  "confidence": "Multi-source qualitative synthesis drawing on author-interpretation and participant voice; single-province fieldwork with small samples — mechanisms are robust within the studied contexts, but magnitudes and national prevalence are unknown.",
-  "comb_gaps": [
-    "capability",
-    "opportunity"
-  ]
+  "borrowed_from": "Parents at a fee-paying ex-model C school in Gauteng. Parents at no-fee schools weigh the same things (quality, teachers, safety, zoning) when they look at a better school."
 }

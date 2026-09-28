@@ -160,7 +160,8 @@ def _wire_llm():
                 os.environ[f"AGENTSOCIETY_{tier}_{key}"] = os.environ.get(f"AGENTSOCIETY_LLM_{key}", "")
 
 
-def run(label: str, segment: str = "everyone", seeds: int = len(SEEDS)) -> dict:
+def run(label: str, segment: str = "everyone", seeds: int = len(SEEDS),
+        pitches: list | None = None) -> dict:
     sys.path.insert(0, BACKEND)
     os.chdir(BACKEND)
     _wire_llm()
@@ -171,6 +172,8 @@ def run(label: str, segment: str = "everyone", seeds: int = len(SEEDS)) -> dict:
 
     rooms = []
     for name, pitch in PITCHES.items():
+        if pitches and name not in pitches:
+            continue
         for seed in [101 * (i + 1) for i in range(seeds)]:
             meta = ps.create_session(pitch=pitch, mode="panel", n=ROOM, seed=seed,
                                      segments=[segment], user_id="sameness-benchmark")
@@ -234,12 +237,14 @@ def main() -> int:
     r.add_argument("--label", required=True)
     r.add_argument("--segment", default="everyone", help="panel segment every room is drawn from")
     r.add_argument("--seeds", type=int, default=len(SEEDS), help="rooms per pitch")
+    r.add_argument("--pitches", default="", help="comma-separated pitch names; all when empty")
     c = sub.add_parser("compare")
     c.add_argument("a")
     c.add_argument("b")
     args = ap.parse_args()
     if args.cmd == "run":
-        out = run(args.label, args.segment, args.seeds)
+        out = run(args.label, args.segment, args.seeds,
+                  [p for p in args.pitches.split(",") if p] or None)
         print("\nSUMMARY (mean, 95% interval across rooms)")
         for key, s in out["summary"].items():
             print(f"  {key:<14} {s['mean']:.3f} ± {s['ci'] or 0:.3f}")

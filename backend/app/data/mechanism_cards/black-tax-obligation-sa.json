@@ -46,6 +46,36 @@
         "extended family",
         "relatives",
         "send money"
+      ],
+      "readings": [
+        {
+          "text": "Someone who feels guilt rather than a stated obligation would weigh a new product or policy by whether it lets them keep giving to family even when it is not required.",
+          "passages": [
+            "P4",
+            "P5"
+          ]
+        },
+        {
+          "text": "If the family endured hardship to get one where one is, a new product or policy is read through whether it relieves family need before anything else.",
+          "passages": [
+            "P10",
+            "P12"
+          ]
+        },
+        {
+          "text": "Someone who says you cannot be prosperous while your family suffers would be less open to a new product or policy that seems to put investing ahead of family need.",
+          "passages": [
+            "P12",
+            "P13"
+          ]
+        },
+        {
+          "text": "If giving to family continues even when it is not required, a new product or policy would be weighed by whether it makes that giving easier or harder to sustain.",
+          "passages": [
+            "P5",
+            "P7"
+          ]
+        }
       ]
     },
     {
@@ -85,6 +115,32 @@
         "entertainment",
         "streaming",
         "new car"
+      ],
+      "readings": [
+        {
+          "text": "Someone who cannot be comfortable while a sister is in need would treat a new product or policy as suspect if it seems to fund personal ease before family obligations.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If you feel obliged to intervene because relatives would otherwise not have food, you would weigh a new product or policy by whether it leaves your family support intact before considering any benefit to yourself.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who asks what the point of investing is while someone is sleeping hungry would be open to a new product or policy only if it does not divert resources away from immediate family needs.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If you cannot be seen going on holiday while siblings cannot afford school fees, you would judge a new product or policy harshly if it makes your own comfort visible while family lacks basics.",
+          "passages": [
+            "P14"
+          ]
+        }
       ]
     },
     {
@@ -115,6 +171,33 @@
         "extended family",
         "relatives",
         "stokvel"
+      ],
+      "readings": [
+        {
+          "text": "Someone who sees support as a shared way of life rather than a tax would weigh a new product or policy by whether it strengthens the whole extended family setup, not by what it does for one person alone.",
+          "passages": [
+            "P17",
+            "P18"
+          ]
+        },
+        {
+          "text": "If contribution happens automatically and unspoken, a new product or policy would be judged by whether it fits into existing family rhythms without needing to be explained or reminded.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "Someone who says you cannot build a family on your own would be cautious of a new product or policy that seems to reward individual gain over the community getting better together.",
+          "passages": [
+            "P16"
+          ]
+        },
+        {
+          "text": "If support is done out of love and not obligation, a new product or policy would be weighed by whether it respects that voluntary spirit rather than turning family care into a formal duty.",
+          "passages": [
+            "P8"
+          ]
+        }
       ]
     },
     {
@@ -146,6 +229,33 @@
         "monthly",
         "per month",
         "a month"
+      ],
+      "readings": [
+        {
+          "text": "Someone who feels the arrangement is unfair yet inescapable would weigh a new product or policy by whether it eases the emotional burden of giving, not just the financial one.",
+          "passages": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "text": "If the arrangement is felt as unfair yet inescapable, a new product or policy would be met with ambivalence, weighed against whether it adds to the sense of being chained.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who gives despite resentment would weigh a new product or policy by whether it reduces the obligation to intervene so that others can have food.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "If giving continues despite resentment, a new product or policy would be weighed against whether it offers freedom from the chains that have been put on the person.",
+          "passages": [
+            "P2"
+          ]
+        }
       ]
     }
   ],
