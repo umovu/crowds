@@ -47,7 +47,10 @@ _MONTHLY_RE = re.compile(r"month|monthly|/\s*mo\b|\bp\.?m\.?\b", re.IGNORECASE)
 _INBOUND_MONEY_RE = re.compile(
     r"\b(loan|loans|grant|grants|subsidy|subsidised|subsidized|bursary|bursaries|"
     r"stipend|salary|salaries|wage|wages|payout|prize|funding|rebate|refund|"
-    r"credit|financing|compensation|pension)\b[^.]{0,40}$",
+    r"credit|financing|compensation|pension|"
+    # What the buyers earn is not a price: "earn between R7 500 and R30 000 a month"
+    # priced a R150 nurse visit at R30 000 and seated only the richest.
+    r"earn|earns|earning|earnings|income|incomes)\b[^.]{0,40}$",
     re.IGNORECASE,
 )
 

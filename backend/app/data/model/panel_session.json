@@ -191,6 +191,25 @@
       "min": 0,
       "when": "optional"
     },
+    "audience_facts": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "optional"
+    },
+    "audience_provinces": {
+      "type": "list",
+      "items": {
+        "type": "string"
+      },
+      "when": "optional"
+    },
+    "audience_pool_size": {
+      "type": "integer",
+      "min": 0,
+      "when": "optional"
+    },
     "pointer": {
       "type": "string",
       "when": "optional",
@@ -320,6 +339,10 @@
     [
       "attitude_filter",
       "attitude_pool_size"
+    ],
+    [
+      "audience_facts",
+      "audience_pool_size"
     ]
   ]
 }

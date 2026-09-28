@@ -4,8 +4,8 @@ Reads one plain sentence (what the user typed) and derives the structured
 study spec the chips approve: what's being tested, the mode, the audience,
 the price, and the probes to ask the panel.
 
-Pure string + keyword logic. No LLM, no I/O — every function is unit-testable
-with the model switched off. This is a structural pre-processing step, not a
+Pure string + keyword logic, and no I/O beyond counting the persona library for
+the audience. No LLM — every function is unit-testable with the model switched off. This is a structural pre-processing step, not a
 chat: nothing here authors identity or budget numbers (persona rule), it only
 labels what the sentence did or didn't say (confidence rule below).
 
@@ -17,6 +17,7 @@ assumed, or defaulted. Never a model's own certainty.
 import re
 
 from .mode_detector import detect as _detect_mode
+from . import audience_reader
 from . import panel_service
 
 # --- Price ---------------------------------------------------------------
@@ -205,7 +206,11 @@ def read_study(text: str, lens: str = "land") -> dict:
     text = (text or "").strip()
     mode_info = _detect_mode(text)
     mode = mode_info.get("mode", "product")
-    suggested = panel_service.suggest_segments(text, cap=2)
+    audience = audience_reader.read(text)
+    named = bool(audience["facts"] or audience["provinces"])
+    # A described audience IS the room (everyone who is all of it); group chips on
+    # top would re-split it by keyword, so they are only suggested when none is named.
+    suggested = [] if named else panel_service.suggest_segments(text, cap=2)
     probes = infer_probes(text, lens)
     return {
         "lens": lens,
@@ -220,7 +225,15 @@ def read_study(text: str, lens: str = "land") -> dict:
         "worry": _infer_worry(probes),
         "audience": {
             "segments": suggested,
-            "confidence": "strong-data" if suggested else "thin-data",
+            "confidence": "strong-data" if (suggested or named) else "thin-data",
+            "facts": audience["facts"],
+            "provinces": audience["provinces"],
+            "labels": audience_reader.labels(audience["facts"], audience["provinces"]),
+            "unmatched": audience["unmatched"],
+            "count": audience_reader.count(audience["facts"], audience["provinces"]) if named else None,
+            "members": audience_reader.members(audience["facts"], audience["provinces"]) if named else {},
+            # Which persona field each fact reads: facts on one field are "either".
+            "fields": {f: audience_reader.OPTIONS[f]["field"] for f in audience["facts"]},
         },
         "probes": probes,
     }

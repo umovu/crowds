@@ -18,6 +18,7 @@ def _typed_readers_off(monkeypatch):
     """
     monkeypatch.setenv("FUB_TYPED_SUBJECTS", "0")
     monkeypatch.setenv("FUB_TYPED_CARDS", "0")
+    monkeypatch.setenv("FUB_TYPED_AUDIENCE", "0")
 
 
 def _is_stub(module) -> bool:

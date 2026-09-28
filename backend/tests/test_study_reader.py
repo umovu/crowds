@@ -148,7 +148,10 @@ def test_read_study_product_with_price():
     assert spec["mode"] == "product"
     assert spec["price"] == "R50/month"
     assert spec["what"]
-    assert spec["audience"]["segments"]
+    # A described audience is read into facts (the room is everyone who is all of
+    # them), so the keyword group chips are no longer suggested on top.
+    assert spec["audience"]["facts"] == ["city", "working", "young"]
+    assert spec["audience"]["segments"] == []
     assert spec["audience"]["confidence"] == "strong-data"
     assert any(p["active"] for p in spec["probes"])
 
