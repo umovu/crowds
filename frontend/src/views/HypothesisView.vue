@@ -179,8 +179,9 @@ const load = async (refresh = false) => {
   error.value = ''
   try {
     const res = await getHypothesis(props.sessionId, refresh)
-    if (res.data?.success) report.value = res.data.data
-    else error.value = res.data?.error || 'The report could not be assembled.'
+    // The api layer already unwraps the body: res is {success, data}.
+    if (res.success) report.value = res.data
+    else error.value = res.error || 'The report could not be assembled.'
   } catch (e) {
     error.value = e?.response?.data?.error || 'The report could not be assembled. Try again.'
   } finally {
