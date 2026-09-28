@@ -232,3 +232,11 @@ def test_the_daily_search_is_asked_to_cover_health():
     import inspect
     from app.services import sa_context
     assert "public health" in inspect.getsource(sa_context._distil)
+
+
+def test_every_subject_the_pitch_touches_gets_a_slot_before_repeats():
+    block = LIVE.replace("- Crime costs", "- A single person needs about R11,000 a month for basic costs.\n"
+                                           "- People march over the rising cost of living.\n- Crime costs")
+    out = relevant_realities(block, DIABETES)
+    assert "insulin" in out
+    assert out.count("\n- ") == 3

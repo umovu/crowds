@@ -418,17 +418,28 @@ def relevant_realities(block: Optional[str], question: str, limit: int = 3) -> O
     wanted = _topics_in(question)
     if not wanted:
         return None
-    header, kept, footer, in_footer = [], [], [], False
+    header, matching, footer, in_footer = [], [], [], False
     for line in block.splitlines():
         if line.startswith("Sources searched"):
             in_footer = True
         if in_footer:
             footer.append(line)
         elif line.startswith("- "):
-            if len(kept) < limit and _claim_subject(line[2:]) in wanted:
-                kept.append(line)
-        elif not kept:
+            if _claim_subject(line[2:]) in wanted:
+                matching.append(line)
+        elif not matching:
             header.append(line)
+    # One claim per subject first, then the rest in order: three cost-of-living
+    # lines used to fill every slot and push out the clinic one a diabetes pitch
+    # is about.
+    first, seen = [], set()
+    for line in matching:
+        subject = _claim_subject(line[2:])
+        if subject not in seen:
+            seen.add(subject)
+            first.append(line)
+    picked = set((first + [l for l in matching if l not in first])[:limit])
+    kept = [l for l in matching if l in picked]
     if not kept:
         return None
     out = "\n".join(header + kept)
