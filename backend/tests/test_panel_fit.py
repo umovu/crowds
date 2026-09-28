@@ -386,7 +386,7 @@ def test_who_plus_thinks_intersects_instead_of_unioning(tmp_path):
     assert meta["attitude_filter"] == {"pays_for_quality": ["yes"]}
     # ...but the label still names the room the operator actually asked for.
     assert meta["picked_segments"] == ["guardians", "pays_for_quality"]
-    assert "Will pay more for better" in meta["segment_label"]
+    assert "Pay more for better" in meta["segment_label"]
 
 
 def test_two_attitudes_on_one_dimension_read_as_either(tmp_path):

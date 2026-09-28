@@ -37,7 +37,8 @@
           "environment",
           "food",
           "government",
-          "safety"
+          "safety",
+          "home"
         ]
       },
       "min_items": 1,

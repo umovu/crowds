@@ -891,6 +891,8 @@ const TOPIC_WORDS = {
   environment: ['environment', 'waste', 'recycl', 'biodigester', 'compost', 'solar', 'water', 'pollution', 'energy', 'green', 'climate'],
   food: ['farm', 'crop', 'livestock', 'maize', 'harvest', 'garden', 'food', 'agri'],
   safety: ['crime', 'safety', 'security', 'theft', 'police', 'alarm'],
+  // Substring match, so no bare 'rent' (parent) or 'car' (care).
+  home: ['rental', 'renting', 'landlord', 'tenant', 'home loan', 'bond ', ' car ', 'cars', 'vehicle', 'petrol', 'fuel', 'commute'],
   government: ['municipal', 'government', 'policy', 'sassa', 'department', 'permit', 'licence', 'grant'],
   money: ['loan', 'savings', 'bank', 'insurance', 'salary', 'price', 'subscription', 'payment'],
 }
@@ -908,7 +910,7 @@ const suggestedTopic = computed(() => {
 })
 
 // Which topics are expanded. Everything starts collapsed so the picker opens as
-// eight readable rows instead of thirty-three cards.
+// nine readable rows instead of forty-odd cards.
 const openTopics = ref(new Set())
 const toggleTopic = (id) => {
   const next = new Set(openTopics.value)
@@ -1390,6 +1392,7 @@ const topics = ref([
   { id: 'food', label: 'Food & farming', description: 'Growing, selling and buying food' },
   { id: 'government', label: 'Government & services', description: 'Anything official, or delivered by the state' },
   { id: 'safety', label: 'Crime & safety', description: 'Security products, policing, safety policy' },
+  { id: 'home', label: 'Home & transport', description: 'Renting, owning, home loans, cars and getting around' },
 ])
 
 // Real library segments with live counts come from /api/panel/segments on mount.
@@ -1397,14 +1400,14 @@ const topics = ref([
 // empty before the fetch resolves or if it fails.
 const segments = ref([
   { id: 'everyone', label: 'Everyone', count: 0, description: 'Full mixed population' },
-  { id: 'employed', label: 'Employed', count: 0, description: 'Formal and informal employment' },
-  { id: 'unemployed', label: 'Unemployed', count: 0, description: 'Seeking work' },
-  { id: 'youth', label: 'Youth', count: 0, description: 'Aged under 35' },
-  { id: 'small_business', label: 'Small business', count: 0, description: 'Spaza, tuck shops, traders' },
-  { id: 'informal_traders', label: 'Informal traders', count: 0, description: 'Street vendors, market sellers' },
-  { id: 'grant_recipients', label: 'Grant recipients', count: 0, description: 'SASSA grant holders' },
-  { id: 'learners', label: 'Learners', count: 0, description: 'School learners' },
-  { id: 'guardians', label: 'Guardians', count: 0, description: 'Parents and caregivers' },
+  { id: 'employed', label: 'Working', count: 0, description: 'Have a job, formal or informal' },
+  { id: 'unemployed', label: 'Out of work', count: 0, description: 'Unemployed, including people who have given up looking' },
+  { id: 'youth', label: 'Young people (15-34)', count: 0, description: 'Aged 15 to 34, working or not' },
+  { id: 'small_business', label: 'Small business owners', count: 0, description: 'Run a registered small business' },
+  { id: 'informal_traders', label: 'Street and spaza traders', count: 0, description: 'Sell from a stall, a spaza shop or the street' },
+  { id: 'grant_recipients', label: 'Living on a grant', count: 0, description: 'Households that live mainly on a SASSA grant' },
+  { id: 'learners', label: 'High-school learners (15-18)', count: 0, description: 'At school, aged 15 to 18' },
+  { id: 'guardians', label: 'Parents of school kids', count: 0, description: 'Adults raising children who are at school' },
 ])
 
 const loadSegments = async () => {
