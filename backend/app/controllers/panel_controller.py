@@ -78,6 +78,22 @@ def suggest_segments():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@panel_bp.route('/search-plan', methods=['GET'])
+def search_plan():
+    """What a round will search the web for (?pitch=...), before it searches.
+
+    Returns {"place", "queries"} — or {"place": null} when the pitch names no
+    South African place, in which case nothing local is searched."""
+    try:
+        from ..services import query_context
+        plan = query_context.search_plan(request.args.get('pitch', ''))
+        if not plan:
+            return _ok({"place": None, "queries": []})
+        return _ok({"place": plan["place"]["label"], "queries": plan["queries"]})
+    except Exception as e:  # noqa: BLE001
+        return _server_error(e, "Could not work out what to search.")
+
+
 @panel_bp.route('/segments', methods=['GET'])
 def list_segments():
     """Named library slices ("Unemployed", "Grant recipients", …) with live counts —

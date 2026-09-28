@@ -124,7 +124,7 @@ class InterviewService:
             # research_context / research_citations are the mechanism cards bound at
             # cast build. The receipt renders them, but they were never passed through,
             # so every panel persona showed "No mechanism card bound" while carrying two.
-            for key in ("library_id", "province", "age", "gender", "persona",
+            for key in ("library_id", "province", "age", "gender", "race", "persona",
                         "budget_tier", "is_grant_dependent", "grant_type",
                         "monthly_income_rand", "monthly_household_income_rand",
                         "income_provenance",
@@ -447,6 +447,7 @@ class InterviewService:
         question: str,
         agent_ids: Optional[List[int]] = None,
         concurrency: int = 1,
+        local_block: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Batch impact-extraction interview with auto-reframing per agent.
 
@@ -458,6 +459,8 @@ class InterviewService:
             agent_ids: Specific agent IDs, or None for all agents.
             concurrency: Max simultaneous interviews (1 = sequential, the
                 post-sim default; panel pitches pass higher for speed).
+            local_block: A NEAR YOU block searched once for this round, added
+                to every agent's prompt (panels only).
 
         Returns:
             Batch result with reframed questions, impact metadata, and aggregate stats.
@@ -489,6 +492,7 @@ class InterviewService:
                     reframed = reframer.reframe(
                         question, profile, mode=self.mode,
                         secondary_lens=self.secondary_lens if self.converged else None,
+                        local_block=local_block,
                     )
                     archetype = reframer.detect_archetype(question)
 

@@ -13,6 +13,11 @@ export const suggestSegments = (pitch) =>
 export const readStudy = (payload) =>
   service.post('/api/panel/read', payload)
 
+// What a round will search the web for, before it searches: the place the pitch
+// names and the exact queries. {place: null} when no SA place is named.
+export const getSearchPlan = (pitch) =>
+  service.get('/api/panel/search-plan', { params: { pitch } })
+
 export const createSession = (payload) =>
   service.post('/api/panel/sessions', payload)
 

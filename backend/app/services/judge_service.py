@@ -234,7 +234,7 @@ REQUIRED:
         return self.judge(criteria, summary, {"pitch": pitch, "reactions": roster})
 
     def judge_sa_context(self, block: str, snippets: List[str],
-                         place: str = "") -> JudgeResult:
+                         place: str = "", alternatives: bool = False) -> JudgeResult:
         """Evaluate a current-realities block against the search snippets it was
         distilled from. Pure entailment check: the block must not contain facts
         absent from the snippets.
@@ -244,8 +244,29 @@ REQUIRED:
         persona would read as a fact about their own street. Without this the
         national shape rule (6-8 bullets) fails every local block for being the
         length it is supposed to be.
+
+        `alternatives` (with `place`) judges the "what people there use today"
+        list instead: a national programme IS in scope there, because people in
+        the place can use it, which is the whole point of that list.
         """
-        if place:
+        if place and alternatives:
+            scope = (
+                f"Evaluate this list of options people in {place}, South Africa, can "
+                f"already use today, against the SNIPPETS in context."
+            )
+            relevance = (
+                f"4. Every bullet names an option that exists — a government programme, a\n"
+                f"   free service, a shop, an app — and that the snippets show is available in\n"
+                f"   or near {place} or across South Africa (a national programme counts: people\n"
+                f"   in {place} can use it). Each must be something a person could pick\n"
+                f"   INSTEAD of the product: it meets the same need today. An item merely on\n"
+                f"   the same topic (pipe upgrades or drainage works for a water-tank refill)\n"
+                f"   is a failure. NOT a rating, NOT a comparison, NOT advice. A bullet\n"
+                f"   naming a private individual is a failure."
+            )
+            shape = "5. 1-3 short bullets, plain declarative prose"
+            pasted_when = " for that run"
+        elif place:
             scope = (
                 f"Evaluate this list of current local realities in {place}, South Africa, "
                 f"against the SNIPPETS in context."

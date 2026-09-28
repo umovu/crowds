@@ -72,6 +72,7 @@ class ImpactReframer:
         agent_profile: Dict[str, Any],
         mode: str = "policy",
         secondary_lens: Optional[str] = None,
+        local_block: Optional[str] = None,
     ) -> str:
         """
         Transform a generic user question into a persona-specific impact question.
@@ -149,6 +150,11 @@ class ImpactReframer:
                     layers.append(f"\n{current}")
             except Exception as e:  # never let context-refresh break an interview
                 logger.warning("Current context unavailable for reframe: %s", e)
+            # Local conditions where the pitch is set (query_context.local_report),
+            # searched once per round by the caller. Already scoped to this pitch,
+            # so it goes in whole.
+            if local_block:
+                layers.append(f"\n{local_block}")
 
         # Layer 4: Impact Question (reframed), plus any additive secondary lens.
         impact_question = self._build_impact_question(

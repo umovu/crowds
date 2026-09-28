@@ -270,24 +270,14 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted, watch } from 'vue'
-import { createAvatar } from '@dicebear/core'
-import { avataaars } from '@dicebear/collection'
+import { personaAvatar } from '../utils/personaAvatar'
 import { listSegments, suggestSegments, createSession, getSession, pitchSession, askAgent, listSessions, listRounds } from '../api/panel'
 
-// DiceBear avatar per persona — seeded by name so the same face is stable
-// across rounds and reopens.
-const _avatarCache = new Map()
+// Face per persona, matched to the roster's race, gender and age. Seeded by
+// name so the same face is stable across rounds and reopens.
 const avatarFor = (name) => {
-  const seed = name || 'unknown'
-  if (_avatarCache.has(seed)) return _avatarCache.get(seed)
-  const svg = createAvatar(avataaars, {
-    seed, radius: 50,
-    backgroundColor: ['b6e3f4', 'c0e8d5', 'fde68a', 'ffd6a5'],
-    backgroundType: ['solid'],
-  }).toString()
-  const uri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
-  _avatarCache.set(seed, uri)
-  return uri
+  const a = (session.value?.agents || []).find(x => x.name === name)
+  return personaAvatar(a || { name })
 }
 
 const ACTIVE_KEY = 'panelPitch.activeSession'

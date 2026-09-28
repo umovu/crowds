@@ -85,6 +85,28 @@ def test_missing_data_never_hands_out_a_card():
     assert mcs.situation_match_strength(CARD, mcs.situation_facts(_person("x"))) == 0
 
 
+def test_banking_research_does_not_fill_unrelated_service_gaps():
+    profile = _person("urban_professional", owns_bank_account="own", internet_use="daily")
+    mcs.attach_research_context(profile)
+    for pitch in (
+        "A panic-button app with an account and a monthly payment for armed response.",
+        "A housing app to manage your account and rent payments.",
+        "Home insurance with a panic button and emergency response.",
+        "A clinic offering credit for treatment and an account to book appointments.",
+    ):
+        assert "fintech-adoption-trust" not in {
+            c["id"] for c in mcs.cards_for_question(profile, pitch)
+        }, pitch
+    for pitch in (
+        "A digital bank account with no monthly fees.",
+        "A mobile payment service to send money to your family.",
+        "A digital wallet for online purchases.",
+    ):
+        assert "fintech-adoption-trust" in {
+            c["id"] for c in mcs.cards_for_question(profile, pitch)
+        }, pitch
+
+
 def test_age_becomes_a_band():
     assert mcs.situation_facts({"age": 19})["age_band"] == "15-24"
     assert mcs.situation_facts({"age": 61})["age_band"] == "60+"

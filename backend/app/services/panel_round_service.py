@@ -95,6 +95,25 @@ def _probes(meta: Dict[str, Any], carried_probe: Optional[str]) -> List[str]:
     return probes
 
 
+def _local_search(pitch_text: str):
+    """(prompt block, what to show the user) for the place the pitch names.
+
+    Searched once per round, not once per persona, so a cold cache costs one
+    search however big the room. Never fails the round: no place, no results or
+    any error leaves the room with the national context alone.
+    """
+    try:
+        from . import query_context
+        report = query_context.local_report(pitch_text)
+    except Exception as e:  # noqa: BLE001 - extra context must never break a round
+        logger.warning("Local search skipped: %s", e)
+        return None, None
+    if not report:
+        return None, None
+    shown = {k: v for k, v in report.items() if k != "block"}
+    return report.get("block"), shown
+
+
 def run_round(session_id: str, meta: Dict[str, Any], pitch_text: str,
               agent_ids: Optional[List[int]], concurrency: int, *,
               user_id: Optional[str], carried_probe: Optional[str] = None):
@@ -123,8 +142,10 @@ def run_round(session_id: str, meta: Dict[str, Any], pitch_text: str,
             pitch_text, meta.get('mode', 'product'),
             probes=_probes(meta, carried_probe),
             operator_context=meta.get('operator_context') or "")
+        local_block, local_shown = _local_search(pitch_text)
         result = _run_async(service.batch_impact_interview(
-            question=framed, agent_ids=agent_ids, concurrency=concurrency))
+            question=framed, agent_ids=agent_ids, concurrency=concurrency,
+            local_block=local_block))
 
         # A partly-collapsed round drawn as a normal one is the worst failure this
         # product can have: it looks like a result. Refuse rather than save it.
@@ -154,6 +175,10 @@ def run_round(session_id: str, meta: Dict[str, Any], pitch_text: str,
             logger.warning(f"Panel summary synthesis skipped for {session_id}: {e}")
 
         _add_segment_ranking(session_id, meta, result)
+        # What was searched and found, so the screen can show it — and, saved with
+        # the round, so a reopened panel still shows it.
+        if local_shown:
+            result["local_search"] = local_shown
 
         round_num = panel_service.save_round(session_id, {
             "pitch": pitch_text,

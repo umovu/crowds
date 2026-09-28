@@ -6,6 +6,7 @@ for deep web research.
 """
 
 import requests
+from urllib.parse import urlparse
 from typing import Dict, Any, List, Optional
 from ..config import Config
 from ..utils.logger import get_logger
@@ -17,6 +18,7 @@ class SerperService:
     """Service for performing Google searches via Serper API."""
 
     SEARCH_URL = "https://google.serper.dev/search"
+    NEWS_URL = "https://google.serper.dev/news"
 
     def __init__(self):
         self.api_key = Config.SERPER_API_KEY
@@ -24,13 +26,14 @@ class SerperService:
     def is_available(self) -> bool:
         return bool(self.api_key)
 
-    def search(self, query: str, num_results: int = 10) -> Dict[str, Any]:
+    def search(self, query: str, num_results: int = 10, news: bool = False) -> Dict[str, Any]:
         """
         Perform a Google search via Serper.
 
         Args:
             query: Search query
             num_results: Number of results to return (max 20)
+            news: Search Google News instead of the whole web
 
         Returns:
             Dict with search results
@@ -44,7 +47,7 @@ class SerperService:
 
         try:
             resp = requests.post(
-                self.SEARCH_URL,
+                self.NEWS_URL if news else self.SEARCH_URL,
                 headers={
                     "X-API-KEY": self.api_key,
                     "Content-Type": "application/json"
@@ -56,10 +59,15 @@ class SerperService:
             data = resp.json()
 
             results = []
-            for item in data.get("organic", []):
+            for item in data.get("news" if news else "organic", []):
+                link = item.get("link", "")
                 results.append({
                     "title": item.get("title", ""),
-                    "url": item.get("link", ""),
+                    "url": link,
+                    # "link" and "source" are what the context blocks cite; without
+                    # them every "Sources searched" footer came out empty.
+                    "link": link,
+                    "source": urlparse(link).netloc.removeprefix("www."),
                     "snippet": item.get("snippet", ""),
                     "position": item.get("position", 0)
                 })

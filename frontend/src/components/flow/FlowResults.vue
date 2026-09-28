@@ -82,6 +82,38 @@
             <span class="spectrum-pitched-label">{{ isPanel ? 'PITCHED:' : 'SCENARIO:' }}</span> {{ query }}
           </div>
 
+          <!-- Local web search (panel): what was searched, then what came back.
+               Shown before results land so the user sees the search happen. -->
+          <div v-if="isPanel && shownSearch" class="web-search">
+            <div class="web-search-head">
+              <span>🔎 Local web search · {{ shownSearch.place }}</span>
+              <span class="web-search-status" :class="'ws-' + searchState">{{ searchStatus }}</span>
+            </div>
+            <div class="web-search-label">We searched for:</div>
+            <ul class="web-search-queries">
+              <li v-for="q in shownSearch.queries" :key="q">{{ q }}</li>
+            </ul>
+            <template v-if="localSearch && localSearch.points && localSearch.points.length">
+              <div class="web-search-label">What we found, given to every persona:</div>
+              <ul class="web-search-points">
+                <li v-for="pt in localSearch.points" :key="pt">{{ pt }}</li>
+              </ul>
+            </template>
+            <template v-if="localSearch && localSearch.alternatives && localSearch.alternatives.length">
+              <div class="web-search-label">What people there use today:</div>
+              <ul class="web-search-points">
+                <li v-for="alt in localSearch.alternatives" :key="alt">{{ alt }}</li>
+              </ul>
+            </template>
+            <div v-if="localSearch && localSearch.sources && localSearch.sources.length" class="web-search-sources">
+              <span class="web-search-label">Sources searched:</span>
+              <template v-for="src in localSearch.sources" :key="src.source">
+                <a v-if="src.link" :href="src.link" target="_blank" rel="noopener noreferrer">{{ src.source }}</a>
+                <span v-else>{{ src.source }}</span>
+              </template>
+            </div>
+          </div>
+
           <!-- Typing indicator while the room is live -->
           <div v-if="feedLive" class="spectrum-typing">
             <div class="chat-typing-indicator">
@@ -550,8 +582,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import { createAvatar } from '@dicebear/core'
-import { avataaars } from '@dicebear/collection'
+import { personaAvatar } from '../../utils/personaAvatar'
 import {
   getSimulationProfilesRealtime,
   getRunStatus,
@@ -563,7 +594,7 @@ import {
   resumeSimulation,
   stopSimulation
 } from '../../api/simulation'
-import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
+import { getSession, pitchSession, askAgent, listRounds, getSearchPlan } from '../../api/panel'
 import { useToast } from '../../composables/useToast'
 import { generateReport, getReportStatus, getReport } from '../../api/report'
 
@@ -657,19 +688,12 @@ const downloadReport = async () => {
   }
 }
 
-// ── DiceBear avatar helper ──────────────────────────────────────────────────
-const _avatarCache = new Map()
+// ── Avatar helper ───────────────────────────────────────────────────────────
+// Faces match the persona's race, gender and age. A name-only lookup finds the
+// roster agent first, so every spot shows the same face.
 const getAvatarUrl = (name) => {
-  const seed = name || 'unknown'
-  if (_avatarCache.has(seed)) return _avatarCache.get(seed)
-  const svg = createAvatar(avataaars, {
-    seed, radius: 50,
-    backgroundColor: ['b6e3f4', 'c0e8d5', 'fde68a', 'ffd6a5'],
-    backgroundType: ['solid']
-  }).toString()
-  const uri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
-  _avatarCache.set(seed, uri)
-  return uri
+  const a = agents.value.find(x => x.name === name)
+  return a?.avatarUrl || personaAvatar({ name })
 }
 
 // Avatar for a feed row — prefer the roster agent's avatar (so the feed and the
@@ -689,7 +713,7 @@ const normalizeAgent = (a) => ({
   id: a.id ?? a.agent_id,
   name: a.name || a.agent_name || `Agent ${a.id ?? a.agent_id}`,
   archetype: a.actor_archetype || a.archetype || a.occupation || '',
-  avatarUrl: getAvatarUrl(a.name || a.agent_name || String(a.id ?? a.agent_id)),
+  avatarUrl: personaAvatar(a),
   stance_after: a.stance || a.stance_after || 'neutral',
   stance_before: a.stance || a.stance_before || 'neutral',
   stance_changed: false,
@@ -749,6 +773,25 @@ const shiftedCount = computed(() => panelAgents.value.filter(a => a.stance_chang
 // reactions — objections + what would move them). Real counts stay in
 // summaryText; this only adds the "why". Empty when unavailable.
 const llmSummary = ref('')
+
+// Local web search for the place the pitch names. `searchPlan` is what WILL be
+// searched (asked for before the round runs); `localSearch` is what the round
+// actually searched and found. Both null when the pitch names no place.
+const searchPlan = ref(null)
+const localSearch = ref(null)
+const shownSearch = computed(() => localSearch.value || (searchPlan.value?.place ? searchPlan.value : null))
+const searchState = computed(() => localSearch.value?.status || (feedLive.value ? 'searching' : 'none'))
+const searchStatus = computed(() => {
+  const n = (localSearch.value?.points?.length || 0) + (localSearch.value?.alternatives?.length || 0)
+  switch (searchState.value) {
+    case 'found': return `Found ${n} local fact${n === 1 ? '' : 's'}`
+    case 'cached': return `Found ${n} local fact${n === 1 ? '' : 's'} (searched in the last day)`
+    case 'thin': return 'Not enough local news found. Personas used national news only.'
+    case 'dropped': return "Results didn't pass our fact check, so we left them out."
+    case 'searching': return 'Searching…'
+    default: return ''
+  }
+})
 
 // ── Reaction map: cluster personas into stance columns (deterministic) ───────
 // Buckets follow the STANCES spread (won over → resistant); any stray stance
@@ -1266,12 +1309,19 @@ const loadPanel = async () => {
       if (last) {
         results = (last.result || {}).results || []
         llmSummary.value = (last.result || {}).summary_narrative || ''
+        localSearch.value = (last.result || {}).local_search || null
         if (panelPointer.value === 'fit') fitRanking.value = (last.result || {}).by_segment || []
       }
       if (!results) {
+        // Show what is about to be searched while the room answers. Not awaited
+        // before the pitch: a slow plan must never hold the round up.
+        getSearchPlan(detail.data?.pitch || props.query || '')
+          .then(r => { searchPlan.value = r.data || null })
+          .catch(() => { searchPlan.value = null })
         const res = await pitchSession(props.sessionId, { concurrency: 6 })
         results = res.data?.results || []
         llmSummary.value = res.data?.summary_narrative || ''
+        localSearch.value = res.data?.local_search || null
         if (panelPointer.value === 'fit') fitRanking.value = res.data?.by_segment || []
       }
       applyRound(results)
@@ -2056,6 +2106,32 @@ onUnmounted(() => {
 .spectrum-pitched-label { color: #1E9E5A; font-weight: 700; margin-right: 6px; }
 
 .spectrum-typing { padding: 16px 24px; }
+
+/* ── Local web search box ─────────────────────────────────────────────────── */
+.web-search {
+  margin: 12px 24px 0;
+  padding: 12px 16px;
+  background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px;
+  font-size: 13px; color: #374151; line-height: 1.5;
+}
+.web-search-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-weight: 600; color: #1F2937; margin-bottom: 8px;
+}
+.web-search-status { font-weight: 500; font-size: 12.5px; color: #6B7280; }
+.web-search-status.ws-found, .web-search-status.ws-cached { color: #1E9E5A; }
+.web-search-status.ws-thin, .web-search-status.ws-dropped { color: #92400E; }
+.web-search-label { font-size: 12px; color: #6B7280; margin: 6px 0 2px; }
+.web-search-queries {
+  margin: 0; padding-left: 18px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #555;
+  overflow-wrap: anywhere;
+}
+.web-search-points { margin: 0; padding-left: 18px; }
+.web-search-sources { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; margin-top: 6px; font-size: 12px; }
+.web-search-sources .web-search-label { margin: 0; }
+.web-search-sources a { color: #1E9E5A; text-decoration: none; }
+.web-search-sources a:hover { text-decoration: underline; }
 
 /* ── Summary box ──────────────────────────────────────────────────────────── */
 .spectrum-summary {
