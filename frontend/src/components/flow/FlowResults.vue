@@ -559,6 +559,18 @@
                     <span v-if="receipt.research.notRelevant" class="receipt-absent">
                       {{ receipt.research.boundCount }} research card{{ receipt.research.boundCount === 1 ? '' : 's' }} fit this persona, but none is about this question — so none was used
                     </span>
+                    <template v-if="receipt.research.studies">
+                      <span v-if="receipt.research.studies.length" class="receipt-lede">
+                        What research told {{ selectedAgent.name.split(' ')[0] }} about people in their situation:
+                      </span>
+                      <span v-for="(st, si) in receipt.research.studies" :key="si" class="receipt-study">
+                        <span v-for="(m, i) in st.claims" :key="i" class="receipt-mech">· {{ m }}</span>
+                        <span class="receipt-cite">
+                          <span v-for="t in st.titles" :key="t" class="receipt-cite-title">Source: {{ t }}</span>
+                          <span v-if="st.confidence" class="receipt-confidence">Limits: {{ st.confidence }}</span>
+                        </span>
+                      </span>
+                    </template>
                     <span v-for="(m,i) in receipt.research.mechanisms" :key="i" class="receipt-mech">· {{ m }}</span>
                     <span v-for="c in receipt.research.citations" :key="c.id" class="receipt-cite">
                       <b>{{ c.id }}</b><span v-for="t in c.titles" :key="t" class="receipt-cite-title"> — {{ t }}</span>
@@ -1193,7 +1205,9 @@ const applyRound = (results) => {
       stance_changed: !!r.stance_changed,
       currentReaction: r.response || a.currentReaction,
       // Which bound cards reached this round's prompt (absent on older rounds).
-      research_cards_used: Array.isArray(r.research_cards_used) ? r.research_cards_used : a.research_cards_used
+      research_cards_used: Array.isArray(r.research_cards_used) ? r.research_cards_used : a.research_cards_used,
+      // The claims themselves that reached it, per card (absent on older rounds).
+      research_claims_used: Array.isArray(r.research_claims_used) ? r.research_claims_used : a.research_claims_used
     }
   })
 }
@@ -1444,6 +1458,17 @@ const receipt = computed(() => {
     const cites = used ? allCites.filter(c => used.has(c.card_id)) : allCites
     if (used && !cites.length) {
       return { mechanisms: [], citations: [], rawContext: ctx, notRelevant: true, boundCount: allCites.length }
+    }
+    // Newer rounds record the exact claims each card gave: show those, one block
+    // per study, and only the studies that gave something.
+    if (Array.isArray(a.research_claims_used)) {
+      const byCard = new Map(cites.map(c => [c.card_id, { titles: c.citation || [], confidence: c.confidence || '', claims: [] }]))
+      for (const cl of a.research_claims_used) {
+        if (byCard.has(cl.card_id) && cl.text) byCard.get(cl.card_id).claims.push(cl.text)
+      }
+      const studies = [...byCard.values()].filter(b => b.claims.length)
+      if (!studies.length) return { studies: [], notRelevant: true, boundCount: allCites.length }
+      return { studies }
     }
     // Mechanism lines, taken only from the sections of the cards that applied.
     const usedTitles = cites.map(c => (c.citation || [])[0]).filter(Boolean)
@@ -1963,6 +1988,9 @@ onUnmounted(() => {
 .receipt-src { font-size: 10px; color: #A4A19B; letter-spacing: 0.2px; }
 .receipt-absent { font-size: 12px; color: #9A9791; font-style: italic; }
 .receipt-att { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.receipt-lede { display: block; font-size: 12px; color: #6B7280; margin-bottom: 4px; }
+.receipt-study { display: block; padding: 8px 0; border-top: 1px solid #F0EFEC; }
+.receipt-study:first-of-type { border-top: none; padding-top: 2px; }
 .receipt-mech { font-size: 12.5px; line-height: 1.5; color: #374151; display: block; }
 .receipt-cite { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; font-size: 11.5px; color: #5C5954; }
 .receipt-cite-title { font-style: italic; color: #374151; }
