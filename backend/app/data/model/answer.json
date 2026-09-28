@@ -187,6 +187,29 @@
           "FlowResults.vue"
         ]
       },
+      "research_claims_used": {
+        "type": "list",
+        "items": {
+          "type": "object",
+          "fields": {
+            "card_id": {
+              "type": "string",
+              "when": "always",
+              "min_length": 1
+            },
+            "text": {
+              "type": "string",
+              "when": "always",
+              "min_length": 1
+            }
+          }
+        },
+        "when": "optional",
+        "note": "The research claims that reached this prompt, each with its card id, so the receipt shows what the persona was told, not the whole card.",
+        "read_by": [
+          "FlowResults.vue"
+        ]
+      },
       "facts_used": {
         "type": "list",
         "items": {

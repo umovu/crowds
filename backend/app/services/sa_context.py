@@ -24,7 +24,7 @@ import os
 import re
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from ..config import Config
 from ..utils.logger import get_logger
@@ -208,6 +208,34 @@ def _write_cache(block: str) -> None:
         logger.warning("Could not cache SA context: %s", e)
 
 
+def _link(item: Dict[str, Any]) -> str:
+    """A search result's address. SerperService returns it as `url`; reading only
+    `link` left every block without a single source."""
+    return (item.get("link") or item.get("url") or "").strip()
+
+
+def _site(link: str) -> str:
+    """news24.com from https://www.news24.com/..., to name a source in a word."""
+    host = re.sub(r"^https?://", "", link or "").split("/", 1)[0]
+    return host[4:] if host.startswith("www.") else host
+
+
+# Places a claim about South Africa today should not come from: social posts,
+# video, forums, encyclopedias, and company blogs selling something (a solar
+# installer's "why load-shedding still matters" post). Blocked by site, not by
+# topic, so the news that remains is left to say what it says.
+_UNTRUSTED_SITES = ("facebook.com", "instagram.com", "tiktok.com", "twitter.com", "x.com",
+                    "youtube.com", "reddit.com", "linkedin.com", "pinterest.com", "quora.com",
+                    "medium.com", "wikipedia.org", "fandom.com")
+
+
+def _trusted(link: str) -> bool:
+    site = _site(link)
+    if not site or any(site == s or site.endswith("." + s) for s in _UNTRUSTED_SITES):
+        return False
+    return not re.search(r"/blogs?/", link)
+
+
 def _gather_snippets() -> List[Dict[str, str]]:
     """Pull real search snippets on what is currently pressing in SA.
 
@@ -225,6 +253,9 @@ def _gather_snippets() -> List[Dict[str, str]]:
         # Health salience (clinic stock-outs, NHI moves) — one more cached query,
         # same daily batch; _distil still only summarises what comes back.
         f"South African public health clinics medicine shortages {when}",
+        # Fuel moves on the first Wednesday of every month and feeds taxi fares
+        # and food prices; the fixed petrol figure in sa_world_facts lags it.
+        f"South Africa petrol diesel price change {when}",
     ]
     sources: List[Dict[str, str]] = []
     for q in queries:
@@ -233,11 +264,11 @@ def _gather_snippets() -> List[Dict[str, str]]:
             continue
         for item in res.get("results", []):
             sn = (item.get("snippet") or item.get("title") or "").strip()
-            if sn:
+            if sn and _trusted(_link(item)):
                 sources.append({
                     "snippet": sn,
-                    "link": (item.get("link") or "").strip(),
-                    "source": (item.get("source") or "").strip(),
+                    "link": _link(item),
+                    "source": (item.get("source") or _site(_link(item))).strip(),
                 })
     return sources[:30]
 
@@ -278,6 +309,8 @@ def _distil(sources: List[Dict[str, str]]) -> Optional[str]:
         "must be something ordinary South Africans LIVE WITH — searches return "
         "continental news and political topic lists, and bullets about wars "
         "elsewhere or lists of election issues tell a simulated person nothing. "
+        "When the snippets carry news on it, give each of these at least one bullet: "
+        "jobs, the cost of living, fuel prices, electricity, public health. "
         "Output 6-8 "
         "short, plain present-tense bullet lines. No preamble, no closing line."
     )
@@ -341,13 +374,37 @@ _REALITY_TOPICS: Dict[str, tuple] = {
 _PRICE_RE = re.compile(r"\bR\s?\d")
 
 
+# A news claim is about the cost of living only when it is about what households
+# pay. "Crime costs the economy R700 billion" says "costs" and names rands, and
+# was reaching every priced pitch as a cost-of-living point.
+_CLAIM_COST_WORDS = ("price", "prices", "cost of living", "living cost", "afford",
+                     "expensive", "inflation", "household", "budget", "fuel", "petrol",
+                     "rent", "tariff", "food", "basic cost", "a month")
+
+
+def _first_at(low: str, words) -> Optional[int]:
+    hits = [m.start() for w in words
+            for m in [re.search(r"(?<![a-z0-9])" + re.escape(w), low)] if m]
+    return min(hits) if hits else None
+
+
 def _topics_in(text: str) -> set:
     low = (text or "").lower()
-    found = {t for t, words in _REALITY_TOPICS.items()
-             if any(re.search(r"(?<![a-z0-9])" + re.escape(w), low) for w in words)}
+    found = {t for t, words in _REALITY_TOPICS.items() if _first_at(low, words) is not None}
     if _PRICE_RE.search(text or ""):
         found.add("cost")
     return found
+
+
+def _claim_subject(claim: str) -> Optional[str]:
+    """The one subject a news claim is about: the one it names first.
+
+    A pitch keeps a claim only on its main subject, not a passing word, so "Crime
+    costs the economy R700 billion" is about crime and stays out of a clinic room."""
+    low = (claim or "").lower()
+    words = {**_REALITY_TOPICS, "cost": _CLAIM_COST_WORDS}
+    at = {t: i for t, ws in words.items() if (i := _first_at(low, ws)) is not None}
+    return min(at, key=at.get) if at else None
 
 
 def relevant_realities(block: Optional[str], question: str, limit: int = 3) -> Optional[str]:
@@ -364,23 +421,79 @@ def relevant_realities(block: Optional[str], question: str, limit: int = 3) -> O
     wanted = _topics_in(question)
     if not wanted:
         return None
-    header, kept, footer, in_footer = [], [], [], False
+    header, matching, footer, in_footer = [], [], [], False
     for line in block.splitlines():
         if line.startswith("Sources searched"):
             in_footer = True
         if in_footer:
             footer.append(line)
         elif line.startswith("- "):
-            if len(kept) < limit and _topics_in(line) & wanted:
-                kept.append(line)
-        elif not kept:
+            if _claim_subject(line[2:]) in wanted:
+                matching.append(line)
+        elif not matching:
             header.append(line)
+    # One claim per subject first, then the rest in order: three cost-of-living
+    # lines used to fill every slot and push out the clinic one a diabetes pitch
+    # is about.
+    first, seen = [], set()
+    for line in matching:
+        subject = _claim_subject(line[2:])
+        if subject not in seen:
+            seen.add(subject)
+            first.append(line)
+    picked = set((first + [l for l in matching if l not in first])[:limit])
+    kept = [l for l in matching if l in picked]
     if not kept:
         return None
     out = "\n".join(header + kept)
     if footer:
         out += "\n" + "\n".join(footer)
     return out
+
+
+_SOURCE_LINE = re.compile(r"^- (?P<label>.+?)(?: \((?P<link>https?://[^)]+)\))?$")
+
+
+def _points_and_sources(block: Optional[str]) -> Tuple[List[str], List[Dict[str, str]]]:
+    """The claim bullets and the sources footer of a rendered block, as lists."""
+    points: List[str] = []
+    sources: List[Dict[str, str]] = []
+    in_footer = False
+    for line in (block or "").splitlines():
+        if line.startswith("Sources searched"):
+            in_footer = True
+            continue
+        if not line.startswith("- "):
+            continue
+        if in_footer:
+            m = _SOURCE_LINE.match(line.strip())
+            if m:
+                sources.append({"label": m["label"], "link": m["link"] or ""})
+        else:
+            points.append(line[2:].strip())
+    return points, sources
+
+
+def news_for_pitch(pitch: str) -> Dict[str, Any]:
+    """What today's web search found, and which of it this pitch's room will hear.
+
+    Same calls the round makes (current_sa_realities, then relevant_realities), so
+    what the page shows is what the personas are given, and a cold cache is filled
+    here rather than by every persona at once. No new search or model call.
+    """
+    if not _enabled():
+        return {"enabled": False}
+    saved = _read_cache() is not None
+    block = current_sa_realities()
+    if not block:
+        return {"enabled": True, "found": False, "from_saved": saved}
+    everything, _ = _points_and_sources(block)
+    used, _ = _points_and_sources(relevant_realities(block, pitch))
+    _, sources = _points_and_sources(block)
+    as_of = re.search(r"as of ([^)]+?)\)", block)
+    return {"enabled": True, "found": True, "from_saved": saved,
+            "as_of": as_of.group(1) if as_of else None,
+            "total": len(everything), "points": used, "sources": sources}
 
 
 def current_sa_realities(snapshot: Optional[Dict[str, Any]] = None) -> Optional[str]:

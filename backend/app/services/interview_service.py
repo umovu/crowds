@@ -518,6 +518,11 @@ class InterviewService:
                     used_cards = mechanism_card_service.cards_for_question(profile, question)
                     if used_cards is not None:
                         result["research_cards_used"] = [c.get("id") for c in used_cards]
+                        # The claims themselves, so the receipt shows what this
+                        # persona was told, not the whole card.
+                        result["research_claims_used"] = [
+                            {"card_id": c.get("id"), "text": cl.get("text")}
+                            for c in used_cards for cl in c.get("claims", []) if cl.get("text")]
                     # Which measured facts replaced the story in this prompt.
                     if persona_facts.uses_facts(profile):
                         result["facts_used"] = persona_facts.fields_used(profile, question)

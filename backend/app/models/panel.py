@@ -14,6 +14,14 @@ from pydantic import Field
 from .base import DataModel, export_fields, export_model
 from ._panel_types import (BudgetTier, Stance)
 
+class ResearchClaimUsed(DataModel):
+    """One research claim that reached a persona's prompt, and the card it came from."""
+    MODEL_NAME: ClassVar[str] = 'research_claim_used'
+    HEADER: ClassVar[Dict[str, Any]] = {'version': 1}
+    card_id: str = Field(min_length=1, json_schema_extra={'when': 'always'})
+    text: str = Field(min_length=1, json_schema_extra={'when': 'always'})
+
+
 ANSWER_HEADER = {'version': 1,
  'about': "What one person's answer in a panel round looks like, and the round file around it. "
           'Written by interview_service.batch_impact_interview and panel_service.save_round; '
@@ -56,6 +64,7 @@ class AnswerRow(DataModel):
     grant_type: Optional[str] = Field(default=None, json_schema_extra={'when': 'optional'})
     monthly_income_rand: float = Field(default=None, json_schema_extra={'when': 'optional'})
     research_cards_used: List[str] = Field(default=None, json_schema_extra={'when': 'optional'})
+    research_claims_used: List[ResearchClaimUsed] = Field(default=None, json_schema_extra={'when': 'optional'})
     facts_used: List[str] = Field(default=None, json_schema_extra={'when': 'optional'})
 
     @classmethod

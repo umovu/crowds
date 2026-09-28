@@ -123,3 +123,122 @@ def test_sim_prompt_keeps_the_card_the_scenario_is_about():
 
 def test_sim_prompt_without_a_question_keeps_the_stored_block():
     assert "STORED BLOCK" in _sim_context("")
+
+
+# ── what the page shows ────────────────────────────────────────────────────
+# The page lists what the web search found and which points this room hears.
+# It must be the same points the prompt gets, not a second reading of the news.
+
+def _news(monkeypatch, block, saved=True):
+    from app.services import sa_context
+    monkeypatch.setattr(sa_context, "_enabled", lambda: True)
+    monkeypatch.setattr(sa_context, "_read_cache", lambda: block if saved else None)
+    monkeypatch.setattr(sa_context, "current_sa_realities", lambda snapshot=None: block)
+    return sa_context
+
+
+def test_the_page_shows_what_the_prompt_gets(monkeypatch):
+    sc = _news(monkeypatch, BLOCK)
+    out = sc.news_for_pitch(CLINIC)
+    prompt_points = [l[2:] for l in relevant_realities(BLOCK, CLINIC).splitlines()
+                     if l.startswith("- ") and "news24" not in l]
+    assert out["points"] == prompt_points
+    assert out["total"] == 6
+    assert out["as_of"] == "10 September 2026"
+    assert out["sources"] == [{"label": "news24.com", "link": ""}]
+    assert out["from_saved"] is True
+
+
+def test_a_pitch_the_news_does_not_touch_shows_none_used(monkeypatch):
+    out = _news(monkeypatch, BLOCK).news_for_pitch(EVENTS_APP)
+    assert out["points"] == [] and out["total"] == 6
+
+
+def test_a_source_link_is_kept(monkeypatch):
+    block = BLOCK.replace("- news24.com\n", "- News24 (https://www.news24.com/a)\n")
+    out = _news(monkeypatch, block, saved=False).news_for_pitch(CLINIC)
+    assert out["sources"] == [{"label": "News24", "link": "https://www.news24.com/a"}]
+    assert out["from_saved"] is False
+
+
+def test_no_search_says_so(monkeypatch):
+    assert _news(monkeypatch, None, saved=False).news_for_pitch(CLINIC)["found"] is False
+
+
+def test_a_search_result_keeps_its_address(monkeypatch):
+    # SerperService names the address `url`; the block read only `link`, so it
+    # never listed a single source.
+    from app.services import sa_context
+
+    class Serper:
+        def is_available(self):
+            return True
+
+        def search(self, q, num_results=6):
+            return {"success": True, "results": [
+                {"title": "t", "snippet": "Clinics are out of insulin.",
+                 "url": "https://www.news24.com/health/a"}]}
+
+    monkeypatch.setattr(sa_context, "SerperService", Serper)
+    got = sa_context._gather_snippets()[0]
+    assert got["link"] == "https://www.news24.com/health/a"
+    assert got["source"] == "news24.com"
+    assert "news24.com (https://www.news24.com/health/a)" in sa_context._render_sources([got])
+
+
+def test_social_posts_encyclopedias_and_company_blogs_are_not_news():
+    from app.services.sa_context import _trusted
+    assert _trusted("https://www.news24.com/health/a")
+    assert _trusted("https://www.gov.za/news")
+    assert not _trusted("https://www.facebook.com/GlobalSouthWorld/videos/1")
+    assert not _trusted("https://en.wikipedia.org/wiki/South_African_energy_crisis")
+    assert not _trusted("https://www.reslink.org/blogs/load-shedding-ended")
+    assert not _trusted("https://m.youtube.com/watch?v=1")
+    assert not _trusted("")
+
+
+# ── a claim counts on its main subject, not a passing word ────────────────────
+# Seen on 28 September 2026: "Crime costs ... R700 billion" reached a R200 diabetes
+# pitch as a cost-of-living point.
+
+LIVE = (
+    "CURRENT SOUTH AFRICAN CONTEXT (source-based, as of 28 September 2026) —\n"
+    "- A family of four needs about R39,710.90 a month for basic living costs.\n"
+    "- Crime costs South Africa’s economy up to R700 billion per year.\n"
+    "- Essential medicines like insulin are out of stock in public clinics.\n"
+    "- Electricity tariffs are rising, pushing more people to consider solar.\n"
+)
+DIABETES = "A clinic service that manages your diabetes for R200 a month."
+
+
+def test_a_claim_about_crime_is_not_a_cost_of_living_claim():
+    out = relevant_realities(LIVE, DIABETES)
+    assert "Crime costs" not in out
+    assert "insulin" in out
+    assert "R39,710.90" in out
+
+
+def test_each_claim_has_one_subject():
+    from app.services.sa_context import _claim_subject
+    assert _claim_subject("Crime costs South Africa’s economy up to R700 billion per year.") == "safety"
+    assert _claim_subject("Essential medicines like insulin are out of stock in public clinics.") == "health"
+    assert _claim_subject("Electricity tariffs are rising, pushing more people to consider solar.") == "power"
+    assert _claim_subject("A family of four needs about R39,710.90 a month for basic living costs.") == "cost"
+    assert _claim_subject("A family of four needs around R39,710.90 a month to cover basic costs.") == "cost"
+
+
+def test_the_daily_search_is_asked_to_cover_health():
+    # The day's points vary with the search; health dropped out on 28 September.
+    import inspect
+    from app.services import sa_context
+    assert "public health" in inspect.getsource(sa_context._distil)
+    assert "fuel prices" in inspect.getsource(sa_context._distil)
+    assert "petrol diesel price" in inspect.getsource(sa_context._gather_snippets)
+
+
+def test_every_subject_the_pitch_touches_gets_a_slot_before_repeats():
+    block = LIVE.replace("- Crime costs", "- A single person needs about R11,000 a month for basic costs.\n"
+                                           "- People march over the rising cost of living.\n- Crime costs")
+    out = relevant_realities(block, DIABETES)
+    assert "insulin" in out
+    assert out.count("\n- ") == 3
