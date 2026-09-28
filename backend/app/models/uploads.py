@@ -227,6 +227,13 @@ class MechanismCardClaim(DataModel):
         'when': 'optional',
         'note': "Words that put the claim in the prompt without the typed reader (whole-word match).",
     })
+    min_income_share: float = Field(default=None, gt=0, lt=1, json_schema_extra={
+        'when': 'optional',
+        'note': ("For a claim about money weighing on someone: the share of the persona's own "
+                 "monthly income the pitch's price must reach before the claim belongs. A R200 "
+                 "plan is not what makes family obligations bite on a R10,000 income. Needs a "
+                 "price in the pitch and an income on record; without either the claim stays out."),
+    })
 
 
 class MechanismCard(DataModel):

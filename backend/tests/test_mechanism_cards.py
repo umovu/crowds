@@ -212,9 +212,41 @@ def test_black_tax_stays_off_a_trivial_pitch():
 
 
 def test_black_tax_speaks_on_funeral_cover_for_family():
-    claims, _ = _claims(_seat("black-tax-obligation-sa", **_BLACK_TAX_PAYER),
+    claims, _ = _claims(_seat("black-tax-obligation-sa", monthly_income_rand=12000, **_BLACK_TAX_PAYER),
                         "Funeral cover for R80 a month that covers your parents too.")
-    assert {"C1", "C5"} <= claims
+    assert "C1" in claims
+    assert "C5" not in claims  # R80 is under 1% of R12,000: not what makes giving bite
+
+
+# The "giving continues despite resentment" claim reached 4 of 8 people in a R200
+# diabetes room. It belongs only when the price is a real share of their own income.
+
+def test_a_small_monthly_price_does_not_bring_in_resentful_giving():
+    claims, _ = _claims(_seat("black-tax-obligation-sa", monthly_income_rand=10000, **_BLACK_TAX_PAYER),
+                        "A diabetes plan for R200 a month, with a monthly debit order.")
+    assert "C5" not in claims
+
+
+def test_a_price_that_takes_a_real_share_of_income_does():
+    claims, _ = _claims(_seat("black-tax-obligation-sa", monthly_income_rand=10000, **_BLACK_TAX_PAYER),
+                        "A car-finance instalment of R800 a month.")
+    assert "C5" in claims
+
+
+def test_no_income_on_record_keeps_it_out():
+    claims, _ = _claims(_seat("black-tax-obligation-sa", **_BLACK_TAX_PAYER),
+                        "A car-finance instalment of R800 a month.")
+    assert "C5" not in claims
+
+
+def test_the_pregnancy_claim_stays_off_a_diabetes_pitch():
+    young_man = dict(age=20, gender="Male", geotype="Traditional")
+    claims, _ = _claims(_seat("youth-clinic-candidacy-sa", **young_man),
+                        "A clinic service that manages your diabetes for R200 a month.")
+    assert claims and "C1" not in claims
+    claims, _ = _claims(_seat("youth-clinic-candidacy-sa", **young_man),
+                        "Free pregnancy tests at the rural clinic, no questions asked.")
+    assert "C1" in claims
 
 
 def test_black_tax_speaks_on_spending_on_yourself():
@@ -276,7 +308,7 @@ def test_a_rural_teen_on_an_ordinary_clinic_pitch_hears_no_sexual_health_claim()
     claims, cards = _claims(_seat("youth-clinic-candidacy-sa", **teen),
                             "A nurse you can see the same day for R150 a visit, no queue.")
     assert "youth-clinic-candidacy-sa" in cards
-    assert {"C1", "C3", "C5"} <= claims and not claims & {"C2", "C4"}
+    assert {"C3", "C5"} <= claims and not claims & {"C1", "C2", "C4"}
 
 
 def test_hiv_disclosure_stays_off_a_chronic_medication_pitch():
