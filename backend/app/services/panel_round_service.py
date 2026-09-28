@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional
 from ..config import Config
 from ..repositories import run_event_repository as run_events
 from ..utils.logger import get_logger
-from . import panel_service, pointers
+from . import panel_service, pointers, sa_context
 from .interview_service import InterviewService
 
 logger = get_logger("fub.panel_round")
@@ -154,6 +154,13 @@ def run_round(session_id: str, meta: Dict[str, Any], pitch_text: str,
             logger.warning(f"Panel summary synthesis skipped for {session_id}: {e}")
 
         _add_segment_ranking(session_id, meta, result)
+
+        # The news this room was given, kept with the round: reopening the panel
+        # later shows what it heard then, not today's search. Cached, so no new call.
+        try:
+            result["news"] = sa_context.news_for_pitch(pitch_text)
+        except Exception as e:  # noqa: BLE001 - the news box is extra
+            logger.warning(f"News record skipped for {session_id}: {e}")
 
         round_num = panel_service.save_round(session_id, {
             "pitch": pitch_text,

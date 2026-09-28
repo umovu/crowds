@@ -88,7 +88,7 @@
             <div class="news-head">
               <span class="news-title">Web research</span>
               <span v-if="news.state === 'done' && news.data" class="news-when">
-                {{ news.data.from_saved ? 'Searched earlier today' : 'Searched just now' }}<template v-if="news.data.as_of"> · {{ news.data.as_of }}</template>
+                {{ news.saved ? 'Searched when this panel ran' : news.data.from_saved ? 'Searched earlier today' : 'Searched just now' }}<template v-if="news.data.as_of"> · {{ news.data.as_of }}</template>
               </span>
             </div>
             <div v-if="news.state === 'searching'" class="chat-typing-indicator news-typing">
@@ -100,7 +100,7 @@
             <p v-else-if="news.state === 'failed'" class="news-line muted">No news search today. The room answers from its own facts.</p>
             <template v-else-if="news.state === 'done'">
               <p class="news-line">
-                Found {{ news.data.total }} points in today's news.
+                Found {{ news.data.total }} points in {{ news.saved ? 'the news that day' : "today's news" }}.
                 <template v-if="news.data.points.length">{{ news.data.points.length }} {{ news.data.points.length === 1 ? 'is' : 'are' }} about your pitch, so the room hears {{ news.data.points.length === 1 ? 'it' : 'them' }}:</template>
                 <template v-else>None are about your pitch, so the room hears none of them.</template>
               </p>
@@ -1314,6 +1314,7 @@ const loadPanel = async () => {
       let results = null
       if (last) {
         results = (last.result || {}).results || []
+        showSavedNews((last.result || {}).news)
         llmSummary.value = (last.result || {}).summary_narrative || ''
         if (panelPointer.value === 'fit') fitRanking.value = (last.result || {}).by_segment || []
       }
@@ -1339,7 +1340,14 @@ const loadPanel = async () => {
 
 // ── Web research — what today's search found, before the room answers ──────
 // 'off' hides the box: a saved room, or the search switched off server-side.
-const news = reactive({ state: 'off', data: null })
+const news = reactive({ state: 'off', data: null, saved: false })
+// A reopened panel shows the news its round was given, as saved with the round.
+const showSavedNews = (d) => {
+  if (!d || !d.enabled || !d.found) return
+  news.data = d
+  news.saved = true
+  news.state = 'done'
+}
 const readNews = async () => {
   news.state = 'searching'
   try {
