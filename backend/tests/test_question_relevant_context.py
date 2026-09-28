@@ -163,3 +163,24 @@ def test_a_source_link_is_kept(monkeypatch):
 
 def test_no_search_says_so(monkeypatch):
     assert _news(monkeypatch, None, saved=False).news_for_pitch(CLINIC)["found"] is False
+
+
+def test_a_search_result_keeps_its_address(monkeypatch):
+    # SerperService names the address `url`; the block read only `link`, so it
+    # never listed a single source.
+    from app.services import sa_context
+
+    class Serper:
+        def is_available(self):
+            return True
+
+        def search(self, q, num_results=6):
+            return {"success": True, "results": [
+                {"title": "t", "snippet": "Clinics are out of insulin.",
+                 "url": "https://www.news24.com/health/a"}]}
+
+    monkeypatch.setattr(sa_context, "SerperService", Serper)
+    got = sa_context._gather_snippets()[0]
+    assert got["link"] == "https://www.news24.com/health/a"
+    assert got["source"] == "news24.com"
+    assert "news24.com (https://www.news24.com/health/a)" in sa_context._render_sources([got])

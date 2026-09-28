@@ -208,6 +208,18 @@ def _write_cache(block: str) -> None:
         logger.warning("Could not cache SA context: %s", e)
 
 
+def _link(item: Dict[str, Any]) -> str:
+    """A search result's address. SerperService returns it as `url`; reading only
+    `link` left every block without a single source."""
+    return (item.get("link") or item.get("url") or "").strip()
+
+
+def _site(link: str) -> str:
+    """news24.com from https://www.news24.com/..., to name a source in a word."""
+    host = re.sub(r"^https?://", "", link or "").split("/", 1)[0]
+    return host[4:] if host.startswith("www.") else host
+
+
 def _gather_snippets() -> List[Dict[str, str]]:
     """Pull real search snippets on what is currently pressing in SA.
 
@@ -236,8 +248,8 @@ def _gather_snippets() -> List[Dict[str, str]]:
             if sn:
                 sources.append({
                     "snippet": sn,
-                    "link": (item.get("link") or "").strip(),
-                    "source": (item.get("source") or "").strip(),
+                    "link": _link(item),
+                    "source": (item.get("source") or _site(_link(item))).strip(),
                 })
     return sources[:30]
 
