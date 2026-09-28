@@ -195,3 +195,39 @@ def test_social_posts_encyclopedias_and_company_blogs_are_not_news():
     assert not _trusted("https://www.reslink.org/blogs/load-shedding-ended")
     assert not _trusted("https://m.youtube.com/watch?v=1")
     assert not _trusted("")
+
+
+# ── a claim counts on its main subject, not a passing word ────────────────────
+# Seen on 28 September 2026: "Crime costs ... R700 billion" reached a R200 diabetes
+# pitch as a cost-of-living point.
+
+LIVE = (
+    "CURRENT SOUTH AFRICAN CONTEXT (source-based, as of 28 September 2026) —\n"
+    "- A family of four needs about R39,710.90 a month for basic living costs.\n"
+    "- Crime costs South Africa’s economy up to R700 billion per year.\n"
+    "- Essential medicines like insulin are out of stock in public clinics.\n"
+    "- Electricity tariffs are rising, pushing more people to consider solar.\n"
+)
+DIABETES = "A clinic service that manages your diabetes for R200 a month."
+
+
+def test_a_claim_about_crime_is_not_a_cost_of_living_claim():
+    out = relevant_realities(LIVE, DIABETES)
+    assert "Crime costs" not in out
+    assert "insulin" in out
+    assert "R39,710.90" in out
+
+
+def test_each_claim_has_one_subject():
+    from app.services.sa_context import _claim_subject
+    assert _claim_subject("Crime costs South Africa’s economy up to R700 billion per year.") == "safety"
+    assert _claim_subject("Essential medicines like insulin are out of stock in public clinics.") == "health"
+    assert _claim_subject("Electricity tariffs are rising, pushing more people to consider solar.") == "power"
+    assert _claim_subject("A family of four needs about R39,710.90 a month for basic living costs.") == "cost"
+
+
+def test_the_daily_search_is_asked_to_cover_health():
+    # The day's points vary with the search; health dropped out on 28 September.
+    import inspect
+    from app.services import sa_context
+    assert "public health" in inspect.getsource(sa_context._distil)

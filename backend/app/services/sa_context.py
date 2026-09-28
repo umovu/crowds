@@ -306,6 +306,8 @@ def _distil(sources: List[Dict[str, str]]) -> Optional[str]:
         "must be something ordinary South Africans LIVE WITH — searches return "
         "continental news and political topic lists, and bullets about wars "
         "elsewhere or lists of election issues tell a simulated person nothing. "
+        "When the snippets carry news on it, give each of these at least one bullet: "
+        "jobs, the cost of living, electricity, public health. "
         "Output 6-8 "
         "short, plain present-tense bullet lines. No preamble, no closing line."
     )
@@ -369,13 +371,37 @@ _REALITY_TOPICS: Dict[str, tuple] = {
 _PRICE_RE = re.compile(r"\bR\s?\d")
 
 
+# A news claim is about the cost of living only when it is about what households
+# pay. "Crime costs the economy R700 billion" says "costs" and names rands, and
+# was reaching every priced pitch as a cost-of-living point.
+_CLAIM_COST_WORDS = ("price", "prices", "cost of living", "living cost", "afford",
+                     "expensive", "inflation", "household", "budget", "fuel", "petrol",
+                     "rent", "tariff", "food")
+
+
+def _first_at(low: str, words) -> Optional[int]:
+    hits = [m.start() for w in words
+            for m in [re.search(r"(?<![a-z0-9])" + re.escape(w), low)] if m]
+    return min(hits) if hits else None
+
+
 def _topics_in(text: str) -> set:
     low = (text or "").lower()
-    found = {t for t, words in _REALITY_TOPICS.items()
-             if any(re.search(r"(?<![a-z0-9])" + re.escape(w), low) for w in words)}
+    found = {t for t, words in _REALITY_TOPICS.items() if _first_at(low, words) is not None}
     if _PRICE_RE.search(text or ""):
         found.add("cost")
     return found
+
+
+def _claim_subject(claim: str) -> Optional[str]:
+    """The one subject a news claim is about: the one it names first.
+
+    A pitch keeps a claim only on its main subject, not a passing word, so "Crime
+    costs the economy R700 billion" is about crime and stays out of a clinic room."""
+    low = (claim or "").lower()
+    words = {**_REALITY_TOPICS, "cost": _CLAIM_COST_WORDS}
+    at = {t: i for t, ws in words.items() if (i := _first_at(low, ws)) is not None}
+    return min(at, key=at.get) if at else None
 
 
 def relevant_realities(block: Optional[str], question: str, limit: int = 3) -> Optional[str]:
@@ -399,7 +425,7 @@ def relevant_realities(block: Optional[str], question: str, limit: int = 3) -> O
         if in_footer:
             footer.append(line)
         elif line.startswith("- "):
-            if len(kept) < limit and _topics_in(line) & wanted:
+            if len(kept) < limit and _claim_subject(line[2:]) in wanted:
                 kept.append(line)
         elif not kept:
             header.append(line)
