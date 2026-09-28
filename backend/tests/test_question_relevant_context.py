@@ -232,6 +232,8 @@ def test_the_daily_search_is_asked_to_cover_health():
     import inspect
     from app.services import sa_context
     assert "public health" in inspect.getsource(sa_context._distil)
+    assert "fuel prices" in inspect.getsource(sa_context._distil)
+    assert "petrol diesel price" in inspect.getsource(sa_context._gather_snippets)
 
 
 def test_every_subject_the_pitch_touches_gets_a_slot_before_repeats():

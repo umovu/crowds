@@ -253,6 +253,9 @@ def _gather_snippets() -> List[Dict[str, str]]:
         # Health salience (clinic stock-outs, NHI moves) — one more cached query,
         # same daily batch; _distil still only summarises what comes back.
         f"South African public health clinics medicine shortages {when}",
+        # Fuel moves on the first Wednesday of every month and feeds taxi fares
+        # and food prices; the fixed petrol figure in sa_world_facts lags it.
+        f"South Africa petrol diesel price change {when}",
     ]
     sources: List[Dict[str, str]] = []
     for q in queries:
@@ -307,7 +310,7 @@ def _distil(sources: List[Dict[str, str]]) -> Optional[str]:
         "continental news and political topic lists, and bullets about wars "
         "elsewhere or lists of election issues tell a simulated person nothing. "
         "When the snippets carry news on it, give each of these at least one bullet: "
-        "jobs, the cost of living, electricity, public health. "
+        "jobs, the cost of living, fuel prices, electricity, public health. "
         "Output 6-8 "
         "short, plain present-tense bullet lines. No preamble, no closing line."
     )
