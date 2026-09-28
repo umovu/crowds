@@ -100,7 +100,7 @@
             <p v-else-if="news.state === 'failed'" class="news-line muted">No news search today. The room answers from its own facts.</p>
             <template v-else-if="news.state === 'done'">
               <p class="news-line">
-                Found {{ news.data.total }} points in today's news.
+                Found {{ news.data.total }} points in {{ news.saved ? 'the news that day' : "today's news" }}.
                 <template v-if="news.data.points.length">{{ news.data.points.length }} {{ news.data.points.length === 1 ? 'is' : 'are' }} about your pitch, so the room hears {{ news.data.points.length === 1 ? 'it' : 'them' }}:</template>
                 <template v-else>None are about your pitch, so the room hears none of them.</template>
               </p>
