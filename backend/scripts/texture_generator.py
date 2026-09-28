@@ -603,6 +603,7 @@ def generate_texture(
                 gender=merged.get("gender"),
                 home_language=merged.get("home_language"),
                 province=merged.get("province"),
+                race=merged.get("race"),
                 rng=rng,
             )
             return merged

@@ -14,8 +14,8 @@ SA first names + surnames, grouped by language family, assigned uniquely against
 running `used` set. No model involved — pure data, assertable with the LLM off.
 
 Linguistic grouping is broad and plausibility-first, not ethnographic; SA names
-cross groups in real life. Home language drives the choice when known; province is
-the fallback; otherwise a broad urban mix is used.
+cross groups in real life. Race sets which banks are possible; home language picks
+among them when known; province is the fallback; otherwise a broad urban mix is used.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ from typing import Dict, List, Optional, Set
 # hundreds of unique combos per group — far more than any single cast (≤24) or
 # the whole library (≈269) needs.
 _BANKS: Dict[str, Dict] = {
-    "nguni": {  # isiZulu / isiXhosa / siSwati / isiNdebele
+    "nguni": {  # isiZulu / siSwati / isiNdebele
         "female": ["Nomvula", "Thandeka", "Nosipho", "Zanele", "Nokuthula",
                    "Sibongile", "Lindiwe", "Busisiwe", "Phumzile", "Nonhlanhla",
                    "Thembeka", "Zinhle", "Ayanda", "Nokwanda", "Sindisiwe",
@@ -41,6 +41,17 @@ _BANKS: Dict[str, Dict] = {
                 "Ngcobo", "Cele", "Mhlongo", "Buthelezi", "Shabangu", "Gumede",
                 "Sithole", "Mkhize", "Zungu", "Hadebe", "Nxumalo", "Mchunu",
                 "Xaba", "Mabaso", "Ntuli", "Zwane"],
+    },
+    "xhosa": {  # isiXhosa: Eastern Cape, and most Black Western Cape families
+        "female": ["Nomsa", "Siphokazi", "Ntombizodwa", "Nwabisa", "Lulama",
+                   "Yonela", "Asanda", "Zukiswa", "Nomonde", "Babalwa",
+                   "Ziyanda", "Unathi", "Nolitha", "Akhona", "Anathi"],
+        "male": ["Luvuyo", "Lwando", "Siyabonga", "Xolani", "Mzwandile",
+                 "Luthando", "Thando", "Sizwe", "Lunga", "Siphiwo",
+                 "Bongani", "Mncedisi", "Aphiwe", "Yamkela", "Lindani"],
+        "sur": ["Mgidi", "Makhaya", "Ngcukana", "Mqhayi", "Jongile", "Ntshebe",
+                "Nkwinti", "Gxasheka", "Nqoko", "Mabandla", "Qamata", "Tshawe",
+                "Ndamase", "Tyali", "Dyantyi", "Bokwe", "Ntlabati", "Nombembe"],
     },
     "sotho_tswana": {  # Sesotho / Setswana / Sepedi
         "female": ["Lerato", "Palesa", "Refilwe", "Dineo", "Boitumelo",
@@ -80,7 +91,7 @@ _BANKS: Dict[str, Dict] = {
                 "Joubert", "Swanepoel", "Le Roux", "Bezuidenhout", "Vermeulen",
                 "Schoeman", "Erasmus", "Lombard", "Oosthuizen"],
     },
-    "english": {  # English / Cape creole surnames common in WC
+    "cape": {  # English / Afrikaans first names + Cape surnames, common in Coloured families
         "female": ["Megan", "Kayla", "Chloe", "Jessica", "Amber", "Robyn",
                    "Nicole", "Shannon", "Candice", "Tamryn", "Bianca", "Caitlin",
                    "Erin", "Leigh", "Paige", "Jade", "Tegan", "Roxanne"],
@@ -92,14 +103,53 @@ _BANKS: Dict[str, Dict] = {
                 "Arendse", "Fortuin", "Cupido", "Pietersen", "Solomons",
                 "Abrahams", "Cloete", "Goliath", "Plaatjies", "Fredericks"],
     },
+    "english": {  # English-speaking white families
+        "female": ["Sarah", "Emma", "Claire", "Kate", "Lauren", "Michelle",
+                   "Samantha", "Rebecca", "Hannah", "Lisa", "Karen", "Jenna",
+                   "Gemma", "Kirsten", "Alison", "Natalie"],
+        "male": ["James", "Michael", "David", "Andrew", "Graham", "Gareth",
+                 "Justin", "Matthew", "Richard", "Stuart", "Ross", "Sean",
+                 "Nicholas", "Simon", "Duncan", "Warren"],
+        "sur": ["Smith", "Taylor", "Brown", "Wilson", "Stewart", "Campbell",
+                "Robertson", "Thompson", "Harris", "Clarke", "Edwards", "Walker",
+                "Murray", "Wright", "Mitchell", "Bennett", "Hughes", "Fraser",
+                "Palmer", "Watson"],
+    },
+    "indian_hindu": {  # Tamil / Hindi-speaking-heritage families, mostly KZN and Gauteng
+        "female": ["Priya", "Kavitha", "Anusha", "Shamila", "Nisha", "Sharmila",
+                   "Thanusha", "Kamini", "Rekha", "Sunitha", "Yashika", "Pooja"],
+        "male": ["Rajesh", "Pravin", "Sanjay", "Vikash", "Suren", "Dinesh",
+                 "Ashwin", "Rakesh", "Nitesh", "Kumaran", "Prenesh", "Yashveer"],
+        "sur": ["Naidoo", "Pillay", "Govender", "Moodley", "Reddy", "Chetty",
+                "Singh", "Maharaj", "Naicker", "Padayachee", "Ramlall", "Munsamy",
+                "Perumal", "Rampersad", "Sookdeo"],
+    },
+    "indian_muslim": {
+        "female": ["Fathima", "Ayesha", "Zainab", "Nadira", "Rukshana", "Shereen",
+                   "Naseema", "Yasmin", "Raeesa", "Tasneem"],
+        "male": ["Yusuf", "Imraan", "Faizal", "Ridwaan", "Ebrahim", "Zaheer",
+                 "Riaz", "Shaheed", "Nazeer", "Irfaan"],
+        "sur": ["Moosa", "Patel", "Khan", "Essop", "Mahomed", "Jeewa", "Dawood",
+                "Bhamjee", "Cassim", "Suleman"],
+    },
 }
 
 # Home language → bank.
 _LANG_GROUP = {
-    "IsiZulu": "nguni", "IsiXhosa": "nguni", "IsiNdebele": "nguni", "SiSwati": "nguni",
+    "IsiZulu": "nguni", "IsiXhosa": "xhosa", "IsiNdebele": "nguni", "SiSwati": "nguni",
     "Sesotho": "sotho_tswana", "Setswana": "sotho_tswana", "Sepedi": "sotho_tswana",
     "Xitsonga": "tsonga_venda", "Tshivenda": "tsonga_venda",
     "Afrikaans": "afrikaans", "English": "english",
+}
+
+# Race → the banks a name may come from. Home language and province only choose
+# among these: a Black Western Cape resident with no recorded language was being
+# named "Morné Pietersen", a White Gauteng resident "Thandeka Shabangu".
+_RACE_GROUPS = {
+    "African/Black": ["nguni", "xhosa", "sotho_tswana", "tsonga_venda"],
+    "White": ["afrikaans", "english"],
+    "Coloured": ["cape", "afrikaans"],
+    "Indian/Asian": ["indian_hindu", "indian_muslim"],
 }
 
 # Province → likely bank(s), used only when home language is unknown. Mixed
@@ -107,14 +157,14 @@ _LANG_GROUP = {
 # plausible, varied name.
 _PROVINCE_GROUPS = {
     "KwaZulu-Natal": ["nguni"],
-    "Eastern Cape": ["nguni"],
+    "Eastern Cape": ["xhosa"],
     "Mpumalanga": ["nguni", "sotho_tswana"],
     "Gauteng": ["nguni", "sotho_tswana"],
     "Free State": ["sotho_tswana"],
     "North West": ["sotho_tswana"],
     "Limpopo": ["sotho_tswana", "tsonga_venda"],
-    "Northern Cape": ["sotho_tswana", "afrikaans"],
-    "Western Cape": ["afrikaans", "english"],
+    "Northern Cape": ["sotho_tswana", "afrikaans", "cape"],
+    "Western Cape": ["afrikaans", "cape", "english", "xhosa"],
 }
 
 _DEFAULT_GROUPS = ["nguni", "sotho_tswana"]  # broad urban-majority fallback
@@ -129,12 +179,33 @@ def _gender_key(gender: Optional[str]) -> Optional[str]:
     return None
 
 
-def _groups_for(home_language: Optional[str], province: Optional[str]) -> List[str]:
-    if home_language and home_language in _LANG_GROUP:
-        return [_LANG_GROUP[home_language]]
-    if province and province in _PROVINCE_GROUPS:
-        return list(_PROVINCE_GROUPS[province])
-    return list(_DEFAULT_GROUPS)
+def _groups_for(home_language: Optional[str], province: Optional[str],
+                race: Optional[str] = None) -> List[str]:
+    allowed = _RACE_GROUPS.get(race or "")
+    if not allowed:
+        allowed = list(_BANKS)
+        default = _DEFAULT_GROUPS
+    else:
+        default = [g for g in _DEFAULT_GROUPS if g in allowed] or allowed
+    lang = _LANG_GROUP.get(home_language or "")
+    if lang in allowed:
+        return [lang]
+    near = [g for g in _PROVINCE_GROUPS.get(province or "", []) if g in allowed]
+    return near or list(default)
+
+
+def name_fits(name: str, race: Optional[str]) -> bool:
+    """True when the first name and surname could both come from a bank this race
+    draws on. Unknown race, or a surname the pool never issued, is not judged."""
+    allowed = _RACE_GROUPS.get(race or "")
+    first, _, sur = (name or "").partition(" ")
+    if not allowed or not any(sur in b["sur"] for b in _BANKS.values()):
+        return True
+    firsts = lambda g: _BANKS[g]["female"] + _BANKS[g]["male"]  # noqa: E731
+    if race == "Indian/Asian":  # Hindu and Muslim names do not mix within one person
+        return any(first in firsts(g) and sur in _BANKS[g]["sur"] for g in allowed)
+    return (any(first in firsts(g) for g in allowed)
+            and any(sur in _BANKS[g]["sur"] for g in allowed))
 
 
 def _candidate_lists(groups: List[str], gkey: Optional[str]):
@@ -159,6 +230,7 @@ def pick_unique_name(
     gender: Optional[str] = None,
     home_language: Optional[str] = None,
     province: Optional[str] = None,
+    race: Optional[str] = None,
     rng: Optional[_random.Random] = None,
 ) -> str:
     """Return a 'First Surname' not already in `used`, plausible for the persona.
@@ -168,19 +240,23 @@ def pick_unique_name(
     """
     r = rng or _random
     gkey = _gender_key(gender)
-    firsts, surs = _candidate_lists(_groups_for(home_language, province), gkey)
+    groups = _groups_for(home_language, province, race)
+    firsts, surs = _candidate_lists(groups, gkey)
     if not firsts or not surs:  # paranoia: never happens with banks above
         firsts, surs = ["Lerato", "Thabo"], ["Mokoena", "Nene"]
 
-    # Fast path: random combos.
+    # Fast path: random combos, first name and surname from the same bank so a
+    # union of banks never yields a "Yusuf Naidoo".
     for _ in range(300):
-        nm = f"{r.choice(firsts)} {r.choice(surs)}"
+        f, s = _candidate_lists([r.choice(groups)], gkey)
+        nm = f"{r.choice(f)} {r.choice(s)}"
         if nm.lower() not in used:
             used.add(nm.lower())
             return nm
 
     # Exhaustive sweep of this group's combos (handles a near-saturated pool).
-    combos = [f"{f} {s}" for f in firsts for s in surs]
+    combos = [f"{f} {s}" for g in groups
+              for f in _candidate_lists([g], gkey)[0] for s in _BANKS[g]["sur"]]
     r.shuffle(combos)
     for nm in combos:
         if nm.lower() not in used:
