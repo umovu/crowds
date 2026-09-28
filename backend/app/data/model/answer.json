@@ -267,6 +267,14 @@
         "type": "list",
         "when": "optional"
       },
+      "news": {
+        "type": "object",
+        "when": "optional",
+        "note": "What the day's web search found and which points this round's room was given (sa_context.news_for_pitch), kept with the round so a reopened panel shows the news it was run on, not today's.",
+        "read_by": [
+          "FlowResults.vue"
+        ]
+      },
       "coverage": {
         "type": "object",
         "nullable": true,

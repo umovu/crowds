@@ -95,6 +95,7 @@ class RoundResult(DataModel):
     results: List[AnswerRow] = Field(json_schema_extra={'when': 'always'})
     summary_narrative: Optional[str] = Field(default=None, json_schema_extra={'when': 'optional'})
     by_segment: list = Field(default=None, json_schema_extra={'when': 'optional'})
+    news: dict = Field(default=None, json_schema_extra={'when': 'optional'})
     coverage: Optional[dict] = Field(default=None, json_schema_extra={'when': 'optional'})
     all_failed: bool = Field(default=None, json_schema_extra={'when': 'optional'})
     unusable: bool = Field(default=None, json_schema_extra={'when': 'optional'})
