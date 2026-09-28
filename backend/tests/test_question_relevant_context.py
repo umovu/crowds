@@ -224,6 +224,7 @@ def test_each_claim_has_one_subject():
     assert _claim_subject("Essential medicines like insulin are out of stock in public clinics.") == "health"
     assert _claim_subject("Electricity tariffs are rising, pushing more people to consider solar.") == "power"
     assert _claim_subject("A family of four needs about R39,710.90 a month for basic living costs.") == "cost"
+    assert _claim_subject("A family of four needs around R39,710.90 a month to cover basic costs.") == "cost"
 
 
 def test_the_daily_search_is_asked_to_cover_health():

@@ -376,7 +376,7 @@ _PRICE_RE = re.compile(r"\bR\s?\d")
 # was reaching every priced pitch as a cost-of-living point.
 _CLAIM_COST_WORDS = ("price", "prices", "cost of living", "living cost", "afford",
                      "expensive", "inflation", "household", "budget", "fuel", "petrol",
-                     "rent", "tariff", "food")
+                     "rent", "tariff", "food", "basic cost", "a month")
 
 
 def _first_at(low: str, words) -> Optional[int]:
