@@ -1,55 +1,114 @@
 {
   "id": "youth-waithood-identity",
-  "subject": "being young without work, and what that does to a person's plans and standing",
   "citation": [
-    "Youth unemployment in South Africa: a theological reflection through the lens of human dignity (SciELO SA)",
-    "Self-reported mental health effects of unemployment on young people in Mdantsane, SA (SA Journal of Psychiatry, PMC)",
-    "Psychological factors influencing youth moving from unemployment to employment in SA (African Journal of Career Development, UJ)"
+    "Mdewuka N, Mhlanga NL, Mabunda SA, Nomatshila SC, Faleni M (2026). Self-reported mental health effects of unemployment on young people in Mdantsane, South Africa: a qualitative study. South African Journal of Psychiatry 32:2565. doi:10.4102/sajpsychiatry.v32i0.2565",
+    "Pereira DJ, Joosub N, Basson P (2024). The psychological factors influencing youth moving from unemployment to employment in South Africa. African Journal of Career Development 6(1):a118. doi:10.4102/ajcd.v6i1.118"
   ],
   "segment_tags": [
     "unemployed_youth"
   ],
-  "topic_tags": [
-    "job",
-    "jobs",
-    "unemployment",
-    "work",
-    "employment",
-    "youth",
-    "internship",
-    "learnership",
-    "career"
-  ],
-  "applies_when": [
+  "claims": [
     {
-      "age_band": [
-        "15-24",
-        "25-34"
+      "text": "Self-worth is earned through material provision: because young people are expected to assume financial responsibilities as they transition to adulthood, lacking the means to care for themselves and their families produces stress, anxiety, self-doubt and worthlessness, so any offer is weighed by whether it restores the ability to provide or merely reminds them of failing adult responsibilities.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P7",
+        "P8",
+        "P9",
+        "P20",
+        "P25",
+        "P26",
+        "P28",
+        "P29",
+        "P34"
       ],
-      "employment_status": [
-        "Unemployed",
-        "Discouraged job seeker"
+      "evaluative_rules": [
+        "Judge an opportunity by whether it restores the ability to provide for yourself and your family, not by what it promises in the abstract"
+      ],
+      "objections": [
+        "Will this actually let me provide for my family, or will it just remind me that I still cannot?"
+      ],
+      "vocabulary": [
+        "provide for my family",
+        "worthless"
+      ],
+      "readings": [
+        {
+          "text": "If being unable to provide for family produces self-doubt, an offer that does not clearly restore the ability to provide may be seen as a reminder of that failure.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who stresses because they cannot take care of themselves would be more open to an offer framed as a way to take care of themselves, and less open to one framed around anything else.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If a person dreamed of being independent and providing for family but could not achieve that dream, they would weigh an offer by whether it moves them toward independence and provision rather than by its other features.",
+          "passages": [
+            "P4"
+          ]
+        }
       ]
     },
     {
-      "age_band": [
-        "15-24",
-        "25-34"
-      ],
-      "is_neet": [
-        "True"
-      ]
-    }
-  ],
-  "economic_tags": [
-    "tight",
-    "moderate"
-  ],
-  "claims": [
-    {
-      "text": "Perceived government betrayal and systemic poverty breed nihilism, making education seem useless and future planning impossible",
+      "text": "Social contact is a threat when you cannot keep up materially: because unemployed young people cannot afford what working peers can, being around others exposes them to shame, jealousy and pity, so they isolate themselves and judge any offer by whether it can be accessed without social exposure or forces comparison with working peers.",
       "needs": [],
-      "chain_id": "C1",
+      "chain_id": "C2",
+      "passages": [
+        "P12",
+        "P13",
+        "P14"
+      ],
+      "evaluative_rules": [
+        "Prefer options that can be pursued without exposing yourself to shame, pity or comparison with working peers"
+      ],
+      "objections": [
+        "Will pursuing this force me into situations where I have to compare myself with people who are working?"
+      ],
+      "vocabulary": [
+        "isolate myself",
+        "insecure"
+      ],
+      "readings": [
+        {
+          "text": "Someone who spends most of their time alone because of unemployment stress would weigh any new offer by whether it can be accessed without being around others, and would be more open to something that does not force social contact.",
+          "passages": [
+            "P12"
+          ]
+        },
+        {
+          "text": "If isolating is how someone avoids insecurity and jealousy towards working friends, they would judge a new offer mainly by whether it can be used while staying alone, and would be less open to anything that requires being seen by peers.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "Someone who isolates to keep from hearing or seeing working friends would be more open to an offer that works without social exposure, but would weigh any element that invites comparison with working peers as a threat to their well-being.",
+          "passages": [
+            "P14"
+          ]
+        },
+        {
+          "text": "If being around others makes someone feel that peers feel sorry for them, they would be more open to an offer that can be taken up alone, but would weigh any social element as exposing them to pity.",
+          "passages": [
+            "P14"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Substances are an escape from the pain of worthlessness: because unemployment brings stress and feelings of being good for nothing, young people turn to Nyaope or dagga to forget their problems, and sometimes to crime, so any offer is judged by whether it provides an alternative escape or pathway that makes substance use unnecessary.",
+      "needs": [],
+      "chain_id": "C3",
       "passages": [
         "P1",
         "P2",
@@ -61,31 +120,91 @@
         "P8",
         "P9"
       ],
+      "evaluative_rules": [
+        "Weigh an offer by whether it gives a real way out of the situation rather than just another reason to escape"
+      ],
       "objections": [
-        "Will this actually change my life, or is it just another empty promise from those who forgot us?"
+        "Will this give me a way out, or will I still need something to help me forget?"
       ],
       "vocabulary": [
-        "alienation",
-        "betrayal",
-        "nihilism"
+        "forget about my problems",
+        "good for nothing"
+      ],
+      "readings": [
+        {
+          "text": "Someone who says unemployment makes them think they are good for nothing would judge any offer by whether it gives them a way to feel useful again, not just a way to pass time.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If stress from not providing for family leads to self-doubt, a new offer would be weighed by whether it can restore a sense of being able to take care of others.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who smokes Nyaope and commits crime to cope would be less open to an offer that only talks about jobs, unless it also addresses the immediate need to escape stress.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If feeling worthless comes from depending on a grant and doing nothing at home, an offer would be judged by whether it provides a real alternative to sitting around, not just more waiting.",
+          "passages": [
+            "P9",
+            "P8"
+          ]
+        }
       ]
     },
     {
-      "text": "Inability to provide for oneself or family erodes self-worth, triggering social isolation and substance use as a coping response — with stigma experienced as a separate, compounding perception rather than the direct cause",
+      "text": "Existing supportive people and places are the buffer that keeps hope alive: because family, friends and community resources like Lingomso Youth Centre provide advice, encouragement and hope, unemployed young people keep engaging socially and using those services, so any offer is judged by whether it connects to or strengthens the support they already trust.",
       "needs": [],
-      "chain_id": "C2",
+      "chain_id": "C4",
       "passages": [
-        "P10",
-        "P11",
-        "P12",
-        "P13",
-        "P14",
         "P15",
         "P16",
         "P17",
         "P18",
-        "P19",
-        "P20",
+        "P19"
+      ],
+      "evaluative_rules": [
+        "Prefer options that build on people and places you already trust for advice and encouragement"
+      ],
+      "objections": [
+        "Does this connect to the people and places that already give me hope, or does it ignore them?"
+      ],
+      "vocabulary": [
+        "encourage me",
+        "hope"
+      ],
+      "readings": [
+        {
+          "text": "Someone who mixes with working people for advice on how to find a job would weigh a new offer by whether it brings them into contact with people who can give that same kind of guidance.",
+          "passages": [
+            "P16"
+          ]
+        },
+        {
+          "text": "If someone goes to Lingomso Youth Centre to expose themselves to things that might benefit them one day, they would judge a new offer by whether it gives them that same kind of exposure.",
+          "passages": [
+            "P18"
+          ]
+        },
+        {
+          "text": "If someone still has hope that things will eventually work out at the right time, they would judge a new offer by whether it respects that sense of timing rather than pressuring them to take whatever comes.",
+          "passages": [
+            "P15"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "A credible route to education, work or purpose restores hope and identity: because blocked pathways from inadequate qualifications, lack of funds or family hardship make young people feel worthless and fear becoming like peers who gave up, those who persist reframe their situation as not over and find purpose, so any offer is judged by whether it opens a believable route that restores hope and a sense of self.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
         "P21",
         "P22",
         "P23",
@@ -96,18 +215,7 @@
         "P28",
         "P29",
         "P30",
-        "P31"
-      ],
-      "objections": [
-        "Will this make me feel like even more of a burden, or prove I'm good for nothing?"
-      ],
-      "vocabulary": []
-    },
-    {
-      "text": "Deferred education dreams create a sense of being left out and worthless compared to peers, turning job-seeking into a desperate, fearful act where requirements feel unattainable and rejection feels personal",
-      "needs": [],
-      "chain_id": "C3",
-      "passages": [
+        "P31",
         "P32",
         "P33",
         "P34",
@@ -116,50 +224,93 @@
         "P37",
         "P38",
         "P39",
-        "P40",
-        "P41",
-        "P42",
-        "P43",
-        "P44",
-        "P45",
-        "P46",
-        "P47",
-        "P48",
-        "P49"
+        "P40"
+      ],
+      "evaluative_rules": [
+        "Judge an opportunity by whether it opens a believable path to education, work or purpose, not by whether it merely promises one"
       ],
       "objections": [
-        "What if I try and they reject me because I don't have what they want?"
+        "Is this a real path to work or study, or just another dead end that will leave me feeling worthless?"
       ],
       "vocabulary": [
-        "worthless",
-        "caged"
-      ]
-    },
-    {
-      "text": "Family hardship and caregiving burdens force a survival lens where any opportunity is judged solely by whether it puts food on the table",
-      "needs": [],
-      "chain_id": "C4",
-      "passages": [
-        "P50",
-        "P51",
-        "P34",
-        "P44",
-        "P45"
+        "it's not over",
+        "finding myself"
       ],
-      "objections": [
-        "How can I think about the future when I need to put food on the table today?"
-      ],
-      "vocabulary": [
-        "survival"
+      "readings": [
+        {
+          "text": "If someone has been turned away because a higher certificate does not meet entry requirements, they would judge a new offer mainly by whether it accepts their current qualifications as a credible starting point.",
+          "passages": [
+            "P21"
+          ]
+        },
+        {
+          "text": "Someone who felt worthless and feared becoming like peers who gave up would weigh a new offer by whether it gives them a believable route away from that feared life and toward a sense of purpose.",
+          "passages": [
+            "P25",
+            "P27",
+            "P30",
+            "P39"
+          ]
+        },
+        {
+          "text": "If a person has reframed their situation as not over and keeps looking for work to put food on the table, they would be open to a new offer only if it fits alongside that immediate need to help family.",
+          "passages": [
+            "P23",
+            "P28",
+            "P29",
+            "P36"
+          ]
+        },
+        {
+          "text": "Someone who found purpose and a reason to wake up would look at a new offer for whether it deepens that sense of self and hope rather than just adding another task.",
+          "passages": [
+            "P39",
+            "P40"
+          ]
+        }
       ]
     }
   ],
   "claim_type": "qualitative",
-  "region": "South Africa (Mdantsane, unspecified urban areas)",
+  "region": "Mdantsane (Eastern Cape) and Gauteng, South Africa",
   "year_range": null,
-  "confidence": "Multi-source qualitative synthesis drawing on theological reflection, psychiatric self-reports, and career-development interviews — mechanisms are robust across contexts, but magnitudes and precise regional boundaries are unknown.",
+  "confidence": "Two qualitative South African studies: interviews with 19 unemployed young people aged 19-29 in Mdantsane (mostly men), and with 4 young Black women who moved from unemployment into work. Mechanisms durable; magnitudes unknown.",
   "comb_gaps": [
-    "opportunity",
-    "motivation"
+    "capability",
+    "opportunity"
+  ],
+  "subject": "being young without work, and what that does to a person's plans and standing",
+  "topic_tags": [
+    "job",
+    "jobs",
+    "unemployment",
+    "work",
+    "employment",
+    "youth",
+    "internship",
+    "learnership",
+    "career"
+  ],
+  "year_note": "Published 2024 and 2026.",
+  "applies_when": [
+    {
+      "employment_status": [
+        "Unemployed",
+        "Discouraged job seeker"
+      ],
+      "age_band": [
+        "15-24",
+        "25-34"
+      ]
+    },
+    {
+      "age_band": [
+        "15-24",
+        "25-34"
+      ],
+      "is_neet": [
+        "True"
+      ]
+    }
   ]
 }

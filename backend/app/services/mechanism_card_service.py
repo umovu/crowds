@@ -253,6 +253,43 @@ def claims_touched(question: str, cards: List[Dict] | None = None) -> set:
                                                           if k not in tagged])
 
 
+def _monthly_income(profile: Dict) -> float | None:
+    for v in (profile.get("monthly_income_rand"), profile.get("monthly_household_income_rand"),
+              (profile.get("circumstances") or {}).get("monthly_household_income_rand")
+              if isinstance(profile.get("circumstances"), dict) else None):
+        if isinstance(v, (int, float)) and v > 0:
+            return float(v)
+    return None
+
+
+def _price(question: str) -> float | None:
+    try:
+        from .affordability_service import parse_price
+    except (ImportError, ValueError):  # loaded by file path (sim subprocess, tests)
+        try:
+            from app.services.affordability_service import parse_price
+        except ImportError:
+            return None
+    found = parse_price(question)
+    return found["amount"] if found else None
+
+
+def _share_narrowed(card: Dict | None, profile: Dict, question: str) -> Dict | None:
+    """The card without claims whose price threshold this pitch does not reach for
+    this persona (min_income_share); None when none is left."""
+    if not card:
+        return None
+    claims = card.get("claims") or []
+    if not any(cl.get("min_income_share") for cl in claims):
+        return card
+    price, income = _price(question), _monthly_income(profile)
+    share = price / income if price and income else 0.0
+    kept = [cl for cl in claims if not cl.get("min_income_share") or share >= cl["min_income_share"]]
+    if not kept:
+        return None
+    return card if len(kept) == len(claims) else {**card, "claims": kept}
+
+
 def _about_narrowed(card: Dict | None, involved: set) -> Dict | None:
     """The card without the claims the question does not involve; None when none is left."""
     if not card:
@@ -316,6 +353,7 @@ def cards_for_question(profile: Dict, question: str, cap: int = DEFAULT_CARD_CAP
     if any(cl.get("about") for c in on_topic for cl in c.get("claims") or []):
         involved = claims_touched(question)  # per pitch, memoized in card_subjects
         on_topic = [_about_narrowed(c, involved) for c in on_topic]
+    on_topic = [_share_narrowed(c, profile, question) for c in on_topic]
     return [c for c in on_topic if c][:cap]
 
 

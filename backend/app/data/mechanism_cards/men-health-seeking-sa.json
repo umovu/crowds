@@ -1,0 +1,331 @@
+{
+  "id": "men-health-seeking-sa",
+  "citation": [
+    "Chavalala L, Lebese TR, Makhado L (2025). Men's views on factors contributing to their poor health-seeking behaviour in Limpopo Province, South Africa. BMC Public Health. doi:10.1186/s12889-025-21283-9",
+    "Chavalala L et al. (2025). General Male Patients' Experiences When Visiting Public Health Facilities in Limpopo Province, South Africa. Public Health Challenges. doi:10.1002/puh2.70166",
+    "Mamabolo LL, Sibiya I, Buthelezi F (2026). Public Men's Clinic: men's experiences of healthcare professionals and environment. African Journal of Primary Health Care & Family Medicine."
+  ],
+  "segment_tags": [
+    "civic_moderate",
+    "unemployed_youth",
+    "urban_professional",
+    "grant_dependent_survivor"
+  ],
+  "claims": [
+    {
+      "text": "Confidentiality is the binding constraint: fear that a health secret will not be safe at public facilities drives men to self-medicate and avoid exposure, so any acceptable option must keep the health status private and away from public facility exposure.",
+      "needs": [],
+      "chain_id": "C1",
+      "passages": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P20"
+      ],
+      "evaluative_rules": [
+        "Judge a health option by whether it keeps your health status secret, not by whether it is the official facility"
+      ],
+      "objections": [
+        "Will my health status or secret stay private if I use this?"
+      ],
+      "vocabulary": [
+        "secret",
+        "self-diagnose"
+      ],
+      "readings": [
+        {
+          "text": "Someone who runs to the pharmacy and self-diagnoses to keep a health secret would weigh a new option mainly by whether it keeps the health status away from public facility exposure.",
+          "passages": [
+            "P1"
+          ]
+        },
+        {
+          "text": "If a man treats a flu with med lemon and grandpa from a spaza shop, he would be less open to an option that requires going to a public health facility, even if it is for a minor problem.",
+          "passages": [
+            "P2"
+          ]
+        },
+        {
+          "text": "Someone who burns and inhales traditional herbs for a headache would be more open to an option that lets him manage the problem without going to the doctor.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If a man believes a woman will find out about diseases through pregnancy checks, he would be less open to any option that involves public facility exposure, because he fears the health status will not be safe there.",
+          "passages": [
+            "P4"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Traditional herbs are trusted as the real cure while pills are seen as weak, so men stay home and use herbs instead of clinics, making an option credible only if it aligns with traditional or herbal healing beliefs.",
+      "needs": [],
+      "chain_id": "C2",
+      "passages": [
+        "P6",
+        "P7",
+        "P3",
+        "P11"
+      ],
+      "evaluative_rules": [
+        "Judge a treatment by whether it is powerful enough to cure, not by whether it is clinic medicine"
+      ],
+      "objections": [
+        "Will this actually cure the disease, or is it just weak pills?"
+      ],
+      "vocabulary": [
+        "African herbs",
+        "cure the disease"
+      ],
+      "readings": [
+        {
+          "text": "Someone who believes pills are not powerful enough to clean drop completely would be open to a new option only if it is built around traditional herbs as the real cure.",
+          "passages": [
+            "P6"
+          ]
+        },
+        {
+          "text": "If a man trusts African herbs and thinks pills do not help him, he would weigh a new option by whether it aligns with herbal healing rather than clinic medicine.",
+          "passages": [
+            "P7"
+          ]
+        },
+        {
+          "text": "Someone who burns and inhales traditional herbs for a headache and feels okay without going to the doctor would be less open to a new option that leads toward clinics or pills.",
+          "passages": [
+            "P3"
+          ]
+        },
+        {
+          "text": "If a man relies on friends or older people and was cured by herbs suggested by elders, he would judge a new option by whether it fits the advice and herbal practices of people he trusts.",
+          "passages": [
+            "P11"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Impatience is the binding constraint: long queues and waiting times are read as intolerable, so men leave or avoid facilities, making an option attractive only if it promises fast, low-wait access.",
+      "needs": [],
+      "chain_id": "C3",
+      "passages": [
+        "P8",
+        "P9",
+        "P21",
+        "P22",
+        "P23",
+        "P30"
+      ],
+      "evaluative_rules": [
+        "Judge a health option by how quickly it serves you, not by how thorough the facility is"
+      ],
+      "objections": [
+        "Will I have to wait in a long queue for this?"
+      ],
+      "vocabulary": [
+        "impatient",
+        "long queues"
+      ],
+      "readings": [
+        {
+          "text": "If a man reads a long queue as something he will not persevere through, he would weigh a new option mainly by whether it removes the queue altogether.",
+          "passages": [
+            "P9"
+          ]
+        },
+        {
+          "text": "Someone who has sat from morning until afternoon without being helped would weigh a new option by whether it can promise access that does not depend on waiting in a queue.",
+          "passages": [
+            "P23"
+          ]
+        },
+        {
+          "text": "If a man has waited for hours without being told why no one was attending to him, he would weigh a new option by whether it offers fast access and also tells him what is happening.",
+          "passages": [
+            "P30"
+          ]
+        },
+        {
+          "text": "Someone who has come back without being helped because the facility was full and there was no seat would weigh a new option by whether it can promise low-wait access even when demand is high.",
+          "passages": [
+            "P21"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Dignity is the binding constraint: stigma, disrespect, and confidentiality breaches from health workers make public facilities shaming and unsafe, so men avoid or abandon care to preserve face, making an option acceptable only if it protects dignity, avoids public labelling, and ensures respectful treatment.",
+      "needs": [],
+      "chain_id": "C4",
+      "passages": [
+        "P12",
+        "P13",
+        "P14",
+        "P26",
+        "P27",
+        "P28",
+        "P29",
+        "P34",
+        "P37",
+        "P38",
+        "P40",
+        "P41",
+        "P50"
+      ],
+      "evaluative_rules": [
+        "Judge a health option by whether it protects your dignity and avoids public labelling, not by whether it is the nearest facility"
+      ],
+      "objections": [
+        "Will I be judged, laughed at, or shamed if I use this?"
+      ],
+      "vocabulary": [
+        "embarrassment",
+        "judged"
+      ],
+      "readings": [
+        {
+          "text": "Someone who fears being seen and judged at a clinic would weigh a new option mainly by whether it lets them keep their health status from being known and avoid public labelling.",
+          "passages": [
+            "P12",
+            "P13"
+          ]
+        },
+        {
+          "text": "If a man has heard nurses joke about patients' conditions to other patients, he would weigh a new option by whether it removes the chance of health workers talking about his condition after consulting.",
+          "passages": [
+            "P26",
+            "P27"
+          ]
+        },
+        {
+          "text": "Someone who stopped taking medication for high blood after being treated badly would weigh a new option by whether it shields him from the attitudes of health workers and security.",
+          "passages": [
+            "P41"
+          ]
+        },
+        {
+          "text": "If a man expects to be shouted at or cruelly spoken to about an STI, he would weigh a new option by whether it ensures respectful treatment rather than harsh talk from nurses.",
+          "passages": [
+            "P28",
+            "P29"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Masculine and cultural values make vulnerability and treatment by female nurses feel emasculating, so men avoid clinics or prefer male-only, male-provider spaces, making an option acceptable only if it offers gender-concordant, male-friendly, culturally comfortable care.",
+      "needs": [],
+      "chain_id": "C5",
+      "passages": [
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P31",
+        "P32",
+        "P42",
+        "P43",
+        "P44",
+        "P45",
+        "P46",
+        "P47",
+        "P48",
+        "P51",
+        "P54"
+      ],
+      "evaluative_rules": [
+        "Judge a health option by whether it lets you be treated man to man, not by whether it is the standard clinic"
+      ],
+      "objections": [
+        "Will I have to be treated by a female nurse or expose myself in a way that goes against my culture?"
+      ],
+      "vocabulary": [
+        "man to man",
+        "pride"
+      ],
+      "readings": [
+        {
+          "text": "Someone who tells himself he is strong and that coughing does not need one to run to the doctor would weigh any new option against whether it treats his body as strong and not like the body of women, making him less open if it frames care as something he must seek for minor things.",
+          "passages": [
+            "P17",
+            "P18",
+            "P19"
+          ]
+        },
+        {
+          "text": "If a man believes that based on his values and culture it is not good for him to take off his trousers for a woman who is not his wife, he would look first at whether the new option guarantees he will not be treated by female nurses, and would be more open only if it offers male providers.",
+          "passages": [
+            "P15",
+            "P16",
+            "P31",
+            "P32"
+          ]
+        },
+        {
+          "text": "Someone who has experienced a men's clinic where he was assisted by a male nurse and could speak man to man about very sensitive things would weigh a new option by whether it creates a male-only space with male nurses, and would be more open if it does.",
+          "passages": [
+            "P42",
+            "P43",
+            "P44",
+            "P46",
+            "P51"
+          ]
+        },
+        {
+          "text": "If a man has seen that at a men's clinic people are free and talk while at the main clinic people are not free and do not talk, he would judge a new option by whether it fosters that same openness among men, and would be less open if it does not address the discomfort he feels in mixed spaces.",
+          "passages": [
+            "P47",
+            "P48",
+            "P54"
+          ]
+        }
+      ]
+    }
+  ],
+  "claim_type": "qualitative",
+  "region": "Limpopo and Sedibeng (Gauteng), South Africa",
+  "year_range": "2024",
+  "confidence": "Three qualitative South African studies of men: 21 men interviewed in Limpopo, 28 male patients in four Limpopo focus groups, and 43 men in four focus groups at a peri-urban men's clinic in Evaton. Mechanisms durable; magnitudes unknown.",
+  "comb_gaps": [
+    "capability"
+  ],
+  "subject": "men deciding whether to go to a clinic: confidentiality, herbs versus pills, queues, dignity, female nurses and what a man is supposed to endure",
+  "year_note": "Limpopo interviews May-June 2024; Evaton focus groups September-October 2024; Limpopo patient focus groups published 2025.",
+  "applies_when": [
+    {
+      "gender": [
+        "Male"
+      ],
+      "youth_age_band": [
+        "18-24",
+        "25+"
+      ]
+    }
+  ],
+  "topic_tags": [
+    "clinic",
+    "clinics",
+    "health",
+    "healthcare",
+    "doctor",
+    "nurse",
+    "nurses",
+    "hospital",
+    "medicine",
+    "medication",
+    "check-up",
+    "sick",
+    "screening",
+    "testing",
+    "treatment",
+    "mens health",
+    "hiv",
+    "pills",
+    "men"
+  ]
+}

@@ -69,15 +69,15 @@ def test_every_card_says_what_it_is_about():
         assert card.get("topic_tags"), card["id"]
 
 
-def test_clinic_pitch_uses_neither_fintech_nor_status_card():
+def test_clinic_pitch_uses_neither_fintech_nor_learner_card():
     mcs._cache = None
-    profile = _bound("middle-class-status-identity", "fintech-adoption-trust")
+    profile = _bound("learner-motivation-grade12-sa", "fintech-adoption-trust")
     assert mcs.cards_for_question(profile, CLINIC) == []
 
 
 def test_a_banking_pitch_uses_the_fintech_card():
     mcs._cache = None
-    profile = _bound("middle-class-status-identity", "fintech-adoption-trust")
+    profile = _bound("learner-motivation-grade12-sa", "fintech-adoption-trust")
     used = mcs.cards_for_question(profile, "A digital bank account with no monthly fees.")
     assert [c["id"] for c in used] == ["fintech-adoption-trust"]
 
