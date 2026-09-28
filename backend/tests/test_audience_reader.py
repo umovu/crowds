@@ -202,3 +202,31 @@ def test_a_fee_paying_room_seats_no_one_from_a_no_fee_school(ps, tmp_path):
     by_id = {p["id"]: p for p in ps.get_library().all()}
     tiers = {ps._fee_tier(by_id[s["library_id"]]) for s in seats}
     assert tiers <= {"low_fee", "high_fee"}
+
+
+# ── who can pay ──────────────────────────────────────────────────────────────
+# A priced diabetes room seated a 15-year-old: minors cannot take out a paid plan.
+
+def _ages(ps, tmp_path, meta):
+    seats = json.load(open(tmp_path / meta["session_id"] / "agentsociety_profiles.json", encoding="utf-8"))
+    by_id = {p["id"]: p for p in ps.get_library().all()}
+    return [by_id[s["library_id"]].get("age") for s in seats]
+
+
+def test_a_priced_room_seats_no_minors(ps, tmp_path):
+    for seed in range(4):
+        meta = ps.create_session("Diabetes care for R200 a month.", mode="panel", n=12, seed=seed,
+                                 segments=["clinic_frustrated"])
+        assert all(a is None or a >= 18 for a in _ages(ps, tmp_path, meta))
+
+
+def test_minors_stay_when_the_operator_asks_for_learners(ps, tmp_path):
+    meta = ps.create_session("A R60 a month study app.", mode="panel", n=12, seed=1,
+                             segments=["learners"])
+    assert any(a is not None and a < 18 for a in _ages(ps, tmp_path, meta))
+
+
+def test_age_alone_decides_who_can_pay(ps):
+    assert not ps._can_pay({"age": 15})
+    assert ps._can_pay({"age": 18})
+    assert ps._can_pay({})
