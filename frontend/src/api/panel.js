@@ -63,6 +63,11 @@ export const attitudeOptions = (dim) =>
 export const previewAffordability = (pitch) =>
   service.post('/api/panel/affordability', { pitch })
 
+// What today's web search found, and which points this pitch's room will hear.
+// Same reading the round makes; fills the day's cache if it is cold.
+export const getNews = (pitch) =>
+  service.post('/api/panel/news', { pitch })
+
 // The follow-up report for a session: what the room told you, who moved, and
 // two or three guesses to test next. Facts are computed server-side; the
 // hypotheses are a cheap LLM pass and are absent, never faked, when it fails.

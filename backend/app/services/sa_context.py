@@ -24,7 +24,7 @@ import os
 import re
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from ..config import Config
 from ..utils.logger import get_logger
@@ -381,6 +381,51 @@ def relevant_realities(block: Optional[str], question: str, limit: int = 3) -> O
     if footer:
         out += "\n" + "\n".join(footer)
     return out
+
+
+_SOURCE_LINE = re.compile(r"^- (?P<label>.+?)(?: \((?P<link>https?://[^)]+)\))?$")
+
+
+def _points_and_sources(block: Optional[str]) -> Tuple[List[str], List[Dict[str, str]]]:
+    """The claim bullets and the sources footer of a rendered block, as lists."""
+    points: List[str] = []
+    sources: List[Dict[str, str]] = []
+    in_footer = False
+    for line in (block or "").splitlines():
+        if line.startswith("Sources searched"):
+            in_footer = True
+            continue
+        if not line.startswith("- "):
+            continue
+        if in_footer:
+            m = _SOURCE_LINE.match(line.strip())
+            if m:
+                sources.append({"label": m["label"], "link": m["link"] or ""})
+        else:
+            points.append(line[2:].strip())
+    return points, sources
+
+
+def news_for_pitch(pitch: str) -> Dict[str, Any]:
+    """What today's web search found, and which of it this pitch's room will hear.
+
+    Same calls the round makes (current_sa_realities, then relevant_realities), so
+    what the page shows is what the personas are given, and a cold cache is filled
+    here rather than by every persona at once. No new search or model call.
+    """
+    if not _enabled():
+        return {"enabled": False}
+    saved = _read_cache() is not None
+    block = current_sa_realities()
+    if not block:
+        return {"enabled": True, "found": False, "from_saved": saved}
+    everything, _ = _points_and_sources(block)
+    used, _ = _points_and_sources(relevant_realities(block, pitch))
+    _, sources = _points_and_sources(block)
+    as_of = re.search(r"as of ([^)]+?)\)", block)
+    return {"enabled": True, "found": True, "from_saved": saved,
+            "as_of": as_of.group(1) if as_of else None,
+            "total": len(everything), "points": used, "sources": sources}
 
 
 def current_sa_realities(snapshot: Optional[Dict[str, Any]] = None) -> Optional[str]:

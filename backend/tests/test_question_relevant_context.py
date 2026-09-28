@@ -123,3 +123,43 @@ def test_sim_prompt_keeps_the_card_the_scenario_is_about():
 
 def test_sim_prompt_without_a_question_keeps_the_stored_block():
     assert "STORED BLOCK" in _sim_context("")
+
+
+# ── what the page shows ────────────────────────────────────────────────────
+# The page lists what the web search found and which points this room hears.
+# It must be the same points the prompt gets, not a second reading of the news.
+
+def _news(monkeypatch, block, saved=True):
+    from app.services import sa_context
+    monkeypatch.setattr(sa_context, "_enabled", lambda: True)
+    monkeypatch.setattr(sa_context, "_read_cache", lambda: block if saved else None)
+    monkeypatch.setattr(sa_context, "current_sa_realities", lambda snapshot=None: block)
+    return sa_context
+
+
+def test_the_page_shows_what_the_prompt_gets(monkeypatch):
+    sc = _news(monkeypatch, BLOCK)
+    out = sc.news_for_pitch(CLINIC)
+    prompt_points = [l[2:] for l in relevant_realities(BLOCK, CLINIC).splitlines()
+                     if l.startswith("- ") and "news24" not in l]
+    assert out["points"] == prompt_points
+    assert out["total"] == 6
+    assert out["as_of"] == "10 September 2026"
+    assert out["sources"] == [{"label": "news24.com", "link": ""}]
+    assert out["from_saved"] is True
+
+
+def test_a_pitch_the_news_does_not_touch_shows_none_used(monkeypatch):
+    out = _news(monkeypatch, BLOCK).news_for_pitch(EVENTS_APP)
+    assert out["points"] == [] and out["total"] == 6
+
+
+def test_a_source_link_is_kept(monkeypatch):
+    block = BLOCK.replace("- news24.com\n", "- News24 (https://www.news24.com/a)\n")
+    out = _news(monkeypatch, block, saved=False).news_for_pitch(CLINIC)
+    assert out["sources"] == [{"label": "News24", "link": "https://www.news24.com/a"}]
+    assert out["from_saved"] is False
+
+
+def test_no_search_says_so(monkeypatch):
+    assert _news(monkeypatch, None, saved=False).news_for_pitch(CLINIC)["found"] is False

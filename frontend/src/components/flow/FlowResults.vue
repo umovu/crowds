@@ -82,6 +82,41 @@
             <span class="spectrum-pitched-label">{{ isPanel ? 'PITCHED:' : 'SCENARIO:' }}</span> {{ query }}
           </div>
 
+          <!-- Web research: today's search, and the points this room was given.
+               Shown only on a fresh run, so an old room never shows today's news. -->
+          <div v-if="isPanel && news.state !== 'off'" class="news-box">
+            <div class="news-head">
+              <span class="news-title">Web research</span>
+              <span v-if="news.state === 'done' && news.data" class="news-when">
+                {{ news.data.from_saved ? 'Searched earlier today' : 'Searched just now' }}<template v-if="news.data.as_of"> · {{ news.data.as_of }}</template>
+              </span>
+            </div>
+            <div v-if="news.state === 'searching'" class="chat-typing-indicator news-typing">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-text">Reading today's South African news…</span>
+            </div>
+            <p v-else-if="news.state === 'failed'" class="news-line muted">No news search today. The room answers from its own facts.</p>
+            <template v-else-if="news.state === 'done'">
+              <p class="news-line">
+                Found {{ news.data.total }} points in today's news.
+                <template v-if="news.data.points.length">{{ news.data.points.length }} {{ news.data.points.length === 1 ? 'is' : 'are' }} about your pitch, so the room hears {{ news.data.points.length === 1 ? 'it' : 'them' }}:</template>
+                <template v-else>None are about your pitch, so the room hears none of them.</template>
+              </p>
+              <ul v-if="news.data.points.length" class="news-points">
+                <li v-for="(pt, i) in news.data.points" :key="i">{{ pt }}</li>
+              </ul>
+              <div v-if="news.data.sources.length" class="news-sources">
+                <span class="news-sources-label">Sources</span>
+                <template v-for="(s, i) in news.data.sources" :key="i">
+                  <a v-if="s.link" :href="s.link" target="_blank" rel="noopener">{{ s.label }}</a>
+                  <span v-else>{{ s.label }}</span>
+                </template>
+              </div>
+            </template>
+          </div>
+
           <!-- Typing indicator while the room is live -->
           <div v-if="feedLive" class="spectrum-typing">
             <div class="chat-typing-indicator">
@@ -563,7 +598,7 @@ import {
   resumeSimulation,
   stopSimulation
 } from '../../api/simulation'
-import { getSession, pitchSession, askAgent, listRounds } from '../../api/panel'
+import { getSession, pitchSession, askAgent, listRounds, getNews } from '../../api/panel'
 import { useToast } from '../../composables/useToast'
 import { generateReport, getReportStatus, getReport } from '../../api/report'
 
@@ -1269,6 +1304,7 @@ const loadPanel = async () => {
         if (panelPointer.value === 'fit') fitRanking.value = (last.result || {}).by_segment || []
       }
       if (!results) {
+        await readNews()
         const res = await pitchSession(props.sessionId, { concurrency: 6 })
         results = res.data?.results || []
         llmSummary.value = res.data?.summary_narrative || ''
@@ -1284,6 +1320,22 @@ const loadPanel = async () => {
                 { retry: loadPanel, code: e?.response?.data?.code })
   } finally {
     feedLive.value = false
+  }
+}
+
+// ── Web research — what today's search found, before the room answers ──────
+// 'off' hides the box: a saved room, or the search switched off server-side.
+const news = reactive({ state: 'off', data: null })
+const readNews = async () => {
+  news.state = 'searching'
+  try {
+    const res = await getNews(props.query)
+    const d = res.data || {}
+    if (!d.enabled) { news.state = 'off'; return }
+    news.data = d
+    news.state = d.found ? 'done' : 'failed'
+  } catch (_) {
+    news.state = 'failed'  // the round still runs; the news is extra
   }
 }
 
@@ -2056,6 +2108,26 @@ onUnmounted(() => {
 .spectrum-pitched-label { color: #1E9E5A; font-weight: 700; margin-right: 6px; }
 
 .spectrum-typing { padding: 16px 24px; }
+
+/* ── Web research box ─────────────────────────────────────────────────────── */
+.news-box {
+  margin: 12px 24px 0;
+  padding: 12px 16px;
+  background: #FFF; border: 1px solid #E5E7EB; border-radius: 8px;
+  font-size: 13px; color: #374151; line-height: 1.5;
+}
+.news-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.news-title { font-weight: 700; color: #1E9E5A; }
+.news-when { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9CA3AF; }
+.news-typing { border: none; padding: 4px 0; }
+.news-line { margin: 0; }
+.news-line.muted { color: #9CA3AF; }
+.news-points { margin: 6px 0 0; padding-left: 18px; }
+.news-points li { margin: 2px 0; }
+.news-sources { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 12px; color: #6B7280; }
+.news-sources-label { font-weight: 600; }
+.news-sources a { color: #1E9E5A; text-decoration: none; }
+.news-sources a:hover { text-decoration: underline; }
 
 /* ── Summary box ──────────────────────────────────────────────────────────── */
 .spectrum-summary {

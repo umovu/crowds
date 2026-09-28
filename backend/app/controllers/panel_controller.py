@@ -4,6 +4,7 @@
   GET    /api/panel/segments                          named library slices + counts
   GET    /api/panel/attitudes/<dim>                   counts per stance for one attitude
   POST   /api/panel/affordability                     the affordability lens a pitch implies
+  POST   /api/panel/news                              what today's web search found for a pitch
   GET    /api/panel/pointers                          the four pointers and their slots
   POST   /api/panel/read                              read one sentence into a study spec
   POST   /api/panel/sessions                          create a session
@@ -32,7 +33,7 @@ from flask import jsonify, request
 from . import gates, panel_bp
 from ..auth import current_user_id
 from ..services import (affordability_service, hypothesis_report, panel_round_service,
-                        panel_service, panel_session_service, pointers, poster_service,
+                        panel_service, panel_session_service, pointers, poster_service, sa_context,
                         study_reader)
 from ..utils.logger import get_logger
 
@@ -117,6 +118,19 @@ def affordability_preview():
                     affordability_service.derive_budget_tiers(data.get('pitch') or '')})
     except Exception as e:  # noqa: BLE001
         logger.error(f"Failed to derive affordability: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@panel_bp.route('/news', methods=['POST'])
+def news_preview():
+    """What today's web search found, and which points this pitch's room will hear.
+
+    Fills the day's cache if it is cold, so the round that follows reuses it."""
+    try:
+        data = request.get_json() or {}
+        return _ok(sa_context.news_for_pitch(data.get('pitch') or ''))
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Failed to read today's news: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 
