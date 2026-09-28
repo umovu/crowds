@@ -662,6 +662,18 @@ def assert_library_cast(profiles: List[Dict[str, Any]]) -> None:
 SPENDING_ADULT_AGE = 25
 _DEPENDENT_ARCHETYPES = {"learner"}
 
+# Who can be asked to pay at all. A priced pitch put a 15-year-old in a R200/month
+# diabetes room: minors cannot sign up for a paid plan, their parent would. They
+# stay in a priced room only when the operator asked for them by name.
+PAYING_AGE = 18
+_MINOR_SEGMENTS = {"youth", "learners", "learners_no_fee", "learners_low_fee", "learners_high_fee"}
+_MINOR_AUDIENCE_FACTS = {"young", "age_15_24", "learners"}
+
+
+def _can_pay(persona: Dict[str, Any]) -> bool:
+    age = persona.get("age")
+    return not (isinstance(age, (int, float)) and age < PAYING_AGE)
+
 
 def _controls_household_income(persona: Dict[str, Any]) -> bool:
     age = persona.get("age")
@@ -1060,6 +1072,11 @@ def create_session(
             )
         audience_pool_size = len(qualified)
         library = _FilteredLibrary(qualified)
+
+    asked_for_minors = bool(set(picked_seg_list) & _MINOR_SEGMENTS
+                            or set(audience_facts) & _MINOR_AUDIENCE_FACTS)
+    if tier_list and not asked_for_minors:
+        library = _FilteredLibrary([p for p in library.all() if _can_pay(p)])
 
     if seg_list == ["everyone"]:
         cast = select_for_query(n, pitch, province=province, seed=seed, library=library)
