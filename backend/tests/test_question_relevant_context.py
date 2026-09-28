@@ -184,3 +184,14 @@ def test_a_search_result_keeps_its_address(monkeypatch):
     assert got["link"] == "https://www.news24.com/health/a"
     assert got["source"] == "news24.com"
     assert "news24.com (https://www.news24.com/health/a)" in sa_context._render_sources([got])
+
+
+def test_social_posts_encyclopedias_and_company_blogs_are_not_news():
+    from app.services.sa_context import _trusted
+    assert _trusted("https://www.news24.com/health/a")
+    assert _trusted("https://www.gov.za/news")
+    assert not _trusted("https://www.facebook.com/GlobalSouthWorld/videos/1")
+    assert not _trusted("https://en.wikipedia.org/wiki/South_African_energy_crisis")
+    assert not _trusted("https://www.reslink.org/blogs/load-shedding-ended")
+    assert not _trusted("https://m.youtube.com/watch?v=1")
+    assert not _trusted("")

@@ -220,6 +220,22 @@ def _site(link: str) -> str:
     return host[4:] if host.startswith("www.") else host
 
 
+# Places a claim about South Africa today should not come from: social posts,
+# video, forums, encyclopedias, and company blogs selling something (a solar
+# installer's "why load-shedding still matters" post). Blocked by site, not by
+# topic, so the news that remains is left to say what it says.
+_UNTRUSTED_SITES = ("facebook.com", "instagram.com", "tiktok.com", "twitter.com", "x.com",
+                    "youtube.com", "reddit.com", "linkedin.com", "pinterest.com", "quora.com",
+                    "medium.com", "wikipedia.org", "fandom.com")
+
+
+def _trusted(link: str) -> bool:
+    site = _site(link)
+    if not site or any(site == s or site.endswith("." + s) for s in _UNTRUSTED_SITES):
+        return False
+    return not re.search(r"/blogs?/", link)
+
+
 def _gather_snippets() -> List[Dict[str, str]]:
     """Pull real search snippets on what is currently pressing in SA.
 
@@ -245,7 +261,7 @@ def _gather_snippets() -> List[Dict[str, str]]:
             continue
         for item in res.get("results", []):
             sn = (item.get("snippet") or item.get("title") or "").strip()
-            if sn:
+            if sn and _trusted(_link(item)):
                 sources.append({
                     "snippet": sn,
                     "link": _link(item),

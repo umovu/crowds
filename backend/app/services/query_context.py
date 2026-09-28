@@ -405,7 +405,7 @@ def _gather_snippets(queries: List[str]) -> List[Dict[str, str]]:
     Same shape as sa_context._gather_snippets, so _render_sources and the judge
     take these unchanged.
     """
-    from .sa_context import _link, _site
+    from .sa_context import _link, _site, _trusted
     from .serper_service import SerperService
     serper = SerperService()
     if not serper.is_available():
@@ -417,7 +417,7 @@ def _gather_snippets(queries: List[str]) -> List[Dict[str, str]]:
             continue
         for item in res.get("results", []):
             sn = (item.get("snippet") or item.get("title") or "").strip()
-            if sn and not _is_junk(sn):
+            if sn and not _is_junk(sn) and _trusted(_link(item)):
                 sources.append({
                     "snippet": sn,
                     "link": _link(item),
