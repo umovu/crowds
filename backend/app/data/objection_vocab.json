@@ -1,117 +1,705 @@
 {
   "version": 1,
-  "about": "What a panel response pushes against (walls) or leans toward (pulls), as data. Loaded by app/services/objections.py. Keyed to a person's SITUATION, never a sector: 'costs something just to reach it' is a no-car, far-from-town objection whether the pitch is a clinic, a bank or a school. Fieldwork-collected types slot in here as new rows; no code change.",
+  "about": "What a panel response pushes against (walls) or leans toward (pulls), as data. Loaded by app/services/objections.py. Keyed to a person's SITUATION, never a sector: 'costs something just to reach it' is a no-car, far-from-town objection whether the pitch is a clinic, a bank or a school. Fieldwork-collected types slot in here as new rows; no code change. Cues are scored against the stored answer archive (scripts/shadow_objections.py): a cue that NEVER fires on a real instance of its wall is noise and comes out. A cue that is merely wrong more often than right stays — it is still the only way this layer can see a true case, and that trade needs a reader, not a shorter list.",
   "walls": {
     "no_human_support": {
       "label": "No one to talk to when it goes wrong",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["branch", "teller", "real person", "real people", "human", "staff", "speak to", "talk to", "someone", "office", "face-to-face", "face to face", "counter", "point of contact", "recourse", "recover", "gladly pay extra"],
-      "grounds": [{"internet_use": ["never", "rarely", "monthly"]}, {"owns_computer": ["none"]}]
+      "cues": [
+        "branch",
+        "teller",
+        "real person",
+        "real people",
+        "human",
+        "staff",
+        "speak to",
+        "talk to",
+        "someone",
+        "office",
+        "face-to-face",
+        "face to face",
+        "counter",
+        "point of contact",
+        "recourse",
+        "recover",
+        "gladly pay extra"
+      ],
+      "grounds": [
+        {
+          "internet_use": [
+            "never",
+            "rarely",
+            "monthly"
+          ]
+        },
+        {
+          "owns_computer": [
+            "none"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "They want a real person to help them when something goes wrong, and doubt one will be there. A branch, a counter, staff, someone accountable who can fix a mistake.",
+        "not_for": "Merely mentioning a person. Consulting a spouse, a parent or the group before deciding is a household decision, not a complaint about support. Asking for a demonstration is a learning need, not a support gap.",
+        "examples": [
+          "If the money goes missing, who do I walk in and see?",
+          "There is no office here. You phone and phone and nobody answers."
+        ]
+      }
     },
     "digital_capability": {
       "label": "Phone, data or power gets in the way",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["internet", "data", "smartphone", "screen", "network", "airtime", "bundle", "battery", "buttons", "computer", "load-shedding", "load shedding", "offline", "power", "glitch", "never used the internet"],
-      "grounds": [{"internet_use": ["never", "rarely", "monthly"]}, {"owns_phone": ["none", "household"]}, {"phone_internet": ["no"]}, {"phone_use": ["never", "rarely", "monthly"]}, {"owns_computer": ["none"]}, {"electricity_reliability": ["never", "half", "occasional"]}]
+      "cues": [
+        "internet",
+        "data",
+        "smartphone",
+        "screen",
+        "network",
+        "airtime",
+        "bundle",
+        "battery",
+        "buttons",
+        "computer",
+        "load-shedding",
+        "load shedding",
+        "offline",
+        "power",
+        "glitch",
+        "never used the internet"
+      ],
+      "grounds": [
+        {
+          "internet_use": [
+            "never",
+            "rarely",
+            "monthly"
+          ]
+        },
+        {
+          "owns_phone": [
+            "none",
+            "household"
+          ]
+        },
+        {
+          "phone_internet": [
+            "no"
+          ]
+        },
+        {
+          "phone_use": [
+            "never",
+            "rarely",
+            "monthly"
+          ]
+        },
+        {
+          "owns_computer": [
+            "none"
+          ]
+        },
+        {
+          "electricity_reliability": [
+            "never",
+            "half",
+            "occasional"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "A phone, data, airtime, signal, a screen, or electricity stands between them and using it. Includes not knowing how to use the thing at all.",
+        "not_for": "The price of the product itself. Worry about whether the app is honest (that is trust).",
+        "examples": [
+          "My phone can't get on the internet, so I would be paying for something I cannot see.",
+          "Half the time it's useless during load-shedding."
+        ]
+      }
     },
     "identity_biometric": {
       "label": "Uneasy about ID and fingerprints",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["fingerprint", "biometric", "thumbprint", "finger print", "scanned", "scanning", "scan", "my finger", "identity document", "id card"],
-      "grounds": [{"gov_trust": ["low"]}, {"business_trust": ["low"]}]
+      "cues": [
+        "fingerprint",
+        "biometric",
+        "thumbprint",
+        "finger print",
+        "scanned",
+        "scanning",
+        "scan",
+        "my finger",
+        "identity document",
+        "id card"
+      ],
+      "grounds": [
+        {
+          "gov_trust": [
+            "low",
+            "mid"
+          ]
+        },
+        {
+          "business_trust": [
+            "low",
+            "mid"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "Unease about handing over identity: fingerprints, face or ID scans, or their ID document being held or copied.",
+        "not_for": "General distrust of the provider with no mention of identity or biometrics.",
+        "examples": [
+          "Why do they need my thumbprint for this?"
+        ]
+      }
     },
     "fee_sensitivity": {
       "label": "Watching the fees and charges",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["fee", "fees", "charge", "charges", "hidden", "admin", "monthly fee", "free", "no monthly", "cost", "bank charges", "rand"],
-      "grounds": [{"lived_poverty": ["high", "moderate"]}, {"pays_for_quality": ["no"]}, {"economic_optimism": ["pessimistic"]}]
+      "cues": [
+        "fee",
+        "fees",
+        "charge",
+        "charges",
+        "hidden",
+        "admin",
+        "monthly fee",
+        "free",
+        "no monthly",
+        "cost",
+        "bank charges",
+        "rand"
+      ],
+      "grounds": [
+        {
+          "lived_poverty": [
+            "high",
+            "moderate"
+          ]
+        },
+        {
+          "pays_for_quality": [
+            "no"
+          ]
+        },
+        {
+          "economic_optimism": [
+            "pessimistic"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "The PRICE of the offer is the problem. The monthly fee, charges, hidden costs, or simply that it is money they do not have spare. Includes 'that competes with groceries' and 'R50 is a lot for me'.",
+        "not_for": "The cost of TRAVELLING to reach it, which is its own type. Praise for something being free.",
+        "examples": [
+          "R10 a month per member adds up.",
+          "Fifty rand is a big part of my grocery budget."
+        ]
+      }
     },
     "cost_of_access": {
       "label": "Costs something just to reach it",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["transport", "taxi", "fare", "fares", "trip", "travel", "travelling", "walk", "walking", "distance", "commute"],
-      "grounds": [{"owns_vehicle": ["none"]}, {"geotype": ["Traditional", "Farms"]}, {"went_without_care": ["often", "sometimes"]}]
+      "cues": [
+        "trip",
+        "travel",
+        "travelling",
+        "distance",
+        "commute",
+        "transport",
+        "taxi",
+        "fare",
+        "fares",
+        "walk",
+        "walking"
+      ],
+      "grounds": [
+        {
+          "owns_vehicle": [
+            "none"
+          ]
+        },
+        {
+          "geotype": [
+            "Traditional",
+            "Farms"
+          ]
+        },
+        {
+          "went_without_care": [
+            "often",
+            "sometimes"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "Getting PHYSICALLY to the thing costs money or effort. Taxi fare, a long walk, distance, a trip into town. A no-car, far-from-town objection.",
+        "not_for": "The price of the offer itself, however unaffordable — that is fee sensitivity. Not being able to get ONLINE, which is a phone/data problem. Money being tight in general.",
+        "examples": [
+          "It's two taxis each way just to get there.",
+          "I would have to walk an hour to reach that office."
+        ]
+      }
     },
     "trust_social_proof": {
       "label": "Wants proof before believing it",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["trust", "proof", "promise", "promises", "promising", "wary", "scam", "too good", "heard", "neighbour", "neighbor", "reliab", "proven", "waiting to see", "show me", "convince", "reputation"],
-      "grounds": [{"social_trust": ["low", "mid"]}, {"business_trust": ["low"]}]
+      "cues": [
+        "trust",
+        "proof",
+        "promise",
+        "promises",
+        "promising",
+        "wary",
+        "scam",
+        "too good",
+        "heard",
+        "neighbour",
+        "neighbor",
+        "reliab",
+        "proven",
+        "waiting to see",
+        "show me",
+        "convince",
+        "reputation"
+      ],
+      "grounds": [
+        {
+          "social_trust": [
+            "low",
+            "mid"
+          ]
+        },
+        {
+          "business_trust": [
+            "low"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "They want evidence before they believe it works. Proof, a track record, a reputation, someone they know who has used it, or time to watch it first.",
+        "not_for": "Distrust aimed at WHO is behind it (government, a company) — that is its own type. Scepticism about a stated return or interest rate — also its own type.",
+        "examples": [
+          "I would wait and see if it works for my neighbour first.",
+          "Anyone can promise that. Show me it has worked."
+        ]
+      }
     },
     "interest_scepticism": {
       "label": "The returns sound too good",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["interest", "return", "yield", "rate", "10%", "ten per cent", "ten percent", "too good to be true", "lure", "payout", "lucrative"],
-      "grounds": [{"business_trust": ["low", "mid"]}]
+      "cues": [
+        "return",
+        "yield",
+        "10%",
+        "ten per cent",
+        "ten percent",
+        "too good to be true",
+        "lure",
+        "lucrative"
+      ],
+      "grounds": [
+        {
+          "business_trust": [
+            "low",
+            "mid"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "A stated return, interest rate, payout or financial upside sounds too good to be true.",
+        "not_for": "The mere mention of interest or a payout as a neutral fact. General distrust with no number attached.",
+        "examples": [
+          "Seven percent? Nothing pays that. Where is that money coming from?"
+        ]
+      }
     },
     "trust_authority": {
       "label": "Doesn't trust who's behind it",
       "source": "tymebank_segment_benchmark_2026",
-      "cues": ["government", "minister", "corruption", "corrupt", "stole", "stolen", "official", "officials", "municipal", "parliament", "legislature", "politician", "public money", "state", "authority", "councillor"],
-      "grounds": [{"gov_trust": ["low"]}, {"official_responsiveness": ["low"]}, {"councillor_responsiveness": ["low"]}]
+      "cues": [
+        "government",
+        "minister",
+        "corruption",
+        "corrupt",
+        "stole",
+        "stolen",
+        "official",
+        "officials",
+        "municipal",
+        "parliament",
+        "legislature",
+        "politician",
+        "public money",
+        "state",
+        "authority",
+        "councillor"
+      ],
+      "grounds": [
+        {
+          "gov_trust": [
+            "low"
+          ]
+        },
+        {
+          "official_responsiveness": [
+            "low"
+          ]
+        },
+        {
+          "councillor_responsiveness": [
+            "low"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "They distrust WHO is behind it. Government, a municipality, officials, a politician, or an unknown company or stranger holding their money.",
+        "not_for": "Wanting proof that the thing works, when no provider is doubted.",
+        "examples": [
+          "It's the same department that lost the last fund.",
+          "I am not handing my money to a stranger."
+        ]
+      }
     },
     "would_warn_others": {
       "label": "Would warn others off it",
       "source": "authored_2026_09_unvalidated",
       "reading_only": true,
-      "cues": ["stay away", "steer clear", "warn", "tell people not to", "tell them not to", "tell my family not to", "avoid it", "don't go near"],
-      "grounds": [{"social_voice": ["mid", "high"]}]
+      "cues": [
+        "stay away",
+        "steer clear",
+        "warn",
+        "tell people not to",
+        "tell them not to",
+        "tell my family not to",
+        "avoid it",
+        "don't go near"
+      ],
+      "grounds": [
+        {
+          "social_voice": [
+            "mid",
+            "high"
+          ]
+        }
+      ],
+      "definition": {
+        "what": "They would actively tell other people to stay away from it.",
+        "not_for": "Declining it themselves without telling anyone else.",
+        "examples": [
+          "I would tell my family not to go near it."
+        ]
+      }
     }
   },
   "pulls": {
     "low_cost": {
       "label": "Costs little or nothing",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["free", "cheap", "affordable", "low cost", "no monthly fee", "no fees", "no charges", "doesn't cost", "does not cost"],
+      "cues": [
+        "free",
+        "cheap",
+        "affordable",
+        "low cost",
+        "no monthly fee",
+        "no fees",
+        "no charges",
+        "doesn't cost",
+        "does not cost"
+      ],
       "grounds": []
     },
     "close_to_home": {
       "label": "Close by and easy to reach",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["close", "near", "nearby", "down the road", "around the corner", "walking distance", "on my doorstep", "no taxi", "no transport"],
+      "cues": [
+        "close",
+        "near",
+        "nearby",
+        "down the road",
+        "around the corner",
+        "walking distance",
+        "on my doorstep",
+        "no taxi",
+        "no transport"
+      ],
       "grounds": []
     },
     "saves_hassle": {
       "label": "Saves time or hassle",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["save time", "saves time", "quicker", "faster", "no queue", "no queues", "no waiting", "less hassle", "convenient", "easier"],
+      "cues": [
+        "save time",
+        "saves time",
+        "quicker",
+        "faster",
+        "no queue",
+        "no queues",
+        "no waiting",
+        "less hassle",
+        "convenient",
+        "easier"
+      ],
       "grounds": []
     },
     "privacy": {
       "label": "Keeps things private",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["privacy", "confidential", "kept private", "stays private", "nobody would know", "no one would know", "nobody knows", "no one knows", "discreet", "keep it to myself"],
+      "cues": [
+        "privacy",
+        "confidential",
+        "kept private",
+        "stays private",
+        "nobody would know",
+        "no one would know",
+        "nobody knows",
+        "no one knows",
+        "discreet",
+        "keep it to myself"
+      ],
       "grounds": []
     },
     "human_help": {
       "label": "Someone real to help",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["real person", "a person to help", "someone to help", "speak to a person", "talk to a person", "someone i can talk to", "face to face", "face-to-face"],
+      "cues": [
+        "real person",
+        "a person to help",
+        "someone to help",
+        "speak to a person",
+        "talk to a person",
+        "someone i can talk to",
+        "face to face",
+        "face-to-face"
+      ],
       "grounds": []
     },
     "worth_paying_for": {
       "label": "Would pay if it's genuinely better",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["worth it", "worth paying", "worth the money", "pay extra", "i'd pay", "i would pay", "happy to pay", "value for money", "fair price"],
-      "grounds": [{"pays_for_quality": ["yes", "mixed"]}, {"lived_poverty": ["none", "low"]}]
+      "cues": [
+        "worth it",
+        "worth paying",
+        "worth the money",
+        "pay extra",
+        "i'd pay",
+        "i would pay",
+        "happy to pay",
+        "value for money",
+        "fair price"
+      ],
+      "grounds": [
+        {
+          "pays_for_quality": [
+            "yes",
+            "mixed"
+          ]
+        },
+        {
+          "lived_poverty": [
+            "none",
+            "low"
+          ]
+        }
+      ]
     },
     "trusted_source": {
       "label": "Trusts who's behind it",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["i trust", "trustworthy", "reputable", "known name", "neighbour used it", "neighbours use it", "people i know use", "recommended by"],
-      "grounds": [{"social_trust": ["high", "mid"]}, {"business_trust": ["high", "mid"]}, {"gov_trust": ["high", "mid"]}]
+      "cues": [
+        "i trust",
+        "trustworthy",
+        "reputable",
+        "known name",
+        "neighbour used it",
+        "neighbours use it",
+        "people i know use",
+        "recommended by"
+      ],
+      "grounds": [
+        {
+          "social_trust": [
+            "high",
+            "mid"
+          ]
+        },
+        {
+          "business_trust": [
+            "high",
+            "mid"
+          ]
+        },
+        {
+          "gov_trust": [
+            "high",
+            "mid"
+          ]
+        }
+      ]
     },
     "would_recommend": {
       "label": "Would tell others about it",
       "source": "authored_2026_09_unvalidated",
-      "cues": ["i'd tell", "i would tell", "tell my", "tell our", "tell a colleague", "tell a friend", "tell a neighbour", "tell the neighbours", "recommend it", "i'd recommend", "i would recommend", "share it with", "word of mouth", "tell others", "tell people", "spread the word", "mention it", "mention this", "i'd mention", "i would mention", "let them know", "let people know", "pass it on", "pass the word"],
-      "grounds": [{"social_voice": ["mid", "high"]}]
+      "cues": [
+        "i'd tell",
+        "i would tell",
+        "tell my",
+        "tell our",
+        "tell a colleague",
+        "tell a friend",
+        "tell a neighbour",
+        "tell the neighbours",
+        "recommend it",
+        "i'd recommend",
+        "i would recommend",
+        "share it with",
+        "word of mouth",
+        "tell others",
+        "tell people",
+        "spread the word",
+        "mention it",
+        "mention this",
+        "i'd mention",
+        "i would mention",
+        "let them know",
+        "let people know",
+        "pass it on",
+        "pass the word"
+      ],
+      "grounds": [
+        {
+          "social_voice": [
+            "mid",
+            "high"
+          ]
+        }
+      ]
     }
   },
   "markers": {
-    "condition": ["only if", "unless", "if you can", "if the", "if there", "if that", "if it", "provided", "as long as", "so long as", "once", "until", "if you prove", "if you show", "when the", "if i", "if my"],
-    "wall_strong": ["only if", "unless", "if you can", "if the", "if there", "if that", "if it", "provided", "as long as", "so long as", "if you prove", "if you show", "can't", "cannot", "won't", "will not", "wouldn't", "would not", "too much", "too expensive", "too far", "too risky", "worr", "problem", "concern", "scared", "afraid", "suspicio", "doubt", "scam", "catch", "expensive", "don't trust", "do not trust", "not sure", "hard to", "struggl", "risk", "breaks", "goes wrong", "what if", "not worth", "isn't worth", "don't like", "do not like", "adds up", "add up", "stay away", "steer clear", "warn", "avoid it", "don't go near"],
-    "pull": ["worth", "i'd use", "i would use", "i'll use", "i like", "i love", "love that", "great", "glad", "happy to", "at least", "finally", "sells it", "good thing", "convenient", "easier", "i'd pay", "i would pay", "gladly", "exactly why", "worked well", "it works", "helps me", "no one would know", "nobody would know", "no queue", "no waiting", "no monthly fee", "no fees", "no charges", "no taxi", "no need", "don't need", "do not need", "doesn't cost", "does not cost"],
-    "wall_weak": ["no", "not", "don't", "do not", "never", "without", "need", "want", "must", "have to", "but"]
+    "condition": [
+      "only if",
+      "unless",
+      "if you can",
+      "if the",
+      "if there",
+      "if that",
+      "if it",
+      "provided",
+      "as long as",
+      "so long as",
+      "once",
+      "until",
+      "if you prove",
+      "if you show",
+      "when the",
+      "if i",
+      "if my"
+    ],
+    "wall_strong": [
+      "only if",
+      "unless",
+      "if you can",
+      "if the",
+      "if there",
+      "if that",
+      "if it",
+      "provided",
+      "as long as",
+      "so long as",
+      "if you prove",
+      "if you show",
+      "can't",
+      "cannot",
+      "won't",
+      "will not",
+      "wouldn't",
+      "would not",
+      "too much",
+      "too expensive",
+      "too far",
+      "too risky",
+      "worr",
+      "problem",
+      "concern",
+      "scared",
+      "afraid",
+      "suspicio",
+      "doubt",
+      "scam",
+      "catch",
+      "expensive",
+      "don't trust",
+      "do not trust",
+      "not sure",
+      "hard to",
+      "struggl",
+      "risk",
+      "breaks",
+      "goes wrong",
+      "what if",
+      "not worth",
+      "isn't worth",
+      "don't like",
+      "do not like",
+      "adds up",
+      "add up",
+      "stay away",
+      "steer clear",
+      "warn",
+      "avoid it",
+      "don't go near"
+    ],
+    "pull": [
+      "worth",
+      "i'd use",
+      "i would use",
+      "i'll use",
+      "i like",
+      "i love",
+      "love that",
+      "great",
+      "glad",
+      "happy to",
+      "at least",
+      "finally",
+      "sells it",
+      "good thing",
+      "convenient",
+      "easier",
+      "i'd pay",
+      "i would pay",
+      "gladly",
+      "exactly why",
+      "worked well",
+      "it works",
+      "helps me",
+      "no one would know",
+      "nobody would know",
+      "no queue",
+      "no waiting",
+      "no monthly fee",
+      "no fees",
+      "no charges",
+      "no taxi",
+      "no need",
+      "don't need",
+      "do not need",
+      "doesn't cost",
+      "does not cost"
+    ],
+    "wall_weak": [
+      "no",
+      "not",
+      "don't",
+      "do not",
+      "never",
+      "without",
+      "need",
+      "want",
+      "must",
+      "have to",
+      "but"
+    ]
   }
 }

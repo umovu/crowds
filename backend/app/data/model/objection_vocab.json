@@ -58,6 +58,31 @@
             },
             "when": "always"
           },
+          "definition": {
+            "type": "object",
+            "fields": {
+              "what": {
+                "type": "string",
+                "min_length": 1,
+                "when": "always"
+              },
+              "not_for": {
+                "type": "string",
+                "min_length": 1,
+                "when": "always"
+              },
+              "examples": {
+                "type": "list",
+                "items": {
+                  "type": "string",
+                  "min_length": 1
+                },
+                "min_items": 1,
+                "when": "always"
+              }
+            },
+            "when": "optional"
+          },
           "reading_only": {
             "type": "boolean",
             "when": "optional"

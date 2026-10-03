@@ -36,6 +36,7 @@ from __future__ import annotations
 import json
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List, Optional, Tuple
 
 _VOCAB_PATH = os.path.join(
@@ -52,6 +53,11 @@ OBJECTION_TYPES: Tuple[str, ...] = tuple(
 READING_WALL_TYPES: Tuple[str, ...] = tuple(_DATA["walls"])
 LABELS: Dict[str, str] = {k: v["label"] for k, v in _DATA["walls"].items()}
 VOCAB: Dict[str, List[str]] = {k: list(v["cues"]) for k, v in _DATA["walls"].items()}
+# What each wall MEANS, for a reader that works on sentences rather than substrings
+# (what it covers, what it does not, worked examples). Optional per row: a wall
+# without one falls back to its label.
+DEFINITIONS: Dict[str, Dict[str, Any]] = {
+    k: v["definition"] for k, v in _DATA["walls"].items() if v.get("definition")}
 
 PULL_TYPES: Tuple[str, ...] = tuple(_DATA["pulls"])
 PULL_LABELS: Dict[str, str] = {k: v["label"] for k, v in _DATA["pulls"].items()}
@@ -230,13 +236,121 @@ def read(text: str, facts: Optional[Dict[str, str]] = None) -> Dict[str, List[st
     }
 
 
+# ── Reading walls by meaning instead of by substring ────────────────────────
+#
+# The substring layer cannot tell "two taxis each way just to get there" from
+# "R50 is a chunk of our weekly taxi fare" — same cue, opposite meaning. Scored
+# against the stored answer archive (582 answers, scripts/shadow_objections.py),
+# 582 of the 1,373 walls it reports are ones the sentence does not carry, and
+# 66 people read as raising four or more complaints where 12 actually do.
+#
+# Cutting cues does not fix it: only three ever fired without a real instance
+# behind them, and they are already gone. The rest are genuinely ambiguous.
+#
+# So walls may be read by a typed reader instead, asked one yes/no question per
+# wall built from that wall's own `definition` block. Bounded deliberately:
+#
+#   * WALLS ONLY. Pulls have no definition block and no measured evidence, so
+#     they stay on the deterministic path.
+#   * The GROUNDS FILTER IS UNTOUCHED. Whether a person is entitled to a wall is
+#     still decided by their measured record, never by the reader.
+#   * No key, a failed call, or the flag off falls straight back to `read`, so
+#     every assertion in tests/test_objection_reading.py holds with the model
+#     switched off.
+
+# A wall needs at least this much of the reader's probability to count. Chosen on
+# the archive: the sampled disagreements below it were the reader's errors.
+WALL_YES = 0.6
+
+# How many reading requests are in flight at once. One request per response, each
+# about 2.5s on the wire, so the room's wait is (responses / WORKERS) * 2.5s — at 8
+# a 60-seat room spent 19s on this alone. jev-1.13.0 allows ~1,200 requests a
+# minute, which 32 in flight does not come close to (~13/s). Override only to go
+# gentler; going higher buys little and risks the rate limit.
+WALL_WORKERS = max(1, int(os.environ.get("FUB_TYPED_WALL_WORKERS") or 32))
+
+
+def _typesafe():
+    """The typed tier, or None. This module is also imported standalone by the
+    benchmark scripts, where the package-relative import does not resolve — and
+    a reader that cannot be reached is simply a reader that is off."""
+    try:
+        from ..utils import typesafe_client
+    except (ImportError, ValueError):
+        return None
+    return typesafe_client
+
+
+def typed_reading_enabled() -> bool:
+    """Read walls by meaning: OFF unless FUB_TYPED_WALLS is set and a key exists.
+
+    Opt-in on purpose. `Config` loads the repo `.env` at import, so a key sitting
+    in the developer's file would otherwise put every test run on the network —
+    non-deterministic, slow, and billed. The deterministic path stays the default
+    everywhere, and production turns this on with an env var.
+    """
+    if (os.environ.get("FUB_TYPED_WALLS") or "").strip().lower() not in ("1", "true", "yes", "on"):
+        return False
+    ts = _typesafe()
+    return bool(ts and ts.enabled())
+
+
+def _wall_questions() -> Dict[str, Dict[str, Any]]:
+    """One yes/no question per reading wall, built from the vocabulary file."""
+    ts = _typesafe()
+    out = {}
+    for t in READING_WALL_TYPES:
+        d = DEFINITIONS.get(t) or {}
+        out[t] = ts.noul_question({
+            "question": f"Does the speaker raise this as a problem with the offer: {LABELS[t]}?",
+            "what_counts": d.get("what", LABELS[t]),
+            "what_does_not_count": d.get("not_for", ""),
+            "examples_that_count": d.get("examples", []),
+        })
+    return out
+
+
+def read_walls_typed(texts: List[str]) -> Optional[List[List[str]]]:
+    """Walls per response, read by meaning. None when the tier is unavailable.
+
+    One request per response, all walls in parallel inside it. Grounds are NOT
+    applied here — the caller still filters on the person's measured record.
+    """
+    if not texts or not typed_reading_enabled():
+        return None
+    ts = _typesafe()
+
+    questions = _wall_questions()
+
+    def one(text: str) -> Optional[List[str]]:
+        answers = ts.ask(text, questions)
+        if answers is None:
+            return None
+        return [t for t in READING_WALL_TYPES
+                if (answers.get(t) or {}).get("noul", 0.0) >= WALL_YES]
+
+    with ThreadPoolExecutor(max_workers=min(WALL_WORKERS, len(texts))) as pool:
+        results = list(pool.map(one, texts))
+    if all(r is None for r in results):
+        return None
+    return results
+
+
 def _read_all(kind: str, responses: List[str],
               profiles: Optional[List[Optional[Dict[str, Any]]]]) -> Dict[str, int]:
+    texts = list(responses or [])
+    typed = read_walls_typed(texts) if kind == "walls" else None
+
     counts: Dict[str, int] = {}
-    for i, text in enumerate(responses or []):
+    for i, text in enumerate(texts):
         profile = profiles[i] if profiles and i < len(profiles) else None
         facts = persona_facts(profile) if profile else None
-        for t in read(text, facts)[kind]:
+        found = typed[i] if typed and typed[i] is not None else read(text, facts)[kind]
+        if typed and typed[i] is not None and facts is not None:
+            # Same grounds rule the deterministic path applies, applied here too:
+            # the reader says what was SAID, the record says who may say it.
+            found = [t for t in found if has_grounds(t, facts) is not False]
+        for t in found:
             counts[t] = counts.get(t, 0) + 1
     return counts
 
